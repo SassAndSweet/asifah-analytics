@@ -69,6 +69,7 @@
             margin-bottom: 15px;
             color: #1e3a5f;
         }
+
         .time-window {
             margin-bottom: 20px;
         }
@@ -282,8 +283,6 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             border: 1px solid #dcdcdc;
-            font-size: 12px;
-            color: #7f8c8d;
         }
 
         .footer-content {
@@ -348,20 +347,19 @@
             <h2>Israeli Military Action Forecasting Dashboard</h2>
         </header>
 
-<div class="controls">
-    <h3>Data Collection Parameters</h3>
-    <div class="time-window">
-        <label><input type="radio" name="timeWindow" value="1"> 24 Hours</label>
-        <label><input type="radio" name="timeWindow" value="2"> 48 Hours</label>
-        <label><input type="radio" name="timeWindow" value="7" checked> 7 Days</label>
-        <label><input type="radio" name="timeWindow" value="30"> 30 Days</label>
-    </div>
-    <button class="scan-button" onclick="scanData()">SCAN OSINT SOURCES</button>
-    <p class="controls-note">
-        Change the time window above, then click “Scan OSINT Sources” to refresh the forecast.
-    </p>
-</div>
-
+        <div class="controls">
+            <h3>Data Collection Parameters</h3>
+            <div class="time-window">
+                <label><input type="radio" name="timeWindow" value="1"> 24 Hours</label>
+                <label><input type="radio" name="timeWindow" value="2"> 48 Hours</label>
+                <label><input type="radio" name="timeWindow" value="7" checked> 7 Days</label>
+                <label><input type="radio" name="timeWindow" value="30"> 30 Days</label>
+            </div>
+            <button class="scan-button" onclick="scanData()">SCAN OSINT SOURCES</button>
+            <p class="controls-note">
+                Change the time window above, then click “Scan OSINT Sources” to refresh the forecast.
+            </p>
+        </div>
 
         <div id="errorMessage" class="error-message"></div>
 
@@ -371,9 +369,9 @@
         </div>
 
         <div class="dashboard" id="dashboard">
-            <!-- Hezbollah Card -->
+            <!-- Hizballah Card -->
             <div class="target-card">
-                <h3>HEZBOLLAH</h3>
+                <h3>HIZBALLAH</h3>
                 <div class="probability-display">
                     <div class="probability-label">Strike Probability</div>
                     <div class="probability-value medium" id="hezbollah-prob">--</div>
@@ -451,143 +449,213 @@
     </audio>
 
     <script>
-        // *** IMPORTANT: Replace this with your Render backend URL once deployed ***
+        // Backend URL
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
-        
+
         async function scanData() {
             const button = document.querySelector('.scan-button');
             const loading = document.getElementById('loadingIndicator');
             const dashboard = document.getElementById('dashboard');
             const clickSound = document.getElementById('clickSound');
             const errorMessage = document.getElementById('errorMessage');
-            
-            // Hide any previous errors
+
             errorMessage.classList.remove('show');
-            
-            // Play click sound
-            clickSound.currentTime = 0;
-            clickSound.play().catch(e => console.log('Audio play failed:', e));
-            
-            // Add scanning animation
+
+            try {
+                clickSound.currentTime = 0;
+                clickSound.play().catch(() => {});
+            } catch (e) {
+                console.log('Audio play failed:', e);
+            }
+
             button.classList.add('scanning');
             button.disabled = true;
             dashboard.style.opacity = '0.3';
             loading.classList.add('active');
-            
-            // Get selected time window
-            const timeWindow = parseInt(document.querySelector('input[name="timeWindow"]:checked').value);
-            
+
+            const timeWindow = parseInt(
+                document.querySelector('input[name="timeWindow"]:checked').value
+            );
+
             try {
-                // Scan each target
                 await Promise.all([
                     scanTarget('hezbollah', timeWindow),
                     scanTarget('iran', timeWindow),
                     scanTarget('houthis', timeWindow)
                 ]);
-                
-// Update timestamp
-const now = new Date();
-const lastUpdatedEl = document.getElementById('lastUpdated');
-const formatted = now.toLocaleString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZoneName: 'short'
-});
-lastUpdatedEl.textContent = 'Last Updated: ' + formatted;
 
-
-                    
+                const now = new Date();
+                const lastUpdatedEl = document.getElementById('lastUpdated');
+                if (lastUpdatedEl) {
+                    const formatted = now.toLocaleString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        timeZoneName: 'short'
+                    });
+                    lastUpdatedEl.textContent =
+                        'Last Updated: ' + formatted + ` (last ${timeWindow} day(s))`;
+                }
             } catch (error) {
                 console.error('Scan error:', error);
-                errorMessage.textContent = 'Error scanning news sources. Please check that backend is running. Error: ' + error.message;
+                errorMessage.textContent =
+                    'Error scanning news sources. Please check that backend is running. Error: ' +
+                    error.message;
                 errorMessage.classList.add('show');
             } finally {
-                // Reset UI
                 loading.classList.remove('active');
                 dashboard.style.opacity = '1';
                 button.classList.remove('scanning');
                 button.disabled = false;
             }
         }
-        
+
         async function scanTarget(targetName, days) {
-            // Call Flask backend instead of NewsAPI directly
             const url = `${BACKEND_URL}/scan?target=${targetName}&days=${days}`;
-            
+
             const response = await fetch(url);
-            const data = await response.json();
-            
-            if (data.error) {
-                throw new Error(`Backend error: ${data.error}`);
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(
+                    `HTTP ${response.status} from backend for ${targetName}: ${text.slice(0, 200)}`
+                );
             }
-            
-            // Get the articles and configuration from backend
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(
+                    `Backend error (${targetName}): ${data.error} - ${data.message || ''}`
+                );
+            }
+
             const articles = data.articles || [];
             const escalationKeywords = data.escalation_keywords || [];
             const targetKeywords = data.target_keywords || [];
-            
-            // Calculate threat score
-            const score = calculateThreatScore(articles, escalationKeywords, targetKeywords);
+
+            const score = calculateThreatScore(
+                articles,
+                escalationKeywords,
+                targetKeywords,
+                days
+            );
+
             const probability = Math.min(Math.round(score.probability), 99);
             const timeline = determineTimeline(probability);
-            
-            // Update UI
+
             updateProbability(targetName, probability);
             updateTimeline(targetName, timeline);
             displayHeadlines(targetName, articles.slice(0, 5));
         }
-        
-        function calculateThreatScore(articles, escalationKeywords, targetKeywords) {
-            if (articles.length === 0) {
-                return { probability: 15, escalationCount: 0 };
+
+        function calculateThreatScore(articles, escalationKeywords, targetKeywords, days) {
+            if (!articles || articles.length === 0) {
+                return { probability: 10, escalationCount: 0 };
             }
-            
+
+            const windowDays = days || 7;
+
+            let coverageCount = articles.length;
             let escalationCount = 0;
-            let totalMentions = 0;
-            
+            let targetMentionCount = 0;
+
+            const KINETIC = [
+                'airstrike', 'air strike', 'strike on', 'rocket attack', 'rocket fire',
+                'missile strike', 'missile attack', 'drone strike', 'drone attack',
+                'barrage', 'shelling', 'bombardment', 'launched rockets', 'launched missiles',
+                'cross-border fire', 'cross border fire', 'killed', 'casualties'
+            ];
+
+            const DIRECT_THREATS = [
+                'we will respond', 'will respond', 'vowed to', 'threatened', 'threatens',
+                'warned that', 'retaliate', 'retaliation', 'severe response',
+                'pay the price', 'destroy', 'wiped out', 'escalate'
+            ];
+
+            const POSTURING = [
+                'mobilized', 'mobilised', 'mobilization', 'mobilisation',
+                'called up reserves', 'reserve call-up', 'troop buildup', 'troop build-up',
+                'massing troops', 'reinforcements', 'deployed forces', 'deployment of troops',
+                'military drill', 'military exercise', 'naval drill', 'raised alert',
+                'high alert', 'heightened alert', 'combat readiness'
+            ];
+
+            const US_INVOLVEMENT = [
+                'us carrier', 'american carrier', 'aircraft carrier', 'uss ',
+                'us navy', 'us destroyer', 'american warship', 'centcom', 'us-led coalition'
+            ];
+
+            const DEESCALATION = [
+                'ceasefire', 'cease-fire', 'truce', 'calm the situation', 'restore calm',
+                'de-escalation', 'deescalation', 'reduce tensions', 'talks', 'talks in',
+                'negotiations', 'mediated', 'mediation', 'diplomatic push', 'diplomatic effort'
+            ];
+
+            let kineticEvents = 0;
+            let directThreatEvents = 0;
+            let postureEvents = 0;
+            let usInvolvementEvents = 0;
+            let deescalationEvents = 0;
+
             articles.forEach(article => {
-                const text = (article.title + ' ' + (article.description || '')).toLowerCase();
-                
-                // Count escalation keywords
+                const text = (
+                    (article.title || '') + ' ' +
+                    (article.description || '') + ' ' +
+                    (article.content || '')
+                ).toLowerCase();
+
                 escalationKeywords.forEach(keyword => {
-                    if (text.includes(keyword.toLowerCase())) {
+                    if (keyword && text.includes(keyword.toLowerCase())) {
                         escalationCount++;
                     }
                 });
-                
-                // Count target mentions
+
                 targetKeywords.forEach(keyword => {
-                    if (text.toLowerCase().includes(keyword.toLowerCase())) {
-                        totalMentions++;
+                    if (keyword && text.includes(keyword.toLowerCase())) {
+                        targetMentionCount++;
                     }
                 });
+
+                if (KINETIC.some(k => text.includes(k))) kineticEvents++;
+                if (DIRECT_THREATS.some(k => text.includes(k))) directThreatEvents++;
+                if (POSTURING.some(k => text.includes(k))) postureEvents++;
+                if (US_INVOLVEMENT.some(k => text.includes(k))) usInvolvementEvents++;
+                if (DEESCALATION.some(k => text.includes(k))) deescalationEvents++;
             });
-            
-            // Simple threat scoring algorithm
-            const baseScore = Math.min(articles.length * 2, 40); // Volume of coverage
-            const escalationScore = Math.min(escalationCount * 3, 40); // Escalatory language
-            const mentionScore = Math.min(totalMentions, 20); // Frequency of mentions
-            
-            const probability = baseScore + escalationScore + mentionScore;
-            
+
+            const coveragePerDay = coverageCount / windowDays;
+            const escalationPerDay = escalationCount / windowDays;
+            const mentionsPerDay = targetMentionCount / windowDays;
+
+            let probability =
+                Math.min(coveragePerDay * 8, 25) +
+                Math.min(escalationPerDay * 10, 40) +
+                Math.min(mentionsPerDay * 4, 15) +
+                Math.min(kineticEvents * 8, 20) +
+                Math.min(directThreatEvents * 6, 15) +
+                Math.min(postureEvents * 3, 10) +
+                Math.min(usInvolvementEvents * 3, 10) -
+                Math.min(deescalationEvents * 5, 20);
+
+            probability = Math.max(5, Math.min(Math.round(probability), 99));
+
             return { probability, escalationCount };
         }
-        
+
         function determineTimeline(probability) {
             if (probability < 30) return "180+ Days (Low priority)";
             if (probability < 50) return "91-180 Days";
             if (probability < 70) return "31-90 Days";
             return "0-30 Days (Elevated threat)";
         }
-        
+
         function updateProbability(targetId, probability) {
             const element = document.getElementById(`${targetId}-prob`);
             element.textContent = `${probability}%`;
-            
-            // Update color based on probability
+
             element.classList.remove('low', 'medium', 'high');
             if (probability < 34) {
                 element.classList.add('low');
@@ -597,30 +665,40 @@ lastUpdatedEl.textContent = 'Last Updated: ' + formatted;
                 element.classList.add('high');
             }
         }
-        
+
         function updateTimeline(targetId, timeline) {
             document.getElementById(`${targetId}-timeline`).textContent = timeline;
         }
-        
+
         function displayHeadlines(targetId, articles) {
             const container = document.getElementById(`${targetId}-headlines`);
-            
-            if (articles.length === 0) {
-                container.innerHTML = '<h4>Recent Headlines:</h4><p style="color: #7f8c8d; font-style: italic;">No recent articles found</p>';
+
+            if (!articles || articles.length === 0) {
+                container.innerHTML =
+                    '<h4>Recent Headlines:</h4>' +
+                    '<p style="color: #7f8c8d; font-style: italic;">No recent articles found</p>';
                 return;
             }
-            
+
             let html = '<h4>Recent Headlines:</h4>';
             articles.forEach(article => {
-                const date = new Date(article.publishedAt).toLocaleDateString();
+                const date = article.publishedAt
+                    ? new Date(article.publishedAt).toLocaleDateString()
+                    : 'Unknown date';
+                const sourceName = article.source && article.source.name
+                    ? article.source.name
+                    : 'Unknown source';
+
                 html += `
                     <div class="headline-item">
-                        <a href="${article.url}" target="_blank">${article.title}</a>
-                        <div class="source">${article.source.name} - ${date}</div>
+                        <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                            ${article.title || 'Untitled article'}
+                        </a>
+                        <div class="source">${sourceName} - ${date}</div>
                     </div>
                 `;
             });
-            
+
             container.innerHTML = html;
         }
     </script>
