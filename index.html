@@ -598,9 +598,10 @@ displayHeadlines(targetName, score.actionableArticles.slice(0, 5)); // ← Chang
             let directThreatEvents = 0;
             let postureEvents = 0;
             let usInvolvementEvents = 0;
-            let deescalationEvents = 0;
+let deescalationEvents = 0;
+let actionableArticles = []; // ← ADD THIS LINE
 
-            articles.forEach(article => {
+articles.forEach(article => {
                 const text = (
                     (article.title || '') + ' ' +
                     (article.description || '') + ' ' +
@@ -624,6 +625,18 @@ displayHeadlines(targetName, score.actionableArticles.slice(0, 5)); // ← Chang
                 if (POSTURING.some(k => text.includes(k))) postureEvents++;
                 if (US_INVOLVEMENT.some(k => text.includes(k))) usInvolvementEvents++;
                 if (DEESCALATION.some(k => text.includes(k))) deescalationEvents++;
+    // Mark article as actionable if it contains ANY threat indicators
+const isActionable = 
+    KINETIC.some(k => text.includes(k)) ||
+    DIRECT_THREATS.some(k => text.includes(k)) ||
+    POSTURING.some(k => text.includes(k)) ||
+    US_INVOLVEMENT.some(k => text.includes(k)) ||
+    escalationKeywords.some(keyword => keyword && text.includes(keyword.toLowerCase())) ||
+    targetKeywords.some(keyword => keyword && text.includes(keyword.toLowerCase()));
+
+if (isActionable) {
+    actionableArticles.push(article);
+}
             });
 
             const coveragePerDay = coverageCount / windowDays;
@@ -640,9 +653,13 @@ displayHeadlines(targetName, score.actionableArticles.slice(0, 5)); // ← Chang
                 Math.min(usInvolvementEvents * 3, 10) -
                 Math.min(deescalationEvents * 5, 20);
 
-            probability = Math.max(5, Math.min(Math.round(probability), 99));
+probability = Math.max(5, Math.min(Math.round(probability), 99));
 
-            return { probability, escalationCount };
+return { 
+    probability, 
+    escalationCount,
+    actionableArticles: actionableArticles
+};
         }
 
         function determineTimeline(probability) {
