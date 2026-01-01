@@ -441,25 +441,9 @@
     </audio>
 
     <script>
-        // Your NewsAPI key
-        const API_KEY = '32de6811aacf4fc2ab651901a08b5235';
+        // *** IMPORTANT: Replace this with your Render backend URL once deployed ***
+        const BACKEND_URL = 'https://YOUR-APP-NAME.onrender.com';
         
-        // Target-specific search terms
-        const TARGETS = {
-            hezbollah: {
-                keywords: ['Hezbollah', 'Lebanon Israel', 'Southern Lebanon', 'Nasrallah'],
-                escalation: ['strike', 'attack', 'military action', 'retaliate', 'offensive', 'troops', 'border', 'rocket', 'missile']
-            },
-            iran: {
-                keywords: ['Iran Israel', 'Iranian', 'Tehran', 'nuclear', 'IRGC'],
-                escalation: ['strike', 'attack', 'military action', 'retaliate', 'sanctions', 'nuclear facility', 'enrichment', 'weapons']
-            },
-            houthis: {
-                keywords: ['Houthis', 'Yemen', 'Ansar Allah', 'Red Sea'],
-                escalation: ['strike', 'attack', 'military action', 'shipping', 'missile', 'drone', 'blockade']
-            }
-        };
-
         async function scanData() {
             const button = document.querySelector('.scan-button');
             const loading = document.getElementById('loadingIndicator');
@@ -482,16 +466,13 @@
             
             // Get selected time window
             const timeWindow = parseInt(document.querySelector('input[name="timeWindow"]:checked').value);
-            const fromDate = new Date();
-            fromDate.setDate(fromDate.getDate() - timeWindow);
-            const fromDateStr = fromDate.toISOString().split('T')[0];
             
             try {
                 // Scan each target
                 await Promise.all([
-                    scanTarget('hezbollah', fromDateStr),
-                    scanTarget('iran', fromDateStr),
-                    scanTarget('houthis', fromDateStr)
+                    scanTarget('hezbollah', timeWindow),
+                    scanTarget('iran', timeWindow),
+                    scanTarget('houthis', timeWindow)
                 ]);
                 
                 // Update timestamp
@@ -508,7 +489,7 @@
                     
             } catch (error) {
                 console.error('Scan error:', error);
-                errorMessage.textContent = 'Error scanning news sources. Please try again. ' + error.message;
+                errorMessage.textContent = 'Error scanning news sources. Please check that backend is running. Error: ' + error.message;
                 errorMessage.classList.add('show');
             } finally {
                 // Reset UI
@@ -519,23 +500,24 @@
             }
         }
         
-        async function scanTarget(targetName, fromDate) {
-            const target = TARGETS[targetName];
-            const query = target.keywords.join(' OR ');
-            
-            // Fetch news from NewsAPI
-            const url = `https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&from=${fromDate}&sortBy=publishedAt&language=en&pageSize=20&apiKey=${API_KEY}`;
+        async function scanTarget(targetName, days) {
+            // Call Flask backend instead of NewsAPI directly
+            const url = `${BACKEND_URL}/scan?target=${targetName}&days=${days}`;
             
             const response = await fetch(url);
             const data = await response.json();
             
-            if (data.status !== 'ok') {
-                throw new Error(`NewsAPI error: ${data.message || 'Unknown error'}`);
+            if (data.error) {
+                throw new Error(`Backend error: ${data.error}`);
             }
             
-            // Analyze articles
+            // Get the articles and configuration from backend
             const articles = data.articles || [];
-            const score = calculateThreatScore(articles, target);
+            const escalationKeywords = data.escalation_keywords || [];
+            const targetKeywords = data.target_keywords || [];
+            
+            // Calculate threat score
+            const score = calculateThreatScore(articles, escalationKeywords, targetKeywords);
             const probability = Math.min(Math.round(score.probability), 99);
             const timeline = determineTimeline(probability);
             
@@ -545,7 +527,7 @@
             displayHeadlines(targetName, articles.slice(0, 5));
         }
         
-        function calculateThreatScore(articles, target) {
+        function calculateThreatScore(articles, escalationKeywords, targetKeywords) {
             if (articles.length === 0) {
                 return { probability: 15, escalationCount: 0 };
             }
@@ -557,14 +539,14 @@
                 const text = (article.title + ' ' + (article.description || '')).toLowerCase();
                 
                 // Count escalation keywords
-                target.escalation.forEach(keyword => {
+                escalationKeywords.forEach(keyword => {
                     if (text.includes(keyword.toLowerCase())) {
                         escalationCount++;
                     }
                 });
                 
                 // Count target mentions
-                target.keywords.forEach(keyword => {
+                targetKeywords.forEach(keyword => {
                     if (text.toLowerCase().includes(keyword.toLowerCase())) {
                         totalMentions++;
                     }
