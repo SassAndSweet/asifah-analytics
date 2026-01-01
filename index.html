@@ -536,19 +536,19 @@
             const escalationKeywords = data.escalation_keywords || [];
             const targetKeywords = data.target_keywords || [];
 
-            const score = calculateThreatScore(
-                articles,
-                escalationKeywords,
-                targetKeywords,
-                days
-            );
+const score = calculateThreatScore(
+    articles,
+    escalationKeywords,
+    targetKeywords,
+    days
+);
 
-            const probability = Math.min(Math.round(score.probability), 99);
-            const timeline = determineTimeline(probability);
+const probability = Math.min(Math.round(score.probability), 99);
+const timeline = determineTimeline(probability);
 
-            updateProbability(targetName, probability);
-            updateTimeline(targetName, timeline);
-            displayHeadlines(targetName, articles.slice(0, 5));
+updateProbability(targetName, probability);
+updateTimeline(targetName, timeline);
+displayHeadlines(targetName, score.actionableArticles.slice(0, 5)); // ← Changed!
         }
 
         function calculateThreatScore(articles, escalationKeywords, targetKeywords, days) {
