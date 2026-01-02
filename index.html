@@ -878,9 +878,9 @@
                 noActionable: "No actionable headlines found (no threat indicators detected)",
                 actionableOnly: "Recent Headlines (Actionable Intelligence Only):",
                 dataSourcesLabel: "Data Sources:",
-                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets",
+                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources.",
                 methodologyLabel: "Methodology:",
-                methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments",
+                methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
                 lastUpdatedLabel: "Last Updated:",
                 notYetScanned: "Not yet scanned",
                 disclaimerTitle: "DISCLAIMER:",
@@ -920,9 +920,9 @@
                 noActionable: "לא נמצאו כותרות פעילות (לא זוהו אינדיקטורים לאיום)",
                 actionableOnly: "כותרות אחרונות (מודיעין פעיל בלבד):",
                 dataSourcesLabel: "מקורות נתונים:",
-                dataSourcesText: "NewsAPI.org מצבירים רויטרס, AP, אל ג'זירה, טיימס אוף ישראל, הארץ, וכלי תקשורת מרכזיים אחרים",
+                dataSourcesText: "NewsAPI.org מצבירים רויטרס, AP, אל ג'זירה, טיימס אוף ישראל, הארץ, וכלי תקשורת מרכזיים אחרים. GDELT עבור מקורות בעברית, ערבית ופרסית.",
                 methodologyLabel: "מתודולוגיה:",
-                methodologyText: "ניתוח מבוסס מילות מפתח עם אינדיקטורי הסלמה כולל מונחי פעולה צבאית, שפה דיפלומטית והערכות איום",
+                methodologyText: "ניתוח מבוסס מילות מפתח עם אינדיקטורי הסלמה כולל מונחי פעולה צבאית, שפה דיפלומטית והערכות איום במספר שפות",
                 lastUpdatedLabel: "עדכון אחרון:",
                 notYetScanned: "טרם נסרק",
                 disclaimerTitle: "הצהרה:",
@@ -962,9 +962,9 @@
                 noActionable: "لم يتم العثور على عناوين قابلة للتنفيذ (لم يتم اكتشاف مؤشرات التهديد)",
                 actionableOnly: "العناوين الأخيرة (معلومات استخباراتية قابلة للتنفيذ فقط):",
                 dataSourcesLabel: "مصادر البيانات:",
-                dataSourcesText: "NewsAPI.org يجمع من رويترز، AP، الجزيرة، تايمز أوف إسرائيل، هآرتس، ووسائل إعلام رئيسية أخرى",
+                dataSourcesText: "NewsAPI.org يجمع من رويترز، AP، الجزيرة، تايمز أوف إسرائيل، هآرتس، ووسائل إعلام رئيسية أخرى. GDELT لمصادر عربية وعبرية وفارسية.",
                 methodologyLabel: "المنهجية:",
-                methodologyText: "تحليل قائم على الكلمات المفتاحية مع مؤشرات التصعيد بما في ذلك مصطلحات العمل العسكري واللغة الدبلوماسية وتقييمات التهديد",
+                methodologyText: "تحليل قائم على الكلمات المفتاحية مع مؤشرات التصعيد بما في ذلك مصطلحات العمل العسكري واللغة الدبلوماسية وتقييمات التهديد بلغات متعددة",
                 lastUpdatedLabel: "آخر تحديث:",
                 notYetScanned: "لم يتم المسح بعد",
                 disclaimerTitle: "إخلاء المسؤولية:",
@@ -1210,6 +1210,8 @@
 
             updateProbability(targetName, probability, isCached);
             updateTimeline(targetName, timeline, probability);
+            
+            // FIXED: Pass the full data object instead of just actionable articles
             displayHeadlines(targetName, data);
         }
 
@@ -1379,126 +1381,78 @@
             }
         }
 
-// ASIFAH ANALYTICS - FRONTEND FIX FOR MULTILINGUAL HEADLINES
-// Replace the scanTarget and displayHeadlines functions in your index.html with these versions
+        // FIXED displayHeadlines function - shows separate sections for each language
+        function displayHeadlines(targetId, data) {
+            const container = document.getElementById(`${targetId}-headlines`);
+            const t = translations[currentLanguage];
 
-// FIXED scanTarget function - passes full data object to displayHeadlines
-async function scanTarget(targetName, days) {
-    const url = `${BACKEND_URL}/scan?target=${targetName}&days=${days}`;
+            if (!data) {
+                container.innerHTML =
+                    `<h4>${t.recentHeadlines}</h4>` +
+                    `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
+                return;
+            }
 
-    const response = await fetch(url);
+            // Get articles by language from the backend response
+            const articles_en = data.articles_en || [];
+            const articles_he = data.articles_he || [];
+            const articles_ar = data.articles_ar || [];
+            const articles_fa = data.articles_fa || [];
 
-    if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
-    }
+            const totalArticles = articles_en.length + articles_he.length + articles_ar.length + articles_fa.length;
 
-    const data = await response.json();
+            if (totalArticles === 0) {
+                container.innerHTML =
+                    `<h4>${t.recentHeadlines}</h4>` +
+                    `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
+                return;
+            }
 
-    if (data.error) {
-        throw new Error(`${data.error}: ${data.message || ''}`);
-    }
+            let html = `<h4>${t.recentHeadlines}</h4>`;
 
-    if (data.rate_limit) {
-        updateRateLimitDisplay(data.rate_limit);
-    }
+            // Helper function to render a section of articles
+            function renderArticleSection(articles, sectionTitle, directionRTL = false) {
+                if (articles.length === 0) return '';
+                
+                let sectionHtml = `<div style="margin-bottom: 20px;">`;
+                sectionHtml += `<h5 style="font-size: 13px; color: #1e3a5f; margin-bottom: 10px; font-weight: bold;">${sectionTitle} (${articles.length})</h5>`;
+                
+                // Show up to 5 headlines per language
+                articles.slice(0, 5).forEach(article => {
+                    const date = article.publishedAt
+                        ? new Date(article.publishedAt).toLocaleDateString()
+                        : 'Unknown date';
+                    const sourceName = article.source && article.source.name
+                        ? article.source.name
+                        : 'Unknown source';
 
-    const isCached = data.cached === true;
-    
-    const articles = data.articles || [];
-    const escalationKeywords = data.escalation_keywords || [];
-    const targetKeywords = data.target_keywords || [];
+                    const dirAttr = directionRTL ? 'dir="rtl"' : '';
+                    
+                    sectionHtml += `
+                        <div class="headline-item" ${dirAttr}>
+                            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                                ${article.title || 'Untitled article'}
+                            </a>
+                            <div class="source">${sourceName} - ${date}</div>
+                        </div>
+                    `;
+                });
+                
+                sectionHtml += `</div>`;
+                return sectionHtml;
+            }
 
-    const score = calculateThreatScore(
-        articles,
-        escalationKeywords,
-        targetKeywords,
-        days
-    );
-
-    const probability = Math.min(Math.round(score.probability), 99);
-    const timeline = determineTimeline(probability);
-
-    updateProbability(targetName, probability, isCached);
-    updateTimeline(targetName, timeline, probability);
-    
-    // CHANGED: Pass the full data object instead of just actionable articles
-    displayHeadlines(targetName, data);
-}
-
-// FIXED displayHeadlines function - shows separate sections for each language
-function displayHeadlines(targetId, data) {
-    const container = document.getElementById(`${targetId}-headlines`);
-    const t = translations[currentLanguage];
-
-    if (!data) {
-        container.innerHTML =
-            `<h4>${t.recentHeadlines}</h4>` +
-            `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
-        return;
-    }
-
-    // Get articles by language from the backend response
-    const articles_en = data.articles_en || [];
-    const articles_he = data.articles_he || [];
-    const articles_ar = data.articles_ar || [];
-    const articles_fa = data.articles_fa || [];
-
-    const totalArticles = articles_en.length + articles_he.length + articles_ar.length + articles_fa.length;
-
-    if (totalArticles === 0) {
-        container.innerHTML =
-            `<h4>${t.recentHeadlines}</h4>` +
-            `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
-        return;
-    }
-
-    let html = `<h4>${t.recentHeadlines}</h4>`;
-
-    // Helper function to render a section of articles
-    function renderArticleSection(articles, sectionTitle, directionRTL = false) {
-        if (articles.length === 0) return '';
-        
-        let sectionHtml = `<div style="margin-bottom: 20px;">`;
-        sectionHtml += `<h5 style="font-size: 13px; color: #1e3a5f; margin-bottom: 10px; font-weight: bold;">${sectionTitle} (${articles.length})</h5>`;
-        
-        // Show up to 5 headlines per language
-        articles.slice(0, 5).forEach(article => {
-            const date = article.publishedAt
-                ? new Date(article.publishedAt).toLocaleDateString()
-                : 'Unknown date';
-            const sourceName = article.source && article.source.name
-                ? article.source.name
-                : 'Unknown source';
-
-            const dirAttr = directionRTL ? 'dir="rtl"' : '';
+            // Display order: English → Hebrew → Arabic → Farsi (if exists)
+            html += renderArticleSection(articles_en, '📰 English Sources', false);
+            html += renderArticleSection(articles_he, '📰 מקורות עבריים', true);
+            html += renderArticleSection(articles_ar, '📰 مصادر عربية', true);
             
-            sectionHtml += `
-                <div class="headline-item" ${dirAttr}>
-                    <a href="${article.url}" target="_blank" rel="noopener noreferrer">
-                        ${article.title || 'Untitled article'}
-                    </a>
-                    <div class="source">${sourceName} - ${date}</div>
-                </div>
-            `;
-        });
-        
-        sectionHtml += `</div>`;
-        return sectionHtml;
-    }
+            // Only show Farsi section if there are Farsi articles
+            if (articles_fa.length > 0) {
+                html += renderArticleSection(articles_fa, '📰 منابع فارسی', true);
+            }
 
-    // Display order: English → Hebrew → Arabic → Farsi (if exists)
-    html += renderArticleSection(articles_en, '📰 English Sources', false);
-    html += renderArticleSection(articles_he, '📰 מקורות עבריים', true);
-    html += renderArticleSection(articles_ar, '📰 مصادر عربية', true);
-    
-    // Only show Farsi section if there are Farsi articles
-    if (articles_fa.length > 0) {
-        html += renderArticleSection(articles_fa, '📰 منابع فارسی', true);
-    }
-
-    container.innerHTML = html;
-}
+            container.innerHTML = html;
         }
     </script>
 </body>
