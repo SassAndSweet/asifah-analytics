@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,11 @@
             color: #2c3e50;
             line-height: 1.6;
             padding: 20px;
+            transition: direction 0.3s ease;
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
         }
 
         .container {
@@ -32,6 +37,7 @@
             border-radius: 12px;
             margin-bottom: 30px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
         }
 
         h1 {
@@ -51,6 +57,48 @@
             font-weight: normal;
             opacity: 0.95;
             letter-spacing: 0.5px;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        [dir="rtl"] .language-switcher {
+            right: auto;
+            left: 35px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3a5f;
+            border-color: white;
         }
 
         /* Rate Limit Display */
@@ -157,6 +205,11 @@
             transition: color 0.2s ease;
         }
 
+        [dir="rtl"] .time-window label {
+            margin-right: 0;
+            margin-left: 25px;
+        }
+
         .time-window label:hover {
             color: #1e3a5f;
         }
@@ -164,6 +217,11 @@
         .time-window input[type="radio"] {
             margin-right: 6px;
             cursor: pointer;
+        }
+
+        [dir="rtl"] .time-window input[type="radio"] {
+            margin-right: 0;
+            margin-left: 6px;
         }
 
         .scan-button {
@@ -241,6 +299,11 @@
             vertical-align: middle;
         }
 
+        [dir="rtl"] .loading-spinner {
+            margin-right: 0;
+            margin-left: 12px;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
@@ -304,11 +367,6 @@
             border-bottom: 3px solid #1e3a5f;
             padding-bottom: 12px;
             letter-spacing: 1px;
-        }
-
-        .target-card h3 .flag {
-            margin-right: 8px;
-            font-size: 24px;
         }
 
         /* Circular Gauge Styles */
@@ -421,6 +479,10 @@
             margin-top: 8px;
         }
 
+        [dir="rtl"] .timeline-bar {
+            flex-direction: row-reverse;
+        }
+
         .timeline-segment {
             flex: 1;
             display: flex;
@@ -433,8 +495,14 @@
             transition: all 0.3s ease;
         }
 
+        [dir="rtl"] .timeline-segment {
+            border-right: none;
+            border-left: 2px solid white;
+        }
+
         .timeline-segment:last-child {
             border-right: none;
+            border-left: none;
         }
 
         .timeline-segment.active {
@@ -488,10 +556,21 @@
             transition: all 0.2s ease;
         }
 
+        [dir="rtl"] .headline-item {
+            border-left: none;
+            border-right: 4px solid #1e3a5f;
+        }
+
         .headline-item:hover {
             background-color: #e8f4f8;
             border-left-width: 6px;
             transform: translateX(4px);
+        }
+
+        [dir="rtl"] .headline-item:hover {
+            border-left-width: 0;
+            border-right-width: 6px;
+            transform: translateX(-4px);
         }
 
         .headline-item .source {
@@ -518,6 +597,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border: 2px solid #e1e8ed;
+            font-size: 12px;
         }
 
         .footer-content {
@@ -580,47 +660,59 @@
             h1 {
                 font-size: 24px;
             }
+            .language-switcher {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ASIFAH ANALYTICS</h1>
-            <h2>Israeli Military Action Forecasting Dashboard</h2>
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he')">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar')">ع</button>
+            </div>
+            <h1 data-i18n="header"></h1>
+            <h2 data-i18n="subtitle"></h2>
         </header>
 
         <!-- Rate Limit Display -->
         <div class="rate-limit-box" id="rateLimitBox">
             <div class="rate-limit-item">
-                <div class="rate-limit-label">Requests Used</div>
+                <div class="rate-limit-label" data-i18n="requestsUsedLabel"></div>
                 <div class="rate-limit-value" id="requestsUsed">--</div>
             </div>
             <div class="rate-limit-item">
-                <div class="rate-limit-label">Requests Remaining</div>
+                <div class="rate-limit-label" data-i18n="requestsRemainingLabel"></div>
                 <div class="rate-limit-value success" id="requestsRemaining">--</div>
             </div>
             <div class="rate-limit-item">
-                <div class="rate-limit-label">Daily Limit</div>
+                <div class="rate-limit-label" data-i18n="dailyLimitLabel"></div>
                 <div class="rate-limit-value" id="requestsLimit">100</div>
             </div>
             <div class="rate-limit-item">
-                <div class="rate-limit-label">Quota Resets In</div>
+                <div class="rate-limit-label" data-i18n="resetsInLabel"></div>
                 <div class="rate-limit-value" id="resetCountdown">--</div>
             </div>
         </div>
 
         <div class="controls">
-            <h3>Data Collection Parameters</h3>
+            <h3 data-i18n="dataCollectionParams"></h3>
             <div class="time-window">
-                <label><input type="radio" name="timeWindow" value="1"> 24 Hours</label>
-                <label><input type="radio" name="timeWindow" value="2"> 48 Hours</label>
-                <label><input type="radio" name="timeWindow" value="7" checked> 7 Days</label>
-                <label><input type="radio" name="timeWindow" value="30"> 30 Days</label>
+                <label><input type="radio" name="timeWindow" value="1"> <span data-i18n="hours24"></span></label>
+                <label><input type="radio" name="timeWindow" value="2"> <span data-i18n="hours48"></span></label>
+                <label><input type="radio" name="timeWindow" value="7" checked> <span data-i18n="days7"></span></label>
+                <label><input type="radio" name="timeWindow" value="30"> <span data-i18n="days30"></span></label>
             </div>
-            <button class="scan-button" id="scanButton" onclick="scanData()">SCAN OSINT SOURCES</button>
+            <button class="scan-button" id="scanButton" onclick="scanData()">
+                <span data-i18n="scanButton"></span>
+            </button>
             <p class="controls-note">
-                Change the time window above, then click "Scan OSINT Sources" to refresh the forecast.
+                <span data-i18n="controlsNote"></span>
                 <span id="cacheNote"></span>
             </p>
         </div>
@@ -629,15 +721,15 @@
 
         <div class="loading" id="loadingIndicator">
             <div class="loading-spinner"></div>
-            Scanning open-source intelligence feeds...
+            <span data-i18n="loadingText"></span>
         </div>
 
         <div class="dashboard" id="dashboard">
             <!-- Hizballah Card -->
             <div class="target-card" id="hezbollah-card">
-                <h3>HIZBALLAH</h3>
+                <h3 data-i18n="targetHezbollah"></h3>
                 <div class="probability-display">
-                    <div class="probability-label">Strike Probability</div>
+                    <div class="probability-label" data-i18n="strikeProbability"></div>
                     <div class="gauge-container">
                         <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
                             <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
@@ -648,26 +740,26 @@
                     </div>
                 </div>
                 <div class="timeline-display">
-                    <div class="timeline-label">Projected Timeline</div>
-                    <div class="timeline-value" id="hezbollah-timeline">Awaiting scan...</div>
+                    <div class="timeline-label" data-i18n="projectedTimeline"></div>
+                    <div class="timeline-value" id="hezbollah-timeline" data-i18n="awaitingScan"></div>
                     <div class="timeline-bar" id="hezbollah-bar">
-                        <div class="timeline-segment">0-30d</div>
-                        <div class="timeline-segment">31-90d</div>
-                        <div class="timeline-segment">91-180d</div>
-                        <div class="timeline-segment">180+d</div>
+                        <div class="timeline-segment"><span data-i18n="days030"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus"></span></div>
                     </div>
                 </div>
                 <div class="headlines-section" id="hezbollah-headlines">
-                    <h4>Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
+                    <h4 data-i18n="recentHeadlines"></h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan"></p>
                 </div>
             </div>
 
             <!-- Iran Card -->
             <div class="target-card" id="iran-card">
-                <h3>IRAN</h3>
+                <h3 data-i18n="targetIran"></h3>
                 <div class="probability-display">
-                    <div class="probability-label">Strike Probability</div>
+                    <div class="probability-label" data-i18n="strikeProbability"></div>
                     <div class="gauge-container">
                         <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
                             <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
@@ -678,26 +770,26 @@
                     </div>
                 </div>
                 <div class="timeline-display">
-                    <div class="timeline-label">Projected Timeline</div>
-                    <div class="timeline-value" id="iran-timeline">Awaiting scan...</div>
+                    <div class="timeline-label" data-i18n="projectedTimeline"></div>
+                    <div class="timeline-value" id="iran-timeline" data-i18n="awaitingScan"></div>
                     <div class="timeline-bar" id="iran-bar">
-                        <div class="timeline-segment">0-30d</div>
-                        <div class="timeline-segment">31-90d</div>
-                        <div class="timeline-segment">91-180d</div>
-                        <div class="timeline-segment">180+d</div>
+                        <div class="timeline-segment"><span data-i18n="days030"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus"></span></div>
                     </div>
                 </div>
                 <div class="headlines-section" id="iran-headlines">
-                    <h4>Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
+                    <h4 data-i18n="recentHeadlines"></h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan"></p>
                 </div>
             </div>
 
             <!-- Houthis Card -->
             <div class="target-card" id="houthis-card">
-                <h3>HOUTHIS (YEMEN)</h3>
+                <h3 data-i18n="targetHouthis"></h3>
                 <div class="probability-display">
-                    <div class="probability-label">Strike Probability</div>
+                    <div class="probability-label" data-i18n="strikeProbability"></div>
                     <div class="gauge-container">
                         <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
                             <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
@@ -708,18 +800,18 @@
                     </div>
                 </div>
                 <div class="timeline-display">
-                    <div class="timeline-label">Projected Timeline</div>
-                    <div class="timeline-value" id="houthis-timeline">Awaiting scan...</div>
+                    <div class="timeline-label" data-i18n="projectedTimeline"></div>
+                    <div class="timeline-value" id="houthis-timeline" data-i18n="awaitingScan"></div>
                     <div class="timeline-bar" id="houthis-bar">
-                        <div class="timeline-segment">0-30d</div>
-                        <div class="timeline-segment">31-90d</div>
-                        <div class="timeline-segment">91-180d</div>
-                        <div class="timeline-segment">180+d</div>
+                        <div class="timeline-segment"><span data-i18n="days030"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180"></span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus"></span></div>
                     </div>
                 </div>
                 <div class="headlines-section" id="houthis-headlines">
-                    <h4>Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
+                    <h4 data-i18n="recentHeadlines"></h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan"></p>
                 </div>
             </div>
         </div>
@@ -727,21 +819,21 @@
         <footer>
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Data Sources:</h4>
-                    NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets
+                    <h4 data-i18n="dataSourcesLabel"></h4>
+                    <span data-i18n="dataSourcesText"></span>
                 </div>
                 <div class="footer-section">
-                    <h4>Methodology:</h4>
-                    Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments
+                    <h4 data-i18n="methodologyLabel"></h4>
+                    <span data-i18n="methodologyText"></span>
                 </div>
                 <div class="footer-section">
-                    <h4 id="lastUpdated">Last Updated:</h4>
-                    Not yet scanned
+                    <h4 data-i18n="lastUpdatedLabel"></h4>
+                    <span id="lastUpdatedValue" data-i18n="notYetScanned"></span>
                 </div>
             </div>
             <div class="disclaimer">
-                <strong>DISCLAIMER:</strong>
-                This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.
+                <strong data-i18n="disclaimerTitle"></strong>
+                <span data-i18n="disclaimerText"></span>
             </div>
         </footer>
     </div>
@@ -754,8 +846,186 @@
     <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
         
+        // Translation Dictionaries
+        const translations = {
+            en: {
+                header: "ASIFAH ANALYTICS",
+                subtitle: "Israeli Military Action Forecasting Dashboard",
+                requestsUsedLabel: "Requests Used",
+                requestsRemainingLabel: "Requests Remaining",
+                dailyLimitLabel: "Daily Limit",
+                resetsInLabel: "Quota Resets In",
+                dataCollectionParams: "Data Collection Parameters",
+                hours24: "24 Hours",
+                hours48: "48 Hours",
+                days7: "7 Days",
+                days30: "30 Days",
+                scanButton: "SCAN OSINT SOURCES",
+                controlsNote: "Change the time window above, then click \"Scan OSINT Sources\" to refresh the forecast.",
+                loadingText: "Scanning open-source intelligence feeds...",
+                targetHezbollah: "HIZBALLAH",
+                targetIran: "IRAN",
+                targetHouthis: "HOUTHIS (YEMEN)",
+                strikeProbability: "Strike Probability",
+                projectedTimeline: "Projected Timeline",
+                awaitingScan: "Awaiting scan...",
+                days030: "0-30d",
+                days3190: "31-90d",
+                days91180: "91-180d",
+                days180plus: "180+d",
+                recentHeadlines: "Recent Headlines:",
+                clickToScan: "Click scan to load latest intelligence",
+                noActionable: "No actionable headlines found (no threat indicators detected)",
+                actionableOnly: "Recent Headlines (Actionable Intelligence Only):",
+                dataSourcesLabel: "Data Sources:",
+                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets",
+                methodologyLabel: "Methodology:",
+                methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments",
+                lastUpdatedLabel: "Last Updated:",
+                notYetScanned: "Not yet scanned",
+                disclaimerTitle: "DISCLAIMER:",
+                disclaimerText: "This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.",
+                timeline180plus: "180+ Days (Low priority)",
+                timeline91180: "91-180 Days",
+                timeline3190: "31-90 Days",
+                timeline030: "0-30 Days (Elevated threat)"
+            },
+            he: {
+                header: "אסיפה אנליטיקס",
+                subtitle: "לוח מחוונים לחיזוי פעולה צבאית ישראלית",
+                requestsUsedLabel: "בקשות שנוצלו",
+                requestsRemainingLabel: "בקשות שנותרו",
+                dailyLimitLabel: "מגבלה יומית",
+                resetsInLabel: "איפוס בעוד",
+                dataCollectionParams: "פרמטרי איסוף נתונים",
+                hours24: "24 שעות",
+                hours48: "48 שעות",
+                days7: "7 ימים",
+                days30: "30 ימים",
+                scanButton: "סריקת מקורות OSINT",
+                controlsNote: "שנה את חלון הזמן למעלה ולחץ על \"סריקת מקורות OSINT\" כדי לרענן את התחזית.",
+                loadingText: "סורק מקורות מודיעין פתוחים...",
+                targetHezbollah: "חיזבאללה",
+                targetIran: "איראן",
+                targetHouthis: "חות'ים (תימן)",
+                strikeProbability: "הסתברות תקיפה",
+                projectedTimeline: "ציר זמן חזוי",
+                awaitingScan: "ממתין לסריקה...",
+                days030: "0-30 י׳",
+                days3190: "31-90 י׳",
+                days91180: "91-180 י׳",
+                days180plus: "180+ י׳",
+                recentHeadlines: "כותרות אחרונות:",
+                clickToScan: "לחץ על סריקה כדי לטעון מודיעין עדכני",
+                noActionable: "לא נמצאו כותרות פעילות (לא זוהו אינדיקטורים לאיום)",
+                actionableOnly: "כותרות אחרונות (מודיעין פעיל בלבד):",
+                dataSourcesLabel: "מקורות נתונים:",
+                dataSourcesText: "NewsAPI.org מצבירים רויטרס, AP, אל ג'זירה, טיימס אוף ישראל, הארץ, וכלי תקשורת מרכזיים אחרים",
+                methodologyLabel: "מתודולוגיה:",
+                methodologyText: "ניתוח מבוסס מילות מפתח עם אינדיקטורי הסלמה כולל מונחי פעולה צבאית, שפה דיפלומטית והערכות איום",
+                lastUpdatedLabel: "עדכון אחרון:",
+                notYetScanned: "טרם נסרק",
+                disclaimerTitle: "הצהרה:",
+                disclaimerText: "לוח מחוונים זה הוא כלי אנליטי למטרות חינוכיות ומחקר בלבד. ההסתברויות מבוססות על צבירת חדשות ממקורות פתוחים וניתוח מילות מפתח פשוט. כלי זה אינו מייצג הערכות ממשלתיות רשמיות של ארה\"ב או עמדות מדיניות. משתמשים צריכים להתייעץ עם מקורות מודיעין רשמיים לקבלת החלטות מבצעיות.",
+                timeline180plus: "180+ ימים (עדיפות נמוכה)",
+                timeline91180: "91-180 ימים",
+                timeline3190: "31-90 ימים",
+                timeline030: "0-30 ימים (איום מוגבר)"
+            },
+            ar: {
+                header: "عاصفة أناليتكس",
+                subtitle: "لوحة التحكم للتنبؤ بالعمل العسكري الإسرائيلي",
+                requestsUsedLabel: "الطلبات المستخدمة",
+                requestsRemainingLabel: "الطلبات المتبقية",
+                dailyLimitLabel: "الحد اليومي",
+                resetsInLabel: "إعادة التعيين خلال",
+                dataCollectionParams: "معلمات جمع البيانات",
+                hours24: "24 ساعة",
+                hours48: "48 ساعة",
+                days7: "7 أيام",
+                days30: "30 يوماً",
+                scanButton: "مسح مصادر OSINT",
+                controlsNote: "قم بتغيير النافذة الزمنية أعلاه، ثم انقر على \"مسح مصادر OSINT\" لتحديث التوقعات.",
+                loadingText: "جارٍ مسح مصادر المعلومات المفتوحة...",
+                targetHezbollah: "حزب الله",
+                targetIran: "إيران",
+                targetHouthis: "الحوثيون (اليمن)",
+                strikeProbability: "احتمالية الضربة",
+                projectedTimeline: "الجدول الزمني المتوقع",
+                awaitingScan: "في انتظار المسح...",
+                days030: "0-30 ي",
+                days3190: "31-90 ي",
+                days91180: "91-180 ي",
+                days180plus: "180+ ي",
+                recentHeadlines: "العناوين الأخيرة:",
+                clickToScan: "انقر على المسح لتحميل آخر المعلومات الاستخباراتية",
+                noActionable: "لم يتم العثور على عناوين قابلة للتنفيذ (لم يتم اكتشاف مؤشرات التهديد)",
+                actionableOnly: "العناوين الأخيرة (معلومات استخباراتية قابلة للتنفيذ فقط):",
+                dataSourcesLabel: "مصادر البيانات:",
+                dataSourcesText: "NewsAPI.org يجمع من رويترز، AP، الجزيرة، تايمز أوف إسرائيل، هآرتس، ووسائل إعلام رئيسية أخرى",
+                methodologyLabel: "المنهجية:",
+                methodologyText: "تحليل قائم على الكلمات المفتاحية مع مؤشرات التصعيد بما في ذلك مصطلحات العمل العسكري واللغة الدبلوماسية وتقييمات التهديد",
+                lastUpdatedLabel: "آخر تحديث:",
+                notYetScanned: "لم يتم المسح بعد",
+                disclaimerTitle: "إخلاء المسؤولية:",
+                disclaimerText: "لوحة التحكم هذه هي أداة تحليلية للأغراض التعليمية والبحثية فقط. الاحتماليات تستند إلى تجميع الأخبار من مصادر مفتوحة وتحليل الكلمات المفتاحية البسيط. هذه الأداة لا تمثل التقييمات الحكومية الرسمية للولايات المتحدة أو المواقف السياسية. يجب على المستخدمين استشارة مصادر استخباراتية رسمية لاتخاذ القرارات التشغيلية.",
+                timeline180plus: "180+ أيام (أولوية منخفضة)",
+                timeline91180: "91-180 أيام",
+                timeline3190: "31-90 أيام",
+                timeline030: "0-30 أيام (تهديد متصاعد)"
+            }
+        };
+
+        let currentLanguage = 'en';
         let globalRateLimit = null;
         let resetCountdownInterval = null;
+
+        // Initialize language from localStorage
+        function initLanguage() {
+            const saved = localStorage.getItem('asifah-language');
+            if (saved && translations[saved]) {
+                currentLanguage = saved;
+                applyLanguage(saved);
+            }
+        }
+
+        function switchLanguage(lang) {
+            if (!translations[lang]) return;
+            
+            currentLanguage = lang;
+            localStorage.setItem('asifah-language', lang);
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            applyLanguage(lang);
+        }
+
+        function applyLanguage(lang) {
+            const t = translations[lang];
+            
+            // Update HTML lang and dir attributes
+            document.documentElement.setAttribute('lang', lang);
+            document.documentElement.setAttribute('dir', lang === 'he' || lang === 'ar' ? 'rtl' : 'ltr');
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    if (element.tagName === 'INPUT') {
+                        element.value = t[key];
+                    } else {
+                        element.textContent = t[key];
+                    }
+                }
+            });
+            
+            // Update title
+            document.title = t.header + ' - ' + t.subtitle;
+        }
 
         function updateRateLimitDisplay(rateLimit) {
             if (!rateLimit) return;
@@ -833,6 +1103,7 @@
             }
         }
         
+        initLanguage();
         fetchRateLimitStatus();
 
         async function scanData() {
@@ -868,19 +1139,16 @@
                 ]);
 
                 const now = new Date();
-                const lastUpdatedEl = document.getElementById('lastUpdated');
-                if (lastUpdatedEl) {
-                    const formatted = now.toLocaleString('en-US', {
+                const t = translations[currentLanguage];
+                document.getElementById('lastUpdatedValue').textContent =
+                    now.toLocaleString('en-US', {
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric',
                         hour: '2-digit',
                         minute: '2-digit',
                         timeZoneName: 'short'
-                    });
-                    lastUpdatedEl.textContent =
-                        'Last Updated: ' + formatted + ` (last ${timeWindow} day(s))`;
-                }
+                    }) + ` (last ${timeWindow} day(s))`;
             } catch (error) {
                 console.error('Scan error:', error);
                 
@@ -1057,10 +1325,11 @@
         }
 
         function determineTimeline(probability) {
-            if (probability < 30) return "180+ Days (Low priority)";
-            if (probability < 50) return "91-180 Days";
-            if (probability < 70) return "31-90 Days";
-            return "0-30 Days (Elevated threat)";
+            const t = translations[currentLanguage];
+            if (probability < 30) return t.timeline180plus;
+            if (probability < 50) return t.timeline91180;
+            if (probability < 70) return t.timeline3190;
+            return t.timeline030;
         }
 
         function updateProbability(targetId, probability, isCached) {
@@ -1068,10 +1337,8 @@
             const textElement = document.getElementById(`${targetId}-prob`);
             const cardElement = document.getElementById(`${targetId}-card`);
             
-            // Update text
             textElement.textContent = `${probability}%`;
             
-            // Determine threat level
             let threatClass = 'medium';
             if (probability < 34) {
                 threatClass = 'low';
@@ -1079,18 +1346,15 @@
                 threatClass = 'high';
             }
             
-            // Update gauge colors
             gaugeElement.classList.remove('low', 'medium', 'high');
             gaugeElement.classList.add(threatClass);
             
             textElement.classList.remove('low', 'medium', 'high');
             textElement.classList.add(threatClass);
             
-            // Update card background
             cardElement.classList.remove('low-threat', 'medium-threat', 'high-threat');
             cardElement.classList.add(`${threatClass}-threat`);
             
-            // Animate gauge (circle circumference = 2 * π * r = 2 * π * 85 ≈ 534)
             const circumference = 534;
             const progress = (probability / 100) * circumference;
             gaugeElement.setAttribute('stroke-dasharray', `${progress} ${circumference}`);
@@ -1099,36 +1363,34 @@
         function updateTimeline(targetId, timeline, probability) {
             document.getElementById(`${targetId}-timeline`).textContent = timeline;
             
-            // Update timeline bar
             const barElement = document.getElementById(`${targetId}-bar`);
             const segments = barElement.querySelectorAll('.timeline-segment');
             
-            // Remove all active classes
             segments.forEach(seg => seg.classList.remove('active'));
             
-            // Activate appropriate segment
             if (probability >= 70) {
-                segments[0].classList.add('active'); // 0-30 days
+                segments[0].classList.add('active');
             } else if (probability >= 50) {
-                segments[1].classList.add('active'); // 31-90 days
+                segments[1].classList.add('active');
             } else if (probability >= 30) {
-                segments[2].classList.add('active'); // 91-180 days
+                segments[2].classList.add('active');
             } else {
-                segments[3].classList.add('active'); // 180+ days
+                segments[3].classList.add('active');
             }
         }
 
         function displayHeadlines(targetId, articles) {
             const container = document.getElementById(`${targetId}-headlines`);
+            const t = translations[currentLanguage];
 
             if (!articles || articles.length === 0) {
                 container.innerHTML =
-                    '<h4>Recent Headlines:</h4>' +
-                    '<p style="color: #7f8c8d; font-style: italic;">No actionable headlines found (no threat indicators detected)</p>';
+                    `<h4>${t.recentHeadlines}</h4>` +
+                    `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
                 return;
             }
 
-            let html = '<h4>Recent Headlines (Actionable Intelligence Only):</h4>';
+            let html = `<h4>${t.actionableOnly}</h4>`;
             articles.forEach(article => {
                 const date = article.publishedAt
                     ? new Date(article.publishedAt).toLocaleDateString()
