@@ -1210,7 +1210,7 @@
 
             updateProbability(targetName, probability, isCached);
             updateTimeline(targetName, timeline, probability);
-            displayHeadlines(targetName, score.actionableArticles.slice(0, 5));
+            displayHeadlines(targetName, data);
         }
 
         function calculateThreatScore(articles, escalationKeywords, targetKeywords, days) {
@@ -1379,37 +1379,126 @@
             }
         }
 
-        function displayHeadlines(targetId, articles) {
-            const container = document.getElementById(`${targetId}-headlines`);
-            const t = translations[currentLanguage];
+// ASIFAH ANALYTICS - FRONTEND FIX FOR MULTILINGUAL HEADLINES
+// Replace the scanTarget and displayHeadlines functions in your index.html with these versions
 
-            if (!articles || articles.length === 0) {
-                container.innerHTML =
-                    `<h4>${t.recentHeadlines}</h4>` +
-                    `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
-                return;
-            }
+// FIXED scanTarget function - passes full data object to displayHeadlines
+async function scanTarget(targetName, days) {
+    const url = `${BACKEND_URL}/scan?target=${targetName}&days=${days}`;
 
-            let html = `<h4>${t.actionableOnly}</h4>`;
-            articles.forEach(article => {
-                const date = article.publishedAt
-                    ? new Date(article.publishedAt).toLocaleDateString()
-                    : 'Unknown date';
-                const sourceName = article.source && article.source.name
-                    ? article.source.name
-                    : 'Unknown source';
+    const response = await fetch(url);
 
-                html += `
-                    <div class="headline-item">
-                        <a href="${article.url}" target="_blank" rel="noopener noreferrer">
-                            ${article.title || 'Untitled article'}
-                        </a>
-                        <div class="source">${sourceName} - ${date}</div>
-                    </div>
-                `;
-            });
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
+    }
 
-            container.innerHTML = html;
+    const data = await response.json();
+
+    if (data.error) {
+        throw new Error(`${data.error}: ${data.message || ''}`);
+    }
+
+    if (data.rate_limit) {
+        updateRateLimitDisplay(data.rate_limit);
+    }
+
+    const isCached = data.cached === true;
+    
+    const articles = data.articles || [];
+    const escalationKeywords = data.escalation_keywords || [];
+    const targetKeywords = data.target_keywords || [];
+
+    const score = calculateThreatScore(
+        articles,
+        escalationKeywords,
+        targetKeywords,
+        days
+    );
+
+    const probability = Math.min(Math.round(score.probability), 99);
+    const timeline = determineTimeline(probability);
+
+    updateProbability(targetName, probability, isCached);
+    updateTimeline(targetName, timeline, probability);
+    
+    // CHANGED: Pass the full data object instead of just actionable articles
+    displayHeadlines(targetName, data);
+}
+
+// FIXED displayHeadlines function - shows separate sections for each language
+function displayHeadlines(targetId, data) {
+    const container = document.getElementById(`${targetId}-headlines`);
+    const t = translations[currentLanguage];
+
+    if (!data) {
+        container.innerHTML =
+            `<h4>${t.recentHeadlines}</h4>` +
+            `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
+        return;
+    }
+
+    // Get articles by language from the backend response
+    const articles_en = data.articles_en || [];
+    const articles_he = data.articles_he || [];
+    const articles_ar = data.articles_ar || [];
+    const articles_fa = data.articles_fa || [];
+
+    const totalArticles = articles_en.length + articles_he.length + articles_ar.length + articles_fa.length;
+
+    if (totalArticles === 0) {
+        container.innerHTML =
+            `<h4>${t.recentHeadlines}</h4>` +
+            `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
+        return;
+    }
+
+    let html = `<h4>${t.recentHeadlines}</h4>`;
+
+    // Helper function to render a section of articles
+    function renderArticleSection(articles, sectionTitle, directionRTL = false) {
+        if (articles.length === 0) return '';
+        
+        let sectionHtml = `<div style="margin-bottom: 20px;">`;
+        sectionHtml += `<h5 style="font-size: 13px; color: #1e3a5f; margin-bottom: 10px; font-weight: bold;">${sectionTitle} (${articles.length})</h5>`;
+        
+        // Show up to 5 headlines per language
+        articles.slice(0, 5).forEach(article => {
+            const date = article.publishedAt
+                ? new Date(article.publishedAt).toLocaleDateString()
+                : 'Unknown date';
+            const sourceName = article.source && article.source.name
+                ? article.source.name
+                : 'Unknown source';
+
+            const dirAttr = directionRTL ? 'dir="rtl"' : '';
+            
+            sectionHtml += `
+                <div class="headline-item" ${dirAttr}>
+                    <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                        ${article.title || 'Untitled article'}
+                    </a>
+                    <div class="source">${sourceName} - ${date}</div>
+                </div>
+            `;
+        });
+        
+        sectionHtml += `</div>`;
+        return sectionHtml;
+    }
+
+    // Display order: English → Hebrew → Arabic → Farsi (if exists)
+    html += renderArticleSection(articles_en, '📰 English Sources', false);
+    html += renderArticleSection(articles_he, '📰 מקורות עבריים', true);
+    html += renderArticleSection(articles_ar, '📰 مصادر عربية', true);
+    
+    // Only show Farsi section if there are Farsi articles
+    if (articles_fa.length > 0) {
+        html += renderArticleSection(articles_fa, '📰 منابع فارسی', true);
+    }
+
+    container.innerHTML = html;
+}
         }
     </script>
 </body>
