@@ -820,7 +820,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4 data-i18n="dataSourcesLabel">Data Sources:</h4>
-                    <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources.</span>
+                    <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits.</span>
                 </div>
                 <div class="footer-section">
                     <h4 data-i18n="methodologyLabel">Methodology:</h4>
@@ -878,7 +878,7 @@
                 noActionable: "No actionable headlines found (no threat indicators detected)",
                 actionableOnly: "Recent Headlines (Actionable Intelligence Only):",
                 dataSourcesLabel: "Data Sources:",
-                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources.",
+                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits.",
                 methodologyLabel: "Methodology:",
                 methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
                 lastUpdatedLabel: "Last Updated:",
@@ -920,7 +920,7 @@
                 noActionable: "לא נמצאו כותרות פעילות (לא זוהו אינדיקטורים לאיום)",
                 actionableOnly: "כותרות אחרונות (מודיעין פעיל בלבד):",
                 dataSourcesLabel: "מקורות נתונים:",
-                dataSourcesText: "NewsAPI.org מצבירים רויטרס, AP, אל ג'זירה, טיימס אוף ישראל, הארץ, וכלי תקשורת מרכזיים אחרים. GDELT עבור מקורות בעברית, ערבית ופרסית.",
+                dataSourcesText: "NewsAPI.org מצבירים רויטרס, AP, אל ג'זירה, טיימס אוף ישראל, הארץ, וכלי תקשורת מרכזיים אחרים. GDELT עבור מקורות בעברית, ערבית ופרסית. Reddit עבור מודיעין קהילתי מ-r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics וסאברדיטים נוספים של OSINT.",
                 methodologyLabel: "מתודולוגיה:",
                 methodologyText: "ניתוח מבוסס מילות מפתח עם אינדיקטורי הסלמה כולל מונחי פעולה צבאית, שפה דיפלומטית והערכות איום במספר שפות",
                 lastUpdatedLabel: "עדכון אחרון:",
@@ -962,7 +962,7 @@
                 noActionable: "لم يتم العثور على عناوين قابلة للتنفيذ (لم يتم اكتشاف مؤشرات التهديد)",
                 actionableOnly: "العناوين الأخيرة (معلومات استخباراتية قابلة للتنفيذ فقط):",
                 dataSourcesLabel: "مصادر البيانات:",
-                dataSourcesText: "NewsAPI.org يجمع من رويترز، AP، الجزيرة، تايمز أوف إسرائيل، هآرتس، ووسائل إعلام رئيسية أخرى. GDELT لمصادر عربية وعبرية وفارسية.",
+                dataSourcesText: "NewsAPI.org يجمع من رويترز، AP، الجزيرة، تايمز أوف إسرائيل، هآرتس، ووسائل إعلام رئيسية أخرى. GDELT لمصادر عربية وعبرية وفارسية. Reddit للمعلومات الاستخباراتية المجتمعية من r/ForbiddenBromance و r/Israel و r/Lebanon و r/Iran و r/Yemen و r/geopolitics وسابريديتات OSINT الأخرى.",
                 methodologyLabel: "المنهجية:",
                 methodologyText: "تحليل قائم على الكلمات المفتاحية مع مؤشرات التصعيد بما في ذلك مصطلحات العمل العسكري واللغة الدبلوماسية وتقييمات التهديد بلغات متعددة",
                 lastUpdatedLabel: "آخر تحديث:",
@@ -1219,8 +1219,6 @@
 
             updateProbability(targetName, probability, isCached);
             updateTimeline(targetName, timeline, probability);
-            
-            // FIXED: Pass the full data object instead of just actionable articles
             displayHeadlines(targetName, data);
         }
 
@@ -1390,7 +1388,7 @@
             }
         }
 
-        // FIXED displayHeadlines function - shows separate sections for each language
+        // UPDATED displayHeadlines function with Reddit support
         function displayHeadlines(targetId, data) {
             const container = document.getElementById(`${targetId}-headlines`);
             const t = translations[currentLanguage];
@@ -1407,8 +1405,9 @@
             const articles_he = data.articles_he || [];
             const articles_ar = data.articles_ar || [];
             const articles_fa = data.articles_fa || [];
+            const articles_reddit = data.articles_reddit || [];
 
-            const totalArticles = articles_en.length + articles_he.length + articles_ar.length + articles_fa.length;
+            const totalArticles = articles_en.length + articles_he.length + articles_ar.length + articles_fa.length + articles_reddit.length;
 
             if (totalArticles === 0) {
                 container.innerHTML =
@@ -1451,7 +1450,55 @@
                 return sectionHtml;
             }
 
-            // Display order: English → Hebrew → Arabic → Farsi (if exists)
+            // Helper function to render Reddit posts with engagement metrics
+            function renderRedditSection(posts, sectionTitle) {
+                if (posts.length === 0) return '';
+                
+                // Sort by engagement score (combination of upvotes and comments)
+                const sortedPosts = posts
+                    .map(post => ({
+                        ...post,
+                        engagement: (post.reddit_score || 0) + (post.reddit_comments || 0) * 2
+                    }))
+                    .sort((a, b) => b.engagement - a.engagement);
+                
+                let sectionHtml = `<div style="margin-bottom: 20px; border-top: 2px solid #ff4500; padding-top: 15px;">`;
+                sectionHtml += `<h5 style="font-size: 13px; color: #ff4500; margin-bottom: 10px; font-weight: bold;">💬 ${sectionTitle} (Top 2)</h5>`;
+                
+                // Show top 2 Reddit posts
+                sortedPosts.slice(0, 2).forEach(post => {
+                    const date = post.publishedAt
+                        ? new Date(post.publishedAt).toLocaleDateString()
+                        : 'Unknown date';
+                    const subreddit = post.source && post.source.name
+                        ? post.source.name
+                        : 'Unknown subreddit';
+                    const score = post.reddit_score || 0;
+                    const comments = post.reddit_comments || 0;
+                    const upvoteRatio = post.reddit_upvote_ratio 
+                        ? Math.round(post.reddit_upvote_ratio * 100) 
+                        : 0;
+                    
+                    sectionHtml += `
+                        <div class="headline-item" style="border-left-color: #ff4500; background-color: #fff5f0;">
+                            <a href="${post.url}" target="_blank" rel="noopener noreferrer">
+                                ${post.title || 'Untitled post'}
+                            </a>
+                            <div class="source">
+                                ${subreddit} - ${date}<br>
+                                <span style="color: #ff4500; font-weight: bold;">
+                                    ↑ ${score} upvotes | 💬 ${comments} comments | ${upvoteRatio}% upvoted
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                sectionHtml += `</div>`;
+                return sectionHtml;
+            }
+
+            // Display order: English → Hebrew → Arabic → Farsi → Reddit
             html += renderArticleSection(articles_en, '📰 English Sources', false);
             html += renderArticleSection(articles_he, '📰 מקורות עבריים', true);
             html += renderArticleSection(articles_ar, '📰 مصادر عربية', true);
@@ -1460,6 +1507,9 @@
             if (articles_fa.length > 0) {
                 html += renderArticleSection(articles_fa, '📰 منابع فارسی', true);
             }
+
+            // Add Reddit section with top 2 posts
+            html += renderRedditSection(articles_reddit, 'Reddit Community Intelligence');
 
             container.innerHTML = html;
         }
