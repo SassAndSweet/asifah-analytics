@@ -669,7 +669,14 @@
             document.querySelectorAll('.language-tabs button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // Handle both click events and programmatic calls
+            if (window.event && window.event.target) {
+                window.event.target.classList.add('active');
+            } else {
+                const targetButton = document.querySelector('.language-tabs button[data-lang="' + lang + '"]');
+                if (targetButton) targetButton.classList.add('active');
+            }
             
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
