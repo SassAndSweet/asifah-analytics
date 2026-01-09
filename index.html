@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,11 @@
             color: #2c3e50;
             line-height: 1.6;
             padding: 20px;
+            transition: direction 0.3s ease;
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
         }
 
         .container {
@@ -26,96 +31,230 @@
         }
 
         header {
-            background-color: #1e3a5f;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
             color: white;
-            padding: 30px;
-            border-radius: 8px;
+            padding: 35px;
+            border-radius: 12px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
         }
 
         h1 {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             margin-bottom: 10px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        h1::before {
+            content: "🌪️ ";
         }
 
         h2 {
             font-size: 16px;
             font-weight: normal;
-            opacity: 0.9;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+        }
+
+        .language-switcher {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        [dir="rtl"] .language-switcher {
+            right: auto;
+            left: 35px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3a5f;
+            border-color: white;
+        }
+
+        .rate-limit-box {
+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #e1e8ed;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .rate-limit-box.warning {
+            border-color: #f39c12;
+            background: linear-gradient(to bottom, #fffaf0 0%, #fff5e6 100%);
+            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.15);
+        }
+
+        .rate-limit-box.danger {
+            border-color: #c0392b;
+            background: linear-gradient(to bottom, #fff5f5 0%, #ffe6e6 100%);
+            box-shadow: 0 4px 12px rgba(192, 57, 43, 0.15);
+            animation: gentle-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes gentle-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.01); }
+        }
+
+        .rate-limit-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 120px;
+        }
+
+        .rate-limit-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+
+        .rate-limit-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .rate-limit-value.warning {
+            color: #f39c12;
+        }
+
+        .rate-limit-value.danger {
+            color: #c0392b;
+        }
+
+        .rate-limit-value.success {
+            color: #27ae60;
         }
 
         .controls {
-            background-color: white;
-            padding: 25px;
-            border-radius: 8px;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #dcdcdc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #e1e8ed;
         }
 
-        .controls h3 {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            color: #1e3a5f;
-        }
-
-        .time-window {
-            margin-bottom: 10px;
-        }
-
-        .time-window label {
-            display: inline-block;
-            margin-right: 20px;
-            cursor: pointer;
-        }
-
-        .time-window input[type="radio"] {
-            margin-right: 5px;
-        }
-
-        .time-window-helper {
-            margin-top: 8px;
+        .controls-note {
+            margin-top: 12px;
             font-size: 12px;
             color: #7f8c8d;
             font-style: italic;
         }
 
+        .controls h3 {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 18px;
+            color: #1e3a5f;
+            letter-spacing: 0.5px;
+        }
+
+        .time-window {
+            margin-bottom: 20px;
+        }
+
+        .time-window label {
+            display: inline-block;
+            margin-right: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        [dir="rtl"] .time-window label {
+            margin-right: 0;
+            margin-left: 25px;
+        }
+
+        .time-window label:hover {
+            color: #1e3a5f;
+        }
+
+        .time-window input[type="radio"] {
+            margin-right: 6px;
+            cursor: pointer;
+        }
+
+        [dir="rtl"] .time-window input[type="radio"] {
+            margin-right: 0;
+            margin-left: 6px;
+        }
+
         .scan-button {
-            margin-top: 15px;
             background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%);
             color: white;
             border: none;
-            padding: 15px 40px;
+            padding: 16px 50px;
             font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
             font-weight: bold;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            letter-spacing: 1px;
         }
 
         .scan-button:hover:not(:disabled) {
             background: linear-gradient(180deg, #2c3e50 0%, #1e3a5f 100%);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+            transform: translateY(-3px);
         }
 
         .scan-button:active,
         .scan-button.scanning {
             transform: translateY(1px);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
         }
 
         .scan-button:disabled {
-            opacity: 0.7;
+            opacity: 0.5;
             cursor: not-allowed;
+            background: linear-gradient(180deg, #95a5a6 0%, #7f8c8d 100%);
         }
 
         .scan-button.scanning::after {
@@ -136,9 +275,10 @@
         .loading {
             display: none;
             text-align: center;
-            padding: 20px;
+            padding: 25px;
             font-style: italic;
             color: #7f8c8d;
+            font-size: 15px;
         }
 
         .loading.active {
@@ -147,14 +287,19 @@
 
         .loading-spinner {
             display: inline-block;
-            width: 20px;
-            height: 20px;
+            width: 24px;
+            height: 24px;
             border: 3px solid #f3f3f3;
             border-top: 3px solid #1e3a5f;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 10px;
+            margin-right: 12px;
             vertical-align: middle;
+        }
+
+        [dir="rtl"] .loading-spinner {
+            margin-right: 0;
+            margin-left: 12px;
         }
 
         @keyframes spin {
@@ -164,113 +309,306 @@
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 25px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 30px;
+            margin-bottom: 35px;
             transition: opacity 0.3s ease;
         }
 
         .target-card {
-            background-color: white;
-            border-radius: 8px;
-            padding: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #dcdcdc;
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #e1e8ed;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .target-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .target-card.low-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f9f4 100%);
+            border-color: #a3d9b1;
+        }
+
+        .target-card.medium-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #fff9f0 100%);
+            border-color: #f5c99d;
+        }
+
+        .target-card.high-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #fff5f5 100%);
+            border-color: #f5a9a3;
+            animation: high-threat-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes high-threat-pulse {
+            0%, 100% { 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+            50% { 
+                box-shadow: 0 4px 20px rgba(192, 57, 43, 0.25);
+            }
         }
 
         .target-card h3 {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: bold;
             color: #1e3a5f;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             text-align: center;
-            border-bottom: 2px solid #1e3a5f;
-            padding-bottom: 10px;
+            border-bottom: 3px solid #1e3a5f;
+            padding-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .protest-analytics-btn {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 20px;
+            padding: 10px 24px;
+            background: linear-gradient(180deg, #c0392b 0%, #a93226 100%);
+            color: white;
+            text-decoration: none;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.5px;
+            box-shadow: 0 3px 8px rgba(192, 57, 43, 0.3);
+        }
+
+        .protest-analytics-btn:hover {
+            background: linear-gradient(180deg, #a93226 0%, #922b21 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(192, 57, 43, 0.4);
+        }
+
+        .protest-analytics-btn::before {
+            content: "📊 ";
         }
 
         .probability-display {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
 
         .probability-label {
-            font-size: 14px;
+            font-size: 13px;
             color: #7f8c8d;
-            margin-bottom: 5px;
-        }
-
-        .probability-value {
-            font-size: 48px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             font-weight: bold;
-            margin-bottom: 10px;
         }
 
-        .probability-value.low {
-            color: #27ae60;
+        .gauge-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 15px;
         }
 
-        .probability-value.medium {
-            color: #f39c12;
+        .gauge-svg {
+            transform: rotate(-90deg);
         }
 
-        .probability-value.high {
-            color: #c0392b;
+        .gauge-background {
+            fill: none;
+            stroke: #ecf0f1;
+            stroke-width: 18;
         }
 
-        .timeline-display {
-            text-align: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 6px;
+        .gauge-progress {
+            fill: none;
+            stroke-width: 18;
+            stroke-linecap: round;
+            transition: stroke-dasharray 1s ease-in-out, stroke 0.3s ease;
         }
 
-        .timeline-label {
-            font-size: 14px;
-            color: #7f8c8d;
-            margin-bottom: 5px;
+        .gauge-progress.low {
+            stroke: #27ae60;
         }
 
-        .timeline-value {
-            font-size: 16px;
+        .gauge-progress.medium {
+            stroke: #f39c12;
+        }
+
+        .gauge-progress.high {
+            stroke: #c0392b;
+        }
+
+        .gauge-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
             font-weight: bold;
             color: #2c3e50;
         }
 
+        .gauge-text.low {
+            color: #27ae60;
+        }
+
+        .gauge-text.medium {
+            color: #f39c12;
+        }
+
+        .gauge-text.high {
+            color: #c0392b;
+        }
+
+        .timeline-display {
+            margin-bottom: 25px;
+            padding: 18px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .timeline-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .timeline-value {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .timeline-bar {
+            display: flex;
+            height: 28px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #e1e8ed;
+            margin-top: 8px;
+        }
+
+        [dir="rtl"] .timeline-bar {
+            flex-direction: row-reverse;
+        }
+
+        .timeline-segment {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+            color: #7f8c8d;
+            border-right: 2px solid white;
+            transition: all 0.3s ease;
+        }
+
+        [dir="rtl"] .timeline-segment {
+            border-right: none;
+            border-left: 2px solid white;
+        }
+
+        .timeline-segment:last-child {
+            border-right: none;
+            border-left: none;
+        }
+
+        .timeline-segment.active {
+            background-color: #1e3a5f;
+            color: white;
+            transform: scaleY(1.1);
+        }
+
         .headlines-section {
-            margin-top: 20px;
-            max-height: 300px;
+            margin-top: 25px;
+            max-height: 320px;
             overflow-y: auto;
-            border-top: 1px solid #ecf0f1;
-            padding-top: 15px;
+            border-top: 2px solid #e1e8ed;
+            padding-top: 18px;
+        }
+
+        .headlines-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .headlines-section::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .headlines-section::-webkit-scrollbar-thumb {
+            background: #bdc3c7;
+            border-radius: 4px;
+        }
+
+        .headlines-section::-webkit-scrollbar-thumb:hover {
+            background: #95a5a6;
         }
 
         .headlines-section h4 {
             font-size: 14px;
             font-weight: bold;
             color: #34495e;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
 
         .headline-item {
-            padding: 10px;
-            margin-bottom: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
             background-color: #f8f9fa;
-            border-left: 3px solid #1e3a5f;
-            border-radius: 4px;
+            border-left: 4px solid #1e3a5f;
+            border-radius: 6px;
             font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        [dir="rtl"] .headline-item {
+            border-left: none;
+            border-right: 4px solid #1e3a5f;
+        }
+
+        .headline-item:hover {
+            background-color: #e8f4f8;
+            border-left-width: 6px;
+            transform: translateX(4px);
+        }
+
+        [dir="rtl"] .headline-item:hover {
+            border-left-width: 0;
+            border-right-width: 6px;
+            transform: translateX(-4px);
         }
 
         .headline-item .source {
             color: #7f8c8d;
             font-style: italic;
             font-size: 11px;
-            margin-top: 5px;
+            margin-top: 6px;
         }
 
         .headline-item a {
             color: #2c3e50;
             text-decoration: none;
+            font-weight: 500;
         }
 
         .headline-item a:hover {
@@ -278,45 +616,241 @@
             text-decoration: underline;
         }
 
-        /* Iran protests button */
-        .iran-protests-link {
-            margin-top: 15px;
+        .polymarket-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #7c3aed;
+            overflow: hidden;
+        }
+
+        .polymarket-disclaimer {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #92400e;
             text-align: center;
         }
 
-        .protests-button {
-            display: inline-block;
-            padding: 8px 16px;
+        .polymarket-disclaimer strong {
+            display: block;
+            margin-bottom: 6px;
             font-size: 13px;
-            border-radius: 4px;
-            border: 1px solid #1e3a5f;
-            background-color: #ffffff;
-            color: #1e3a5f;
-            text-decoration: none;
-            font-weight: bold;
-            transition: all 0.2s ease;
+            color: #78350f;
         }
 
-        .protests-button:hover {
-            background-color: #1e3a5f;
-            color: #ffffff;
+        .ticker-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to right, #f8f9fa, #ffffff, #f8f9fa);
+            border-radius: 8px;
+            padding: 15px 0;
+            border: 1px solid #e1e8ed;
+        }
+
+        .ticker-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll-ticker 60s linear infinite;
+            will-change: transform;
+        }
+
+        .ticker-wrapper:hover .ticker-content {
+            animation-play-state: paused;
+        }
+
+        @keyframes scroll-ticker {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 25px;
+            font-size: 14px;
+            color: #2c3e50;
+            border-right: 2px solid #e1e8ed;
+            min-width: max-content;
+        }
+
+        .ticker-item:last-child {
+            border-right: none;
+        }
+
+        .ticker-icon {
+            font-size: 18px;
+            margin-right: 10px;
+        }
+
+        .ticker-question {
+            font-weight: 500;
+            margin-right: 12px;
+        }
+
+        .ticker-probability {
+            font-weight: bold;
+            color: #7c3aed;
+            background: linear-gradient(135deg, #ede9fe, #f3f4f6);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 8px;
+        }
+
+        .ticker-link {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .ticker-link:hover {
+            color: #7c3aed;
+            text-decoration: underline;
+        }
+
+        .ticker-loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .ticker-error {
+            text-align: center;
+            padding: 15px;
+            color: #c0392b;
+            font-size: 13px;
+        }
+
+        .flight-widget {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #e74c3c;
+        }
+
+        .flight-widget-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .flight-widget-title {
+            font-size: 17px;
+            font-weight: bold;
+            color: #c0392b;
+            letter-spacing: 0.5px;
+        }
+
+        .flight-widget-title::before {
+            content: "✈️ ";
+            font-size: 20px;
+            margin-right: 8px;
+        }
+
+        .flight-status-badge {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .flight-status-badge.normal {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .flight-status-badge.active {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #f59e0b;
+        }
+
+        .flight-cancellations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        .cancellation-card {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+            border: 2px solid #fecaca;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .cancellation-card:hover {
+            border-color: #f87171;
+            transform: translateY(-3px);
+        }
+
+        .cancellation-airline {
+            font-size: 16px;
+            font-weight: bold;
+            color: #991b1b;
+            margin-bottom: 8px;
+        }
+
+        .cancellation-airline::before {
+            content: "🚫 ";
+        }
+
+        .cancellation-details {
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .no-cancellations {
+            text-align: center;
+            padding: 30px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .no-cancellations::before {
+            content: "✓";
+            display: block;
+            font-size: 48px;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        [dir="rtl"] .flight-widget-title::before {
+            margin-right: 0;
+            margin-left: 8px;
         }
 
         footer {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            border: 1px solid #dcdcdc;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #e1e8ed;
             font-size: 12px;
-            color: #7f8c8d;
         }
 
         .footer-content {
             display: flex;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 25px;
         }
 
         .footer-section {
@@ -328,30 +862,32 @@
             font-size: 13px;
             font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
 
         .disclaimer {
             background-color: #fff3cd;
-            border: 1px solid #ffc107;
-            padding: 15px;
-            border-radius: 6px;
-            margin-top: 20px;
+            border: 2px solid #ffc107;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 25px;
             font-size: 12px;
             color: #856404;
         }
 
         .disclaimer strong {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 13px;
         }
 
         .error-message {
             background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
+            border: 2px solid #f5c6cb;
             color: #721c24;
-            padding: 15px;
-            border-radius: 6px;
+            padding: 18px;
+            border-radius: 10px;
             margin: 20px 0;
             display: none;
         }
@@ -364,92 +900,197 @@
             .dashboard {
                 grid-template-columns: 1fr;
             }
+            .rate-limit-box {
+                justify-content: center;
+            }
+            h1 {
+                font-size: 24px;
+            }
+            .language-switcher {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            .ticker-item {
+                font-size: 12px;
+                padding: 6px 15px;
+            }
+            .flight-cancellations-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>ASIFAH ANALYTICS</h1>
-            <h2>Israeli Military Action Forecasting Dashboard</h2>
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he')">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar')">ع</button>
+                <button class="lang-btn" onclick="switchLanguage('fa')">فא</button>
+            </div>
+            <h1 data-i18n="header">ASIFAH ANALYTICS</h1>
+            <h2 data-i18n="subtitle">Israeli Military Action Forecasting Dashboard</h2>
         </header>
 
-        <div class="controls">
-            <h3>Data Collection Parameters</h3>
-            <div class="time-window">
-                <label><input type="radio" name="timeWindow" value="1"> 24 Hours</label>
-                <label><input type="radio" name="timeWindow" value="2"> 48 Hours</label>
-                <label><input type="radio" name="timeWindow" value="7" checked> 7 Days</label>
-                <label><input type="radio" name="timeWindow" value="30"> 30 Days</label>
+        <div class="polymarket-section" id="polymarketSection">
+            <div class="polymarket-disclaimer">
+                <strong data-i18n="polymarketDisclaimerTitle">⚠️ MARKET PREDICTIONS DISCLAIMER</strong>
+                <span data-i18n="polymarketDisclaimerText">Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.</span>
             </div>
-            <p class="time-window-helper">
-                Changing the time window does <strong>not</strong> refresh automatically.
-                After you update it, click <strong>SCAN OSINT SOURCES</strong> again to run a new forecast.
+            
+            <div class="ticker-wrapper">
+                <div class="ticker-content" id="polymarketTicker">
+                    <div class="ticker-loading">Loading Polymarket data...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <h3 data-i18n="dataCollectionParams">Data Collection Parameters</h3>
+            <div class="time-window">
+                <label><input type="radio" name="timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                <label><input type="radio" name="timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                <label><input type="radio" name="timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                <label><input type="radio" name="timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+            </div>
+            <button class="scan-button" id="scanButton" onclick="scanData()">
+                <span data-i18n="scanButton">SCAN OSINT SOURCES</span>
+            </button>
+            <p class="controls-note">
+                <span data-i18n="controlsNote">Change the time window above, then click "Scan OSINT Sources" to refresh the forecast.</span>
+                <span id="cacheNote"></span>
             </p>
-            <button class="scan-button" onclick="scanData()">SCAN OSINT SOURCES</button>
         </div>
 
         <div id="errorMessage" class="error-message"></div>
 
         <div class="loading" id="loadingIndicator">
             <div class="loading-spinner"></div>
-            Scanning open-source intelligence feeds...
+            <span data-i18n="loadingText">Scanning open-source intelligence feeds...</span>
         </div>
 
         <div class="dashboard" id="dashboard">
-            <!-- HIZBALLAH Card -->
-            <div class="target-card">
-                <h3>HIZBALLAH (LEBANON)</h3>
+            <div class="target-card" id="hezbollah-card">
+                <h3 data-i18n="targetHezbollah">HIZBALLAH</h3>
                 <div class="probability-display">
-                    <div class="probability-label">Strike Probability</div>
-                    <div class="probability-value medium" id="hezbollah-prob">--</div>
+                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+                    <div class="gauge-container">
+                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                            <circle class="gauge-progress medium" id="hezbollah-gauge" cx="100" cy="100" r="85"
+                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <div class="gauge-text medium" id="hezbollah-prob">--</div>
+                    </div>
                 </div>
                 <div class="timeline-display">
-                    <div class="timeline-label">Projected Timeline</div>
-                    <div class="timeline-value" id="hezbollah-timeline">Awaiting scan...</div>
+                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                    <div class="timeline-value" id="hezbollah-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+                    <div class="timeline-bar" id="hezbollah-bar">
+                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    </div>
                 </div>
                 <div class="headlines-section" id="hezbollah-headlines">
-                    <h4>Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
+                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
 
-            <!-- Iran Card -->
-            <div class="target-card">
-                <h3>IRAN</h3>
+            <div class="target-card" id="iran-card">
+                <h3 data-i18n="targetIran">IRAN</h3>
+                <a href="iran-protests.html" class="protest-analytics-btn" data-i18n="protestAnalytics">Protest Analytics</a>
                 <div class="probability-display">
-                    <div class="probability-label">Strike Probability</div>
-                    <div class="probability-value medium" id="iran-prob">--</div>
+                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+                    <div class="gauge-container">
+                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                            <circle class="gauge-progress medium" id="iran-gauge" cx="100" cy="100" r="85"
+                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <div class="gauge-text medium" id="iran-prob">--</div>
+                    </div>
                 </div>
                 <div class="timeline-display">
-                    <div class="timeline-label">Projected Timeline</div>
-                    <div class="timeline-value" id="iran-timeline">Awaiting scan...</div>
+                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                    <div class="timeline-value" id="iran-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+                    <div class="timeline-bar" id="iran-bar">
+                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    </div>
                 </div>
                 <div class="headlines-section" id="iran-headlines">
-                    <h4>Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
-                </div>
-                <div class="iran-protests-link">
-                    <a href="iran-protests.html" class="protests-button">
-                        Open Iran Protests Tracker
-                    </a>
+                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
 
-            <!-- Houthis Card -->
-            <div class="target-card">
-                <h3>HOUTHIS (YEMEN)</h3>
+            <div class="target-card" id="houthis-card">
+                <h3 data-i18n="targetHouthis">HOUTHIS (YEMEN)</h3>
                 <div class="probability-display">
-                    <div class="probability-label">Strike Probability</div>
-                    <div class="probability-value medium" id="houthis-prob">--</div>
+                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+                    <div class="gauge-container">
+                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                            <circle class="gauge-progress medium" id="houthis-gauge" cx="100" cy="100" r="85"
+                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <div class="gauge-text medium" id="houthis-prob">--</div>
+                    </div>
                 </div>
                 <div class="timeline-display">
-                    <div class="timeline-label">Projected Timeline</div>
-                    <div class="timeline-value" id="houthis-timeline">Awaiting scan...</div>
+                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                    <div class="timeline-value" id="houthis-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+                    <div class="timeline-bar" id="houthis-bar">
+                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    </div>
                 </div>
                 <div class="headlines-section" id="houthis-headlines">
-                    <h4>Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
+                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="rate-limit-box" id="rateLimitBox">
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="requestsUsedLabel">Requests Used</div>
+                <div class="rate-limit-value" id="requestsUsed">--</div>
+            </div>
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="requestsRemainingLabel">Requests Remaining</div>
+                <div class="rate-limit-value success" id="requestsRemaining">--</div>
+            </div>
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="dailyLimitLabel">Daily Limit</div>
+                <div class="rate-limit-value" id="requestsLimit">100</div>
+            </div>
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="resetsInLabel">Quota Resets In</div>
+                <div class="rate-limit-value" id="resetCountdown">--</div>
+            </div>
+        </div>
+
+        <div class="flight-widget" id="flightWidget">
+            <div class="flight-widget-header">
+                <div class="flight-widget-title" data-i18n="flightWidgetTitle">Flight Disruptions Monitor</div>
+                <div class="flight-status-badge normal" id="flightStatusBadge">
+                    <span data-i18n="flightStatusNormal">All Routes Normal</span>
+                </div>
+            </div>
+            
+            <div class="flight-cancellations-grid" id="flightCancellationsGrid">
+                <div class="no-cancellations" data-i18n="noFlightDisruptions">
+                    No major flight disruptions detected in target regions
                 </div>
             </div>
         </div>
@@ -457,36 +1098,409 @@
         <footer>
             <div class="footer-content">
                 <div class="footer-section">
-                    <h4>Data Sources:</h4>
-                    NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets
+                    <h4 data-i18n="dataSourcesLabel">Data Sources:</h4>
+                    <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.</span>
                 </div>
                 <div class="footer-section">
-                    <h4>Methodology:</h4>
-                    Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments
+                    <h4 data-i18n="methodologyLabel">Methodology:</h4>
+                    <span data-i18n="methodologyText">Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages</span>
                 </div>
-                <div class="footer-section" id="lastUpdated">
-                    <h4>Last Updated:</h4>
-                    Not yet scanned
+                <div class="footer-section">
+                    <h4 data-i18n="lastUpdatedLabel">Last Updated:</h4>
+                    <span id="lastUpdatedValue" data-i18n="notYetScanned">Not yet scanned</span>
                 </div>
             </div>
             <div class="disclaimer">
-                <strong>DISCLAIMER:</strong>
-                This dashboard is an analytical tool for educational and research purposes only.
-                Probabilities are based on open-source news aggregation and simple keyword analysis.
-                This tool does not represent official U.S. government assessments or policy positions.
-                Users should consult official intelligence sources for operational decision-making.
+                <strong data-i18n="disclaimerTitle">DISCLAIMER:</strong>
+                <span data-i18n="disclaimerText">This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.</span>
             </div>
         </footer>
     </div>
 
-    <!-- Click sound -->
     <audio id="clickSound">
-        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSyBzvLZiTcIGWm98OScTgwPUKnn77RiFQc4ktjyz3szBSl+zPLaizsKE16y6OyrWBUIR6Hh8r1xIAUrlcvv34o7ChVjuO7mnFQODk6m4u+0YRYFOJLY8s98MwUqf8zz24w8CRVbtergpVoXCEal4PO+byEGLJXM8t+KOwwVZbjv56JYEwxNouDutl8XBTqS2PLPezMGKYHM8tuNOwsVXLDq6adcGQdEpeDxwXAjBiuVz/Ddi0AMFGa48OeSVhEMTKPi77ZgFwU5kdnyz3szBSl/y/LajDwLFV2x7OmlXhkGRKTi8cFvJAYslM3w3opBDRRltvDnklURDEyj4u+3YBgFOZLZ8s96MwYpgMzy2o49CxVeserpp2AaBkSk4vHBbyQHK5PN8d+LQQwUZLju55JUEQ1Mo+LvuWEXBTmS2PLPejMGKH/M8tuNPAsUXrLq6KdgGgZFpeLxwW8kByuTzfDejUEMFGS47ueSUxEOTKPi77lhGAU5ktnyz3o0BiiAy/LcjDwLFV6x6+mnYRsGRKXi8cJwIwYrks7x344/DRRkuO3nklMRDk2j4u+6YBkEOZLY8tB5MwUogMzy2408CRVesevqp2AbBkSl4fLCcCMHKpLP8N+OPw0UZLru55JVEQ1No+LvumAZBTmS2PLQeTMGKIDM8tuNPQsUXrHs6adgGwZEpeLywm8kByuSz/DejkEMFGW67ueRVBEOTKPj8bpgGQU6kdjy0HkzBiiAzPLbjTwLFV+x6+inYhsGRKXi8sJvJAYrks7w341BDRRluu3nklQRDkuj4vG6YBkFOpHY8s95MwYogMvz2408DBVesuvpp2IbBkSl4vLCbyMGK5LO8d+OQAwUZbrt55JVEg1Lo+Pxul8ZBTuR2PLPeS8FKHzM89uMPAwVXrLr6adiGwZEpeLxwm8jByuSzvHejkAMFGa67ueSVRIOTKPj8LpgGQU6kdjyz3kzBiiAy/LajDwMFV2x6+mnYRsFRKXi8cJvIwcrks7w340/DRRmuu7nklUSDkuj4/C6YRkFOpHY8tB5MwYngMzy3Iw+DBVesevqqGIbBkal4/HBbiMHKpHO8N+OPw0UZrrt55RUEg5Mo+Pxul8ZBTqR2PLPeTMGJ3/M8tyNPgwVXbHr6qdiGwZFpePxwW4jByuRzvDfjj8NFGa77ueTVRENTKPj8bpfGAY7kdny0HkyBSd/y/PcjT4LFV2x6+qoYhsGRaXj8cFuIwgrkM/w345ADRRmu+7nklUSDkyi5PG5YBkFPJHY8tB5MgUngMzy3Iw+DBVesevqqGEbB0ak4/HCbiMHKo/P8d6MPwwVZrzt56NUEQxNpOTwul0ZBT2Q2PLQeTMFJoDL89uNPgoVXrHr6ahiGwZGpOPxwW4jByqQzvHejUANFWa77uejVREMTKTk8bleGAU8kNjy0HkzBSeAy/PajD4LFV6x6+qoYRwGRqTj8cFuJAcqj87x3o1ADRVmu+3no1USDEyk5PC6XRgFPJDZ8tB5MgUngMry240+CxVdsevpp2IaBkWl4vHCbyMHKpHO8N+OPw0UZLju55JUEQ1Mo+Pxul8ZBTyQ2fLQeTMFJ4DL89qMPgsVXrHr6ahhGwZGpOTxwW4kByqPzvHejD8NFWe87OelUxEMTaTk8Lp" type="audio/wav">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
     </audio>
 
     <script>
-        // Backend base URL
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
+        
+        const translations = {
+            en: {
+                header: "ASIFAH ANALYTICS",
+                subtitle: "Israeli Military Action Forecasting Dashboard",
+                requestsUsedLabel: "Requests Used",
+                requestsRemainingLabel: "Requests Remaining",
+                dailyLimitLabel: "Daily Limit",
+                resetsInLabel: "Quota Resets In",
+                dataCollectionParams: "Data Collection Parameters",
+                hours24: "24 Hours",
+                hours48: "48 Hours",
+                days7: "7 Days",
+                days30: "30 Days",
+                scanButton: "SCAN OSINT SOURCES",
+                controlsNote: "Change the time window above, then click \"Scan OSINT Sources\" to refresh the forecast.",
+                loadingText: "Scanning open-source intelligence feeds...",
+                targetHezbollah: "HIZBALLAH",
+                targetIran: "IRAN",
+                targetHouthis: "HOUTHIS (YEMEN)",
+                strikeProbability: "Strike Probability",
+                projectedTimeline: "Projected Timeline",
+                awaitingScan: "Awaiting scan...",
+                days030: "0-30d",
+                days3190: "31-90d",
+                days91180: "91-180d",
+                days180plus: "180+d",
+                recentHeadlines: "Recent Headlines:",
+                clickToScan: "Click scan to load latest intelligence",
+                noActionable: "No actionable headlines found (no threat indicators detected)",
+                actionableOnly: "Recent Headlines (Actionable Intelligence Only):",
+                dataSourcesLabel: "Data Sources:",
+                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.",
+                methodologyLabel: "Methodology:",
+                methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
+                lastUpdatedLabel: "Last Updated:",
+                notYetScanned: "Not yet scanned",
+                disclaimerTitle: "DISCLAIMER:",
+                disclaimerText: "This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.",
+                polymarketDisclaimerTitle: "⚠️ MARKET PREDICTIONS DISCLAIMER",
+                polymarketDisclaimerText: "Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.",
+                timeline180plus: "180+ Days (Low priority)",
+                timeline91180: "91-180 Days",
+                timeline3190: "31-90 Days",
+                timeline030: "0-30 Days (Elevated threat)",
+                protestAnalytics: "Protest Analytics",
+                flightWidgetTitle: "Flight Disruptions Monitor",
+                flightStatusNormal: "All Routes Normal",
+                flightStatusActive: "Active Disruptions",
+                noFlightDisruptions: "No major flight disruptions detected in target regions"
+            },
+            he: {
+                header: "אסיפה אנליטיקס",
+                subtitle: "לוח מחוונים לחיזוי פעולה צבאית ישראלית",
+                requestsUsedLabel: "בקשות שנוצלו",
+                requestsRemainingLabel: "בקשות שנותרו",
+                dailyLimitLabel: "מגבלה יומית",
+                resetsInLabel: "איפוס בעוד",
+                dataCollectionParams: "פרמטרי איסוף נתונים",
+                hours24: "24 שעות",
+                hours48: "48 שעות",
+                days7: "7 ימים",
+                days30: "30 ימים",
+                scanButton: "סריקת מקורות OSINT",
+                controlsNote: "שנה את חלון הזמן למעלה ולחץ על \"סריקת מקורות OSINT\" כדי לרענן את התחזית.",
+                loadingText: "סורק מקורות מודיעין פתוחים...",
+                targetHezbollah: "חיזבאללה",
+                targetIran: "איראן",
+                targetHouthis: "חות'ים (תימן)",
+                strikeProbability: "הסתברות תקיפה",
+                projectedTimeline: "ציר זמן חזוי",
+                awaitingScan: "ממתין לסריקה...",
+                days030: "0-30 י׳",
+                days3190: "31-90 י׳",
+                days91180: "91-180 י׳",
+                days180plus: "180+ י׳",
+                recentHeadlines: "כותרות אחרונות:",
+                clickToScan: "לחץ על סריקה כדי לטעון מודיעין עדכני",
+                noActionable: "לא נמצאו כותרות פעילות (לא זוהו אינדיקטורים לאיום)",
+                actionableOnly: "כותרות אחרונות (מודיעין פעיל בלבד):",
+                dataSourcesLabel: "מקורות נתונים:",
+                dataSourcesText: "NewsAPI.org מצבירים רויטרס, AP, אל ג'זירה, טיימס אוף ישראל, הארץ, וכלי תקשורת מרכזיים אחרים. GDELT עבור מקורות בעברית, ערבית ופרסית. Reddit עבור מודיעין קהילתי מ-r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics וסאברדיטים נוספים של OSINT. Polymarket עבור נתוני שווקי חיזוי.",
+                methodologyLabel: "מתודולוגיה:",
+                methodologyText: "ניתוח מבוסס מילות מפתח עם אינדיקטורי הסלמה כולל מונחי פעולה צבאית, שפה דיפלומטית והערכות איום במספר שפות",
+                lastUpdatedLabel: "עדכון אחרון:",
+                notYetScanned: "טרם נסרק",
+                disclaimerTitle: "הצהרה:",
+                disclaimerText: "לוח מחוונים זה הוא כלי אנליטי למטרות חינוכיות ומחקר בלבד. ההסתברויות מבוססות על צבירת חדשות ממקורות פתוחים וניתוח מילות מפתח פשוט. כלי זה אינו מייצג הערכות ממשלתיות רשמיות של ארה\"ב או עמדות מדיניות. משתמשים צריכים להתייעץ עם מקורות מודיעין רשמיים לקבלת החלטות מבצעיות.",
+                polymarketDisclaimerTitle: "⚠️ כתב ויתור על תחזיות שוק",
+                polymarketDisclaimerText: "נתוני Polymarket מייצגים הסתברויות שוק הימורים (תחזיות מקור המונים). זהו נתון משלים בלבד ואינו מהווה הערכת מודיעין או אומנות אנליטית.",
+                timeline180plus: "180+ ימים (עדיפות נמוכה)",
+                timeline91180: "91-180 ימים",
+                timeline3190: "31-90 ימים",
+                timeline030: "0-30 ימים (איום מוגבר)",
+                protestAnalytics: "ניתוח מחאות",
+                flightWidgetTitle: "מעקב הפרעות טיסה",
+                flightStatusNormal: "כל הנתיבים תקינים",
+                flightStatusActive: "הפרעות פעילות",
+                noFlightDisruptions: "לא זוהו הפרעות משמעותיות באזורי היעד"
+            },
+            ar: {
+                header: "عاصفة أناليتكس",
+                subtitle: "لوحة التحكم للتنبؤ بالعمل العسكري الإسرائيلي",
+                requestsUsedLabel: "الطلبات المستخدمة",
+                requestsRemainingLabel: "الطلبات المتبقية",
+                dailyLimitLabel: "الحد اليومي",
+                resetsInLabel: "إعادة التعيين خلال",
+                dataCollectionParams: "معلمات جمع البيانات",
+                hours24: "24 ساعة",
+                hours48: "48 ساعة",
+                days7: "7 أيام",
+                days30: "30 يوماً",
+                scanButton: "مسح مصادر OSINT",
+                controlsNote: "قم بتغيير النافذة الزمنية أعلاه، ثم انقر على \"مسح مصادر OSINT\" لتحديث التوقعات.",
+                loadingText: "جارٍ مسح مصادر المعلومات المفتوحة...",
+                targetHezbollah: "حزب الله",
+                targetIran: "إيران",
+                targetHouthis: "الحوثيون (اليمن)",
+                strikeProbability: "احتمالية الضربة",
+                projectedTimeline: "الجدول الزمني المتوقع",
+                awaitingScan: "في انتظار المسح...",
+                days030: "0-30 ي",
+                days3190: "31-90 ي",
+                days91180: "91-180 ي",
+                days180plus: "180+ ي",
+                recentHeadlines: "العناوين الأخيرة:",
+                clickToScan: "انقر على المسح لتحميل آخر المعلومات الاستخباراتية",
+                noActionable: "لم يتم العثور على عناوين قابلة للتنفيذ (لم يتم اكتشاف مؤشرات التهديد)",
+                actionableOnly: "العناوين الأخيرة (معلومات استخباراتية قابلة للتنفيذ فقط):",
+                dataSourcesLabel: "مصادر البيانات:",
+                dataSourcesText: "NewsAPI.org يجمع من رويترز، AP، الجزيرة، تايمز أوف إسرائيل، هآرتس، ووسائل إعلام رئيسية أخرى. GDELT لمصادر عربية وعبرية وفارسية. Reddit للمعلومات الاستخباراتية المجتمعية من r/ForbiddenBromance و r/Israel و r/Lebanon و r/Iran و r/Yemen و r/geopolitics وسابريديتات OSINT الأخرى. Polymarket لبيانات سوق التنبؤ الجماعي.",
+                methodologyLabel: "المنهجية:",
+                methodologyText: "تحليل قائم على الكلمات المفتاحية مع مؤشرات التصعيد بما في ذلك مصطلحات العمل العسكري واللغة الدبلوماسية وتقييمات التهديد بلغات متعددة",
+                lastUpdatedLabel: "آخر تحديث:",
+                notYetScanned: "لم يتم المسح بعد",
+                disclaimerTitle: "إخلاء المسؤولية:",
+                disclaimerText: "لوحة التحكم هذه هي أداة تحليلية للأغراض التعليمية والبحثية فقط. الاحتماليات تستند إلى تجميع الأخبار من مصادر مفتوحة وتحليل الكلمات المفتاحية البسيط. هذه الأداة لا تمثل التقييمات الحكومية الرسمية للولايات المتحدة أو المواقف السياسية. يجب على المستخدمين استشارة مصادر استخباراتية رسمية لاتخاذ القرارات التشغيلية.",
+                polymarketDisclaimerTitle: "⚠️ إخلاء مسؤولية تنبؤات السوق",
+                polymarketDisclaimerText: "تمثل بيانات Polymarket احتماليات سوق المراهنات (التنبؤات الجماعية). هذه بيانات تكميلية فقط ولا تشكل تقييمًا استخباراتيًا أو حرفة تحليلية.",
+                timeline180plus: "180+ أيام (أولوية منخفضة)",
+                timeline91180: "91-180 أيام",
+                timeline3190: "31-90 أيام",
+                timeline030: "0-30 أيام (تهديد متصاعد)",
+                protestAnalytics: "تحليل الاحتجاجات",
+                flightWidgetTitle: "مراقبة اضطرابات الرحلات",
+                flightStatusNormal: "جميع المسارات طبيعية",
+                flightStatusActive: "اضطرابات نشطة",
+                noFlightDisruptions: "لم يتم الكشف عن اضطرابات كبيرة في المناطق المستهدفة"
+            },
+            fa: {
+                header: "آسیفه آنالیتیکس",
+                subtitle: "داشبورد پیش‌بینی اقدام نظامی اسرائیل",
+                requestsUsedLabel: "درخواست‌های استفاده شده",
+                requestsRemainingLabel: "درخواست‌های باقی‌مانده",
+                dailyLimitLabel: "محدودیت روزانه",
+                resetsInLabel: "بازنشانی در",
+                dataCollectionParams: "پارامترهای جمع‌آوری داده",
+                hours24: "24 ساعت",
+                hours48: "48 ساعت",
+                days7: "7 روز",
+                days30: "30 روز",
+                scanButton: "اسکن منابع OSINT",
+                controlsNote: "پنجره زمانی بالا را تغییر دهید، سپس روی \"اسکن منابع OSINT\" کلیک کنید تا پیش‌بینی به‌روزرسانی شود.",
+                loadingText: "در حال اسکن منابع اطلاعاتی منبع باز...",
+                targetHezbollah: "حزب‌الله",
+                targetIran: "ایران",
+                targetHouthis: "حوثی‌ها (یمن)",
+                strikeProbability: "احتمال حمله",
+                projectedTimeline: "جدول زمانی پیش‌بینی شده",
+                awaitingScan: "در انتظار اسکن...",
+                days030: "0-30 روز",
+                days3190: "31-90 روز",
+                days91180: "91-180 روز",
+                days180plus: "180+ روز",
+                recentHeadlines: "سرفصل‌های اخیر:",
+                clickToScan: "برای بارگیری آخرین اطلاعات اطلاعاتی روی اسکن کلیک کنید",
+                noActionable: "هیچ سرفصل قابل اقدامی یافت نشد (هیچ شاخص تهدیدی شناسایی نشد)",
+                actionableOnly: "سرفصل‌های اخیر (فقط اطلاعات قابل اقدام):",
+                dataSourcesLabel: "منابع داده:",
+                dataSourcesText: "NewsAPI.org جمع‌آوری از رویترز، AP، الجزیره، تایمز اسرائیل، هاآرتص و رسانه‌های اصلی دیگر. GDELT برای منابع عربی، عبری و فارسی. Reddit برای اطلاعات جامعه از r/ForbiddenBromance، r/Israel، r/Lebanon، r/Iran، r/Yemen، r/geopolitics و سابردیت‌های OSINT دیگر. Polymarket برای داده‌های بازار پیش‌بینی جمعی.",
+                methodologyLabel: "روش‌شناسی:",
+                methodologyText: "تحلیل مبتنی بر کلمات کلیدی با شاخص‌های تشدید شامل اصطلاحات اقدام نظامی، زبان دیپلماتیک و ارزیابی‌های تهدید به زبان‌های مختلف",
+                lastUpdatedLabel: "آخرین به‌روزرسانی:",
+                notYetScanned: "هنوز اسکن نشده",
+                disclaimerTitle: "سلب مسئولیت:",
+                disclaimerText: "این داشبورد یک ابزار تحلیلی فقط برای اهداف آموزشی و تحقیقاتی است. احتمالات بر اساس جمع‌آوری اخبار منبع باز و تحلیل کلمات کلیدی ساده است. این ابزار ارزیابی‌های رسمی دولت ایالات متحده یا موضع‌گیری‌های سیاسی را نشان نمی‌دهد. کاربران باید برای تصمیم‌گیری عملیاتی با منابع اطلاعاتی رسمی مشورت کنند.",
+                polymarketDisclaimerTitle: "⚠️ سلب مسئولیت پیش‌بینی‌های بازار",
+                polymarketDisclaimerText: "داده‌های Polymarket احتمالات بازار شرط‌بندی (پیش‌بینی‌های جمعی) را نشان می‌دهد. این فقط داده‌های تکمیلی است و ارزیابی اطلاعاتی یا صنعت تحلیلی نیست.",
+                timeline180plus: "180+ روز (اولویت پایین)",
+                timeline91180: "91-180 روز",
+                timeline3190: "31-90 روز",
+                timeline030: "0-30 روز (تهدید بالا)",
+                protestAnalytics: "تحلیل اعتراضات",
+                flightWidgetTitle: "نظارت بر اختلالات پروازی",
+                flightStatusNormal: "همه مسیرها عادی",
+                flightStatusActive: "اختلالات فعال",
+                noFlightDisruptions: "هیچ اختلال عمده پروازی در مناطق هدف شناسایی نشد"
+            }
+        };
+
+        let currentLanguage = 'en';
+        let globalRateLimit = null;
+        let resetCountdownInterval = null;
+
+        function initLanguage() {
+            const saved = localStorage.getItem('asifah-language');
+            if (saved && translations[saved]) {
+                currentLanguage = saved;
+                applyLanguage(saved);
+            }
+        }
+
+        function switchLanguage(lang) {
+            if (!translations[lang]) return;
+            
+            currentLanguage = lang;
+            localStorage.setItem('asifah-language', lang);
+            
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            applyLanguage(lang);
+        }
+
+        function applyLanguage(lang) {
+            const t = translations[lang];
+            
+            document.documentElement.setAttribute('lang', lang);
+            document.documentElement.setAttribute('dir', lang === 'he' || lang === 'ar' || lang === 'fa' ? 'rtl' : 'ltr');
+            
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    if (element.tagName === 'INPUT') {
+                        element.value = t[key];
+                    } else {
+                        element.textContent = t[key];
+                    }
+                }
+            });
+            
+            document.title = t.header + ' - ' + t.subtitle;
+        }
+
+        function updateRateLimitDisplay(rateLimit) {
+            if (!rateLimit) return;
+            
+            globalRateLimit = rateLimit;
+            
+            const used = rateLimit.requests_used || 0;
+            const limit = rateLimit.requests_limit || 100;
+            const remaining = rateLimit.requests_remaining || 0;
+            
+            document.getElementById('requestsUsed').textContent = used;
+            document.getElementById('requestsLimit').textContent = limit;
+            document.getElementById('requestsRemaining').textContent = remaining;
+            
+            const remainingEl = document.getElementById('requestsRemaining');
+            const rateLimitBox = document.getElementById('rateLimitBox');
+            const scanButton = document.getElementById('scanButton');
+            
+            remainingEl.classList.remove('success', 'warning', 'danger');
+            rateLimitBox.classList.remove('warning', 'danger');
+            
+            if (remaining === 0) {
+                remainingEl.classList.add('danger');
+                rateLimitBox.classList.add('danger');
+                scanButton.disabled = true;
+                document.getElementById('cacheNote').innerHTML = 
+                    '<br><strong style="color: #c0392b;">⚠️ Daily quota exhausted. Showing cached data only until reset.</strong>';
+            } else if (remaining <= 20) {
+                remainingEl.classList.add('warning');
+                rateLimitBox.classList.add('warning');
+                document.getElementById('cacheNote').innerHTML = 
+                    `<br><strong style="color: #f39c12;">⚠️ Only ${remaining} requests remaining today.</strong>`;
+            } else {
+                remainingEl.classList.add('success');
+                document.getElementById('cacheNote').innerHTML = '';
+            }
+            
+            if (resetCountdownInterval) {
+                clearInterval(resetCountdownInterval);
+            }
+            startResetCountdown(rateLimit.resets_in_seconds);
+        }
+        
+        function startResetCountdown(seconds) {
+            let remaining = seconds;
+            
+            function updateCountdown() {
+                if (remaining <= 0) {
+                    document.getElementById('resetCountdown').textContent = 'Resetting...';
+                    setTimeout(fetchRateLimitStatus, 1000);
+                    return;
+                }
+                
+                const hours = Math.floor(remaining / 3600);
+                const minutes = Math.floor((remaining % 3600) / 60);
+                const secs = remaining % 60;
+                
+                document.getElementById('resetCountdown').textContent = 
+                    `${hours}h ${minutes}m ${secs}s`;
+                
+                remaining--;
+            }
+            
+            updateCountdown();
+            resetCountdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        async function fetchRateLimitStatus() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/rate-limit`);
+                const data = await response.json();
+                updateRateLimitDisplay(data);
+            } catch (error) {
+                console.error('Failed to fetch rate limit:', error);
+            }
+        }
+
+        async function fetchPolymarketData() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/polymarket-data`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                displayPolymarketTicker(data.markets || []);
+            } catch (error) {
+                console.error('Failed to fetch Polymarket data:', error);
+                document.getElementById('polymarketTicker').innerHTML = 
+                    '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
+            }
+        }
+
+        function displayPolymarketTicker(markets) {
+            const tickerContainer = document.getElementById('polymarketTicker');
+            
+            if (!markets || markets.length === 0) {
+                tickerContainer.innerHTML = 
+                    '<div class="ticker-error">No active markets found</div>';
+                return;
+            }
+            
+            let tickerHTML = '';
+            const allMarkets = [...markets, ...markets];
+            
+            allMarkets.forEach(market => {
+                const probabilityPercent = Math.round(market.probability * 100);
+                tickerHTML += `
+                    <div class="ticker-item">
+                        <span class="ticker-icon">📊</span>
+                        <span class="ticker-question">${market.question}</span>
+                        <span class="ticker-probability">${probabilityPercent}% Yes</span>
+                        <a href="${market.url}" target="_blank" rel="noopener noreferrer" class="ticker-link">View ↗</a>
+                    </div>
+                `;
+            });
+            
+            tickerContainer.innerHTML = tickerHTML;
+        }
+
+        fetchPolymarketData();
+        setInterval(fetchPolymarketData, 2 * 60 * 60 * 1000);
+        
+        initLanguage();
+        fetchRateLimitStatus();
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initLanguage();
+                fetchRateLimitStatus();
+            });
+        }
 
         async function scanData() {
             const button = document.querySelector('.scan-button');
@@ -495,170 +1509,161 @@
             const clickSound = document.getElementById('clickSound');
             const errorMessage = document.getElementById('errorMessage');
 
-            // Hide previous errors
             errorMessage.classList.remove('show');
 
-            // Play click sound (ignore failure on some browsers)
-            if (clickSound) {
-                try {
-                    clickSound.currentTime = 0;
-                    clickSound.play().catch(() => {});
-                } catch (_) {}
+            try {
+                clickSound.currentTime = 0;
+                clickSound.play().catch(() => {});
+            } catch (e) {
+                console.log('Audio play failed:', e);
             }
 
-            // UI: scanning state
             button.classList.add('scanning');
             button.disabled = true;
             dashboard.style.opacity = '0.3';
             loading.classList.add('active');
 
-            // Selected time window
             const timeWindow = parseInt(
-                document.querySelector('input[name="timeWindow"]:checked').value,
-                10
+                document.querySelector('input[name="timeWindow"]:checked').value
             );
 
             try {
-                // Scan all three targets in parallel
                 await Promise.all([
                     scanTarget('hezbollah', timeWindow),
                     scanTarget('iran', timeWindow),
                     scanTarget('houthis', timeWindow)
                 ]);
 
-                // Update timestamp
                 const now = new Date();
-                const lastUpdated = document.getElementById('lastUpdated');
-                if (lastUpdated) {
-                    lastUpdated.innerHTML =
-                        '<h4>Last Updated:</h4> ' +
-                        now.toLocaleString('en-US', {
-                            month: 'long',
-                            day: 'numeric',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            timeZoneName: 'short'
-                        });
-                }
+                const t = translations[currentLanguage];
+                document.getElementById('lastUpdatedValue').textContent =
+                    now.toLocaleString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        timeZoneName: 'short'
+                    }) + ` (last ${timeWindow} day(s))`;
             } catch (error) {
                 console.error('Scan error:', error);
-                errorMessage.textContent =
-                    'Error scanning news sources. Please check that backend is running. Error: ' +
-                    error.message;
+                
+                if (error.message.includes('429') || error.message.includes('Rate limit')) {
+                    errorMessage.innerHTML = 
+                        '<strong>Daily API Limit Reached</strong><br>' +
+                        'You\'ve used all 100 daily requests. The dashboard will show cached data until midnight UTC. ' +
+                        'Check the rate limit display above for reset time.';
+                } else {
+                    errorMessage.textContent =
+                        'Error scanning news sources: ' + error.message;
+                }
                 errorMessage.classList.add('show');
             } finally {
-                // Reset UI
                 loading.classList.remove('active');
                 dashboard.style.opacity = '1';
                 button.classList.remove('scanning');
                 button.disabled = false;
+                
+                fetchRateLimitStatus();
             }
         }
 
-        // Uses backend probability/timeline when there is real data; otherwise falls back to local scoring
         async function scanTarget(targetName, days) {
             const url = `${BACKEND_URL}/scan?target=${targetName}&days=${days}`;
-            console.log('Calling backend:', url);
 
             const response = await fetch(url);
+
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}`);
+                const text = await response.text();
+                throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
             }
+
             const data = await response.json();
-            console.log('Raw backend response for', targetName, data);
 
-            // Backend-level error
             if (data.error) {
-                console.error(
-                    `Backend error for ${targetName}:`,
-                    data.error,
-                    data.message || ''
-                );
-                const errorMessage = document.getElementById('errorMessage');
-                if (errorMessage) {
-                    errorMessage.textContent =
-                        `Backend error for ${targetName}: ${data.error}` +
-                        (data.message ? ` – ${data.message}` : '');
-                    errorMessage.classList.add('show');
-                }
-                return;
+                throw new Error(`${data.error}: ${data.message || ''}`);
             }
 
-            // Prefer language-specific articles if present
-            const backendArticles =
-                data.articles_en && Array.isArray(data.articles_en)
-                    ? data.articles_en
-                    : (data.articles && Array.isArray(data.articles)
-                        ? data.articles
-                        : []);
+            if (data.rate_limit) {
+                updateRateLimitDisplay(data.rate_limit);
+            }
 
+            const isCached = data.cached === true;
+            
+            const articles = data.articles || [];
             const escalationKeywords = data.escalation_keywords || [];
             const targetKeywords = data.target_keywords || [];
 
-            const totalArticles =
-                typeof data.total_articles === 'number'
-                    ? data.total_articles
-                    : backendArticles.length;
+            const score = calculateThreatScore(
+                articles,
+                escalationKeywords,
+                targetKeywords,
+                days
+            );
 
-            let probability;
-            let timeline;
-            let articlesForDisplay = backendArticles;
+            const probability = Math.min(Math.round(score.probability), 99);
+            const timeline = determineTimeline(probability);
 
-            // Use backend probability ONLY if it actually has article data to support it
-            if (
-                typeof data.probability === 'number' &&
-                totalArticles > 0 &&
-                backendArticles.length > 0
-            ) {
-                probability = Math.min(
-                    Math.max(Math.round(data.probability), 1),
-                    99
-                );
-                timeline = data.timeline || determineTimeline(probability);
-                console.log(
-                    `Using backend probability/timeline for ${targetName}:`,
-                    probability,
-                    timeline,
-                    'articles:', totalArticles
-                );
-            } else {
-                // Fallback: local scoring (handles cases where backend returns stub probability with no articles)
-                const score = calculateThreatScore(
-                    backendArticles,
-                    escalationKeywords,
-                    targetKeywords
-                );
-                probability = Math.min(Math.round(score.probability), 99);
-                timeline = determineTimeline(probability);
-                console.log(
-                    `Using local scoring for ${targetName}:`,
-                    probability,
-                    timeline,
-                    score
-                );
-            }
-
-            updateProbability(targetName, probability);
-            updateTimeline(targetName, timeline);
-            displayHeadlines(targetName, articlesForDisplay.slice(0, 5));
+            updateProbability(targetName, probability, isCached);
+            updateTimeline(targetName, timeline, probability);
+            displayHeadlines(targetName, data);
         }
 
-        // Simple local threat score (used as fallback only)
-        function calculateThreatScore(articles, escalationKeywords, targetKeywords) {
+        function calculateThreatScore(articles, escalationKeywords, targetKeywords, days) {
             if (!articles || articles.length === 0) {
-                // Very low base when we truly have nothing to work with
-                return { probability: 10, escalationCount: 0 };
+                return { probability: 10, escalationCount: 0, actionableArticles: [] };
             }
 
+            const windowDays = days || 7;
+
+            let coverageCount = articles.length;
             let escalationCount = 0;
-            let totalMentions = 0;
+            let targetMentionCount = 0;
+            let actionableArticles = [];
+
+            const KINETIC = [
+                'airstrike', 'air strike', 'strike on', 'rocket attack', 'rocket fire',
+                'missile strike', 'missile attack', 'drone strike', 'drone attack',
+                'barrage', 'shelling', 'bombardment', 'launched rockets', 'launched missiles',
+                'cross-border fire', 'cross border fire', 'killed', 'casualties'
+            ];
+
+            const DIRECT_THREATS = [
+                'we will respond', 'will respond', 'vowed to', 'threatened', 'threatens',
+                'warned that', 'retaliate', 'retaliation', 'severe response',
+                'pay the price', 'destroy', 'wiped out', 'escalate'
+            ];
+
+            const POSTURING = [
+                'mobilized', 'mobilised', 'mobilization', 'mobilisation',
+                'called up reserves', 'reserve call-up', 'troop buildup', 'troop build-up',
+                'massing troops', 'reinforcements', 'deployed forces', 'deployment of troops',
+                'military drill', 'military exercise', 'naval drill', 'raised alert',
+                'high alert', 'heightened alert', 'combat readiness'
+            ];
+
+            const US_INVOLVEMENT = [
+                'us carrier', 'american carrier', 'aircraft carrier', 'uss ',
+                'us navy', 'us destroyer', 'american warship', 'centcom', 'us-led coalition'
+            ];
+
+            const DEESCALATION = [
+                'ceasefire', 'cease-fire', 'truce', 'calm the situation', 'restore calm',
+                'de-escalation', 'deescalation', 'reduce tensions', 'talks', 'talks in',
+                'negotiations', 'mediated', 'mediation', 'diplomatic push', 'diplomatic effort'
+            ];
+
+            let kineticEvents = 0;
+            let directThreatEvents = 0;
+            let postureEvents = 0;
+            let usInvolvementEvents = 0;
+            let deescalationEvents = 0;
 
             articles.forEach(article => {
                 const text = (
-                    (article.title || '') +
-                    ' ' +
-                    (article.description || '')
+                    (article.title || '') + ' ' +
+                    (article.description || '') + ' ' +
+                    (article.content || '')
                 ).toLowerCase();
 
                 escalationKeywords.forEach(keyword => {
@@ -669,78 +1674,275 @@
 
                 targetKeywords.forEach(keyword => {
                     if (keyword && text.includes(keyword.toLowerCase())) {
-                        totalMentions++;
+                        targetMentionCount++;
                     }
                 });
+
+                if (KINETIC.some(k => text.includes(k))) kineticEvents++;
+                if (DIRECT_THREATS.some(k => text.includes(k))) directThreatEvents++;
+                if (POSTURING.some(k => text.includes(k))) postureEvents++;
+                if (US_INVOLVEMENT.some(k => text.includes(k))) usInvolvementEvents++;
+                if (DEESCALATION.some(k => text.includes(k))) deescalationEvents++;
+                
+                const isActionable = 
+                    KINETIC.some(k => text.includes(k)) ||
+                    DIRECT_THREATS.some(k => text.includes(k)) ||
+                    POSTURING.some(k => text.includes(k)) ||
+                    US_INVOLVEMENT.some(k => text.includes(k)) ||
+                    escalationKeywords.some(keyword => keyword && text.includes(keyword.toLowerCase())) ||
+                    targetKeywords.some(keyword => keyword && text.includes(keyword.toLowerCase()));
+
+                if (isActionable) {
+                    actionableArticles.push(article);
+                }
             });
 
-            const baseScore = Math.min(articles.length * 2, 40);        // volume of coverage
-            const escalationScore = Math.min(escalationCount * 3, 40);   // escalatory language
-            const mentionScore = Math.min(totalMentions, 20);            // frequency of mentions
+            const coveragePerDay = coverageCount / windowDays;
+            const escalationPerDay = escalationCount / windowDays;
+            const mentionsPerDay = targetMentionCount / windowDays;
 
-            const probability = baseScore + escalationScore + mentionScore;
-            return { probability, escalationCount };
+            let probability =
+                Math.min(coveragePerDay * 8, 25) +
+                Math.min(escalationPerDay * 10, 40) +
+                Math.min(mentionsPerDay * 4, 15) +
+                Math.min(kineticEvents * 8, 20) +
+                Math.min(directThreatEvents * 6, 15) +
+                Math.min(postureEvents * 3, 10) +
+                Math.min(usInvolvementEvents * 3, 10) -
+                Math.min(deescalationEvents * 5, 20);
+
+            probability = Math.max(5, Math.min(Math.round(probability), 99));
+
+            return { 
+                probability, 
+                escalationCount,
+                actionableArticles: actionableArticles
+            };
         }
 
-        // Timeline buckets for when backend doesn't supply one
         function determineTimeline(probability) {
-            if (probability < 30) return '180+ Days (Low priority)';
-            if (probability < 50) return '91-180 Days';
-            if (probability < 70) return '31-90 Days';
-            return '0-30 Days (Elevated threat)';
+            const t = translations[currentLanguage];
+            if (probability < 30) return t.timeline180plus;
+            if (probability < 50) return t.timeline91180;
+            if (probability < 70) return t.timeline3190;
+            return t.timeline030;
         }
 
-        function updateProbability(targetId, probability) {
-            const element = document.getElementById(`${targetId}-prob`);
-            if (!element) return;
-
-            element.textContent = `${probability}%`;
-            element.classList.remove('low', 'medium', 'high');
-
+        function updateProbability(targetId, probability, isCached) {
+            const gaugeElement = document.getElementById(`${targetId}-gauge`);
+            const textElement = document.getElementById(`${targetId}-prob`);
+            const cardElement = document.getElementById(`${targetId}-card`);
+            
+            textElement.textContent = `${probability}%`;
+            
+            let threatClass = 'medium';
             if (probability < 34) {
-                element.classList.add('low');
-            } else if (probability < 67) {
-                element.classList.add('medium');
+                threatClass = 'low';
+            } else if (probability >= 67) {
+                threatClass = 'high';
+            }
+            
+            gaugeElement.classList.remove('low', 'medium', 'high');
+            gaugeElement.classList.add(threatClass);
+            
+            textElement.classList.remove('low', 'medium', 'high');
+            textElement.classList.add(threatClass);
+            
+            cardElement.classList.remove('low-threat', 'medium-threat', 'high-threat');
+            cardElement.classList.add(`${threatClass}-threat`);
+            
+            const circumference = 534;
+            const progress = (probability / 100) * circumference;
+            gaugeElement.setAttribute('stroke-dasharray', `${progress} ${circumference}`);
+        }
+
+        function updateTimeline(targetId, timeline, probability) {
+            document.getElementById(`${targetId}-timeline`).textContent = timeline;
+            
+            const barElement = document.getElementById(`${targetId}-bar`);
+            const segments = barElement.querySelectorAll('.timeline-segment');
+            
+            segments.forEach(seg => seg.classList.remove('active'));
+            
+            if (probability >= 70) {
+                segments[0].classList.add('active');
+            } else if (probability >= 50) {
+                segments[1].classList.add('active');
+            } else if (probability >= 30) {
+                segments[2].classList.add('active');
             } else {
-                element.classList.add('high');
+                segments[3].classList.add('active');
             }
         }
 
-        function updateTimeline(targetId, timeline) {
-            const el = document.getElementById(`${targetId}-timeline`);
-            if (el) el.textContent = timeline;
-        }
-
-        function displayHeadlines(targetId, articles) {
+        function displayHeadlines(targetId, data) {
             const container = document.getElementById(`${targetId}-headlines`);
-            if (!container) return;
+            const t = translations[currentLanguage];
 
-            if (!articles || articles.length === 0) {
+            if (!data) {
                 container.innerHTML =
-                    '<h4>Recent Headlines:</h4>' +
-                    '<p style="color: #7f8c8d; font-style: italic;">No recent articles found</p>';
+                    `<h4>${t.recentHeadlines}</h4>` +
+                    `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
                 return;
             }
 
-            let html = '<h4>Recent Headlines:</h4>';
-            articles.forEach(article => {
-                const dateStr = article.publishedAt
-                    ? new Date(article.publishedAt).toLocaleDateString()
-                    : '';
-                const title = article.title || 'Untitled article';
-                const url = article.url || '#';
-                const source = (article.source && article.source.name) || 'Unknown source';
+            const articles_en = data.articles_en || [];
+            const articles_he = data.articles_he || [];
+            const articles_ar = data.articles_ar || [];
+            const articles_fa = data.articles_fa || [];
+            const articles_reddit = data.articles_reddit || [];
 
-                html += `
-                    <div class="headline-item">
-                        <a href="${url}" target="_blank" rel="noopener noreferrer">${title}</a>
-                        <div class="source">${source}${dateStr ? ' - ' + dateStr : ''}</div>
-                    </div>
-                `;
-            });
+            const totalArticles = articles_en.length + articles_he.length + articles_ar.length + articles_fa.length + articles_reddit.length;
+
+            if (totalArticles === 0) {
+                container.innerHTML =
+                    `<h4>${t.recentHeadlines}</h4>` +
+                    `<p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>`;
+                return;
+            }
+
+            let html = `<h4>${t.recentHeadlines}</h4>`;
+
+            function renderArticleSection(articles, sectionTitle, directionRTL = false) {
+                if (articles.length === 0) return '';
+                
+                let sectionHtml = `<div style="margin-bottom: 20px;">`;
+                sectionHtml += `<h5 style="font-size: 13px; color: #1e3a5f; margin-bottom: 10px; font-weight: bold;">${sectionTitle} (${articles.length})</h5>`;
+                
+                articles.slice(0, 5).forEach(article => {
+                    const date = article.publishedAt
+                        ? new Date(article.publishedAt).toLocaleDateString()
+                        : 'Unknown date';
+                    const sourceName = article.source && article.source.name
+                        ? article.source.name
+                        : 'Unknown source';
+
+                    const dirAttr = directionRTL ? 'dir="rtl"' : '';
+                    
+                    sectionHtml += `
+                        <div class="headline-item" ${dirAttr}>
+                            <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                                ${article.title || 'Untitled article'}
+                            </a>
+                            <div class="source">${sourceName} - ${date}</div>
+                        </div>
+                    `;
+                });
+                
+                sectionHtml += `</div>`;
+                return sectionHtml;
+            }
+
+            function renderRedditSection(posts, sectionTitle) {
+                if (posts.length === 0) return '';
+                
+                const sortedPosts = posts
+                    .map(post => ({
+                        ...post,
+                        engagement: (post.reddit_score || 0) + (post.reddit_comments || 0) * 2
+                    }))
+                    .sort((a, b) => b.engagement - a.engagement);
+                
+                let sectionHtml = `<div style="margin-bottom: 20px; border-top: 2px solid #ff4500; padding-top: 15px;">`;
+                sectionHtml += `<h5 style="font-size: 13px; color: #ff4500; margin-bottom: 10px; font-weight: bold;">💬 ${sectionTitle} (Top 2)</h5>`;
+                
+                sortedPosts.slice(0, 2).forEach(post => {
+                    const date = post.publishedAt
+                        ? new Date(post.publishedAt).toLocaleDateString()
+                        : 'Unknown date';
+                    const subreddit = post.source && post.source.name
+                        ? post.source.name
+                        : 'Unknown subreddit';
+                    const score = post.reddit_score || 0;
+                    const comments = post.reddit_comments || 0;
+                    const upvoteRatio = post.reddit_upvote_ratio 
+                        ? Math.round(post.reddit_upvote_ratio * 100) 
+                        : 0;
+                    
+                    sectionHtml += `
+                        <div class="headline-item" style="border-left-color: #ff4500; background-color: #fff5f0;">
+                            <a href="${post.url}" target="_blank" rel="noopener noreferrer">
+                                ${post.title || 'Untitled post'}
+                            </a>
+                            <div class="source">
+                                ${subreddit} - ${date}<br>
+                                <span style="color: #ff4500; font-weight: bold;">
+                                    ↑ ${score} upvotes | 💬 ${comments} comments | ${upvoteRatio}% upvoted
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                sectionHtml += `</div>`;
+                return sectionHtml;
+            }
+
+            html += renderArticleSection(articles_en, '📰 English Sources', false);
+            html += renderArticleSection(articles_he, '📰 מקורות עבריים', true);
+            html += renderArticleSection(articles_ar, '📰 مصادر عربية', true);
+            
+            if (articles_fa.length > 0) {
+                html += renderArticleSection(articles_fa, '📰 منابع فارسی', true);
+            }
+
+            html += renderRedditSection(articles_reddit, 'Reddit Community Intelligence');
 
             container.innerHTML = html;
         }
+
+        async function updateFlightCancellations() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/flight-cancellations`);
+                if (!response.ok) {
+                    console.log('Flight cancellations endpoint not ready yet');
+                    return;
+                }
+                
+                const data = await response.json();
+                displayFlightCancellations(data.cancellations || []);
+            } catch (error) {
+                console.error('Error fetching flight cancellations:', error);
+            }
+        }
+
+        function displayFlightCancellations(cancellations) {
+            const grid = document.getElementById('flightCancellationsGrid');
+            const badge = document.getElementById('flightStatusBadge');
+            const t = translations[currentLanguage];
+            
+            if (!cancellations || cancellations.length === 0) {
+                grid.innerHTML = `<div class="no-cancellations">${t.noFlightDisruptions}</div>`;
+                badge.className = 'flight-status-badge normal';
+                badge.innerHTML = `<span data-i18n="flightStatusNormal">${t.flightStatusNormal}</span>`;
+                return;
+            }
+            
+            badge.className = 'flight-status-badge active';
+            badge.innerHTML = `<span data-i18n="flightStatusActive">${t.flightStatusActive} (${cancellations.length})</span>`;
+            
+            let html = '';
+            cancellations.forEach(cancel => {
+                const date = new Date(cancel.date).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric'
+                });
+                
+                html += `
+                    <div class="cancellation-card">
+                        <div class="cancellation-airline">${cancel.airline}</div>
+                        <div class="cancellation-details">
+                            <strong>Destination:</strong> ${cancel.destination}<br>
+                            <strong>Announced:</strong> ${date}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            grid.innerHTML = html;
+        }
+
+        updateFlightCancellations();
+        setInterval(updateFlightCancellations, 30 * 60 * 1000);
     </script>
 </body>
 </html>
