@@ -278,6 +278,30 @@
             text-decoration: underline;
         }
 
+        /* Iran protests button */
+        .iran-protests-link {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .protests-button {
+            display: inline-block;
+            padding: 8px 16px;
+            font-size: 13px;
+            border-radius: 4px;
+            border: 1px solid #1e3a5f;
+            background-color: #ffffff;
+            color: #1e3a5f;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.2s ease;
+        }
+
+        .protests-button:hover {
+            background-color: #1e3a5f;
+            color: #ffffff;
+        }
+
         footer {
             background-color: white;
             padding: 20px;
@@ -405,6 +429,11 @@
                     <h4>Recent Headlines:</h4>
                     <p style="color: #7f8c8d; font-style: italic;">Click scan to load latest intelligence</p>
                 </div>
+                <div class="iran-protests-link">
+                    <a href="iran-protests.html" class="protests-button">
+                        Open Iran Protests Tracker
+                    </a>
+                </div>
             </div>
 
             <!-- Houthis Card -->
@@ -527,12 +556,15 @@
             }
         }
 
-        // Uses backend probability/timeline when available; falls back to local scoring
+        // Uses backend probability/timeline when there is real data; otherwise falls back to local scoring
         async function scanTarget(targetName, days) {
             const url = `${BACKEND_URL}/scan?target=${targetName}&days=${days}`;
             console.log('Calling backend:', url);
 
             const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
             const data = await response.json();
             console.log('Raw backend response for', targetName, data);
 
@@ -553,26 +585,47 @@
                 return;
             }
 
-            const articles = data.articles || [];
+            // Prefer language-specific articles if present
+            const backendArticles =
+                data.articles_en && Array.isArray(data.articles_en)
+                    ? data.articles_en
+                    : (data.articles && Array.isArray(data.articles)
+                        ? data.articles
+                        : []);
+
             const escalationKeywords = data.escalation_keywords || [];
             const targetKeywords = data.target_keywords || [];
 
+            const totalArticles =
+                typeof data.total_articles === 'number'
+                    ? data.total_articles
+                    : backendArticles.length;
+
             let probability;
             let timeline;
+            let articlesForDisplay = backendArticles;
 
-            // Prefer backend probability/timeline if provided
-            if (typeof data.probability === 'number') {
-                probability = Math.min(Math.max(Math.round(data.probability), 1), 99);
+            // Use backend probability ONLY if it actually has article data to support it
+            if (
+                typeof data.probability === 'number' &&
+                totalArticles > 0 &&
+                backendArticles.length > 0
+            ) {
+                probability = Math.min(
+                    Math.max(Math.round(data.probability), 1),
+                    99
+                );
                 timeline = data.timeline || determineTimeline(probability);
                 console.log(
                     `Using backend probability/timeline for ${targetName}:`,
                     probability,
-                    timeline
+                    timeline,
+                    'articles:', totalArticles
                 );
             } else {
-                // Fallback: local scoring
+                // Fallback: local scoring (handles cases where backend returns stub probability with no articles)
                 const score = calculateThreatScore(
-                    articles,
+                    backendArticles,
                     escalationKeywords,
                     targetKeywords
                 );
@@ -588,13 +641,14 @@
 
             updateProbability(targetName, probability);
             updateTimeline(targetName, timeline);
-            displayHeadlines(targetName, articles.slice(0, 5));
+            displayHeadlines(targetName, articlesForDisplay.slice(0, 5));
         }
 
         // Simple local threat score (used as fallback only)
         function calculateThreatScore(articles, escalationKeywords, targetKeywords) {
             if (!articles || articles.length === 0) {
-                return { probability: 15, escalationCount: 0 };
+                // Very low base when we truly have nothing to work with
+                return { probability: 10, escalationCount: 0 };
             }
 
             let escalationCount = 0;
