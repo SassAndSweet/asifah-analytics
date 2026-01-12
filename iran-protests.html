@@ -152,10 +152,10 @@
         .stability-low { color: #ff8c42; }
         .stability-critical { color: #ff6b6b; }
 
-        /* Enhanced Casualty Cards (v1.9.1) */
+        /* Enhanced Casualty Cards v2.0 */
         .casualties-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
@@ -220,6 +220,47 @@
             letter-spacing: 1px;
             color: #a0a0a0;
             font-weight: bold;
+        }
+
+        /* NEW: Source links styling v2.0 */
+        .casualty-sources {
+            margin-top: 15px;
+            text-align: left;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .source-item {
+            font-size: 11px;
+            margin-bottom: 5px;
+            padding: 3px 0;
+        }
+
+        .source-item a {
+            color: #4dabf7;
+            text-decoration: none;
+        }
+
+        .source-item a:hover {
+            text-decoration: underline;
+        }
+
+        .source-count {
+            color: #c0c0c0;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .casualty-sources::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .casualty-sources::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
         }
 
         .verified-badge {
@@ -466,13 +507,14 @@
             </div>
         </div>
 
-        <!-- Casualties Grid (v1.9.1) -->
+        <!-- Enhanced Casualties Grid v2.0 with Source Links -->
         <div class="casualties-grid">
             <div class="casualty-card deaths">
                 <div class="casualty-icon">☠️</div>
                 <div class="casualty-number" id="deathCount">--</div>
                 <div class="casualty-label" id="deaths-label">Deaths Reported</div>
                 <div class="verified-badge" id="verified-badge">Verified</div>
+                <div class="casualty-sources" id="deathSources"></div>
             </div>
             
             <div class="casualty-card injuries">
@@ -480,6 +522,7 @@
                 <div class="casualty-number" id="injuryCount">--</div>
                 <div class="casualty-label" id="injuries-label">Injuries Reported</div>
                 <div class="verified-badge" id="verified-badge2">Verified</div>
+                <div class="casualty-sources" id="injurySources"></div>
             </div>
             
             <div class="casualty-card arrests">
@@ -487,6 +530,7 @@
                 <div class="casualty-number" id="arrestCount">--</div>
                 <div class="casualty-label" id="arrests-label">Arrests Reported</div>
                 <div class="verified-badge" id="verified-badge3">Verified</div>
+                <div class="casualty-sources" id="arrestSources"></div>
             </div>
         </div>
 
@@ -508,7 +552,7 @@
         </div>
 
         <div class="footer">
-            <p>Asifah Analytics v1.9.1 | Data sources: NewsAPI, GDELT, Iran Wire RSS, Reddit</p>
+            <p>Asifah Analytics v2.0 | Data sources: NewsAPI, GDELT, Iran Wire RSS, Reddit</p>
             <p>Updated every 30 minutes | Not for operational use</p>
         </div>
     </div>
@@ -689,11 +733,13 @@
         }
 
         function updateMetrics(data) {
+            // ENHANCED v2.0: Intensity with percentage
             const intensity = data.intensity || 0;
-            document.getElementById('protest-intensity').textContent = intensity;
+            document.getElementById('protest-intensity').textContent = intensity + '%';
             document.getElementById('protest-intensity').className = 'metric-value ' + getIntensityClass(intensity);
             document.getElementById('intensity-level').textContent = getIntensityLabel(intensity);
             
+            // Casualties
             const deaths = data.casualties?.deaths || 0;
             const injuries = data.casualties?.injuries || 0;
             const arrests = data.casualties?.arrests || 0;
@@ -701,6 +747,11 @@
             document.getElementById('deathCount').textContent = deaths;
             document.getElementById('injuryCount').textContent = injuries;
             document.getElementById('arrestCount').textContent = arrests;
+            
+            // ENHANCED v2.0: Display sources with links
+            updateCasualtySources('deathSources', data.casualties?.details, 'deaths');
+            updateCasualtySources('injurySources', data.casualties?.details, 'injuries');
+            updateCasualtySources('arrestSources', data.casualties?.details, 'arrests');
             
             animateNumber('deathCount', deaths);
             animateNumber('injuryCount', injuries);
@@ -722,6 +773,46 @@
                     citiesContainer.appendChild(pill);
                 });
             }
+        }
+
+        // NEW v2.0: Function to display casualty sources with links
+        function updateCasualtySources(elementId, details, type) {
+            const container = document.getElementById(elementId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!details || details.length === 0) {
+                container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
+                return;
+            }
+            
+            // Filter by type and sort by count (highest first)
+            const filtered = details
+                .filter(d => d.type === type)
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 5); // Show top 5
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
+                return;
+            }
+            
+            filtered.forEach(detail => {
+                const item = document.createElement('div');
+                item.className = 'source-item';
+                
+                const count = detail.count || '?';
+                const source = detail.source || 'Unknown';
+                const url = detail.url || '#';
+                
+                item.innerHTML = `
+                    <span class="source-count">${count}:</span>
+                    <a href="${url}" target="_blank">${source}</a>
+                `;
+                
+                container.appendChild(item);
+            });
         }
 
         function getIntensityClass(value) {
