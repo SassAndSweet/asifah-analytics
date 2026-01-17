@@ -263,6 +263,11 @@
             font-weight: bold;
         }
 
+        .source-no-numbers {
+            color: #ffd43b;
+            font-style: italic;
+        }
+
         .casualty-sources::-webkit-scrollbar {
             width: 4px;
         }
@@ -469,8 +474,8 @@
                 gap: 15px;
             }
         }
-   
-    /* Analytics Icon */
+        
+        /* Analytics Icon */
         .analytics-icon {
             position: fixed;
             bottom: 20px;
@@ -498,7 +503,7 @@
             border-color: rgba(255, 107, 107, 0.6);
             background: rgba(255, 107, 107, 0.3);
         }
-         </style>
+    </style>
 </head>
 <body>
     <!-- Analytics Icon -->
@@ -519,7 +524,7 @@
                 <button onclick="switchLanguage('en')" class="active">EN</button>
                 <button onclick="switchLanguage('he')">עב</button>
                 <button onclick="switchLanguage('ar')">ع</button>
-                <button onclick="switchLanguage('fa')">فا</button>
+                <button onclick="switchLanguage('fa')">فא</button>
             </div>
         </div>
 
@@ -789,10 +794,10 @@
             document.getElementById('injuryCount').textContent = injuries;
             document.getElementById('arrestCount').textContent = arrests;
             
-            // ENHANCED v2.0: Display sources with links
-            updateCasualtySources('deathSources', data.casualties?.details, 'deaths');
-            updateCasualtySources('injurySources', data.casualties?.details, 'injuries');
-            updateCasualtySources('arrestSources', data.casualties?.details, 'arrests');
+            // ENHANCED v3.0: Display sources with links INCLUDING articles_without_numbers
+            updateCasualtySources('deathSources', data.casualties, 'deaths');
+            updateCasualtySources('injurySources', data.casualties, 'injuries');
+            updateCasualtySources('arrestSources', data.casualties, 'arrests');
             
             animateNumber('deathCount', deaths);
             animateNumber('injuryCount', injuries);
@@ -802,11 +807,13 @@
             document.getElementById('regime-stability').textContent = stability;
             document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stability);
             
+            // FIX #1: Display ALL cities, not just 3
             document.getElementById('total-cities').textContent = data.num_cities_affected || 0;
             
             const citiesContainer = document.getElementById('cities-list');
             citiesContainer.innerHTML = '';
             if (data.cities && data.cities.length > 0) {
+                // Display ALL cities
                 data.cities.forEach(cityObj => {
                     const pill = document.createElement('div');
                     pill.className = 'city-pill';
@@ -816,30 +823,39 @@
             }
         }
 
-        // NEW v2.0: Function to display casualty sources with links
-        function updateCasualtySources(elementId, details, type) {
+        // FIX #2: Enhanced function to display casualty sources WITH articles_without_numbers
+        function updateCasualtySources(elementId, casualties, type) {
             const container = document.getElementById(elementId);
             if (!container) return;
             
             container.innerHTML = '';
             
-            if (!details || details.length === 0) {
+            if (!casualties) {
                 container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
                 return;
             }
             
-            // Filter by type and sort by count (highest first)
-            const filtered = details
+            const details = casualties.details || [];
+            const articlesWithoutNumbers = casualties.articles_without_numbers || [];
+            
+            // Filter numbered sources by type
+            const numberedSources = details
                 .filter(d => d.type === type)
                 .sort((a, b) => b.count - a.count)
-                .slice(0, 5); // Show top 5
+                .slice(0, 3); // Top 3 with numbers
             
-            if (filtered.length === 0) {
+            // Filter articles without numbers by type
+            const unnumberedSources = articlesWithoutNumbers
+                .filter(a => a.type === type)
+                .slice(0, 3); // Top 3 without numbers
+            
+            if (numberedSources.length === 0 && unnumberedSources.length === 0) {
                 container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
                 return;
             }
             
-            filtered.forEach(detail => {
+            // Display numbered sources first
+            numberedSources.forEach(detail => {
                 const item = document.createElement('div');
                 item.className = 'source-item';
                 
@@ -849,7 +865,23 @@
                 
                 item.innerHTML = `
                     <span class="source-count">${count}:</span>
-                    <a href="${url}" target="_blank">${source}</a>
+                    <a href="${url}" target="_blank">${source} ↗</a>
+                `;
+                
+                container.appendChild(item);
+            });
+            
+            // Display unnumbered sources (mentions without numbers)
+            unnumberedSources.forEach(article => {
+                const item = document.createElement('div');
+                item.className = 'source-item source-no-numbers';
+                
+                const source = article.source || 'Unknown';
+                const url = article.url || '#';
+                
+                item.innerHTML = `
+                    <span style="color:#ffd43b;">⚠</span>
+                    <a href="${url}" target="_blank">${source} (mentioned) ↗</a>
                 `;
                 
                 container.appendChild(item);
