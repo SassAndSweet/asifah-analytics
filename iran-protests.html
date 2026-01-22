@@ -24,6 +24,94 @@
             margin: 0 auto;
         }
 
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 12px;
+        }
+
+        .left-nav {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #334155;
+            color: #e2e8f0;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #475569;
+            transform: translateY(-2px);
+        }
+
+        .analytics-widget {
+            display: inline-block;
+        }
+
+        .analytics-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .analytics-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .storm-icon {
+            font-size: 1.2rem;
+        }
+
+        .language-switcher {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(51, 65, 85, 0.5);
+            padding: 0.5rem;
+            border-radius: 8px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 1px solid #475569;
+            color: #94a3b8;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .lang-btn:hover {
+            background: rgba(71, 85, 105, 0.5);
+            color: #e2e8f0;
+        }
+
+        .lang-btn.active {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 3rem;
@@ -48,44 +136,6 @@
         .subtitle {
             color: #94a3b8;
             font-size: 1.1rem;
-        }
-
-        .top-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-        }
-
-        .back-button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: #334155;
-            color: #e2e8f0;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .back-button:hover {
-            background: #475569;
-            transform: translateY(-2px);
-        }
-
-        .widget-button {
-            display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .widget-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
         }
 
         .stats-grid {
@@ -337,59 +387,77 @@
                 width: 100%;
             }
 
-            .top-nav {
+            .top-bar {
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .language-switcher {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="top-nav">
-            <a href="index.html" class="back-button">← Back to Dashboard</a>
-            <a href="https://asifahanalytics.com" class="widget-button" target="_blank">📊 View Analytics Dashboard</a>
+        <div class="top-bar">
+            <div class="left-nav">
+                <a href="index.html" class="back-button" data-translate="back">← Back to Dashboard</a>
+                <div class="analytics-widget">
+                    <a href="https://analytics.google.com/analytics/web/#/a381040543p520399776/reports/intelligenthome" target="_blank" class="analytics-button">
+                        <span class="storm-icon">⛈️</span>
+                        <span data-translate="analytics">Analytics</span>
+                    </a>
+                </div>
+            </div>
+            <div class="language-switcher">
+                <button class="lang-btn active" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="he">עב</button>
+                <button class="lang-btn" data-lang="ar">ع</button>
+                <button class="lang-btn" data-lang="fa">فارسی</button>
+            </div>
         </div>
 
         <div class="header">
             <h1>
                 <span class="flag">🇮🇷</span>
-                Iran Protests Monitor
+                <span data-translate="title">Iran Protests Monitor</span>
             </h1>
-            <p class="subtitle">Real-time tracking of protests, casualties, and geographic spread</p>
+            <p class="subtitle" data-translate="subtitle">Real-time tracking of protests, casualties, and geographic spread</p>
         </div>
 
         <div class="stats-grid">
             <div class="stats-card">
                 <div class="stats-icon">☠️</div>
-                <h3 class="stats-title">DEATHS REPORTED</h3>
+                <h3 class="stats-title" data-translate="deaths-title">DEATHS REPORTED</h3>
                 <div class="stats-number" id="deaths-count">--</div>
-                <div class="stats-label">Confirmed fatalities</div>
-                <span class="verified-badge">VERIFIED</span>
+                <div class="stats-label" data-translate="deaths-label">Confirmed fatalities</div>
+                <span class="verified-badge" data-translate="verified">VERIFIED</span>
             </div>
 
             <div class="stats-card">
                 <div class="stats-icon">🩹</div>
-                <h3 class="stats-title">INJURIES REPORTED</h3>
+                <h3 class="stats-title" data-translate="injuries-title">INJURIES REPORTED</h3>
                 <div class="stats-number" id="injuries-count">--</div>
-                <div class="stats-label">Seriously injured</div>
-                <span class="verified-badge">VERIFIED</span>
+                <div class="stats-label" data-translate="injuries-label">Seriously injured</div>
+                <span class="verified-badge" data-translate="verified">VERIFIED</span>
             </div>
 
             <div class="stats-card">
                 <div class="stats-icon">⛓️</div>
-                <h3 class="stats-title">ARRESTS REPORTED</h3>
+                <h3 class="stats-title" data-translate="arrests-title">ARRESTS REPORTED</h3>
                 <div class="stats-number" id="arrests-count">--</div>
-                <div class="stats-label">Total detentions</div>
-                <span class="verified-badge">VERIFIED</span>
+                <div class="stats-label" data-translate="arrests-label">Total detentions</div>
+                <span class="verified-badge" data-translate="verified">VERIFIED</span>
             </div>
 
             <div class="stats-card">
-                <h3 class="stats-title">GEOGRAPHIC SPREAD</h3>
+                <h3 class="stats-title" data-translate="geographic-title">GEOGRAPHIC SPREAD</h3>
                 <div class="stats-number" id="cities-affected">--</div>
-                <div class="stats-label">Cities affected</div>
+                <div class="stats-label" data-translate="cities-label">Cities affected</div>
                 <div style="font-size: 0.9em; color: #94a3b8; margin-top: 0.5rem;" id="provinces-affected">
-                    -- provinces affected
+                    <span data-translate="provinces-label">-- provinces affected</span>
                 </div>
                 <div class="city-tags" id="city-tags-container">
                     <!-- Cities will be loaded dynamically -->
@@ -398,7 +466,7 @@
         </div>
 
         <div class="news-section">
-            <h2>📰 News Coverage</h2>
+            <h2><span data-translate="news-title">📰 News Coverage</span></h2>
             <div class="news-tabs">
                 <button class="news-tab active" data-source="hrana">HRANA (<span id="hrana-count">0</span>)</button>
                 <button class="news-tab" data-source="iranwire">Iran Wire (<span id="iranwire-count">0</span>)</button>
@@ -409,7 +477,7 @@
                 <button class="news-tab" data-source="reddit">Reddit (<span id="reddit-count">0</span>)</button>
             </div>
             <div class="articles-container" id="articles-container">
-                <div class="loading">Loading articles...</div>
+                <div class="loading" data-translate="loading">Loading articles...</div>
             </div>
         </div>
     </div>
@@ -418,17 +486,166 @@
         const API_BASE_URL = 'https://asifah-backend.onrender.com';
         let allArticlesData = {};
         let currentSource = 'hrana';
+        let currentLang = 'en';
+
+        // Translation dictionary
+        const translations = {
+            en: {
+                'back': '← Back to Dashboard',
+                'analytics': 'Analytics',
+                'title': 'Iran Protests Monitor',
+                'subtitle': 'Real-time tracking of protests, casualties, and geographic spread',
+                'deaths-title': 'DEATHS REPORTED',
+                'deaths-label': 'Confirmed fatalities',
+                'injuries-title': 'INJURIES REPORTED',
+                'injuries-label': 'Seriously injured',
+                'arrests-title': 'ARRESTS REPORTED',
+                'arrests-label': 'Total detentions',
+                'geographic-title': 'GEOGRAPHIC SPREAD',
+                'cities-label': 'Cities affected',
+                'provinces-label': 'provinces affected',
+                'verified': 'VERIFIED',
+                'news-title': '📰 News Coverage',
+                'loading': 'Loading articles...'
+            },
+            he: {
+                'back': '→ חזרה ללוח המחוונים',
+                'analytics': 'אנליטיקה',
+                'title': 'מעקב הפגנות איראן',
+                'subtitle': 'מעקב בזמן אמת אחר הפגנות, נפגעים והתפשטות גיאוגרפית',
+                'deaths-title': 'מקרי מוות מדווחים',
+                'deaths-label': 'הרוגים מאושרים',
+                'injuries-title': 'פגיעות מדווחות',
+                'injuries-label': 'פצועים קשה',
+                'arrests-title': 'מעצרים מדווחים',
+                'arrests-label': 'סך כל עיכובים',
+                'geographic-title': 'התפשטות גיאוגרפית',
+                'cities-label': 'ערים מושפעות',
+                'provinces-label': 'מחוזות מושפעים',
+                'verified': 'מאומת',
+                'news-title': '📰 סיקור חדשות',
+                'loading': 'טוען מאמרים...'
+            },
+            ar: {
+                'back': '→ العودة إلى لوحة القيادة',
+                'analytics': 'التحليلات',
+                'title': 'مراقبة احتجاجات إيران',
+                'subtitle': 'تتبع في الوقت الفعلي للاحتجاجات والإصابات والانتشار الجغرافي',
+                'deaths-title': 'الوفيات المبلغ عنها',
+                'deaths-label': 'الوفيات المؤكدة',
+                'injuries-title': 'الإصابات المبلغ عنها',
+                'injuries-label': 'مصابون بجروح خطيرة',
+                'arrests-title': 'الاعتقالات المبلغ عنها',
+                'arrests-label': 'إجمالي الاحتجازات',
+                'geographic-title': 'الانتشار الجغرافي',
+                'cities-label': 'المدن المتأثرة',
+                'provinces-label': 'المحافظات المتأثرة',
+                'verified': 'تم التحقق',
+                'news-title': '📰 التغطية الإخبارية',
+                'loading': 'جاري تحميل المقالات...'
+            },
+            fa: {
+                'back': '→ بازگشت به داشبورد',
+                'analytics': 'تحلیل‌ها',
+                'title': 'نظارت بر اعتراضات ایران',
+                'subtitle': 'پیگیری لحظه‌ای اعتراضات، تلفات و گستره جغرافیایی',
+                'deaths-title': 'مرگ‌های گزارش شده',
+                'deaths-label': 'کشته‌های تأیید شده',
+                'injuries-title': 'مجروحان گزارش شده',
+                'injuries-label': 'مجروحان شدید',
+                'arrests-title': 'بازداشت‌های گزارش شده',
+                'arrests-label': 'کل بازداشت‌ها',
+                'geographic-title': 'گستره جغرافیایی',
+                'cities-label': 'شهرهای تحت تأثیر',
+                'provinces-label': 'استان‌های تحت تأثیر',
+                'verified': 'تأیید شده',
+                'news-title': '📰 پوشش خبری',
+                'loading': 'در حال بارگذاری مقالات...'
+            }
+        };
+
+        // Translation function
+        function translatePage(lang) {
+            currentLang = lang;
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            // Update province text dynamically
+            const provincesText = document.getElementById('provinces-affected');
+            if (provincesText) {
+                const count = provincesText.textContent.match(/\d+/)?.[0] || '--';
+                provincesText.innerHTML = `<span data-translate="provinces-label">${count} ${translations[lang]['provinces-label']}</span>`;
+            }
+
+            // Update document direction for RTL languages
+            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
+                document.body.style.direction = 'rtl';
+            } else {
+                document.body.style.direction = 'ltr';
+            }
+        }
+
+        // Language switcher event listeners
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                translatePage(btn.getAttribute('data-lang'));
+            });
+        });
 
         // Load protest statistics and geographic data
         async function loadProtestData() {
             try {
-                const response = await fetch(`${API_BASE_URL}/iran-protests-data`);
-                if (!response.ok) throw new Error('Failed to fetch data');
+                // Try the new endpoint first
+                let response = await fetch(`${API_BASE_URL}/iran-protests-data`);
                 
+                // If 404, fallback to scan-iran-protests
+                if (!response.ok) {
+                    console.log('iran-protests-data not found, using scan-iran-protests');
+                    response = await fetch(`${API_BASE_URL}/scan-iran-protests?days=7`);
+                    
+                    if (!response.ok) throw new Error('Failed to fetch data');
+                    
+                    const data = await response.json();
+                    
+                    // Use casualties from scan endpoint
+                    document.getElementById('deaths-count').textContent = 
+                        (data.casualties?.deaths || 0).toLocaleString();
+                    document.getElementById('injuries-count').textContent = 
+                        (data.casualties?.injuries || 0).toLocaleString();
+                    document.getElementById('arrests-count').textContent = 
+                        (data.casualties?.arrests || 0).toLocaleString();
+                    
+                    // Geographic data
+                    document.getElementById('cities-affected').textContent = 
+                        data.num_cities_affected || '--';
+                    
+                    // City tags from cities array
+                    const cityTagsContainer = document.getElementById('city-tags-container');
+                    cityTagsContainer.innerHTML = '';
+                    
+                    if (data.cities && data.cities.length > 0) {
+                        data.cities.slice(0, 5).forEach(cityObj => {
+                            const tag = document.createElement('span');
+                            tag.className = 'city-tag';
+                            tag.textContent = cityObj.name || cityObj;
+                            cityTagsContainer.appendChild(tag);
+                        });
+                    }
+                    
+                    return;
+                }
+                
+                // If iran-protests-data works, use it
                 const data = await response.json();
                 console.log('Iran protests data:', data);
                 
-                // Update casualties
                 document.getElementById('deaths-count').textContent = 
                     data.casualties.deaths.toLocaleString();
                 document.getElementById('injuries-count').textContent = 
@@ -436,13 +653,11 @@
                 document.getElementById('arrests-count').textContent = 
                     data.casualties.arrests.toLocaleString();
                 
-                // Update geographic spread
                 document.getElementById('cities-affected').textContent = 
                     data.geographic.cities_affected;
                 document.getElementById('provinces-affected').textContent = 
-                    `${data.geographic.provinces_affected} provinces affected`;
+                    `${data.geographic.provinces_affected} ${translations[currentLang]['provinces-label']}`;
                 
-                // Update city tags dynamically
                 const cityTagsContainer = document.getElementById('city-tags-container');
                 cityTagsContainer.innerHTML = '';
                 
@@ -458,9 +673,8 @@
                 
             } catch (error) {
                 console.error('Error loading protest data:', error);
-                // Set fallback values
                 document.getElementById('cities-affected').textContent = '--';
-                document.getElementById('provinces-affected').textContent = '-- provinces affected';
+                document.getElementById('provinces-affected').textContent = translations[currentLang]['provinces-label'];
             }
         }
 
@@ -528,11 +742,8 @@
         // Tab switching functionality
         document.querySelectorAll('.news-tab').forEach(tab => {
             tab.addEventListener('click', () => {
-                // Update active state
                 document.querySelectorAll('.news-tab').forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                
-                // Switch source and display articles
                 currentSource = tab.dataset.source;
                 displayArticles(currentSource);
             });
