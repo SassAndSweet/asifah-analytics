@@ -365,6 +365,36 @@
             }
         }
 
+        /* Syria-specific purple styling */
+        #syria-card h3 {
+            border-bottom-color: #8b5cf6;
+        }
+
+        #syria-card.low-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #f5f3ff 100%);
+            border-color: #c4b5fd;
+        }
+
+        #syria-card.medium-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #faf5ff 100%);
+            border-color: #d8b4fe;
+        }
+
+        #syria-card.high-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #faf5ff 100%);
+            border-color: #c084fc;
+            animation: syria-threat-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes syria-threat-pulse {
+            0%, 100% { 
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            }
+            50% { 
+                box-shadow: 0 4px 20px rgba(139, 92, 246, 0.25);
+            }
+        }
+
         .target-card h3 {
             font-size: 20px;
             font-weight: bold;
@@ -947,6 +977,15 @@
             font-size: 13px;
         }
 
+        .copyright-footer {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            text-align: center;
+            color: #606060;
+            font-size: 11px;
+        }
+
         .error-message {
             background-color: #f8d7da;
             border: 2px solid #f5c6cb;
@@ -984,8 +1023,8 @@
                 grid-template-columns: 1fr;
             }
         }
- 
-    /* Analytics Icon */
+
+        /* Analytics Icon */
         .analytics-icon {
             position: fixed;
             bottom: 20px;
@@ -1012,7 +1051,7 @@
             box-shadow: 0 6px 20px rgba(30, 58, 95, 0.5);
             border-color: rgba(255, 255, 255, 0.4);
         }
-           </style>
+    </style>
 </head>
 <body>
     <!-- Analytics Icon -->
@@ -1155,6 +1194,37 @@
                     <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
+
+            <!-- NEW: SYRIA CARD 🆕 -->
+            <div class="target-card" id="syria-card">
+                <h3 data-i18n="targetSyria">SYRIA</h3>
+                <div class="probability-display">
+                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+                    <div class="gauge-container">
+                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                            <circle class="gauge-progress medium" id="syria-gauge" cx="100" cy="100" r="85"
+                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+                        </svg>
+                        <div class="gauge-text medium" id="syria-prob">--</div>
+                    </div>
+                </div>
+                <div class="timeline-display">
+                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                    <div class="timeline-value" id="syria-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+                    <div class="timeline-bar" id="syria-bar">
+                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    </div>
+                </div>
+                <div class="headlines-section" id="syria-headlines">
+                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+                </div>
+            </div>
+
         </div>
 
         <div class="flight-widget" id="flightWidget">
@@ -1191,11 +1261,11 @@
             </div>
         </div>
 
-<footer>
+        <footer>
             <div class="footer-content">
                 <div class="footer-section">
                     <h4 data-i18n="dataSourcesLabel">Data Sources:</h4>
-                    <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.</span>
+                    <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/syriancivilwar, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.</span>
                 </div>
                 <div class="footer-section">
                     <h4 data-i18n="methodologyLabel">Methodology:</h4>
@@ -1210,24 +1280,12 @@
                 <strong data-i18n="disclaimerTitle">DISCLAIMER:</strong>
                 <span data-i18n="disclaimerText">This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.</span>
             </div>
-            
-            <!-- Copyright Notice -->
-            <div style="
-                margin-top: 20px;
-                padding-top: 20px;
-                border-top: 2px solid #e1e8ed;
-                text-align: center;
-                font-size: 11px;
-                color: #7f8c8d;
-            ">
-                <p style="margin-bottom: 4px; font-weight: bold;">
-                    © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.
-                </p>
-                <p style="font-size: 10px; color: #95a5a6;">
-                    Unauthorized use, reproduction, or distribution prohibited.
-                </p>
+            <div class="copyright-footer">
+                © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
             </div>
         </footer>
+    </div>
 
     <audio id="clickSound">
         <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
@@ -1255,6 +1313,7 @@
                 targetHezbollah: "HIZBALLAH",
                 targetIran: "IRAN",
                 targetHouthis: "HOUTHIS (YEMEN)",
+                targetSyria: "SYRIA",
                 strikeProbability: "Strike Probability",
                 projectedTimeline: "Projected Timeline",
                 awaitingScan: "Awaiting scan...",
@@ -1267,7 +1326,7 @@
                 noActionable: "No actionable headlines found (no threat indicators detected)",
                 actionableOnly: "Recent Headlines (Actionable Intelligence Only):",
                 dataSourcesLabel: "Data Sources:",
-                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.",
+                dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/syriancivilwar, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.",
                 methodologyLabel: "Methodology:",
                 methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
                 lastUpdatedLabel: "Last Updated:",
@@ -1289,35 +1348,13 @@
             he: {
                 header: "אסיפה אנליטיקס",
                 subtitle: "לוח מחוונים לחיזוי פעולה צבאית ישראלית",
-                requestsUsedLabel: "בקשות שנוצלו",
-                requestsRemainingLabel: "בקשות שנותרו",
-                dailyLimitLabel: "מגבלה יומית",
-                resetsInLabel: "איפוס בעוד",
-                dataCollectionParams: "פרמטרי איסוף נתונים",
-                hours24: "24 שעות",
-                hours48: "48 שעות",
-                days7: "7 ימים",
-                days30: "30 ימים",
-                scanButton: "סריקת מקורות OSINT",
-                controlsNote: "שנה את חלון הזמן למעלה ולחץ על \"סריקת מקורות OSINT\" כדי לרענן את התחזית.",
-                loadingText: "סורק מקורות מודיעין פתוחים...",
                 targetHezbollah: "חיזבאללה",
                 targetIran: "איראן",
                 targetHouthis: "חות'ים (תימן)",
-                strikeProbability: "הסתברות תקיפה",
-                projectedTimeline: "ציר זמן חזוי",
-                awaitingScan: "ממתין לסריקה...",
-                days030: "0-30 י׳",
-                days3190: "31-90 י׳",
-                days91180: "91-180 י׳",
-                days180plus: "180+ י׳",
-                recentHeadlines: "כותרות אחרונות:",
-                clickToScan: "לחץ על סריקה כדי לטעון מודיעין עדכני",
+                targetSyria: "סוריה",
                 protestAnalytics: "ניתוח מחאות",
-                flightWidgetTitle: "מעקב הפרעות טיסה",
-                flightStatusNormal: "כל הנתיבים תקינים",
-                flightStatusActive: "הפרעות פעילות",
-                noFlightDisruptions: "לא זוהו הפרעות משמעותיות באזורי היעד"
+                strikeProbability: "הסתברות תקיפה",
+                projectedTimeline: "ציר זמן חזוי"
             },
             ar: {
                 header: "عاصفة أناليتكس",
@@ -1325,10 +1362,8 @@
                 targetHezbollah: "حزب الله",
                 targetIran: "إيران",
                 targetHouthis: "الحوثيون (اليمن)",
-                protestAnalytics: "تحليل الاحتجاجات",
-                flightWidgetTitle: "مراقبة اضطرابات الرحلات",
-                flightStatusNormal: "جميع المسارات طبيعية",
-                noFlightDisruptions: "لم يتم الكشف عن اضطرابات كبيرة في المناطق المستهدفة"
+                targetSyria: "سوريا",
+                protestAnalytics: "تحليل الاحتجاجات"
             },
             fa: {
                 header: "آسیفه آنالیتیکس",
@@ -1336,10 +1371,8 @@
                 targetHezbollah: "حزب‌الله",
                 targetIran: "ایران",
                 targetHouthis: "حوثی‌ها (یمن)",
-                protestAnalytics: "تحلیل اعتراضات",
-                flightWidgetTitle: "نظارت بر اختلالات پروازی",
-                flightStatusNormal: "همه مسیرها عادی",
-                noFlightDisruptions: "هیچ اختلال عمده پروازی در مناطق هدف شناسایی نشد"
+                targetSyria: "سوریه",
+                protestAnalytics: "تحلیل اعتراضات"
             }
         };
 
@@ -1542,7 +1575,8 @@
                 await Promise.all([
                     scanTarget('hezbollah', timeWindow),
                     scanTarget('iran', timeWindow),
-                    scanTarget('houthis', timeWindow)
+                    scanTarget('houthis', timeWindow),
+                    scanTarget('syria', timeWindow)  // ← SYRIA ADDED! 🎉
                 ]);
 
                 const now = new Date();
