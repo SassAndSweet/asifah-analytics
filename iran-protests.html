@@ -12,7 +12,7 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iran Protests Monitor | Asifah Analytics</title>
+    <title>Iran Protests Tracker | Asifah Analytics</title>
     <style>
         * {
             margin: 0;
@@ -325,6 +325,7 @@
             margin-bottom: 20px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
             padding-bottom: 10px;
+            flex-wrap: wrap;
         }
 
         .language-tabs button {
@@ -475,7 +476,7 @@
             }
         }
         
-        /* Analytics Icon - Fixed positioning in bottom-right corner */
+        /* Analytics Icon */
         .analytics-icon {
             position: fixed;
             bottom: 20px;
@@ -486,7 +487,7 @@
             transition: all 0.3s ease;
             z-index: 1000;
             text-decoration: none;
-            background: rgba(30, 58, 95, 0.9);
+            background: rgba(255, 107, 107, 0.2);
             width: 60px;
             height: 60px;
             border-radius: 50%;
@@ -494,39 +495,31 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            animation: gentle-wiggle 3s ease-in-out infinite;
+            border: 2px solid rgba(255, 107, 107, 0.3);
         }
-        
         .analytics-icon:hover {
             opacity: 1;
             transform: scale(1.15) rotate(15deg);
-            box-shadow: 0 6px 20px rgba(30, 58, 95, 0.5);
-            border-color: rgba(255, 255, 255, 0.4);
-            animation: none;
-        }
-
-        @keyframes gentle-wiggle {
-            0%, 100% { transform: rotate(0deg); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
+            border-color: rgba(255, 107, 107, 0.6);
+            background: rgba(255, 107, 107, 0.3);
         }
     </style>
 </head>
 <body>
-    <!-- Analytics Icon - Storm widget in bottom-right corner -->
+    <!-- Analytics Icon -->
     <a href="https://analytics.google.com" target="_blank" class="analytics-icon" title="View Analytics">🌪️</a>
     
     <div class="container">
         <div class="header">
-            <h1 id="main-title">Iran Protests Monitor</h1>
-            <p id="subtitle">Real-time tracking of protests, casualties, and geographic spread</p>
+            <h1 id="main-title">Iran Protests Tracker</h1>
+            <p id="subtitle">Real-time monitoring of nationwide demonstrations and regime stability</p>
         </div>
 
         <div class="nav-bar">
             <a href="index.html" class="back-link">
                 <span>←</span>
-                <span id="back-text">Back to Dashboard</span>
+                <span id="back-text">Back to Main Dashboard</span>
             </a>
             <div class="language-switcher">
                 <button onclick="switchLanguage('en')" class="active">EN</button>
@@ -591,13 +584,15 @@
         <div class="news-section">
             <h2 id="news-title">News Coverage</h2>
             
+            <!-- v2.3.1: REORDERED TABS - HRANA first, then Iran Wire, then languages -->
             <div class="language-tabs">
-                <button onclick="showArticles('en')" class="active" data-lang="en" id="tab-en">English (--)</button>
+                <button onclick="showArticles('hrana')" class="active" data-lang="hrana" id="tab-hrana">HRANA (--)</button>
+                <button onclick="showArticles('iranwire')" data-lang="iranwire" id="tab-iranwire">Iran Wire (--)</button>
+                <button onclick="showArticles('en')" data-lang="en" id="tab-en">English (--)</button>
                 <button onclick="showArticles('he')" data-lang="he" id="tab-he">Hebrew (--)</button>
                 <button onclick="showArticles('ar')" data-lang="ar" id="tab-ar">Arabic (--)</button>
                 <button onclick="showArticles('fa')" data-lang="fa" id="tab-fa">Farsi (--)</button>
                 <button onclick="showArticles('reddit')" data-lang="reddit" id="tab-reddit">Reddit (--)</button>
-                <button onclick="showArticles('iranwire')" data-lang="iranwire" id="tab-iranwire">Iran Wire (--)</button>
             </div>
 
             <div class="articles-container" id="articles-container">
@@ -606,29 +601,34 @@
         </div>
 
         <div class="footer">
-            <p>Asifah Analytics v2.0 | Data sources: NewsAPI, GDELT, Iran Wire RSS, Reddit</p>
+            <p>Asifah Analytics v2.3.1 | Data sources: NewsAPI, GDELT, HRANA, Iran Wire RSS, Reddit</p>
             <p>Updated every 30 minutes | Not for operational use</p>
+            <p style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #606060; font-size: 11px;">
+                © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </p>
         </div>
     </div>
 
     <script>
         const translations = {
             en: {
-                mainTitle: "Iran Protests Monitor",
-                subtitle: "Real-time tracking of protests, casualties, and geographic spread",
-                backText: "Back to Dashboard",
+                mainTitle: "Iran Protests Tracker",
+                subtitle: "Real-time monitoring of nationwide demonstrations and regime stability",
+                backText: "Back to Main Dashboard",
                 metricTitleIntensity: "Protest Intensity",
                 metricTitleStability: "Regime Stability Index",
                 metricTitleGeography: "Geographic Spread",
                 stabilityExplanation: "Lower values indicate increased instability",
                 geographySubtitle: "Cities affected",
                 newsTitle: "News Coverage",
+                tabHRANA: "HRANA",
+                tabIranWire: "Iran Wire",
                 tabEnglish: "English",
                 tabHebrew: "Hebrew",
                 tabArabic: "Arabic",
                 tabFarsi: "Farsi",
                 tabReddit: "Reddit",
-                tabIranWire: "Iran Wire",
                 loading: "Loading data...",
                 error: "Error loading data. Please try again.",
                 lastUpdated: "Last updated:",
@@ -643,20 +643,21 @@
             },
             he: {
                 mainTitle: "מעקב הפגנות באיראן",
-                subtitle: "מעקב בזמן אמת אחר הפגנות, נפגעים והתפשטות גיאוגרפית",
-                backText: "חזרה ללוח הבקרה",
+                subtitle: "ניטור בזמן אמת של הפגנות כלל ארציות ויציבות המשטר",
+                backText: "חזרה ללוח הבקרה הראשי",
                 metricTitleIntensity: "עצמת המחאה",
                 metricTitleStability: "מדד יציבות המשטר",
                 metricTitleGeography: "תפוצה גיאוגרפית",
                 stabilityExplanation: "ערכים נמוכים יותר מצביעים על אי-יציבות מוגברת",
                 geographySubtitle: "ערים מושפעות",
                 newsTitle: "כיסוי חדשותי",
+                tabHRANA: "HRANA",
+                tabIranWire: "איראן וויר",
                 tabEnglish: "אנגלית",
                 tabHebrew: "עברית",
                 tabArabic: "ערבית",
                 tabFarsi: "פרסית",
                 tabReddit: "רדיט",
-                tabIranWire: "איראן וויר",
                 loading: "טוען נתונים...",
                 error: "שגיאה בטעינת נתונים. אנא נסה שוב.",
                 lastUpdated: "עודכן לאחרונה:",
@@ -671,20 +672,21 @@
             },
             ar: {
                 mainTitle: "متابعة احتجاجات إيران",
-                subtitle: "تتبع فوري للاحتجاجات والضحايا والانتشار الجغرافي",
-                backText: "العودة إلى لوحة التحكم",
+                subtitle: "مراقبة فورية للمظاهرات الوطنية واستقرار النظام",
+                backText: "العودة إلى لوحة التحكم الرئيسية",
                 metricTitleIntensity: "شدة الاحتجاج",
                 metricTitleStability: "مؤشر استقرار النظام",
                 metricTitleGeography: "الانتشار الجغرافي",
                 stabilityExplanation: "القيم الأقل تشير إلى عدم استقرار متزايد",
                 geographySubtitle: "المدن المتضررة",
                 newsTitle: "التغطية الإخبارية",
+                tabHRANA: "HRANA",
+                tabIranWire: "إيران واير",
                 tabEnglish: "الإنجليزية",
                 tabHebrew: "العبرية",
                 tabArabic: "العربية",
                 tabFarsi: "الفارسية",
                 tabReddit: "ريديت",
-                tabIranWire: "إيران واير",
                 loading: "جاري تحميل البيانات...",
                 error: "خطأ في تحميل البيانات. يرجى المحاولة مرة أخرى.",
                 lastUpdated: "آخر تحديث:",
@@ -699,20 +701,21 @@
             },
             fa: {
                 mainTitle: "پیگیری اعتراضات ایران",
-                subtitle: "پیگیری لحظه‌ای اعتراضات، تلفات و گستردگی جغرافیایی",
-                backText: "بازگشت به داشبورد",
+                subtitle: "نظارت بلادرنگ بر تظاهرات سراسری و ثبات رژیم",
+                backText: "بازگشت به داشبورد اصلی",
                 metricTitleIntensity: "شدت اعتراض",
                 metricTitleStability: "شاخص ثبات رژیم",
                 metricTitleGeography: "گستردگی جغرافیایی",
                 stabilityExplanation: "مقادیر پایین‌تر نشان‌دهنده بی‌ثباتی بیشتر است",
                 geographySubtitle: "شهرهای تحت تاثیر",
                 newsTitle: "پوشش خبری",
+                tabHRANA: "HRANA",
+                tabIranWire: "ایران وایر",
                 tabEnglish: "انگلیسی",
                 tabHebrew: "عبری",
                 tabArabic: "عربی",
                 tabFarsi: "فارسی",
                 tabReddit: "ردیت",
-                tabIranWire: "ایران وایر",
                 loading: "در حال بارگذاری داده‌ها...",
                 error: "خطا در بارگذاری داده‌ها. لطفا دوباره تلاش کنید.",
                 lastUpdated: "آخرین به‌روزرسانی:",
@@ -776,7 +779,7 @@
                 
                 updateMetrics(data);
                 updateTabCounts(data);
-                showArticles('en');
+                showArticles('hrana'); // Changed default to HRANA
                 updateLastUpdated();
                 
             } catch (error) {
@@ -815,13 +818,12 @@
             document.getElementById('regime-stability').textContent = stability;
             document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stability);
             
-            // FIX #1: Display ALL cities, not just 3
+            // Display ALL cities
             document.getElementById('total-cities').textContent = data.num_cities_affected || 0;
             
             const citiesContainer = document.getElementById('cities-list');
             citiesContainer.innerHTML = '';
             if (data.cities && data.cities.length > 0) {
-                // Display ALL cities
                 data.cities.forEach(cityObj => {
                     const pill = document.createElement('div');
                     pill.className = 'city-pill';
@@ -831,7 +833,6 @@
             }
         }
 
-        // FIX #2: Enhanced function to display casualty sources WITH articles_without_numbers
         function updateCasualtySources(elementId, casualties, type) {
             const container = document.getElementById(elementId);
             if (!container) return;
@@ -846,23 +847,20 @@
             const details = casualties.details || [];
             const articlesWithoutNumbers = casualties.articles_without_numbers || [];
             
-            // Filter numbered sources by type
             const numberedSources = details
                 .filter(d => d.type === type)
                 .sort((a, b) => b.count - a.count)
-                .slice(0, 3); // Top 3 with numbers
+                .slice(0, 3);
             
-            // Filter articles without numbers by type
             const unnumberedSources = articlesWithoutNumbers
                 .filter(a => a.type === type)
-                .slice(0, 3); // Top 3 without numbers
+                .slice(0, 3);
             
             if (numberedSources.length === 0 && unnumberedSources.length === 0) {
                 container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
                 return;
             }
             
-            // Display numbered sources first
             numberedSources.forEach(detail => {
                 const item = document.createElement('div');
                 item.className = 'source-item';
@@ -879,7 +877,6 @@
                 container.appendChild(item);
             });
             
-            // Display unnumbered sources (mentions without numbers)
             unnumberedSources.forEach(article => {
                 const item = document.createElement('div');
                 item.className = 'source-item source-no-numbers';
@@ -920,12 +917,14 @@
 
         function updateTabCounts(data) {
             const t = translations[currentLang];
+            // v2.3.1: Updated tab labels with new ordering
+            document.getElementById('tab-hrana').textContent = `${t.tabHRANA} (${(data.articles_hrana || []).length})`;
+            document.getElementById('tab-iranwire').textContent = `${t.tabIranWire} (${(data.articles_iranwire || []).length})`;
             document.getElementById('tab-en').textContent = `${t.tabEnglish} (${(data.articles_en || []).length})`;
             document.getElementById('tab-he').textContent = `${t.tabHebrew} (${(data.articles_he || []).length})`;
             document.getElementById('tab-ar').textContent = `${t.tabArabic} (${(data.articles_ar || []).length})`;
             document.getElementById('tab-fa').textContent = `${t.tabFarsi} (${(data.articles_fa || []).length})`;
             document.getElementById('tab-reddit').textContent = `${t.tabReddit} (${(data.articles_reddit || []).length})`;
-            document.getElementById('tab-iranwire').textContent = `${t.tabIranWire} (${(data.articles_iranwire || []).length})`;
         }
 
         function showArticles(lang) {
@@ -945,19 +944,23 @@
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
             
+            // v2.3.1: Added HRANA case
             let articles = [];
-            if (lang === 'en') articles = protestData.articles_en || [];
+            if (lang === 'hrana') articles = protestData.articles_hrana || [];
+            else if (lang === 'iranwire') articles = protestData.articles_iranwire || [];
+            else if (lang === 'en') articles = protestData.articles_en || [];
             else if (lang === 'he') articles = protestData.articles_he || [];
             else if (lang === 'ar') articles = protestData.articles_ar || [];
             else if (lang === 'fa') articles = protestData.articles_fa || [];
             else if (lang === 'reddit') articles = protestData.articles_reddit || [];
-            else if (lang === 'iranwire') articles = protestData.articles_iranwire || [];
             
             if (articles.length === 0) {
-                container.innerHTML = '<div class="loading">No articles available in this language.</div>';
+                container.innerHTML = '<div class="loading">No articles available in this category.</div>';
                 return;
             }
             
+            // v2.3.1: Articles are displayed in their ORIGINAL language (no translation)
+            // Backend sends articles with proper 'language' field - we just display as-is
             articles.forEach(article => {
                 const articleDiv = document.createElement('div');
                 articleDiv.className = 'article';
