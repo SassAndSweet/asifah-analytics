@@ -1629,16 +1629,17 @@ body::before {
 
 async function fetchPolymarketData() {
     console.log('✅ Polymarket: fetchPolymarketData() called');
+
     const ticker = document.getElementById('polymarketTicker');
-    if (!ticker) return;
-    ...
-}
 
     // If the container isn't on the page, fail silently
-    if (!ticker) return;
+    if (!ticker) {
+        console.warn('⚠️ Polymarket: ticker container not found (#polymarketTicker)');
+        return;
+    }
 
     try {
-        // Active markets as of January 2026 - includes Syria!
+        // Active markets as of January 2026 - includes Syria
         const markets = [
             // IRAN MARKETS
             { slug: 'israel-strikes-iran-by-january-31-2026', question: 'Israel strikes Iran by Jan 31?' },
@@ -1653,31 +1654,29 @@ async function fetchPolymarketData() {
 
             // SYRIA MARKETS
             { slug: 'israel-strikes-syria-on', question: 'Israel strikes Syria?' },
-            { slug: 'israel-and-syria-normalize-relations-in-2025', question: 'Israel-Syria normalize relations?' },
+            { slug: 'israel-and-syria-normalize-relations-in-2025', question: 'Israel–Syria normalize relations?' },
             { slug: 'will-the-us-abandon-syrian-base-before-april-2025', question: 'US abandons Syria base?' }
         ];
 
         // Helper: parse probability from multiple possible shapes
-        const extractProbability = (data) => {
-            // Most common: outcomePrices as array of strings ["0.34","0.66"]
-            if (Array.isArray(data?.outcomePrices) && data.outcomePrices.length > 0) {
-                const p = parseFloat(data.outcomePrices[0]);
+        const extractProbability = (marketObj) => {
+            // Most common: outcomePrices is array of strings ["0.34","0.66"]
+            if (Array.isArray(marketObj?.outcomePrices) && marketObj.outcomePrices.length > 0) {
+                const p = parseFloat(marketObj.outcomePrices[0]);
                 if (Number.isFinite(p)) return p;
             }
 
-            // Sometimes: data.market?.outcomePrices
-            if (Array.isArray(data?.market?.outcomePrices) && data.market.outcomePrices.length > 0) {
-                const p = parseFloat(data.market.outcomePrices[0]);
+            // Some shapes: marketObj.market?.outcomePrices
+            if (Array.isArray(marketObj?.market?.outcomePrices) && marketObj.market.outcomePrices.length > 0) {
+                const p = parseFloat(marketObj.market.outcomePrices[0]);
                 if (Number.isFinite(p)) return p;
             }
 
-            // Sometimes: data.prices or data.bestAsk / bestBid
-            const maybe = [data?.price, data?.bestAsk, data?.bestBid, data?.market?.price]
+            // Fallback to any other numeric-ish fields
+            const maybe = [marketObj?.price, marketObj?.bestAsk, marketObj?.bestBid, marketObj?.market?.price]
                 .map(x => parseFloat(x))
                 .find(x => Number.isFinite(x));
-            if (Number.isFinite(maybe)) return maybe;
-
-            return null;
+            return Number.isFinite(maybe) ? maybe : null;
         };
 
         // Helper: safe fetch with timeout
@@ -1692,18 +1691,100 @@ async function fetchPolymarketData() {
                     signal: controller.signal
                 });
 
-                if (!res.ok) return null;
+                if (!res.ok) {
+                    console.warn(`⚠️ Polymarket fetch failed: ${url} (HTTP ${res.status})`);
+                    return null;
+                }
 
                 const contentType = res.headers.get('content-type') || '';
-                if (!contentType.includes('application/json')) return null;
+                if (!contentType.includes('application/json')) {
+                    console.warn(`⚠️ Polymarket non-JSON response: ${url}`);
+                    return null;
+                }
 
                 return await res.json();
-            } catch {
+            } catch (err) {
+                console.warn(`⚠️ Polymarket fetch error: ${url}`, err);
                 return null;
             } finally {
                 clearTimeout(timer);
             }
         };
+
+        // IMPORTANT: use the Gamma "query" endpoint by slug
+        // This returns an ARRAY of markets. We take the first match.
+        const results = await Promise.allSettled(
+            markets.map(async (market) => {
+                const url = `https://gamma-api.polymarket.com/markets?slug=${encodeURIComponent(market.slug)}&limit=1`;
+                const data = await fetchJsonWithTimeout(url);
+
+                if (!data) return null;
+                if (!Array.isArray(data) || data.length === 0) return null;
+
+                const marketObj = data[0];
+                const prob = extractProbability(marketObj);
+                if (prob === null) return null;
+
+                return {
+                    question: market.question,
+                    probability: prob, // already 0.xx
+                    url: `https://polymarket.com/event/${market.slug}`
+                };
+            })
+        );
+
+        const validMarkets = results
+            .filter(r => r.status === 'fulfilled' && r.value)
+            .map(r => r.value);
+
+        console.log('✅ Polymarket: validMarkets', validMarkets);
+
+        if (validMarkets.length === 0) {
+            ticker.innerHTML =
+                '<div class="ticker-error">⚠️ Polymarket data unavailable (no markets returned)</div>';
+            return;
+        }
+
+        displayPolymarketTicker(validMarkets);
+
+    } catch (error) {
+        console.error('❌ Polymarket fetch error:', error);
+        ticker.innerHTML =
+            '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
+    }
+}
+
+function displayPolymarketTicker(markets) {
+    console.log('✅ Polymarket: displayPolymarketTicker() markets count:', markets?.length);
+
+    const ticker = document.getElementById('polymarketTicker');
+    if (!ticker) {
+        console.warn('⚠️ Polymarket: ticker container not found during render');
+        return;
+    }
+
+    if (!markets || markets.length === 0) {
+        ticker.innerHTML = '<div class="ticker-error">No Polymarket markets available</div>';
+        return;
+    }
+
+    let html = '';
+
+    markets.forEach(market => {
+        const pct = Math.round((market.probability || 0) * 100);
+        html += `
+            <div class="ticker-item">
+                <strong>${market.question}</strong>
+                <span class="ticker-probability">${pct}%</span>
+                <a href="${market.url}" target="_blank" rel="noopener noreferrer">View</a>
+            </div>
+        `;
+    });
+
+    // Duplicate content for smooth infinite scroll (your CSS scrolls -50%)
+    ticker.innerHTML = html + html;
+}
+
 
         const marketData = await Promise.allSettled(
             markets.map(async (market) => {
