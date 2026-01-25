@@ -95,15 +95,6 @@
             font-size: 12px;
             color: #c0c0c0;
         }
-        .location-item a {
-            color: #c084fc;
-            text-decoration: none;
-            transition: all 0.2s;
-        }
-        .location-item a:hover {
-            text-decoration: underline;
-            color: #d8b4fe;
-        }
         .source-citations {
             margin-top: 15px;
             padding-top: 10px;
@@ -211,6 +202,28 @@
             font-size: 12px;
             margin-top: 30px;
         }
+        
+        /* BUY ME A COFFEE SUPPORT SECTION - Added */
+        .support-footer {
+            margin-top: 40px;
+            padding: 15px 20px;
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 13px;
+            color: #505050;
+        }
+        .support-footer a {
+            color: #c084fc;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .support-footer a:hover {
+            text-decoration: underline;
+            color: #d8b4fe;
+        }
+        
         .copyright-footer {
             margin-top: 15px;
             padding-top: 15px;
@@ -290,6 +303,15 @@
         <div class="footer">
             <p>Asifah Analytics v2.5.0 | Syria Conflict Tracker</p>
             <p>Data sources: Syria Direct, SOHR, NewsAPI, GDELT, Reddit</p>
+            
+            <!-- BUY ME A COFFEE SECTION - Added between data sources and disclaimer -->
+            <div class="support-footer">
+                <p>
+                    If you find Asifah Analytics useful and want to support ongoing development, you can 
+                    <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" rel="noopener noreferrer">☕ buy me a coffee</a>
+                </p>
+            </div>
+            
             <div class="copyright-footer">
                 © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
                 Unauthorized use, reproduction, or distribution prohibited.
@@ -330,7 +352,7 @@
                 document.getElementById('factionList').textContent = cd.active_factions.join(', ');
             }
             
-            // Show clash locations WITH CLICKABLE LINKS
+            // Show clash locations
             const locList = document.getElementById('locationsList');
             locList.innerHTML = '';
             if (cd.clash_locations) {
@@ -338,13 +360,7 @@
                 locations.forEach(([city, count]) => {
                     const item = document.createElement('div');
                     item.className = 'location-item';
-                    
-                    // Create clickable link to Google News search for that city + Syria
-                    const cityCapitalized = city.charAt(0).toUpperCase() + city.slice(1);
-                    const searchQuery = encodeURIComponent(`${cityCapitalized} Syria conflict`);
-                    const newsUrl = `https://news.google.com/search?q=${searchQuery}`;
-                    
-                    item.innerHTML = `<a href="${newsUrl}" target="_blank">${cityCapitalized}</a>: ${count} incidents`;
+                    item.textContent = `${city.charAt(0).toUpperCase() + city.slice(1)}: ${count} incidents`;
                     locList.appendChild(item);
                 });
             }
