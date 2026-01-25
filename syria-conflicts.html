@@ -95,6 +95,15 @@
             font-size: 12px;
             color: #c0c0c0;
         }
+        .location-item a {
+            color: #c084fc;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .location-item a:hover {
+            text-decoration: underline;
+            color: #d8b4fe;
+        }
         .source-citations {
             margin-top: 15px;
             padding-top: 10px;
@@ -321,7 +330,7 @@
                 document.getElementById('factionList').textContent = cd.active_factions.join(', ');
             }
             
-            // Show clash locations
+            // Show clash locations WITH CLICKABLE LINKS
             const locList = document.getElementById('locationsList');
             locList.innerHTML = '';
             if (cd.clash_locations) {
@@ -329,7 +338,13 @@
                 locations.forEach(([city, count]) => {
                     const item = document.createElement('div');
                     item.className = 'location-item';
-                    item.textContent = `${city.charAt(0).toUpperCase() + city.slice(1)}: ${count} incidents`;
+                    
+                    // Create clickable link to Google News search for that city + Syria
+                    const cityCapitalized = city.charAt(0).toUpperCase() + city.slice(1);
+                    const searchQuery = encodeURIComponent(`${cityCapitalized} Syria conflict`);
+                    const newsUrl = `https://news.google.com/search?q=${searchQuery}`;
+                    
+                    item.innerHTML = `<a href="${newsUrl}" target="_blank">${cityCapitalized}</a>: ${count} incidents`;
                     locList.appendChild(item);
                 });
             }
