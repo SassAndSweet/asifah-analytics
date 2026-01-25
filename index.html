@@ -732,53 +732,104 @@ body::before {
             white-space: nowrap;
         }
 
-        .polymarket-section {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 2px solid #7c3aed;
-            overflow: hidden;
-        }
+.polymarket-section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 2px solid #7c3aed;
+    overflow: hidden;
+}
 
-        .polymarket-disclaimer {
-            background-color: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: #92400e;
-            text-align: center;
-        }
+.polymarket-disclaimer {
+    background-color: #fef3c7;
+    border: 2px solid #f59e0b;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #92400e;
+    text-align: center;
+}
 
-        .polymarket-disclaimer strong {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            color: #78350f;
-        }
+.polymarket-disclaimer strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #78350f;
+}
 
-        .ticker-wrapper {
-            position: relative;
-            overflow: hidden;
-            background: linear-gradient(to right, #f8f9fa, #ffffff, #f8f9fa);
-            border-radius: 8px;
-            padding: 15px 0;
-            border: 1px solid #e1e8ed;
-        }
+.ticker-wrapper {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(to right, #f8f9fa, #ffffff, #f8f9fa);
+    border-radius: 8px;
+    padding: 15px 0;
+    border: 1px solid #e1e8ed;
+}
 
-        .ticker-content {
-            display: flex;
-            white-space: nowrap;
-            animation: scroll-ticker 60s linear infinite;
-            will-change: transform;
-        }
+.ticker-content {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    gap: 28px;                  /* spacing between ticker items */
+    padding: 0 24px;            /* breathing room at edges */
+    animation: scroll-ticker 60s linear infinite;
+    will-change: transform;
+}
 
-        .ticker-wrapper:hover .ticker-content {
-            animation-play-state: paused;
-        }
+.ticker-wrapper:hover .ticker-content {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-ticker {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ✅ These are what your JS renderer relies on */
+.ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: rgba(124, 58, 237, 0.06);    /* subtle purple tint */
+    border: 1px solid rgba(124, 58, 237, 0.18);
+    font-size: 13px;
+    color: #2c3e50;
+}
+
+.ticker-item strong {
+    font-weight: bold;
+}
+
+.ticker-probability {
+    font-weight: bold;
+    color: #7c3aed;
+}
+
+.ticker-item a {
+    color: #7c3aed;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.ticker-item a:hover {
+    text-decoration: underline;
+}
+
+/* Error / empty state */
+.ticker-error {
+    padding: 10px 18px;
+    margin: 0 24px;
+    border-radius: 8px;
+    background: rgba(192, 57, 43, 0.08);
+    border: 1px solid rgba(192, 57, 43, 0.25);
+    color: #721c24;
+    font-size: 13px;
+}
 
         @keyframes scroll-ticker {
             0% {
@@ -1679,6 +1730,7 @@ async function fetchPolymarketData() {
             return;
         }
 
+        // ✅ This function is defined below now
         displayPolymarketTicker(validMarkets);
 
     } catch (error) {
@@ -1688,6 +1740,40 @@ async function fetchPolymarketData() {
     }
 }
 
+/**
+ * Renders the Polymarket ticker.
+ * IMPORTANT: Your HTML should have:
+ *   <div id="polymarketTicker" class="ticker-content"></div>
+ */
+function displayPolymarketTicker(markets) {
+    const ticker = document.getElementById('polymarketTicker');
+    if (!ticker) {
+        console.warn('Polymarket ticker container not found');
+        return;
+    }
+
+    if (!markets || markets.length === 0) {
+        ticker.innerHTML = '<div class="ticker-error">No Polymarket markets available</div>';
+        return;
+    }
+
+    let html = '';
+
+    markets.forEach(market => {
+        const pct = Math.round((market.probability || 0) * 100);
+
+        html += `
+            <div class="ticker-item">
+                <strong>${market.question}</strong>
+                <span class="ticker-probability">${pct}%</span>
+                <a href="${market.url}" target="_blank" rel="noopener noreferrer">View</a>
+            </div>
+        `;
+    });
+
+    // Duplicate for smooth infinite scroll (matches your CSS translateX(-50%))
+    ticker.innerHTML = html + html;
+}
 
         async function scanTarget(targetName, days) {
             const url = `${BACKEND_URL}/api/threat/${targetName}?days=${days}`;
