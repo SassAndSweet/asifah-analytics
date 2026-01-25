@@ -95,6 +95,34 @@
             font-size: 12px;
             color: #c0c0c0;
         }
+        .source-citations {
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(139, 92, 246, 0.3);
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .source-citations-title {
+            font-size: 10px;
+            color: #808080;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .citation-item {
+            font-size: 11px;
+            margin-bottom: 6px;
+            padding-left: 8px;
+            border-left: 2px solid rgba(168, 85, 247, 0.5);
+        }
+        .citation-item a {
+            color: #c084fc;
+            text-decoration: none;
+        }
+        .citation-item a:hover {
+            text-decoration: underline;
+        }
         .news-section {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(139, 92, 246, 0.3);
@@ -198,6 +226,7 @@
                 <div class="metric-number" id="deathCount">--</div>
                 <div class="metric-label">Deaths Reported</div>
                 <div class="estimated-badge">ESTIMATED</div>
+                <div class="source-citations" id="deathSources"></div>
             </div>
             
             <div class="metric-card">
@@ -205,6 +234,7 @@
                 <div class="metric-number" id="displacedCount">--</div>
                 <div class="metric-label">Displaced Persons</div>
                 <div class="estimated-badge">ESTIMATED</div>
+                <div class="source-citations" id="displacedSources"></div>
             </div>
             
             <div class="metric-card">
@@ -212,6 +242,7 @@
                 <div class="metric-number" id="clashCount">--</div>
                 <div class="metric-label">Factional Clashes</div>
                 <div class="estimated-badge">ESTIMATED</div>
+                <div class="source-citations" id="clashSources"></div>
             </div>
             
             <div class="metric-card">
@@ -302,16 +333,75 @@
                     locList.appendChild(item);
                 });
             }
+            
+            // Populate source citations
+            populateSourceCitations(cd.details || []);
+        }
+        
+        function populateSourceCitations(details) {
+            // Group details by type
+            const deathDetails = details.filter(d => d.type === 'deaths').slice(0, 5);
+            const displacedDetails = details.filter(d => d.type === 'displaced').slice(0, 5);
+            const clashDetails = details.filter(d => d.type === 'clashes').slice(0, 5);
+            
+            // Deaths sources
+            const deathSources = document.getElementById('deathSources');
+            deathSources.innerHTML = '';
+            if (deathDetails.length > 0) {
+                deathSources.innerHTML = '<div class="source-citations-title">Sources:</div>';
+                deathDetails.forEach(detail => {
+                    const citation = document.createElement('div');
+                    citation.className = 'citation-item';
+                    citation.innerHTML = `<a href="${detail.url}" target="_blank">${detail.source}: ${detail.count} killed</a>`;
+                    deathSources.appendChild(citation);
+                });
+            }
+            
+            // Displaced sources
+            const displacedSources = document.getElementById('displacedSources');
+            displacedSources.innerHTML = '';
+            if (displacedDetails.length > 0) {
+                displacedSources.innerHTML = '<div class="source-citations-title">Sources:</div>';
+                displacedDetails.forEach(detail => {
+                    const citation = document.createElement('div');
+                    citation.className = 'citation-item';
+                    citation.innerHTML = `<a href="${detail.url}" target="_blank">${detail.source}: ${detail.count.toLocaleString()} displaced</a>`;
+                    displacedSources.appendChild(citation);
+                });
+            }
+            
+            // Clash sources (we'll need to track these differently)
+            const clashSources = document.getElementById('clashSources');
+            clashSources.innerHTML = '';
+            if (conflictData && conflictData.articles_syria_direct) {
+                const clashArticles = conflictData.articles_syria_direct.slice(0, 3);
+                if (clashArticles.length > 0) {
+                    clashSources.innerHTML = '<div class="source-citations-title">Recent Reports:</div>';
+                    clashArticles.forEach(article => {
+                        const citation = document.createElement('div');
+                        citation.className = 'citation-item';
+                        citation.innerHTML = `<a href="${article.url}" target="_blank">${article.source?.name || 'Source'}</a>`;
+                        clashSources.appendChild(citation);
+                    });
+                }
+            }
         }
 
         function updateTabCounts(data) {
             const tabs = document.querySelectorAll('.language-tabs button');
+            
+            // Filter articles by language for accurate counts
+            const enArticles = (data.articles_en || []).filter(a => a.language === 'en');
+            const heArticles = (data.articles_he || []).filter(a => a.language === 'he');
+            const arArticles = (data.articles_ar || []).filter(a => a.language === 'ar');
+            const faArticles = (data.articles_fa || []).filter(a => a.language === 'fa');
+            
             tabs[0].textContent = `Syria Direct (${(data.articles_syria_direct || []).length})`;
             tabs[1].textContent = `SOHR (${(data.articles_sohr || []).length})`;
-            tabs[2].textContent = `English (${(data.articles_en || []).length})`;
-            tabs[3].textContent = `Hebrew (${(data.articles_he || []).length})`;
-            tabs[4].textContent = `Arabic (${(data.articles_ar || []).length})`;
-            tabs[5].textContent = `Farsi (${(data.articles_fa || []).length})`;
+            tabs[2].textContent = `English (${enArticles.length})`;
+            tabs[3].textContent = `Hebrew (${heArticles.length})`;
+            tabs[4].textContent = `Arabic (${arArticles.length})`;
+            tabs[5].textContent = `Farsi (${faArticles.length})`;
             tabs[6].textContent = `Reddit (${(data.articles_reddit || []).length})`;
         }
 
@@ -327,16 +417,35 @@
             container.innerHTML = '';
             
             let articles = [];
-            if (source === 'syria_direct') articles = conflictData.articles_syria_direct || [];
-            else if (source === 'sohr') articles = conflictData.articles_sohr || [];
-            else if (source === 'en') articles = conflictData.articles_en || [];
-            else if (source === 'he') articles = conflictData.articles_he || [];
-            else if (source === 'ar') articles = conflictData.articles_ar || [];
-            else if (source === 'fa') articles = conflictData.articles_fa || [];
-            else if (source === 'reddit') articles = conflictData.articles_reddit || [];
+            let expectedLang = null;
+            
+            if (source === 'syria_direct') {
+                articles = conflictData.articles_syria_direct || [];
+            } else if (source === 'sohr') {
+                articles = conflictData.articles_sohr || [];
+            } else if (source === 'en') {
+                articles = conflictData.articles_en || [];
+                expectedLang = 'en';
+            } else if (source === 'he') {
+                articles = conflictData.articles_he || [];
+                expectedLang = 'he';
+            } else if (source === 'ar') {
+                articles = conflictData.articles_ar || [];
+                expectedLang = 'ar';
+            } else if (source === 'fa') {
+                articles = conflictData.articles_fa || [];
+                expectedLang = 'fa';
+            } else if (source === 'reddit') {
+                articles = conflictData.articles_reddit || [];
+            }
+            
+            // STRICT LANGUAGE FILTERING - only show articles matching the tab language
+            if (expectedLang) {
+                articles = articles.filter(article => article.language === expectedLang);
+            }
             
             if (articles.length === 0) {
-                container.innerHTML = '<div class="loading">No articles available.</div>';
+                container.innerHTML = '<div class="loading">No articles available in this language.</div>';
                 return;
             }
             
