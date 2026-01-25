@@ -1574,66 +1574,87 @@
             tickerContainer.innerHTML = tickerHTML;
         }
 
-        fetchPolymarketData();
-        setInterval(fetchPolymarketData, 2 * 60 * 60 * 1000);
-        
-        initLanguage();
-        fetchRateLimitStatus();
-
-        async function scanData() {
-            const button = document.querySelector('.scan-button');
-            const loading = document.getElementById('loadingIndicator');
-            const dashboard = document.getElementById('dashboard');
-            const clickSound = document.getElementById('clickSound');
-            const errorMessage = document.getElementById('errorMessage');
-
-            errorMessage.classList.remove('show');
-
-            try {
-                clickSound.currentTime = 0;
-                clickSound.play().catch(() => {});
-            } catch (e) {}
-
-            button.classList.add('scanning');
-            button.disabled = true;
-            dashboard.style.opacity = '0.3';
-            loading.classList.add('active');
-
-            const timeWindow = parseInt(
-                document.querySelector('input[name="timeWindow"]:checked').value
-            );
-
-            try {
-                await Promise.all([
-                    scanTarget('hezbollah', timeWindow),
-                    scanTarget('iran', timeWindow),
-                    scanTarget('houthis', timeWindow),
-                    scanTarget('syria', timeWindow)  // ← SYRIA ADDED! 🎉
-                ]);
-
-                const now = new Date();
-                document.getElementById('lastUpdatedValue').textContent =
-                    now.toLocaleString('en-US', {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        timeZoneName: 'short'
-                    }) + ` (last ${timeWindow} day(s))`;
-            } catch (error) {
-                console.error('Scan error:', error);
-                errorMessage.textContent = 'Error scanning news sources: ' + error.message;
-                errorMessage.classList.add('show');
-            } finally {
-                loading.classList.remove('active');
-                dashboard.style.opacity = '1';
-                button.classList.remove('scanning');
-                button.disabled = false;
-                
-                fetchRateLimitStatus();
+async function fetchPolymarketData() {
+    try {
+        // Active markets as of January 2026 - Now includes Syria!
+        const markets = [
+            // IRAN MARKETS
+            {
+                slug: 'israel-strikes-iran-by-january-31-2026',
+                question: 'Israel strikes Iran by Jan 31?'
+            },
+            {
+                slug: 'us-strikes-iran-by',
+                question: 'US strikes Iran?'
+            },
+            {
+                slug: 'khamenei-out-as-supreme-leader-of-iran-by-january-31',
+                question: 'Khamenei out by Jan 31?'
+            },
+            
+            // LEBANON/HEZBOLLAH MARKETS
+            {
+                slug: 'will-israel-strike-lebanon-on',
+                question: 'Israel strikes Lebanon?'
+            },
+            
+            // YEMEN/HOUTHIS MARKETS
+            {
+                slug: 'us-strikes-yemen-by',
+                question: 'US strikes Yemen?'
+            },
+            
+            // SYRIA MARKETS (NEW!)
+            {
+                slug: 'israel-strikes-syria-on',
+                question: 'Israel strikes Syria?'
+            },
+            {
+                slug: 'israel-and-syria-normalize-relations-in-2025',
+                question: 'Israel-Syria normalize relations?'
+            },
+            {
+                slug: 'will-the-us-abandon-syrian-base-before-april-2025',
+                question: 'US abandons Syria base?'
             }
-        }
+        ];
+        
+        const marketData = await Promise.all(
+            markets.map(async (market) => {
+                try {
+                    const response = await fetch(
+                        `https://gamma-api.polymarket.com/markets/${market.slug}`,
+                        { 
+                            method: 'GET',
+                            headers: { 'Accept': 'application/json' }
+                        }
+                    );
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        return {
+                            question: market.question,
+                            probability: parseFloat(data.outcomePrices?.[0] || 0),
+                            url: `https://polymarket.com/event/${market.slug}`
+                        };
+                    }
+                    return null;
+                } catch (error) {
+                    console.error(`Failed to fetch ${market.slug}:`, error);
+                    return null;
+                }
+            })
+        );
+        
+        const validMarkets = marketData.filter(m => m !== null);
+        displayPolymarketTicker(validMarkets);
+        
+    } catch (error) {
+        console.error('Polymarket fetch error:', error);
+        document.getElementById('polymarketTicker').innerHTML = 
+            '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
+    }
+}
 
         async function scanTarget(targetName, days) {
             const url = `${BACKEND_URL}/api/threat/${targetName}?days=${days}`;
