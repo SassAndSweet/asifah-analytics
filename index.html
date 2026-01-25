@@ -1530,50 +1530,6 @@
             }
         }
 
-        async function fetchPolymarketData() {
-            try {
-                const response = await fetch(`${BACKEND_URL}/polymarket-data`);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const data = await response.json();
-                displayPolymarketTicker(data.markets || []);
-            } catch (error) {
-                console.error('Failed to fetch Polymarket data:', error);
-                document.getElementById('polymarketTicker').innerHTML = 
-                    '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
-            }
-        }
-
-        function displayPolymarketTicker(markets) {
-            const tickerContainer = document.getElementById('polymarketTicker');
-            
-            if (!markets || markets.length === 0) {
-                tickerContainer.innerHTML = 
-                    '<div class="ticker-error">No active markets found</div>';
-                return;
-            }
-            
-            let tickerHTML = '';
-            const allMarkets = [...markets, ...markets];
-            
-            allMarkets.forEach(market => {
-                const probabilityPercent = Math.round(market.probability * 100);
-                tickerHTML += `
-                    <div class="ticker-item">
-                        <span class="ticker-icon">📊</span>
-                        <span class="ticker-question">${market.question}</span>
-                        <span class="ticker-probability">${probabilityPercent}% Yes</span>
-                        <a href="${market.url}" target="_blank" rel="noopener noreferrer" class="ticker-link">View ↗</a>
-                    </div>
-                `;
-            });
-            
-            tickerContainer.innerHTML = tickerHTML;
-        }
-
 async function fetchPolymarketData() {
     try {
         // Active markets as of January 2026 - includes Syria!
