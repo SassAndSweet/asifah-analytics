@@ -1787,19 +1787,39 @@ async function fetchPolymarketData() {
             container.innerHTML = html;
         }
 
-        async function updateFlightCancellations() {
-            try {
-                const response = await fetch(`${BACKEND_URL}/flight-cancellations`);
-                if (!response.ok) {
-                    return;
-                }
-                
-                const data = await response.json();
-                displayFlightCancellations(data.cancellations || []);
-            } catch (error) {
-                console.error('Error fetching flight cancellations:', error);
-            }
+async function updateFlightCancellations() {
+    const grid = document.getElementById('flightCancellationsGrid');
+    const badge = document.getElementById('flightStatusBadge');
+
+    // If the page structure changed and these elements don't exist,
+    // fail silently without breaking other widgets.
+    if (!grid || !badge) return;
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/flight-cancellations`);
+
+        // If endpoint doesn't exist (404) or otherwise fails,
+        // show a "no disruptions" state instead of bailing.
+        if (!response.ok) {
+            displayFlightCancellations([]);
+            return;
         }
+
+        // Guard against non-JSON responses
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            displayFlightCancellations([]);
+            return;
+        }
+
+        const data = await response.json();
+        displayFlightCancellations(data.cancellations || []);
+    } catch (error) {
+        console.warn('Flight cancellations widget failed (non-fatal):', error);
+        displayFlightCancellations([]);
+    }
+}
+
 
         function displayFlightCancellations(cancellations) {
             const grid = document.getElementById('flightCancellationsGrid');
