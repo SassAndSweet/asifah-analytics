@@ -1178,10 +1178,10 @@ body::before {
     <div class="container">
         <header>
             <div class="language-switcher">
-                <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
-                <button class="lang-btn" onclick="switchLanguage('he')">עב</button>
-                <button class="lang-btn" onclick="switchLanguage('ar')">ع</button>
-                <button class="lang-btn" onclick="switchLanguage('fa')">فא</button>
+<button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+<button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+<button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+<button class="lang-btn" onclick="switchLanguage('fa', this)">فא</button>
             </div>
             <h1 data-i18n="header">ASIFAH ANALYTICS</h1>
             <h2 data-i18n="subtitle">Israeli Military Action Forecasting Dashboard</h2>
@@ -1517,19 +1517,24 @@ body::before {
             }
         }
 
-        function switchLanguage(lang) {
-            if (!translations[lang]) return;
-            
-            currentLanguage = lang;
-            localStorage.setItem('asifah-language', lang);
-            
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            applyLanguage(lang);
-        }
+function switchLanguage(lang, clickedButton) {
+    if (!translations[lang]) return;
+    
+    currentLanguage = lang;
+    localStorage.setItem('asifah-language', lang);
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Add active class to clicked button
+    if (clickedButton) {
+        clickedButton.classList.add('active');
+    }
+    
+    applyLanguage(lang);
+}
 
         function applyLanguage(lang) {
             const t = translations[lang];
