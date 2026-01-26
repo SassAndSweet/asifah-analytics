@@ -1518,20 +1518,35 @@ body::before {
         }
 
 function switchLanguage(lang, button) {
-            if (!translations[lang]) return;
+            console.log('switchLanguage called!');
+            console.log('lang:', lang);
+            console.log('button:', button);
+            console.log('button type:', typeof button);
+            
+            if (!translations[lang]) {
+                console.log('Translation not found for:', lang);
+                return;
+            }
             
             currentLanguage = lang;
             localStorage.setItem('asifah-language', lang);
             
+            console.log('Removing active from all buttons...');
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             
+            console.log('Adding active to clicked button...');
             if (button) {
                 button.classList.add('active');
+                console.log('Active class added!');
+            } else {
+                console.log('ERROR: button is null/undefined!');
             }
             
+            console.log('Applying language...');
             applyLanguage(lang);
+            console.log('Done!');
         }
 
         function applyLanguage(lang) {
