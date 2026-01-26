@@ -20,36 +20,36 @@
             box-sizing: border-box;
         }
 
-body {
-    font-family: 'Times New Roman', Times, serif;
-    font-size: 14px;
-    background-color: #f5f5f5;
-    color: #2c3e50;
-    line-height: 1.6;
-    padding: 20px;
-    transition: direction 0.3s ease;
-    
-    /* LOGO BACKGROUND - FULL PAGE VERSION */
-    background-image: url('Asifah_Analytics_1_25_26_V1_LOGO.png');
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;  /* FILLS ENTIRE SCREEN */
-    background-attachment: fixed;
-    opacity: 1;
-}
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: #f5f5f5;
+            color: #2c3e50;
+            line-height: 1.6;
+            padding: 20px;
+            transition: direction 0.3s ease;
+            
+            /* LOGO BACKGROUND - FULL PAGE VERSION */
+            background-image: url('Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+            opacity: 1;
+        }
 
-/* Overlay for logo transparency */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(245, 245, 245, 0.75);  /* 75% white = 25% logo visible */
-    pointer-events: none;
-    z-index: -1;
-}
+        /* Overlay for logo transparency */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(245, 245, 245, 0.75);
+            pointer-events: none;
+            z-index: -1;
+        }
 
         [dir="rtl"] {
             direction: rtl;
@@ -197,97 +197,82 @@ body::before {
             color: #27ae60;
         }
 
-        .controls {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        /* NEW: Individual card scan controls */
+        .card-scan-controls {
+            background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
             border: 2px solid #e1e8ed;
         }
 
-        .controls-note {
-            margin-top: 12px;
-            font-size: 12px;
-            color: #7f8c8d;
-            font-style: italic;
+        .card-time-window {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
         }
 
-        .controls h3 {
-            font-size: 17px;
-            font-weight: bold;
-            margin-bottom: 18px;
-            color: #1e3a5f;
-            letter-spacing: 0.5px;
-        }
-
-        .time-window {
-            margin-bottom: 20px;
-        }
-
-        .time-window label {
-            display: inline-block;
-            margin-right: 25px;
+        .card-time-window label {
+            display: inline-flex;
+            align-items: center;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             transition: color 0.2s ease;
         }
 
-        [dir="rtl"] .time-window label {
-            margin-right: 0;
-            margin-left: 25px;
-        }
-
-        .time-window label:hover {
+        .card-time-window label:hover {
             color: #1e3a5f;
         }
 
-        .time-window input[type="radio"] {
+        .card-time-window input[type="radio"] {
             margin-right: 6px;
             cursor: pointer;
         }
 
-        [dir="rtl"] .time-window input[type="radio"] {
+        [dir="rtl"] .card-time-window input[type="radio"] {
             margin-right: 0;
             margin-left: 6px;
         }
 
-        .scan-button {
+        .card-scan-button {
             background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%);
             color: white;
             border: none;
-            padding: 16px 50px;
+            padding: 12px 30px;
             font-family: 'Times New Roman', Times, serif;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
+            width: 100%;
         }
 
-        .scan-button:hover:not(:disabled) {
+        .card-scan-button:hover:not(:disabled) {
             background: linear-gradient(180deg, #2c3e50 0%, #1e3a5f 100%);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.35);
-            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+            transform: translateY(-2px);
         }
 
-        .scan-button:active,
-        .scan-button.scanning {
+        .card-scan-button:active,
+        .card-scan-button.scanning {
             transform: translateY(1px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
-        .scan-button:disabled {
+        .card-scan-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             background: linear-gradient(180deg, #95a5a6 0%, #7f8c8d 100%);
         }
 
-        .scan-button.scanning::after {
+        .card-scan-button.scanning::after {
             content: '';
             position: absolute;
             top: 0;
@@ -305,10 +290,10 @@ body::before {
         .loading {
             display: none;
             text-align: center;
-            padding: 25px;
+            padding: 15px;
             font-style: italic;
             color: #7f8c8d;
-            font-size: 15px;
+            font-size: 13px;
         }
 
         .loading.active {
@@ -317,19 +302,19 @@ body::before {
 
         .loading-spinner {
             display: inline-block;
-            width: 24px;
-            height: 24px;
+            width: 18px;
+            height: 18px;
             border: 3px solid #f3f3f3;
             border-top: 3px solid #1e3a5f;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 12px;
+            margin-right: 8px;
             vertical-align: middle;
         }
 
         [dir="rtl"] .loading-spinner {
             margin-right: 0;
-            margin-left: 12px;
+            margin-left: 8px;
         }
 
         @keyframes spin {
@@ -420,7 +405,7 @@ body::before {
             font-size: 20px;
             font-weight: bold;
             color: #1e3a5f;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             text-align: center;
             border-bottom: 3px solid #1e3a5f;
             padding-bottom: 12px;
@@ -732,156 +717,90 @@ body::before {
             white-space: nowrap;
         }
 
-.polymarket-section {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border: 2px solid #7c3aed;
-    overflow: hidden;
-}
+        .polymarket-section {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid #7c3aed;
+            overflow: hidden;
+        }
 
-.polymarket-disclaimer {
-    background-color: #fef3c7;
-    border: 2px solid #f59e0b;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    font-size: 12px;
-    color: #92400e;
-    text-align: center;
-}
+        .polymarket-disclaimer {
+            background-color: #fef3c7;
+            border: 2px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
+            color: #92400e;
+            text-align: center;
+        }
 
-.polymarket-disclaimer strong {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 13px;
-    color: #78350f;
-}
+        .polymarket-disclaimer strong {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: #78350f;
+        }
 
-.ticker-wrapper {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(to right, #f8f9fa, #ffffff, #f8f9fa);
-    border-radius: 8px;
-    padding: 15px 0;
-    border: 1px solid #e1e8ed;
-}
+        .ticker-wrapper {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(to right, #f8f9fa, #ffffff, #f8f9fa);
+            border-radius: 8px;
+            padding: 15px 0;
+            border: 1px solid #e1e8ed;
+        }
 
-.ticker-content {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-    gap: 28px;                  /* spacing between ticker items */
-    padding: 0 24px;            /* breathing room at edges */
-    animation: scroll-ticker 60s linear infinite;
-    will-change: transform;
-}
+        .ticker-content {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            gap: 28px;
+            padding: 0 24px;
+            animation: scroll-ticker 60s linear infinite;
+            will-change: transform;
+        }
 
-.ticker-wrapper:hover .ticker-content {
-    animation-play-state: paused;
-}
-
-@keyframes scroll-ticker {
-    0%   { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
-
-/* ✅ These are what your JS renderer relies on */
-.ticker-item {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 18px;
-    border-radius: 999px;
-    background: rgba(124, 58, 237, 0.06);    /* subtle purple tint */
-    border: 1px solid rgba(124, 58, 237, 0.18);
-    font-size: 13px;
-    color: #2c3e50;
-}
-
-.ticker-item strong {
-    font-weight: bold;
-}
-
-.ticker-probability {
-    font-weight: bold;
-    color: #7c3aed;
-}
-
-.ticker-item a {
-    color: #7c3aed;
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.ticker-item a:hover {
-    text-decoration: underline;
-}
-
-/* Error / empty state */
-.ticker-error {
-    padding: 10px 18px;
-    margin: 0 24px;
-    border-radius: 8px;
-    background: rgba(192, 57, 43, 0.08);
-    border: 1px solid rgba(192, 57, 43, 0.25);
-    color: #721c24;
-    font-size: 13px;
-}
+        .ticker-wrapper:hover .ticker-content {
+            animation-play-state: paused;
+        }
 
         @keyframes scroll-ticker {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
         }
 
         .ticker-item {
             display: inline-flex;
             align-items: center;
-            padding: 8px 25px;
-            font-size: 14px;
+            gap: 12px;
+            padding: 8px 18px;
+            border-radius: 999px;
+            background: rgba(124, 58, 237, 0.06);
+            border: 1px solid rgba(124, 58, 237, 0.18);
+            font-size: 13px;
             color: #2c3e50;
-            border-right: 2px solid #e1e8ed;
-            min-width: max-content;
         }
 
-        .ticker-item:last-child {
-            border-right: none;
-        }
-
-        .ticker-icon {
-            font-size: 18px;
-            margin-right: 10px;
-        }
-
-        .ticker-question {
-            font-weight: 500;
-            margin-right: 12px;
+        .ticker-item strong {
+            font-weight: bold;
         }
 
         .ticker-probability {
             font-weight: bold;
             color: #7c3aed;
-            background: linear-gradient(135deg, #ede9fe, #f3f4f6);
-            padding: 4px 10px;
-            border-radius: 6px;
-            margin-right: 8px;
         }
 
-        .ticker-link {
-            font-size: 11px;
-            color: #7f8c8d;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .ticker-link:hover {
+        .ticker-item a {
             color: #7c3aed;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .ticker-item a:hover {
             text-decoration: underline;
         }
 
@@ -1049,60 +968,28 @@ body::before {
             font-size: 13px;
         }
 
-        .copyright-footer {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            text-align: center;
-            color: #606060;
-            font-size: 11px;
-        }
-
-        .contact-footer {
-            margin-top: 20px;
+        .support-footer {
+            margin-top: 40px;
             padding: 15px 20px;
-            background: rgba(46, 125, 50, 0.1);
-            border: 1px solid rgba(46, 125, 50, 0.3);
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 8px;
             text-align: center;
-            color: #505050;
             font-size: 13px;
-            line-height: 1.6;
+            color: #505050;
         }
 
-        .contact-footer a {
-            color: #2e7d32;
+        .support-footer a {
+            color: #8b5cf6;
             text-decoration: none;
             font-weight: bold;
+            transition: all 0.2s ease;
         }
 
-        .contact-footer a:hover {
+        .support-footer a:hover {
+            color: #7c3aed;
             text-decoration: underline;
-            color: #388e3c;
         }
-
-        .support-footer {
-    margin-top: 40px;
-    padding: 15px 20px;
-    background: rgba(139, 92, 246, 0.05);
-    border: 1px solid rgba(139, 92, 246, 0.2);
-    border-radius: 8px;
-    text-align: center;
-    font-size: 13px;
-    color: #505050;
-}
-
-.support-footer a {
-    color: #8b5cf6;
-    text-decoration: none;
-    font-weight: bold;
-    transition: all 0.2s ease;
-}
-
-.support-footer a:hover {
-    color: #7c3aed;
-    text-decoration: underline;
-}
 
         .error-message {
             background-color: #f8d7da;
@@ -1172,7 +1059,7 @@ body::before {
     </style>
 </head>
 <body>
-<!-- Analytics Icon -->
+    <!-- Analytics Icon -->
     <a href="https://analytics.google.com" target="_blank" class="analytics-icon" title="View Analytics">🌪️</a>
     
     <div class="container">
@@ -1200,33 +1087,30 @@ body::before {
             </div>
         </div>
 
-        <div class="controls">
-            <h3 data-i18n="dataCollectionParams">Data Collection Parameters</h3>
-            <div class="time-window">
-                <label><input type="radio" name="timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
-                <label><input type="radio" name="timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
-                <label><input type="radio" name="timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
-                <label><input type="radio" name="timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
-            </div>
-            <button class="scan-button" id="scanButton" onclick="scanData()">
-                <span data-i18n="scanButton">SCAN OSINT SOURCES</span>
-            </button>
-            <p class="controls-note">
-                <span data-i18n="controlsNote">Change the time window above, then click "Scan OSINT Sources" to refresh the forecast.</span>
-                <span id="cacheNote"></span>
-            </p>
-        </div>
-
         <div id="errorMessage" class="error-message"></div>
 
-        <div class="loading" id="loadingIndicator">
-            <div class="loading-spinner"></div>
-            <span data-i18n="loadingText">Scanning open-source intelligence feeds...</span>
-        </div>
-
         <div class="dashboard" id="dashboard">
+            <!-- HEZBOLLAH CARD -->
             <div class="target-card" id="hezbollah-card">
                 <h3 data-i18n="targetHezbollah">HIZBALLAH</h3>
+                
+                <!-- Individual Scan Controls -->
+                <div class="card-scan-controls">
+                    <div class="card-time-window">
+                        <label><input type="radio" name="hezbollah-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                        <label><input type="radio" name="hezbollah-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                        <label><input type="radio" name="hezbollah-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                        <label><input type="radio" name="hezbollah-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                    </div>
+                    <button class="card-scan-button" onclick="scanSingleTarget('hezbollah')">
+                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+                    </button>
+                    <div class="loading" id="hezbollah-loading">
+                        <div class="loading-spinner"></div>
+                        <span data-i18n="loadingText">Scanning...</span>
+                    </div>
+                </div>
+
                 <div class="probability-display">
                     <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
                     <div class="gauge-container">
@@ -1254,9 +1138,28 @@ body::before {
                 </div>
             </div>
 
+            <!-- IRAN CARD -->
             <div class="target-card" id="iran-card">
                 <h3 data-i18n="targetIran">IRAN</h3>
                 <a href="iran-protests.html" class="protest-analytics-btn" data-i18n="protestAnalytics">Protest Analytics</a>
+                
+                <!-- Individual Scan Controls -->
+                <div class="card-scan-controls">
+                    <div class="card-time-window">
+                        <label><input type="radio" name="iran-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                        <label><input type="radio" name="iran-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                        <label><input type="radio" name="iran-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                        <label><input type="radio" name="iran-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                    </div>
+                    <button class="card-scan-button" onclick="scanSingleTarget('iran')">
+                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+                    </button>
+                    <div class="loading" id="iran-loading">
+                        <div class="loading-spinner"></div>
+                        <span data-i18n="loadingText">Scanning...</span>
+                    </div>
+                </div>
+
                 <div class="probability-display">
                     <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
                     <div class="gauge-container">
@@ -1284,8 +1187,27 @@ body::before {
                 </div>
             </div>
 
+            <!-- HOUTHIS CARD -->
             <div class="target-card" id="houthis-card">
                 <h3 data-i18n="targetHouthis">HOUTHIS (YEMEN)</h3>
+                
+                <!-- Individual Scan Controls -->
+                <div class="card-scan-controls">
+                    <div class="card-time-window">
+                        <label><input type="radio" name="houthis-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                        <label><input type="radio" name="houthis-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                        <label><input type="radio" name="houthis-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                        <label><input type="radio" name="houthis-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                    </div>
+                    <button class="card-scan-button" onclick="scanSingleTarget('houthis')">
+                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+                    </button>
+                    <div class="loading" id="houthis-loading">
+                        <div class="loading-spinner"></div>
+                        <span data-i18n="loadingText">Scanning...</span>
+                    </div>
+                </div>
+
                 <div class="probability-display">
                     <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
                     <div class="gauge-container">
@@ -1313,10 +1235,28 @@ body::before {
                 </div>
             </div>
 
-            <!-- NEW: SYRIA CARD 🆕 -->
+            <!-- SYRIA CARD -->
             <div class="target-card" id="syria-card">
                 <h3 data-i18n="targetSyria">SYRIA</h3>
                 <a href="syria-conflicts.html" class="protest-analytics-btn" data-i18n="conflictTracker">📊 Conflict Tracker</a>
+                
+                <!-- Individual Scan Controls -->
+                <div class="card-scan-controls">
+                    <div class="card-time-window">
+                        <label><input type="radio" name="syria-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                        <label><input type="radio" name="syria-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                        <label><input type="radio" name="syria-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                        <label><input type="radio" name="syria-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                    </div>
+                    <button class="card-scan-button" onclick="scanSingleTarget('syria')">
+                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+                    </button>
+                    <div class="loading" id="syria-loading">
+                        <div class="loading-spinner"></div>
+                        <span data-i18n="loadingText">Scanning...</span>
+                    </div>
+                </div>
+
                 <div class="probability-display">
                     <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
                     <div class="gauge-container">
@@ -1343,7 +1283,6 @@ body::before {
                     <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
-
         </div>
 
         <div class="flight-widget" id="flightWidget">
@@ -1380,43 +1319,43 @@ body::before {
             </div>
         </div>
 
-<footer>
-    <div class="footer-content">
-        <div class="footer-section">
-            <h4 data-i18n="dataSourcesLabel">Data Sources:</h4>
-            <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.</span>
-        </div>
-        <div class="footer-section">
-            <h4 data-i18n="methodologyLabel">Methodology:</h4>
-            <span data-i18n="methodologyText">Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages</span>
-        </div>
-        <div class="footer-section">
-            <h4 data-i18n="lastUpdatedLabel">Last Updated:</h4>
-            <span id="lastUpdatedValue" data-i18n="notYetScanned">Not yet scanned</span>
-        </div>
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 data-i18n="dataSourcesLabel">Data Sources:</h4>
+                    <span data-i18n="dataSourcesText">NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/syriancivilwar, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.</span>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="methodologyLabel">Methodology:</h4>
+                    <span data-i18n="methodologyText">Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages</span>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="lastUpdatedLabel">Last Updated:</h4>
+                    <span id="lastUpdatedValue" data-i18n="notYetScanned">Not yet scanned</span>
+                </div>
+            </div>
+            
+            <div class="support-footer">
+                <p>
+                    If you find Asifah Analytics useful and want to support ongoing development, you can 
+                    <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" rel="noopener noreferrer">
+                        ☕ buy me a coffee
+                    </a>
+                </p>
+            </div>
+            
+            <div class="disclaimer">
+                <strong data-i18n="disclaimerTitle">⚠️ DISCLAIMER:</strong>
+                <span data-i18n="disclaimerText">This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.</span>
+            </div>
+        </footer>
     </div>
-    
-    <!-- NEW: BUY ME A COFFEE SECTION -->
-    <div class="support-footer">
-        <p>
-            If you find Asifah Analytics useful and want to support ongoing development, you can 
-            <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" rel="noopener noreferrer">
-                ☕ buy me a coffee
-            </a>
-        </p>
-    </div>
-    
-    <div class="disclaimer">
-        <strong data-i18n="disclaimerTitle">⚠️ DISCLAIMER:</strong>
-        <span data-i18n="disclaimerText">This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.</span>
-    </div>
-</footer>
 
     <audio id="clickSound">
         <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
     </audio>
 
-<script>
+    <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
         
         const translations = {
@@ -1427,14 +1366,12 @@ body::before {
                 requestsRemainingLabel: "Requests Remaining",
                 dailyLimitLabel: "Daily Limit",
                 resetsInLabel: "Quota Resets In",
-                dataCollectionParams: "Data Collection Parameters",
                 hours24: "24 Hours",
                 hours48: "48 Hours",
                 days7: "7 Days",
                 days30: "30 Days",
-                scanButton: "SCAN OSINT SOURCES",
-                controlsNote: "Change the time window above, then click \"Scan OSINT Sources\" to refresh the forecast.",
-                loadingText: "Scanning open-source intelligence feeds...",
+                scanButtonIndividual: "Scan OSINT - Update Forecast",
+                loadingText: "Scanning...",
                 targetHezbollah: "HIZBALLAH",
                 targetIran: "IRAN",
                 targetHouthis: "HOUTHIS (YEMEN)",
@@ -1449,7 +1386,6 @@ body::before {
                 recentHeadlines: "Recent Headlines:",
                 clickToScan: "Click scan to load latest intelligence",
                 noActionable: "No actionable headlines found (no threat indicators detected)",
-                actionableOnly: "Recent Headlines (Actionable Intelligence Only):",
                 dataSourcesLabel: "Data Sources:",
                 dataSourcesText: "NewsAPI.org aggregating Reuters, AP, Al Jazeera, Times of Israel, Haaretz, and other major news outlets. GDELT for Arabic, Hebrew, and Farsi sources. Reddit for community intelligence from r/ForbiddenBromance, r/Israel, r/Lebanon, r/Iran, r/Yemen, r/syriancivilwar, r/geopolitics, and other OSINT subreddits. Polymarket for crowd-sourced prediction market data.",
                 methodologyLabel: "Methodology:",
@@ -1460,10 +1396,6 @@ body::before {
                 disclaimerText: "This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.",
                 polymarketDisclaimerTitle: "⚠️ MARKET PREDICTIONS DISCLAIMER",
                 polymarketDisclaimerText: "Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.",
-                timeline180plus: "180+ Days (Low priority)",
-                timeline91180: "91-180 Days",
-                timeline3190: "31-90 Days",
-                timeline030: "0-30 Days (Elevated threat)",
                 protestAnalytics: "Protest Analytics",
                 conflictTracker: "Conflict Tracker",
                 flightWidgetTitle: "Flight Disruptions Monitor",
@@ -1480,8 +1412,11 @@ body::before {
                 targetSyria: "סוריה",
                 protestAnalytics: "ניתוח מחאות",
                 conflictTracker: "מעקב סכסוכים",
-                strikeProbability: "הסתברות תקיפה",
-                projectedTimeline: "ציר זמן חזוי"
+                scanButtonIndividual: "סרוק OSINT - עדכן תחזית",
+                hours24: "24 שעות",
+                hours48: "48 שעות",
+                days7: "7 ימים",
+                days30: "30 ימים"
             },
             ar: {
                 header: "عاصفة أناليتكس",
@@ -1491,7 +1426,8 @@ body::before {
                 targetHouthis: "الحوثيون (اليمن)",
                 targetSyria: "سوريا",
                 protestAnalytics: "تحليل الاحتجاجات",
-                conflictTracker: "متتبع النزاعات"
+                conflictTracker: "متتبع النزاعات",
+                scanButtonIndividual: "مسح OSINT - تحديث التوقعات"
             },
             fa: {
                 header: "آسیفه آنالیتیکس",
@@ -1501,7 +1437,8 @@ body::before {
                 targetHouthis: "حوثی‌ها (یمن)",
                 targetSyria: "سوریه",
                 protestAnalytics: "تحلیل اعتراضات",
-                conflictTracker: "ردیاب درگیری‌ها"
+                conflictTracker: "ردیاب درگیری‌ها",
+                scanButtonIndividual: "اسکن OSINT - به‌روزرسانی پیش‌بینی"
             }
         };
 
@@ -1517,36 +1454,20 @@ body::before {
             }
         }
 
-function switchLanguage(lang, button) {
-            console.log('switchLanguage called!');
-            console.log('lang:', lang);
-            console.log('button:', button);
-            console.log('button type:', typeof button);
-            
-            if (!translations[lang]) {
-                console.log('Translation not found for:', lang);
-                return;
-            }
+        function switchLanguage(lang, button) {
+            if (!translations[lang]) return;
             
             currentLanguage = lang;
             localStorage.setItem('asifah-language', lang);
             
-            console.log('Removing active from all buttons...');
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
-            console.log('Adding active to clicked button...');
             if (button) {
                 button.classList.add('active');
-                console.log('Active class added!');
-            } else {
-                console.log('ERROR: button is null/undefined!');
             }
             
-            console.log('Applying language...');
             applyLanguage(lang);
-            console.log('Done!');
         }
 
         function applyLanguage(lang) {
@@ -1584,7 +1505,6 @@ function switchLanguage(lang, button) {
             
             const remainingEl = document.getElementById('requestsRemaining');
             const rateLimitBox = document.getElementById('rateLimitBox');
-            const scanButton = document.getElementById('scanButton');
             
             remainingEl.classList.remove('success', 'warning', 'danger');
             rateLimitBox.classList.remove('warning', 'danger');
@@ -1592,17 +1512,11 @@ function switchLanguage(lang, button) {
             if (remaining === 0) {
                 remainingEl.classList.add('danger');
                 rateLimitBox.classList.add('danger');
-                scanButton.disabled = true;
-                document.getElementById('cacheNote').innerHTML = 
-                    '<br><strong style="color: #c0392b;">⚠️ Daily quota exhausted. Showing cached data only until reset.</strong>';
             } else if (remaining <= 20) {
                 remainingEl.classList.add('warning');
                 rateLimitBox.classList.add('warning');
-                document.getElementById('cacheNote').innerHTML = 
-                    `<br><strong style="color: #f39c12;">⚠️ Only ${remaining} requests remaining today.</strong>`;
             } else {
                 remainingEl.classList.add('success');
-                document.getElementById('cacheNote').innerHTML = '';
             }
             
             if (resetCountdownInterval) {
@@ -1645,238 +1559,159 @@ function switchLanguage(lang, button) {
             }
         }
 
-async function fetchPolymarketData() {
-    console.log('✅ Polymarket: fetchPolymarketData() called');
-
-    const ticker = document.getElementById('polymarketTicker');
-
-    // If the container isn't on the page, fail silently
-    if (!ticker) {
-        console.warn('⚠️ Polymarket: ticker container not found (#polymarketTicker)');
-        return;
-    }
-
-    try {
-        // Active markets as of January 2026 - includes Syria
-        const markets = [
-            // IRAN MARKETS
-            { slug: 'israel-strikes-iran-by-january-31-2026', question: 'Israel strikes Iran by Jan 31?' },
-            { slug: 'us-strikes-iran-by', question: 'US strikes Iran?' },
-            { slug: 'khamenei-out-as-supreme-leader-of-iran-by-january-31', question: 'Khamenei out by Jan 31?' },
-
-            // LEBANON/HIZBALLAH MARKETS
-            { slug: 'will-israel-strike-lebanon-on', question: 'Israel strikes Lebanon?' },
-
-            // YEMEN/HOUTHIS MARKETS
-            { slug: 'us-strikes-yemen-by', question: 'US strikes Yemen?' },
-
-            // SYRIA MARKETS
-            { slug: 'israel-strikes-syria-on', question: 'Israel strikes Syria?' },
-            { slug: 'israel-and-syria-normalize-relations-in-2025', question: 'Israel–Syria normalize relations?' },
-            { slug: 'will-the-us-abandon-syrian-base-before-april-2025', question: 'US abandons Syria base?' }
-        ];
-
-        // Helper: parse probability from multiple possible shapes
-        const extractProbability = (marketObj) => {
-            // Most common: outcomePrices is array of strings ["0.34","0.66"]
-            if (Array.isArray(marketObj?.outcomePrices) && marketObj.outcomePrices.length > 0) {
-                const p = parseFloat(marketObj.outcomePrices[0]);
-                if (Number.isFinite(p)) return p;
-            }
-
-            // Some shapes: marketObj.market?.outcomePrices
-            if (Array.isArray(marketObj?.market?.outcomePrices) && marketObj.market.outcomePrices.length > 0) {
-                const p = parseFloat(marketObj.market.outcomePrices[0]);
-                if (Number.isFinite(p)) return p;
-            }
-
-            // Fallback to any other numeric-ish fields
-            const maybe = [marketObj?.price, marketObj?.bestAsk, marketObj?.bestBid, marketObj?.market?.price]
-                .map(x => parseFloat(x))
-                .find(x => Number.isFinite(x));
-            return Number.isFinite(maybe) ? maybe : null;
-        };
-
-        // Helper: safe fetch with timeout
-        const fetchJsonWithTimeout = async (url, timeoutMs = 8000) => {
-            const controller = new AbortController();
-            const timer = setTimeout(() => controller.abort(), timeoutMs);
+        async function fetchPolymarketData() {
+            const ticker = document.getElementById('polymarketTicker');
+            if (!ticker) return;
 
             try {
-                const res = await fetch(url, {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' },
-                    signal: controller.signal
-                });
+                const markets = [
+                    { slug: 'israel-strikes-iran-by-january-31-2026', question: 'Israel strikes Iran by Jan 31?' },
+                    { slug: 'us-strikes-iran-by', question: 'US strikes Iran?' },
+                    { slug: 'khamenei-out-as-supreme-leader-of-iran-by-january-31', question: 'Khamenei out by Jan 31?' },
+                    { slug: 'will-israel-strike-lebanon-on', question: 'Israel strikes Lebanon?' },
+                    { slug: 'us-strikes-yemen-by', question: 'US strikes Yemen?' },
+                    { slug: 'israel-strikes-syria-on', question: 'Israel strikes Syria?' },
+                    { slug: 'israel-and-syria-normalize-relations-in-2025', question: 'Israel–Syria normalize relations?' },
+                    { slug: 'will-the-us-abandon-syrian-base-before-april-2025', question: 'US abandons Syria base?' }
+                ];
 
-                if (!res.ok) {
-                    console.warn(`⚠️ Polymarket fetch failed: ${url} (HTTP ${res.status})`);
+                const extractProbability = (marketObj) => {
+                    if (Array.isArray(marketObj?.outcomePrices) && marketObj.outcomePrices.length > 0) {
+                        const p = parseFloat(marketObj.outcomePrices[0]);
+                        if (Number.isFinite(p)) return p;
+                    }
+                    if (Array.isArray(marketObj?.market?.outcomePrices) && marketObj.market.outcomePrices.length > 0) {
+                        const p = parseFloat(marketObj.market.outcomePrices[0]);
+                        if (Number.isFinite(p)) return p;
+                    }
                     return null;
+                };
+
+                const fetchJsonWithTimeout = async (url, timeoutMs = 8000) => {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+                    try {
+                        const res = await fetch(url, {
+                            method: 'GET',
+                            headers: { 'Accept': 'application/json' },
+                            signal: controller.signal
+                        });
+
+                        if (!res.ok) return null;
+
+                        const contentType = res.headers.get('content-type') || '';
+                        if (!contentType.includes('application/json')) return null;
+
+                        return await res.json();
+                    } catch (err) {
+                        return null;
+                    } finally {
+                        clearTimeout(timer);
+                    }
+                };
+
+                const results = await Promise.allSettled(
+                    markets.map(async (market) => {
+                        const url = `https://gamma-api.polymarket.com/markets?slug=${encodeURIComponent(market.slug)}&limit=1`;
+                        const data = await fetchJsonWithTimeout(url);
+
+                        if (!data || !Array.isArray(data) || data.length === 0) return null;
+
+                        const marketObj = data[0];
+                        const prob = extractProbability(marketObj);
+                        if (prob === null) return null;
+
+                        return {
+                            question: market.question,
+                            probability: prob,
+                            url: `https://polymarket.com/event/${market.slug}`
+                        };
+                    })
+                );
+
+                const validMarkets = results
+                    .filter(r => r.status === 'fulfilled' && r.value)
+                    .map(r => r.value);
+
+                if (validMarkets.length === 0) {
+                    ticker.innerHTML = '<div class="ticker-error">⚠️ Polymarket data unavailable</div>';
+                    return;
                 }
 
-                const contentType = res.headers.get('content-type') || '';
-                if (!contentType.includes('application/json')) {
-                    console.warn(`⚠️ Polymarket non-JSON response: ${url}`);
-                    return null;
-                }
-
-                return await res.json();
-            } catch (err) {
-                console.warn(`⚠️ Polymarket fetch error: ${url}`, err);
-                return null;
-            } finally {
-                clearTimeout(timer);
+                displayPolymarketTicker(validMarkets);
+            } catch (error) {
+                console.error('Polymarket error:', error);
+                ticker.innerHTML = '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
             }
-        };
-
-        // IMPORTANT: use the Gamma "query" endpoint by slug
-        // This returns an ARRAY of markets. We take the first match.
-        const results = await Promise.allSettled(
-            markets.map(async (market) => {
-                const url = `https://gamma-api.polymarket.com/markets?slug=${encodeURIComponent(market.slug)}&limit=1`;
-                const data = await fetchJsonWithTimeout(url);
-
-                if (!data) return null;
-                if (!Array.isArray(data) || data.length === 0) return null;
-
-                const marketObj = data[0];
-                const prob = extractProbability(marketObj);
-                if (prob === null) return null;
-
-                return {
-                    question: market.question,
-                    probability: prob, // already 0.xx
-                    url: `https://polymarket.com/event/${market.slug}`
-                };
-            })
-        );
-
-        const validMarkets = results
-            .filter(r => r.status === 'fulfilled' && r.value)
-            .map(r => r.value);
-
-        console.log('✅ Polymarket: validMarkets', validMarkets);
-
-        if (validMarkets.length === 0) {
-            ticker.innerHTML =
-                '<div class="ticker-error">⚠️ Polymarket data unavailable (no markets returned)</div>';
-            return;
         }
 
-        displayPolymarketTicker(validMarkets);
+        function displayPolymarketTicker(markets) {
+            const ticker = document.getElementById('polymarketTicker');
+            if (!ticker || !markets || markets.length === 0) return;
 
-    } catch (error) {
-        console.error('❌ Polymarket fetch error:', error);
-        ticker.innerHTML =
-            '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
-    }
-}
+            let html = '';
+            markets.forEach(market => {
+                const pct = Math.round((market.probability || 0) * 100);
+                html += `
+                    <div class="ticker-item">
+                        <strong>${market.question}</strong>
+                        <span class="ticker-probability">${pct}%</span>
+                        <a href="${market.url}" target="_blank" rel="noopener noreferrer">View</a>
+                    </div>
+                `;
+            });
 
-function displayPolymarketTicker(markets) {
-    console.log('✅ Polymarket: displayPolymarketTicker() markets count:', markets?.length);
-
-    const ticker = document.getElementById('polymarketTicker');
-    if (!ticker) {
-        console.warn('⚠️ Polymarket: ticker container not found during render');
-        return;
-    }
-
-    if (!markets || markets.length === 0) {
-        ticker.innerHTML = '<div class="ticker-error">No Polymarket markets available</div>';
-        return;
-    }
-
-    let html = '';
-
-    markets.forEach(market => {
-        const pct = Math.round((market.probability || 0) * 100);
-        html += `
-            <div class="ticker-item">
-                <strong>${market.question}</strong>
-                <span class="ticker-probability">${pct}%</span>
-                <a href="${market.url}" target="_blank" rel="noopener noreferrer">View</a>
-            </div>
-        `;
-    });
-
-    // Duplicate content for smooth infinite scroll (your CSS scrolls -50%)
-    ticker.innerHTML = html + html;
-}
-
-
-        const marketData = await Promise.allSettled(
-            markets.map(async (market) => {
-                const url = `https://gamma-api.polymarket.com/markets/${market.slug}`;
-                const data = await fetchJsonWithTimeout(url);
-
-                if (!data) return null;
-
-                const prob = extractProbability(data);
-                if (prob === null) return null;
-
-                return {
-                    question: market.question,
-                    // Polymarket returns probability as 0.XX already
-                    probability: prob,
-                    url: `https://polymarket.com/event/${market.slug}`
-                };
-            })
-        );
-
-        const validMarkets = marketData
-            .filter(r => r.status === 'fulfilled' && r.value)
-            .map(r => r.value);
-
-        if (validMarkets.length === 0) {
-            ticker.innerHTML =
-                '<div class="ticker-error">⚠️ Polymarket data unavailable (no markets returned)</div>';
-            return;
+            ticker.innerHTML = html + html;
         }
 
-        // ✅ This function is defined below now
-        displayPolymarketTicker(validMarkets);
+        // NEW: Individual scan function
+        async function scanSingleTarget(targetName) {
+            const button = document.querySelector(`#${targetName}-card .card-scan-button`);
+            const loading = document.getElementById(`${targetName}-loading`);
+            const errorMessage = document.getElementById('errorMessage');
 
-    } catch (error) {
-        console.error('Polymarket fetch error:', error);
-        ticker.innerHTML =
-            '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
-    }
-}
+            errorMessage.classList.remove('show');
 
-/**
- * Renders the Polymarket ticker.
- * IMPORTANT: Your HTML should have:
- *   <div id="polymarketTicker" class="ticker-content"></div>
- */
-function displayPolymarketTicker(markets) {
-    const ticker = document.getElementById('polymarketTicker');
-    if (!ticker) {
-        console.warn('Polymarket ticker container not found');
-        return;
-    }
+            try {
+                const clickSound = document.getElementById('clickSound');
+                clickSound.currentTime = 0;
+                clickSound.play().catch(() => {});
+            } catch (e) {}
 
-    if (!markets || markets.length === 0) {
-        ticker.innerHTML = '<div class="ticker-error">No Polymarket markets available</div>';
-        return;
-    }
+            button.classList.add('scanning');
+            button.disabled = true;
+            loading.classList.add('active');
 
-    let html = '';
+            const timeWindow = parseInt(
+                document.querySelector(`input[name="${targetName}-timeWindow"]:checked`).value
+            );
 
-    markets.forEach(market => {
-        const pct = Math.round((market.probability || 0) * 100);
+            try {
+                await scanTarget(targetName, timeWindow);
 
-        html += `
-            <div class="ticker-item">
-                <strong>${market.question}</strong>
-                <span class="ticker-probability">${pct}%</span>
-                <a href="${market.url}" target="_blank" rel="noopener noreferrer">View</a>
-            </div>
-        `;
-    });
-
-    // Duplicate for smooth infinite scroll (matches your CSS translateX(-50%))
-    ticker.innerHTML = html + html;
-}
+                const now = new Date();
+                document.getElementById('lastUpdatedValue').textContent =
+                    `${targetName.toUpperCase()}: ` + now.toLocaleString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        timeZoneName: 'short'
+                    }) + ` (last ${timeWindow} day(s))`;
+            } catch (error) {
+                console.error('Scan error:', error);
+                errorMessage.textContent = `Error scanning ${targetName}: ` + error.message;
+                errorMessage.classList.add('show');
+            } finally {
+                loading.classList.remove('active');
+                button.classList.remove('scanning');
+                button.disabled = false;
+                
+                fetchRateLimitStatus();
+            }
+        }
 
         async function scanTarget(targetName, days) {
             const url = `${BACKEND_URL}/api/threat/${targetName}?days=${days}`;
@@ -2007,117 +1842,102 @@ function displayPolymarketTicker(markets) {
             container.innerHTML = html;
         }
 
-async function updateFlightCancellations() {
-    const grid = document.getElementById('flightCancellationsGrid');
-    const badge = document.getElementById('flightStatusBadge');
+        async function updateFlightCancellations() {
+            const grid = document.getElementById('flightCancellationsGrid');
+            const badge = document.getElementById('flightStatusBadge');
 
-    // If the page structure changed and these elements don't exist,
-    // fail silently without breaking other widgets.
-    if (!grid || !badge) return;
+            if (!grid || !badge) return;
 
-    try {
-        const response = await fetch(`${BACKEND_URL}/flight-cancellations`);
+            try {
+                const response = await fetch(`${BACKEND_URL}/flight-cancellations`);
 
-        // If the endpoint is missing (404), stop hammering it every 30 minutes.
-        // Show "no disruptions" and disable future calls for this session.
-        if (response.status === 404) {
-            displayFlightCancellations([]);
-            console.warn('⚠️ Flight cancellations endpoint missing (404). Disabling further checks this session.');
-            window.__disableFlightCancellations = true;
-            return;
+                if (response.status === 404) {
+                    displayFlightCancellations([]);
+                    window.__disableFlightCancellations = true;
+                    return;
+                }
+
+                if (!response.ok) {
+                    displayFlightCancellations([]);
+                    return;
+                }
+
+                const contentType = response.headers.get('content-type') || '';
+                if (!contentType.includes('application/json')) {
+                    displayFlightCancellations([]);
+                    return;
+                }
+
+                const data = await response.json();
+                displayFlightCancellations(data.cancellations || []);
+            } catch (error) {
+                console.warn('Flight cancellations failed:', error);
+                displayFlightCancellations([]);
+            }
         }
 
-        // Any other non-OK response: show "no disruptions" state and continue.
-        if (!response.ok) {
-            displayFlightCancellations([]);
-            return;
+        function displayFlightCancellations(cancellations) {
+            const grid = document.getElementById('flightCancellationsGrid');
+            const badge = document.getElementById('flightStatusBadge');
+
+            if (!grid || !badge) return;
+
+            const t = translations[currentLanguage] || translations.en;
+
+            if (!cancellations || cancellations.length === 0) {
+                grid.innerHTML = `<div class="no-cancellations">${t.noFlightDisruptions}</div>`;
+                badge.className = 'flight-status-badge normal';
+                badge.innerHTML = `<span>${t.flightStatusNormal}</span>`;
+                return;
+            }
+
+            badge.className = 'flight-status-badge active';
+            badge.innerHTML = `<span>${t.flightStatusActive} (${cancellations.length})</span>`;
+
+            let html = '';
+            cancellations.forEach(cancel => {
+                const date = cancel.date
+                    ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    : '';
+
+                html += `
+                    <div class="cancellation-card">
+                        <div class="cancellation-airline">${cancel.airline || ''}</div>
+                        <div class="cancellation-details">
+                            <strong>Destination:</strong> ${cancel.destination || ''}<br>
+                            <strong>Announced:</strong> ${date}
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = html;
         }
 
-        // Guard against non-JSON responses
-        const contentType = response.headers.get('content-type') || '';
-        if (!contentType.includes('application/json')) {
-            displayFlightCancellations([]);
-            return;
-        }
+        window.addEventListener('DOMContentLoaded', () => {
+            initLanguage();
+            fetchRateLimitStatus();
+            
+            try {
+                fetchPolymarketData();
+                setInterval(fetchPolymarketData, 30 * 60 * 1000);
+            } catch (e) {
+                console.warn('Polymarket init failed:', e);
+            }
 
-        const data = await response.json();
-        displayFlightCancellations(data.cancellations || []);
-    } catch (error) {
-        console.warn('Flight cancellations widget failed (non-fatal):', error);
-        displayFlightCancellations([]);
-    }
-}
-
-function displayFlightCancellations(cancellations) {
-    const grid = document.getElementById('flightCancellationsGrid');
-    const badge = document.getElementById('flightStatusBadge');
-
-    // If these are missing for any reason, do nothing (non-fatal)
-    if (!grid || !badge) return;
-
-    // translations/currentLanguage exist elsewhere in your script; guard lightly
-    const t = (typeof translations !== 'undefined' && typeof currentLanguage !== 'undefined' && translations[currentLanguage])
-        ? translations[currentLanguage]
-        : {
-            noFlightDisruptions: 'No flight disruptions detected',
-            flightStatusNormal: 'Normal',
-            flightStatusActive: 'Active Disruptions'
-        };
-
-    if (!cancellations || cancellations.length === 0) {
-        grid.innerHTML = `<div class="no-cancellations">${t.noFlightDisruptions}</div>`;
-        badge.className = 'flight-status-badge normal';
-        badge.innerHTML = `<span>${t.flightStatusNormal}</span>`;
-        return;
-    }
-
-    badge.className = 'flight-status-badge active';
-    badge.innerHTML = `<span>${t.flightStatusActive} (${cancellations.length})</span>`;
-
-    let html = '';
-    cancellations.forEach(cancel => {
-        const date = cancel.date
-            ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-            : '';
-
-        html += `
-            <div class="cancellation-card">
-                <div class="cancellation-airline">${cancel.airline || ''}</div>
-                <div class="cancellation-details">
-                    <strong>Destination:</strong> ${cancel.destination || ''}<br>
-                    <strong>Announced:</strong> ${date}
-                </div>
-            </div>
-        `;
-    });
-
-    grid.innerHTML = html;
-}
-
-window.addEventListener('DOMContentLoaded', () => {
-    // Polymarket ticker
-    try {
-        fetchPolymarketData();
-        setInterval(fetchPolymarketData, 30 * 60 * 1000);
-    } catch (e) {
-        console.warn('Polymarket init failed (non-fatal):', e);
-    }
-
-    // Flight cancellations (disable future calls if 404 detected)
-    try {
-        if (!window.__disableFlightCancellations) {
-            updateFlightCancellations();
-            setInterval(() => {
+            try {
                 if (!window.__disableFlightCancellations) {
                     updateFlightCancellations();
+                    setInterval(() => {
+                        if (!window.__disableFlightCancellations) {
+                            updateFlightCancellations();
+                        }
+                    }, 30 * 60 * 1000);
                 }
-            }, 30 * 60 * 1000);
-        }
-    } catch (e) {
-        console.warn('Flight cancellations init failed (non-fatal):', e);
-    }
-});
-
-</script>
+            } catch (e) {
+                console.warn('Flight cancellations init failed:', e);
+            }
+        });
+    </script>
 </body>
 </html>
