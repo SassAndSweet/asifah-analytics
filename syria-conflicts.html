@@ -44,6 +44,20 @@
             font-size: 16px;
         }
         .back-link:hover { text-decoration: underline; }
+        .error-banner {
+            background: rgba(255, 107, 107, 0.2);
+            border: 2px solid #ff6b6b;
+            color: #ff6b6b;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+        .error-banner.show {
+            display: block;
+        }
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -141,6 +155,7 @@
             margin-bottom: 20px;
             border-bottom: 2px solid rgba(139, 92, 246, 0.3);
             padding-bottom: 10px;
+            flex-wrap: wrap;
         }
         .language-tabs button {
             background: none;
@@ -202,32 +217,32 @@
             font-size: 12px;
             margin-top: 30px;
         }
-        
-        /* BUY ME A COFFEE SUPPORT SECTION - Added */
         .support-footer {
-            margin-top: 40px;
+            margin-top: 25px;
             padding: 15px 20px;
-            background: rgba(139, 92, 246, 0.05);
+            background: rgba(139, 92, 246, 0.1);
             border: 1px solid rgba(139, 92, 246, 0.2);
             border-radius: 8px;
             text-align: center;
             font-size: 13px;
-            color: #505050;
+            color: #e0e0e0;
         }
         .support-footer a {
             color: #c084fc;
             text-decoration: none;
             font-weight: bold;
+            transition: all 0.2s ease;
         }
         .support-footer a:hover {
-            text-decoration: underline;
             color: #d8b4fe;
+            text-decoration: underline;
         }
-        
         .copyright-footer {
             margin-top: 15px;
             padding-top: 15px;
             border-top: 1px solid rgba(139, 92, 246, 0.3);
+            color: #808080;
+            font-size: 11px;
         }
     </style>
 </head>
@@ -241,6 +256,8 @@
         <div class="nav-bar">
             <a href="index.html" class="back-link">← Back to Main Dashboard</a>
         </div>
+
+        <div class="error-banner" id="errorBanner"></div>
 
         <div class="metrics-grid">
             <div class="metric-card">
@@ -304,7 +321,6 @@
             <p>Asifah Analytics v2.5.0 | Syria Conflict Tracker</p>
             <p>Data sources: Syria Direct, SOHR, NewsAPI, GDELT, Reddit</p>
             
-            <!-- BUY ME A COFFEE SECTION - Added between data sources and disclaimer -->
             <div class="support-footer">
                 <p>
                     If you find Asifah Analytics useful and want to support ongoing development, you can 
@@ -320,12 +336,33 @@
     </div>
 
     <script>
+        const BACKEND_URL = 'https://asifah-backend.onrender.com';
         let conflictData = null;
 
         async function fetchConflictData() {
+            const errorBanner = document.getElementById('errorBanner');
+            errorBanner.classList.remove('show');
+            
             try {
-                const response = await fetch('https://asifah-backend.onrender.com/api/syria-conflicts?days=7');
+                console.log('Fetching Syria conflict data...');
+                
+                // CORRECTED: Try /syria-conflicts endpoint (without /api/)
+                const response = await fetch(`${BACKEND_URL}/syria-conflicts?days=7`);
+                
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`HTTP ${response.status}: ${errorText.slice(0, 100)}`);
+                }
+                
                 const data = await response.json();
+                console.log('Data received:', data);
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'API returned success: false');
+                }
+                
                 conflictData = data;
                 
                 updateMetrics(data);
@@ -333,14 +370,20 @@
                 showArticles('syria_direct');
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error fetching Syria conflict data:', error);
+                
+                errorBanner.textContent = `⚠️ Error loading data: ${error.message}. Please refresh the page or try again later.`;
+                errorBanner.classList.add('show');
+                
                 document.getElementById('articles-container').innerHTML = 
-                    '<div class="loading" style="color:#ff6b6b;">Error loading data. Please refresh.</div>';
+                    `<div class="loading" style="color:#ff6b6b;">Error: ${error.message}</div>`;
             }
         }
 
         function updateMetrics(data) {
             const cd = data.conflict_data || {};
+            
+            console.log('Updating metrics with:', cd);
             
             document.getElementById('deathCount').textContent = cd.deaths || 0;
             document.getElementById('displacedCount').textContent = (cd.displaced || 0).toLocaleString();
@@ -370,6 +413,8 @@
         }
         
         function populateSourceCitations(details) {
+            console.log('Populating citations with:', details);
+            
             // Group details by type
             const deathDetails = details.filter(d => d.type === 'deaths').slice(0, 5);
             const displacedDetails = details.filter(d => d.type === 'displaced').slice(0, 5);
@@ -401,7 +446,7 @@
                 });
             }
             
-            // Clash sources (we'll need to track these differently)
+            // Clash sources
             const clashSources = document.getElementById('clashSources');
             clashSources.innerHTML = '';
             if (conflictData && conflictData.articles_syria_direct) {
@@ -475,6 +520,8 @@
                 articles = articles.filter(article => article.language === expectedLang);
             }
             
+            console.log(`Showing ${articles.length} articles for ${source}`);
+            
             if (articles.length === 0) {
                 container.innerHTML = '<div class="loading">No articles available in this language.</div>';
                 return;
@@ -498,6 +545,7 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            console.log('Page loaded, fetching conflict data...');
             fetchConflictData();
             setInterval(fetchConflictData, 30 * 60 * 1000);
         });
