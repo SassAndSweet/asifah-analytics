@@ -740,7 +740,7 @@
                         <span class="stability-icon">🛢️</span>
                         <div class="stability-metric-content">
                             <div class="stability-metric-label">Oil (Brent)</div>
-                            <div class="stability-metric-value" id="oil-price-value">Coming Soon</div>
+                            <div class="stability-metric-value" id="oil-price-value">Loading...</div>
                         </div>
                     </div>
                     
@@ -1087,6 +1087,18 @@
                 const intensityLabel = intensity >= 60 ? 'High' : intensity >= 30 ? 'Medium' : 'Low';
                 const intensityColor = intensity >= 60 ? '#ff6b6b' : intensity >= 30 ? '#ff8c42' : '#ffd43b';
                 protestIntensityMini.innerHTML = `<span style="color: ${intensityColor};">${intensityLabel}</span> (${intensity}%)`;
+            }
+            
+            // Update Oil Price metric
+            const oilPriceElement = document.getElementById('oil-price-value');
+            if (oilPriceElement && data.oil_price) {
+                const oilPrice = data.oil_price.price;
+                const oilChange = data.oil_price.change_percent;
+                const changeColor = oilChange >= 0 ? '#51cf66' : '#ff6b6b';
+                const changeSign = oilChange >= 0 ? '+' : '';
+                
+                oilPriceElement.innerHTML = 
+                    `$${oilPrice}/bbl <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${oilChange}%)</span>`;
             }
             
             // Display ALL cities
