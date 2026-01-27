@@ -575,7 +575,8 @@
             <div class="metric-card">
                 <div class="metric-title" id="metric-title-stability">Regime Stability Index</div>
                 <div class="metric-value" id="regime-stability">--</div>
-                <div class="metric-explanation" id="stability-explanation">Lower values indicate increased instability</div>
+                <div class="metric-subtitle" id="stability-level">Loading...</div>
+                <div class="metric-explanation" id="stability-trend">Trend: --</div>
             </div>
 
             <div class="metric-card">
@@ -635,7 +636,7 @@
         <div class="footer">
             <p><strong>Asifah Analytics v2.0</strong></p>
             <p><strong>Data Sources:</strong> NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Iran Wire and HRANA RSS feeds, Reddit for community intelligence, plus other OSINT sources.</p>
-            <p><strong>For inquiries, contact:</strong> <a href="mailto:asifahanalytics@gmail.com" style="color: #c084fc; text-decoration: none;">asifahanalytics@gmail.com</a></p>
+            <p><strong>For inquiries, contact:</strong> <a href="/cdn-cgi/l/email-protection#accddfc5cacdc4cdc2cdc0d5d8c5cfdfeccbc1cdc5c082cfc3c1" style="color: #c084fc; text-decoration: none;"><span class="__cf_email__" data-cfemail="ff9e8c96999e979e919e93868b969c8cbf98929e9693d19c9092">[email&#160;protected]</span></a></p>
             <p style="margin-top: 10px; font-size: 11px;">Updated every 30 minutes | Not for operational use</p>
             
             <!-- BUY ME A COFFEE SECTION -->
@@ -654,7 +655,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const translations = {
             en: {
                 mainTitle: "Iran Protests Tracker",
@@ -683,7 +684,10 @@
                 deathsLabel: "Deaths Reported",
                 injuriesLabel: "Injuries Reported",
                 arrestsLabel: "Arrests Reported",
-                verified: "Verified"
+                verified: "Verified",
+                trendIncreasing: "Increasing",
+                trendDecreasing: "Decreasing",
+                trendStable: "Stable"
             },
             he: {
                 mainTitle: "מעקב הפגנות באיראן",
@@ -858,9 +862,27 @@
             animateNumber('injuryCount', injuries);
             animateNumber('arrestCount', arrests);
             
-            const stability = data.stability || 0;
-            document.getElementById('regime-stability').textContent = stability;
-            document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stability);
+            // NEW v2.6.0: Regime Stability Index
+            const regimeStability = data.regime_stability || {};
+            const stabilityScore = regimeStability.stability_score || 0;
+            const riskLevel = regimeStability.risk_level || 'Unknown';
+            const trend = regimeStability.trend || 'stable';
+            const exchangeRate = data.exchange_rate || {};
+            
+            document.getElementById('regime-stability').textContent = stabilityScore;
+            document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stabilityScore);
+            document.getElementById('stability-level').textContent = riskLevel;
+            
+            // Display trend with arrow
+            const trendArrow = trend === 'increasing' ? '↑' : trend === 'decreasing' ? '↓' : '→';
+            const trendText = trend.charAt(0).toUpperCase() + trend.slice(1);
+            document.getElementById('stability-trend').textContent = `Trend: ${trendArrow} ${trendText}`;
+            
+            // Add exchange rate info if available
+            if (exchangeRate.usd_to_irr) {
+                const rateElement = document.getElementById('stability-trend');
+                rateElement.innerHTML += `<br><small style="font-size: 10px;">USD/IRR: ${exchangeRate.usd_to_irr.toLocaleString()}</small>`;
+            }
             
             // Display ALL cities
             document.getElementById('total-cities').textContent = data.num_cities_affected || 0;
@@ -1060,14 +1082,3 @@
                     clearInterval(interval);
                 } else {
                     element.textContent = Math.floor(current);
-                }
-            }, duration / steps);
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchProtestData();
-            setInterval(fetchProtestData, 30 * 60 * 1000);
-        });
-    </script>
-</body>
-</html>
