@@ -161,6 +161,119 @@
         .stability-low { color: #ff8c42; }
         .stability-critical { color: #ff6b6b; }
 
+        /* Enhanced Regime Stability Card */
+        .regime-stability-card {
+            grid-column: span 2;
+        }
+
+        .stability-progress-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stability-progress-bar {
+            flex: 1;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .stability-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b 0%, #ffd43b 50%, #51cf66 100%);
+            transition: width 1s ease;
+            border-radius: 15px;
+        }
+
+        .stability-score-display {
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
+            min-width: 120px;
+        }
+
+        .stability-score-display .metric-value {
+            font-size: 56px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .stability-max {
+            font-size: 24px;
+            color: #808080;
+            font-weight: normal;
+        }
+
+        .stability-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stability-metric-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        .stability-metric-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .stability-icon {
+            font-size: 28px;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .stability-metric-content {
+            flex: 1;
+        }
+
+        .stability-metric-label {
+            font-size: 11px;
+            color: #a0a0a0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .stability-metric-value {
+            font-size: 16px;
+            color: #e0e0e0;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .stability-trend-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+
+        .stability-trend-section .metric-subtitle {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stability-trend-section .metric-explanation {
+            font-size: 13px;
+        }
+
         /* Enhanced Casualty Cards v2.0 */
         .casualties-grid {
             display: grid;
@@ -572,11 +685,60 @@
                 <div class="metric-subtitle" id="intensity-level">Loading...</div>
             </div>
 
-            <div class="metric-card">
-                <div class="metric-title" id="metric-title-stability">Regime Stability Index</div>
-                <div class="metric-value" id="regime-stability">--</div>
-                <div class="metric-subtitle" id="stability-level">Loading...</div>
-                <div class="metric-explanation" id="stability-trend">Trend: --</div>
+            <div class="metric-card regime-stability-card">
+                <div class="metric-title" id="metric-title-stability">REGIME STABILITY INDEX</div>
+                
+                <!-- Progress Bar -->
+                <div class="stability-progress-container">
+                    <div class="stability-progress-bar" id="stability-progress-bar">
+                        <div class="stability-progress-fill" id="stability-progress-fill"></div>
+                    </div>
+                    <div class="stability-score-display">
+                        <span class="metric-value" id="regime-stability">--</span>
+                        <span class="stability-max">/100</span>
+                    </div>
+                </div>
+                
+                <!-- Metrics Grid with Icons -->
+                <div class="stability-metrics-grid">
+                    <div class="stability-metric-item">
+                        <span class="stability-icon">💱</span>
+                        <div class="stability-metric-content">
+                            <div class="stability-metric-label">USD/IRR</div>
+                            <div class="stability-metric-value" id="usd-irr-value">--</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stability-metric-item">
+                        <span class="stability-icon">📊</span>
+                        <div class="stability-metric-content">
+                            <div class="stability-metric-label">Protest Intensity</div>
+                            <div class="stability-metric-value" id="protest-intensity-mini">--</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stability-metric-item">
+                        <span class="stability-icon">🛢️</span>
+                        <div class="stability-metric-content">
+                            <div class="stability-metric-label">Oil (Brent)</div>
+                            <div class="stability-metric-value" id="oil-price-value">Coming Soon</div>
+                        </div>
+                    </div>
+                    
+                    <div class="stability-metric-item">
+                        <span class="stability-icon">🔴</span>
+                        <div class="stability-metric-content">
+                            <div class="stability-metric-label">Bond Yields</div>
+                            <div class="stability-metric-value" id="bond-yield-value">Coming Soon</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Trend Info -->
+                <div class="stability-trend-section">
+                    <div class="metric-subtitle" id="stability-level">Loading...</div>
+                    <div class="metric-explanation" id="stability-trend">Trend: --</div>
+                </div>
             </div>
 
             <div class="metric-card">
@@ -862,26 +1024,50 @@
             animateNumber('injuryCount', injuries);
             animateNumber('arrestCount', arrests);
             
-            // NEW v2.6.0: Regime Stability Index
+            // NEW v2.6.0: Enhanced Regime Stability Index Widget
             const regimeStability = data.regime_stability || {};
             const stabilityScore = regimeStability.stability_score || 0;
             const riskLevel = regimeStability.risk_level || 'Unknown';
             const trend = regimeStability.trend || 'stable';
             const exchangeRate = data.exchange_rate || {};
             
+            // Update main score
             document.getElementById('regime-stability').textContent = stabilityScore;
             document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stabilityScore);
-            document.getElementById('stability-level').textContent = riskLevel;
             
-            // Display trend with arrow
+            // Update progress bar
+            const progressFill = document.getElementById('stability-progress-fill');
+            if (progressFill) {
+                progressFill.style.width = stabilityScore + '%';
+            }
+            
+            // Update risk level
+            document.getElementById('stability-level').textContent = riskLevel;
+            document.getElementById('stability-level').className = 'metric-subtitle ' + getStabilityClass(stabilityScore);
+            
+            // Update trend with arrow
             const trendArrow = trend === 'increasing' ? '↑' : trend === 'decreasing' ? '↓' : '→';
             const trendText = trend.charAt(0).toUpperCase() + trend.slice(1);
-            document.getElementById('stability-trend').textContent = `Trend: ${trendArrow} ${trendText}`;
+            document.getElementById('stability-trend').textContent = `Trend: ${trendArrow} ${trendText} (7-day)`;
             
-            // Add exchange rate info if available
+            // Update USD/IRR metric
             if (exchangeRate.usd_to_irr) {
-                const rateElement = document.getElementById('stability-trend');
-                rateElement.innerHTML += `<br><small style="font-size: 10px;">USD/IRR: ${exchangeRate.usd_to_irr.toLocaleString()}</small>`;
+                const baselineRate = 42000;
+                const currentRate = exchangeRate.usd_to_irr;
+                const changePercent = ((currentRate - baselineRate) / baselineRate * 100).toFixed(1);
+                const changeSign = changePercent > 0 ? '+' : '';
+                const changeColor = changePercent > 0 ? '#ff6b6b' : '#51cf66';
+                
+                document.getElementById('usd-irr-value').innerHTML = 
+                    `${currentRate.toLocaleString()} <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${changePercent}%)</span>`;
+            }
+            
+            // Update Protest Intensity mini metric
+            const protestIntensityMini = document.getElementById('protest-intensity-mini');
+            if (protestIntensityMini) {
+                const intensityLabel = intensity >= 60 ? 'High' : intensity >= 30 ? 'Medium' : 'Low';
+                const intensityColor = intensity >= 60 ? '#ff6b6b' : intensity >= 30 ? '#ff8c42' : '#ffd43b';
+                protestIntensityMini.innerHTML = `<span style="color: ${intensityColor};">${intensityLabel}</span> (${intensity}%)`;
             }
             
             // Display ALL cities
