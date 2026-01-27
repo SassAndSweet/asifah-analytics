@@ -303,13 +303,13 @@
             <h2>News Coverage</h2>
             
             <div class="language-tabs">
-                <button onclick="showArticles('syria_direct')" class="active">Syria Direct (--)</button>
-                <button onclick="showArticles('sohr')">SOHR (--)</button>
-                <button onclick="showArticles('en')">English (--)</button>
-                <button onclick="showArticles('he')">Hebrew (--)</button>
-                <button onclick="showArticles('ar')">Arabic (--)</button>
-                <button onclick="showArticles('fa')">Farsi (--)</button>
-                <button onclick="showArticles('reddit')">Reddit (--)</button>
+                <button onclick="showArticles('syria_direct', event)" class="active">Syria Direct (--)</button>
+                <button onclick="showArticles('sohr', event)">SOHR (--)</button>
+                <button onclick="showArticles('en', event)">English (--)</button>
+                <button onclick="showArticles('he', event)">Hebrew (--)</button>
+                <button onclick="showArticles('ar', event)">Arabic (--)</button>
+                <button onclick="showArticles('fa', event)">Farsi (--)</button>
+                <button onclick="showArticles('reddit', event)">Reddit (--)</button>
             </div>
 
             <div class="articles-container" id="articles-container">
@@ -481,13 +481,21 @@
             tabs[6].textContent = `Reddit (${(data.articles_reddit || []).length})`;
         }
 
-        function showArticles(source) {
+        function showArticles(source, clickEvent) {
             if (!conflictData) return;
             
             document.querySelectorAll('.language-tabs button').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            
+            // If called from a click event, mark that button as active
+            if (clickEvent && clickEvent.target) {
+                clickEvent.target.classList.add('active');
+            } else {
+                // If called programmatically, mark the first button as active
+                const firstButton = document.querySelector('.language-tabs button');
+                if (firstButton) firstButton.classList.add('active');
+            }
             
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
