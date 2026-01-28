@@ -875,31 +875,134 @@
         .cancellation-card {
             background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
             border: 2px solid #fecaca;
-            border-radius: 8px;
-            padding: 15px;
+            border-radius: 10px;
+            padding: 18px;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .cancellation-card:hover {
             border-color: #f87171;
-            transform: translateY(-3px);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.15);
+        }
+
+        .cancellation-card.status-resumed {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+            border-color: #bbf7d0;
+        }
+
+        .cancellation-card.status-resumed:hover {
+            border-color: #86efac;
+        }
+
+        .cancellation-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .airline-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            object-fit: contain;
+            background: white;
+            padding: 4px;
+            border: 1px solid #e5e7eb;
         }
 
         .cancellation-airline {
             font-size: 16px;
             font-weight: bold;
             color: #991b1b;
-            margin-bottom: 8px;
+            flex: 1;
+        }
+
+        .status-resumed .cancellation-airline {
+            color: #065f46;
         }
 
         .cancellation-airline::before {
-            content: "🚫 ";
+            content: "";
+        }
+
+        .cancellation-status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .cancellation-status-badge.status-suspended {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .cancellation-status-badge.status-cancelled {
+            background: #fef2f2;
+            color: #7f1d1d;
+            border: 1px solid #fca5a5;
+        }
+
+        .cancellation-status-badge.status-resumed {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .cancellation-route {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 12px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.02);
+            border-radius: 6px;
+            border-left: 3px solid #ef4444;
+        }
+
+        .status-resumed .cancellation-route {
+            border-left-color: #10b981;
         }
 
         .cancellation-details {
-            font-size: 13px;
+            font-size: 12px;
             color: #6b7280;
-            line-height: 1.6;
+            line-height: 1.8;
+        }
+
+        .detail-row {
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .detail-row strong {
+            color: #374151;
+            min-width: 100px;
+        }
+
+        .source-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .source-link:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
         }
 
         .no-cancellations {
@@ -1325,7 +1428,7 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h4 data-i18n="dataSourcesLabel">Data Sources:</h4>
-                    <span data-i18n="dataSourcesText">NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Reddit for community intelligence, Polymarket for crowdsourced prediction market data, plus other OSINT sources. For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color: #3498db; text-decoration: none;">asifahanalytics@gmail.com</a></span>
+                    <span data-i18n="dataSourcesText">NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Reddit for community intelligence, Polymarket for crowdsourced prediction market data, plus other OSINT sources. For inquiries, contact: <a href="/cdn-cgi/l/email-protection#0a6b79636c6b626b646b66737e6369794a6d676b636624696567" style="color: #3498db; text-decoration: none;"><span class="__cf_email__" data-cfemail="2e4f5d47484f464f404f42575a474d5d6e49434f4742004d4143">[email&#160;protected]</span></a></span>
                 </div>
                 <div class="footer-section">
                     <h4 data-i18n="methodologyLabel">Methodology:</h4>
@@ -1362,7 +1465,7 @@
         <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
     </audio>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
         
         const translations = {
@@ -1847,6 +1950,32 @@
             }
         }
 
+        function getAirlineLogo(airlineName) {
+            // Map airline names to logo URLs (using clearbit for favicons)
+            const logoMap = {
+                'Lufthansa': 'https://logo.clearbit.com/lufthansa.com',
+                'Air France': 'https://logo.clearbit.com/airfrance.com',
+                'British Airways': 'https://logo.clearbit.com/britishairways.com',
+                'Delta': 'https://logo.clearbit.com/delta.com',
+                'United': 'https://logo.clearbit.com/united.com',
+                'American Airlines': 'https://logo.clearbit.com/aa.com',
+                'Emirates': 'https://logo.clearbit.com/emirates.com',
+                'Etihad': 'https://logo.clearbit.com/etihad.com',
+                'Qatar Airways': 'https://logo.clearbit.com/qatarairways.com',
+                'Turkish Airlines': 'https://logo.clearbit.com/turkishairlines.com',
+                'KLM': 'https://logo.clearbit.com/klm.com',
+                'Swiss': 'https://logo.clearbit.com/swiss.com',
+                'Austrian Airlines': 'https://logo.clearbit.com/austrian.com',
+                'LOT Polish': 'https://logo.clearbit.com/lot.com',
+                'Iberia': 'https://logo.clearbit.com/iberia.com',
+                'El Al': 'https://logo.clearbit.com/elal.com',
+                'Singapore Airlines': 'https://logo.clearbit.com/singaporeair.com',
+                'Cathay Pacific': 'https://logo.clearbit.com/cathaypacific.com'
+            };
+            
+            return logoMap[airlineName] || 'https://via.placeholder.com/32x32?text=✈️';
+        }
+
         function displayFlightCancellations(cancellations) {
             const grid = document.getElementById('flightCancellationsGrid');
             const badge = document.getElementById('flightStatusBadge');
@@ -1868,15 +1997,53 @@
             let html = '';
             cancellations.forEach(cancel => {
                 const date = cancel.date
-                    ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+                    ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                     : '';
+                
+                const logoUrl = getAirlineLogo(cancel.airline);
+                
+                // Status badge styling
+                let statusClass = 'status-suspended';
+                let statusIcon = '🚫';
+                if (cancel.status === 'Resumed') {
+                    statusClass = 'status-resumed';
+                    statusIcon = '✅';
+                } else if (cancel.status === 'Cancelled') {
+                    statusClass = 'status-cancelled';
+                    statusIcon = '❌';
+                }
 
                 html += `
-                    <div class="cancellation-card">
-                        <div class="cancellation-airline">${cancel.airline || ''}</div>
+                    <div class="cancellation-card ${statusClass}">
+                        <div class="cancellation-header">
+                            <img src="${logoUrl}" 
+                                 alt="${cancel.airline}" 
+                                 class="airline-logo"
+                                 onerror="this.style.display='none'">
+                            <div class="cancellation-airline">
+                                ${cancel.airline || 'Unknown Airline'}
+                            </div>
+                            <span class="cancellation-status-badge ${statusClass}">
+                                ${statusIcon} ${cancel.status || 'Suspended'}
+                            </span>
+                        </div>
+                        <div class="cancellation-route">
+                            ✈️ ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
+                        </div>
                         <div class="cancellation-details">
-                            <strong>Destination:</strong> ${cancel.destination || ''}<br>
-                            <strong>Announced:</strong> ${date}
+                            <div class="detail-row">
+                                <strong>📅 Announced:</strong> ${date}
+                            </div>
+                            <div class="detail-row">
+                                <strong>⏱️ Duration:</strong> ${cancel.duration || 'Indefinite'}
+                            </div>
+                            ${cancel.source_url ? `
+                                <div class="detail-row">
+                                    <a href="${cancel.source_url}" target="_blank" rel="noopener noreferrer" class="source-link">
+                                        📰 View Article →
+                                    </a>
+                                </div>
+                            ` : ''}
                         </div>
                     </div>
                 `;
@@ -1901,14 +2068,4 @@
                     updateFlightCancellations();
                     setInterval(() => {
                         if (!window.__disableFlightCancellations) {
-                            updateFlightCancellations();
-                        }
-                    }, 30 * 60 * 1000);
-                }
-            } catch (e) {
-                console.warn('Flight cancellations init failed:', e);
-            }
-        });
-    </script>
-</body>
-</html>
+                            updateFlig
