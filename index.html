@@ -2012,8 +2012,50 @@
             return domainMap[airlineName] || 'example.com';
         }
         
+        function getCountryFlagImage(destination) {
+            // Map destinations to country codes for flag images
+            const countryCodeMap = {
+                // Israel
+                'Tel Aviv': 'il', 'Israel': 'il', 'Haifa': 'il', 'Eilat': 'il',
+                // Lebanon
+                'Beirut': 'lb', 'Lebanon': 'lb',
+                // Syria
+                'Damascus': 'sy', 'Syria': 'sy',
+                // Iran
+                'Tehran': 'ir', 'Iran': 'ir',
+                // Yemen
+                'Sanaa': 'ye', 'Yemen': 'ye',
+                // Iraq
+                'Baghdad': 'iq', 'Iraq': 'iq', 'Erbil': 'iq',
+                // Jordan
+                'Amman': 'jo', 'Jordan': 'jo',
+                // Saudi Arabia
+                'Riyadh': 'sa', 'Saudi Arabia': 'sa', 'Jeddah': 'sa', 'Dammam': 'sa',
+                // UAE
+                'Dubai': 'ae', 'UAE': 'ae', 'Abu Dhabi': 'ae',
+                // Egypt
+                'Cairo': 'eg', 'Egypt': 'eg',
+                // Turkey
+                'Istanbul': 'tr', 'Turkey': 'tr', 'Ankara': 'tr',
+                // Bahrain
+                'Manama': 'bh', 'Bahrain': 'bh',
+                // Kuwait
+                'Kuwait City': 'kw', 'Kuwait': 'kw',
+                // Qatar
+                'Doha': 'qa', 'Qatar': 'qa',
+                // Oman
+                'Muscat': 'om', 'Oman': 'om'
+            };
+            
+            const countryCode = countryCodeMap[destination];
+            if (countryCode) {
+                return `https://flagcdn.com/24x18/${countryCode}.png`;
+            }
+            return null;
+        }
+        
         function getCountryFlag(destination) {
-            // Map destinations to country flag emojis
+            // Kept for backward compatibility - returns emoji
             const flagMap = {
                 // Israel
                 'Tel Aviv': '🇮🇱', 'Israel': '🇮🇱', 'Haifa': '🇮🇱', 'Eilat': '🇮🇱',
@@ -2075,7 +2117,7 @@
                     : '';
                 
                 const logoUrl = getAirlineLogo(cancel.airline);
-                const countryFlag = getCountryFlag(cancel.destination);
+                const flagImageUrl = getCountryFlagImage(cancel.destination);
                 
                 // Status badge styling
                 let statusClass = 'status-suspended';
@@ -2094,8 +2136,15 @@
                             <img src="${logoUrl}" 
                                  alt="${cancel.airline}" 
                                  class="airline-logo"
-                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-                            <span class="flag-fallback" style="display:none; font-size:24px; margin-right:8px;">${countryFlag}</span>
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';">
+                            ${flagImageUrl ? `
+                                <img src="${flagImageUrl}" 
+                                     alt="${cancel.destination}" 
+                                     class="flag-fallback"
+                                     style="display:none; width:24px; height:18px; margin-right:8px;">
+                            ` : `
+                                <span class="flag-fallback" style="display:none; font-size:24px; margin-right:8px;">✈️</span>
+                            `}
                             <div class="cancellation-airline">
                                 ${cancel.airline || 'Unknown Airline'}
                             </div>
@@ -2104,7 +2153,8 @@
                             </span>
                         </div>
                         <div class="cancellation-route">
-                            ${countryFlag} ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
+                            ${flagImageUrl ? `<img src="${flagImageUrl}" alt="${cancel.destination}" style="width:20px; height:15px; vertical-align:middle; margin-right:6px;">` : '✈️'}
+                            ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
                         </div>
                         <div class="cancellation-details">
                             <div class="detail-row">
