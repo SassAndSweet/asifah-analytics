@@ -1566,96 +1566,46 @@
             }
         }
 
+        // ============================================
+        // FIXED POLYMARKET INTEGRATION v2.0
+        // Uses backend proxy with keyword search
+        // ============================================
         async function fetchPolymarketData() {
             const ticker = document.getElementById('polymarketTicker');
             if (!ticker) return;
 
             try {
-                const markets = [
-                    { slug: 'israel-strikes-iran-by-january-31-2026', question: 'Israel strikes Iran by Jan 31?' },
-                    { slug: 'us-strikes-iran-by', question: 'US strikes Iran?' },
-                    { slug: 'khamenei-out-as-supreme-leader-of-iran-by-january-31', question: 'Khamenei out by Jan 31?' },
-                    { slug: 'will-israel-strike-lebanon-on', question: 'Israel strikes Lebanon?' },
-                    { slug: 'us-strikes-yemen-by', question: 'US strikes Yemen?' },
-                    { slug: 'israel-strikes-syria-on', question: 'Israel strikes Syria?' },
-                    { slug: 'israel-and-syria-normalize-relations-in-2025', question: 'Israel–Syria normalize relations?' },
-                    { slug: 'will-the-us-abandon-syrian-base-before-april-2025', question: 'US abandons Syria base?' }
-                ];
-
-                const extractProbability = (marketObj) => {
-                    if (Array.isArray(marketObj?.outcomePrices) && marketObj.outcomePrices.length > 0) {
-                        const p = parseFloat(marketObj.outcomePrices[0]);
-                        if (Number.isFinite(p)) return p;
-                    }
-                    if (Array.isArray(marketObj?.market?.outcomePrices) && marketObj.market.outcomePrices.length > 0) {
-                        const p = parseFloat(marketObj.market.outcomePrices[0]);
-                        if (Number.isFinite(p)) return p;
-                    }
-                    return null;
-                };
-
-                const fetchJsonWithTimeout = async (url, timeoutMs = 8000) => {
-                    const controller = new AbortController();
-                    const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-                    try {
-                        const res = await fetch(url, {
-                            method: 'GET',
-                            headers: { 'Accept': 'application/json' },
-                            signal: controller.signal
-                        });
-
-                        if (!res.ok) return null;
-
-                        const contentType = res.headers.get('content-type') || '';
-                        if (!contentType.includes('application/json')) return null;
-
-                        return await res.json();
-                    } catch (err) {
-                        return null;
-                    } finally {
-                        clearTimeout(timer);
-                    }
-                };
-
-                const results = await Promise.allSettled(
-                    markets.map(async (market) => {
-                        const url = `https://gamma-api.polymarket.com/markets?slug=${encodeURIComponent(market.slug)}&limit=1`;
-                        const data = await fetchJsonWithTimeout(url);
-
-                        if (!data || !Array.isArray(data) || data.length === 0) return null;
-
-                        const marketObj = data[0];
-                        const prob = extractProbability(marketObj);
-                        if (prob === null) return null;
-
-                        return {
-                            question: market.question,
-                            probability: prob,
-                            url: `https://polymarket.com/event/${market.slug}`
-                        };
-                    })
-                );
-
-                const validMarkets = results
-                    .filter(r => r.status === 'fulfilled' && r.value)
-                    .map(r => r.value);
-
-                if (validMarkets.length === 0) {
-                    ticker.innerHTML = '<div class="ticker-error">⚠️ Polymarket data unavailable</div>';
+                console.log('[Polymarket] Fetching via backend proxy...');
+                
+                const response = await fetch(`${BACKEND_URL}/api/polymarket`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success || !data.markets || data.markets.length === 0) {
+                    console.warn('[Polymarket] No markets found');
+                    displayPolymarketFallback();
                     return;
                 }
-
-                displayPolymarketTicker(validMarkets);
+                
+                console.log(`[Polymarket] ✅ Found ${data.markets.length} markets`);
+                displayPolymarketTicker(data.markets);
+                
             } catch (error) {
-                console.error('Polymarket error:', error);
-                ticker.innerHTML = '<div class="ticker-error">⚠️ Unable to load Polymarket data</div>';
+                console.error('[Polymarket] Error:', error);
+                displayPolymarketFallback();
             }
         }
 
         function displayPolymarketTicker(markets) {
             const ticker = document.getElementById('polymarketTicker');
-            if (!ticker || !markets || markets.length === 0) return;
+            if (!ticker || !markets || markets.length === 0) {
+                displayPolymarketFallback();
+                return;
+            }
 
             let html = '';
             markets.forEach(market => {
@@ -1669,7 +1619,22 @@
                 `;
             });
 
+            // Duplicate for infinite scroll effect
             ticker.innerHTML = html + html;
+        }
+
+        function displayPolymarketFallback() {
+            const ticker = document.getElementById('polymarketTicker');
+            if (!ticker) return;
+            
+            ticker.innerHTML = `
+                <div class="ticker-item">
+                    <strong>⚠️ Polymarket data temporarily unavailable</strong>
+                    <a href="https://polymarket.com/" target="_blank" rel="noopener noreferrer">
+                        Visit Polymarket
+                    </a>
+                </div>
+            `;
         }
 
         async function scanSingleTarget(targetName) {
