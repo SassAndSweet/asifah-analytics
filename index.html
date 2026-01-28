@@ -1922,6 +1922,17 @@
 
             if (!grid || !badge) return;
 
+            // Show loading state
+            grid.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: #6b7280;">
+                    <div style="display: inline-block; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #1e3a5f; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;"></div>
+                    <div style="font-size: 14px; font-weight: 500;">Scanning flight disruptions across Middle East...</div>
+                    <div style="font-size: 12px; color: #9ca3af; margin-top: 8px;">This may take up to 30 seconds</div>
+                </div>
+            `;
+            badge.className = 'flight-status-badge active';
+            badge.innerHTML = '<span>Loading...</span>';
+
             try {
                 const response = await fetch(`${BACKEND_URL}/flight-cancellations`);
 
