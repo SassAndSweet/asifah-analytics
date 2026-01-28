@@ -1951,29 +1951,103 @@
         }
 
         function getAirlineLogo(airlineName) {
-            // Map airline names to logo URLs (using clearbit for favicons)
-            const logoMap = {
-                'Lufthansa': 'https://logo.clearbit.com/lufthansa.com',
-                'Air France': 'https://logo.clearbit.com/airfrance.com',
-                'British Airways': 'https://logo.clearbit.com/britishairways.com',
-                'Delta': 'https://logo.clearbit.com/delta.com',
-                'United': 'https://logo.clearbit.com/united.com',
-                'American Airlines': 'https://logo.clearbit.com/aa.com',
-                'Emirates': 'https://logo.clearbit.com/emirates.com',
-                'Etihad': 'https://logo.clearbit.com/etihad.com',
-                'Qatar Airways': 'https://logo.clearbit.com/qatarairways.com',
-                'Turkish Airlines': 'https://logo.clearbit.com/turkishairlines.com',
-                'KLM': 'https://logo.clearbit.com/klm.com',
-                'Swiss': 'https://logo.clearbit.com/swiss.com',
-                'Austrian Airlines': 'https://logo.clearbit.com/austrian.com',
-                'LOT Polish': 'https://logo.clearbit.com/lot.com',
-                'Iberia': 'https://logo.clearbit.com/iberia.com',
-                'El Al': 'https://logo.clearbit.com/elal.com',
-                'Singapore Airlines': 'https://logo.clearbit.com/singaporeair.com',
-                'Cathay Pacific': 'https://logo.clearbit.com/cathaypacific.com'
+            // Try multiple logo sources before falling back to country flag
+            const logoSources = [
+                // Source 1: Clearbit
+                `https://logo.clearbit.com/${getAirlineDomain(airlineName)}`,
+                // Source 2: Google S2 Favicons
+                `https://www.google.com/s2/favicons?sz=64&domain=${getAirlineDomain(airlineName)}`
+            ];
+            
+            return logoSources[0]; // Return first source, will fall back via onerror
+        }
+        
+        function getAirlineDomain(airlineName) {
+            // Map airline names to website domains
+            const domainMap = {
+                'Lufthansa': 'lufthansa.com',
+                'Air France': 'airfrance.com',
+                'British Airways': 'britishairways.com',
+                'Delta': 'delta.com',
+                'Delta Airlines': 'delta.com',
+                'United': 'united.com',
+                'United Airlines': 'united.com',
+                'American Airlines': 'aa.com',
+                'American': 'aa.com',
+                'Emirates': 'emirates.com',
+                'Etihad': 'etihad.com',
+                'Qatar Airways': 'qatarairways.com',
+                'Turkish Airlines': 'turkishairlines.com',
+                'KLM': 'klm.com',
+                'Swiss': 'swiss.com',
+                'SWISS': 'swiss.com',
+                'Austrian Airlines': 'austrian.com',
+                'Austrian': 'austrian.com',
+                'LOT Polish': 'lot.com',
+                'Iberia': 'iberia.com',
+                'El Al': 'elal.com',
+                'Singapore Airlines': 'singaporeair.com',
+                'Cathay Pacific': 'cathaypacific.com',
+                'Air Canada': 'aircanada.com',
+                'Wizz Air': 'wizzair.com',
+                'IndiGo': 'goindigo.in',
+                'flydubai': 'flydubai.com',
+                'Ryanair': 'ryanair.com',
+                'EasyJet': 'easyjet.com',
+                'Air India': 'airindia.com',
+                'JAL': 'jal.co.jp',
+                'Japan Airlines': 'jal.co.jp',
+                'ANA': 'ana.co.jp',
+                'Saudia': 'saudia.com',
+                'Gulf Air': 'gulfair.com',
+                'Kuwait Airways': 'kuwaitairways.com',
+                'Royal Jordanian': 'rj.com',
+                'Oman Air': 'omanair.com',
+                'Middle East Airlines': 'mea.com.lb',
+                'MEA': 'mea.com.lb',
+                'Egypt Air': 'egyptair.com',
+                'EgyptAir': 'egyptair.com'
             };
             
-            return logoMap[airlineName] || 'https://via.placeholder.com/32x32?text=✈️';
+            return domainMap[airlineName] || 'example.com';
+        }
+        
+        function getCountryFlag(destination) {
+            // Map destinations to country flag emojis
+            const flagMap = {
+                // Israel
+                'Tel Aviv': '🇮🇱', 'Israel': '🇮🇱', 'Haifa': '🇮🇱', 'Eilat': '🇮🇱',
+                // Lebanon
+                'Beirut': '🇱🇧', 'Lebanon': '🇱🇧',
+                // Syria
+                'Damascus': '🇸🇾', 'Syria': '🇸🇾',
+                // Iran
+                'Tehran': '🇮🇷', 'Iran': '🇮🇷',
+                // Yemen
+                'Sanaa': '🇾🇪', 'Yemen': '🇾🇪',
+                // Iraq
+                'Baghdad': '🇮🇶', 'Iraq': '🇮🇶', 'Erbil': '🇮🇶',
+                // Jordan
+                'Amman': '🇯🇴', 'Jordan': '🇯🇴',
+                // Saudi Arabia
+                'Riyadh': '🇸🇦', 'Saudi Arabia': '🇸🇦', 'Jeddah': '🇸🇦', 'Dammam': '🇸🇦',
+                // UAE
+                'Dubai': '🇦🇪', 'UAE': '🇦🇪', 'Abu Dhabi': '🇦🇪',
+                // Egypt
+                'Cairo': '🇪🇬', 'Egypt': '🇪🇬',
+                // Turkey
+                'Istanbul': '🇹🇷', 'Turkey': '🇹🇷', 'Ankara': '🇹🇷',
+                // Bahrain
+                'Manama': '🇧🇭', 'Bahrain': '🇧🇭',
+                // Kuwait
+                'Kuwait City': '🇰🇼', 'Kuwait': '🇰🇼',
+                // Qatar
+                'Doha': '🇶🇦', 'Qatar': '🇶🇦',
+                // Oman
+                'Muscat': '🇴🇲', 'Oman': '🇴🇲'
+            };
+            
+            return flagMap[destination] || '✈️';
         }
 
         function displayFlightCancellations(cancellations) {
@@ -2001,6 +2075,7 @@
                     : '';
                 
                 const logoUrl = getAirlineLogo(cancel.airline);
+                const countryFlag = getCountryFlag(cancel.destination);
                 
                 // Status badge styling
                 let statusClass = 'status-suspended';
@@ -2019,7 +2094,8 @@
                             <img src="${logoUrl}" 
                                  alt="${cancel.airline}" 
                                  class="airline-logo"
-                                 onerror="this.style.display='none'">
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+                            <span class="flag-fallback" style="display:none; font-size:24px; margin-right:8px;">${countryFlag}</span>
                             <div class="cancellation-airline">
                                 ${cancel.airline || 'Unknown Airline'}
                             </div>
@@ -2028,7 +2104,7 @@
                             </span>
                         </div>
                         <div class="cancellation-route">
-                            ✈️ ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
+                            ${countryFlag} ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
                         </div>
                         <div class="cancellation-details">
                             <div class="detail-row">
