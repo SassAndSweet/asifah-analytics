@@ -1113,16 +1113,16 @@
             if (numCities === 0) {
                 // Show "No protests identified" when zero
                 subtitleElement.textContent = 'No protests identified';
-                citiesContainer.innerHTML = '<div style="text-align:center; color:#808080; padding:10px; font-size:14px;">No geographic data available for this period</div>';
+                citiesContainer.innerHTML = '<div style="text-align:center; color:#808080; padding:10px; font-size:14px;">No recent protests identified (7-day window)</div>';
             } else {
                 // Show normal subtitle
-                subtitleElement.textContent = numCities === 1 ? 'City affected' : 'Cities affected';
+                subtitleElement.textContent = numCities === 1 ? 'City affected (last 7 days)' : 'Cities affected (last 7 days)';
                 
                 // Display city pills with source links
                 if (data.cities && data.cities.length > 0) {
                     data.cities.forEach(cityObj => {
                         const cityWrapper = document.createElement('div');
-                        cityWrapper.style.marginBottom = '8px';
+                        cityWrapper.style.marginBottom = '12px';
                         
                         const pill = document.createElement('div');
                         pill.className = 'city-pill';
@@ -1144,10 +1144,18 @@
                                 }
                                 
                                 const link = document.createElement('a');
-                                link.href = source;
+                                
+                                // Handle both old format (string URL) and new format (object with name)
+                                if (typeof source === 'string') {
+                                    link.href = source;
+                                    link.textContent = `Source ${idx + 1}`;
+                                } else {
+                                    link.href = source.url || '#';
+                                    link.textContent = source.name || `Source ${idx + 1}`;
+                                }
+                                
                                 link.target = '_blank';
                                 link.rel = 'noopener noreferrer';
-                                link.textContent = `Source ${idx + 1}`;
                                 link.style.color = '#6495ED';
                                 link.style.textDecoration = 'none';
                                 link.onmouseover = function() { this.style.textDecoration = 'underline'; };
