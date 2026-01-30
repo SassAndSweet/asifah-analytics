@@ -1101,18 +1101,67 @@
                     `$${oilPrice}/bbl <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${oilChange}%)</span>`;
             }
             
-            // Display ALL cities
-            document.getElementById('total-cities').textContent = data.num_cities_affected || 0;
+            // Display cities with source links
+            const numCities = data.num_cities_affected || 0;
+            document.getElementById('total-cities').textContent = numCities;
             
             const citiesContainer = document.getElementById('cities-list');
+            const subtitleElement = document.getElementById('geography-subtitle');
+            
             citiesContainer.innerHTML = '';
-            if (data.cities && data.cities.length > 0) {
-                data.cities.forEach(cityObj => {
-                    const pill = document.createElement('div');
-                    pill.className = 'city-pill';
-                    pill.textContent = cityObj.name;
-                    citiesContainer.appendChild(pill);
-                });
+            
+            if (numCities === 0) {
+                // Show "No protests identified" when zero
+                subtitleElement.textContent = 'No protests identified';
+                citiesContainer.innerHTML = '<div style="text-align:center; color:#808080; padding:10px; font-size:14px;">No geographic data available for this period</div>';
+            } else {
+                // Show normal subtitle
+                subtitleElement.textContent = numCities === 1 ? 'City affected' : 'Cities affected';
+                
+                // Display city pills with source links
+                if (data.cities && data.cities.length > 0) {
+                    data.cities.forEach(cityObj => {
+                        const cityWrapper = document.createElement('div');
+                        cityWrapper.style.marginBottom = '8px';
+                        
+                        const pill = document.createElement('div');
+                        pill.className = 'city-pill';
+                        pill.style.display = 'inline-block';
+                        pill.textContent = `${cityObj.name} (${cityObj.count})`;
+                        
+                        cityWrapper.appendChild(pill);
+                        
+                        // Add source links if available
+                        if (cityObj.sources && cityObj.sources.length > 0) {
+                            const sourcesDiv = document.createElement('div');
+                            sourcesDiv.style.fontSize = '11px';
+                            sourcesDiv.style.marginTop = '4px';
+                            sourcesDiv.style.marginLeft = '8px';
+                            
+                            cityObj.sources.forEach((source, idx) => {
+                                if (idx > 0) {
+                                    sourcesDiv.appendChild(document.createTextNode(' • '));
+                                }
+                                
+                                const link = document.createElement('a');
+                                link.href = source;
+                                link.target = '_blank';
+                                link.rel = 'noopener noreferrer';
+                                link.textContent = `Source ${idx + 1}`;
+                                link.style.color = '#6495ED';
+                                link.style.textDecoration = 'none';
+                                link.onmouseover = function() { this.style.textDecoration = 'underline'; };
+                                link.onmouseout = function() { this.style.textDecoration = 'none'; };
+                                
+                                sourcesDiv.appendChild(link);
+                            });
+                            
+                            cityWrapper.appendChild(sourcesDiv);
+                        }
+                        
+                        citiesContainer.appendChild(cityWrapper);
+                    });
+                }
             }
         }
 
