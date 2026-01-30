@@ -240,6 +240,12 @@ This platform is a research and analytical tool for educational purposes and unc
 
 ---
 
+## Acknowledgments
+
+Special thanks to Peter N. for conceptual contributions, analytical feedback, and serving as a valuable sounding board during the development of Asifah Analytics. His insights helped shape key aspects of the threat assessment methodology.
+
+---
+
 ## Intellectual Property
 
 ### Copyright Notice
@@ -280,4 +286,4 @@ For technical support, feature requests, or analytical feedback, contact the rep
 
 ---
 
-*Last Updated: January 24, 2026*
+*Last Updated: January 30, 2026*
