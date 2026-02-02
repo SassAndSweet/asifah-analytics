@@ -327,6 +327,7 @@
             <h1>🇱🇧 LEBANON STABILITY INDEX</h1>
             <div class="subtitle">Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status</div>
             <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
+            <a href="index.html" class="back-link" style="position: absolute; top: 20px; left: 20px; margin: 0;">← Back to Dashboard</a>
         </header>
 
         <div class="loading" id="loadingState">
@@ -351,16 +352,16 @@
                 <!-- Government Status -->
                 <div class="metric-card">
                     <div class="metric-title">GOVERNMENT STATUS</div>
-                    <div class="metric-value" id="presidentStatus">❌</div>
-                    <div class="metric-subtitle">Presidential Vacancy</div>
+                    <div class="metric-value" id="presidentStatus">✅</div>
+                    <div class="metric-subtitle">President: Joseph Aoun</div>
                     <div class="government-status">
                         <div class="government-status-item">
-                            <span class="status-label">Days Without President:</span>
-                            <span class="status-value critical" id="daysWithoutPresident">--</span>
+                            <span class="status-label">Days in Office:</span>
+                            <span class="status-value" id="daysWithPresident">--</span>
                         </div>
                         <div class="government-status-item">
-                            <span class="status-label">Caretaker PM:</span>
-                            <span class="status-value" id="caretakerPM">--</span>
+                            <span class="status-label">Elected:</span>
+                            <span class="status-value">Jan 9, 2025</span>
                         </div>
                         <div class="government-status-item">
                             <span class="status-label">Days Until Elections:</span>
@@ -410,13 +411,31 @@
 
         <footer>
             <div>Data Sources: ExchangeRate-API, Trading Economics, Google News, UNIFIL Reports</div>
-            <div style="margin-top:10px;">⚠️ Analysis for informational purposes only. Not financial or policy advice.</div>
-            <div style="margin-top:10px;">Questions or feedback? <a href="mailto:asifah.analytics@gmail.com" style="color:#6495ED;">asifah.analytics@gmail.com</a></div>
-            <a href="index.html" class="back-link">← Back to Dashboard</a>
+            <div style="margin-top:15px; font-size:0.85em; color:#7a9ab8;">
+                NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content. Reddit for community intelligence, plus other OSINT sources.
+            </div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifah.analytics@gmail.com" style="color:#6495ED;">asifah.analytics@gmail.com</a></div>
+            
+            <div style="margin-top:25px; padding:15px; background:rgba(255,255,255,0.05); border-radius:8px;">
+                <div style="font-size:0.9em; color:#b8d4e8; margin-bottom:8px;">Asifah Analytics v2.7.0</div>
+                <div style="font-size:0.8em; color:#7a9ab8;">Updated every 30 minutes | Not for operational use</div>
+            </div>
+
+            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
+                <span style="font-size:0.9em; color:#b8d4e8;">
+                    If you find Asifah Analytics useful and want to support ongoing development, you can 
+                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#6495ED;">☕ buy me a coffee</a>
+                </span>
+            </div>
+
+            <div style="margin-top:25px; font-size:0.75em; color:#5a7a9a;">
+                © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
         </footer>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
         async function loadLebanonData() {
@@ -474,8 +493,9 @@
             
             // Government Status
             const govt = data.government || {};
-            document.getElementById('daysWithoutPresident').textContent = govt.days_without_president || '0';
-            document.getElementById('caretakerPM').textContent = govt.caretaker_pm || 'N/A';
+            if (govt.has_president) {
+                document.getElementById('daysWithPresident').textContent = govt.days_with_president || '0';
+            }
             document.getElementById('daysUntilElection').textContent = govt.days_until_election || '0';
             
             // Currency
@@ -518,14 +538,4 @@
                         <div class="article-meta">
                             ${article.keyword || ''} • ${article.published ? new Date(article.published).toLocaleDateString() : 'Recent'}
                         </div>
-                        ${article.url ? `<a href="${article.url}" target="_blank" class="article-link">Read article →</a>` : ''}
-                    </div>
-                `).join('');
-            }
-        }
-
-        // Load data on page load
-        document.addEventListener('DOMContentLoaded', loadLebanonData);
-    </script>
-</body>
-</html>
+                        ${article.url ? `<a href="${article.url}" target="_blank" class="ar
