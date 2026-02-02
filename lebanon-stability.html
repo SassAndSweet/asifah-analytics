@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lebanon Stability Index | Asifah Analytics</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇱🇧</text></svg>">
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 100%);
+            color: #f0f4f8;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #b8d4e8;
+            margin-bottom: 20px;
+        }
+
+        .last-updated {
+            font-size: 0.9em;
+            color: #7a9ab8;
+            margin-top: 10px;
+        }
+
+        /* Stability Index Card */
+        .stability-index-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .stability-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .stability-score {
+            font-size: 5em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stability-score.green { color: #4ade80; }
+        .stability-score.yellow { color: #facc15; }
+        .stability-score.orange { color: #fb923c; }
+        .stability-score.red { color: #f87171; }
+
+        .stability-label {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stability-label.green { color: #4ade80; }
+        .stability-label.yellow { color: #facc15; }
+        .stability-label.orange { color: #fb923c; }
+        .stability-label.red { color: #f87171; }
+
+        .stability-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .stability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f87171 0%, #fb923c 25%, #facc15 50%, #4ade80 100%);
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+
+        .stability-legend {
+            text-align: center;
+            font-size: 0.85em;
+            color: #b8d4e8;
+            font-style: italic;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-title {
+            font-size: 0.9em;
+            color: #b8d4e8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .metric-subtitle {
+            font-size: 0.85em;
+            color: #7a9ab8;
+        }
+
+        /* Government Status */
+        .government-status {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .government-status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .government-status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #b8d4e8;
+            font-size: 0.9em;
+        }
+
+        .status-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .status-value.warning {
+            color: #fb923c;
+        }
+
+        .status-value.critical {
+            color: #f87171;
+        }
+
+        /* Hezbollah Activity */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .activity-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .activity-label {
+            font-size: 0.85em;
+            color: #b8d4e8;
+            margin-top: 5px;
+        }
+
+        /* Articles Section */
+        .articles-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .article-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+        }
+
+        .article-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .article-title {
+            color: #ffffff;
+            font-size: 1.05em;
+            margin-bottom: 5px;
+        }
+
+        .article-meta {
+            font-size: 0.85em;
+            color: #7a9ab8;
+        }
+
+        .article-link {
+            color: #6495ED;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .article-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.85em;
+            color: #7a9ab8;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🇱🇧 LEBANON STABILITY INDEX</h1>
+            <div class="subtitle">Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status</div>
+            <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
+        </header>
+
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <div>Scanning Lebanon stability indicators...</div>
+        </div>
+
+        <div id="content" style="display:none;">
+            <!-- Overall Stability Index -->
+            <div class="stability-index-card">
+                <div class="stability-title">LEBANON STABILITY INDEX</div>
+                <div class="stability-score" id="stabilityScore">--</div>
+                <div class="stability-label" id="stabilityLabel">--</div>
+                <div class="stability-bar">
+                    <div class="stability-fill" id="stabilityFill"></div>
+                </div>
+                <div class="stability-legend">100 = Stable Regime | 0 = Imminent Collapse</div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <!-- Government Status -->
+                <div class="metric-card">
+                    <div class="metric-title">GOVERNMENT STATUS</div>
+                    <div class="metric-value" id="presidentStatus">❌</div>
+                    <div class="metric-subtitle">Presidential Vacancy</div>
+                    <div class="government-status">
+                        <div class="government-status-item">
+                            <span class="status-label">Days Without President:</span>
+                            <span class="status-value critical" id="daysWithoutPresident">--</span>
+                        </div>
+                        <div class="government-status-item">
+                            <span class="status-label">Caretaker PM:</span>
+                            <span class="status-value" id="caretakerPM">--</span>
+                        </div>
+                        <div class="government-status-item">
+                            <span class="status-label">Days Until Elections:</span>
+                            <span class="status-value" id="daysUntilElection">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Currency Status -->
+                <div class="metric-card">
+                    <div class="metric-title">CURRENCY (LBP/USD)</div>
+                    <div class="metric-value" id="currencyRate">--</div>
+                    <div class="metric-subtitle" id="currencyChange">--</div>
+                </div>
+
+                <!-- Bond Yields -->
+                <div class="metric-card">
+                    <div class="metric-title">10Y EUROBOND YIELD</div>
+                    <div class="metric-value" id="bondYield">--</div>
+                    <div class="metric-subtitle">Sovereign default risk</div>
+                </div>
+
+                <!-- Hezbollah Activity -->
+                <div class="metric-card">
+                    <div class="metric-title">HEZBOLLAH ACTIVITY</div>
+                    <div class="metric-value" id="hezbollahScore">--</div>
+                    <div class="metric-subtitle">Last 7 days</div>
+                    <div class="activity-grid">
+                        <div class="activity-item">
+                            <div class="activity-number" id="rearmamentCount">--</div>
+                            <div class="activity-label">Rearmament Reports</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-number" id="strikeCount">--</div>
+                            <div class="activity-label">Strike Mentions</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Hezbollah-Related Articles -->
+            <div class="articles-section">
+                <div class="section-title">📰 Recent Hezbollah & Security Articles (Last 7 Days)</div>
+                <div id="articlesContainer"></div>
+            </div>
+        </div>
+
+        <footer>
+            <div>Data Sources: ExchangeRate-API, Trading Economics, Google News, UNIFIL Reports</div>
+            <div style="margin-top:10px;">⚠️ Analysis for informational purposes only. Not financial or policy advice.</div>
+            <div style="margin-top:10px;">Questions or feedback? <a href="mailto:asifah.analytics@gmail.com" style="color:#6495ED;">asifah.analytics@gmail.com</a></div>
+            <a href="index.html" class="back-link">← Back to Dashboard</a>
+        </footer>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://asifah-backend.onrender.com';
+
+        async function loadLebanonData() {
+            try {
+                console.log('Fetching Lebanon stability data...');
+                
+                const response = await fetch(`${BACKEND_URL}/scan-lebanon-stability`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Unknown error');
+                }
+                
+                console.log('Lebanon data:', data);
+                
+                displayData(data);
+                
+            } catch (error) {
+                console.error('Error loading Lebanon data:', error);
+                document.getElementById('loadingState').innerHTML = `
+                    <div style="color:#f87171;">❌ Error loading data: ${error.message}</div>
+                    <div style="margin-top:15px;"><button onclick="location.reload()" style="padding:10px 20px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:8px; cursor:pointer;">Retry</button></div>
+                `;
+            }
+        }
+
+        function displayData(data) {
+            // Hide loading, show content
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+            
+            // Update timestamp
+            document.getElementById('lastUpdated').textContent = 
+                `Last updated: ${new Date().toLocaleString('en-US', { 
+                    month: 'short', day: 'numeric', year: 'numeric', 
+                    hour: 'numeric', minute: '2-digit', hour12: true 
+                })}`;
+            
+            // Overall Stability
+            const stability = data.stability || {};
+            const score = stability.score || 0;
+            const riskLevel = stability.risk_level || 'Unknown';
+            const riskColor = stability.risk_color || 'red';
+            
+            document.getElementById('stabilityScore').textContent = `${score}/100`;
+            document.getElementById('stabilityScore').className = `stability-score ${riskColor}`;
+            document.getElementById('stabilityLabel').textContent = riskLevel;
+            document.getElementById('stabilityLabel').className = `stability-label ${riskColor}`;
+            document.getElementById('stabilityFill').style.width = `${score}%`;
+            
+            // Government Status
+            const govt = data.government || {};
+            document.getElementById('daysWithoutPresident').textContent = govt.days_without_president || '0';
+            document.getElementById('caretakerPM').textContent = govt.caretaker_pm || 'N/A';
+            document.getElementById('daysUntilElection').textContent = govt.days_until_election || '0';
+            
+            // Currency
+            const currency = data.currency || {};
+            if (currency.usd_to_lbp) {
+                const rate = currency.usd_to_lbp.toLocaleString('en-US', {maximumFractionDigits: 0});
+                document.getElementById('currencyRate').textContent = rate;
+                
+                const devalPct = currency.devaluation_pct || 0;
+                document.getElementById('currencyChange').textContent = 
+                    `${devalPct > 0 ? '+' : ''}${devalPct.toFixed(0)}% vs official rate`;
+                document.getElementById('currencyChange').style.color = '#f87171';
+            }
+            
+            // Bonds
+            const bonds = data.bonds || {};
+            if (bonds.yield) {
+                document.getElementById('bondYield').textContent = `${bonds.yield.toFixed(1)}%`;
+            } else {
+                document.getElementById('bondYield').textContent = 'N/A';
+            }
+            
+            // Hezbollah Activity
+            const hezbollah = data.hezbollah || {};
+            const activityScore = hezbollah.activity_score || 0;
+            document.getElementById('hezbollahScore').textContent = `${activityScore}/100`;
+            document.getElementById('rearmamentCount').textContent = hezbollah.rearmament_mentions || 0;
+            document.getElementById('strikeCount').textContent = hezbollah.strike_mentions || 0;
+            
+            // Articles
+            const articles = hezbollah.articles || [];
+            const articlesContainer = document.getElementById('articlesContainer');
+            
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = '<div style="text-align:center; color:#7a9ab8; padding:20px;">No recent articles found</div>';
+            } else {
+                articlesContainer.innerHTML = articles.map(article => `
+                    <div class="article-item">
+                        <div class="article-title">${article.title || 'Untitled'}</div>
+                        <div class="article-meta">
+                            ${article.keyword || ''} • ${article.published ? new Date(article.published).toLocaleDateString() : 'Recent'}
+                        </div>
+                        ${article.url ? `<a href="${article.url}" target="_blank" class="article-link">Read article →</a>` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadLebanonData);
+    </script>
+</body>
+</html>
