@@ -418,7 +418,7 @@
             <div style="margin-top:15px; font-size:0.85em; color:#7a9ab8;">
                 NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content. Reddit for community intelligence, plus other OSINT sources.
             </div>
-            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifah.analytics@gmail.com" style="color:#6495ED;">asifah.analytics@gmail.com</a></div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="/cdn-cgi/l/email-protection#610012080700094f000f000d181508021221060c00080d4f020e0c" style="color:#6495ED;"><span class="__cf_email__" data-cfemail="fb9a88929d9a93d59a959a97828f929888bb9c969a9297d5989496">[email&#160;protected]</span></a></div>
             
             <div style="margin-top:25px; padding:15px; background:rgba(255,255,255,0.05); border-radius:8px;">
                 <div style="font-size:0.9em; color:#b8d4e8; margin-bottom:8px;">Asifah Analytics v2.7.0</div>
@@ -439,7 +439,7 @@
         </footer>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
         async function loadLebanonData() {
@@ -473,13 +473,7 @@
                 const data = JSON.parse(text);
                 
                 console.log('Parsed data:', data);
-                console.log('Success flag:', data.success);
-                
-                if (!data.success) {
-                    throw new Error(data.error || 'Unknown error');
-                }
-                
-                console.log('Lebanon data loaded successfully! Calling displayData...');
+                consoleCalling displayData...');
                 
                 displayData(data);
                 
@@ -573,4 +567,16 @@
                     <div class="article-item">
                         <div class="article-title">${article.title || 'Untitled'}</div>
                         <div class="article-meta">
-     
+                            ${article.keyword || ''} • ${article.published ? new Date(article.published).toLocaleDateString() : 'Recent'}
+                        </div>
+                        ${article.url ? `<a href="${article.url}" target="_blank" class="article-link">Read article →</a>` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadLebanonData);
+    </script>
+</body>
+</html>
