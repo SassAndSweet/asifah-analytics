@@ -428,6 +428,7 @@
                     <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
                     <div class="metric-value" id="currencyRate">--</div>
                     <div class="metric-subtitle" id="currencyChange">--</div>
+                    <div id="currencyTrend" style="margin-top:10px;"></div>
                 </div>
 
                 <!-- Bond Yields -->
@@ -596,6 +597,22 @@
                 document.getElementById('currencyChange').textContent = 
                     `${devalPct > 0 ? '+' : ''}${devalPct.toFixed(0)}% vs official rate`;
                 document.getElementById('currencyChange').style.color = '#f87171';
+                
+                // Display 24h trend
+                const change24h = currency.change_24h || 0;
+                const pressure = currency.pressure || 'NEUTRAL';
+                const trendIcon = change24h > 0 ? '▼' : (change24h < 0 ? '▲' : '—');
+                const trendColor = change24h > 0 ? '#f87171' : (change24h < 0 ? '#4ade80' : '#7a9ab8');
+                const pressureIcon = pressure === 'SELLING' ? '📉' : (pressure === 'BUYING' ? '📈' : '━');
+                
+                document.getElementById('currencyTrend').innerHTML = `
+                    <div style="color:${trendColor}; font-size:0.9em; font-weight:600;">
+                        ${trendIcon} ${Math.abs(change24h).toFixed(2)}% (24h)
+                    </div>
+                    <div style="font-size:0.85em; color:#b8d4e8; margin-top:3px;">
+                        ${pressureIcon} ${pressure} PRESSURE
+                    </div>
+                `;
             }
             
             // Bonds
