@@ -446,10 +446,12 @@
                         <div class="activity-item">
                             <div class="activity-number" id="rearmamentCount">--</div>
                             <div class="activity-label" data-i18n="rearmamentReports">Rearmament Reports</div>
+                            <div id="rearmamentLinks" style="margin-top:10px; font-size:0.8em;"></div>
                         </div>
                         <div class="activity-item">
                             <div class="activity-number" id="strikeCount">--</div>
                             <div class="activity-label" data-i18n="strikeMentions">Strike Mentions</div>
+                            <div id="strikeLinks" style="margin-top:10px; font-size:0.8em;"></div>
                         </div>
                     </div>
                 </div>
@@ -610,6 +612,42 @@
             document.getElementById('hezbollahScore').textContent = `${activityScore}/100`;
             document.getElementById('rearmamentCount').textContent = hezbollah.rearmament_mentions || 0;
             document.getElementById('strikeCount').textContent = hezbollah.strike_mentions || 0;
+            
+            // Add article links below counts
+            const articles = hezbollah.articles || [];
+            
+            // Filter articles by keyword
+            const rearmamentArticles = articles.filter(a => 
+                a.keyword && (a.keyword.toLowerCase().includes('rearmament') || a.keyword.toLowerCase().includes('weapons'))
+            ).slice(0, 3); // Show top 3
+            
+            const strikeArticles = articles.filter(a => 
+                a.keyword && a.keyword.toLowerCase().includes('strike')
+            ).slice(0, 3); // Show top 3
+            
+            // Display rearmament links
+            const rearmamentLinksContainer = document.getElementById('rearmamentLinks');
+            if (rearmamentArticles.length > 0) {
+                rearmamentLinksContainer.innerHTML = rearmamentArticles.map(article => `
+                    <div style="margin-top:5px;">
+                        <a href="${article.url}" target="_blank" style="color:#6495ED; text-decoration:none; font-size:0.85em;">
+                            → ${article.title ? article.title.substring(0, 60) + (article.title.length > 60 ? '...' : '') : 'Article'}
+                        </a>
+                    </div>
+                `).join('');
+            }
+            
+            // Display strike links
+            const strikeLinksContainer = document.getElementById('strikeLinks');
+            if (strikeArticles.length > 0) {
+                strikeLinksContainer.innerHTML = strikeArticles.map(article => `
+                    <div style="margin-top:5px;">
+                        <a href="${article.url}" target="_blank" style="color:#6495ED; text-decoration:none; font-size:0.85em;">
+                            → ${article.title ? article.title.substring(0, 60) + (article.title.length > 60 ? '...' : '') : 'Article'}
+                        </a>
+                    </div>
+                `).join('');
+            }
             
             // Articles
             const articles = hezbollah.articles || [];
