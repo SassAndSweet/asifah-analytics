@@ -725,6 +725,7 @@
                         <div class="stability-metric-content">
                             <div class="stability-metric-label">USD/IRR</div>
                             <div class="stability-metric-value" id="usd-irr-value">--</div>
+                            <div id="irr-trend" style="margin-top:8px; font-size:0.85em;"></div>
                         </div>
                     </div>
                     
@@ -1079,6 +1080,22 @@
                 
                 document.getElementById('usd-irr-value').innerHTML = 
                     `${currentRate.toLocaleString()} <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${changePercent}%)</span>`;
+                
+                // Display 24h trend
+                const change24h = exchangeRate.change_24h || 0;
+                const pressure = exchangeRate.pressure || 'NEUTRAL';
+                const trendIcon = change24h > 0 ? '▼' : (change24h < 0 ? '▲' : '—');
+                const trendColor = change24h > 0 ? '#ff6b6b' : (change24h < 0 ? '#51cf66' : '#a0aec0');
+                const pressureIcon = pressure === 'SELLING' ? '📉' : (pressure === 'BUYING' ? '📈' : '━');
+                
+                document.getElementById('irr-trend').innerHTML = `
+                    <div style="color:${trendColor}; font-weight:600; font-size:0.9em;">
+                        ${trendIcon} ${Math.abs(change24h).toFixed(2)}% (24h)
+                    </div>
+                    <div style="color:#cbd5e0; font-size:0.85em; margin-top:2px;">
+                        ${pressureIcon} ${pressure}
+                    </div>
+                `;
             }
             
             // Update Protest Intensity mini metric
