@@ -473,7 +473,13 @@
                 const data = JSON.parse(text);
                 
                 console.log('Parsed data:', data);
-                consoleCalling displayData...');
+                console.log('Success flag:', data.success);
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Unknown error');
+                }
+                
+                console.log('Lebanon data loaded successfully! Calling displayData...');
                 
                 displayData(data);
                 
