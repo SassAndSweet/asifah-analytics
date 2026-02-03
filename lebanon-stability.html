@@ -444,26 +444,42 @@
                 console.log('Backend URL:', BACKEND_URL);
                 console.log('Full URL:', `${BACKEND_URL}/scan-lebanon-stability`);
                 
-                const response = await fetch(`${BACKEND_URL}/scan-lebanon-stability`);
+                // Add timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
                 
+                const response = await fetch(`${BACKEND_URL}/scan-lebanon-stability`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                console.log('Response received!');
                 console.log('Response status:', response.status);
                 console.log('Response ok:', response.ok);
+                console.log('Response headers:', [...response.headers.entries()]);
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
-                const data = await response.json();
+                const text = await response.text();
+                console.log('Raw response text (first 500 chars):', text.substring(0, 500));
                 
-                console.log('Response data:', data);
+                const data = JSON.parse(text);
+                
+                console.log('Parsed data:', data);
+                console.log('Success flag:', data.success);
                 
                 if (!data.success) {
                     throw new Error(data.error || 'Unknown error');
                 }
                 
-                console.log('Lebanon data loaded successfully!');
+                console.log('Lebanon data loaded successfully! Calling displayData...');
                 
                 displayData(data);
+                
+                console.log('displayData completed!');
                 
             } catch (error) {
                 console.error('Error loading Lebanon data:', error);
@@ -471,8 +487,13 @@
                 console.error('Error message:', error.message);
                 console.error('Full error:', error);
                 
+                let errorMessage = error.message;
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Request timeout (30 seconds) - backend may be slow';
+                }
+                
                 document.getElementById('loadingState').innerHTML = `
-                    <div style="color:#f87171;">❌ Error loading data: ${error.message}</div>
+                    <div style="color:#f87171;">❌ Error loading data: ${errorMessage}</div>
                     <div style="margin-top:10px; font-size:0.9em; color:#ccc;">Check browser console (F12) for details</div>
                     <div style="margin-top:15px;"><button onclick="location.reload()" style="padding:10px 20px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:8px; cursor:pointer;">Retry</button></div>
                 `;
