@@ -323,15 +323,64 @@
         .back-link:hover {
             background: rgba(255,255,255,0.2);
         }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        [dir="rtl"] .language-switcher {
+            right: auto;
+            left: 35px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3a5f;
+            border-color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🇱🇧 LEBANON STABILITY INDEX</h1>
-            <div class="subtitle">Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status</div>
-            <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
-            <a href="index.html" class="back-link" style="position: absolute; top: 20px; left: 20px; margin: 0;">← Back to Dashboard</a>
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                <button class="lang-btn" onclick="switchLanguage('fa', this)">פא</button>
+            </div>
+            <h1 data-i18n="pageTitle">🇱🇧 LEBANON STABILITY INDEX</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            <a href="index.html" class="back-link" style="position: absolute; top: 20px; left: 20px; margin: 0;" data-i18n="backLink">← Back to Dashboard</a>
         </header>
 
         <div class="loading" id="loadingState">
@@ -342,33 +391,33 @@
         <div id="content" style="display:none;">
             <!-- Overall Stability Index -->
             <div class="stability-index-card">
-                <div class="stability-title">LEBANON STABILITY INDEX</div>
+                <div class="stability-title" data-i18n="stabilityTitle">LEBANON STABILITY INDEX</div>
                 <div class="stability-score" id="stabilityScore">--</div>
                 <div class="stability-label" id="stabilityLabel">--</div>
                 <div class="stability-bar">
                     <div class="stability-fill" id="stabilityFill"></div>
                 </div>
-                <div class="stability-legend">100 = Stable Regime | 0 = Imminent Collapse</div>
+                <div class="stability-legend" data-i18n="stabilityLegend">100 = Stable Regime | 0 = Imminent Collapse</div>
             </div>
 
             <!-- Metrics Grid -->
             <div class="metrics-grid">
                 <!-- Government Status -->
                 <div class="metric-card">
-                    <div class="metric-title">GOVERNMENT STATUS</div>
+                    <div class="metric-title" data-i18n="govStatus">GOVERNMENT STATUS</div>
                     <div class="metric-value" id="presidentStatus">✅</div>
-                    <div class="metric-subtitle">President: Joseph Aoun</div>
+                    <div class="metric-subtitle" data-i18n="president">President: Joseph Aoun</div>
                     <div class="government-status">
                         <div class="government-status-item">
-                            <span class="status-label">Days in Office:</span>
+                            <span class="status-label" data-i18n="daysInOffice">Days in Office:</span>
                             <span class="status-value" id="daysWithPresident">--</span>
                         </div>
                         <div class="government-status-item">
-                            <span class="status-label">Elected:</span>
+                            <span class="status-label" data-i18n="elected">Elected:</span>
                             <span class="status-value">Jan 9, 2025</span>
                         </div>
                         <div class="government-status-item">
-                            <span class="status-label">Days Until Elections:</span>
+                            <span class="status-label" data-i18n="daysUntilElections">Days Until Elections:</span>
                             <span class="status-value" id="daysUntilElection">--</span>
                         </div>
                     </div>
@@ -376,31 +425,31 @@
 
                 <!-- Currency Status -->
                 <div class="metric-card">
-                    <div class="metric-title">CURRENCY (LBP/USD)</div>
+                    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
                     <div class="metric-value" id="currencyRate">--</div>
                     <div class="metric-subtitle" id="currencyChange">--</div>
                 </div>
 
                 <!-- Bond Yields -->
                 <div class="metric-card">
-                    <div class="metric-title">10Y EUROBOND YIELD</div>
+                    <div class="metric-title" data-i18n="bondYield">10Y EUROBOND YIELD</div>
                     <div class="metric-value" id="bondYield">--</div>
-                    <div class="metric-subtitle">Sovereign default risk</div>
+                    <div class="metric-subtitle" data-i18n="bondSubtitle">Sovereign default risk</div>
                 </div>
 
                 <!-- Hezbollah Activity -->
                 <div class="metric-card">
-                    <div class="metric-title">HEZBOLLAH ACTIVITY</div>
+                    <div class="metric-title" data-i18n="hezbollahActivity">HEZBOLLAH ACTIVITY</div>
                     <div class="metric-value" id="hezbollahScore">--</div>
-                    <div class="metric-subtitle">Last 7 days</div>
+                    <div class="metric-subtitle" data-i18n="last7Days">Last 7 days</div>
                     <div class="activity-grid">
                         <div class="activity-item">
                             <div class="activity-number" id="rearmamentCount">--</div>
-                            <div class="activity-label">Rearmament Reports</div>
+                            <div class="activity-label" data-i18n="rearmamentReports">Rearmament Reports</div>
                         </div>
                         <div class="activity-item">
                             <div class="activity-number" id="strikeCount">--</div>
-                            <div class="activity-label">Strike Mentions</div>
+                            <div class="activity-label" data-i18n="strikeMentions">Strike Mentions</div>
                         </div>
                     </div>
                 </div>
@@ -408,7 +457,7 @@
 
             <!-- Recent Hezbollah-Related Articles -->
             <div class="articles-section">
-                <div class="section-title">📰 Recent Hezbollah & Security Articles (Last 7 Days)</div>
+                <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 7 Days)</div>
                 <div id="articlesContainer"></div>
             </div>
         </div>
@@ -583,6 +632,134 @@
 
         // Load data on page load
         document.addEventListener('DOMContentLoaded', loadLebanonData);
+
+        // Translation system
+        const translations = {
+            en: {
+                pageTitle: "🇱🇧 LEBANON STABILITY INDEX",
+                pageSubtitle: "Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status",
+                lastUpdated: "Last updated: ",
+                backLink: "← Back to Dashboard",
+                stabilityTitle: "LEBANON STABILITY INDEX",
+                stabilityLegend: "100 = Stable Regime | 0 = Imminent Collapse",
+                govStatus: "GOVERNMENT STATUS",
+                president: "President: Joseph Aoun",
+                daysInOffice: "Days in Office:",
+                elected: "Elected:",
+                daysUntilElections: "Days Until Elections:",
+                currency: "CURRENCY (LBP/USD)",
+                bondYield: "10Y EUROBOND YIELD",
+                bondSubtitle: "Sovereign default risk",
+                hezbollahActivity: "HEZBOLLAH ACTIVITY",
+                last7Days: "Last 7 days",
+                rearmamentReports: "Rearmament Reports",
+                strikeMentions: "Strike Mentions",
+                recentArticles: "📰 Recent Hezbollah & Security Articles (Last 7 Days)",
+                noArticles: "No recent articles found",
+                readArticle: "Read article →"
+            },
+            he: {
+                pageTitle: "🇱🇧 מדד יציבות לבנון",
+                pageSubtitle: "ניתוח רב-גורמי: מצב פוליטי, כלכלי, ביטחוני וחיזבאללה",
+                lastUpdated: "עודכן לאחרונה: ",
+                backLink: "→ חזרה למרכז הבקרה",
+                stabilityTitle: "מדד יציבות לבנון",
+                stabilityLegend: "100 = משטר יציב | 0 = קריסה קרובה",
+                govStatus: "סטטוס הממשלה",
+                president: "נשיא: ג'וזף עון",
+                daysInOffice: "ימים בתפקיד:",
+                elected: "נבחר:",
+                daysUntilElections: "ימים עד הבחירות:",
+                currency: "מטבע (לירה לבנונית/דולר)",
+                bondYield: "תשואת איגרות חוב 10 שנים",
+                bondSubtitle: "סיכון למחדל ריבוני",
+                hezbollahActivity: "פעילות חיזבאללה",
+                last7Days: "7 ימים אחרונים",
+                rearmamentReports: "דיווחי חימוש מחדש",
+                strikeMentions: "אזכורי תקיפות",
+                recentArticles: "📰 כתבות אחרונות על חיזבאללה וביטחון (7 ימים)",
+                noArticles: "לא נמצאו כתבות אחרונות",
+                readArticle: "→ קרא כתבה"
+            },
+            ar: {
+                pageTitle: "🇱🇧 مؤشر استقرار لبنان",
+                pageSubtitle: "تحليل متعدد العوامل: الوضع السياسي والاقتصادي والأمني وحزب الله",
+                lastUpdated: "آخر تحديث: ",
+                backLink: "→ العودة إلى لوحة المعلومات",
+                stabilityTitle: "مؤشر استقرار لبنان",
+                stabilityLegend: "100 = نظام مستقر | 0 = انهيار وشيك",
+                govStatus: "حالة الحكومة",
+                president: "الرئيس: جوزيف عون",
+                daysInOffice: "أيام في المنصب:",
+                elected: "انتخب:",
+                daysUntilElections: "أيام حتى الانتخابات:",
+                currency: "العملة (ليرة لبنانية/دولار)",
+                bondYield: "عائد السندات 10 سنوات",
+                bondSubtitle: "مخاطر التخلف عن السداد السيادي",
+                hezbollahActivity: "نشاط حزب الله",
+                last7Days: "آخر 7 أيام",
+                rearmamentReports: "تقارير إعادة التسلح",
+                strikeMentions: "إشارات الضربات",
+                recentArticles: "📰 مقالات حديثة عن حزب الله والأمن (7 أيام)",
+                noArticles: "لا توجد مقالات حديثة",
+                readArticle: "→ اقرأ المقال"
+            },
+            fa: {
+                pageTitle: "🇱🇧 شاخص ثبات لبنان",
+                pageSubtitle: "تحلیل چندعاملی: وضعیت سیاسی، اقتصادی، امنیتی و حزب‌الله",
+                lastUpdated: "آخرین به‌روزرسانی: ",
+                backLink: "→ بازگشت به داشبورد",
+                stabilityTitle: "شاخص ثبات لبنان",
+                stabilityLegend: "100 = رژیم پایدار | 0 = فروپاشی قریب‌الوقوع",
+                govStatus: "وضعیت دولت",
+                president: "رئیس‌جمهور: ژوزف عون",
+                daysInOffice: "روزهای در مقام:",
+                elected: "انتخاب شده:",
+                daysUntilElections: "روزها تا انتخابات:",
+                currency: "ارز (لیره لبنان/دلار)",
+                bondYield: "بازده اوراق قرضه 10 ساله",
+                bondSubtitle: "ریسک نکول حاکمیتی",
+                hezbollahActivity: "فعالیت حزب‌الله",
+                last7Days: "7 روز گذشته",
+                rearmamentReports: "گزارش‌های تسلیح مجدد",
+                strikeMentions: "اشاره به حملات",
+                recentArticles: "📰 مقالات اخیر درباره حزب‌الله و امنیت (7 روز)",
+                noArticles: "مقاله اخیری یافت نشد",
+                readArticle: "→ خواندن مقاله"
+            }
+        };
+
+        function switchLanguage(lang, button) {
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Set text direction for RTL languages
+            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // Special handling for lastUpdated which has dynamic content
+                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
+                        const currentText = element.textContent;
+                        if (currentText.includes(':')) {
+                            const timestamp = currentText.split(': ')[1];
+                            element.textContent = translations[lang][key] + timestamp;
+                        } else {
+                            element.textContent = translations[lang][key] + 'Loading...';
+                        }
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
