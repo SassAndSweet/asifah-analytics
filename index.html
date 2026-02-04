@@ -1166,6 +1166,186 @@
             box-shadow: 0 6px 20px rgba(30, 58, 95, 0.5);
             border-color: rgba(255, 255, 255, 0.4);
         }
+/* ===== THREAT MATRIX EXPANDABLE CARDS ===== */
+.threat-matrix-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+.threat-matrix-card:hover {
+    border-color: rgba(100, 149, 237, 0.5);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.target-flag {
+    font-size: 32px;
+}
+
+.expand-button {
+    background: rgba(100, 149, 237, 0.2);
+    border: 1px solid rgba(100, 149, 237, 0.4);
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.expand-button:hover {
+    background: rgba(100, 149, 237, 0.4);
+    transform: scale(1.05);
+}
+
+.combined-probability {
+    margin-bottom: 25px;
+}
+
+.combined-value {
+    font-size: 48px;
+    font-weight: bold;
+    text-align: center;
+    margin: 15px 0;
+    font-family: 'Courier New', monospace;
+}
+
+.combined-value.very-high { color: #ff6b6b; }
+.combined-value.high { color: #ff8c42; }
+.combined-value.moderate { color: #ffd93d; }
+.combined-value.low { color: #6bcf7f; }
+
+.probability-bar {
+    width: 100%;
+    height: 30px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+}
+
+.probability-fill {
+    height: 100%;
+    transition: width 1s ease;
+    border-radius: 15px;
+}
+
+.probability-fill.very-high { background: linear-gradient(90deg, #ff6b6b 0%, #c0392b 100%); }
+.probability-fill.high { background: linear-gradient(90deg, #ff8c42 0%, #e67e22 100%); }
+.probability-fill.moderate { background: linear-gradient(90deg, #ffd93d 0%, #f39c12 100%); }
+.probability-fill.low { background: linear-gradient(90deg, #6bcf7f 0%, #27ae60 100%); }
+
+.coordination-badge {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 12px;
+    background: rgba(100, 149, 237, 0.3);
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.expanded-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.expanded-details.show {
+    max-height: 2500px;
+}
+
+.threat-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    border-left: 4px solid rgba(100, 149, 237, 0.6);
+}
+
+.section-title {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #7a9ab8;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.threat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.threat-item:last-child {
+    border-bottom: none;
+}
+
+.threat-actor {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.threat-probability {
+    font-size: 24px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+.threat-mini-bar {
+    width: 200px;
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-left: 15px;
+}
+
+.threat-mini-fill {
+    height: 100%;
+    transition: width 0.8s ease;
+}
+
+.risk-badge {
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    min-width: 80px;
+    text-align: center;
+}
+
+.risk-very-high { background: #ff6b6b; color: #fff; }
+.risk-high { background: #ff8c42; color: #fff; }
+.risk-moderate { background: #ffd93d; color: #2c3e50; }
+.risk-low { background: #6bcf7f; color: #fff; }
+    
     </style>
 </head>
 <body>
@@ -1180,7 +1360,7 @@
                 <button class="lang-btn" onclick="switchLanguage('fa', this)">פא</button>
             </div>
             <h1 data-i18n="header">ASIFAH ANALYTICS</h1>
-            <h2 data-i18n="subtitle">Israeli Military Action Forecasting Dashboard</h2>
+            <h2 data-i18n="subtitle">Regional Multi-Actor Conflict Probability Dashboard - The Middle East</h2>
         </header>
 
         <div class="polymarket-section" id="polymarketSection">
@@ -1198,170 +1378,350 @@
 
         <div id="errorMessage" class="error-message"></div>
 
-        <div class="dashboard" id="dashboard">
-            <!-- HEZBOLLAH CARD -->
-            <div class="target-card" id="hezbollah-card">
-                <h3 data-i18n="targetHezbollah">HEZBOLLAH (LEBANON)</h3>
-                <a href="lebanon-stability.html" class="protest-analytics-btn" data-i18n="lebanonStability">Lebanon Stability</a>
+<!-- COMPLETE THREAT MATRIX CARDS SECTION -->
+<!-- Replace the existing cards grid with this entire section -->
+
+<div class="targets-grid">
+
+    <!-- IRAN CARD -->
+    <div class="threat-matrix-card" id="iran-matrix">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="target-flag">🇮🇷</span>
+                <span data-i18n="targetIran">IRAN</span>
+            </div>
+            <button class="expand-button" onclick="toggleCard('iran')">
+                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
+            </button>
+        </div>
+
+        <div class="combined-probability">
+            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+            <div class="combined-value" id="iran-combined-value">--</div>
+            <div class="probability-bar">
+                <div class="probability-fill" id="iran-combined-bar" style="width: 0%"></div>
+            </div>
+            <div class="coordination-badge" id="iran-coordination">
+                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="iran-coord-value">--</span>
+            </div>
+        </div>
+
+        <div class="expanded-details" id="iran-details">
+            <div class="threat-section">
+                <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
                 
-                <div class="card-scan-controls">
-                    <div class="card-time-window">
-                        <label><input type="radio" name="hezbollah-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
-                        <label><input type="radio" name="hezbollah-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
-                        <label><input type="radio" name="hezbollah-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
-                        <label><input type="radio" name="hezbollah-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇮🇱</span>
+                        <span data-i18n="israelStrike">Israel Strike</span>
                     </div>
-                    <button class="card-scan-button" onclick="scanSingleTarget('hezbollah')">
-                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
-                    </button>
-                    <div class="loading" id="hezbollah-loading">
-                        <div class="loading-spinner"></div>
-                        <span data-i18n="loadingText">Scanning...</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="iran-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="iran-israel-bar" style="width: 0%; background: #ff6b6b;"></div>
+                        </div>
+                        <span class="risk-badge" id="iran-israel-risk">--</span>
                     </div>
                 </div>
 
-                <div class="probability-display">
-                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
-                    <div class="gauge-container">
-                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
-                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
-                            <circle class="gauge-progress medium" id="hezbollah-gauge" cx="100" cy="100" r="85"
-                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
-                        </svg>
-                        <div class="gauge-text medium" id="hezbollah-prob">--</div>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇺🇸</span>
+                        <span data-i18n="usStrike">US Strike</span>
                     </div>
-                </div>
-                <div class="timeline-display">
-                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
-                    <div class="timeline-value" id="hezbollah-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
-                    <div class="timeline-bar" id="hezbollah-bar">
-                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="iran-us-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="iran-us-bar" style="width: 0%; background: #6495ED;"></div>
+                        </div>
+                        <span class="risk-badge" id="iran-us-risk">--</span>
                     </div>
-                </div>
-                <div class="headlines-section" id="hezbollah-headlines">
-                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
 
-            <!-- IRAN CARD -->
-            <div class="target-card" id="iran-card">
-                <h3 data-i18n="targetIran">IRAN</h3>
-                <a href="iran-protests.html" class="protest-analytics-btn" data-i18n="protestAnalytics">Protest Analytics</a>
+            <div class="threat-section">
+                <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
                 
-                <div class="card-scan-controls">
-                    <div class="card-time-window">
-                        <label><input type="radio" name="iran-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
-                        <label><input type="radio" name="iran-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
-                        <label><input type="radio" name="iran-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
-                        <label><input type="radio" name="iran-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇮🇷 → 🇮🇱</span>
+                        <span data-i18n="iranToIsrael">Iran → Israel</span>
                     </div>
-                    <button class="card-scan-button" onclick="scanSingleTarget('iran')">
-                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
-                    </button>
-                    <div class="loading" id="iran-loading">
-                        <div class="loading-spinner"></div>
-                        <span data-i18n="loadingText">Scanning...</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="iran-to-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="iran-to-israel-bar" style="width: 0%; background: #ffd93d;"></div>
+                        </div>
+                        <span class="risk-badge" id="iran-to-israel-risk">--</span>
                     </div>
                 </div>
 
-                <div class="probability-display">
-                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
-                    <div class="gauge-container">
-                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
-                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
-                            <circle class="gauge-progress medium" id="iran-gauge" cx="100" cy="100" r="85"
-                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
-                        </svg>
-                        <div class="gauge-text medium" id="iran-prob">--</div>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇮🇷 → 🇺🇸</span>
+                        <span data-i18n="iranToUS">Iran → US</span>
                     </div>
-                </div>
-                <div class="timeline-display">
-                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
-                    <div class="timeline-value" id="iran-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
-                    <div class="timeline-bar" id="iran-bar">
-                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="iran-to-us-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="iran-to-us-bar" style="width: 0%; background: #6bcf7f;"></div>
+                        </div>
+                        <span class="risk-badge" id="iran-to-us-risk">--</span>
                     </div>
-                </div>
-                <div class="headlines-section" id="iran-headlines">
-                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
 
-            <!-- HOUTHIS CARD -->
-            <div class="target-card" id="houthis-card">
-                <h3 data-i18n="targetHouthis">HOUTHIS (YEMEN)</h3>
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="#methodology" style="color: #6495ED; text-decoration: none; font-size: 13px;">
+                    📖 <span data-i18n="viewMethodology">View Methodology</span> →
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEZBOLLAH CARD -->
+    <div class="threat-matrix-card" id="hezbollah-matrix">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="target-flag">🇱🇧</span>
+                <span data-i18n="targetHezbollah">HEZBOLLAH</span>
+            </div>
+            <button class="expand-button" onclick="toggleCard('hezbollah')">
+                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
+            </button>
+        </div>
+
+        <div class="combined-probability">
+            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+            <div class="combined-value" id="hezbollah-combined-value">--</div>
+            <div class="probability-bar">
+                <div class="probability-fill" id="hezbollah-combined-bar" style="width: 0%"></div>
+            </div>
+            <div class="coordination-badge" id="hezbollah-coordination">
+                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="hezbollah-coord-value">--</span>
+            </div>
+        </div>
+
+        <div class="expanded-details" id="hezbollah-details">
+            <div class="threat-section">
+                <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
                 
-                <div class="card-scan-controls">
-                    <div class="card-time-window">
-                        <label><input type="radio" name="houthis-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
-                        <label><input type="radio" name="houthis-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
-                        <label><input type="radio" name="houthis-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
-                        <label><input type="radio" name="houthis-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇮🇱</span>
+                        <span data-i18n="israelStrike">Israel Strike</span>
                     </div>
-                    <button class="card-scan-button" onclick="scanSingleTarget('houthis')">
-                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
-                    </button>
-                    <div class="loading" id="houthis-loading">
-                        <div class="loading-spinner"></div>
-                        <span data-i18n="loadingText">Scanning...</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="hezbollah-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="hezbollah-israel-bar" style="width: 0%; background: #ff6b6b;"></div>
+                        </div>
+                        <span class="risk-badge" id="hezbollah-israel-risk">--</span>
                     </div>
                 </div>
 
-                <div class="probability-display">
-                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
-                    <div class="gauge-container">
-                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
-                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
-                            <circle class="gauge-progress medium" id="houthis-gauge" cx="100" cy="100" r="85"
-                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
-                        </svg>
-                        <div class="gauge-text medium" id="houthis-prob">--</div>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇺🇸</span>
+                        <span data-i18n="usStrike">US Strike</span>
                     </div>
-                </div>
-                <div class="timeline-display">
-                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
-                    <div class="timeline-value" id="houthis-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
-                    <div class="timeline-bar" id="houthis-bar">
-                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="hezbollah-us-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="hezbollah-us-bar" style="width: 0%; background: #6495ED;"></div>
+                        </div>
+                        <span class="risk-badge" id="hezbollah-us-risk">--</span>
                     </div>
-                </div>
-                <div class="headlines-section" id="houthis-headlines">
-                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                 </div>
             </div>
 
-            <!-- SYRIA CARD -->
-            <div class="target-card" id="syria-card">
-                <h3 data-i18n="targetSyria">SYRIA</h3>
-                <a href="syria-conflicts.html" class="protest-analytics-btn" data-i18n="conflictTracker">📊 Conflict Tracker</a>
+            <div class="threat-section">
+                <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
                 
-                <div class="card-scan-controls">
-                    <div class="card-time-window">
-                        <label><input type="radio" name="syria-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
-                        <label><input type="radio" name="syria-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
-                        <label><input type="radio" name="syria-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
-                        <label><input type="radio" name="syria-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇱🇧 → 🇮🇱</span>
+                        <span data-i18n="hezbollahToIsrael">Hezbollah → Israel</span>
                     </div>
-                    <button class="card-scan-button" onclick="scanSingleTarget('syria')">
-                        <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
-                    </button>
-                    <div class="loading" id="syria-loading">
-                        <div class="loading-spinner"></div>
-                        <span data-i18n="loadingText">Scanning...</span>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="hezbollah-to-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="hezbollah-to-israel-bar" style="width: 0%; background: #ffd93d;"></div>
+                        </div>
+                        <span class="risk-badge" id="hezbollah-to-israel-risk">--</span>
                     </div>
                 </div>
+
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇱🇧 → 🇺🇸</span>
+                        <span data-i18n="hezbollahToUS">Hezbollah → US</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="hezbollah-to-us-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="hezbollah-to-us-bar" style="width: 0%; background: #6bcf7f;"></div>
+                        </div>
+                        <span class="risk-badge" id="hezbollah-to-us-risk">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HOUTHIS CARD -->
+    <div class="threat-matrix-card" id="houthis-matrix">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="target-flag">🇾🇪</span>
+                <span data-i18n="targetHouthis">HOUTHIS (YEMEN)</span>
+            </div>
+            <button class="expand-button" onclick="toggleCard('houthis')">
+                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
+            </button>
+        </div>
+
+        <div class="combined-probability">
+            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+            <div class="combined-value" id="houthis-combined-value">--</div>
+            <div class="probability-bar">
+                <div class="probability-fill" id="houthis-combined-bar" style="width: 0%"></div>
+            </div>
+            <div class="coordination-badge" id="houthis-coordination">
+                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="houthis-coord-value">--</span>
+            </div>
+        </div>
+
+        <div class="expanded-details" id="houthis-details">
+            <div class="threat-section">
+                <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
+                
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇮🇱</span>
+                        <span data-i18n="israelStrike">Israel Strike</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="houthis-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="houthis-israel-bar" style="width: 0%; background: #ff6b6b;"></div>
+                        </div>
+                        <span class="risk-badge" id="houthis-israel-risk">--</span>
+                    </div>
+                </div>
+
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇺🇸</span>
+                        <span data-i18n="usStrike">US Strike</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="houthis-us-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="houthis-us-bar" style="width: 0%; background: #6495ED;"></div>
+                        </div>
+                        <span class="risk-badge" id="houthis-us-risk">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="threat-section">
+                <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
+                
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇾🇪 → 🇮🇱</span>
+                        <span data-i18n="houthisToIsrael">Houthis → Israel</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="houthis-to-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="houthis-to-israel-bar" style="width: 0%; background: #ffd93d;"></div>
+                        </div>
+                        <span class="risk-badge" id="houthis-to-israel-risk">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SYRIA CARD -->
+    <div class="threat-matrix-card" id="syria-matrix">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="target-flag">🇸🇾</span>
+                <span data-i18n="targetSyria">SYRIA</span>
+            </div>
+            <button class="expand-button" onclick="toggleCard('syria')">
+                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
+            </button>
+        </div>
+
+        <div class="combined-probability">
+            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+            <div class="combined-value" id="syria-combined-value">--</div>
+            <div class="probability-bar">
+                <div class="probability-fill" id="syria-combined-bar" style="width: 0%"></div>
+            </div>
+            <div class="coordination-badge" id="syria-coordination">
+                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="syria-coord-value">--</span>
+            </div>
+        </div>
+
+        <div class="expanded-details" id="syria-details">
+            <div class="threat-section">
+                <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
+                
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇮🇱</span>
+                        <span data-i18n="israelStrike">Israel Strike</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="syria-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="syria-israel-bar" style="width: 0%; background: #ff6b6b;"></div>
+                        </div>
+                        <span class="risk-badge" id="syria-israel-risk">--</span>
+                    </div>
+                </div>
+
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇺🇸</span>
+                        <span data-i18n="usStrike">US Strike</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="syria-us-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="syria-us-bar" style="width: 0%; background: #6495ED;"></div>
+                        </div>
+                        <span class="risk-badge" id="syria-us-risk">--</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="threat-section">
+                <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
+                
+                <div class="threat-item">
+                    <div class="threat-actor">
+                        <span>🇸🇾 → 🇮🇱</span>
+                        <span data-i18n="syriaToIsrael">Syria → Israel</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span class="threat-probability" id="syria-to-israel-prob">--</span>
+                        <div class="threat-mini-bar">
+                            <div class="threat-mini-fill" id="syria-to-israel-bar" style="width: 0%; background: #ffd93d;"></div>
+                        </div>
+                        <span class="risk-badge" id="syria-to-israel-risk">--</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 
                 <div class="probability-display">
                     <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
@@ -1468,90 +1828,181 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
+
+const translations = {
+    en: {
+        // Original keys
+        header: "ASIFAH ANALYTICS",
+        subtitle: "Regional Multi-Actor Conflict Probability Dashboard - The Middle East",
+        requestsUsedLabel: "Requests Used",
+        requestsRemainingLabel: "Requests Remaining",
+        dailyLimitLabel: "Daily Limit",
+        resetsInLabel: "Quota Resets In",
+        hours24: "24 Hours",
+        hours48: "48 Hours",
+        days7: "7 Days",
+        days30: "30 Days",
+        scanButtonIndividual: "Scan OSINT - Update Forecast",
+        loadingText: "Scanning...",
+        targetHezbollah: "HIZBALLAH",
+        targetIran: "IRAN",
+        targetHouthis: "HOUTHIS (YEMEN)",
+        targetSyria: "SYRIA",
+        strikeProbability: "Strike Probability",
+        projectedTimeline: "Projected Timeline",
+        awaitingScan: "Awaiting scan...",
+        days030: "0-30d",
+        days3190: "31-90d",
+        days91180: "91-180d",
+        days180plus: "180+d",
+        recentHeadlines: "Recent Headlines:",
+        clickToScan: "Click scan to load latest intelligence",
+        noActionable: "No actionable headlines found (no threat indicators detected)",
+        dataSourcesLabel: "Data Sources:",
+        dataSourcesText: "NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Reddit for community intelligence, Polymarket for crowdsourced prediction market data, plus other OSINT sources. For inquiries, contact: asifahanalytics@gmail.com",
+        methodologyLabel: "Methodology:",
+        methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
+        lastUpdatedLabel: "Last Updated:",
+        notYetScanned: "Not yet scanned",
+        disclaimerTitle: "DISCLAIMER:",
+        disclaimerText: "This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.",
+        polymarketDisclaimerTitle: "⚠️ MARKET PREDICTIONS DISCLAIMER",
+        polymarketDisclaimerText: "Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.",
+        protestAnalytics: "Protest Analytics",
+        conflictTracker: "Conflict Tracker",
+        flightWidgetTitle: "Flight Disruptions Monitor",
+        flightStatusNormal: "All Routes Normal",
+        flightStatusActive: "Active Disruptions",
+        noFlightDisruptions: "No major flight disruptions detected in target regions",
         
-        const translations = {
-            en: {
-                header: "ASIFAH ANALYTICS",
-                subtitle: "Israeli Military Action Forecasting Dashboard",
-                requestsUsedLabel: "Requests Used",
-                requestsRemainingLabel: "Requests Remaining",
-                dailyLimitLabel: "Daily Limit",
-                resetsInLabel: "Quota Resets In",
-                hours24: "24 Hours",
-                hours48: "48 Hours",
-                days7: "7 Days",
-                days30: "30 Days",
-                scanButtonIndividual: "Scan OSINT - Update Forecast",
-                loadingText: "Scanning...",
-                targetHezbollah: "HEZBOLLAH (LEBANON)",
-                targetIran: "IRAN",
-                targetHouthis: "HOUTHIS (YEMEN)",
-                targetSyria: "SYRIA",
-                strikeProbability: "Strike Probability",
-                projectedTimeline: "Projected Timeline",
-                awaitingScan: "Awaiting scan...",
-                days030: "0-30d",
-                days3190: "31-90d",
-                days91180: "91-180d",
-                days180plus: "180+d",
-                recentHeadlines: "Recent Headlines:",
-                clickToScan: "Click scan to load latest intelligence",
-                noActionable: "No actionable headlines found (no threat indicators detected)",
-                dataSourcesLabel: "Data Sources:",
-                dataSourcesText: "NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Reddit for community intelligence, Polymarket for crowdsourced prediction market data, plus other OSINT sources. For inquiries, contact: asifahanalytics@gmail.com",
-                methodologyLabel: "Methodology:",
-                methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
-                lastUpdatedLabel: "Last Updated:",
-                notYetScanned: "Not yet scanned",
-                disclaimerTitle: "DISCLAIMER:",
-                disclaimerText: "This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.",
-                polymarketDisclaimerTitle: "⚠️ MARKET PREDICTIONS DISCLAIMER",
-                polymarketDisclaimerText: "Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.",
-                protestAnalytics: "Protest Analytics",
-                conflictTracker: "Conflict Tracker",
-                flightWidgetTitle: "Flight Disruptions Monitor",
-                flightStatusNormal: "All Routes Normal",
-                flightStatusActive: "Active Disruptions",
-                noFlightDisruptions: "No major flight disruptions detected in target regions"
-            },
-            he: {
-                header: "אסיפה אנליטיקס",
-                subtitle: "לוח מחוונים לחיזוי פעולה צבאית ישראלית",
-                targetHezbollah: "חיזבאללה (לבנון)",
-                targetIran: "איראן",
-                targetHouthis: "חות'ים (תימן)",
-                targetSyria: "סוריה",
-                protestAnalytics: "ניתוח מחאות",
-                conflictTracker: "מעקב סכסוכים",
-                scanButtonIndividual: "סרוק OSINT - עדכן תחזית",
-                hours24: "24 שעות",
-                hours48: "48 שעות",
-                days7: "7 ימים",
-                days30: "30 ימים"
-            },
-            ar: {
-                header: "عاصفة أناليتكس",
-                subtitle: "لوحة التحكم للتنبؤ بالعمل العسكري الإسرائيلي",
-                targetHezbollah: "حزب الله (لبنان)",
-                targetIran: "إيران",
-                targetHouthis: "الحوثيون (اليمن)",
-                targetSyria: "سوريا",
-                protestAnalytics: "تحليل الاحتجاجات",
-                conflictTracker: "متتبع النزاعات",
-                scanButtonIndividual: "مسح OSINT - تحديث التوقعات"
-            },
-            fa: {
-                header: "آسیفه آنالیتیکس",
-                subtitle: "داشبورد پیش‌بینی اقدام نظامی اسرائیل",
-                targetHezbollah: "حزب‌الله (لبنان)",
-                targetIran: "ایران",
-                targetHouthis: "حوثی‌ها (یمن)",
-                targetSyria: "سوریه",
-                protestAnalytics: "تحلیل اعتراضات",
-                conflictTracker: "ردیاب درگیری‌ها",
-                scanButtonIndividual: "اسکن OSINT - به‌روزرسانی پیش‌بینی"
-            }
-        };
+        // NEW: Multi-actor threat matrix keys
+        combinedProbability: "COMBINED STRIKE PROBABILITY",
+        incomingThreats: "INCOMING THREATS",
+        outgoingThreats: "OUTGOING THREATS",
+        coordinationBonus: "Coordination Factor",
+        israelStrike: "Israel Strike",
+        usStrike: "US Strike",
+        iranToIsrael: "Iran → Israel",
+        iranToUS: "Iran → US Forces",
+        hezbollahToIsrael: "Hezbollah → Israel",
+        hezbollahToUS: "Hezbollah → US",
+        houthisToIsrael: "Houthis → Israel",
+        syriaToIsrael: "Syria → Israel",
+        riskLow: "Low",
+        riskModerate: "Moderate",
+        riskHigh: "High",
+        riskVeryHigh: "Very High",
+        expand: "Expand",
+        close: "Close",
+        viewMethodology: "View Methodology"
+    },
+    
+    he: {
+        // Original keys
+        header: "אסיפה אנליטיקס",
+        subtitle: "לוח מחוונים אזורי להסתברות סכסוכים רב-שחקנים - המזרח התיכון",
+        targetHezbollah: "חיזבאללה",
+        targetIran: "איראן",
+        targetHouthis: "חות'ים (תימן)",
+        targetSyria: "סוריה",
+        protestAnalytics: "ניתוח מחאות",
+        conflictTracker: "מעקב סכסוכים",
+        scanButtonIndividual: "סרוק OSINT - עדכן תחזית",
+        hours24: "24 שעות",
+        hours48: "48 שעות",
+        days7: "7 ימים",
+        days30: "30 ימים",
+        
+        // NEW: Multi-actor threat matrix keys
+        combinedProbability: "הסתברות תקיפה משולבת",
+        incomingThreats: "איומים נכנסים",
+        outgoingThreats: "איומים יוצאים",
+        coordinationBonus: "גורם תיאום",
+        israelStrike: "תקיפה ישראלית",
+        usStrike: "תקיפה אמריקאית",
+        iranToIsrael: "איראן → ישראל",
+        iranToUS: "איראן → כוחות ארה\"ב",
+        hezbollahToIsrael: "חיזבאללה → ישראל",
+        hezbollahToUS: "חיזבאללה → ארה\"ב",
+        houthisToIsrael: "חות'ים → ישראל",
+        syriaToIsrael: "סוריה → ישראל",
+        riskLow: "נמוך",
+        riskModerate: "בינוני",
+        riskHigh: "גבוה",
+        riskVeryHigh: "גבוה מאוד",
+        expand: "הרחב",
+        close: "סגור",
+        viewMethodology: "צפה במתודולוגיה"
+    },
+    
+    ar: {
+        // Original keys
+        header: "عاصفة أناليتكس",
+        subtitle: "لوحة التحكم الإقليمية لاحتمالات الصراع متعدد الأطراف - الشرق الأوسط",
+        targetHezbollah: "حزب الله",
+        targetIran: "إيران",
+        targetHouthis: "الحوثيون (اليمن)",
+        targetSyria: "سوريا",
+        protestAnalytics: "تحليل الاحتجاجات",
+        conflictTracker: "متتبع النزاعات",
+        scanButtonIndividual: "مسح OSINT - تحديث التوقعات",
+        
+        // NEW: Multi-actor threat matrix keys
+        combinedProbability: "احتمالية الضربة المشتركة",
+        incomingThreats: "التهديدات الواردة",
+        outgoingThreats: "التهديدات الصادرة",
+        coordinationBonus: "عامل التنسيق",
+        israelStrike: "ضربة إسرائيلية",
+        usStrike: "ضربة أمريكية",
+        iranToIsrael: "إيران → إسرائيل",
+        iranToUS: "إيران → القوات الأمريكية",
+        hezbollahToIsrael: "حزب الله → إسرائيل",
+        hezbollahToUS: "حزب الله → أمريكا",
+        houthisToIsrael: "الحوثيون → إسرائيل",
+        syriaToIsrael: "سوريا → إسرائيل",
+        riskLow: "منخفض",
+        riskModerate: "معتدل",
+        riskHigh: "مرتفع",
+        riskVeryHigh: "مرتفع جداً",
+        expand: "توسيع",
+        close: "إغلاق",
+        viewMethodology: "عرض المنهجية"
+    },
+    
+    fa: {
+        // Original keys
+        header: "آسیفه آنالیتیکس",
+        subtitle: "داشبورد منطقه‌ای احتمال درگیری چند بازیگر - خاورمیانه",
+        targetHezbollah: "حزب‌الله",
+        targetIran: "ایران",
+        targetHouthis: "حوثی‌ها (یمن)",
+        targetSyria: "سوریه",
+        protestAnalytics: "تحلیل اعتراضات",
+        conflictTracker: "ردیاب درگیری‌ها",
+        scanButtonIndividual: "اسکن OSINT - به‌روزرسانی پیش‌بینی",
+        
+        // NEW: Multi-actor threat matrix keys
+        combinedProbability: "احتمال حمله ترکیبی",
+        incomingThreats: "تهدیدات ورودی",
+        outgoingThreats: "تهدیدات خروجی",
+        coordinationBonus: "فاکتور هماهنگی",
+        israelStrike: "حمله اسرائیل",
+        usStrike: "حمله آمریکا",
+        iranToIsrael: "ایران → اسرائیل",
+        iranToUS: "ایران → نیروهای آمریکا",
+        hezbollahToIsrael: "حزب‌الله → اسرائیل",
+        hezbollahToUS: "حزب‌الله → آمریکا",
+        houthisToIsrael: "حوثی‌ها → اسرائیل",
+        syriaToIsrael: "سوریه → اسرائیل",
+        riskLow: "کم",
+        riskModerate: "متوسط",
+        riskHigh: "بالا",
+        riskVeryHigh: "بسیار بالا",
+        expand: "گسترش",
+        close: "بستن",
+        viewMethodology: "مشاهده روش‌شناسی"
+    }
+};
 
         let currentLanguage = 'en';
         let globalRateLimit = null;
@@ -2214,6 +2665,101 @@
                 console.warn('Flight cancellations init failed:', e);
             }
         });
+
+        // ===== THREAT MATRIX FUNCTIONS =====
+
+function toggleCard(target) {
+    const details = document.getElementById(`${target}-details`);
+    const button = document.querySelector(`#${target}-matrix .expand-button .expand-text`);
+    
+    if (details.classList.contains('show')) {
+        details.classList.remove('show');
+        button.innerHTML = '<span data-i18n="expand">Expand</span> ▼';
+    } else {
+        details.classList.add('show');
+        button.innerHTML = '<span data-i18n="close">Close</span> ▲';
+    }
+    
+    if (window.translatePage) {
+        translatePage();
+    }
+}
+
+function getRiskClass(riskLevel) {
+    return `risk-${riskLevel.replace('_', '-')}`;
+}
+
+function getColorClass(riskLevel) {
+    return riskLevel.replace('_', '-');
+}
+
+async function loadThreatMatrix(target) {
+    try {
+        console.log(`[Threat Matrix] Loading ${target}...`);
+        
+        const response = await fetch(`https://asifah-backend.onrender.com/api/threat-matrix/${target}?days=7`);
+        const data = await response.json();
+        
+        if (!data.success) {
+            console.error(`[Threat Matrix] Error:`, data.error);
+            return;
+        }
+        
+        const combined = data.combined_probability;
+        document.getElementById(`${target}-combined-value`).textContent = combined.value.toFixed(1) + '%';
+        document.getElementById(`${target}-combined-bar`).style.width = combined.value + '%';
+        
+        const coordValue = combined.coordination_bonus.toFixed(1);
+        document.getElementById(`${target}-coord-value`).textContent = 
+            (combined.coordination_bonus > 0 ? '+' : '') + coordValue + '%';
+        
+        const combinedColorClass = getColorClass(combined.risk_level);
+        document.getElementById(`${target}-combined-value`).className = `combined-value ${combinedColorClass}`;
+        document.getElementById(`${target}-combined-bar`).className = `probability-fill ${combinedColorClass}`;
+        
+        const israel = data.incoming_threats.israel;
+        document.getElementById(`${target}-israel-prob`).textContent = israel.probability.toFixed(1) + '%';
+        document.getElementById(`${target}-israel-bar`).style.width = israel.probability + '%';
+        document.getElementById(`${target}-israel-risk`).textContent = israel.risk_level.replace('_', ' ').toUpperCase();
+        document.getElementById(`${target}-israel-risk`).className = `risk-badge ${getRiskClass(israel.risk_level)}`;
+        
+        const us = data.incoming_threats.us;
+        document.getElementById(`${target}-us-prob`).textContent = us.probability.toFixed(1) + '%';
+        document.getElementById(`${target}-us-bar`).style.width = us.probability + '%';
+        document.getElementById(`${target}-us-risk`).textContent = us.risk_level.replace('_', ' ').toUpperCase();
+        document.getElementById(`${target}-us-risk`).className = `risk-badge ${getRiskClass(us.risk_level)}`;
+        
+        const toIsrael = data.outgoing_threats.vs_israel;
+        document.getElementById(`${target}-to-israel-prob`).textContent = toIsrael.probability.toFixed(1) + '%';
+        document.getElementById(`${target}-to-israel-bar`).style.width = toIsrael.probability + '%';
+        document.getElementById(`${target}-to-israel-risk`).textContent = toIsrael.risk_level.replace('_', ' ').toUpperCase();
+        document.getElementById(`${target}-to-israel-risk`).className = `risk-badge ${getRiskClass(toIsrael.risk_level)}`;
+        
+        const toUSEl = document.getElementById(`${target}-to-us-prob`);
+        if (toUSEl && data.outgoing_threats.vs_us) {
+            const toUS = data.outgoing_threats.vs_us;
+            toUSEl.textContent = toUS.probability.toFixed(1) + '%';
+            document.getElementById(`${target}-to-us-bar`).style.width = toUS.probability + '%';
+            document.getElementById(`${target}-to-us-risk`).textContent = toUS.risk_level.replace('_', ' ').toUpperCase();
+            document.getElementById(`${target}-to-us-risk`).className = `risk-badge ${getRiskClass(toUS.risk_level)}`;
+        }
+        
+        console.log(`[Threat Matrix] ✅ ${target} loaded`);
+        
+    } catch (error) {
+        console.error(`[Threat Matrix] Error loading ${target}:`, error);
+        document.getElementById(`${target}-combined-value`).textContent = 'Error';
+    }
+}
+
+// Load all threat matrices on page load
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('[Threat Matrix] Loading all cards...');
+    loadThreatMatrix('iran');
+    loadThreatMatrix('hezbollah');
+    loadThreatMatrix('houthis');
+    loadThreatMatrix('syria');
+});
     </script>
 </body>
 </html>
