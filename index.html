@@ -1197,27 +1197,55 @@
     gap: 10px;
 }
 
+/* ADD THIS CSS FOR THREAT MATRIX SECTION INSIDE CARDS */
+
 .target-flag {
-    font-size: 32px;
+    font-size: 28px;
+    margin-right: 8px;
 }
 
-.expand-button {
-    background: rgba(100, 149, 237, 0.2);
-    border: 1px solid rgba(100, 149, 237, 0.4);
+.threat-matrix-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: rgba(100, 149, 237, 0.05);
+    border-radius: 12px;
+    border: 2px solid rgba(100, 149, 237, 0.2);
+}
+
+.expand-matrix-button {
+    width: 100%;
+    background: linear-gradient(135deg, rgba(100, 149, 237, 0.2) 0%, rgba(100, 149, 237, 0.1) 100%);
+    border: 2px solid rgba(100, 149, 237, 0.3);
     border-radius: 8px;
-    padding: 8px 16px;
+    padding: 12px 20px;
     cursor: pointer;
-    transition: all 0.2s;
-    color: #fff;
+    transition: all 0.3s;
+    color: #2c3e50;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 15px;
+    text-align: center;
 }
 
-.expand-button:hover {
-    background: rgba(100, 149, 237, 0.4);
-    transform: scale(1.05);
+.expand-matrix-button:hover {
+    background: linear-gradient(135deg, rgba(100, 149, 237, 0.3) 0%, rgba(100, 149, 237, 0.2) 100%);
+    border-color: rgba(100, 149, 237, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 149, 237, 0.2);
 }
 
+.threat-matrix-details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+    margin-top: 0;
+}
+
+.threat-matrix-details.show {
+    max-height: 2500px;
+    margin-top: 20px;
+}
+
+/* Keep all existing threat matrix styles */
 .combined-probability {
     margin-bottom: 25px;
 }
@@ -1264,20 +1292,10 @@
     font-size: 13px;
 }
 
-.expanded-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease;
-}
-
-.expanded-details.show {
-    max-height: 2500px;
-}
-
 .threat-section {
     margin: 25px 0;
     padding: 20px;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0,0,0,0.05);
     border-radius: 12px;
     border-left: 4px solid rgba(100, 149, 237, 0.6);
 }
@@ -1296,7 +1314,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 15px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .threat-item:last-child {
@@ -1320,7 +1338,7 @@
 .threat-mini-bar {
     width: 200px;
     height: 8px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.1);
     border-radius: 4px;
     overflow: hidden;
     margin-left: 15px;
@@ -1383,30 +1401,75 @@
 
 <div class="targets-grid">
 
-    <!-- IRAN CARD -->
-    <div class="threat-matrix-card" id="iran-matrix">
-        <div class="card-header">
-            <div class="card-title">
-                <span class="target-flag">🇮🇷</span>
-                <span data-i18n="targetIran">IRAN</span>
-            </div>
-            <button class="expand-button" onclick="toggleCard('iran')">
-                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
-            </button>
+<!-- COMPLETE IRAN CARD - READY TO DROP IN -->
+<div class="target-card" id="iran-card">
+    <h3><span class="target-flag">🇮🇷</span> <span data-i18n="targetIran">IRAN</span></h3>
+    <a href="iran-protests.html" class="protest-analytics-btn" data-i18n="protestAnalytics">Protest Analytics</a>
+    
+    <!-- ORIGINAL: Radio buttons + Scan button -->
+    <div class="card-scan-controls">
+        <div class="card-time-window">
+            <label><input type="radio" name="iran-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+            <label><input type="radio" name="iran-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+            <label><input type="radio" name="iran-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+            <label><input type="radio" name="iran-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
         </div>
-
-        <div class="combined-probability">
-            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
-            <div class="combined-value" id="iran-combined-value">--</div>
-            <div class="probability-bar">
-                <div class="probability-fill" id="iran-combined-bar" style="width: 0%"></div>
-            </div>
-            <div class="coordination-badge" id="iran-coordination">
-                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="iran-coord-value">--</span>
-            </div>
+        <button class="card-scan-button" onclick="scanSingleTarget('iran')">
+            <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+        </button>
+        <div class="loading" id="iran-loading">
+            <div class="loading-spinner"></div>
+            <span data-i18n="loadingText">Scanning...</span>
         </div>
+    </div>
 
-        <div class="expanded-details" id="iran-details">
+    <!-- ORIGINAL: Probability gauge -->
+    <div class="probability-display">
+        <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+        <div class="gauge-container">
+            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                <circle class="gauge-progress medium" id="iran-gauge" cx="100" cy="100" r="85"
+                    stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="gauge-text medium" id="iran-prob">--</div>
+        </div>
+    </div>
+    
+    <!-- ORIGINAL: Timeline display -->
+    <div class="timeline-display">
+        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+        <div class="timeline-value" id="iran-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+        <div class="timeline-bar" id="iran-bar">
+            <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+            <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+            <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+            <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+        </div>
+    </div>
+
+    <!-- NEW: Expandable Threat Matrix Section -->
+    <div class="threat-matrix-section">
+        <button class="expand-matrix-button" onclick="toggleThreatMatrix('iran')">
+            <span class="expand-matrix-text">
+                📊 <span data-i18n="viewThreatMatrix">View Multi-Actor Threat Matrix</span> ▼
+            </span>
+        </button>
+        
+        <div class="threat-matrix-details" id="iran-matrix-details">
+            <!-- Combined Probability -->
+            <div class="combined-probability">
+                <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+                <div class="combined-value" id="iran-combined-value">--</div>
+                <div class="probability-bar">
+                    <div class="probability-fill" id="iran-combined-bar" style="width: 0%"></div>
+                </div>
+                <div class="coordination-badge" id="iran-coordination">
+                    ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="iran-coord-value">--</span>
+                </div>
+            </div>
+
+            <!-- Incoming Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
                 
@@ -1439,6 +1502,7 @@
                 </div>
             </div>
 
+            <!-- Outgoing Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
                 
@@ -1470,39 +1534,84 @@
                     </div>
                 </div>
             </div>
-
-            <div style="text-align: center; margin-top: 20px;">
-                <a href="#methodology" style="color: #6495ED; text-decoration: none; font-size: 13px;">
-                    📖 <span data-i18n="viewMethodology">View Methodology</span> →
-                </a>
-            </div>
         </div>
     </div>
 
-    <!-- HEZBOLLAH CARD -->
-    <div class="threat-matrix-card" id="hezbollah-matrix">
-        <div class="card-header">
-            <div class="card-title">
-                <span class="target-flag">🇱🇧</span>
-                <span data-i18n="targetHezbollah">HEZBOLLAH</span>
-            </div>
-            <button class="expand-button" onclick="toggleCard('hezbollah')">
-                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
-            </button>
-        </div>
+    <!-- ORIGINAL: Headlines section -->
+    <div class="headlines-section" id="iran-headlines">
+        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+        <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+    </div>
+</div>
 
-        <div class="combined-probability">
-            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
-            <div class="combined-value" id="hezbollah-combined-value">--</div>
-            <div class="probability-bar">
-                <div class="probability-fill" id="hezbollah-combined-bar" style="width: 0%"></div>
-            </div>
-            <div class="coordination-badge" id="hezbollah-coordination">
-                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="hezbollah-coord-value">--</span>
-            </div>
+<!-- COMPLETE HEZBOLLAH CARD - READY TO DROP IN -->
+<div class="target-card" id="hezbollah-card">
+    <h3><span class="target-flag">🇱🇧</span> <span data-i18n="targetHezbollah">HIZBALLAH</span></h3>
+    
+    <!-- ORIGINAL: Radio buttons + Scan button -->
+    <div class="card-scan-controls">
+        <div class="card-time-window">
+            <label><input type="radio" name="hezbollah-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+            <label><input type="radio" name="hezbollah-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+            <label><input type="radio" name="hezbollah-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+            <label><input type="radio" name="hezbollah-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
         </div>
+        <button class="card-scan-button" onclick="scanSingleTarget('hezbollah')">
+            <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+        </button>
+        <div class="loading" id="hezbollah-loading">
+            <div class="loading-spinner"></div>
+            <span data-i18n="loadingText">Scanning...</span>
+        </div>
+    </div>
 
-        <div class="expanded-details" id="hezbollah-details">
+    <!-- ORIGINAL: Probability gauge -->
+    <div class="probability-display">
+        <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+        <div class="gauge-container">
+            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                <circle class="gauge-progress medium" id="hezbollah-gauge" cx="100" cy="100" r="85"
+                    stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="gauge-text medium" id="hezbollah-prob">--</div>
+        </div>
+    </div>
+    
+    <!-- ORIGINAL: Timeline display -->
+    <div class="timeline-display">
+        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+        <div class="timeline-value" id="hezbollah-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+        <div class="timeline-bar" id="hezbollah-bar">
+            <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+            <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+            <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+            <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+        </div>
+    </div>
+
+    <!-- NEW: Expandable Threat Matrix Section -->
+    <div class="threat-matrix-section">
+        <button class="expand-matrix-button" onclick="toggleThreatMatrix('hezbollah')">
+            <span class="expand-matrix-text">
+                📊 <span data-i18n="viewThreatMatrix">View Multi-Actor Threat Matrix</span> ▼
+            </span>
+        </button>
+        
+        <div class="threat-matrix-details" id="hezbollah-matrix-details">
+            <!-- Combined Probability -->
+            <div class="combined-probability">
+                <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+                <div class="combined-value" id="hezbollah-combined-value">--</div>
+                <div class="probability-bar">
+                    <div class="probability-fill" id="hezbollah-combined-bar" style="width: 0%"></div>
+                </div>
+                <div class="coordination-badge" id="hezbollah-coordination">
+                    ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="hezbollah-coord-value">--</span>
+                </div>
+            </div>
+
+            <!-- Incoming Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
                 
@@ -1535,6 +1644,7 @@
                 </div>
             </div>
 
+            <!-- Outgoing Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
                 
@@ -1569,30 +1679,81 @@
         </div>
     </div>
 
-    <!-- HOUTHIS CARD -->
-    <div class="threat-matrix-card" id="houthis-matrix">
-        <div class="card-header">
-            <div class="card-title">
-                <span class="target-flag">🇾🇪</span>
-                <span data-i18n="targetHouthis">HOUTHIS (YEMEN)</span>
-            </div>
-            <button class="expand-button" onclick="toggleCard('houthis')">
-                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
-            </button>
-        </div>
+    <!-- ORIGINAL: Headlines section -->
+    <div class="headlines-section" id="hezbollah-headlines">
+        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+        <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+    </div>
+</div>
 
-        <div class="combined-probability">
-            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
-            <div class="combined-value" id="houthis-combined-value">--</div>
-            <div class="probability-bar">
-                <div class="probability-fill" id="houthis-combined-bar" style="width: 0%"></div>
-            </div>
-            <div class="coordination-badge" id="houthis-coordination">
-                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="houthis-coord-value">--</span>
-            </div>
+<!-- COMPLETE HOUTHIS CARD - READY TO DROP IN -->
+<div class="target-card" id="houthis-card">
+    <h3><span class="target-flag">🇾🇪</span> <span data-i18n="targetHouthis">HOUTHIS (YEMEN)</span></h3>
+    
+    <!-- ORIGINAL: Radio buttons + Scan button -->
+    <div class="card-scan-controls">
+        <div class="card-time-window">
+            <label><input type="radio" name="houthis-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+            <label><input type="radio" name="houthis-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+            <label><input type="radio" name="houthis-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+            <label><input type="radio" name="houthis-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
         </div>
+        <button class="card-scan-button" onclick="scanSingleTarget('houthis')">
+            <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+        </button>
+        <div class="loading" id="houthis-loading">
+            <div class="loading-spinner"></div>
+            <span data-i18n="loadingText">Scanning...</span>
+        </div>
+    </div>
 
-        <div class="expanded-details" id="houthis-details">
+    <!-- ORIGINAL: Probability gauge -->
+    <div class="probability-display">
+        <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+        <div class="gauge-container">
+            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                <circle class="gauge-progress medium" id="houthis-gauge" cx="100" cy="100" r="85"
+                    stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="gauge-text medium" id="houthis-prob">--</div>
+        </div>
+    </div>
+    
+    <!-- ORIGINAL: Timeline display -->
+    <div class="timeline-display">
+        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+        <div class="timeline-value" id="houthis-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+        <div class="timeline-bar" id="houthis-bar">
+            <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+            <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+            <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+            <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+        </div>
+    </div>
+
+    <!-- NEW: Expandable Threat Matrix Section -->
+    <div class="threat-matrix-section">
+        <button class="expand-matrix-button" onclick="toggleThreatMatrix('houthis')">
+            <span class="expand-matrix-text">
+                📊 <span data-i18n="viewThreatMatrix">View Multi-Actor Threat Matrix</span> ▼
+            </span>
+        </button>
+        
+        <div class="threat-matrix-details" id="houthis-matrix-details">
+            <!-- Combined Probability -->
+            <div class="combined-probability">
+                <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+                <div class="combined-value" id="houthis-combined-value">--</div>
+                <div class="probability-bar">
+                    <div class="probability-fill" id="houthis-combined-bar" style="width: 0%"></div>
+                </div>
+                <div class="coordination-badge" id="houthis-coordination">
+                    ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="houthis-coord-value">--</span>
+                </div>
+            </div>
+
+            <!-- Incoming Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
                 
@@ -1625,6 +1786,7 @@
                 </div>
             </div>
 
+            <!-- Outgoing Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
                 
@@ -1645,30 +1807,82 @@
         </div>
     </div>
 
-    <!-- SYRIA CARD -->
-    <div class="threat-matrix-card" id="syria-matrix">
-        <div class="card-header">
-            <div class="card-title">
-                <span class="target-flag">🇸🇾</span>
-                <span data-i18n="targetSyria">SYRIA</span>
-            </div>
-            <button class="expand-button" onclick="toggleCard('syria')">
-                <span class="expand-text"><span data-i18n="expand">Expand</span> ▼</span>
-            </button>
-        </div>
+    <!-- ORIGINAL: Headlines section -->
+    <div class="headlines-section" id="houthis-headlines">
+        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+        <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+    </div>
+</div>
 
-        <div class="combined-probability">
-            <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
-            <div class="combined-value" id="syria-combined-value">--</div>
-            <div class="probability-bar">
-                <div class="probability-fill" id="syria-combined-bar" style="width: 0%"></div>
-            </div>
-            <div class="coordination-badge" id="syria-coordination">
-                ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="syria-coord-value">--</span>
-            </div>
+<!-- COMPLETE SYRIA CARD - READY TO DROP IN -->
+<div class="target-card" id="syria-card">
+    <h3><span class="target-flag">🇸🇾</span> <span data-i18n="targetSyria">SYRIA</span></h3>
+    <a href="syria-conflicts.html" class="protest-analytics-btn" data-i18n="conflictTracker">Conflict Tracker</a>
+    
+    <!-- ORIGINAL: Radio buttons + Scan button -->
+    <div class="card-scan-controls">
+        <div class="card-time-window">
+            <label><input type="radio" name="syria-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+            <label><input type="radio" name="syria-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+            <label><input type="radio" name="syria-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+            <label><input type="radio" name="syria-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
         </div>
+        <button class="card-scan-button" onclick="scanSingleTarget('syria')">
+            <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+        </button>
+        <div class="loading" id="syria-loading">
+            <div class="loading-spinner"></div>
+            <span data-i18n="loadingText">Scanning...</span>
+        </div>
+    </div>
 
-        <div class="expanded-details" id="syria-details">
+    <!-- ORIGINAL: Probability gauge -->
+    <div class="probability-display">
+        <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
+        <div class="gauge-container">
+            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                <circle class="gauge-progress medium" id="syria-gauge" cx="100" cy="100" r="85"
+                    stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+            </svg>
+            <div class="gauge-text medium" id="syria-prob">--</div>
+        </div>
+    </div>
+    
+    <!-- ORIGINAL: Timeline display -->
+    <div class="timeline-display">
+        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+        <div class="timeline-value" id="syria-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+        <div class="timeline-bar" id="syria-bar">
+            <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+            <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+            <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+            <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+        </div>
+    </div>
+
+    <!-- NEW: Expandable Threat Matrix Section -->
+    <div class="threat-matrix-section">
+        <button class="expand-matrix-button" onclick="toggleThreatMatrix('syria')">
+            <span class="expand-matrix-text">
+                📊 <span data-i18n="viewThreatMatrix">View Multi-Actor Threat Matrix</span> ▼
+            </span>
+        </button>
+        
+        <div class="threat-matrix-details" id="syria-matrix-details">
+            <!-- Combined Probability -->
+            <div class="combined-probability">
+                <div class="section-title" data-i18n="combinedProbability">COMBINED STRIKE PROBABILITY</div>
+                <div class="combined-value" id="syria-combined-value">--</div>
+                <div class="probability-bar">
+                    <div class="probability-fill" id="syria-combined-bar" style="width: 0%"></div>
+                </div>
+                <div class="coordination-badge" id="syria-coordination">
+                    ⚡ <span data-i18n="coordinationBonus">Coordination</span>: <span id="syria-coord-value">--</span>
+                </div>
+            </div>
+
+            <!-- Incoming Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="incomingThreats">INCOMING THREATS:</div>
                 
@@ -1701,6 +1915,7 @@
                 </div>
             </div>
 
+            <!-- Outgoing Threats -->
             <div class="threat-section">
                 <div class="section-title" data-i18n="outgoingThreats">OUTGOING THREATS:</div>
                 
@@ -1721,36 +1936,12 @@
         </div>
     </div>
 
+    <!-- ORIGINAL: Headlines section -->
+    <div class="headlines-section" id="syria-headlines">
+        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+        <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+    </div>
 </div>
-
-                <div class="probability-display">
-                    <div class="probability-label" data-i18n="strikeProbability">Strike Probability</div>
-                    <div class="gauge-container">
-                        <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
-                            <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
-                            <circle class="gauge-progress medium" id="syria-gauge" cx="100" cy="100" r="85"
-                                stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
-                        </svg>
-                        <div class="gauge-text medium" id="syria-prob">--</div>
-                    </div>
-                </div>
-                <div class="timeline-display">
-                    <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
-                    <div class="timeline-value" id="syria-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
-                    <div class="timeline-bar" id="syria-bar">
-                        <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
-                        <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
-                    </div>
-                </div>
-                <div class="headlines-section" id="syria-headlines">
-                    <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
-                    <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
-                </div>
-            </div>
-        </div>
-
         <div class="flight-widget" id="flightWidget">
             <div class="flight-widget-header">
                 <div class="flight-widget-title" data-i18n="flightWidgetTitle">Flight Disruptions Monitor</div>
@@ -1894,7 +2085,9 @@ const translations = {
         riskVeryHigh: "Very High",
         expand: "Expand",
         close: "Close",
-        viewMethodology: "View Methodology"
+        viewMethodology: "View Methodology",    
+        viewThreatMatrix: "View Multi-Actor Threat Matrix",
+        hideThreatMatrix: "Hide Multi-Actor Threat Matrix",
     },
     
     he: {
@@ -1932,7 +2125,9 @@ const translations = {
         riskVeryHigh: "גבוה מאוד",
         expand: "הרחב",
         close: "סגור",
-        viewMethodology: "צפה במתודולוגיה"
+        viewMethodology: "צפה במתודולוגיה",
+        viewThreatMatrix: "הצג מטריצת איומים רב-שחקנים",
+        hideThreatMatrix: "הסתר מטריצת איומים",
     },
     
     ar: {
@@ -1966,7 +2161,9 @@ const translations = {
         riskVeryHigh: "مرتفع جداً",
         expand: "توسيع",
         close: "إغلاق",
-        viewMethodology: "عرض المنهجية"
+        viewMethodology: "عرض المنهجية",
+        viewThreatMatrix: "عرض مصفوفة التهديد متعددة الأطراف",
+        hideThreatMatrix: "إخفاء مصفوفة التهديد",
     },
     
     fa: {
@@ -2000,7 +2197,9 @@ const translations = {
         riskVeryHigh: "بسیار بالا",
         expand: "گسترش",
         close: "بستن",
-        viewMethodology: "مشاهده روش‌شناسی"
+        viewMethodology: "مشاهده روش‌شناسی",
+        viewThreatMatrix: "نمایش ماتریس تهدید چند بازیگر",
+        hideThreatMatrix: "پنهان کردن ماتریس تهدید",
     }
 };
 
@@ -2192,7 +2391,7 @@ const translations = {
             `;
         }
 
-        async function scanSingleTarget(targetName) {
+async function scanSingleTarget(targetName) {
             const button = document.querySelector(`#${targetName}-card .card-scan-button`);
             const loading = document.getElementById(`${targetName}-loading`);
             const errorMessage = document.getElementById('errorMessage');
@@ -2226,6 +2425,14 @@ const translations = {
                         minute: '2-digit',
                         timeZoneName: 'short'
                     }) + ` (last ${timeWindow} day(s))`;
+                
+                // ===== STEP 7: REFRESH THREAT MATRIX IF OPEN =====
+                const matrixDetails = document.getElementById(`${targetName}-matrix-details`);
+                if (matrixDetails && matrixDetails.classList.contains('show')) {
+                    loadThreatMatrixData(targetName);
+                }
+                // ===== END STEP 7 =====
+                
             } catch (error) {
                 console.error('Scan error:', error);
                 errorMessage.textContent = `Error scanning ${targetName}: ` + error.message;
@@ -2237,135 +2444,6 @@ const translations = {
                 
                 fetchRateLimitStatus();
             }
-        }
-
-        async function scanTarget(targetName, days) {
-            const url = `${BACKEND_URL}/api/threat/${targetName}?days=${days}`;
-            const response = await fetch(url);
-
-            if (!response.ok) {
-                const text = await response.text();
-                throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
-            }
-
-            const data = await response.json();
-
-            if (!data.success) {
-                throw new Error(data.error || 'Unknown error');
-            }
-
-            const probability = data.probability || 0;
-            const timeline = data.timeline || 'Unknown';
-
-            updateProbability(targetName, probability, data.cached);
-            updateTimeline(targetName, timeline, probability);
-            displayHeadlinesWithWeights(targetName, data);
-        }
-
-        function updateProbability(targetId, probability, isCached) {
-            const gaugeElement = document.getElementById(`${targetId}-gauge`);
-            const textElement = document.getElementById(`${targetId}-prob`);
-            const cardElement = document.getElementById(`${targetId}-card`);
-            
-            textElement.textContent = `${probability}%`;
-            
-            let threatClass = 'medium';
-            if (probability < 34) {
-                threatClass = 'low';
-            } else if (probability >= 67) {
-                threatClass = 'high';
-            }
-            
-            gaugeElement.classList.remove('low', 'medium', 'high');
-            gaugeElement.classList.add(threatClass);
-            
-            textElement.classList.remove('low', 'medium', 'high');
-            textElement.classList.add(threatClass);
-            
-            cardElement.classList.remove('low-threat', 'medium-threat', 'high-threat');
-            cardElement.classList.add(`${threatClass}-threat`);
-            
-            const circumference = 534;
-            const progress = (probability / 100) * circumference;
-            gaugeElement.setAttribute('stroke-dasharray', `${progress} ${circumference}`);
-        }
-
-        function updateTimeline(targetId, timeline, probability) {
-            document.getElementById(`${targetId}-timeline`).textContent = timeline;
-            
-            const barElement = document.getElementById(`${targetId}-bar`);
-            const segments = barElement.querySelectorAll('.timeline-segment');
-            
-            segments.forEach(seg => seg.classList.remove('active'));
-            
-            if (probability >= 70) {
-                segments[0].classList.add('active');
-            } else if (probability >= 50) {
-                segments[1].classList.add('active');
-            } else if (probability >= 30) {
-                segments[2].classList.add('active');
-            } else {
-                segments[3].classList.add('active');
-            }
-        }
-
-        function displayHeadlinesWithWeights(targetId, data) {
-            const container = document.getElementById(`${targetId}-headlines`);
-            const t = translations[currentLanguage];
-
-            if (!data || !data.top_scoring_articles || data.top_scoring_articles.length === 0) {
-                container.innerHTML = `
-                    <h4>${t.recentHeadlines}</h4>
-                    <p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>
-                `;
-                return;
-            }
-
-            const topArticles = data.top_scoring_articles.slice(0, 10);
-            
-            let html = `<h4>${t.recentHeadlines} (Weighted by Impact)</h4>`;
-            
-            topArticles.forEach(article => {
-                const date = article.publishedAt
-                    ? new Date(article.publishedAt).toLocaleDateString()
-                    : 'Unknown date';
-                
-                const contributionPercent = Math.abs(article.contribution_percent || 0);
-                const isDeescalation = article.deescalation || false;
-                const icon = isDeescalation ? '🕊️' : '⚠️';
-                
-                let impactClass = 'low-impact';
-                if (contributionPercent >= 10) {
-                    impactClass = 'high-impact';
-                } else if (contributionPercent >= 5) {
-                    impactClass = 'medium-impact';
-                }
-                
-                html += `
-                    <div class="headline-item">
-                        <a href="${article.url}" target="_blank" rel="noopener noreferrer">
-                            ${icon} ${article.title || 'Untitled article'}
-                        </a>
-                        <span class="article-weight-badge ${impactClass}">
-                            ${contributionPercent.toFixed(1)}% impact
-                        </span>
-                        <div class="article-contribution-bar">
-                            <div class="article-contribution-fill ${isDeescalation ? 'deescalation' : ''}" 
-                                 style="width: ${Math.min(contributionPercent, 100)}%">
-                            </div>
-                        </div>
-                        <div class="article-scoring-details">
-                            <span><strong>Source:</strong> ${article.source}</span>
-                            <span><strong>Date:</strong> ${date}</span>
-                            <span><strong>Severity:</strong> ${(article.severity || 0).toFixed(1)}</span>
-                            <span><strong>Source Weight:</strong> ${(article.source_weight || 0).toFixed(2)}</span>
-                            <span><strong>Time Decay:</strong> ${(article.time_decay || 0).toFixed(2)}</span>
-                        </div>
-                    </div>
-                `;
-            });
-            
-            container.innerHTML = html;
         }
 
         async function updateFlightCancellations() {
@@ -2666,20 +2744,27 @@ const translations = {
             }
         });
 
-        // ===== THREAT MATRIX FUNCTIONS =====
+// ===== HYBRID THREAT MATRIX FUNCTIONS (NO AUTO-LOADING) =====
 
-function toggleCard(target) {
-    const details = document.getElementById(`${target}-details`);
-    const button = document.querySelector(`#${target}-matrix .expand-button .expand-text`);
+// Toggle threat matrix visibility
+function toggleThreatMatrix(target) {
+    const details = document.getElementById(`${target}-matrix-details`);
+    const button = document.querySelector(`#${target}-card .expand-matrix-button .expand-matrix-text`);
     
     if (details.classList.contains('show')) {
+        // Close
         details.classList.remove('show');
-        button.innerHTML = '<span data-i18n="expand">Expand</span> ▼';
+        button.innerHTML = '📊 <span data-i18n="viewThreatMatrix">View Multi-Actor Threat Matrix</span> ▼';
     } else {
+        // Open and load data
         details.classList.add('show');
-        button.innerHTML = '<span data-i18n="close">Close</span> ▲';
+        button.innerHTML = '📊 <span data-i18n="hideThreatMatrix">Hide Multi-Actor Threat Matrix</span> ▲';
+        
+        // Load threat matrix data when opened
+        loadThreatMatrixData(target);
     }
     
+    // Retranslate
     if (window.translatePage) {
         translatePage();
     }
@@ -2693,7 +2778,8 @@ function getColorClass(riskLevel) {
     return riskLevel.replace('_', '-');
 }
 
-async function loadThreatMatrix(target) {
+// Load threat matrix data (called when matrix is expanded OR when scan button is clicked)
+async function loadThreatMatrixData(target) {
     try {
         console.log(`[Threat Matrix] Loading ${target}...`);
         
@@ -2705,6 +2791,7 @@ async function loadThreatMatrix(target) {
             return;
         }
         
+        // Combined Probability
         const combined = data.combined_probability;
         document.getElementById(`${target}-combined-value`).textContent = combined.value.toFixed(1) + '%';
         document.getElementById(`${target}-combined-bar`).style.width = combined.value + '%';
@@ -2717,31 +2804,35 @@ async function loadThreatMatrix(target) {
         document.getElementById(`${target}-combined-value`).className = `combined-value ${combinedColorClass}`;
         document.getElementById(`${target}-combined-bar`).className = `probability-fill ${combinedColorClass}`;
         
+        // Israel Strike
         const israel = data.incoming_threats.israel;
         document.getElementById(`${target}-israel-prob`).textContent = israel.probability.toFixed(1) + '%';
         document.getElementById(`${target}-israel-bar`).style.width = israel.probability + '%';
         document.getElementById(`${target}-israel-risk`).textContent = israel.risk_level.replace('_', ' ').toUpperCase();
         document.getElementById(`${target}-israel-risk`).className = `risk-badge ${getRiskClass(israel.risk_level)}`;
         
+        // US Strike
         const us = data.incoming_threats.us;
         document.getElementById(`${target}-us-prob`).textContent = us.probability.toFixed(1) + '%';
         document.getElementById(`${target}-us-bar`).style.width = us.probability + '%';
         document.getElementById(`${target}-us-risk`).textContent = us.risk_level.replace('_', ' ').toUpperCase();
         document.getElementById(`${target}-us-risk`).className = `risk-badge ${getRiskClass(us.risk_level)}`;
         
+        // Outgoing - to Israel
         const toIsrael = data.outgoing_threats.vs_israel;
         document.getElementById(`${target}-to-israel-prob`).textContent = toIsrael.probability.toFixed(1) + '%';
         document.getElementById(`${target}-to-israel-bar`).style.width = toIsrael.probability + '%';
         document.getElementById(`${target}-to-israel-risk`).textContent = toIsrael.risk_level.replace('_', ' ').toUpperCase();
-        document.getElementById(`${target}-to-israel-risk`).className = `risk-badge ${getRiskClass(toIsrael.risk_level)}`;
+        document.getElementById(`${target}-to-israel-risk`).className = `risk-badge risk-${toIsrael.risk_level}`;
         
+        // Outgoing - to US (if exists)
         const toUSEl = document.getElementById(`${target}-to-us-prob`);
         if (toUSEl && data.outgoing_threats.vs_us) {
             const toUS = data.outgoing_threats.vs_us;
             toUSEl.textContent = toUS.probability.toFixed(1) + '%';
             document.getElementById(`${target}-to-us-bar`).style.width = toUS.probability + '%';
             document.getElementById(`${target}-to-us-risk`).textContent = toUS.risk_level.replace('_', ' ').toUpperCase();
-            document.getElementById(`${target}-to-us-risk`).className = `risk-badge ${getRiskClass(toUS.risk_level)}`;
+            document.getElementById(`${target}-to-us-risk`).className = `risk-badge risk-${toUS.risk_level}`;
         }
         
         console.log(`[Threat Matrix] ✅ ${target} loaded`);
@@ -2752,14 +2843,14 @@ async function loadThreatMatrix(target) {
     }
 }
 
-// Load all threat matrices on page load
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('[Threat Matrix] Loading all cards...');
-    loadThreatMatrix('iran');
-    loadThreatMatrix('hezbollah');
-    loadThreatMatrix('houthis');
-    loadThreatMatrix('syria');
-});
+// NO AUTO-LOADING on page load!
+// Threat matrix only loads when:
+// 1. User clicks "View Multi-Actor Threat Matrix" button
+// 2. User clicks "Scan OSINT" button (if matrix is already open)
+
+    </script>
+</body>
+</html>
     </script>
 </body>
 </html>
