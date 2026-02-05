@@ -2426,7 +2426,7 @@ async function scanSingleTarget(targetName) {
                         timeZoneName: 'short'
                     }) + ` (last ${timeWindow} day(s))`;
                 
-                // ===== STEP 7: REFRESH THREAT MATRIX IF OPEN =====
+// ===== STEP 7: REFRESH THREAT MATRIX IF OPEN =====
                 const matrixDetails = document.getElementById(`${targetName}-matrix-details`);
                 if (matrixDetails && matrixDetails.classList.contains('show')) {
                     loadThreatMatrixData(targetName, timeWindow);
@@ -2893,15 +2893,9 @@ function toggleThreatMatrix(target) {
             document.querySelector(`input[name="${target}-timeWindow"]:checked`).value
         );
         
-        // Load threat matrix data with selected time window
-        loadThreatMatrixData(target, timeWindow);  // ← NEW: Pass time window!
+// Load threat matrix data with selected time window
+        loadThreatMatrixData(target, timeWindow);
     }
-    
-    // Retranslate
-    if (window.translatePage) {
-        translatePage();
-    }
-}
     
     // Retranslate
     if (window.translatePage) {
@@ -2916,19 +2910,15 @@ function getRiskClass(riskLevel) {
 function getColorClass(riskLevel) {
     return riskLevel.replace('_', '-');
 }
-
 // Load threat matrix data (called when matrix is expanded OR when scan button is clicked)
 async function loadThreatMatrixData(target, days = 7) {
     try {
         console.log(`[Threat Matrix] Loading ${target} for ${days} days...`);
         
         const response = await fetch(`https://asifah-backend.onrender.com/api/threat-matrix/${target}?days=${days}`);
-        const data = await response.json();  // ← ADD THIS LINE!
+        const data = await response.json();
         
         if (!data.success) {
-            console.error(`[Threat Matrix] Error:`, data.error);
-            return;
-        }
         
         // Combined Probability
         const combined = data.combined_probability;
