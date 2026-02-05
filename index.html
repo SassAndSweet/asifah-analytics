@@ -1952,47 +1952,373 @@
     <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
-        const translations = {
+const translations = {
             en: {
+                // Header
                 header: "ASIFAH ANALYTICS",
                 subtitle: "Regional Multi-Actor Conflict Probability Dashboard - The Middle East",
+                
+                // Target Names
                 targetHezbollah: "HIZBALLAH",
                 targetIran: "IRAN",
                 targetHouthis: "HOUTHIS (YEMEN)",
                 targetSyria: "SYRIA",
+                
+                // Time Window Options
+                hours24: "24 Hours",
+                hours48: "48 Hours",
+                days7: "7 Days",
+                days30: "30 Days",
+                
+                // Buttons
                 scanButtonIndividual: "Scan OSINT - Update Forecast",
+                protestAnalytics: "Protest Analytics",
+                conflictTracker: "Conflict Tracker",
+                
+                // Loading States
+                loadingText: "Scanning...",
+                
+                // Probability Display
+                strikeProbability: "Strike Probability",
+                projectedTimeline: "Projected Timeline",
+                awaitingScan: "Awaiting scan...",
+                
+                // Timeline Segments
+                days030: "0-30d",
+                days3190: "31-90d",
+                days91180: "91-180d",
+                days180plus: "180+d",
+                
+                // Headlines Section
+                recentHeadlines: "Recent Headlines:",
+                clickToScan: "Click scan to load latest intelligence",
+                noActionable: "No actionable headlines found (no threat indicators detected)",
+                
+                // Threat Matrix
                 viewThreatMatrix: "View Multi-Actor Threat Matrix",
                 hideThreatMatrix: "Hide Multi-Actor Threat Matrix",
                 combinedProbability: "COMBINED STRIKE PROBABILITY",
                 incomingThreats: "INCOMING THREATS",
                 outgoingThreats: "OUTGOING THREATS",
                 coordinationBonus: "Coordination Factor",
+                
+                // Threat Actors
                 israelStrike: "Israel Strike",
                 usStrike: "US Strike",
+                iranToIsrael: "Iran → Israel",
+                iranToUS: "Iran → US",
+                hezbollahToIsrael: "Hezbollah → Israel",
+                hezbollahToUS: "Hezbollah → US",
+                houthisToIsrael: "Houthis → Israel",
+                syriaToIsrael: "Syria → Israel",
+                
+                // Risk Levels
+                riskLow: "Low",
+                riskModerate: "Moderate",
+                riskHigh: "High",
+                riskVeryHigh: "Very High",
+                
+                // Polymarket Section
+                polymarketDisclaimerTitle: "⚠️ MARKET PREDICTIONS DISCLAIMER",
+                polymarketDisclaimerText: "Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.",
+                
+                // Flight Widget
+                flightWidgetTitle: "Flight Disruptions Monitor",
+                flightStatusNormal: "All Routes Normal",
+                flightStatusActive: "Active Disruptions",
+                noFlightDisruptions: "No major flight disruptions detected in target regions",
+                
+                // Rate Limit Box
+                requestsUsedLabel: "Requests Used",
+                requestsRemainingLabel: "Requests Remaining",
+                dailyLimitLabel: "Daily Limit",
+                resetsInLabel: "Quota Resets In",
+                
+                // Footer
+                dataSourcesLabel: "Data Sources:",
+                dataSourcesText: "NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Reddit for community intelligence, Polymarket for crowdsourced prediction market data, plus other OSINT sources. For inquiries, contact: asifahanalytics@gmail.com",
+                methodologyLabel: "Methodology:",
+                methodologyText: "Keyword-based analysis with escalation indicators including military action terms, diplomatic language, and threat assessments across multiple languages",
+                lastUpdatedLabel: "Last Updated:",
+                notYetScanned: "Not yet scanned",
+                disclaimerTitle: "⚠️ DISCLAIMER:",
+                disclaimerText: "This dashboard is an analytical tool for educational and research purposes only. Probabilities are based on open-source news aggregation and simple keyword analysis. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.",
             },
+            
             he: {
+                // Header
                 header: "אסיפה אנליטיקס",
                 subtitle: "לוח מחוונים אזורי להסתברות סכסוכים רב-שחקנים - המזרח התיכון",
+                
+                // Target Names
                 targetHezbollah: "חיזבאללה",
                 targetIran: "איראן",
                 targetHouthis: "חות'ים (תימן)",
                 targetSyria: "סוריה",
+                
+                // Time Window Options
+                hours24: "24 שעות",
+                hours48: "48 שעות",
+                days7: "7 ימים",
+                days30: "30 ימים",
+                
+                // Buttons
+                scanButtonIndividual: "סרוק OSINT - עדכן תחזית",
+                protestAnalytics: "ניתוח מחאות",
+                conflictTracker: "מעקב סכסוכים",
+                
+                // Loading States
+                loadingText: "סורק...",
+                
+                // Probability Display
+                strikeProbability: "הסתברות תקיפה",
+                projectedTimeline: "ציר זמן צפוי",
+                awaitingScan: "ממתין לסריקה...",
+                
+                // Timeline Segments
+                days030: "0-30 ימים",
+                days3190: "31-90 ימים",
+                days91180: "91-180 ימים",
+                days180plus: "180+ ימים",
+                
+                // Headlines Section
+                recentHeadlines: "כותרות עדכניות:",
+                clickToScan: "לחץ סרוק לטעינת מודיעין עדכני",
+                noActionable: "לא נמצאו כותרות פעולה (לא זוהו אינדיקטורים לאיום)",
+                
+                // Threat Matrix
+                viewThreatMatrix: "הצג מטריצת איומים רב-שחקנים",
+                hideThreatMatrix: "הסתר מטריצת איומים",
+                combinedProbability: "הסתברות תקיפה משולבת",
+                incomingThreats: "איומים נכנסים",
+                outgoingThreats: "איומים יוצאים",
+                coordinationBonus: "גורם תיאום",
+                
+                // Threat Actors
+                israelStrike: "תקיפה ישראלית",
+                usStrike: "תקיפה אמריקאית",
+                iranToIsrael: "איראן → ישראל",
+                iranToUS: "איראן → ארה\"ב",
+                hezbollahToIsrael: "חיזבאללה → ישראל",
+                hezbollahToUS: "חיזבאללה → ארה\"ב",
+                houthisToIsrael: "חות'ים → ישראל",
+                syriaToIsrael: "סוריה → ישראל",
+                
+                // Risk Levels
+                riskLow: "נמוך",
+                riskModerate: "בינוני",
+                riskHigh: "גבוה",
+                riskVeryHigh: "גבוה מאוד",
+                
+                // Polymarket Section
+                polymarketDisclaimerTitle: "⚠️ אזהרת תחזיות שוק",
+                polymarketDisclaimerText: "נתוני Polymarket מייצגים הסתברויות שוק הימורים (תחזיות מבוססות קהל). זהו מידע משלים בלבד ואינו מהווה הערכת מודיעין או מלאכה אנליטית.",
+                
+                // Flight Widget
+                flightWidgetTitle: "מוניטור הפרעות טיסה",
+                flightStatusNormal: "כל הקווים תקינים",
+                flightStatusActive: "הפרעות פעילות",
+                noFlightDisruptions: "לא זוהו הפרעות טיסה משמעותיות באזורי יעד",
+                
+                // Rate Limit Box
+                requestsUsedLabel: "בקשות בשימוש",
+                requestsRemainingLabel: "בקשות נותרו",
+                dailyLimitLabel: "מגבלה יומית",
+                resetsInLabel: "איפוס מכסה בעוד",
+                
+                // Footer
+                dataSourcesLabel: "מקורות מידע:",
+                dataSourcesText: "NewsAPI לאיסוף מקורות חדשות, GDELT לתוכן בערבית, עברית ופרסית, Reddit למודיעין קהילתי, Polymarket לנתוני שוק תחזיות, ומקורות OSINT נוספים. לפניות: asifahanalytics@gmail.com",
+                methodologyLabel: "מתודולוגיה:",
+                methodologyText: "ניתוח מבוסס מילות מפתח עם אינדיקטורים להסלמה כולל מונחי פעולה צבאית, שפה דיפלומטית והערכות איומים במספר שפות",
+                lastUpdatedLabel: "עדכון אחרון:",
+                notYetScanned: "טרם נסרק",
+                disclaimerTitle: "⚠️ כתב ויתור:",
+                disclaimerText: "לוח מחוונים זה הוא כלי אנליטי למטרות חינוכיות ומחקר בלבד. הסתברויות מבוססות על איסוף חדשות בקוד פתוח וניתוח מילות מפתח פשוט. כלי זה אינו מייצג הערכות ממשלתיות רשמיות של ארה\"ב או עמדות מדיניות. על המשתמשים להתייעץ עם מקורות מודיעין רשמיים לקבלת החלטות מבצעיות.",
             },
+            
             ar: {
+                // Header
                 header: "عاصفة أناليتكس",
                 subtitle: "لوحة التحكم الإقليمية لاحتمالات الصراع متعدد الأطراف - الشرق الأوسط",
+                
+                // Target Names
                 targetHezbollah: "حزب الله",
                 targetIran: "إيران",
                 targetHouthis: "الحوثيون (اليمن)",
                 targetSyria: "سوريا",
+                
+                // Time Window Options
+                hours24: "24 ساعة",
+                hours48: "48 ساعة",
+                days7: "7 أيام",
+                days30: "30 يوماً",
+                
+                // Buttons
+                scanButtonIndividual: "مسح OSINT - تحديث التوقعات",
+                protestAnalytics: "تحليل الاحتجاجات",
+                conflictTracker: "متتبع النزاعات",
+                
+                // Loading States
+                loadingText: "جارٍ المسح...",
+                
+                // Probability Display
+                strikeProbability: "احتمالية الضربة",
+                projectedTimeline: "الجدول الزمني المتوقع",
+                awaitingScan: "في انتظار المسح...",
+                
+                // Timeline Segments
+                days030: "0-30 يوم",
+                days3190: "31-90 يوم",
+                days91180: "91-180 يوم",
+                days180plus: "180+ يوم",
+                
+                // Headlines Section
+                recentHeadlines: "عناوين حديثة:",
+                clickToScan: "انقر على المسح لتحميل أحدث المعلومات الاستخبارية",
+                noActionable: "لم يتم العثور على عناوين قابلة للتنفيذ (لم يتم اكتشاف مؤشرات تهديد)",
+                
+                // Threat Matrix
+                viewThreatMatrix: "عرض مصفوفة التهديد متعددة الأطراف",
+                hideThreatMatrix: "إخفاء مصفوفة التهديد",
+                combinedProbability: "احتمالية الضربة المشتركة",
+                incomingThreats: "التهديدات الواردة",
+                outgoingThreats: "التهديدات الصادرة",
+                coordinationBonus: "عامل التنسيق",
+                
+                // Threat Actors
+                israelStrike: "ضربة إسرائيلية",
+                usStrike: "ضربة أمريكية",
+                iranToIsrael: "إيران → إسرائيل",
+                iranToUS: "إيران → الولايات المتحدة",
+                hezbollahToIsrael: "حزب الله → إسرائيل",
+                hezbollahToUS: "حزب الله → الولايات المتحدة",
+                houthisToIsrael: "الحوثيون → إسرائيل",
+                syriaToIsrael: "سوريا → إسرائيل",
+                
+                // Risk Levels
+                riskLow: "منخفض",
+                riskModerate: "معتدل",
+                riskHigh: "مرتفع",
+                riskVeryHigh: "مرتفع جداً",
+                
+                // Polymarket Section
+                polymarketDisclaimerTitle: "⚠️ إخلاء مسؤولية توقعات السوق",
+                polymarketDisclaimerText: "تمثل بيانات Polymarket احتمالات سوق المراهنات (توقعات جماعية). هذه بيانات تكميلية فقط ولا تشكل تقييماً استخبارياً أو حرفة تحليلية.",
+                
+                // Flight Widget
+                flightWidgetTitle: "مراقب اضطرابات الرحلات",
+                flightStatusNormal: "جميع المسارات طبيعية",
+                flightStatusActive: "اضطرابات نشطة",
+                noFlightDisruptions: "لم يتم اكتشاف اضطرابات رحلات كبيرة في المناطق المستهدفة",
+                
+                // Rate Limit Box
+                requestsUsedLabel: "الطلبات المستخدمة",
+                requestsRemainingLabel: "الطلبات المتبقية",
+                dailyLimitLabel: "الحد اليومي",
+                resetsInLabel: "إعادة تعيين الحصة في",
+                
+                // Footer
+                dataSourcesLabel: "مصادر البيانات:",
+                dataSourcesText: "NewsAPI لتجميع مصادر الأخبار، GDELT للمحتوى بالعربية والعبرية والفارسية، Reddit للمعلومات الاستخبارية المجتمعية، Polymarket لبيانات سوق التوقعات الجماعية، بالإضافة إلى مصادر OSINT أخرى. للاستفسارات: asifahanalytics@gmail.com",
+                methodologyLabel: "المنهجية:",
+                methodologyText: "تحليل قائم على الكلمات الرئيسية مع مؤشرات التصعيد بما في ذلك مصطلحات العمل العسكري واللغة الدبلوماسية وتقييمات التهديدات عبر لغات متعددة",
+                lastUpdatedLabel: "آخر تحديث:",
+                notYetScanned: "لم يتم المسح بعد",
+                disclaimerTitle: "⚠️ إخلاء المسؤولية:",
+                disclaimerText: "لوحة التحكم هذه هي أداة تحليلية لأغراض تعليمية وبحثية فقط. تستند الاحتمالات إلى تجميع الأخبار مفتوحة المصدر وتحليل بسيط للكلمات الرئيسية. لا تمثل هذه الأداة تقييمات حكومية رسمية أمريكية أو مواقف سياسية. يجب على المستخدمين استشارة مصادر استخبارات رسمية لاتخاذ القرارات التشغيلية.",
             },
+            
             fa: {
+                // Header
                 header: "آسیفه آنالیتیکس",
                 subtitle: "داشبورد منطقه‌ای احتمال درگیری چند بازیگر - خاورمیانه",
+                
+                // Target Names
                 targetHezbollah: "حزب‌الله",
                 targetIran: "ایران",
-                targetHouthis: "حوثی‌ها (تیمن)",
+                targetHouthis: "حوثی‌ها (یمن)",
                 targetSyria: "سوریه",
+                
+                // Time Window Options
+                hours24: "24 ساعت",
+                hours48: "48 ساعت",
+                days7: "7 روز",
+                days30: "30 روز",
+                
+                // Buttons
+                scanButtonIndividual: "اسکن OSINT - به‌روزرسانی پیش‌بینی",
+                protestAnalytics: "تحلیل اعتراضات",
+                conflictTracker: "ردیاب درگیری‌ها",
+                
+                // Loading States
+                loadingText: "در حال اسکن...",
+                
+                // Probability Display
+                strikeProbability: "احتمال حمله",
+                projectedTimeline: "جدول زمانی پیش‌بینی شده",
+                awaitingScan: "در انتظار اسکن...",
+                
+                // Timeline Segments
+                days030: "0-30 روز",
+                days3190: "31-90 روز",
+                days91180: "91-180 روز",
+                days180plus: "180+ روز",
+                
+                // Headlines Section
+                recentHeadlines: "تیترهای اخیر:",
+                clickToScan: "برای بارگذاری آخرین اطلاعات استخباراتی روی اسکن کلیک کنید",
+                noActionable: "هیچ تیتر قابل اقدامی یافت نشد (هیچ شاخص تهدیدی شناسایی نشد)",
+                
+                // Threat Matrix
+                viewThreatMatrix: "نمایش ماتریس تهدید چند بازیگر",
+                hideThreatMatrix: "پنهان کردن ماتریس تهدید",
+                combinedProbability: "احتمال حمله ترکیبی",
+                incomingThreats: "تهدیدات ورودی",
+                outgoingThreats: "تهدیدات خروجی",
+                coordinationBonus: "فاکتور هماهنگی",
+                
+                // Threat Actors
+                israelStrike: "حمله اسرائیل",
+                usStrike: "حمله آمریکا",
+                iranToIsrael: "ایران → اسرائیل",
+                iranToUS: "ایران → آمریکا",
+                hezbollahToIsrael: "حزب‌الله → اسرائیل",
+                hezbollahToUS: "حزب‌الله → آمریکا",
+                houthisToIsrael: "حوثی‌ها → اسرائیل",
+                syriaToIsrael: "سوریه → اسرائیل",
+                
+                // Risk Levels
+                riskLow: "کم",
+                riskModerate: "متوسط",
+                riskHigh: "بالا",
+                riskVeryHigh: "بسیار بالا",
+                
+                // Polymarket Section
+                polymarketDisclaimerTitle: "⚠️ سلب مسئولیت پیش‌بینی‌های بازار",
+                polymarketDisclaimerText: "داده‌های Polymarket نشان‌دهنده احتمالات بازار شرط‌بندی (پیش‌بینی‌های جمعی) است. این فقط داده‌های تکمیلی است و ارزیابی استخباراتی یا کار تحلیلی نیست.",
+                
+                // Flight Widget
+                flightWidgetTitle: "مانیتور اختلالات پروازی",
+                flightStatusNormal: "همه مسیرها عادی",
+                flightStatusActive: "اختلالات فعال",
+                noFlightDisruptions: "هیچ اختلال عمده پروازی در مناطق هدف شناسایی نشد",
+                
+                // Rate Limit Box
+                requestsUsedLabel: "درخواست‌های استفاده شده",
+                requestsRemainingLabel: "درخواست‌های باقیمانده",
+                dailyLimitLabel: "محدودیت روزانه",
+                resetsInLabel: "بازنشانی سهمیه در",
+                
+                // Footer
+                dataSourcesLabel: "منابع داده:",
+                dataSourcesText: "NewsAPI برای جمع‌آوری منابع خبری، GDELT برای محتوای عربی، عبری و فارسی، Reddit برای اطلاعات استخباراتی جامعه، Polymarket برای داده‌های بازار پیش‌بینی جمعی، به علاوه سایر منابع OSINT. برای سوالات: asifahanalytics@gmail.com",
+                methodologyLabel: "روش‌شناسی:",
+                methodologyText: "تحلیل مبتنی بر کلیدواژه با شاخص‌های تشدید شامل اصطلاحات اقدام نظامی، زبان دیپلماتیک و ارزیابی تهدیدات در چندین زبان",
+                lastUpdatedLabel: "آخرین به‌روزرسانی:",
+                notYetScanned: "هنوز اسکن نشده",
+                disclaimerTitle: "⚠️ سلب مسئولیت:",
+                disclaimerText: "این داشبورد یک ابزار تحلیلی برای اهداف آموزشی و تحقیقاتی است. احتمالات بر اساس جمع‌آوری اخبار منبع باز و تحلیل ساده کلیدواژه است. این ابزار نشان‌دهنده ارزیابی‌های رسمی دولت آمریکا یا موضع‌گیری‌های سیاسی نیست. کاربران باید برای تصمیم‌گیری‌های عملیاتی با منابع استخباراتی رسمی مشورت کنند.",
             }
         };
 
