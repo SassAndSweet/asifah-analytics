@@ -2446,6 +2446,134 @@ async function scanSingleTarget(targetName) {
             }
         }
 
+async function scanTarget(targetName, days) {
+    const url = `${BACKEND_URL}/api/threat/${targetName}?days=${days}`;
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success) {
+        throw new Error(data.error || 'Unknown error');
+    }
+
+    const probability = data.probability || 0;
+    const timeline = data.timeline || 'Unknown';
+
+    updateProbability(targetName, probability, data.cached);
+    updateTimeline(targetName, timeline, probability);
+    displayHeadlinesWithWeights(targetName, data);
+}
+
+function updateProbability(targetId, probability, isCached) {
+    const gaugeElement = document.getElementById(`${targetId}-gauge`);
+    const textElement = document.getElementById(`${targetId}-prob`);
+    const cardElement = document.getElementById(`${targetId}-card`);
+    
+    textElement.textContent = `${probability}%`;
+    
+    let threatClass = 'medium';
+    if (probability < 34) {
+        threatClass = 'low';
+    } else if (probability >= 67) {
+        threatClass = 'high';
+    }
+    
+    gaugeElement.classList.remove('low', 'medium', 'high');
+    gaugeElement.classList.add(threatClass);
+    
+    textElement.classList.remove('low', 'medium', 'high');
+    textElement.classList.add(threatClass);
+    
+    cardElement.classList.remove('low-threat', 'medium-threat', 'high-threat');
+    cardElement.classList.add(`${threatClass}-threat`);
+    
+    const circumference = 534;
+    const progress = (probability / 100) * circumference;
+    gaugeElement.setAttribute('stroke-dasharray', `${progress} ${circumference}`);
+}
+
+function updateTimeline(targetId, timeline, probability) {
+    document.getElementById(`${targetId}-timeline`).textContent = timeline;
+    
+    const barElement = document.getElementById(`${targetId}-bar`);
+    const segments = barElement.querySelectorAll('.timeline-segment');
+    
+    segments.forEach(seg => seg.classList.remove('active'));
+    
+    if (probability >= 70) {
+        segments[0].classList.add('active');
+    } else if (probability >= 50) {
+        segments[1].classList.add('active');
+    } else if (probability >= 30) {
+        segments[2].classList.add('active');
+    } else {
+        segments[3].classList.add('active');
+    }
+}
+
+function displayHeadlinesWithWeights(targetId, data) {
+    const container = document.getElementById(`${targetId}-headlines`);
+    const t = translations[currentLanguage];
+
+    if (!data || !data.top_scoring_articles || data.top_scoring_articles.length === 0) {
+        container.innerHTML = `
+            <h4>${t.recentHeadlines}</h4>
+            <p style="color: #7f8c8d; font-style: italic;">${t.noActionable}</p>
+        `;
+        return;
+    }
+
+    const topArticles = data.top_scoring_articles.slice(0, 10);
+    
+    let html = `<h4>${t.recentHeadlines} (Weighted by Impact)</h4>`;
+    
+    topArticles.forEach(article => {
+        const date = article.publishedAt
+            ? new Date(article.publishedAt).toLocaleDateString()
+            : 'Unknown date';
+        
+        const contributionPercent = Math.abs(article.contribution_percent || 0);
+        const isDeescalation = article.deescalation || false;
+        const icon = isDeescalation ? '🕊️' : '⚠️';
+        
+        let impactClass = 'low-impact';
+        if (contributionPercent >= 10) {
+            impactClass = 'high-impact';
+        } else if (contributionPercent >= 5) {
+            impactClass = 'medium-impact';
+        }
+        
+        html += `
+            <div class="headline-item">
+                <a href="${article.url}" target="_blank" rel="noopener noreferrer">
+                    ${icon} ${article.title || 'Untitled article'}
+                </a>
+                <span class="article-weight-badge ${impactClass}">
+                    ${contributionPercent.toFixed(1)}% impact
+                </span>
+                <div class="article-contribution-bar">
+                    <div class="article-contribution-fill ${isDeescalation ? 'deescalation' : ''}" 
+                         style="width: ${Math.min(contributionPercent, 100)}%">
+                    </div>
+                </div>
+                <div class="article-scoring-details">
+                    <span><strong>Source:</strong> ${article.source}</span>
+                    <span><strong>Date:</strong> ${date}</span>
+                    <span><strong>Severity:</strong> ${(article.severity || 0).toFixed(1)}</span>
+                    <span><strong>Source Weight:</strong> ${(article.source_weight || 0).toFixed(2)}</span>
+                    <span><strong>Time Decay:</strong> ${(article.time_decay || 0).toFixed(2)}</span>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
         async function updateFlightCancellations() {
             const grid = document.getElementById('flightCancellationsGrid');
             const badge = document.getElementById('flightStatusBadge');
