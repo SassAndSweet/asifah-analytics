@@ -34,6 +34,102 @@
             min-height: 100vh;
         }
 
+        /* NEW: Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 58, 95, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(100, 149, 237, 0.2);
+            border-top-color: #6495ED;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-status {
+            text-align: center;
+            max-width: 500px;
+            padding: 0 20px;
+        }
+
+        .loading-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6495ED;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .loading-steps {
+            margin-top: 20px;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            font-size: 15px;
+            color: #7a9ab8;
+            transition: all 0.3s ease;
+        }
+
+        .loading-step.active {
+            color: #6495ED;
+            font-weight: bold;
+        }
+
+        .loading-step.complete {
+            color: #4ade80;
+        }
+
+        .step-icon {
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        .loading-progress {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #7a9ab8;
+            font-style: italic;
+        }
+
+        .loading-error {
+            color: #f87171;
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 8px;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -296,10 +392,6 @@
             margin: 0 auto 20px;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Footer */
         footer {
             text-align: center;
@@ -369,6 +461,42 @@
     </style>
 </head>
 <body>
+    <!-- NEW: Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Lebanon Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1">
+                    <span class="step-icon">⏳</span>
+                    <span>Fetching currency rates (LBP/USD)...</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span class="step-icon">⏳</span>
+                    <span>Scraping Eurobond yields...</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span class="step-icon">⏳</span>
+                    <span>Analyzing Hezbollah activity...</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span class="step-icon">⏳</span>
+                    <span>Calculating stability score...</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span class="step-icon">⏳</span>
+                    <span>Rendering dashboard...</span>
+                </div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">
+                This may take 20-40 seconds...
+            </div>
+            <div class="loading-error" id="loadingError" style="display: none;">
+                ⚠️ Loading is taking longer than expected. Please wait or refresh the page.
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <div class="language-switcher">
@@ -382,11 +510,6 @@
             <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
             <a href="index.html" class="back-link" style="position: absolute; top: 20px; left: 20px; margin: 0;" data-i18n="backLink">← Back to Dashboard</a>
         </header>
-
-        <div class="loading" id="loadingState">
-            <div class="spinner"></div>
-            <div>Scanning Lebanon stability indicators...</div>
-        </div>
 
         <div id="content" style="display:none;">
             <!-- Overall Stability Index -->
@@ -494,6 +617,61 @@
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
+        // NEW: Loading Overlay Management
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+
+        function startLoadingProgress() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            
+            // Progress through steps every 8 seconds
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    // Mark current step as complete
+                    const currentStep = document.getElementById(steps[loadingStepIndex]);
+                    if (currentStep) {
+                        currentStep.classList.remove('active');
+                        currentStep.classList.add('complete');
+                        currentStep.querySelector('.step-icon').textContent = '✓';
+                    }
+                    
+                    // Move to next step
+                    loadingStepIndex++;
+                    const nextStep = document.getElementById(steps[loadingStepIndex]);
+                    if (nextStep) {
+                        nextStep.classList.add('active');
+                    }
+                }
+            }, 8000); // 8 seconds per step = 40 seconds total
+            
+            // Show error message after 60 seconds
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingError').style.display = 'block';
+            }, 60000);
+        }
+
+        function hideLoadingOverlay() {
+            // Clear intervals
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            
+            // Mark all steps as complete
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '✓';
+            });
+            
+            // Fade out overlay after brief delay
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                }
+            }, 500);
+        }
+
         async function loadLebanonData() {
             try {
                 console.log('Fetching Lebanon stability data...');
@@ -535,6 +713,9 @@
                 
                 displayData(data);
                 
+                // Hide loading overlay when data is ready
+                hideLoadingOverlay();
+                
                 console.log('displayData completed!');
                 
             } catch (error) {
@@ -548,17 +729,15 @@
                     errorMessage = 'Request timeout (30 seconds) - backend may be slow';
                 }
                 
-                document.getElementById('loadingState').innerHTML = `
-                    <div style="color:#f87171;">❌ Error loading data: ${errorMessage}</div>
-                    <div style="margin-top:10px; font-size:0.9em; color:#ccc;">Check browser console (F12) for details</div>
-                    <div style="margin-top:15px;"><button onclick="location.reload()" style="padding:10px 20px; background:rgba(255,255,255,0.1); color:#fff; border:none; border-radius:8px; cursor:pointer;">Retry</button></div>
-                `;
+                // Show error in loading overlay
+                document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
+                document.getElementById('loadingError').innerHTML = `⚠️ ${errorMessage}`;
+                document.getElementById('loadingError').style.display = 'block';
             }
         }
 
         function displayData(data) {
-            // Hide loading, show content
-            document.getElementById('loadingState').style.display = 'none';
+            // Show content
             document.getElementById('content').style.display = 'block';
             
             // Update timestamp
@@ -685,7 +864,13 @@
         }
 
         // Load data on page load
-        document.addEventListener('DOMContentLoaded', loadLebanonData);
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start loading progress animation
+            startLoadingProgress();
+            
+            // Fetch data
+            loadLebanonData();
+        });
 
         // Translation system
         const translations = {
