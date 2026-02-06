@@ -29,6 +29,102 @@
             padding: 20px;
         }
 
+        /* NEW: Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 107, 107, 0.2);
+            border-top-color: #ff6b6b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-status {
+            text-align: center;
+            max-width: 500px;
+            padding: 0 20px;
+        }
+
+        .loading-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .loading-steps {
+            margin-top: 20px;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            font-size: 15px;
+            color: #a0a0a0;
+            transition: all 0.3s ease;
+        }
+
+        .loading-step.active {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+
+        .loading-step.complete {
+            color: #51cf66;
+        }
+
+        .step-icon {
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        .loading-progress {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #808080;
+            font-style: italic;
+        }
+
+        .loading-error {
+            color: #ff6b6b;
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: 8px;
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -756,6 +852,42 @@
     </style>
 </head>
 <body>
+    <!-- NEW: Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Iran Protests Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1">
+                    <span class="step-icon">⏳</span>
+                    <span>Scanning HRANA reports...</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span class="step-icon">⏳</span>
+                    <span>Fetching multi-language GDELT articles...</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span class="step-icon">⏳</span>
+                    <span>Analyzing Reddit OSINT discussions...</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span class="step-icon">⏳</span>
+                    <span>Calculating regime stability...</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span class="step-icon">⏳</span>
+                    <span>Rendering dashboard...</span>
+                </div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">
+                This may take 20-40 seconds...
+            </div>
+            <div class="loading-error" id="loadingError" style="display: none;">
+                ⚠️ Loading is taking longer than expected. Please wait or refresh the page.
+            </div>
+        </div>
+    </div>
+
     <!-- Analytics Icon -->
     <a href="https://analytics.google.com" target="_blank" class="analytics-icon" title="View Analytics">🌪️</a>
     
@@ -990,6 +1122,61 @@
     </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // NEW: Loading Overlay Management
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+
+        function startLoadingProgress() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            
+            // Progress through steps every 8 seconds
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    // Mark current step as complete
+                    const currentStep = document.getElementById(steps[loadingStepIndex]);
+                    if (currentStep) {
+                        currentStep.classList.remove('active');
+                        currentStep.classList.add('complete');
+                        currentStep.querySelector('.step-icon').textContent = '✓';
+                    }
+                    
+                    // Move to next step
+                    loadingStepIndex++;
+                    const nextStep = document.getElementById(steps[loadingStepIndex]);
+                    if (nextStep) {
+                        nextStep.classList.add('active');
+                    }
+                }
+            }, 8000); // 8 seconds per step = 40 seconds total
+            
+            // Show error message after 60 seconds
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingError').style.display = 'block';
+            }, 60000);
+        }
+
+        function hideLoadingOverlay() {
+            // Clear intervals
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            
+            // Mark all steps as complete
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '✓';
+            });
+            
+            // Fade out overlay after brief delay
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                }
+            }, 500);
+        }
+
         const translations = {
             en: {
                 mainTitle: "Iran Protests Tracker",
@@ -1138,7 +1325,6 @@
             document.getElementById('metric-title-intensity').textContent = t.metricTitleIntensity;
             document.getElementById('metric-title-stability').textContent = t.metricTitleStability;
             document.getElementById('metric-title-geography').textContent = t.metricTitleGeography;
-            document.getElementById('stability-explanation').textContent = t.stabilityExplanation;
             document.getElementById('geography-subtitle').textContent = t.geographySubtitle;
             document.getElementById('news-title').textContent = t.newsTitle;
             
@@ -1164,10 +1350,17 @@
                 showArticles('hrana'); // Changed default to HRANA
                 updateLastUpdated();
                 
+                // Hide loading overlay when data is ready
+                hideLoadingOverlay();
+                
             } catch (error) {
                 console.error('Error fetching protest data:', error);
                 document.getElementById('articles-container').innerHTML = 
                     '<div class="error">Error loading data. Please refresh the page.</div>';
+                
+                // Show error in loading overlay
+                document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
+                document.getElementById('loadingError').style.display = 'block';
             }
         }
 
@@ -1557,7 +1750,13 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            // Start loading progress animation
+            startLoadingProgress();
+            
+            // Fetch data
             fetchProtestData();
+            
+            // Refresh every 30 minutes
             setInterval(fetchProtestData, 30 * 60 * 1000);
         });
     </script>
