@@ -1322,6 +1322,96 @@
             font-size: 28px;
             margin-right: 8px;
         }
+
+        /* ========================================
+   OSINT FEED SIDEBAR
+   ======================================== */
+.osint-feed-container {
+    background: rgba(30, 30, 40, 0.95);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    margin-bottom: 30px;
+}
+
+.osint-feed-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.osint-feed-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.osint-feed-widget {
+    width: 100%;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.osint-feed-widget iframe {
+    width: 100% !important;
+    max-width: 100%;
+    border: none;
+    border-radius: 5px;
+}
+
+.osint-follow-button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: linear-gradient(135deg, #E1306C, #C13584);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.osint-follow-button:hover {
+    background: linear-gradient(135deg, #C13584, #E1306C);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(225, 48, 108, 0.4);
+}
+
+/* Desktop Layout */
+@media (min-width: 1200px) {
+    .main-content-wrapper {
+        display: grid;
+        grid-template-columns: 320px 1fr;
+        gap: 30px;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+    
+    .osint-sidebar {
+        position: sticky;
+        top: 120px;
+        height: fit-content;
+    }
+}
+
+/* Mobile Layout */
+@media (max-width: 1199px) {
+    .main-content-wrapper {
+        display: block;
+    }
+    
+    .osint-feed-widget iframe {
+        height: 500px !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -1354,7 +1444,30 @@
 
         <div id="errorMessage" class="error-message"></div>
 
-        <div class="targets-grid">
+        <!-- Main Content Wrapper (Sidebar + Threat Cards) -->
+<div class="main-content-wrapper">
+    
+    <!-- OSINT Feed Sidebar -->
+    <aside class="osint-sidebar">
+        <div class="osint-feed-container">
+            <div class="osint-feed-header">
+                <span style="font-size: 24px;">📸</span>
+                <h3>OSINT FEED</h3>
+            </div>
+            
+            <div class="osint-feed-widget">
+                <!-- SnapWidget -->
+                <iframe src="https://snapwidget.com/embed/1117696" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; width:100%; height:600px" title="Posts from @osintdefender"></iframe>
+            </div>
+            
+            <a href="https://www.instagram.com/osintdefender/" target="_blank" class="osint-follow-button">
+                📷 Follow @OSINTdefender →
+            </a>
+        </div>
+    </aside>
+    
+    <!-- Threat Cards Wrapper -->
+    <div class="targets-grid">
             <!-- IRAN CARD -->
             <div class="target-card" id="iran-card">
                 <h3><span class="target-flag">🇮🇷</span> <span data-i18n="targetIran">IRAN</span></h3>
@@ -1869,7 +1982,7 @@
                 </div>
             </div>
 
-        </div>
+      </div><!-- End main-content-wrapper -->
 
         <div class="flight-widget" id="flightWidget">
             <div class="flight-widget-header">
