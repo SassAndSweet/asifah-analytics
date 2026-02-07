@@ -1,0 +1,62 @@
+name: Daily Cache Update
+
+on:
+  schedule:
+    # Runs every day at 12:00 UTC (7am EST / 4am PST)
+    - cron: '0 12 * * *'
+  
+  # Allow manual triggering from Actions tab
+  workflow_dispatch:
+
+jobs:
+  update-caches:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Update Lebanon Stability Cache
+        run: |
+          echo "Pinging Lebanon endpoint..."
+          curl -X GET "https://asifah-backend.onrender.com/scan-lebanon-stability" \
+            --max-time 60 \
+            --retry 2 \
+            --retry-delay 5
+          echo "✅ Lebanon cache updated"
+      
+      - name: Update Iran Protests Cache
+        run: |
+          echo "Pinging Iran endpoint..."
+          curl -X GET "https://asifah-backend.onrender.com/scan-iran-protests?days=7" \
+            --max-time 60 \
+            --retry 2 \
+            --retry-delay 5
+          echo "✅ Iran cache updated"
+      
+      - name: Summary
+        run: |
+          echo "🎉 All caches updated successfully!"
+          echo "Timestamp: $(date -u)"
+```
+
+---
+
+### **STEP 3: Commit the File**
+
+1. Scroll down
+2. **Commit message:** `Add daily cache update workflow`
+3. Click **"Commit new file"**
+
+---
+
+### **STEP 4: Test It Immediately!**
+
+1. Go to your repo's **"Actions"** tab
+2. Click **"Daily Cache Update"** in the left sidebar
+3. Click **"Run workflow"** → **"Run workflow"** (green button)
+4. Wait 30 seconds
+5. Click the workflow run to see the logs
+
+You should see:
+```
+✅ Lebanon cache updated
+✅ Iran cache updated
+🎉 All caches updated successfully!
