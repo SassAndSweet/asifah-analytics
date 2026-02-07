@@ -9,6 +9,8 @@
     <meta http-equiv="Expires" content="0">
     <title>Lebanon Stability Index | Asifah Analytics v2.7.0</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇱🇧</text></svg>">
+    <!-- Chart.js for sparklines -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <!-- Google Analytics (commented out - may be blocked by network) -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -222,6 +224,35 @@
             color: #b8d4e8;
             font-style: italic;
         }
+
+        /* Sparkline styles */
+.sparkline-container {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sparkline-label {
+    font-size: 0.75em;
+    color: #b8d4e8;
+    margin-right: 10px;
+}
+
+.sparkline-canvas {
+    flex-grow: 1;
+    max-width: 150px;
+    height: 40px;
+}
+
+.sparkline-status {
+    font-size: 0.75em;
+    color: #7a9ab8;
+    font-style: italic;
+}
 
         /* Metrics Grid */
         .metrics-grid {
@@ -521,6 +552,11 @@
                     <div class="stability-fill" id="stabilityFill"></div>
                 </div>
                 <div class="stability-legend" data-i18n="stabilityLegend">100 = Stable Regime | 0 = Imminent Collapse</div>
+                <div class="sparkline-container" id="stabilitySparklineContainer">
+    <span class="sparkline-label">30-Day Trend:</span>
+    <canvas id="stabilitySparkline" class="sparkline-canvas"></canvas>
+    <span class="sparkline-status" id="stabilitySparklineStatus">Loading...</span>
+</div>
             </div>
 
             <!-- Metrics Grid -->
@@ -546,19 +582,30 @@
                     </div>
                 </div>
 
-                <!-- Currency Status -->
-                <div class="metric-card">
-                    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
-                    <div class="metric-value" id="currencyRate">--</div>
-                    <div class="metric-subtitle" id="currencyChange">--</div>
-                    <div id="currencyTrend" style="margin-top:10px;"></div>
-                </div>
+<!-- Currency Status -->
+<div class="metric-card">
+    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
+    <div class="metric-value" id="currencyRate">--</div>
+    <div class="metric-subtitle" id="currencyChange">--</div>
+    <div id="currencyTrend" style="margin-top:10px;"></div>
+    
+    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
+        <span class="sparkline-label">30-Day:</span>
+        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
+        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
+    </div>
+</div>
 
                 <!-- Bond Yields -->
                 <div class="metric-card">
                     <div class="metric-title" data-i18n="bondYield">10Y EUROBOND YIELD</div>
                     <div class="metric-value" id="bondYield">--</div>
                     <div class="metric-subtitle" data-i18n="bondSubtitle">Sovereign default risk</div>
+                    <div class="sparkline-container" id="bondSparklineContainer" style="display:none;">
+    <span class="sparkline-label">30-Day:</span>
+    <canvas id="bondSparkline" class="sparkline-canvas"></canvas>
+    <span class="sparkline-status" id="bondSparklineStatus">Loading...</span>
+</div>
                 </div>
 
                 <!-- Hezbollah Activity -->
@@ -566,6 +613,11 @@
                     <div class="metric-title" data-i18n="hezbollahActivity">HEZBOLLAH ACTIVITY</div>
                     <div class="metric-value" id="hezbollahScore">--</div>
                     <div class="metric-subtitle" data-i18n="last7Days">Last 7 days</div>
+                    <div class="sparkline-container" id="hezbollahSparklineContainer" style="display:none;">
+    <span class="sparkline-label">7-Day:</span>
+    <canvas id="hezbollahSparkline" class="sparkline-canvas"></canvas>
+    <span class="sparkline-status" id="hezbollahSparklineStatus">Loading...</span>
+</div>
                     <div class="activity-grid">
                         <div class="activity-item">
                             <div class="activity-number" id="rearmamentCount">--</div>
@@ -651,27 +703,174 @@
             }, 60000);
         }
 
-        function hideLoadingOverlay() {
-            // Clear intervals
-            if (loadingInterval) clearInterval(loadingInterval);
-            if (loadingTimeout) clearTimeout(loadingTimeout);
-            
-            // Mark all steps as complete
-            document.querySelectorAll('.loading-step').forEach(step => {
-                step.classList.remove('active');
-                step.classList.add('complete');
-                step.querySelector('.step-icon').textContent = '✓';
-            });
-            
-            // Fade out overlay after brief delay
-            setTimeout(() => {
-                const overlay = document.getElementById('loadingOverlay');
-                if (overlay) {
-                    overlay.classList.add('hidden');
-                }
-            }, 500);
+function hideLoadingOverlay() {
+    // Clear intervals
+    if (loadingInterval) clearInterval(loadingInterval);
+    if (loadingTimeout) clearTimeout(loadingTimeout);
+    
+    // Mark all steps as complete
+    document.querySelectorAll('.loading-step').forEach(step => {
+        step.classList.remove('active');
+        step.classList.add('complete');
+        step.querySelector('.step-icon').textContent = '✓';
+    });
+    
+    // Fade out overlay after brief delay
+    setTimeout(() => {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
         }
+    }, 500);
+}
 
+// NEW: Fetch trend data for sparklines
+async function loadTrendData() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`);
+        const data = await response.json();
+        
+        if (data.success && data.days_collected >= 3) {
+            createSparklines(data.trends);
+        } else {
+            document.getElementById('stabilitySparklineStatus').textContent = 
+                `Building... (${data.days_collected}/3 days)`;
+            
+            if (data.days_collected > 0) {
+                document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+            }
+        }
+    } catch (error) {
+        console.error('Error loading trend data:', error);
+        document.getElementById('stabilitySparklineStatus').textContent = 'No trend data';
+    }
+}
+
+        // NEW: Create sparkline charts
+function createSparklines(trends) {
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+        elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
+    };
+
+    // 1. Stability Sparkline
+    if (trends.stability && trends.stability.length > 0) {
+        const ctx = document.getElementById('stabilitySparkline');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trends.dates,
+                datasets: [{
+                    data: trends.stability,
+                    borderColor: '#6495ED',
+                    backgroundColor: 'rgba(100, 149, 237, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = trends.stability[trends.stability.length - 1];
+        const previous = trends.stability[trends.stability.length - 2] || latest;
+        const change = latest - previous;
+        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+        const color = change > 0 ? '#4ade80' : change < 0 ? '#f87171' : '#7a9ab8';
+        
+        document.getElementById('stabilitySparklineStatus').innerHTML = 
+            `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(1)}</span>`;
+        document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+    }
+
+    // 2. Currency Sparkline
+    if (trends.currency && trends.currency.length > 0) {
+        const ctx = document.getElementById('currencySparkline');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trends.dates,
+                datasets: [{
+                    data: trends.currency,
+                    borderColor: '#f87171',
+                    backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = trends.currency[trends.currency.length - 1];
+        const previous = trends.currency[trends.currency.length - 2] || latest;
+        const change = ((latest - previous) / previous * 100).toFixed(1);
+        const arrow = change > 0 ? '▼' : change < 0 ? '▲' : '→';
+        
+        document.getElementById('currencySparklineStatus').innerHTML = 
+            `<span style="color:#f87171">${arrow} ${Math.abs(change)}%</span>`;
+        document.getElementById('currencySparklineContainer').style.display = 'flex';
+    }
+
+    // 3. Bond Sparkline
+    if (trends.bonds && trends.bonds.length > 0) {
+        const ctx = document.getElementById('bondSparkline');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trends.dates,
+                datasets: [{
+                    data: trends.bonds,
+                    borderColor: '#fb923c',
+                    backgroundColor: 'rgba(251, 146, 60, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = trends.bonds[trends.bonds.length - 1];
+        const previous = trends.bonds[trends.bonds.length - 2] || latest;
+        const change = (latest - previous).toFixed(1);
+        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+        
+        document.getElementById('bondSparklineStatus').innerHTML = 
+            `<span style="color:#fb923c">${arrow} ${Math.abs(change)}%</span>`;
+        document.getElementById('bondSparklineContainer').style.display = 'flex';
+    }
+
+    // 4. Hezbollah Activity Sparkline (7-day rolling)
+    if (trends.hezbollah && trends.hezbollah.length > 0) {
+        const ctx = document.getElementById('hezbollahSparkline');
+        const last7 = {
+            dates: trends.dates.slice(-7),
+            data: trends.hezbollah.slice(-7)
+        };
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: last7.dates,
+                datasets: [{
+                    data: last7.data,
+                    borderColor: '#facc15',
+                    backgroundColor: 'rgba(250, 204, 21, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = last7.data[last7.data.length - 1];
+        const previous = last7.data[last7.data.length - 2] || latest;
+        const change = latest - previous;
+        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+        const color = change > 0 ? '#f87171' : change < 0 ? '#4ade80' : '#7a9ab8';
+        
+        document.getElementById('hezbollahSparklineStatus').innerHTML = 
+            `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(0)}</span>`;
+        document.getElementById('hezbollahSparklineContainer').style.display = 'flex';
+    }
+}
         async function loadLebanonData() {
             try {
                 console.log('Fetching Lebanon stability data...');
@@ -711,10 +910,13 @@
                 
                 console.log('Lebanon data loaded successfully! Calling displayData...');
                 
-                displayData(data);
-                
-                // Hide loading overlay when data is ready
-                hideLoadingOverlay();
+displayData(data);
+
+// NEW: Load trend data for sparklines
+await loadTrendData();
+
+// Hide loading overlay when data is ready
+hideLoadingOverlay();
                 
                 console.log('displayData completed!');
                 
