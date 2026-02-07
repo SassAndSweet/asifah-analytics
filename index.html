@@ -812,7 +812,7 @@
             font-size: 13px;
         }
 
-        .flight-widget {
+.flight-widget {
             background: white;
             padding: 25px;
             border-radius: 12px;
@@ -1014,6 +1014,39 @@
         [dir="rtl"] .flight-widget-title::before {
             margin-right: 0;
             margin-left: 8px;
+        }
+
+        /* Flight Expand/Collapse Button */
+        .flight-expand-button {
+            display: block;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .flight-expand-button:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #1e5a8a 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(52, 152, 219, 0.4);
+        }
+
+        .flight-expand-button:active {
+            transform: translateY(1px);
+        }
+
+        .cancellation-card.hidden-card {
+            display: none;
         }
 
         footer {
@@ -2000,6 +2033,11 @@
             No major flight disruptions detected in target regions
         </div>
     </div>
+    
+    <!-- Expand/Collapse Button -->
+    <button id="flightExpandButton" class="flight-expand-button" style="display: none;">
+        Show 4 More ▼
+    </button>
 </div>
 
         <div class="rate-limit-box" id="rateLimitBox">
@@ -2731,34 +2769,127 @@ const translations = {
             return countryCode ? `https://flagcdn.com/24x18/${countryCode}.png` : null;
         }
 
-        function displayFlightCancellations(cancellations) {
-            const grid = document.getElementById('flightCancellationsGrid');
-            const badge = document.getElementById('flightStatusBadge');
-            if (!grid || !badge) return;
-            const t = translations[currentLanguage] || translations.en;
-            if (!cancellations || cancellations.length === 0) {
-                grid.innerHTML = '<div class="no-cancellations">No major flight disruptions detected</div>';
-                badge.className = 'flight-status-badge normal';
-                badge.innerHTML = '<span>All Routes Normal</span>';
-                return;
-            }
-            badge.className = 'flight-status-badge active';
-            badge.innerHTML = `<span>Active Disruptions (${cancellations.length})</span>`;
-            let html = '';
-            cancellations.forEach(cancel => {
-                const date = cancel.date ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-                const logoUrl = getAirlineLogo(cancel.airline);
-                const flagImageUrl = getCountryFlagImage(cancel.destination);
-                let statusClass = 'status-suspended';
-                let statusIcon = '🚫';
-                if (cancel.status === 'Resumed') {
-                    statusClass = 'status-resumed';
-                    statusIcon = '✅';
-                }
-                html += `<div class="cancellation-card ${statusClass}"><div class="cancellation-header"><img src="${logoUrl}" alt="${cancel.airline}" class="airline-logo" onerror="this.style.display='none';"><div class="cancellation-airline">${cancel.airline || 'Unknown Airline'}</div><span class="cancellation-status-badge ${statusClass}">${statusIcon} ${cancel.status || 'Suspended'}</span></div><div class="cancellation-route">${flagImageUrl ? `<img src="${flagImageUrl}" style="width:20px; height:15px; vertical-align:middle; margin-right:6px;">` : '✈️'}${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}</div><div class="cancellation-details"><div class="detail-row"><strong>📅 Announced:</strong> ${date}</div><div class="detail-row"><strong>⏱️ Duration:</strong> ${cancel.duration || 'Indefinite'}</div>${cancel.source_url ? `<div class="detail-row"><a href="${cancel.source_url}" target="_blank" rel="noopener noreferrer" class="source-link">📰 View Article →</a></div>` : ''}</div></div>`;
-            });
-            grid.innerHTML = html;
+let flightCardsVisible = 4; // Track how many cards are visible
+
+function displayFlightCancellations(cancellations) {
+    const grid = document.getElementById('flightCancellationsGrid');
+    const badge = document.getElementById('flightStatusBadge');
+    const expandButton = document.getElementById('flightExpandButton');
+    
+    if (!grid || !badge) return;
+    
+    const t = translations[currentLanguage] || translations.en;
+    
+    if (!cancellations || cancellations.length === 0) {
+        grid.innerHTML = '<div class="no-cancellations">No major flight disruptions detected</div>';
+        badge.className = 'flight-status-badge normal';
+        badge.innerHTML = '<span>All Routes Normal</span>';
+        if (expandButton) expandButton.style.display = 'none';
+        return;
+    }
+    
+    badge.className = 'flight-status-badge active';
+    badge.innerHTML = `<span>Active Disruptions (${cancellations.length})</span>`;
+    
+    let html = '';
+    cancellations.forEach((cancel, index) => {
+        const date = cancel.date ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        const logoUrl = getAirlineLogo(cancel.airline);
+        const flagImageUrl = getCountryFlagImage(cancel.destination);
+        
+        let statusClass = 'status-suspended';
+        let statusIcon = '🚫';
+        if (cancel.status === 'Resumed') {
+            statusClass = 'status-resumed';
+            statusIcon = '✅';
         }
+        
+        // Hide cards beyond first 4
+        const hiddenClass = index >= 4 ? ' hidden-card' : '';
+        
+        html += `<div class="cancellation-card ${statusClass}${hiddenClass}" data-card-index="${index}">
+            <div class="cancellation-header">
+                <img src="${logoUrl}" alt="${cancel.airline}" class="airline-logo" onerror="this.style.display='none';">
+                <div class="cancellation-airline">${cancel.airline || 'Unknown Airline'}</div>
+                <span class="cancellation-status-badge ${statusClass}">${statusIcon} ${cancel.status || 'Suspended'}</span>
+            </div>
+            <div class="cancellation-route">
+                ${flagImageUrl ? `<img src="${flagImageUrl}" style="width:20px; height:15px; vertical-align:middle; margin-right:6px;">` : '✈️'}
+                ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
+            </div>
+            <div class="cancellation-details">
+                <div class="detail-row"><strong>📅 Announced:</strong> ${date}</div>
+                <div class="detail-row"><strong>⏱️ Duration:</strong> ${cancel.duration || 'Indefinite'}</div>
+                ${cancel.source_url ? `<div class="detail-row"><a href="${cancel.source_url}" target="_blank" rel="noopener noreferrer" class="source-link">📰 View Article →</a></div>` : ''}
+            </div>
+        </div>`;
+    });
+    
+    grid.innerHTML = html;
+    
+    // Show expand button if more than 4 cards
+    if (expandButton) {
+        if (cancellations.length > 4) {
+            expandButton.style.display = 'block';
+            flightCardsVisible = 4;
+            updateExpandButton(cancellations.length);
+        } else {
+            expandButton.style.display = 'none';
+        }
+    }
+}
+
+function updateExpandButton(totalCards) {
+    const expandButton = document.getElementById('flightExpandButton');
+    if (!expandButton) return;
+    
+    const hiddenCards = document.querySelectorAll('.cancellation-card.hidden-card');
+    
+    if (hiddenCards.length === 0) {
+        // All cards visible - show "collapse" button
+        expandButton.textContent = 'Show Less ▲';
+    } else {
+        // Some cards hidden - show how many more
+        const remaining = hiddenCards.length;
+        const toShow = Math.min(4, remaining);
+        expandButton.textContent = `Show ${toShow} More ▼`;
+    }
+}
+
+function toggleFlightCards() {
+    const allCards = document.querySelectorAll('.cancellation-card');
+    const hiddenCards = document.querySelectorAll('.cancellation-card.hidden-card');
+    
+    if (hiddenCards.length === 0) {
+        // All visible - collapse back to 4
+        allCards.forEach((card, index) => {
+            if (index >= 4) {
+                card.classList.add('hidden-card');
+            }
+        });
+        flightCardsVisible = 4;
+    } else {
+        // Show next 4
+        let shown = 0;
+        hiddenCards.forEach(card => {
+            if (shown < 4) {
+                card.classList.remove('hidden-card');
+                shown++;
+            }
+        });
+        flightCardsVisible += shown;
+    }
+    
+    updateExpandButton(allCards.length);
+}
+
+// Add event listener for expand button
+window.addEventListener('DOMContentLoaded', () => {
+    const expandButton = document.getElementById('flightExpandButton');
+    if (expandButton) {
+        expandButton.addEventListener('click', toggleFlightCards);
+    }
+});
 
         function toggleThreatMatrix(target) {
             const details = document.getElementById(`${target}-matrix-details`);
