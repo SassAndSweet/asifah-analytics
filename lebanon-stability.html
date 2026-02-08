@@ -1,662 +1,1206 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/lebanon-stability.html b/lebanon-stability.html
-index bb575b8b803af81257c78c76356c4740ef69ea82..0b81c241249a414176b239d7497a744e990b674a 100644
---- a/lebanon-stability.html
-+++ b/lebanon-stability.html
-@@ -7,55 +7,75 @@
-     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-     <meta http-equiv="Pragma" content="no-cache">
-     <meta http-equiv="Expires" content="0">
-     <title>Lebanon Stability Index | Asifah Analytics v2.7.0</title>
-     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇱🇧</text></svg>">
-     <!-- Chart.js for sparklines -->
- <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-     
-     <!-- Google Analytics (commented out - may be blocked by network) -->
-     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
-     <script>
-     window.dataLayer = window.dataLayer || [];
-     function gtag(){dataLayer.push(arguments);}
-     gtag('js', new Date());
-     gtag('config', 'G-Z9114D1Z5C');
-     </script> -->
-     
-     <style>
-         * {
-             margin: 0;
-             padding: 0;
-             box-sizing: border-box;
-         }
- 
-         body {
--            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
--            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 100%);
--            color: #f0f4f8;
-+            font-family: 'Times New Roman', Times, serif;
-+            font-size: 14px;
-+            background-color: #f5f5f5;
-+            color: #2c3e50;
-+            line-height: 1.6;
-             padding: 20px;
-             min-height: 100vh;
-+            background-image: url('Asifah_Analytics_1_25_26_V1_LOGO.png');
-+            background-position: center center;
-+            background-repeat: no-repeat;
-+            background-size: cover;
-+            background-attachment: fixed;
-+            opacity: 1;
-+        }
-+
-+        body::before {
-+            content: '';
-+            position: fixed;
-+            top: 0;
-+            left: 0;
-+            width: 100%;
-+            height: 100%;
-+            background-color: rgba(245, 245, 245, 0.75);
-+            pointer-events: none;
-+            z-index: -1;
-         }
- 
-         /* NEW: Loading Overlay Styles */
-         .loading-overlay {
-             position: fixed;
-             top: 0;
-             left: 0;
-             width: 100%;
-             height: 100%;
-             background: rgba(30, 58, 95, 0.95);
-             backdrop-filter: blur(10px);
-             display: flex;
-             flex-direction: column;
-             align-items: center;
-             justify-content: center;
-             z-index: 9999;
-             transition: opacity 0.5s ease, visibility 0.5s ease;
-         }
- 
-         .loading-overlay.hidden {
-             opacity: 0;
-             visibility: hidden;
-         }
- 
-         .loading-spinner {
-@@ -118,340 +138,353 @@
-         .loading-progress {
-             margin-top: 25px;
-             font-size: 13px;
-             color: #7a9ab8;
-             font-style: italic;
-         }
- 
-         .loading-error {
-             color: #f87171;
-             font-size: 16px;
-             margin-top: 20px;
-             padding: 15px;
-             background: rgba(248, 113, 113, 0.1);
-             border: 1px solid rgba(248, 113, 113, 0.3);
-             border-radius: 8px;
-         }
- 
-         .container {
-             max-width: 1400px;
-             margin: 0 auto;
-         }
- 
-         header {
-             text-align: center;
-             margin-bottom: 30px;
-+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-+            color: white;
-+            padding: 35px;
-+            border-radius: 12px;
-+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-+            position: relative;
-         }
- 
-         h1 {
--            font-size: 2.5em;
-+            font-size: 28px;
-+            font-weight: bold;
-             margin-bottom: 10px;
-+            letter-spacing: 2px;
-             color: #ffffff;
--            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-         }
- 
-         .subtitle {
-             font-size: 1.1em;
--            color: #b8d4e8;
-+            color: rgba(255,255,255,0.9);
-             margin-bottom: 20px;
-         }
- 
-         .last-updated {
-             font-size: 0.9em;
--            color: #7a9ab8;
-+            color: rgba(255,255,255,0.8);
-             margin-top: 10px;
-         }
- 
-         /* Stability Index Card */
-         .stability-index-card {
--            background: rgba(255, 255, 255, 0.1);
--            backdrop-filter: blur(10px);
-+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-             border-radius: 15px;
-             padding: 30px;
-             margin-bottom: 30px;
--            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-+            border: 1px solid #e1e8ed;
-         }
- 
-         .stability-title {
-             font-size: 1.5em;
-             margin-bottom: 20px;
-             text-align: center;
--            color: #ffffff;
-+            color: #2c3e50;
-         }
- 
-         .stability-score {
-             font-size: 5em;
-             font-weight: bold;
-             text-align: center;
-             margin: 20px 0;
-         }
- 
-         .stability-score.green { color: #4ade80; }
-         .stability-score.yellow { color: #facc15; }
-         .stability-score.orange { color: #fb923c; }
-         .stability-score.red { color: #f87171; }
- 
-         .stability-label {
-             text-align: center;
-             font-size: 1.5em;
-             margin-bottom: 10px;
-             font-weight: 600;
-         }
- 
-         .stability-label.green { color: #4ade80; }
-         .stability-label.yellow { color: #facc15; }
-         .stability-label.orange { color: #fb923c; }
-         .stability-label.red { color: #f87171; }
- 
-         .stability-bar {
-             width: 100%;
-             height: 30px;
--            background: rgba(255,255,255,0.1);
-+            background: #e5e7eb;
-             border-radius: 15px;
-             overflow: hidden;
-             margin: 20px 0;
-         }
- 
-         .stability-fill {
-             height: 100%;
-             background: linear-gradient(90deg, #f87171 0%, #fb923c 25%, #facc15 50%, #4ade80 100%);
-             transition: width 0.5s ease;
-             border-radius: 15px;
-         }
- 
-         .stability-legend {
-             text-align: center;
-             font-size: 0.85em;
--            color: #b8d4e8;
-+            color: #7f8c8d;
-             font-style: italic;
-         }
- 
-         /* Sparkline styles */
- .sparkline-container {
-     margin-top: 15px;
-     padding: 10px;
--    background: rgba(255, 255, 255, 0.05);
-+    background: #f8f9fa;
-     border-radius: 8px;
-     display: flex;
-     align-items: center;
-     justify-content: space-between;
-+    border: 1px solid #e1e8ed;
- }
- 
- .sparkline-label {
-     font-size: 0.75em;
--    color: #b8d4e8;
-+    color: #7f8c8d;
-     margin-right: 10px;
- }
- 
- .sparkline-canvas {
-     flex-grow: 1;
-     max-width: 150px;
-     height: 40px;
- }
- 
- .sparkline-status {
-     font-size: 0.75em;
--    color: #7a9ab8;
-+    color: #95a5a6;
-     font-style: italic;
- }
- 
-         /* Metrics Grid */
-         .metrics-grid {
-             display: grid;
-             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-             gap: 20px;
-             margin-bottom: 30px;
-         }
- 
-         .metric-card {
--            background: rgba(255, 255, 255, 0.1);
--            backdrop-filter: blur(10px);
-+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-             border-radius: 12px;
-             padding: 20px;
--            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-             transition: transform 0.2s;
-+            border: 1px solid #e1e8ed;
-         }
- 
-         .metric-card:hover {
-             transform: translateY(-5px);
-         }
- 
-         .metric-title {
-             font-size: 0.9em;
--            color: #b8d4e8;
-+            color: #7f8c8d;
-             text-transform: uppercase;
-             letter-spacing: 1px;
-             margin-bottom: 10px;
-         }
- 
-         .metric-value {
-             font-size: 2.5em;
-             font-weight: bold;
--            color: #ffffff;
-+            color: #2c3e50;
-             margin-bottom: 5px;
-         }
- 
-         .metric-subtitle {
-             font-size: 0.85em;
--            color: #7a9ab8;
-+            color: #7f8c8d;
-         }
- 
-         /* Government Status */
-         .government-status {
--            background: rgba(255, 255, 255, 0.05);
-+            background: #f8f9fa;
-             padding: 15px;
-             border-radius: 8px;
-             margin-top: 10px;
-+            border: 1px solid #e1e8ed;
-         }
- 
-         .government-status-item {
-             display: flex;
-             justify-content: space-between;
-             padding: 8px 0;
--            border-bottom: 1px solid rgba(255,255,255,0.1);
-+            border-bottom: 1px solid #e1e8ed;
-         }
- 
-         .government-status-item:last-child {
-             border-bottom: none;
-         }
- 
-         .status-label {
--            color: #b8d4e8;
-+            color: #7f8c8d;
-             font-size: 0.9em;
-         }
- 
-         .status-value {
--            color: #ffffff;
-+            color: #2c3e50;
-             font-weight: 600;
-         }
- 
-         .status-value.warning {
-             color: #fb923c;
-         }
- 
-         .status-value.critical {
-             color: #f87171;
-         }
- 
-         /* Hezbollah Activity */
-         .activity-grid {
-             display: grid;
-             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-             gap: 15px;
-             margin-top: 15px;
-         }
- 
-         .activity-item {
--            background: rgba(255,255,255,0.05);
-+            background: #f8f9fa;
-             padding: 15px;
-             border-radius: 8px;
-             text-align: center;
-+            border: 1px solid #e1e8ed;
-         }
- 
-         .activity-number {
-             font-size: 2em;
-             font-weight: bold;
--            color: #ffffff;
-+            color: #2c3e50;
-         }
- 
-         .activity-label {
-             font-size: 0.85em;
--            color: #b8d4e8;
-+            color: #7f8c8d;
-             margin-top: 5px;
-         }
- 
-         /* Articles Section */
-         .articles-section {
--            background: rgba(255, 255, 255, 0.1);
--            backdrop-filter: blur(10px);
-+            background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
-             border-radius: 15px;
-             padding: 25px;
-             margin-top: 30px;
-+            border: 1px solid #e1e8ed;
-+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-         }
- 
-         .section-title {
-             font-size: 1.5em;
-             margin-bottom: 20px;
--            color: #ffffff;
-+            color: #2c3e50;
-         }
- 
-         .article-item {
--            background: rgba(255,255,255,0.05);
-+            background: #f8f9fa;
-             padding: 15px;
-             border-radius: 8px;
-             margin-bottom: 10px;
-             transition: background 0.2s;
-+            border: 1px solid #e1e8ed;
-         }
- 
-         .article-item:hover {
--            background: rgba(255,255,255,0.1);
-+            background: #eef2f6;
-         }
- 
-         .article-title {
--            color: #ffffff;
-+            color: #2c3e50;
-             font-size: 1.05em;
-             margin-bottom: 5px;
-         }
- 
-         .article-meta {
-             font-size: 0.85em;
--            color: #7a9ab8;
-+            color: #7f8c8d;
-         }
- 
-         .article-link {
-             color: #6495ED;
-             text-decoration: none;
-             font-size: 0.9em;
-         }
- 
-         .article-link:hover {
-             text-decoration: underline;
-         }
- 
-         /* Loading State */
-         .loading {
-             text-align: center;
-             padding: 60px 20px;
-         }
- 
-         .spinner {
-             width: 50px;
-             height: 50px;
-             border: 4px solid rgba(255,255,255,0.1);
-             border-top-color: #ffffff;
-             border-radius: 50%;
-             animation: spin 1s linear infinite;
-             margin: 0 auto 20px;
-         }
- 
-         /* Footer */
-         footer {
-             text-align: center;
-             margin-top: 40px;
-             padding: 20px;
-             font-size: 0.85em;
--            color: #7a9ab8;
-+            color: #7f8c8d;
-         }
- 
-         .back-link {
-             display: inline-block;
-             margin-top: 20px;
-             padding: 12px 24px;
-             background: rgba(255,255,255,0.1);
-             color: #ffffff;
-             text-decoration: none;
-             border-radius: 8px;
-             transition: background 0.2s;
-         }
- 
-         .back-link:hover {
-             background: rgba(255,255,255,0.2);
-         }
- 
-         /* Language Switcher */
-         .language-switcher {
-             position: absolute;
-             top: 35px;
-             right: 35px;
-             display: flex;
-             gap: 8px;
-             background: rgba(255,255,255,0.15);
-@@ -646,50 +679,52 @@
-                 NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content. Reddit for community intelligence, plus other OSINT sources.
-             </div>
-            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:#6495ED;">asifahanalytics@gmail.com</a></div>
-             
-             <div style="margin-top:25px; padding:15px; background:rgba(255,255,255,0.05); border-radius:8px;">
-                 <div style="font-size:0.9em; color:#b8d4e8; margin-bottom:8px;">Asifah Analytics v2.7.0</div>
-                 <div style="font-size:0.8em; color:#7a9ab8;">Updated every 30 minutes | Not for operational use</div>
-             </div>
- 
-             <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
-                 <span style="font-size:0.9em; color:#b8d4e8;">
-                     If you find Asifah Analytics useful and want to support ongoing development, you can 
-                     <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#6495ED;">☕ buy me a coffee</a>
-                 </span>
-             </div>
- 
-             <div style="margin-top:25px; font-size:0.75em; color:#5a7a9a;">
-                 © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
-                 Unauthorized use, reproduction, or distribution prohibited.
-             </div>
-         </footer>
-     </div>
- 
-     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-         const BACKEND_URL = 'https://asifah-backend.onrender.com';
-+        const TREND_CACHE_KEY = 'lebanon-trends-cache-v1';
-+        const TREND_CACHE_TTL = 30 * 60 * 1000;
- 
-         // NEW: Loading Overlay Management
-         let loadingStepIndex = 0;
-         let loadingInterval = null;
-         let loadingTimeout = null;
- 
-         function startLoadingProgress() {
-             const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
-             
-             // Progress through steps every 8 seconds
-             loadingInterval = setInterval(() => {
-                 if (loadingStepIndex < steps.length - 1) {
-                     // Mark current step as complete
-                     const currentStep = document.getElementById(steps[loadingStepIndex]);
-                     if (currentStep) {
-                         currentStep.classList.remove('active');
-                         currentStep.classList.add('complete');
-                         currentStep.querySelector('.step-icon').textContent = '✓';
-                     }
-                     
-                     // Move to next step
-                     loadingStepIndex++;
-                     const nextStep = document.getElementById(steps[loadingStepIndex]);
-                     if (nextStep) {
-                         nextStep.classList.add('active');
-@@ -702,69 +737,121 @@
-                 document.getElementById('loadingError').style.display = 'block';
-             }, 60000);
-         }
- 
- function hideLoadingOverlay() {
-     // Clear intervals
-     if (loadingInterval) clearInterval(loadingInterval);
-     if (loadingTimeout) clearTimeout(loadingTimeout);
-     
-     // Mark all steps as complete
-     document.querySelectorAll('.loading-step').forEach(step => {
-         step.classList.remove('active');
-         step.classList.add('complete');
-         step.querySelector('.step-icon').textContent = '✓';
-     });
-     
-     // Fade out overlay after brief delay
-     setTimeout(() => {
-         const overlay = document.getElementById('loadingOverlay');
-         if (overlay) {
-             overlay.classList.add('hidden');
-         }
-     }, 500);
- }
- 
-+function getCachedTrends() {
-+    try {
-+        const cached = JSON.parse(localStorage.getItem(TREND_CACHE_KEY));
-+        if (!cached || !cached.timestamp || !cached.data) {
-+            return null;
-+        }
-+        if (Date.now() - cached.timestamp > TREND_CACHE_TTL) {
-+            return null;
-+        }
-+        return cached.data;
-+    } catch (error) {
-+        console.warn('Unable to read trend cache:', error);
-+        return null;
-+    }
-+}
-+
-+function setCachedTrends(data) {
-+    try {
-+        localStorage.setItem(TREND_CACHE_KEY, JSON.stringify({
-+            timestamp: Date.now(),
-+            data
-+        }));
-+    } catch (error) {
-+        console.warn('Unable to write trend cache:', error);
-+    }
-+}
-+
-+function applyTrendData(data) {
-+    if (data.success && data.days_collected >= 3) {
-+        createSparklines(data.trends);
-+        return true;
-+    }
-+
-+    if (data.success) {
-+        document.getElementById('stabilitySparklineStatus').textContent =
-+            `Building... (${data.days_collected}/3 days)`;
-+
-+        if (data.days_collected > 0) {
-+            document.getElementById('stabilitySparklineContainer').style.display = 'flex';
-+        }
-+    }
-+
-+    return false;
-+}
-+
- // NEW: Fetch trend data for sparklines
- async function loadTrendData() {
-+    const cachedData = getCachedTrends();
-+    if (cachedData) {
-+        const usedCache = applyTrendData(cachedData);
-+        if (usedCache) {
-+            return;
-+        }
-+    }
-+
-     try {
--        const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`);
-+        const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`, {
-+            cache: 'no-store'
-+        });
-         const data = await response.json();
--        
--        if (data.success && data.days_collected >= 3) {
--            createSparklines(data.trends);
--        } else {
--            document.getElementById('stabilitySparklineStatus').textContent = 
--                `Building... (${data.days_collected}/3 days)`;
--            
--            if (data.days_collected > 0) {
--                document.getElementById('stabilitySparklineContainer').style.display = 'flex';
--            }
-+
-+        if (data.success) {
-+            setCachedTrends(data);
-         }
-+
-+        applyTrendData(data);
-     } catch (error) {
-         console.error('Error loading trend data:', error);
--        document.getElementById('stabilitySparklineStatus').textContent = 'No trend data';
-+        if (!cachedData) {
-+            document.getElementById('stabilitySparklineStatus').textContent = 'No trend data';
-+        }
-     }
- }
- 
-         // NEW: Create sparkline charts
- function createSparklines(trends) {
-     const commonOptions = {
-         responsive: true,
-         maintainAspectRatio: false,
-         plugins: { legend: { display: false }, tooltip: { enabled: false } },
-         scales: { x: { display: false }, y: { display: false } },
-         elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
-     };
- 
-     // 1. Stability Sparkline
-     if (trends.stability && trends.stability.length > 0) {
-         const ctx = document.getElementById('stabilitySparkline');
-         new Chart(ctx, {
-             type: 'line',
-             data: {
-                 labels: trends.dates,
-                 datasets: [{
-                     data: trends.stability,
-                     borderColor: '#6495ED',
-                     backgroundColor: 'rgba(100, 149, 237, 0.1)',
-                     fill: true
- 
-EOF
-)
+<!DOCTYPE html>
+<!-- Asifah Analytics - Lebanon Stability Index v2.7.0 - Last updated: Feb 3, 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Lebanon Stability Index | Asifah Analytics v2.7.0</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇱🇧</text></svg>">
+    <!-- Chart.js for sparklines -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Google Analytics (commented out - may be blocked by network) -->
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-Z9114D1Z5C');
+    </script> -->
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 100%);
+            color: #f0f4f8;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* NEW: Loading Overlay Styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(30, 58, 95, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(100, 149, 237, 0.2);
+            border-top-color: #6495ED;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-status {
+            text-align: center;
+            max-width: 500px;
+            padding: 0 20px;
+        }
+
+        .loading-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #6495ED;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .loading-steps {
+            margin-top: 20px;
+        }
+
+        .loading-step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            font-size: 15px;
+            color: #7a9ab8;
+            transition: all 0.3s ease;
+        }
+
+        .loading-step.active {
+            color: #6495ED;
+            font-weight: bold;
+        }
+
+        .loading-step.complete {
+            color: #4ade80;
+        }
+
+        .step-icon {
+            font-size: 18px;
+            min-width: 20px;
+        }
+
+        .loading-progress {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #7a9ab8;
+            font-style: italic;
+        }
+
+        .loading-error {
+            color: #f87171;
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(248, 113, 113, 0.1);
+            border: 1px solid rgba(248, 113, 113, 0.3);
+            border-radius: 8px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #b8d4e8;
+            margin-bottom: 20px;
+        }
+
+        .last-updated {
+            font-size: 0.9em;
+            color: #7a9ab8;
+            margin-top: 10px;
+        }
+
+        /* Stability Index Card */
+        .stability-index-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .stability-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .stability-score {
+            font-size: 5em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stability-score.green { color: #4ade80; }
+        .stability-score.yellow { color: #facc15; }
+        .stability-score.orange { color: #fb923c; }
+        .stability-score.red { color: #f87171; }
+
+        .stability-label {
+            text-align: center;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stability-label.green { color: #4ade80; }
+        .stability-label.yellow { color: #facc15; }
+        .stability-label.orange { color: #fb923c; }
+        .stability-label.red { color: #f87171; }
+
+        .stability-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .stability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f87171 0%, #fb923c 25%, #facc15 50%, #4ade80 100%);
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+
+        .stability-legend {
+            text-align: center;
+            font-size: 0.85em;
+            color: #b8d4e8;
+            font-style: italic;
+        }
+
+        /* Sparkline styles */
+.sparkline-container {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sparkline-label {
+    font-size: 0.75em;
+    color: #b8d4e8;
+    margin-right: 10px;
+}
+
+.sparkline-canvas {
+    flex-grow: 1;
+    max-width: 150px;
+    height: 40px;
+}
+
+.sparkline-status {
+    font-size: 0.75em;
+    color: #7a9ab8;
+    font-style: italic;
+}
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: transform 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .metric-title {
+            font-size: 0.9em;
+            color: #b8d4e8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .metric-subtitle {
+            font-size: 0.85em;
+            color: #7a9ab8;
+        }
+
+        /* Government Status */
+        .government-status {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+
+        .government-status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .government-status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: #b8d4e8;
+            font-size: 0.9em;
+        }
+
+        .status-value {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .status-value.warning {
+            color: #fb923c;
+        }
+
+        .status-value.critical {
+            color: #f87171;
+        }
+
+        /* Hezbollah Activity */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .activity-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .activity-label {
+            font-size: 0.85em;
+            color: #b8d4e8;
+            margin-top: 5px;
+        }
+
+        /* Articles Section */
+        .articles-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .article-item {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+        }
+
+        .article-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .article-title {
+            color: #ffffff;
+            font-size: 1.05em;
+            margin-bottom: 5px;
+        }
+
+        .article-meta {
+            font-size: 0.85em;
+            color: #7a9ab8;
+        }
+
+        .article-link {
+            color: #6495ED;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .article-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-size: 0.85em;
+            color: #7a9ab8;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: absolute;
+            top: 35px;
+            right: 35px;
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+        }
+
+        [dir="rtl"] .language-switcher {
+            right: auto;
+            left: 35px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3a5f;
+            border-color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- NEW: Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Lebanon Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1">
+                    <span class="step-icon">⏳</span>
+                    <span>Fetching currency rates (LBP/USD)...</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span class="step-icon">⏳</span>
+                    <span>Scraping Eurobond yields...</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span class="step-icon">⏳</span>
+                    <span>Analyzing Hezbollah activity...</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span class="step-icon">⏳</span>
+                    <span>Calculating stability score...</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span class="step-icon">⏳</span>
+                    <span>Rendering dashboard...</span>
+                </div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">
+                This may take 20-40 seconds...
+            </div>
+            <div class="loading-error" id="loadingError" style="display: none;">
+                ⚠️ Loading is taking longer than expected. Please wait or refresh the page.
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                <button class="lang-btn" onclick="switchLanguage('fa', this)">פא</button>
+            </div>
+            <h1 data-i18n="pageTitle">🇱🇧 LEBANON STABILITY INDEX</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            <a href="index.html" class="back-link" style="position: absolute; top: 20px; left: 20px; margin: 0;" data-i18n="backLink">← Back to Dashboard</a>
+        </header>
+
+        <div id="content" style="display:none;">
+            <!-- Overall Stability Index -->
+            <div class="stability-index-card">
+                <div class="stability-title" data-i18n="stabilityTitle">LEBANON STABILITY INDEX</div>
+                <div class="stability-score" id="stabilityScore">--</div>
+                <div class="stability-label" id="stabilityLabel">--</div>
+                <div class="stability-bar">
+                    <div class="stability-fill" id="stabilityFill"></div>
+                </div>
+                <div class="stability-legend" data-i18n="stabilityLegend">100 = Stable Regime | 0 = Imminent Collapse</div>
+                <div class="sparkline-container" id="stabilitySparklineContainer">
+    <span class="sparkline-label">30-Day Trend:</span>
+    <canvas id="stabilitySparkline" class="sparkline-canvas"></canvas>
+    <span class="sparkline-status" id="stabilitySparklineStatus">Loading...</span>
+</div>
+            </div>
+
+            <!-- Metrics Grid -->
+            <div class="metrics-grid">
+                <!-- Government Status -->
+                <div class="metric-card">
+                    <div class="metric-title" data-i18n="govStatus">GOVERNMENT STATUS</div>
+                    <div class="metric-value" id="presidentStatus">✅</div>
+                    <div class="metric-subtitle" data-i18n="president">President: Joseph Aoun</div>
+                    <div class="government-status">
+                        <div class="government-status-item">
+                            <span class="status-label" data-i18n="daysInOffice">Days in Office:</span>
+                            <span class="status-value" id="daysWithPresident">--</span>
+                        </div>
+                        <div class="government-status-item">
+                            <span class="status-label" data-i18n="elected">Elected:</span>
+                            <span class="status-value">Jan 9, 2025</span>
+                        </div>
+                        <div class="government-status-item">
+                            <span class="status-label" data-i18n="daysUntilElections">Days Until Elections:</span>
+                            <span class="status-value" id="daysUntilElection">--</span>
+                        </div>
+                    </div>
+                </div>
+
+<!-- Currency Status -->
+<div class="metric-card">
+    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
+    <div class="metric-value" id="currencyRate">--</div>
+    <div class="metric-subtitle" id="currencyChange">--</div>
+    <div id="currencyTrend" style="margin-top:10px;"></div>
+    
+    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
+        <span class="sparkline-label">30-Day:</span>
+        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
+        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
+    </div>
+</div>
+
+                <!-- Bond Yields -->
+                <div class="metric-card">
+                    <div class="metric-title" data-i18n="bondYield">10Y EUROBOND YIELD</div>
+                    <div class="metric-value" id="bondYield">--</div>
+                    <div class="metric-subtitle" data-i18n="bondSubtitle">Sovereign default risk</div>
+                    <div class="sparkline-container" id="bondSparklineContainer" style="display:none;">
+    <span class="sparkline-label">30-Day:</span>
+    <canvas id="bondSparkline" class="sparkline-canvas"></canvas>
+    <span class="sparkline-status" id="bondSparklineStatus">Loading...</span>
+</div>
+                </div>
+
+                <!-- Hezbollah Activity -->
+                <div class="metric-card">
+                    <div class="metric-title" data-i18n="hezbollahActivity">HEZBOLLAH ACTIVITY</div>
+                    <div class="metric-value" id="hezbollahScore">--</div>
+                    <div class="metric-subtitle" data-i18n="last7Days">Last 7 days</div>
+                    <div class="sparkline-container" id="hezbollahSparklineContainer" style="display:none;">
+    <span class="sparkline-label">7-Day:</span>
+    <canvas id="hezbollahSparkline" class="sparkline-canvas"></canvas>
+    <span class="sparkline-status" id="hezbollahSparklineStatus">Loading...</span>
+</div>
+                    <div class="activity-grid">
+                        <div class="activity-item">
+                            <div class="activity-number" id="rearmamentCount">--</div>
+                            <div class="activity-label" data-i18n="rearmamentReports">Rearmament Reports</div>
+                            <div id="rearmamentLinks" style="margin-top:10px; font-size:0.8em;"></div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-number" id="strikeCount">--</div>
+                            <div class="activity-label" data-i18n="strikeMentions">Strike Mentions</div>
+                            <div id="strikeLinks" style="margin-top:10px; font-size:0.8em;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Hezbollah-Related Articles -->
+            <div class="articles-section">
+                <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 7 Days)</div>
+                <div id="articlesContainer"></div>
+            </div>
+        </div>
+
+        <footer>
+            <div>Data Sources: ExchangeRate-API, Trading Economics, Google News, UNIFIL Reports</div>
+            <div style="margin-top:15px; font-size:0.85em; color:#7a9ab8;">
+                NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content. Reddit for community intelligence, plus other OSINT sources.
+            </div>
+           <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:#6495ED;">asifahanalytics@gmail.com</a></div>
+            
+            <div style="margin-top:25px; padding:15px; background:rgba(255,255,255,0.05); border-radius:8px;">
+                <div style="font-size:0.9em; color:#b8d4e8; margin-bottom:8px;">Asifah Analytics v2.7.0</div>
+                <div style="font-size:0.8em; color:#7a9ab8;">Updated every 30 minutes | Not for operational use</div>
+            </div>
+
+            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
+                <span style="font-size:0.9em; color:#b8d4e8;">
+                    If you find Asifah Analytics useful and want to support ongoing development, you can 
+                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#6495ED;">☕ buy me a coffee</a>
+                </span>
+            </div>
+
+            <div style="margin-top:25px; font-size:0.75em; color:#5a7a9a;">
+                © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        const BACKEND_URL = 'https://asifah-backend.onrender.com';
+
+        // NEW: Loading Overlay Management
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+
+        function startLoadingProgress() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            
+            // Progress through steps every 8 seconds
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    // Mark current step as complete
+                    const currentStep = document.getElementById(steps[loadingStepIndex]);
+                    if (currentStep) {
+                        currentStep.classList.remove('active');
+                        currentStep.classList.add('complete');
+                        currentStep.querySelector('.step-icon').textContent = '✓';
+                    }
+                    
+                    // Move to next step
+                    loadingStepIndex++;
+                    const nextStep = document.getElementById(steps[loadingStepIndex]);
+                    if (nextStep) {
+                        nextStep.classList.add('active');
+                    }
+                }
+            }, 8000); // 8 seconds per step = 40 seconds total
+            
+            // Show error message after 60 seconds
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingError').style.display = 'block';
+            }, 60000);
+        }
+
+function hideLoadingOverlay() {
+    // Clear intervals
+    if (loadingInterval) clearInterval(loadingInterval);
+    if (loadingTimeout) clearTimeout(loadingTimeout);
+    
+    // Mark all steps as complete
+    document.querySelectorAll('.loading-step').forEach(step => {
+        step.classList.remove('active');
+        step.classList.add('complete');
+        step.querySelector('.step-icon').textContent = '✓';
+    });
+    
+    // Fade out overlay after brief delay
+    setTimeout(() => {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+        }
+    }, 500);
+}
+
+// NEW: Fetch trend data for sparklines
+async function loadTrendData() {
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`);
+        const data = await response.json();
+        
+        if (data.success && data.days_collected >= 3) {
+            createSparklines(data.trends);
+        } else {
+            document.getElementById('stabilitySparklineStatus').textContent = 
+                `Building... (${data.days_collected}/3 days)`;
+            
+            if (data.days_collected > 0) {
+                document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+            }
+        }
+    } catch (error) {
+        console.error('Error loading trend data:', error);
+        document.getElementById('stabilitySparklineStatus').textContent = 'No trend data';
+    }
+}
+
+        // NEW: Create sparkline charts
+function createSparklines(trends) {
+    const commonOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        scales: { x: { display: false }, y: { display: false } },
+        elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
+    };
+
+    // 1. Stability Sparkline
+    if (trends.stability && trends.stability.length > 0) {
+        const ctx = document.getElementById('stabilitySparkline');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trends.dates,
+                datasets: [{
+                    data: trends.stability,
+                    borderColor: '#6495ED',
+                    backgroundColor: 'rgba(100, 149, 237, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = trends.stability[trends.stability.length - 1];
+        const previous = trends.stability[trends.stability.length - 2] || latest;
+        const change = latest - previous;
+        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+        const color = change > 0 ? '#4ade80' : change < 0 ? '#f87171' : '#7a9ab8';
+        
+        document.getElementById('stabilitySparklineStatus').innerHTML = 
+            `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(1)}</span>`;
+        document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+    }
+
+    // 2. Currency Sparkline
+    if (trends.currency && trends.currency.length > 0) {
+        const ctx = document.getElementById('currencySparkline');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trends.dates,
+                datasets: [{
+                    data: trends.currency,
+                    borderColor: '#f87171',
+                    backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = trends.currency[trends.currency.length - 1];
+        const previous = trends.currency[trends.currency.length - 2] || latest;
+        const change = ((latest - previous) / previous * 100).toFixed(1);
+        const arrow = change > 0 ? '▼' : change < 0 ? '▲' : '→';
+        
+        document.getElementById('currencySparklineStatus').innerHTML = 
+            `<span style="color:#f87171">${arrow} ${Math.abs(change)}%</span>`;
+        document.getElementById('currencySparklineContainer').style.display = 'flex';
+    }
+
+    // 3. Bond Sparkline
+    if (trends.bonds && trends.bonds.length > 0) {
+        const ctx = document.getElementById('bondSparkline');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trends.dates,
+                datasets: [{
+                    data: trends.bonds,
+                    borderColor: '#fb923c',
+                    backgroundColor: 'rgba(251, 146, 60, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = trends.bonds[trends.bonds.length - 1];
+        const previous = trends.bonds[trends.bonds.length - 2] || latest;
+        const change = (latest - previous).toFixed(1);
+        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+        
+        document.getElementById('bondSparklineStatus').innerHTML = 
+            `<span style="color:#fb923c">${arrow} ${Math.abs(change)}%</span>`;
+        document.getElementById('bondSparklineContainer').style.display = 'flex';
+    }
+
+    // 4. Hezbollah Activity Sparkline (7-day rolling)
+    if (trends.hezbollah && trends.hezbollah.length > 0) {
+        const ctx = document.getElementById('hezbollahSparkline');
+        const last7 = {
+            dates: trends.dates.slice(-7),
+            data: trends.hezbollah.slice(-7)
+        };
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: last7.dates,
+                datasets: [{
+                    data: last7.data,
+                    borderColor: '#facc15',
+                    backgroundColor: 'rgba(250, 204, 21, 0.1)',
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+        
+        const latest = last7.data[last7.data.length - 1];
+        const previous = last7.data[last7.data.length - 2] || latest;
+        const change = latest - previous;
+        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+        const color = change > 0 ? '#f87171' : change < 0 ? '#4ade80' : '#7a9ab8';
+        
+        document.getElementById('hezbollahSparklineStatus').innerHTML = 
+            `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(0)}</span>`;
+        document.getElementById('hezbollahSparklineContainer').style.display = 'flex';
+    }
+}
+        async function loadLebanonData() {
+            try {
+                console.log('Fetching Lebanon stability data...');
+                console.log('Backend URL:', BACKEND_URL);
+                console.log('Full URL:', `${BACKEND_URL}/scan-lebanon-stability`);
+                
+                // Add timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                
+                const response = await fetch(`${BACKEND_URL}/scan-lebanon-stability`, {
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                console.log('Response received!');
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+                console.log('Response headers:', [...response.headers.entries()]);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const text = await response.text();
+                console.log('Raw response text (first 500 chars):', text.substring(0, 500));
+                
+                const data = JSON.parse(text);
+                
+                console.log('Parsed data:', data);
+                console.log('Success flag:', data.success);
+                
+                if (!data.success) {
+                    throw new Error(data.error || 'Unknown error');
+                }
+                
+                console.log('Lebanon data loaded successfully! Calling displayData...');
+                
+displayData(data);
+
+// NEW: Load trend data for sparklines
+await loadTrendData();
+
+// Hide loading overlay when data is ready
+hideLoadingOverlay();
+                
+                console.log('displayData completed!');
+                
+            } catch (error) {
+                console.error('Error loading Lebanon data:', error);
+                console.error('Error type:', error.constructor.name);
+                console.error('Error message:', error.message);
+                console.error('Full error:', error);
+                
+                let errorMessage = error.message;
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Request timeout (30 seconds) - backend may be slow';
+                }
+                
+                // Show error in loading overlay
+                document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
+                document.getElementById('loadingError').innerHTML = `⚠️ ${errorMessage}`;
+                document.getElementById('loadingError').style.display = 'block';
+            }
+        }
+
+        function displayData(data) {
+            // Show content
+            document.getElementById('content').style.display = 'block';
+            
+            // Update timestamp
+            document.getElementById('lastUpdated').textContent = 
+                `Last updated: ${new Date().toLocaleString('en-US', { 
+                    month: 'short', day: 'numeric', year: 'numeric', 
+                    hour: 'numeric', minute: '2-digit', hour12: true 
+                })}`;
+            
+            // Overall Stability
+            const stability = data.stability || {};
+            const score = stability.score || 0;
+            const riskLevel = stability.risk_level || 'Unknown';
+            const riskColor = stability.risk_color || 'red';
+            
+            document.getElementById('stabilityScore').textContent = `${score}/100`;
+            document.getElementById('stabilityScore').className = `stability-score ${riskColor}`;
+            document.getElementById('stabilityLabel').textContent = riskLevel;
+            document.getElementById('stabilityLabel').className = `stability-label ${riskColor}`;
+            document.getElementById('stabilityFill').style.width = `${score}%`;
+            
+            // Government Status
+            const govt = data.government || {};
+            if (govt.has_president) {
+                document.getElementById('daysWithPresident').textContent = govt.days_with_president || '0';
+            }
+            document.getElementById('daysUntilElection').textContent = govt.days_until_election || '0';
+            
+            // Currency
+            const currency = data.currency || {};
+            if (currency.usd_to_lbp) {
+                const rate = currency.usd_to_lbp.toLocaleString('en-US', {maximumFractionDigits: 0});
+                document.getElementById('currencyRate').textContent = rate;
+                
+                const devalPct = currency.devaluation_pct || 0;
+                document.getElementById('currencyChange').textContent = 
+                    `${devalPct > 0 ? '+' : ''}${devalPct.toFixed(0)}% vs official rate`;
+                document.getElementById('currencyChange').style.color = '#f87171';
+                
+                // Display 24h trend
+                const change24h = currency.change_24h || 0;
+                const pressure = currency.pressure || 'NEUTRAL';
+                const trendIcon = change24h > 0 ? '▼' : (change24h < 0 ? '▲' : '—');
+                const trendColor = change24h > 0 ? '#f87171' : (change24h < 0 ? '#4ade80' : '#7a9ab8');
+                const pressureIcon = pressure === 'SELLING' ? '📉' : (pressure === 'BUYING' ? '📈' : '━');
+                
+                document.getElementById('currencyTrend').innerHTML = `
+                    <div style="color:${trendColor}; font-size:0.9em; font-weight:600;">
+                        ${trendIcon} ${Math.abs(change24h).toFixed(2)}% (24h)
+                    </div>
+                    <div style="font-size:0.85em; color:#b8d4e8; margin-top:3px;">
+                        ${pressureIcon} ${pressure} PRESSURE
+                    </div>
+                `;
+            }
+            
+            // Bonds
+            const bonds = data.bonds || {};
+            if (bonds.yield) {
+                document.getElementById('bondYield').textContent = `${bonds.yield.toFixed(1)}%`;
+            } else {
+                document.getElementById('bondYield').textContent = 'N/A';
+            }
+            
+            // Hezbollah Activity
+            const hezbollah = data.hezbollah || {};
+            const activityScore = hezbollah.activity_score || 0;
+            document.getElementById('hezbollahScore').textContent = `${activityScore}/100`;
+            document.getElementById('rearmamentCount').textContent = hezbollah.rearmament_mentions || 0;
+            document.getElementById('strikeCount').textContent = hezbollah.strike_mentions || 0;
+            
+            // Add article links below counts
+            const articles = hezbollah.articles || [];
+            
+            // Filter articles by keyword
+            const rearmamentArticles = articles.filter(a => 
+                a.keyword && (a.keyword.toLowerCase().includes('rearmament') || a.keyword.toLowerCase().includes('weapons'))
+            ).slice(0, 3); // Show top 3
+            
+            const strikeArticles = articles.filter(a => 
+                a.keyword && a.keyword.toLowerCase().includes('strike')
+            ).slice(0, 3); // Show top 3
+            
+            // Display rearmament links
+            const rearmamentLinksContainer = document.getElementById('rearmamentLinks');
+            if (rearmamentArticles.length > 0) {
+                rearmamentLinksContainer.innerHTML = rearmamentArticles.map(article => `
+                    <div style="margin-top:5px;">
+                        <a href="${article.url}" target="_blank" style="color:#6495ED; text-decoration:none; font-size:0.85em;">
+                            → ${article.title ? article.title.substring(0, 60) + (article.title.length > 60 ? '...' : '') : 'Article'}
+                        </a>
+                    </div>
+                `).join('');
+            }
+            
+            // Display strike links
+            const strikeLinksContainer = document.getElementById('strikeLinks');
+            if (strikeArticles.length > 0) {
+                strikeLinksContainer.innerHTML = strikeArticles.map(article => `
+                    <div style="margin-top:5px;">
+                        <a href="${article.url}" target="_blank" style="color:#6495ED; text-decoration:none; font-size:0.85em;">
+                            → ${article.title ? article.title.substring(0, 60) + (article.title.length > 60 ? '...' : '') : 'Article'}
+                        </a>
+                    </div>
+                `).join('');
+            }
+            
+            // Articles section (already have articles variable from above)
+            const articlesContainer = document.getElementById('articlesContainer');
+            
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = '<div style="text-align:center; color:#7a9ab8; padding:20px;">No recent articles found</div>';
+            } else {
+                articlesContainer.innerHTML = articles.map(article => `
+                    <div class="article-item">
+                        <div class="article-title">${article.title || 'Untitled'}</div>
+                        <div class="article-meta">
+                            ${article.keyword || ''} • ${article.published ? new Date(article.published).toLocaleDateString() : 'Recent'}
+                        </div>
+                        ${article.url ? `<a href="${article.url}" target="_blank" class="article-link">Read article →</a>` : ''}
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Start loading progress animation
+            startLoadingProgress();
+            
+            // Fetch data
+            loadLebanonData();
+        });
+
+        // Translation system
+        const translations = {
+            en: {
+                pageTitle: "🇱🇧 LEBANON STABILITY INDEX",
+                pageSubtitle: "Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status",
+                lastUpdated: "Last updated: ",
+                backLink: "← Back to Dashboard",
+                stabilityTitle: "LEBANON STABILITY INDEX",
+                stabilityLegend: "100 = Stable Regime | 0 = Imminent Collapse",
+                govStatus: "GOVERNMENT STATUS",
+                president: "President: Joseph Aoun",
+                daysInOffice: "Days in Office:",
+                elected: "Elected:",
+                daysUntilElections: "Days Until Elections:",
+                currency: "CURRENCY (LBP/USD)",
+                bondYield: "10Y EUROBOND YIELD",
+                bondSubtitle: "Sovereign default risk",
+                hezbollahActivity: "HEZBOLLAH ACTIVITY",
+                last7Days: "Last 7 days",
+                rearmamentReports: "Rearmament Reports",
+                strikeMentions: "Strike Mentions",
+                recentArticles: "📰 Recent Hezbollah & Security Articles (Last 7 Days)",
+                noArticles: "No recent articles found",
+                readArticle: "Read article →"
+            },
+            he: {
+                pageTitle: "🇱🇧 מדד יציבות לבנון",
+                pageSubtitle: "ניתוח רב-גורמי: מצב פוליטי, כלכלי, ביטחוני וחיזבאללה",
+                lastUpdated: "עודכן לאחרונה: ",
+                backLink: "→ חזרה למרכז הבקרה",
+                stabilityTitle: "מדד יציבות לבנון",
+                stabilityLegend: "100 = משטר יציב | 0 = קריסה קרובה",
+                govStatus: "סטטוס הממשלה",
+                president: "נשיא: ג'וזף עון",
+                daysInOffice: "ימים בתפקיד:",
+                elected: "נבחר:",
+                daysUntilElections: "ימים עד הבחירות:",
+                currency: "מטבע (לירה לבנונית/דולר)",
+                bondYield: "תשואת איגרות חוב 10 שנים",
+                bondSubtitle: "סיכון למחדל ריבוני",
+                hezbollahActivity: "פעילות חיזבאללה",
+                last7Days: "7 ימים אחרונים",
+                rearmamentReports: "דיווחי חימוש מחדש",
+                strikeMentions: "אזכורי תקיפות",
+                recentArticles: "📰 כתבות אחרונות על חיזבאללה וביטחון (7 ימים)",
+                noArticles: "לא נמצאו כתבות אחרונות",
+                readArticle: "→ קרא כתבה"
+            },
+            ar: {
+                pageTitle: "🇱🇧 مؤشر استقرار لبنان",
+                pageSubtitle: "تحليل متعدد العوامل: الوضع السياسي والاقتصادي والأمني وحزب الله",
+                lastUpdated: "آخر تحديث: ",
+                backLink: "→ العودة إلى لوحة المعلومات",
+                stabilityTitle: "مؤشر استقرار لبنان",
+                stabilityLegend: "100 = نظام مستقر | 0 = انهيار وشيك",
+                govStatus: "حالة الحكومة",
+                president: "الرئيس: جوزيف عون",
+                daysInOffice: "أيام في المنصب:",
+                elected: "انتخب:",
+                daysUntilElections: "أيام حتى الانتخابات:",
+                currency: "العملة (ليرة لبنانية/دولار)",
+                bondYield: "عائد السندات 10 سنوات",
+                bondSubtitle: "مخاطر التخلف عن السداد السيادي",
+                hezbollahActivity: "نشاط حزب الله",
+                last7Days: "آخر 7 أيام",
+                rearmamentReports: "تقارير إعادة التسلح",
+                strikeMentions: "إشارات الضربات",
+                recentArticles: "📰 مقالات حديثة عن حزب الله والأمن (7 أيام)",
+                noArticles: "لا توجد مقالات حديثة",
+                readArticle: "→ اقرأ المقال"
+            },
+            fa: {
+                pageTitle: "🇱🇧 شاخص ثبات لبنان",
+                pageSubtitle: "تحلیل چندعاملی: وضعیت سیاسی، اقتصادی، امنیتی و حزب‌الله",
+                lastUpdated: "آخرین به‌روزرسانی: ",
+                backLink: "→ بازگشت به داشبورد",
+                stabilityTitle: "شاخص ثبات لبنان",
+                stabilityLegend: "100 = رژیم پایدار | 0 = فروپاشی قریب‌الوقوع",
+                govStatus: "وضعیت دولت",
+                president: "رئیس‌جمهور: ژوزف عون",
+                daysInOffice: "روزهای در مقام:",
+                elected: "انتخاب شده:",
+                daysUntilElections: "روزها تا انتخابات:",
+                currency: "ارز (لیره لبنان/دلار)",
+                bondYield: "بازده اوراق قرضه 10 ساله",
+                bondSubtitle: "ریسک نکول حاکمیتی",
+                hezbollahActivity: "فعالیت حزب‌الله",
+                last7Days: "7 روز گذشته",
+                rearmamentReports: "گزارش‌های تسلیح مجدد",
+                strikeMentions: "اشاره به حملات",
+                recentArticles: "📰 مقالات اخیر درباره حزب‌الله و امنیت (7 روز)",
+                noArticles: "مقاله اخیری یافت نشد",
+                readArticle: "→ خواندن مقاله"
+            }
+        };
+
+        function switchLanguage(lang, button) {
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Set text direction for RTL languages
+            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // Special handling for lastUpdated which has dynamic content
+                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
+                        const currentText = element.textContent;
+                        if (currentText.includes(':')) {
+                            const timestamp = currentText.split(': ')[1];
+                            element.textContent = translations[lang][key] + timestamp;
+                        } else {
+                            element.textContent = translations[lang][key] + 'Loading...';
+                        }
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
