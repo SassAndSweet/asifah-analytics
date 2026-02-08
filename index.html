@@ -3184,9 +3184,23 @@ const translations = {
             }
         }
 
-        async function scanTarget(targetName, days) {
-            const url = `${BACKEND_URL}/api/threat/${targetName}?days=${days}`;
-            const response = await fetch(url);
+async function scanTarget(targetName, days) {
+    // Map target names to new endpoint URLs
+    const endpointMap = {
+        'iran': '/api/iran-strike-probability',
+        'hezbollah': '/api/hezbollah-activity',
+        'houthis': '/api/houthis-threat',
+        'syria': '/api/syria-conflict'
+    };
+    
+    const endpoint = endpointMap[targetName];
+    if (!endpoint) {
+        throw new Error(`Unknown target: ${targetName}`);
+    }
+    
+    // Add ?refresh=true to force fresh scan (button click)
+    const url = `${BACKEND_URL}${endpoint}?refresh=true&days=${days}`;
+    const response = await fetch(url);
             if (!response.ok) {
                 const text = await response.text();
                 throw new Error(`HTTP ${response.status}: ${text.slice(0, 200)}`);
