@@ -3705,50 +3705,51 @@ async function updateFlightCancellations() {
             scanSingleTarget(target);
         }
 
-        // Load collapsed view data on page load
-        async function loadCollapsedData() {
-            // Iran
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/iran-strike-probability`);
-                if (response.ok) {
-                    const data = await response.json();
-                    updateCollapsedView('iran', data.probability, data.last_updated);
-                }
-            } catch (e) {
-                console.warn('Iran collapsed data failed:', e);
-            }
-            
-// Hezbollah
-try {
-    const response = await fetch(`${BACKEND_URL}/api/hezbollah-activity`);  // ADDED ( HERE
-    if (response.ok) {
-        const data = await response.json();
-        updateCollapsedView('hezbollah', data.probability, data.last_updated);
+// Load collapsed view data on page load
+async function loadCollapsedData() {
+    // Iran
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/iran-strike-probability`);  // FIXED: Added (
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('iran', data.probability, data.last_updated);
+        }
+    } catch (e) {
+        console.warn('Iran collapsed data failed:', e);
     }
-} catch (e) {
-    console.warn('Hezbollah collapsed data failed:', e);
-}
-            
-// Houthis
-try {
-    const response = await fetch(`${BACKEND_URL}/api/houthis-threat`);  // ADDED ( HERE
-    if (response.ok) {
-        const data = await response.json();
-        updateCollapsedView('houthis', data.probability, data.last_updated);
+    
+    // Hezbollah
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/hezbollah-activity`);  // FIXED: Added (
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('hezbollah', data.probability, data.last_updated);
+        }
+    } catch (e) {
+        console.warn('Hezbollah collapsed data failed:', e);
     }
-} catch (e) {
-    console.warn('Houthis collapsed data failed:', e);
-}
-            
-// Syria
-try {
-    const response = await fetch(`${BACKEND_URL}/api/syria-conflict`);  // ADDED ( HERE
-    if (response.ok) {
-        const data = await response.json();
-        updateCollapsedView('syria', data.probability, data.last_updated);  // Changed from instability_index to probability
+    
+    // Houthis
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/houthis-threat`);  // FIXED: Added (
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('houthis', data.probability, data.last_updated);
+        }
+    } catch (e) {
+        console.warn('Houthis collapsed data failed:', e);
     }
-} catch (e) {
-    console.warn('Syria collapsed data failed:', e);
+    
+    // Syria
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/syria-conflict`);  // FIXED: Added (
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('syria', data.probability, data.last_updated);
+        }
+    } catch (e) {
+        console.warn('Syria collapsed data failed:', e);
+    }
 }
 
         // Update collapsed view with data
