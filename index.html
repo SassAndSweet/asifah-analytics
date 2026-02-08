@@ -1049,6 +1049,281 @@
             display: none;
         }
 
+        /* NOTAM Widget */
+.notam-widget {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 2px solid #f59e0b;
+}
+
+.notam-widget-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.notam-widget-title {
+    font-size: 17px;
+    font-weight: bold;
+    color: #92400e;
+    letter-spacing: 0.5px;
+}
+
+.notam-widget-title::before {
+    content: "⚠️ ";
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.notam-status-badge {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background: #fef3c7;
+    color: #92400e;
+    border: 1px solid #f59e0b;
+}
+
+.notam-scroll-container {
+    position: relative;
+    overflow: hidden;
+    padding: 10px 0;
+}
+
+.notam-cards-wrapper {
+    display: flex;
+    gap: 20px;
+    animation: scroll-notams 30s linear infinite;
+    width: max-content;
+}
+
+.notam-cards-wrapper:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-notams {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.notam-card {
+    min-width: 320px;
+    max-width: 320px;
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%);
+    border: 2px solid #fde68a;
+    border-radius: 10px;
+    padding: 18px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.notam-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.2);
+}
+
+/* Color variants for different NOTAM types */
+.notam-card.type-red {
+    background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%);
+    border-color: #fecaca;
+}
+
+.notam-card.type-red:hover {
+    border-color: #f87171;
+    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.2);
+}
+
+.notam-card.type-orange {
+    background: linear-gradient(135deg, #fff7ed 0%, #ffffff 100%);
+    border-color: #fed7aa;
+}
+
+.notam-card.type-orange:hover {
+    border-color: #fb923c;
+    box-shadow: 0 6px 16px rgba(249, 115, 22, 0.2);
+}
+
+.notam-card.type-yellow {
+    background: linear-gradient(135deg, #fefce8 0%, #ffffff 100%);
+    border-color: #fef08a;
+}
+
+.notam-card.type-yellow:hover {
+    border-color: #facc15;
+    box-shadow: 0 6px 16px rgba(234, 179, 8, 0.2);
+}
+
+.notam-card.type-purple {
+    background: linear-gradient(135deg, #faf5ff 0%, #ffffff 100%);
+    border-color: #e9d5ff;
+}
+
+.notam-card.type-purple:hover {
+    border-color: #c084fc;
+    box-shadow: 0 6px 16px rgba(168, 85, 247, 0.2);
+}
+
+.notam-card.type-blue {
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%);
+    border-color: #bfdbfe;
+}
+
+.notam-card.type-blue:hover {
+    border-color: #60a5fa;
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
+}
+
+.notam-card.type-gray {
+    background: linear-gradient(135deg, #f9fafb 0%, #ffffff 100%);
+    border-color: #e5e7eb;
+}
+
+.notam-card.type-gray:hover {
+    border-color: #9ca3af;
+    box-shadow: 0 6px 16px rgba(107, 114, 128, 0.2);
+}
+
+.notam-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.notam-country {
+    font-size: 15px;
+    font-weight: bold;
+    color: #374151;
+    flex: 1;
+}
+
+.notam-type-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.notam-type-badge.type-red {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.notam-type-badge.type-orange {
+    background: #ffedd5;
+    color: #9a3412;
+    border: 1px solid #fed7aa;
+}
+
+.notam-type-badge.type-yellow {
+    background: #fef9c3;
+    color: #854d0e;
+    border: 1px solid #fef08a;
+}
+
+.notam-type-badge.type-purple {
+    background: #f3e8ff;
+    color: #6b21a8;
+    border: 1px solid #e9d5ff;
+}
+
+.notam-type-badge.type-blue {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #bfdbfe;
+}
+
+.notam-type-badge.type-gray {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #e5e7eb;
+}
+
+.notam-summary {
+    font-size: 13px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    min-height: 60px;
+}
+
+.notam-details {
+    font-size: 11px;
+    color: #6b7280;
+    line-height: 1.8;
+}
+
+.notam-detail-row {
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.notam-detail-row strong {
+    color: #374151;
+    min-width: 70px;
+}
+
+.notam-link {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.notam-link:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+.no-notams {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+.no-notams::before {
+    content: "✓";
+    display: block;
+    font-size: 48px;
+    color: #10b981;
+    margin-bottom: 15px;
+}
+
+.no-notams-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.no-notams-subtitle {
+    font-size: 13px;
+    color: #9ca3af;
+}
+        
         footer {
             background: white;
             padding: 25px;
@@ -2019,6 +2294,22 @@
 </div><!-- End targets-grid -->
 </div><!-- End main-content-wrapper -->
 
+<!-- NOTAM Widget (above flights) -->
+<div class="notam-widget" id="notamWidget">
+    <div class="notam-widget-header">
+        <div class="notam-widget-title" data-i18n="notamWidgetTitle">Active NOTAMs - Middle East</div>
+        <div class="notam-status-badge" id="notamStatusBadge">
+            <span>Loading...</span>
+        </div>
+    </div>
+    
+    <div class="notam-scroll-container" id="notamScrollContainer">
+        <div class="notam-cards-wrapper" id="notamCardsWrapper">
+            <!-- NOTAM cards will be inserted here -->
+        </div>
+    </div>
+</div>
+
 <!-- Flight widget OUTSIDE the grid wrapper -->
 <div class="flight-widget" id="flightWidget">
     <div class="flight-widget-header">
@@ -2716,7 +3007,7 @@ const translations = {
             container.innerHTML = html;
         }
 
-        async function updateFlightCancellations() {
+async function updateFlightCancellations() {
             const grid = document.getElementById('flightCancellationsGrid');
             const badge = document.getElementById('flightStatusBadge');
             if (!grid || !badge) return;
@@ -2769,127 +3060,229 @@ const translations = {
             return countryCode ? `https://flagcdn.com/24x18/${countryCode}.png` : null;
         }
 
-let flightCardsVisible = 4; // Track how many cards are visible
+        let flightCardsVisible = 4; // Track how many cards are visible
 
-function displayFlightCancellations(cancellations) {
-    const grid = document.getElementById('flightCancellationsGrid');
-    const badge = document.getElementById('flightStatusBadge');
-    const expandButton = document.getElementById('flightExpandButton');
-    
-    if (!grid || !badge) return;
-    
-    const t = translations[currentLanguage] || translations.en;
-    
-    if (!cancellations || cancellations.length === 0) {
-        grid.innerHTML = '<div class="no-cancellations">No major flight disruptions detected</div>';
-        badge.className = 'flight-status-badge normal';
-        badge.innerHTML = '<span>All Routes Normal</span>';
-        if (expandButton) expandButton.style.display = 'none';
-        return;
-    }
-    
-    badge.className = 'flight-status-badge active';
-    badge.innerHTML = `<span>Active Disruptions (${cancellations.length})</span>`;
-    
-    let html = '';
-    cancellations.forEach((cancel, index) => {
-        const date = cancel.date ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
-        const logoUrl = getAirlineLogo(cancel.airline);
-        const flagImageUrl = getCountryFlagImage(cancel.destination);
-        
-        let statusClass = 'status-suspended';
-        let statusIcon = '🚫';
-        if (cancel.status === 'Resumed') {
-            statusClass = 'status-resumed';
-            statusIcon = '✅';
+        function displayFlightCancellations(cancellations) {
+            const grid = document.getElementById('flightCancellationsGrid');
+            const badge = document.getElementById('flightStatusBadge');
+            const expandButton = document.getElementById('flightExpandButton');
+            
+            if (!grid || !badge) return;
+            
+            const t = translations[currentLanguage] || translations.en;
+            
+            if (!cancellations || cancellations.length === 0) {
+                grid.innerHTML = '<div class="no-cancellations">No major flight disruptions detected</div>';
+                badge.className = 'flight-status-badge normal';
+                badge.innerHTML = '<span>All Routes Normal</span>';
+                if (expandButton) expandButton.style.display = 'none';
+                return;
+            }
+            
+            badge.className = 'flight-status-badge active';
+            badge.innerHTML = `<span>Active Disruptions (${cancellations.length})</span>`;
+            
+            let html = '';
+            cancellations.forEach((cancel, index) => {
+                const date = cancel.date ? new Date(cancel.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+                const logoUrl = getAirlineLogo(cancel.airline);
+                const flagImageUrl = getCountryFlagImage(cancel.destination);
+                
+                let statusClass = 'status-suspended';
+                let statusIcon = '🚫';
+                if (cancel.status === 'Resumed') {
+                    statusClass = 'status-resumed';
+                    statusIcon = '✅';
+                }
+                
+                // Hide cards beyond first 4
+                const hiddenClass = index >= 4 ? ' hidden-card' : '';
+                
+                html += `<div class="cancellation-card ${statusClass}${hiddenClass}" data-card-index="${index}">
+                    <div class="cancellation-header">
+                        <img src="${logoUrl}" alt="${cancel.airline}" class="airline-logo" onerror="this.style.display='none';">
+                        <div class="cancellation-airline">${cancel.airline || 'Unknown Airline'}</div>
+                        <span class="cancellation-status-badge ${statusClass}">${statusIcon} ${cancel.status || 'Suspended'}</span>
+                    </div>
+                    <div class="cancellation-route">
+                        ${flagImageUrl ? `<img src="${flagImageUrl}" style="width:20px; height:15px; vertical-align:middle; margin-right:6px;">` : '✈️'}
+                        ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
+                    </div>
+                    <div class="cancellation-details">
+                        <div class="detail-row"><strong>📅 Announced:</strong> ${date}</div>
+                        <div class="detail-row"><strong>⏱️ Duration:</strong> ${cancel.duration || 'Indefinite'}</div>
+                        ${cancel.source_url ? `<div class="detail-row"><a href="${cancel.source_url}" target="_blank" rel="noopener noreferrer" class="source-link">📰 View Article →</a></div>` : ''}
+                    </div>
+                </div>`;
+            });
+            
+            grid.innerHTML = html;
+            
+            // Show expand button if more than 4 cards
+            if (expandButton) {
+                if (cancellations.length > 4) {
+                    expandButton.style.display = 'block';
+                    flightCardsVisible = 4;
+                    updateExpandButton(cancellations.length);
+                } else {
+                    expandButton.style.display = 'none';
+                }
+            }
         }
-        
-        // Hide cards beyond first 4
-        const hiddenClass = index >= 4 ? ' hidden-card' : '';
-        
-        html += `<div class="cancellation-card ${statusClass}${hiddenClass}" data-card-index="${index}">
-            <div class="cancellation-header">
-                <img src="${logoUrl}" alt="${cancel.airline}" class="airline-logo" onerror="this.style.display='none';">
-                <div class="cancellation-airline">${cancel.airline || 'Unknown Airline'}</div>
-                <span class="cancellation-status-badge ${statusClass}">${statusIcon} ${cancel.status || 'Suspended'}</span>
-            </div>
-            <div class="cancellation-route">
-                ${flagImageUrl ? `<img src="${flagImageUrl}" style="width:20px; height:15px; vertical-align:middle; margin-right:6px;">` : '✈️'}
-                ${cancel.route || `${cancel.origin || 'Various'} → ${cancel.destination || 'Unknown'}`}
-            </div>
-            <div class="cancellation-details">
-                <div class="detail-row"><strong>📅 Announced:</strong> ${date}</div>
-                <div class="detail-row"><strong>⏱️ Duration:</strong> ${cancel.duration || 'Indefinite'}</div>
-                ${cancel.source_url ? `<div class="detail-row"><a href="${cancel.source_url}" target="_blank" rel="noopener noreferrer" class="source-link">📰 View Article →</a></div>` : ''}
-            </div>
-        </div>`;
-    });
-    
-    grid.innerHTML = html;
-    
-    // Show expand button if more than 4 cards
-    if (expandButton) {
-        if (cancellations.length > 4) {
-            expandButton.style.display = 'block';
-            flightCardsVisible = 4;
-            updateExpandButton(cancellations.length);
-        } else {
-            expandButton.style.display = 'none';
+
+        function updateExpandButton(totalCards) {
+            const expandButton = document.getElementById('flightExpandButton');
+            if (!expandButton) return;
+            
+            const hiddenCards = document.querySelectorAll('.cancellation-card.hidden-card');
+            
+            if (hiddenCards.length === 0) {
+                // All cards visible - show "collapse" button
+                expandButton.textContent = 'Show Less ▲';
+            } else {
+                // Some cards hidden - show how many more
+                const remaining = hiddenCards.length;
+                const toShow = Math.min(4, remaining);
+                expandButton.textContent = `Show ${toShow} More ▼`;
+            }
         }
-    }
-}
 
-function updateExpandButton(totalCards) {
-    const expandButton = document.getElementById('flightExpandButton');
-    if (!expandButton) return;
-    
-    const hiddenCards = document.querySelectorAll('.cancellation-card.hidden-card');
-    
-    if (hiddenCards.length === 0) {
-        // All cards visible - show "collapse" button
-        expandButton.textContent = 'Show Less ▲';
-    } else {
-        // Some cards hidden - show how many more
-        const remaining = hiddenCards.length;
-        const toShow = Math.min(4, remaining);
-        expandButton.textContent = `Show ${toShow} More ▼`;
-    }
-}
+        function toggleFlightCards() {
+            const allCards = document.querySelectorAll('.cancellation-card');
+            const hiddenCards = document.querySelectorAll('.cancellation-card.hidden-card');
+            
+            if (hiddenCards.length === 0) {
+                // All visible - collapse back to 4
+                allCards.forEach((card, index) => {
+                    if (index >= 4) {
+                        card.classList.add('hidden-card');
+                    }
+                });
+                flightCardsVisible = 4;
+            } else {
+                // Show next 4
+                let shown = 0;
+                hiddenCards.forEach(card => {
+                    if (shown < 4) {
+                        card.classList.remove('hidden-card');
+                        shown++;
+                    }
+                });
+                flightCardsVisible += shown;
+            }
+            
+            updateExpandButton(allCards.length);
+        }
 
-function toggleFlightCards() {
-    const allCards = document.querySelectorAll('.cancellation-card');
-    const hiddenCards = document.querySelectorAll('.cancellation-card.hidden-card');
-    
-    if (hiddenCards.length === 0) {
-        // All visible - collapse back to 4
-        allCards.forEach((card, index) => {
-            if (index >= 4) {
-                card.classList.add('hidden-card');
+        // Add event listener for expand button
+        window.addEventListener('DOMContentLoaded', () => {
+            const expandButton = document.getElementById('flightExpandButton');
+            if (expandButton) {
+                expandButton.addEventListener('click', toggleFlightCards);
             }
         });
-        flightCardsVisible = 4;
-    } else {
-        // Show next 4
-        let shown = 0;
-        hiddenCards.forEach(card => {
-            if (shown < 4) {
-                card.classList.remove('hidden-card');
-                shown++;
-            }
-        });
-        flightCardsVisible += shown;
-    }
-    
-    updateExpandButton(allCards.length);
-}
 
-// Add event listener for expand button
-window.addEventListener('DOMContentLoaded', () => {
-    const expandButton = document.getElementById('flightExpandButton');
-    if (expandButton) {
-        expandButton.addEventListener('click', toggleFlightCards);
-    }
-});
+        // ===========================================
+        // NOTAM FUNCTIONS
+        // ===========================================
+
+        async function updateNotams() {
+            const wrapper = document.getElementById('notamCardsWrapper');
+            const badge = document.getElementById('notamStatusBadge');
+            
+            if (!wrapper || !badge) return;
+            
+            badge.innerHTML = '<span>Loading...</span>';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/notams`);
+                
+                if (!response.ok) {
+                    displayNotams([]);
+                    return;
+                }
+                
+                const data = await response.json();
+                displayNotams(data.notams || []);
+                
+            } catch (error) {
+                console.warn('NOTAM fetch error:', error);
+                displayNotams([]);
+            }
+        }
+
+        function displayNotams(notams) {
+            const wrapper = document.getElementById('notamCardsWrapper');
+            const badge = document.getElementById('notamStatusBadge');
+            
+            if (!wrapper || !badge) return;
+            
+            if (!notams || notams.length === 0) {
+                badge.innerHTML = '<span>0 Active</span>';
+                wrapper.innerHTML = `
+                    <div class="no-notams">
+                        <div class="no-notams-title">No Active NOTAMs</div>
+                        <div class="no-notams-subtitle">All Middle East airspace operating normally</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            badge.innerHTML = `<span>${notams.length} Active</span>`;
+            
+            // Determine color class based on NOTAM type
+            function getColorClass(color) {
+                const colorMap = {
+                    'red': 'type-red',
+                    'orange': 'type-orange',
+                    'yellow': 'type-yellow',
+                    'purple': 'type-purple',
+                    'blue': 'type-blue',
+                    'gray': 'type-gray'
+                };
+                return colorMap[color] || 'type-gray';
+            }
+            
+            // Generate NOTAM cards
+            let html = '';
+            notams.forEach(notam => {
+                const colorClass = getColorClass(notam.color);
+                
+                html += `
+                    <div class="notam-card ${colorClass}">
+                        <div class="notam-header">
+                            <div class="notam-country">${notam.flag} ${notam.country} (${notam.fir})</div>
+                        </div>
+                        <div class="notam-type-badge ${colorClass}">
+                            ${notam.icon} ${notam.type}
+                        </div>
+                        <div class="notam-summary">${notam.summary}</div>
+                        <div class="notam-details">
+                            <div class="notam-detail-row">
+                                <strong>📅 Valid:</strong> ${notam.valid_range}
+                            </div>
+                            <div class="notam-detail-row">
+                                <strong>🕐 Effective:</strong> ${notam.effective_date || 'Immediately'}
+                            </div>
+                            ${notam.source_url ? `
+                                <a href="${notam.source_url}" target="_blank" rel="noopener noreferrer" class="notam-link">
+                                    📰 View NOTAM →
+                                </a>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Duplicate cards for seamless infinite scroll
+            wrapper.innerHTML = html + html;
+        }
+
+        // Update NOTAMs on page load and every 15 minutes
+        window.addEventListener('DOMContentLoaded', () => {
+            updateNotams();
+            setInterval(updateNotams, 900000); // 15 minutes
+        });
 
         function toggleThreatMatrix(target) {
             const details = document.getElementById(`${target}-matrix-details`);
