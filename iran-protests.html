@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Asifah Analytics - Iran Protests Tracker v2.8.0 - Last updated: Feb 9, 2025 -->
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -12,7 +13,14 @@
     
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iran Protests Tracker | Asifah Analytics</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Iran Protests Tracker | Asifah Analytics v2.8.0</title>
+    
+    <!-- Favicon using Asifah Analytics logo -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    
     <style>
         * {
             margin: 0;
@@ -20,23 +28,89 @@
             box-sizing: border-box;
         }
 
+        /* CSS Variables for Light/Dark Mode */
+        :root {
+            /* Light Mode Colors (matching landing page) */
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #ffffff;
+            --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --watermark-opacity: 0.03;
+            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
+            --loading-spinner-bg: rgba(255, 107, 107, 0.2);
+            --iran-accent: #ff6b6b;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode Colors */
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #2d2d2d;
+            --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535;
+            --article-hover: #404040;
+            --watermark-opacity: 0.02;
+            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
+            --loading-spinner-bg: rgba(255, 107, 107, 0.3);
+            --iran-accent: #ff6b6b;
+        }
+
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 14px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
         }
 
-        /* NEW: Loading Overlay Styles */
+        /* Watermark Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Loading Overlay Styles */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(26, 26, 46, 0.95);
+            background: var(--loading-overlay-bg);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
@@ -54,8 +128,8 @@
         .loading-spinner {
             width: 60px;
             height: 60px;
-            border: 5px solid rgba(255, 107, 107, 0.2);
-            border-top-color: #ff6b6b;
+            border: 5px solid var(--loading-spinner-bg);
+            border-top-color: var(--iran-accent);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 30px;
@@ -74,7 +148,7 @@
         .loading-title {
             font-size: 24px;
             font-weight: bold;
-            color: #ff6b6b;
+            color: var(--iran-accent);
             margin-bottom: 20px;
             letter-spacing: 1px;
         }
@@ -90,12 +164,12 @@
             gap: 12px;
             padding: 12px;
             font-size: 15px;
-            color: #a0a0a0;
+            color: var(--text-secondary);
             transition: all 0.3s ease;
         }
 
         .loading-step.active {
-            color: #ff6b6b;
+            color: var(--iran-accent);
             font-weight: bold;
         }
 
@@ -111,12 +185,12 @@
         .loading-progress {
             margin-top: 25px;
             font-size: 13px;
-            color: #808080;
+            color: var(--text-secondary);
             font-style: italic;
         }
 
         .loading-error {
-            color: #ff6b6b;
+            color: var(--iran-accent);
             font-size: 16px;
             margin-top: 20px;
             padding: 15px;
@@ -128,77 +202,196 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        .header {
-            text-align: center;
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px;
+            border-radius: 12px;
             margin-bottom: 30px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 30px;
         }
 
-        .header h1 {
-            font-size: 32px;
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            margin-top: 48px;
+        }
+
+        .header-content {
+            flex: 1;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 28px;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #ff6b6b;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        .header p {
+        .subtitle {
             font-size: 16px;
-            color: #a0a0a0;
+            font-weight: normal;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
         }
 
-        .nav-bar {
+        /* Controls container on the right */
+        .header-controls {
+            position: absolute;
+            top: 35px;
+            right: 35px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        [dir="rtl"] .header-controls {
+            right: auto;
+            left: 35px;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: flex;
             align-items: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            justify-content: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            margin-right: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .theme-toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-switch:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .theme-toggle-slider::before {
+            content: '☀️';
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(24px);
+        }
+
+        [data-theme="dark"] .theme-toggle-slider::before {
+            content: '🌙';
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3a5f;
+            border-color: white;
         }
 
         .back-link {
-            color: #4dabf7;
+            display: inline-block;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            margin: 0;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white;
             text-decoration: none;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: bold;
         }
 
         .back-link:hover {
-            text-decoration: underline;
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
         }
 
-        .language-switcher {
-            display: flex;
-            gap: 15px;
-        }
-
-        .language-switcher button {
-            background: rgba(255, 255, 255, 0.1);
-            color: #e0e0e0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
-            transition: all 0.3s;
-        }
-
-        .language-switcher button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .language-switcher button.active {
-            background: #4dabf7;
-            border-color: #4dabf7;
+        .last-updated {
+            text-align: center;
+            padding: 15px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
         }
 
         .metrics-grid {
@@ -209,21 +402,26 @@
         }
 
         .metric-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: var(--metric-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
             padding: 25px;
-            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s, background 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
         }
 
         .metric-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--metric-hover-shadow);
+        }
+
+        .regime-stability-card {
+            grid-column: span 2;
         }
 
         .metric-title {
             font-size: 16px;
-            color: #a0a0a0;
+            color: var(--text-secondary);
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
@@ -238,7 +436,7 @@
         
         .stability-subtitle {
             font-size: 11px;
-            color: #808080;
+            color: var(--text-muted);
             font-style: italic;
             margin-top: -10px;
             margin-bottom: 15px;
@@ -249,17 +447,18 @@
             font-size: 48px;
             font-weight: bold;
             margin-bottom: 10px;
+            color: var(--text-primary);
         }
 
         .metric-subtitle {
             font-size: 16px;
-            color: #c0c0c0;
+            color: var(--text-secondary);
             margin-bottom: 10px;
         }
 
         .metric-explanation {
             font-size: 12px;
-            color: #808080;
+            color: var(--text-muted);
             font-style: italic;
         }
 
@@ -273,11 +472,7 @@
         .stability-low { color: #ff8c42; }
         .stability-critical { color: #ff6b6b; }
 
-        /* Enhanced Regime Stability Card */
-        .regime-stability-card {
-            grid-column: span 2;
-        }
-
+        /* Stability Progress Container */
         .stability-progress-container {
             display: flex;
             align-items: center;
@@ -288,10 +483,9 @@
         .stability-progress-bar {
             flex: 1;
             height: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-border);
             border-radius: 15px;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .stability-progress-fill {
@@ -316,7 +510,7 @@
 
         .stability-max {
             font-size: 24px;
-            color: #808080;
+            color: var(--text-muted);
             font-weight: normal;
         }
 
@@ -332,15 +526,14 @@
             align-items: center;
             gap: 12px;
             padding: 12px;
-            background: rgba(255, 255, 255, 0.03);
+            background: var(--article-bg);
             border-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--card-border);
             transition: all 0.3s;
         }
 
         .stability-metric-item:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: var(--article-hover);
         }
 
         .stability-icon {
@@ -355,7 +548,7 @@
 
         .stability-metric-label {
             font-size: 11px;
-            color: #a0a0a0;
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 4px;
@@ -364,7 +557,7 @@
 
         .stability-metric-value {
             font-size: 16px;
-            color: #e0e0e0;
+            color: var(--text-primary);
             font-weight: bold;
             font-family: 'Courier New', monospace;
         }
@@ -372,7 +565,7 @@
         .stability-trend-section {
             margin-top: 15px;
             padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--card-border);
             text-align: center;
         }
 
@@ -388,7 +581,7 @@
             font-weight: 600;
         }
 
-        /* Enhanced Casualty Cards v2.0 */
+        /* Casualties Grid */
         .casualties-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -397,33 +590,30 @@
         }
 
         .casualty-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: var(--metric-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
             padding: 25px;
             text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             transition: all 0.3s;
         }
 
         .casualty-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
             transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--metric-hover-shadow);
         }
 
         .casualty-card.deaths {
             border-color: #ff6b6b;
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
 
         .casualty-card.injuries {
             border-color: #ff8c42;
-            background: linear-gradient(135deg, rgba(255, 140, 66, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
 
         .casualty-card.arrests {
             border-color: #4dabf7;
-            background: linear-gradient(135deg, rgba(77, 171, 247, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
         }
 
         .casualty-icon {
@@ -454,30 +644,30 @@
             font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #a0a0a0;
+            color: var(--text-secondary);
             font-weight: bold;
         }
 
-        /* Enhanced casualty card sections */
         .casualty-section {
             margin: 15px 0;
             padding: 12px;
-            background: rgba(0, 0, 0, 0.2);
+            background: var(--article-bg);
             border-radius: 8px;
+            transition: background 0.3s ease;
         }
 
         .casualty-section-title {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #7a9ab8;
+            color: var(--text-secondary);
             margin-bottom: 8px;
             font-weight: 600;
         }
 
         .casualty-recent-values {
             font-size: 16px;
-            color: #ffffff;
+            color: var(--text-primary);
             margin: 5px 0;
             font-family: 'Courier New', monospace;
         }
@@ -504,30 +694,30 @@
         .casualty-cumulative-value {
             font-size: 24px;
             font-weight: bold;
-            color: #ffffff;
+            color: var(--text-primary);
             margin: 8px 0;
             font-family: 'Courier New', monospace;
         }
 
         .casualty-cumulative-label {
             font-size: 11px;
-            color: #b8d4e8;
+            color: var(--text-secondary);
             margin-bottom: 5px;
         }
 
         .casualty-avg {
             font-size: 12px;
-            color: #7a9ab8;
+            color: var(--text-secondary);
             margin-top: 5px;
         }
 
         .casualty-footnote {
             font-size: 10px;
-            color: #6b7280;
+            color: var(--text-muted);
             margin-top: 10px;
             font-style: italic;
             padding-top: 10px;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid var(--card-border);
         }
 
         .hrana-link {
@@ -542,52 +732,6 @@
         .hrana-link:hover {
             color: #4a7dc9;
             text-decoration: underline;
-        }
-
-        /* NEW: Source links styling v2.0 */
-        .casualty-sources {
-            margin-top: 15px;
-            text-align: left;
-            max-height: 150px;
-            overflow-y: auto;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-        }
-
-        .source-item {
-            font-size: 11px;
-            margin-bottom: 5px;
-            padding: 3px 0;
-        }
-
-        .source-item a {
-            color: #4dabf7;
-            text-decoration: none;
-        }
-
-        .source-item a:hover {
-            text-decoration: underline;
-        }
-
-        .source-count {
-            color: #c0c0c0;
-            margin-right: 5px;
-            font-weight: bold;
-        }
-
-        .source-no-numbers {
-            color: #ffd43b;
-            font-style: italic;
-        }
-
-        .casualty-sources::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .casualty-sources::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
         }
 
         .verified-badge {
@@ -610,33 +754,37 @@
         }
 
         .city-pill {
-            background: rgba(255, 107, 107, 0.2);
-            border: 1px solid rgba(255, 107, 107, 0.4);
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
             padding: 6px 12px;
             border-radius: 15px;
             font-size: 13px;
-            color: #ff6b6b;
+            color: var(--text-primary);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
+        /* News Section */
         .news-section {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
             padding: 25px;
             margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .news-section h2 {
             font-size: 24px;
             margin-bottom: 20px;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .language-tabs {
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 2px solid var(--card-border);
             padding-bottom: 10px;
             flex-wrap: wrap;
         }
@@ -644,7 +792,7 @@
         .language-tabs button {
             background: none;
             border: none;
-            color: #a0a0a0;
+            color: var(--text-secondary);
             font-family: 'Times New Roman', Times, serif;
             font-size: 16px;
             padding: 8px 16px;
@@ -655,7 +803,7 @@
         }
 
         .language-tabs button:hover {
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .language-tabs button.active {
@@ -669,8 +817,8 @@
         }
 
         .article {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
             border-radius: 8px;
             padding: 20px;
             margin-bottom: 15px;
@@ -678,15 +826,14 @@
         }
 
         .article:hover {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--article-hover);
         }
 
         .article-title {
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 8px;
-            color: #e0e0e0;
+            color: var(--text-primary);
         }
 
         .article-title a {
@@ -700,14 +847,14 @@
 
         .article-description {
             font-size: 14px;
-            color: #c0c0c0;
+            color: var(--text-secondary);
             margin-bottom: 12px;
             line-height: 1.6;
         }
 
         .article-meta {
             font-size: 12px;
-            color: #808080;
+            color: var(--text-muted);
             display: flex;
             gap: 15px;
         }
@@ -726,11 +873,16 @@
             color: #ff6b6b;
         }
 
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #808080;
+        footer {
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
             font-size: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+            transition: background 0.3s ease, border-color 0.3s ease;
         }
 
         .support-footer {
@@ -741,7 +893,6 @@
             border-radius: 8px;
             text-align: center;
             font-size: 13px;
-            color: #e0e0e0;
         }
 
         .support-footer a {
@@ -759,25 +910,9 @@
         .copyright-footer {
             margin-top: 20px;
             padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid var(--card-border);
             text-align: center;
-            color: #808080;
             font-size: 11px;
-        }
-
-        .last-updated {
-            text-align: center;
-            padding: 15px;
-            color: #a0a0a0;
-            font-size: 13px;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        [dir="rtl"] {
-            direction: rtl;
-            text-align: right;
         }
 
         .articles-container::-webkit-scrollbar {
@@ -785,20 +920,56 @@
         }
 
         .articles-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--article-bg);
             border-radius: 4px;
         }
 
         .articles-container::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.2);
+            background: var(--card-border);
             border-radius: 4px;
         }
 
         .articles-container::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: var(--text-muted);
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
+            text-align: right;
         }
 
         @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 25px 20px;
+            }
+            
+            .header-logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .header-content {
+                text-align: center;
+            }
+            
+            .header-controls {
+                position: static;
+                align-items: center;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .back-link {
+                position: static;
+                display: block;
+                width: fit-content;
+                margin: 0 auto 15px;
+            }
+            
             .metrics-grid {
                 grid-template-columns: 1fr;
             }
@@ -807,52 +978,14 @@
                 grid-template-columns: 1fr;
             }
 
-            .header h1 {
-                font-size: 24px;
-            }
-
             .metric-value {
                 font-size: 36px;
             }
-
-            .nav-bar {
-                flex-direction: column;
-                gap: 15px;
-            }
-        }
-        
-        /* Analytics Icon */
-        .analytics-icon {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 28px;
-            opacity: 0.5;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            text-decoration: none;
-            background: rgba(255, 107, 107, 0.2);
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border: 2px solid rgba(255, 107, 107, 0.3);
-        }
-        .analytics-icon:hover {
-            opacity: 1;
-            transform: scale(1.15) rotate(15deg);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
-            border-color: rgba(255, 107, 107, 0.6);
-            background: rgba(255, 107, 107, 0.3);
         }
     </style>
 </head>
 <body>
-    <!-- NEW: Loading Overlay -->
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-status">
@@ -888,44 +1021,49 @@
         </div>
     </div>
 
-    <!-- Analytics Icon -->
-    <a href="https://analytics.google.com" target="_blank" class="analytics-icon" title="View Analytics">🌪️</a>
-    
     <div class="container">
-        <div class="header">
-            <h1 id="main-title">Iran Protests Tracker</h1>
-            <p id="subtitle">Real-time monitoring of nationwide demonstrations and regime stability</p>
-        </div>
-
-        <div class="nav-bar">
-            <a href="index.html" class="back-link">
-                <span>←</span>
-                <span id="back-text">Back to Main Dashboard</span>
-            </a>
-            <div class="language-switcher">
-                <button onclick="switchLanguage('en')" class="active">EN</button>
-                <button onclick="switchLanguage('he')">עב</button>
-                <button onclick="switchLanguage('ar')">ع</button>
-                <button onclick="switchLanguage('fa')">فא</button>
+        <header>
+            <a href="index.html" class="back-link" data-i18n="backLink">← Back to Dashboard</a>
+            
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            
+            <div class="header-content">
+                <h1 id="main-title" data-i18n="pageTitle">🇮🇷 IRAN PROTESTS TRACKER</h1>
+                <div class="subtitle" id="subtitle" data-i18n="pageSubtitle">Real-time monitoring of nationwide demonstrations and regime stability</div>
             </div>
-        </div>
+            
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en')">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('he')">עב</button>
+                    <button class="lang-btn" onclick="switchLanguage('ar')">ע</button>
+                    <button class="lang-btn" onclick="switchLanguage('fa')">פא</button>
+                </div>
+                
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Toggle: Light - Dark</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
         <div class="last-updated" id="last-updated">
-            Loading data...
+            <span data-i18n="loading">Loading data...</span>
         </div>
 
         <div class="metrics-grid">
             <div class="metric-card">
-                <div class="metric-title" id="metric-title-intensity">Protest Intensity</div>
+                <div class="metric-title" id="metric-title-intensity" data-i18n="metricTitleIntensity">Protest Intensity</div>
                 <div class="metric-value" id="protest-intensity">--</div>
                 <div class="metric-subtitle" id="intensity-level">Loading...</div>
             </div>
 
             <div class="metric-card regime-stability-card">
-                <div class="metric-title" id="metric-title-stability">REGIME STABILITY INDEX</div>
+                <div class="metric-title" id="metric-title-stability" data-i18n="metricTitleStability">REGIME STABILITY INDEX</div>
                 <div class="stability-subtitle">100 = Stable Regime | 0 = Imminent Collapse</div>
                 
-                <!-- Progress Bar -->
                 <div class="stability-progress-container">
                     <div class="stability-progress-bar" id="stability-progress-bar">
                         <div class="stability-progress-fill" id="stability-progress-fill"></div>
@@ -936,7 +1074,6 @@
                     </div>
                 </div>
                 
-                <!-- Metrics Grid with Icons -->
                 <div class="stability-metrics-grid">
                     <div class="stability-metric-item">
                         <span class="stability-icon">💱</span>
@@ -972,7 +1109,6 @@
                     </div>
                 </div>
                 
-                <!-- Trend Info -->
                 <div class="stability-trend-section">
                     <div class="metric-subtitle" id="stability-level">Loading...</div>
                     <div class="metric-explanation" id="stability-trend">Trend: --</div>
@@ -980,20 +1116,19 @@
             </div>
 
             <div class="metric-card">
-                <div class="metric-title" id="metric-title-geography">Geographic Spread</div>
+                <div class="metric-title" id="metric-title-geography" data-i18n="metricTitleGeography">Geographic Spread</div>
                 <div class="metric-value" id="total-cities">--</div>
-                <div class="metric-subtitle" id="geography-subtitle">Cities affected</div>
+                <div class="metric-subtitle" id="geography-subtitle" data-i18n="geographySubtitle">Cities affected</div>
                 <div class="cities-container" id="cities-list"></div>
             </div>
         </div>
 
-        <!-- Enhanced Casualties Grid v2.0 with Source Links -->
+        <!-- Casualties Grid -->
         <div class="casualties-grid">
             <div class="casualty-card deaths">
                 <div class="casualty-icon">☠️</div>
-                <div class="casualty-label" id="deaths-label">DEATHS</div>
+                <div class="casualty-label" id="deaths-label" data-i18n="deathsLabel">DEATHS</div>
                 
-                <!-- Recent Section -->
                 <div class="casualty-section">
                     <div class="casualty-section-title">RECENT:</div>
                     <div class="casualty-recent-values">
@@ -1003,27 +1138,24 @@
                     </div>
                 </div>
                 
-                <!-- Cumulative Section -->
                 <div class="casualty-section">
                     <div class="casualty-cumulative-label">CUMULATIVE (Since Sept 2022):</div>
                     <div class="casualty-cumulative-value" id="deaths-cumulative">--</div>
                     <div class="casualty-avg">Average: <span id="deaths-avg">--</span>/week</div>
                 </div>
                 
-                <!-- Footnote & Link -->
                 <div class="casualty-footnote">
                     * Trend accuracy improves daily
                     <a href="https://en-hrana.org/category/killings/" target="_blank" class="hrana-link">📊 HRANA Death Reports →</a>
                 </div>
                 
-                <div class="verified-badge" id="verified-badge">Verified</div>
+                <div class="verified-badge" id="verified-badge" data-i18n="verified">Verified</div>
             </div>
             
             <div class="casualty-card injuries">
                 <div class="casualty-icon">🩹</div>
-                <div class="casualty-label" id="injuries-label">INJURIES</div>
+                <div class="casualty-label" id="injuries-label" data-i18n="injuriesLabel">INJURIES</div>
                 
-                <!-- Recent Section -->
                 <div class="casualty-section">
                     <div class="casualty-section-title">RECENT:</div>
                     <div class="casualty-recent-values">
@@ -1033,27 +1165,24 @@
                     </div>
                 </div>
                 
-                <!-- Cumulative Section -->
                 <div class="casualty-section">
                     <div class="casualty-cumulative-label">CUMULATIVE (Since Sept 2022):</div>
                     <div class="casualty-cumulative-value" id="injuries-cumulative">~--</div>
                     <div class="casualty-avg">Average: <span id="injuries-avg">--</span>/week</div>
                 </div>
                 
-                <!-- Footnote & Link -->
                 <div class="casualty-footnote">
                     * Trend accuracy improves daily
                     <a href="https://en-hrana.org/category/human-rights-violations/" target="_blank" class="hrana-link">📊 HRANA Injury Reports →</a>
                 </div>
                 
-                <div class="verified-badge" id="verified-badge2">Verified</div>
+                <div class="verified-badge" id="verified-badge2" data-i18n="verified">Verified</div>
             </div>
             
             <div class="casualty-card arrests">
                 <div class="casualty-icon">⛓️</div>
-                <div class="casualty-label" id="arrests-label">ARRESTS</div>
+                <div class="casualty-label" id="arrests-label" data-i18n="arrestsLabel">ARRESTS</div>
                 
-                <!-- Recent Section -->
                 <div class="casualty-section">
                     <div class="casualty-section-title">RECENT:</div>
                     <div class="casualty-recent-values">
@@ -1063,35 +1192,32 @@
                     </div>
                 </div>
                 
-                <!-- Cumulative Section -->
                 <div class="casualty-section">
                     <div class="casualty-cumulative-label">CUMULATIVE (Since Sept 2022):</div>
                     <div class="casualty-cumulative-value" id="arrests-cumulative">~--</div>
                     <div class="casualty-avg">Average: <span id="arrests-avg">--</span>/week</div>
                 </div>
                 
-                <!-- Footnote & Link -->
                 <div class="casualty-footnote">
                     * Trend accuracy improves daily
                     <a href="https://en-hrana.org/category/arrests/" target="_blank" class="hrana-link">📊 HRANA Arrest Reports →</a>
                 </div>
                 
-                <div class="verified-badge" id="verified-badge3">Verified</div>
+                <div class="verified-badge" id="verified-badge3" data-i18n="verified">Verified</div>
             </div>
         </div>
 
         <div class="news-section">
-            <h2 id="news-title">News Coverage</h2>
+            <h2 id="news-title" data-i18n="newsTitle">News Coverage</h2>
             
-            <!-- v2.3.1: REORDERED TABS - HRANA first, then Iran Wire, then languages -->
             <div class="language-tabs">
-                <button onclick="showArticles('hrana')" class="active" data-lang="hrana" id="tab-hrana">HRANA (--)</button>
-                <button onclick="showArticles('iranwire')" data-lang="iranwire" id="tab-iranwire">Iran Wire (--)</button>
-                <button onclick="showArticles('en')" data-lang="en" id="tab-en">English (--)</button>
-                <button onclick="showArticles('he')" data-lang="he" id="tab-he">Hebrew (--)</button>
-                <button onclick="showArticles('ar')" data-lang="ar" id="tab-ar">Arabic (--)</button>
-                <button onclick="showArticles('fa')" data-lang="fa" id="tab-fa">Farsi (--)</button>
-                <button onclick="showArticles('reddit')" data-lang="reddit" id="tab-reddit">Reddit (--)</button>
+                <button onclick="showArticles('hrana')" class="active" data-lang="hrana" id="tab-hrana" data-i18n="tabHRANA">HRANA (--)</button>
+                <button onclick="showArticles('iranwire')" data-lang="iranwire" id="tab-iranwire" data-i18n="tabIranWire">Iran Wire (--)</button>
+                <button onclick="showArticles('en')" data-lang="en" id="tab-en" data-i18n="tabEnglish">English (--)</button>
+                <button onclick="showArticles('he')" data-lang="he" id="tab-he" data-i18n="tabHebrew">Hebrew (--)</button>
+                <button onclick="showArticles('ar')" data-lang="ar" id="tab-ar" data-i18n="tabArabic">Arabic (--)</button>
+                <button onclick="showArticles('fa')" data-lang="fa" id="tab-fa" data-i18n="tabFarsi">Farsi (--)</button>
+                <button onclick="showArticles('reddit')" data-lang="reddit" id="tab-reddit" data-i18n="tabReddit">Reddit (--)</button>
             </div>
 
             <div class="articles-container" id="articles-container">
@@ -1099,13 +1225,12 @@
             </div>
         </div>
 
-        <div class="footer">
-            <p><strong>Asifah Analytics v2.0</strong></p>
+        <footer>
+            <p><strong>Asifah Analytics v2.8.0</strong></p>
             <p><strong>Data Sources:</strong> NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Iran Wire and HRANA RSS feeds, Reddit for community intelligence, plus other OSINT sources.</p>
-            <p><strong>For inquiries, contact:</strong> <a href="/cdn-cgi/l/email-protection#accddfc5cacdc4cdc2cdc0d5d8c5cfdfeccbc1cdc5c082cfc3c1" style="color: #c084fc; text-decoration: none;"><span class="__cf_email__" data-cfemail="ff9e8c96999e979e919e93868b969c8cbf98929e9693d19c9092">[email&#160;protected]</span></a></p>
+            <p><strong>For inquiries, contact:</strong> <a href="mailto:asifahanalytics@gmail.com" style="color: #c084fc; text-decoration: none;">asifahanalytics@gmail.com</a></p>
             <p style="margin-top: 10px; font-size: 11px;">Updated every 30 minutes | Not for operational use</p>
             
-            <!-- BUY ME A COFFEE SECTION -->
             <div class="support-footer">
                 <p>
                     If you find Asifah Analytics useful and want to support ongoing development, you can 
@@ -1113,16 +1238,30 @@
                 </p>
             </div>
 
-            <!-- COPYRIGHT FOOTER - ADDED -->
             <div class="copyright-footer">
                 © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
                 Unauthorized use, reproduction, or distribution prohibited.
             </div>
-        </div>
+        </footer>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        // NEW: Loading Overlay Management
+    <script>
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('asifah-theme', newTheme);
+        }
+
+        initTheme();
+
+        // Loading Overlay Management
         let loadingStepIndex = 0;
         let loadingInterval = null;
         let loadingTimeout = null;
@@ -1130,10 +1269,8 @@
         function startLoadingProgress() {
             const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
             
-            // Progress through steps every 8 seconds
             loadingInterval = setInterval(() => {
                 if (loadingStepIndex < steps.length - 1) {
-                    // Mark current step as complete
                     const currentStep = document.getElementById(steps[loadingStepIndex]);
                     if (currentStep) {
                         currentStep.classList.remove('active');
@@ -1141,34 +1278,29 @@
                         currentStep.querySelector('.step-icon').textContent = '✓';
                     }
                     
-                    // Move to next step
                     loadingStepIndex++;
                     const nextStep = document.getElementById(steps[loadingStepIndex]);
                     if (nextStep) {
                         nextStep.classList.add('active');
                     }
                 }
-            }, 8000); // 8 seconds per step = 40 seconds total
+            }, 8000);
             
-            // Show error message after 60 seconds
             loadingTimeout = setTimeout(() => {
                 document.getElementById('loadingError').style.display = 'block';
             }, 60000);
         }
 
         function hideLoadingOverlay() {
-            // Clear intervals
             if (loadingInterval) clearInterval(loadingInterval);
             if (loadingTimeout) clearTimeout(loadingTimeout);
             
-            // Mark all steps as complete
             document.querySelectorAll('.loading-step').forEach(step => {
                 step.classList.remove('active');
                 step.classList.add('complete');
                 step.querySelector('.step-icon').textContent = '✓';
             });
             
-            // Fade out overlay after brief delay
             setTimeout(() => {
                 const overlay = document.getElementById('loadingOverlay');
                 if (overlay) {
@@ -1179,13 +1311,14 @@
 
         const translations = {
             en: {
-                mainTitle: "Iran Protests Tracker",
-                subtitle: "Real-time monitoring of nationwide demonstrations and regime stability",
-                backText: "Back to Main Dashboard",
+                pageTitle: "🇮🇷 IRAN PROTESTS TRACKER",
+                pageSubtitle: "Real-time monitoring of nationwide demonstrations and regime stability",
+                backLink: "← Back to Dashboard",
+                themeToggle: "Toggle: Light - Dark",
+                loading: "Loading data...",
                 metricTitleIntensity: "Protest Intensity",
-                metricTitleStability: "Regime Stability Index",
+                metricTitleStability: "REGIME STABILITY INDEX",
                 metricTitleGeography: "Geographic Spread",
-                stabilityExplanation: "Lower values indicate increased instability",
                 geographySubtitle: "Cities affected",
                 newsTitle: "News Coverage",
                 tabHRANA: "HRANA",
@@ -1195,29 +1328,21 @@
                 tabArabic: "Arabic",
                 tabFarsi: "Farsi",
                 tabReddit: "Reddit",
-                loading: "Loading data...",
-                error: "Error loading data. Please try again.",
-                lastUpdated: "Last updated:",
-                intensityLow: "Low activity",
-                intensityMedium: "Moderate protests",
-                intensityHigh: "Widespread protests",
-                intensityCritical: "Nationwide unrest",
-                deathsLabel: "Deaths Reported",
-                injuriesLabel: "Injuries Reported",
-                arrestsLabel: "Arrests Reported",
+                deathsLabel: "DEATHS",
+                injuriesLabel: "INJURIES",
+                arrestsLabel: "ARRESTS",
                 verified: "Verified",
-                trendIncreasing: "Increasing",
-                trendDecreasing: "Decreasing",
-                trendStable: "Stable"
+                lastUpdated: "Last updated:"
             },
             he: {
-                mainTitle: "מעקב הפגנות באיראן",
-                subtitle: "ניטור בזמן אמת של הפגנות כלל ארציות ויציבות המשטר",
-                backText: "חזרה ללוח הבקרה הראשי",
+                pageTitle: "🇮🇷 מעקב הפגנות באיראן",
+                pageSubtitle: "ניטור בזמן אמת של הפגנות כלל ארציות ויציבות המשטר",
+                backLink: "→ חזרה ללוח הבקרה",
+                themeToggle: "מעבר: בהיר - כהה",
+                loading: "טוען נתונים...",
                 metricTitleIntensity: "עצמת המחאה",
                 metricTitleStability: "מדד יציבות המשטר",
                 metricTitleGeography: "תפוצה גיאוגרפית",
-                stabilityExplanation: "ערכים נמוכים יותר מצביעים על אי-יציבות מוגברת",
                 geographySubtitle: "ערים מושפעות",
                 newsTitle: "כיסוי חדשותי",
                 tabHRANA: "HRANA",
@@ -1227,26 +1352,21 @@
                 tabArabic: "ערבית",
                 tabFarsi: "פרסית",
                 tabReddit: "רדיט",
-                loading: "טוען נתונים...",
-                error: "שגיאה בטעינת נתונים. אנא נסה שוב.",
-                lastUpdated: "עודכן לאחרונה:",
-                intensityLow: "פעילות נמוכה",
-                intensityMedium: "הפגנות מתונות",
-                intensityHigh: "הפגנות נרחבות",
-                intensityCritical: "תסיסה ארצית",
-                deathsLabel: "הרוגים מדווחים",
-                injuriesLabel: "פצועים מדווחים",
-                arrestsLabel: "מעצרים מדווחים",
-                verified: "מאומת"
+                deathsLabel: "הרוגים",
+                injuriesLabel: "פצועים",
+                arrestsLabel: "מעצרים",
+                verified: "מאומת",
+                lastUpdated: "עודכן לאחרונה:"
             },
             ar: {
-                mainTitle: "متابعة احتجاجات إيران",
-                subtitle: "مراقبة فورية للمظاهرات الوطنية واستقرار النظام",
-                backText: "العودة إلى لوحة التحكم الرئيسية",
+                pageTitle: "🇮🇷 متابعة احتجاجات إيران",
+                pageSubtitle: "مراقبة فورية للمظاهرات الوطنية واستقرار النظام",
+                backLink: "→ العودة إلى لوحة التحكم",
+                themeToggle: "التبديل: فاتح - داكن",
+                loading: "جاري تحميل البيانات...",
                 metricTitleIntensity: "شدة الاحتجاج",
                 metricTitleStability: "مؤشر استقرار النظام",
                 metricTitleGeography: "الانتشار الجغرافي",
-                stabilityExplanation: "القيم الأقل تشير إلى عدم استقرار متزايد",
                 geographySubtitle: "المدن المتضررة",
                 newsTitle: "التغطية الإخبارية",
                 tabHRANA: "HRANA",
@@ -1256,26 +1376,21 @@
                 tabArabic: "العربية",
                 tabFarsi: "الفارسية",
                 tabReddit: "ريديت",
-                loading: "جاري تحميل البيانات...",
-                error: "خطأ في تحميل البيانات. يرجى المحاولة مرة أخرى.",
-                lastUpdated: "آخر تحديث:",
-                intensityLow: "نشاط منخفض",
-                intensityMedium: "احتجاجات معتدلة",
-                intensityHigh: "احتجاجات واسعة النطاق",
-                intensityCritical: "اضطرابات وطنية",
-                deathsLabel: "الوفيات المبلغ عنها",
-                injuriesLabel: "الإصابات المبلغ عنها",
-                arrestsLabel: "الاعتقالات المبلغ عنها",
-                verified: "تم التحقق"
+                deathsLabel: "الوفيات",
+                injuriesLabel: "الإصابات",
+                arrestsLabel: "الاعتقالات",
+                verified: "تم التحقق",
+                lastUpdated: "آخر تحديث:"
             },
             fa: {
-                mainTitle: "پیگیری اعتراضات ایران",
-                subtitle: "نظارت بلادرنگ بر تظاهرات سراسری و ثبات رژیم",
-                backText: "بازگشت به داشبورد اصلی",
+                pageTitle: "🇮🇷 پیگیری اعتراضات ایران",
+                pageSubtitle: "نظارت بلادرنگ بر تظاهرات سراسری و ثبات رژیم",
+                backLink: "→ بازگشت به داشبورد",
+                themeToggle: "تغییر: روشن - تیره",
+                loading: "در حال بارگذاری داده‌ها...",
                 metricTitleIntensity: "شدت اعتراض",
                 metricTitleStability: "شاخص ثبات رژیم",
                 metricTitleGeography: "گستردگی جغرافیایی",
-                stabilityExplanation: "مقادیر پایین‌تر نشان‌دهنده بی‌ثباتی بیشتر است",
                 geographySubtitle: "شهرهای تحت تاثیر",
                 newsTitle: "پوشش خبری",
                 tabHRANA: "HRANA",
@@ -1285,17 +1400,11 @@
                 tabArabic: "عربی",
                 tabFarsi: "فارسی",
                 tabReddit: "ردیت",
-                loading: "در حال بارگذاری داده‌ها...",
-                error: "خطا در بارگذاری داده‌ها. لطفا دوباره تلاش کنید.",
-                lastUpdated: "آخرین به‌روزرسانی:",
-                intensityLow: "فعالیت کم",
-                intensityMedium: "اعتراضات متوسط",
-                intensityHigh: "اعتراضات گسترده",
-                intensityCritical: "ناآرامی سراسری",
-                deathsLabel: "کشته‌های گزارش شده",
-                injuriesLabel: "مجروحان گزارش شده",
-                arrestsLabel: "بازداشت‌های گزارش شده",
-                verified: "تأیید شده"
+                deathsLabel: "کشته‌ها",
+                injuriesLabel: "مجروحان",
+                arrestsLabel: "بازداشت‌ها",
+                verified: "تأیید شده",
+                lastUpdated: "آخرین به‌روزرسانی:"
             }
         };
 
@@ -1305,7 +1414,7 @@
         function switchLanguage(lang) {
             currentLang = lang;
             
-            document.querySelectorAll('.language-switcher button').forEach(btn => {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
@@ -1319,24 +1428,16 @@
         function updateUIText() {
             const t = translations[currentLang];
             
-            document.getElementById('main-title').textContent = t.mainTitle;
-            document.getElementById('subtitle').textContent = t.subtitle;
-            document.getElementById('back-text').textContent = t.backText;
-            document.getElementById('metric-title-intensity').textContent = t.metricTitleIntensity;
-            document.getElementById('metric-title-stability').textContent = t.metricTitleStability;
-            document.getElementById('metric-title-geography').textContent = t.metricTitleGeography;
-            document.getElementById('geography-subtitle').textContent = t.geographySubtitle;
-            document.getElementById('news-title').textContent = t.newsTitle;
-            
-            const deathsLabel = document.getElementById('deaths-label');
-            const injuriesLabel = document.getElementById('injuries-label');
-            const arrestsLabel = document.getElementById('arrests-label');
-            const verifiedBadges = document.querySelectorAll('.verified-badge');
-            
-            if (deathsLabel) deathsLabel.textContent = t.deathsLabel;
-            if (injuriesLabel) injuriesLabel.textContent = t.injuriesLabel;
-            if (arrestsLabel) arrestsLabel.textContent = t.arrestsLabel;
-            verifiedBadges.forEach(badge => badge.textContent = t.verified);
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    if (element.tagName === 'INPUT') {
+                        element.value = t[key];
+                    } else {
+                        element.textContent = t[key];
+                    }
+                }
+            });
         }
 
         async function fetchProtestData() {
@@ -1347,10 +1448,8 @@
                 
                 updateMetrics(data);
                 updateTabCounts(data);
-                showArticles('hrana'); // Changed default to HRANA
+                showArticles('hrana');
                 updateLastUpdated();
-                
-                // Hide loading overlay when data is ready
                 hideLoadingOverlay();
                 
             } catch (error) {
@@ -1358,24 +1457,20 @@
                 document.getElementById('articles-container').innerHTML = 
                     '<div class="error">Error loading data. Please refresh the page.</div>';
                 
-                // Show error in loading overlay
                 document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
                 document.getElementById('loadingError').style.display = 'block';
             }
         }
 
         function updateMetrics(data) {
-            // ENHANCED v2.0: Intensity with percentage
             const intensity = data.intensity || 0;
             document.getElementById('protest-intensity').textContent = intensity + '%';
             document.getElementById('protest-intensity').className = 'metric-value ' + getIntensityClass(intensity);
             document.getElementById('intensity-level').textContent = getIntensityLabel(intensity);
             
-            // Casualties - Enhanced with trends and cumulative
             const casualties = data.casualties || {};
             const casualties_enhanced = data.casualties_enhanced || {};
             
-            // Helper function to format trend
             function formatTrend(value) {
                 if (!value || value === 0) return '<span class="trend-neutral">—</span>';
                 const arrow = value > 0 ? '▲' : '▼';
@@ -1383,26 +1478,19 @@
                 return `<span class="${colorClass}">${arrow} ${Math.abs(value).toFixed(1)}%*</span>`;
             }
             
-            // Update ARRESTS
             if (casualties_enhanced.recent_7d) {
                 document.getElementById('arrests-7d').textContent = casualties_enhanced.recent_7d.arrests || 0;
                 document.getElementById('arrests-30d').textContent = `~${casualties_enhanced.recent_30d?.arrests || 0}`;
                 document.getElementById('arrests-trend').innerHTML = formatTrend(casualties_enhanced.trends?.arrests);
                 document.getElementById('arrests-cumulative').textContent = casualties_enhanced.cumulative?.arrests || '~50,000+';
                 document.getElementById('arrests-avg').textContent = casualties_enhanced.averages?.arrests_per_week || '--';
-            }
-            
-            // Update DEATHS
-            if (casualties_enhanced.recent_7d) {
+                
                 document.getElementById('deaths-7d').textContent = casualties_enhanced.recent_7d.deaths || 0;
                 document.getElementById('deaths-30d').textContent = `~${casualties_enhanced.recent_30d?.deaths || 0}`;
                 document.getElementById('deaths-trend').innerHTML = formatTrend(casualties_enhanced.trends?.deaths);
                 document.getElementById('deaths-cumulative').textContent = casualties_enhanced.cumulative?.deaths || '551';
                 document.getElementById('deaths-avg').textContent = casualties_enhanced.averages?.deaths_per_week || '--';
-            }
-            
-            // Update INJURIES
-            if (casualties_enhanced.recent_7d) {
+                
                 document.getElementById('injuries-7d').textContent = casualties_enhanced.recent_7d.injuries || 0;
                 document.getElementById('injuries-30d').textContent = `~${casualties_enhanced.recent_30d?.injuries || 0}`;
                 document.getElementById('injuries-trend').innerHTML = formatTrend(casualties_enhanced.trends?.injuries);
@@ -1410,39 +1498,32 @@
                 document.getElementById('injuries-avg').textContent = casualties_enhanced.averages?.injuries_per_week || '--';
             }
             
-            // Verified badges
             const isVerified = casualties_enhanced.hrana_verified || casualties.hrana_verified || false;
             document.querySelectorAll('.verified-badge').forEach(badge => {
                 badge.style.display = isVerified ? 'block' : 'none';
             });
             
-            // NEW v2.6.0: Enhanced Regime Stability Index Widget
             const regimeStability = data.regime_stability || {};
             const stabilityScore = regimeStability.stability_score || 0;
             const riskLevel = regimeStability.risk_level || 'Unknown';
             const trend = regimeStability.trend || 'stable';
             const exchangeRate = data.exchange_rate || {};
             
-            // Update main score
             document.getElementById('regime-stability').textContent = stabilityScore;
             document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stabilityScore);
             
-            // Update progress bar
             const progressFill = document.getElementById('stability-progress-fill');
             if (progressFill) {
                 progressFill.style.width = stabilityScore + '%';
             }
             
-            // Update risk level
             document.getElementById('stability-level').textContent = riskLevel;
             document.getElementById('stability-level').className = 'metric-subtitle ' + getStabilityClass(stabilityScore);
             
-            // Update trend with arrow
             const trendArrow = trend === 'increasing' ? '↑' : trend === 'decreasing' ? '↓' : '→';
             const trendText = trend.charAt(0).toUpperCase() + trend.slice(1);
             document.getElementById('stability-trend').textContent = `Trend: ${trendArrow} ${trendText} (7-day)`;
             
-            // Update USD/IRR metric
             if (exchangeRate.usd_to_irr) {
                 const baselineRate = 42000;
                 const currentRate = exchangeRate.usd_to_irr;
@@ -1453,7 +1534,6 @@
                 document.getElementById('usd-irr-value').innerHTML = 
                     `${currentRate.toLocaleString()} <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${changePercent}%)</span>`;
                 
-                // Display 24h trend
                 const change24h = exchangeRate.change_24h || 0;
                 const pressure = exchangeRate.pressure || 'NEUTRAL';
                 const trendIcon = change24h > 0 ? '▼' : (change24h < 0 ? '▲' : '—');
@@ -1464,13 +1544,12 @@
                     <div style="color:${trendColor}; font-weight:600; font-size:0.9em;">
                         ${trendIcon} ${Math.abs(change24h).toFixed(2)}% (24h)
                     </div>
-                    <div style="color:#cbd5e0; font-size:0.85em; margin-top:2px;">
+                    <div style="color:var(--text-secondary); font-size:0.85em; margin-top:2px;">
                         ${pressureIcon} ${pressure}
                     </div>
                 `;
             }
             
-            // Update Protest Intensity mini metric
             const protestIntensityMini = document.getElementById('protest-intensity-mini');
             if (protestIntensityMini) {
                 const intensityLabel = intensity >= 60 ? 'High' : intensity >= 30 ? 'Medium' : 'Low';
@@ -1478,7 +1557,6 @@
                 protestIntensityMini.innerHTML = `<span style="color: ${intensityColor};">${intensityLabel}</span> (${intensity}%)`;
             }
             
-            // Update Oil Price metric
             const oilPriceElement = document.getElementById('oil-price-value');
             if (oilPriceElement && data.oil_price) {
                 const oilPrice = data.oil_price.price;
@@ -1490,7 +1568,6 @@
                     `$${oilPrice}/bbl <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${oilChange}%)</span>`;
             }
             
-            // Display cities with source links
             const numCities = data.num_cities_affected || 0;
             document.getElementById('total-cities').textContent = numCities;
             
@@ -1500,14 +1577,11 @@
             citiesContainer.innerHTML = '';
             
             if (numCities === 0) {
-                // Show "No protests identified" when zero
                 subtitleElement.textContent = 'No protests identified';
-                citiesContainer.innerHTML = '<div style="text-align:center; color:#808080; padding:10px; font-size:14px;">No recent protests identified (7-day window)</div>';
+                citiesContainer.innerHTML = '<div style="text-align:center; color:var(--text-muted); padding:10px; font-size:14px;">No recent protests identified (7-day window)</div>';
             } else {
-                // Show normal subtitle
                 subtitleElement.textContent = numCities === 1 ? 'City affected (last 7 days)' : 'Cities affected (last 7 days)';
                 
-                // Display city pills with source links
                 if (data.cities && data.cities.length > 0) {
                     data.cities.forEach(cityObj => {
                         const cityWrapper = document.createElement('div');
@@ -1520,7 +1594,6 @@
                         
                         cityWrapper.appendChild(pill);
                         
-                        // Add source links if available
                         if (cityObj.sources && cityObj.sources.length > 0) {
                             const sourcesDiv = document.createElement('div');
                             sourcesDiv.style.fontSize = '11px';
@@ -1534,7 +1607,6 @@
                                 
                                 const link = document.createElement('a');
                                 
-                                // Handle both old format (string URL) and new format (object with name)
                                 if (typeof source === 'string') {
                                     link.href = source;
                                     link.textContent = `Source ${idx + 1}`;
@@ -1562,66 +1634,6 @@
             }
         }
 
-        function updateCasualtySources(elementId, casualties, type) {
-            const container = document.getElementById(elementId);
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            if (!casualties) {
-                container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
-                return;
-            }
-            
-            const details = casualties.details || [];
-            const articlesWithoutNumbers = casualties.articles_without_numbers || [];
-            
-            const numberedSources = details
-                .filter(d => d.type === type)
-                .sort((a, b) => b.count - a.count)
-                .slice(0, 3);
-            
-            const unnumberedSources = articlesWithoutNumbers
-                .filter(a => a.type === type)
-                .slice(0, 3);
-            
-            if (numberedSources.length === 0 && unnumberedSources.length === 0) {
-                container.innerHTML = '<div class="source-item" style="text-align:center; color:#808080;">No sources available</div>';
-                return;
-            }
-            
-            numberedSources.forEach(detail => {
-                const item = document.createElement('div');
-                item.className = 'source-item';
-                
-                const count = detail.count || '?';
-                const source = detail.source || 'Unknown';
-                const url = detail.url || '#';
-                
-                item.innerHTML = `
-                    <span class="source-count">${count}:</span>
-                    <a href="${url}" target="_blank">${source} ↗</a>
-                `;
-                
-                container.appendChild(item);
-            });
-            
-            unnumberedSources.forEach(article => {
-                const item = document.createElement('div');
-                item.className = 'source-item source-no-numbers';
-                
-                const source = article.source || 'Unknown';
-                const url = article.url || '#';
-                
-                item.innerHTML = `
-                    <span style="color:#ffd43b;">⚠</span>
-                    <a href="${url}" target="_blank">${source} (mentioned) ↗</a>
-                `;
-                
-                container.appendChild(item);
-            });
-        }
-
         function getIntensityClass(value) {
             if (value >= 80) return 'intensity-critical';
             if (value >= 60) return 'intensity-high';
@@ -1637,16 +1649,14 @@
         }
 
         function getIntensityLabel(value) {
-            const t = translations[currentLang];
-            if (value >= 80) return t.intensityCritical;
-            if (value >= 60) return t.intensityHigh;
-            if (value >= 30) return t.intensityMedium;
-            return t.intensityLow;
+            if (value >= 80) return 'Nationwide unrest';
+            if (value >= 60) return 'Widespread protests';
+            if (value >= 30) return 'Moderate protests';
+            return 'Low activity';
         }
 
         function updateTabCounts(data) {
             const t = translations[currentLang];
-            // v2.3.1: Updated tab labels with new ordering
             document.getElementById('tab-hrana').textContent = `${t.tabHRANA} (${(data.articles_hrana || []).length})`;
             document.getElementById('tab-iranwire').textContent = `${t.tabIranWire} (${(data.articles_iranwire || []).length})`;
             document.getElementById('tab-en').textContent = `${t.tabEnglish} (${(data.articles_en || []).length})`;
@@ -1673,7 +1683,6 @@
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
             
-            // v2.3.1: Added HRANA case
             let articles = [];
             if (lang === 'hrana') articles = protestData.articles_hrana || [];
             else if (lang === 'iranwire') articles = protestData.articles_iranwire || [];
@@ -1688,8 +1697,6 @@
                 return;
             }
             
-            // v2.3.1: Articles are displayed in their ORIGINAL language (no translation)
-            // Backend sends articles with proper 'language' field - we just display as-is
             articles.forEach(article => {
                 const articleDiv = document.createElement('div');
                 articleDiv.className = 'article';
@@ -1729,34 +1736,9 @@
                 `${t.lastUpdated} ${now.toLocaleString()}`;
         }
 
-        function animateNumber(elementId, finalValue) {
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            
-            const duration = 1000;
-            const steps = 30;
-            const increment = finalValue / steps;
-            let current = 0;
-            
-            const interval = setInterval(() => {
-                current += increment;
-                if (current >= finalValue) {
-                    element.textContent = finalValue;
-                    clearInterval(interval);
-                } else {
-                    element.textContent = Math.floor(current);
-                }
-            }, duration / steps);
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
-            // Start loading progress animation
             startLoadingProgress();
-            
-            // Fetch data
             fetchProtestData();
-            
-            // Refresh every 30 minutes
             setInterval(fetchProtestData, 30 * 60 * 1000);
         });
     </script>
