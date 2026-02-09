@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Lebanon Stability Index v2.7.0 - Last updated: Feb 3, 2026 -->
+<!-- Asifah Analytics - Lebanon Stability Index v2.8.0 - Last updated: Feb 9, 2025 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,19 +7,13 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Lebanon Stability Index | Asifah Analytics v2.7.0</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🇱🇧</text></svg>">
-    <!-- Chart.js for sparklines -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <title>Lebanon Stability Index | Asifah Analytics v2.8.0</title>
     
-    <!-- Google Analytics (commented out - may be blocked by network) -->
-    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-Z9114D1Z5C');
-    </script> -->
+    <!-- Favicon using Asifah Analytics logo -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    
+    <!-- Chart.js for sparklines -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
         * {
@@ -28,22 +22,90 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a7b 100%);
-            color: #f0f4f8;
-            padding: 20px;
-            min-height: 100vh;
+        /* CSS Variables for Light/Dark Mode */
+        :root {
+            /* Light Mode Colors (matching landing page) */
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --stability-bg: rgba(255, 255, 255, 0.95);
+            --metric-bg: #ffffff;
+            --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --watermark-opacity: 0.03;
+            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
         }
 
-        /* NEW: Loading Overlay Styles */
+        [data-theme="dark"] {
+            /* Dark Mode Colors */
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --stability-bg: rgba(45, 45, 45, 0.95);
+            --metric-bg: #2d2d2d;
+            --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535;
+            --article-hover: #404040;
+            --watermark-opacity: 0.02;
+            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        /* Watermark Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Loading Overlay Styles */
         .loading-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(30, 58, 95, 0.95);
+            background: var(--loading-overlay-bg);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
@@ -61,7 +123,7 @@
         .loading-spinner {
             width: 60px;
             height: 60px;
-            border: 5px solid rgba(100, 149, 237, 0.2);
+            border: 5px solid var(--loading-spinner-bg);
             border-top-color: #6495ED;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -97,7 +159,7 @@
             gap: 12px;
             padding: 12px;
             font-size: 15px;
-            color: #7a9ab8;
+            color: var(--text-secondary);
             transition: all 0.3s ease;
         }
 
@@ -118,7 +180,7 @@
         .loading-progress {
             margin-top: 25px;
             font-size: 13px;
-            color: #7a9ab8;
+            color: var(--text-secondary);
             font-style: italic;
         }
 
@@ -135,316 +197,110 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         header {
-            text-align: center;
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px;
+            border-radius: 12px;
             margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
         }
 
         h1 {
-            font-size: 2.5em;
+            font-size: 28px;
+            font-weight: bold;
             margin-bottom: 10px;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .subtitle {
-            font-size: 1.1em;
-            color: #b8d4e8;
-            margin-bottom: 20px;
+            font-size: 16px;
+            font-weight: normal;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
         }
 
         .last-updated {
-            font-size: 0.9em;
-            color: #7a9ab8;
+            font-size: 13px;
+            opacity: 0.85;
             margin-top: 10px;
         }
 
-        /* Stability Index Card */
-        .stability-index-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-        }
-
-        .stability-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ffffff;
-        }
-
-        .stability-score {
-            font-size: 5em;
-            font-weight: bold;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .stability-score.green { color: #4ade80; }
-        .stability-score.yellow { color: #facc15; }
-        .stability-score.orange { color: #fb923c; }
-        .stability-score.red { color: #f87171; }
-
-        .stability-label {
-            text-align: center;
-            font-size: 1.5em;
-            margin-bottom: 10px;
-            font-weight: 600;
-        }
-
-        .stability-label.green { color: #4ade80; }
-        .stability-label.yellow { color: #facc15; }
-        .stability-label.orange { color: #fb923c; }
-        .stability-label.red { color: #f87171; }
-
-        .stability-bar {
-            width: 100%;
-            height: 30px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            overflow: hidden;
-            margin: 20px 0;
-        }
-
-        .stability-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #f87171 0%, #fb923c 25%, #facc15 50%, #4ade80 100%);
-            transition: width 0.5s ease;
-            border-radius: 15px;
-        }
-
-        .stability-legend {
-            text-align: center;
-            font-size: 0.85em;
-            color: #b8d4e8;
-            font-style: italic;
-        }
-
-        /* Sparkline styles */
-.sparkline-container {
-    margin-top: 15px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.sparkline-label {
-    font-size: 0.75em;
-    color: #b8d4e8;
-    margin-right: 10px;
-}
-
-.sparkline-canvas {
-    flex-grow: 1;
-    max-width: 150px;
-    height: 40px;
-}
-
-.sparkline-status {
-    font-size: 0.75em;
-    color: #7a9ab8;
-    font-style: italic;
-}
-
-        /* Metrics Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .metric-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-            transition: transform 0.2s;
-        }
-
-        .metric-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .metric-title {
-            font-size: 0.9em;
-            color: #b8d4e8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 10px;
-        }
-
-        .metric-value {
-            font-size: 2.5em;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 5px;
-        }
-
-        .metric-subtitle {
-            font-size: 0.85em;
-            color: #7a9ab8;
-        }
-
-        /* Government Status */
-        .government-status {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-        }
-
-        .government-status-item {
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 35px;
+            right: 200px;
             display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .government-status-item:last-child {
-            border-bottom: none;
-        }
-
-        .status-label {
-            color: #b8d4e8;
-            font-size: 0.9em;
-        }
-
-        .status-value {
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .status-value.warning {
-            color: #fb923c;
-        }
-
-        .status-value.critical {
-            color: #f87171;
-        }
-
-        /* Hezbollah Activity */
-        .activity-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .activity-item {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
             border-radius: 8px;
-            text-align: center;
-        }
-
-        .activity-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        .activity-label {
-            font-size: 0.85em;
-            color: #b8d4e8;
-            margin-top: 5px;
-        }
-
-        /* Articles Section */
-        .articles-section {
-            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 25px;
-            margin-top: 30px;
+            z-index: 1000;
         }
 
-        .section-title {
-            font-size: 1.5em;
-            margin-bottom: 20px;
-            color: #ffffff;
+        [dir="rtl"] .theme-toggle {
+            right: auto;
+            left: 200px;
         }
 
-        .article-item {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: background 0.2s;
+        .theme-toggle-label {
+            font-size: 12px;
+            color: rgba(255,255,255,0.9);
+            margin-right: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .article-item:hover {
-            background: rgba(255,255,255,0.1);
-        }
-
-        .article-title {
-            color: #ffffff;
-            font-size: 1.05em;
-            margin-bottom: 5px;
-        }
-
-        .article-meta {
-            font-size: 0.85em;
-            color: #7a9ab8;
-        }
-
-        .article-link {
-            color: #6495ED;
-            text-decoration: none;
-            font-size: 0.9em;
-        }
-
-        .article-link:hover {
-            text-decoration: underline;
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            padding: 60px 20px;
-        }
-
-        .spinner {
+        .theme-toggle-switch {
+            position: relative;
             width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 20px;
-            font-size: 0.85em;
-            color: #7a9ab8;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 12px 24px;
-            background: rgba(255,255,255,0.1);
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: background 0.2s;
-        }
-
-        .back-link:hover {
+            height: 26px;
             background: rgba(255,255,255,0.2);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-switch:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .theme-toggle-slider::before {
+            content: '☀️';
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(24px);
+        }
+
+        [data-theme="dark"] .theme-toggle-slider::before {
+            content: '🌙';
         }
 
         /* Language Switcher */
@@ -489,10 +345,341 @@
             color: #1e3a5f;
             border-color: white;
         }
+
+        /* Stability Index Card */
+        .stability-index-card {
+            background: var(--stability-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .stability-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-primary);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .stability-score {
+            font-size: 72px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .stability-score.green { color: #4ade80; }
+        .stability-score.yellow { color: #facc15; }
+        .stability-score.orange { color: #fb923c; }
+        .stability-score.red { color: #f87171; }
+
+        .stability-label {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stability-label.green { color: #4ade80; }
+        .stability-label.yellow { color: #facc15; }
+        .stability-label.orange { color: #fb923c; }
+        .stability-label.red { color: #f87171; }
+
+        .stability-bar {
+            width: 100%;
+            height: 30px;
+            background: var(--card-border);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .stability-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f87171 0%, #fb923c 25%, #facc15 50%, #4ade80 100%);
+            transition: width 0.5s ease;
+            border-radius: 15px;
+        }
+
+        .stability-legend {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Sparkline styles */
+        .sparkline-container {
+            margin-top: 15px;
+            padding: 10px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background 0.3s ease;
+        }
+
+        .sparkline-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-right: 10px;
+        }
+
+        .sparkline-canvas {
+            flex-grow: 1;
+            max-width: 150px;
+            height: 40px;
+        }
+
+        .sparkline-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: var(--metric-bg);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
+            transition: transform 0.2s, background 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px var(--metric-hover-shadow);
+        }
+
+        .metric-title {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+        }
+
+        .metric-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Government Status */
+        .government-status {
+            background: var(--article-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .government-status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .government-status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .status-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .status-value.warning {
+            color: #fb923c;
+        }
+
+        .status-value.critical {
+            color: #f87171;
+        }
+
+        /* Hezbollah Activity */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .activity-item {
+            background: var(--article-bg);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: background 0.3s ease;
+        }
+
+        .activity-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .activity-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Articles Section */
+        .articles-section {
+            background: var(--container-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        .article-item {
+            background: var(--article-bg);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background 0.2s ease, transform 0.2s;
+            border-left: 4px solid #1e3a5f;
+        }
+
+        [dir="rtl"] .article-item {
+            border-left: none;
+            border-right: 4px solid #1e3a5f;
+        }
+
+        .article-item:hover {
+            background: var(--article-hover);
+            transform: translateX(4px);
+        }
+
+        [dir="rtl"] .article-item:hover {
+            transform: translateX(-4px);
+        }
+
+        .article-title {
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .article-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .article-link {
+            color: #6495ED;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .article-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .back-link {
+            display: inline-block;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            margin: 0;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        @media (max-width: 768px) {
+            .theme-toggle {
+                position: static;
+                margin: 15px auto 0;
+                justify-content: center;
+            }
+            
+            .language-switcher {
+                position: static;
+                margin-top: 15px;
+                justify-content: center;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .back-link {
+                position: static;
+                display: block;
+                width: fit-content;
+                margin: 15px auto 0;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- NEW: Loading Overlay -->
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-status">
@@ -530,16 +717,25 @@
 
     <div class="container">
         <header>
+            <a href="index.html" class="back-link" data-i18n="backLink">← Back to Dashboard</a>
+            
+            <div class="theme-toggle">
+                <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()">
+                    <div class="theme-toggle-slider"></div>
+                </div>
+            </div>
+            
             <div class="language-switcher">
                 <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
                 <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
                 <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
                 <button class="lang-btn" onclick="switchLanguage('fa', this)">פא</button>
             </div>
+            
             <h1 data-i18n="pageTitle">🇱🇧 LEBANON STABILITY INDEX</h1>
             <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status</div>
             <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
-            <a href="index.html" class="back-link" style="position: absolute; top: 20px; left: 20px; margin: 0;" data-i18n="backLink">← Back to Dashboard</a>
         </header>
 
         <div id="content" style="display:none;">
@@ -553,10 +749,10 @@
                 </div>
                 <div class="stability-legend" data-i18n="stabilityLegend">100 = Stable Regime | 0 = Imminent Collapse</div>
                 <div class="sparkline-container" id="stabilitySparklineContainer">
-    <span class="sparkline-label">30-Day Trend:</span>
-    <canvas id="stabilitySparkline" class="sparkline-canvas"></canvas>
-    <span class="sparkline-status" id="stabilitySparklineStatus">Loading...</span>
-</div>
+                    <span class="sparkline-label">30-Day Trend:</span>
+                    <canvas id="stabilitySparkline" class="sparkline-canvas"></canvas>
+                    <span class="sparkline-status" id="stabilitySparklineStatus">Loading...</span>
+                </div>
             </div>
 
             <!-- Metrics Grid -->
@@ -582,19 +778,19 @@
                     </div>
                 </div>
 
-<!-- Currency Status -->
-<div class="metric-card">
-    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
-    <div class="metric-value" id="currencyRate">--</div>
-    <div class="metric-subtitle" id="currencyChange">--</div>
-    <div id="currencyTrend" style="margin-top:10px;"></div>
-    
-    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
-        <span class="sparkline-label">30-Day:</span>
-        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
-        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
-    </div>
-</div>
+                <!-- Currency Status -->
+                <div class="metric-card">
+                    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
+                    <div class="metric-value" id="currencyRate">--</div>
+                    <div class="metric-subtitle" id="currencyChange">--</div>
+                    <div id="currencyTrend" style="margin-top:10px;"></div>
+                    
+                    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
+                        <span class="sparkline-label">30-Day:</span>
+                        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
+                        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
+                    </div>
+                </div>
 
                 <!-- Bond Yields -->
                 <div class="metric-card">
@@ -602,10 +798,10 @@
                     <div class="metric-value" id="bondYield">--</div>
                     <div class="metric-subtitle" data-i18n="bondSubtitle">Sovereign default risk</div>
                     <div class="sparkline-container" id="bondSparklineContainer" style="display:none;">
-    <span class="sparkline-label">30-Day:</span>
-    <canvas id="bondSparkline" class="sparkline-canvas"></canvas>
-    <span class="sparkline-status" id="bondSparklineStatus">Loading...</span>
-</div>
+                        <span class="sparkline-label">30-Day:</span>
+                        <canvas id="bondSparkline" class="sparkline-canvas"></canvas>
+                        <span class="sparkline-status" id="bondSparklineStatus">Loading...</span>
+                    </div>
                 </div>
 
                 <!-- Hezbollah Activity -->
@@ -614,10 +810,10 @@
                     <div class="metric-value" id="hezbollahScore">--</div>
                     <div class="metric-subtitle" data-i18n="last7Days">Last 7 days</div>
                     <div class="sparkline-container" id="hezbollahSparklineContainer" style="display:none;">
-    <span class="sparkline-label">7-Day:</span>
-    <canvas id="hezbollahSparkline" class="sparkline-canvas"></canvas>
-    <span class="sparkline-status" id="hezbollahSparklineStatus">Loading...</span>
-</div>
+                        <span class="sparkline-label">7-Day:</span>
+                        <canvas id="hezbollahSparkline" class="sparkline-canvas"></canvas>
+                        <span class="sparkline-status" id="hezbollahSparklineStatus">Loading...</span>
+                    </div>
                     <div class="activity-grid">
                         <div class="activity-item">
                             <div class="activity-number" id="rearmamentCount">--</div>
@@ -642,34 +838,50 @@
 
         <footer>
             <div>Data Sources: ExchangeRate-API, Trading Economics, Google News, UNIFIL Reports</div>
-            <div style="margin-top:15px; font-size:0.85em; color:#7a9ab8;">
+            <div style="margin-top:15px; font-size:0.85em;">
                 NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content. Reddit for community intelligence, plus other OSINT sources.
             </div>
-           <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:#6495ED;">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:#6495ED;">asifahanalytics@gmail.com</a></div>
             
-            <div style="margin-top:25px; padding:15px; background:rgba(255,255,255,0.05); border-radius:8px;">
-                <div style="font-size:0.9em; color:#b8d4e8; margin-bottom:8px;">Asifah Analytics v2.7.0</div>
-                <div style="font-size:0.8em; color:#7a9ab8;">Updated every 30 minutes | Not for operational use</div>
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v2.8.0</div>
+                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
             </div>
 
             <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
-                <span style="font-size:0.9em; color:#b8d4e8;">
+                <span style="font-size:0.9em;">
                     If you find Asifah Analytics useful and want to support ongoing development, you can 
                     <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#6495ED;">☕ buy me a coffee</a>
                 </span>
             </div>
 
-            <div style="margin-top:25px; font-size:0.75em; color:#5a7a9a;">
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
                 © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
                 Unauthorized use, reproduction, or distribution prohibited.
             </div>
         </footer>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
-        // NEW: Loading Overlay Management
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('asifah-theme', newTheme);
+        }
+
+        // Initialize theme on page load
+        initTheme();
+
+        // Loading Overlay Management
         let loadingStepIndex = 0;
         let loadingInterval = null;
         let loadingTimeout = null;
@@ -677,10 +889,8 @@
         function startLoadingProgress() {
             const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
             
-            // Progress through steps every 8 seconds
             loadingInterval = setInterval(() => {
                 if (loadingStepIndex < steps.length - 1) {
-                    // Mark current step as complete
                     const currentStep = document.getElementById(steps[loadingStepIndex]);
                     if (currentStep) {
                         currentStep.classList.remove('active');
@@ -688,198 +898,189 @@
                         currentStep.querySelector('.step-icon').textContent = '✓';
                     }
                     
-                    // Move to next step
                     loadingStepIndex++;
                     const nextStep = document.getElementById(steps[loadingStepIndex]);
                     if (nextStep) {
                         nextStep.classList.add('active');
                     }
                 }
-            }, 8000); // 8 seconds per step = 40 seconds total
+            }, 8000);
             
-            // Show error message after 60 seconds
             loadingTimeout = setTimeout(() => {
                 document.getElementById('loadingError').style.display = 'block';
             }, 60000);
         }
 
-function hideLoadingOverlay() {
-    // Clear intervals
-    if (loadingInterval) clearInterval(loadingInterval);
-    if (loadingTimeout) clearTimeout(loadingTimeout);
-    
-    // Mark all steps as complete
-    document.querySelectorAll('.loading-step').forEach(step => {
-        step.classList.remove('active');
-        step.classList.add('complete');
-        step.querySelector('.step-icon').textContent = '✓';
-    });
-    
-    // Fade out overlay after brief delay
-    setTimeout(() => {
-        const overlay = document.getElementById('loadingOverlay');
-        if (overlay) {
-            overlay.classList.add('hidden');
-        }
-    }, 500);
-}
-
-// NEW: Fetch trend data for sparklines
-async function loadTrendData() {
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`);
-        const data = await response.json();
-        
-        if (data.success && data.days_collected >= 3) {
-            createSparklines(data.trends);
-        } else {
-            document.getElementById('stabilitySparklineStatus').textContent = 
-                `Building... (${data.days_collected}/3 days)`;
+        function hideLoadingOverlay() {
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
             
-            if (data.days_collected > 0) {
-                document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '✓';
+            });
+            
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) {
+                    overlay.classList.add('hidden');
+                }
+            }, 500);
+        }
+
+        // Fetch trend data for sparklines
+        async function loadTrendData() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`);
+                const data = await response.json();
+                
+                if (data.success && data.days_collected >= 3) {
+                    createSparklines(data.trends);
+                } else {
+                    document.getElementById('stabilitySparklineStatus').textContent = 
+                        `Building... (${data.days_collected}/3 days)`;
+                    
+                    if (data.days_collected > 0) {
+                        document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading trend data:', error);
+                document.getElementById('stabilitySparklineStatus').textContent = 'No trend data';
             }
         }
-    } catch (error) {
-        console.error('Error loading trend data:', error);
-        document.getElementById('stabilitySparklineStatus').textContent = 'No trend data';
-    }
-}
 
-        // NEW: Create sparkline charts
-function createSparklines(trends) {
-    const commonOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: false } },
-        scales: { x: { display: false }, y: { display: false } },
-        elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
-    };
+        // Create sparkline charts
+        function createSparklines(trends) {
+            const commonOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } },
+                elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
+            };
 
-    // 1. Stability Sparkline
-    if (trends.stability && trends.stability.length > 0) {
-        const ctx = document.getElementById('stabilitySparkline');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: trends.dates,
-                datasets: [{
-                    data: trends.stability,
-                    borderColor: '#6495ED',
-                    backgroundColor: 'rgba(100, 149, 237, 0.1)',
-                    fill: true
-                }]
-            },
-            options: commonOptions
-        });
-        
-        const latest = trends.stability[trends.stability.length - 1];
-        const previous = trends.stability[trends.stability.length - 2] || latest;
-        const change = latest - previous;
-        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
-        const color = change > 0 ? '#4ade80' : change < 0 ? '#f87171' : '#7a9ab8';
-        
-        document.getElementById('stabilitySparklineStatus').innerHTML = 
-            `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(1)}</span>`;
-        document.getElementById('stabilitySparklineContainer').style.display = 'flex';
-    }
+            // Stability Sparkline
+            if (trends.stability && trends.stability.length > 0) {
+                const ctx = document.getElementById('stabilitySparkline');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: trends.dates,
+                        datasets: [{
+                            data: trends.stability,
+                            borderColor: '#6495ED',
+                            backgroundColor: 'rgba(100, 149, 237, 0.1)',
+                            fill: true
+                        }]
+                    },
+                    options: commonOptions
+                });
+                
+                const latest = trends.stability[trends.stability.length - 1];
+                const previous = trends.stability[trends.stability.length - 2] || latest;
+                const change = latest - previous;
+                const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+                const color = change > 0 ? '#4ade80' : change < 0 ? '#f87171' : '#7a9ab8';
+                
+                document.getElementById('stabilitySparklineStatus').innerHTML = 
+                    `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(1)}</span>`;
+                document.getElementById('stabilitySparklineContainer').style.display = 'flex';
+            }
 
-    // 2. Currency Sparkline
-    if (trends.currency && trends.currency.length > 0) {
-        const ctx = document.getElementById('currencySparkline');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: trends.dates,
-                datasets: [{
-                    data: trends.currency,
-                    borderColor: '#f87171',
-                    backgroundColor: 'rgba(248, 113, 113, 0.1)',
-                    fill: true
-                }]
-            },
-            options: commonOptions
-        });
-        
-        const latest = trends.currency[trends.currency.length - 1];
-        const previous = trends.currency[trends.currency.length - 2] || latest;
-        const change = ((latest - previous) / previous * 100).toFixed(1);
-        const arrow = change > 0 ? '▼' : change < 0 ? '▲' : '→';
-        
-        document.getElementById('currencySparklineStatus').innerHTML = 
-            `<span style="color:#f87171">${arrow} ${Math.abs(change)}%</span>`;
-        document.getElementById('currencySparklineContainer').style.display = 'flex';
-    }
+            // Currency Sparkline
+            if (trends.currency && trends.currency.length > 0) {
+                const ctx = document.getElementById('currencySparkline');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: trends.dates,
+                        datasets: [{
+                            data: trends.currency,
+                            borderColor: '#f87171',
+                            backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                            fill: true
+                        }]
+                    },
+                    options: commonOptions
+                });
+                
+                const latest = trends.currency[trends.currency.length - 1];
+                const previous = trends.currency[trends.currency.length - 2] || latest;
+                const change = ((latest - previous) / previous * 100).toFixed(1);
+                const arrow = change > 0 ? '▼' : change < 0 ? '▲' : '→';
+                
+                document.getElementById('currencySparklineStatus').innerHTML = 
+                    `<span style="color:#f87171">${arrow} ${Math.abs(change)}%</span>`;
+                document.getElementById('currencySparklineContainer').style.display = 'flex';
+            }
 
-    // 3. Bond Sparkline
-    if (trends.bonds && trends.bonds.length > 0) {
-        const ctx = document.getElementById('bondSparkline');
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: trends.dates,
-                datasets: [{
-                    data: trends.bonds,
-                    borderColor: '#fb923c',
-                    backgroundColor: 'rgba(251, 146, 60, 0.1)',
-                    fill: true
-                }]
-            },
-            options: commonOptions
-        });
-        
-        const latest = trends.bonds[trends.bonds.length - 1];
-        const previous = trends.bonds[trends.bonds.length - 2] || latest;
-        const change = (latest - previous).toFixed(1);
-        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
-        
-        document.getElementById('bondSparklineStatus').innerHTML = 
-            `<span style="color:#fb923c">${arrow} ${Math.abs(change)}%</span>`;
-        document.getElementById('bondSparklineContainer').style.display = 'flex';
-    }
+            // Bond Sparkline
+            if (trends.bonds && trends.bonds.length > 0) {
+                const ctx = document.getElementById('bondSparkline');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: trends.dates,
+                        datasets: [{
+                            data: trends.bonds,
+                            borderColor: '#fb923c',
+                            backgroundColor: 'rgba(251, 146, 60, 0.1)',
+                            fill: true
+                        }]
+                    },
+                    options: commonOptions
+                });
+                
+                const latest = trends.bonds[trends.bonds.length - 1];
+                const previous = trends.bonds[trends.bonds.length - 2] || latest;
+                const change = (latest - previous).toFixed(1);
+                const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+                
+                document.getElementById('bondSparklineStatus').innerHTML = 
+                    `<span style="color:#fb923c">${arrow} ${Math.abs(change)}%</span>`;
+                document.getElementById('bondSparklineContainer').style.display = 'flex';
+            }
 
-    // 4. Hezbollah Activity Sparkline (7-day rolling)
-    if (trends.hezbollah && trends.hezbollah.length > 0) {
-        const ctx = document.getElementById('hezbollahSparkline');
-        const last7 = {
-            dates: trends.dates.slice(-7),
-            data: trends.hezbollah.slice(-7)
-        };
-        
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: last7.dates,
-                datasets: [{
-                    data: last7.data,
-                    borderColor: '#facc15',
-                    backgroundColor: 'rgba(250, 204, 21, 0.1)',
-                    fill: true
-                }]
-            },
-            options: commonOptions
-        });
-        
-        const latest = last7.data[last7.data.length - 1];
-        const previous = last7.data[last7.data.length - 2] || latest;
-        const change = latest - previous;
-        const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
-        const color = change > 0 ? '#f87171' : change < 0 ? '#4ade80' : '#7a9ab8';
-        
-        document.getElementById('hezbollahSparklineStatus').innerHTML = 
-            `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(0)}</span>`;
-        document.getElementById('hezbollahSparklineContainer').style.display = 'flex';
-    }
-}
+            // Hezbollah Activity Sparkline
+            if (trends.hezbollah && trends.hezbollah.length > 0) {
+                const ctx = document.getElementById('hezbollahSparkline');
+                const last7 = {
+                    dates: trends.dates.slice(-7),
+                    data: trends.hezbollah.slice(-7)
+                };
+                
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last7.dates,
+                        datasets: [{
+                            data: last7.data,
+                            borderColor: '#facc15',
+                            backgroundColor: 'rgba(250, 204, 21, 0.1)',
+                            fill: true
+                        }]
+                    },
+                    options: commonOptions
+                });
+                
+                const latest = last7.data[last7.data.length - 1];
+                const previous = last7.data[last7.data.length - 2] || latest;
+                const change = latest - previous;
+                const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+                const color = change > 0 ? '#f87171' : change < 0 ? '#4ade80' : '#7a9ab8';
+                
+                document.getElementById('hezbollahSparklineStatus').innerHTML = 
+                    `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(0)}</span>`;
+                document.getElementById('hezbollahSparklineContainer').style.display = 'flex';
+            }
+        }
+
         async function loadLebanonData() {
             try {
-                console.log('Fetching Lebanon stability data...');
-                console.log('Backend URL:', BACKEND_URL);
-                console.log('Full URL:', `${BACKEND_URL}/scan-lebanon-stability`);
-                
-                // Add timeout
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
                 
                 const response = await fetch(`${BACKEND_URL}/scan-lebanon-stability`, {
                     signal: controller.signal
@@ -887,51 +1088,29 @@ function createSparklines(trends) {
                 
                 clearTimeout(timeoutId);
                 
-                console.log('Response received!');
-                console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
-                console.log('Response headers:', [...response.headers.entries()]);
-                
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
                 const text = await response.text();
-                console.log('Raw response text (first 500 chars):', text.substring(0, 500));
-                
                 const data = JSON.parse(text);
-                
-                console.log('Parsed data:', data);
-                console.log('Success flag:', data.success);
                 
                 if (!data.success) {
                     throw new Error(data.error || 'Unknown error');
                 }
                 
-                console.log('Lebanon data loaded successfully! Calling displayData...');
-                
-displayData(data);
-
-// NEW: Load trend data for sparklines
-await loadTrendData();
-
-// Hide loading overlay when data is ready
-hideLoadingOverlay();
-                
-                console.log('displayData completed!');
+                displayData(data);
+                await loadTrendData();
+                hideLoadingOverlay();
                 
             } catch (error) {
                 console.error('Error loading Lebanon data:', error);
-                console.error('Error type:', error.constructor.name);
-                console.error('Error message:', error.message);
-                console.error('Full error:', error);
                 
                 let errorMessage = error.message;
                 if (error.name === 'AbortError') {
                     errorMessage = 'Request timeout (30 seconds) - backend may be slow';
                 }
                 
-                // Show error in loading overlay
                 document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
                 document.getElementById('loadingError').innerHTML = `⚠️ ${errorMessage}`;
                 document.getElementById('loadingError').style.display = 'block';
@@ -939,10 +1118,8 @@ hideLoadingOverlay();
         }
 
         function displayData(data) {
-            // Show content
             document.getElementById('content').style.display = 'block';
             
-            // Update timestamp
             document.getElementById('lastUpdated').textContent = 
                 `Last updated: ${new Date().toLocaleString('en-US', { 
                     month: 'short', day: 'numeric', year: 'numeric', 
@@ -979,7 +1156,6 @@ hideLoadingOverlay();
                     `${devalPct > 0 ? '+' : ''}${devalPct.toFixed(0)}% vs official rate`;
                 document.getElementById('currencyChange').style.color = '#f87171';
                 
-                // Display 24h trend
                 const change24h = currency.change_24h || 0;
                 const pressure = currency.pressure || 'NEUTRAL';
                 const trendIcon = change24h > 0 ? '▼' : (change24h < 0 ? '▲' : '—');
@@ -990,7 +1166,7 @@ hideLoadingOverlay();
                     <div style="color:${trendColor}; font-size:0.9em; font-weight:600;">
                         ${trendIcon} ${Math.abs(change24h).toFixed(2)}% (24h)
                     </div>
-                    <div style="font-size:0.85em; color:#b8d4e8; margin-top:3px;">
+                    <div style="font-size:0.85em; color:var(--text-secondary); margin-top:3px;">
                         ${pressureIcon} ${pressure} PRESSURE
                     </div>
                 `;
@@ -1011,19 +1187,16 @@ hideLoadingOverlay();
             document.getElementById('rearmamentCount').textContent = hezbollah.rearmament_mentions || 0;
             document.getElementById('strikeCount').textContent = hezbollah.strike_mentions || 0;
             
-            // Add article links below counts
             const articles = hezbollah.articles || [];
             
-            // Filter articles by keyword
             const rearmamentArticles = articles.filter(a => 
                 a.keyword && (a.keyword.toLowerCase().includes('rearmament') || a.keyword.toLowerCase().includes('weapons'))
-            ).slice(0, 3); // Show top 3
+            ).slice(0, 3);
             
             const strikeArticles = articles.filter(a => 
                 a.keyword && a.keyword.toLowerCase().includes('strike')
-            ).slice(0, 3); // Show top 3
+            ).slice(0, 3);
             
-            // Display rearmament links
             const rearmamentLinksContainer = document.getElementById('rearmamentLinks');
             if (rearmamentArticles.length > 0) {
                 rearmamentLinksContainer.innerHTML = rearmamentArticles.map(article => `
@@ -1035,7 +1208,6 @@ hideLoadingOverlay();
                 `).join('');
             }
             
-            // Display strike links
             const strikeLinksContainer = document.getElementById('strikeLinks');
             if (strikeArticles.length > 0) {
                 strikeLinksContainer.innerHTML = strikeArticles.map(article => `
@@ -1047,11 +1219,11 @@ hideLoadingOverlay();
                 `).join('');
             }
             
-            // Articles section (already have articles variable from above)
+            // Articles section
             const articlesContainer = document.getElementById('articlesContainer');
             
             if (articles.length === 0) {
-                articlesContainer.innerHTML = '<div style="text-align:center; color:#7a9ab8; padding:20px;">No recent articles found</div>';
+                articlesContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px;">No recent articles found</div>';
             } else {
                 articlesContainer.innerHTML = articles.map(article => `
                     <div class="article-item">
@@ -1065,15 +1237,6 @@ hideLoadingOverlay();
             }
         }
 
-        // Load data on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Start loading progress animation
-            startLoadingProgress();
-            
-            // Fetch data
-            loadLebanonData();
-        });
-
         // Translation system
         const translations = {
             en: {
@@ -1081,6 +1244,7 @@ hideLoadingOverlay();
                 pageSubtitle: "Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status",
                 lastUpdated: "Last updated: ",
                 backLink: "← Back to Dashboard",
+                themeToggle: "Theme",
                 stabilityTitle: "LEBANON STABILITY INDEX",
                 stabilityLegend: "100 = Stable Regime | 0 = Imminent Collapse",
                 govStatus: "GOVERNMENT STATUS",
@@ -1104,6 +1268,7 @@ hideLoadingOverlay();
                 pageSubtitle: "ניתוח רב-גורמי: מצב פוליטי, כלכלי, ביטחוני וחיזבאללה",
                 lastUpdated: "עודכן לאחרונה: ",
                 backLink: "→ חזרה למרכז הבקרה",
+                themeToggle: "ערכת נושא",
                 stabilityTitle: "מדד יציבות לבנון",
                 stabilityLegend: "100 = משטר יציב | 0 = קריסה קרובה",
                 govStatus: "סטטוס הממשלה",
@@ -1127,6 +1292,7 @@ hideLoadingOverlay();
                 pageSubtitle: "تحليل متعدد العوامل: الوضع السياسي والاقتصادي والأمني وحزب الله",
                 lastUpdated: "آخر تحديث: ",
                 backLink: "→ العودة إلى لوحة المعلومات",
+                themeToggle: "المظهر",
                 stabilityTitle: "مؤشر استقرار لبنان",
                 stabilityLegend: "100 = نظام مستقر | 0 = انهيار وشيك",
                 govStatus: "حالة الحكومة",
@@ -1150,6 +1316,7 @@ hideLoadingOverlay();
                 pageSubtitle: "تحلیل چندعاملی: وضعیت سیاسی، اقتصادی، امنیتی و حزب‌الله",
                 lastUpdated: "آخرین به‌روزرسانی: ",
                 backLink: "→ بازگشت به داشبورد",
+                themeToggle: "پوسته",
                 stabilityTitle: "شاخص ثبات لبنان",
                 stabilityLegend: "100 = رژیم پایدار | 0 = فروپاشی قریب‌الوقوع",
                 govStatus: "وضعیت دولت",
@@ -1171,22 +1338,18 @@ hideLoadingOverlay();
         };
 
         function switchLanguage(lang, button) {
-            // Update active button
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
-            // Set text direction for RTL languages
             if (lang === 'he' || lang === 'ar' || lang === 'fa') {
                 document.documentElement.setAttribute('dir', 'rtl');
             } else {
                 document.documentElement.setAttribute('dir', 'ltr');
             }
 
-            // Update all elements with data-i18n attribute
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (translations[lang] && translations[lang][key]) {
-                    // Special handling for lastUpdated which has dynamic content
                     if (key === 'lastUpdated' && element.id === 'lastUpdated') {
                         const currentText = element.textContent;
                         if (currentText.includes(':')) {
@@ -1201,6 +1364,12 @@ hideLoadingOverlay();
                 }
             });
         }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            startLoadingProgress();
+            loadLebanonData();
+        });
     </script>
 </body>
 </html>
