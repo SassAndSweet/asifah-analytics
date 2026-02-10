@@ -219,7 +219,7 @@
             height: 80px;
             flex-shrink: 0;
             border-radius: 50%;
-            margin-top: 28px;
+            margin-top: 48px;
         }
 
         .header-content {
@@ -805,6 +805,15 @@
                             <span class="status-label" data-i18n="daysUntilElections">Days Until Elections:</span>
                             <span class="status-value" id="daysUntilElection">--</span>
                         </div>
+                        <div class="government-status-item" style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
+                            <span style="font-weight: 600;">May 10, 2026</span> (Decree No. 2438) 
+                            <a href="https://today.lorientlejour.com/article/1493221/hajjar-sets-vote-for-may-3-diaspora-to-vote-1-week-earlier.html" 
+                               target="_blank" 
+                               style="color: #6495ED; text-decoration: none; margin-left: 4px;"
+                               title="L'Orient Today - Official Election Decree">
+                                📄 Source
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -819,6 +828,25 @@
                         <span class="sparkline-label">30-Day:</span>
                         <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
                         <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
+                    </div>
+                    
+                    <!-- Gold Reserves Info -->
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
+                            🪙 Gold Reserves
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">
+                            <span style="font-weight: bold;">286.8 tons</span> (~$40-50B USD)
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-secondary); line-height: 1.4;">
+                            2nd largest in Middle East • Protected by 1986 law 
+                            <a href="https://www.euronews.com/business/2026/02/06/lebanons-424bn-gold-dilemma-a-crisis-lifeline-or-a-last-resort" 
+                               target="_blank" 
+                               style="color: #6495ED; text-decoration: none; margin-left: 4px;"
+                               title="Euronews - Lebanon's Gold Reserves">
+                                📊
+                            </a>
+                        </div>
                     </div>
                 </div>
 
@@ -1173,7 +1201,14 @@
             if (govt.has_president) {
                 document.getElementById('daysWithPresident').textContent = govt.days_with_president || '0';
             }
-            document.getElementById('daysUntilElection').textContent = govt.days_until_election || '0';
+            
+            // Calculate days until May 10, 2026 (failsafe in case backend hasn't updated)
+            const electionDate = new Date('2026-05-10T00:00:00');
+            const today = new Date();
+            const daysUntil = Math.ceil((electionDate - today) / (1000 * 60 * 60 * 24));
+            
+            // Use backend value if available, otherwise use calculated value
+            document.getElementById('daysUntilElection').textContent = govt.days_until_election || daysUntil;
             
             // Currency
             const currency = data.currency || {};
@@ -1188,13 +1223,31 @@
                 
                 const change24h = currency.change_24h || 0;
                 const pressure = currency.pressure || 'NEUTRAL';
-                const trendIcon = change24h > 0 ? '▼' : (change24h < 0 ? '▲' : '—');
-                const trendColor = change24h > 0 ? '#f87171' : (change24h < 0 ? '#4ade80' : '#7a9ab8');
+                
+                // Enhanced trend indicators with Billboard-style arrows
+                let trendIcon, trendText, trendColor;
+                if (Math.abs(change24h) < 0.01) {
+                    // No change
+                    trendIcon = '➡️';
+                    trendText = 'NO CHANGE';
+                    trendColor = '#7a9ab8';
+                } else if (change24h > 0) {
+                    // Weakening (bad for Lebanon)
+                    trendIcon = '⬇️';
+                    trendText = 'WEAKENING';
+                    trendColor = '#f87171';
+                } else {
+                    // Strengthening (good for Lebanon)
+                    trendIcon = '⬆️';
+                    trendText = 'STRENGTHENING';
+                    trendColor = '#4ade80';
+                }
+                
                 const pressureIcon = pressure === 'SELLING' ? '📉' : (pressure === 'BUYING' ? '📈' : '━');
                 
                 document.getElementById('currencyTrend').innerHTML = `
-                    <div style="color:${trendColor}; font-size:0.9em; font-weight:600;">
-                        ${trendIcon} ${Math.abs(change24h).toFixed(2)}% (24h)
+                    <div style="color:${trendColor}; font-size:0.95em; font-weight:700; margin-bottom: 4px;">
+                        ${trendIcon} ${trendText} ${Math.abs(change24h).toFixed(2)}% (24h)
                     </div>
                     <div style="font-size:0.85em; color:var(--text-secondary); margin-top:3px;">
                         ${pressureIcon} ${pressure} PRESSURE
