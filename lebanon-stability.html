@@ -818,37 +818,54 @@
                 </div>
 
                 <!-- Currency Status -->
-                <div class="metric-card">
-                    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
-                    <div class="metric-value" id="currencyRate">--</div>
-                    <div class="metric-subtitle" id="currencyChange">--</div>
-                    <div id="currencyTrend" style="margin-top:10px;"></div>
-                    
-                    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
-                        <span class="sparkline-label">30-Day:</span>
-                        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
-                        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
-                    </div>
-                    
-                    <!-- Gold Reserves Info -->
-                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
-                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
-                            🪙 Gold Reserves
-                        </div>
-                        <div style="font-size: 13px; color: var(--text-primary); margin-bottom: 4px;">
-                            <span style="font-weight: bold;">286.8 tons</span> (~$40-50B USD)
-                        </div>
-                        <div style="font-size: 10px; color: var(--text-secondary); line-height: 1.4;">
-                            2nd largest in Middle East • Protected by 1986 law 
-                            <a href="https://www.euronews.com/business/2026/02/06/lebanons-424bn-gold-dilemma-a-crisis-lifeline-or-a-last-resort" 
-                               target="_blank" 
-                               style="color: #6495ED; text-decoration: none; margin-left: 4px;"
-                               title="Euronews - Lebanon's Gold Reserves">
-                                📊
-                            </a>
-                        </div>
-                    </div>
-                </div>
+<div class="metric-card">
+    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
+    <div class="metric-value" id="currencyRate">--</div>
+    <div class="metric-subtitle" id="currencyChange">--</div>
+    <div id="currencyTrend" style="margin-top:10px;"></div>
+    
+    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
+        <span class="sparkline-label">30-Day:</span>
+        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
+        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
+    </div>
+    
+    <!-- Gold Reserves Info (ENHANCED!) -->
+    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
+        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
+            🪙 GOLD RESERVES
+        </div>
+        
+        <!-- Dynamic Gold Value -->
+        <div style="font-size: 18px; color: var(--text-primary); margin-bottom: 6px; font-weight: bold;">
+            <span id="goldValue">~$40-50B</span> USD
+        </div>
+        
+        <!-- Gold Holdings -->
+        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+            286.8 tons • <span id="goldPrice">$2,750/oz</span>
+        </div>
+        
+        <!-- Gold Price Sparkline -->
+        <div class="sparkline-container" id="goldSparklineContainer" style="display:none; margin-top: 8px;">
+            <span class="sparkline-label" style="font-size: 10px;">Gold Price (30d):</span>
+            <canvas id="goldSparkline" class="sparkline-canvas" style="max-width: 100px;"></canvas>
+            <span class="sparkline-status" id="goldSparklineStatus" style="font-size: 10px;">Loading...</span>
+        </div>
+        
+        <!-- Static Info -->
+        <div style="font-size: 9px; color: var(--text-muted); line-height: 1.5; margin-top: 8px;">
+            2nd largest ME reserves • Protected by 1986 law • 
+            <span id="goldGdpPct">~200%</span> of GDP
+            <a href="https://www.euronews.com/business/2026/02/06/lebanons-424bn-gold-dilemma-a-crisis-lifeline-or-a-last-resort" 
+               target="_blank" 
+               style="color: #6495ED; text-decoration: none; margin-left: 4px;"
+               title="Euronews - Lebanon's Gold Reserves">
+                📊
+            </a>
+        </div>
+    </div>
+</div>
 
                 <!-- Bond Yields -->
                 <div class="metric-card">
@@ -1009,7 +1026,7 @@
             }
         }
 
-        // Create sparkline charts
+// Create sparkline charts
         function createSparklines(trends) {
             const commonOptions = {
                 responsive: true,
@@ -1133,6 +1150,34 @@
                     `<span style="color:${color}">${arrow} ${Math.abs(change).toFixed(0)}</span>`;
                 document.getElementById('hezbollahSparklineContainer').style.display = 'flex';
             }
+
+            // Gold Price Sparkline (NEW!)
+            if (trends.gold_price && trends.gold_price.length > 0) {
+                const ctx = document.getElementById('goldSparkline');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: trends.dates,
+                        datasets: [{
+                            data: trends.gold_price,
+                            borderColor: '#fbbf24', // Gold color
+                            backgroundColor: 'rgba(251, 191, 36, 0.1)',
+                            fill: true
+                        }]
+                    },
+                    options: commonOptions
+                });
+                
+                const latest = trends.gold_price[trends.gold_price.length - 1];
+                const previous = trends.gold_price[trends.gold_price.length - 2] || latest;
+                const change = ((latest - previous) / previous * 100).toFixed(1);
+                const arrow = change > 0 ? '↑' : change < 0 ? '↓' : '→';
+                const color = change > 0 ? '#4ade80' : change < 0 ? '#f87171' : '#7a9ab8';
+                
+                document.getElementById('goldSparklineStatus').innerHTML = 
+                    `<span style="color:${color}">${arrow} ${Math.abs(change)}%</span>`;
+                document.getElementById('goldSparklineContainer').style.display = 'flex';
+            }
         }
 
         async function loadLebanonData() {
@@ -1254,7 +1299,21 @@
                     </div>
                 `;
             }
-            
+
+            // Gold Reserves (NEW!)
+const gold = data.gold_reserves || {};
+if (gold.total_value_billions) {
+    document.getElementById('goldValue').textContent = gold.display_value || `$${gold.total_value_billions}B`;
+    
+    if (gold.price_per_oz) {
+        document.getElementById('goldPrice').textContent = 
+            `$${gold.price_per_oz.toLocaleString('en-US', {maximumFractionDigits: 0})}/oz`;
+    }
+    
+    if (gold.gdp_percentage) {
+        document.getElementById('goldGdpPct').textContent = `~${gold.gdp_percentage}%`;
+    }
+}
             // Bonds
             const bonds = data.bonds || {};
             if (bonds.yield) {
