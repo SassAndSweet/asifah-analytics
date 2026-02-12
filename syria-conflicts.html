@@ -1153,38 +1153,46 @@
         }
 
         function updateMetrics(data) {
-            const cd = data.conflict_data || {};
-            
-            document.getElementById('deathCount').textContent = cd.deaths || 0;
-            document.getElementById('displacedCount').textContent = (cd.displaced || 0).toLocaleString();
-            document.getElementById('clashCount').textContent = cd.factional_clashes || 0;
-            document.getElementById('factionCount').textContent = cd.num_factions || 0;
-            
-            // Update displacement breakdown (these would come from backend eventually)
-            // For now, showing estimated breakdown
-            const totalDisplaced = cd.displaced || 0;
-            document.getElementById('idpCount').textContent = Math.floor(totalDisplaced * 0.65).toLocaleString();
-            document.getElementById('campCount').textContent = Math.floor(totalDisplaced * 0.25).toLocaleString();
-            document.getElementById('recentDisplacement').textContent = `+${Math.floor(totalDisplaced * 0.1).toLocaleString()}`;
-            
-            if (cd.active_factions && cd.active_factions.length > 0) {
-                document.getElementById('factionList').textContent = cd.active_factions.join(', ');
-            }
-            
-            const locList = document.getElementById('locationsList');
-            locList.innerHTML = '';
-            if (cd.clash_locations) {
-                const locations = Object.entries(cd.clash_locations).slice(0, 10);
-                locations.forEach(([city, count]) => {
-                    const item = document.createElement('div');
-                    item.className = 'location-item';
-                    item.textContent = `${city.charAt(0).toUpperCase() + city.slice(1)}: ${count} incidents`;
-                    locList.appendChild(item);
-                });
-            }
-            
-            populateSourceCitations(cd.details || []);
-        }
+    const cd = data.conflict_data || {};
+    const displacement = data.displacement_enhanced || {};
+    
+    // Update deaths count
+    document.getElementById('deathCount').textContent = cd.deaths || 0;
+    
+    // Update displaced count (use enhanced data if available)
+    const totalDisplaced = displacement.total_idps || cd.displaced || 0;
+    document.getElementById('displacedCount').textContent = totalDisplaced.toLocaleString();
+    
+    // Update clashes and factions
+    document.getElementById('clashCount').textContent = cd.factional_clashes || 0;
+    document.getElementById('factionCount').textContent = cd.num_factions || 0;
+    
+    // NEW: Update displacement breakdown stats
+    const breakdown = displacement.idp_breakdown || {};
+    document.getElementById('idpCount').textContent = (breakdown.in_camps || 0).toLocaleString();
+    document.getElementById('campCount').textContent = (breakdown.with_host_communities || 0).toLocaleString();
+    document.getElementById('recentDisplacement').textContent = `+${(breakdown.recent_movements || 0).toLocaleString()}`;
+    
+    // Update factions list
+    if (cd.active_factions && cd.active_factions.length > 0) {
+        document.getElementById('factionList').textContent = cd.active_factions.join(', ');
+    }
+    
+    // Update clash locations
+    const locList = document.getElementById('locationsList');
+    locList.innerHTML = '';
+    if (cd.clash_locations) {
+        const locations = Object.entries(cd.clash_locations).slice(0, 10);
+        locations.forEach(([city, count]) => {
+            const item = document.createElement('div');
+            item.className = 'location-item';
+            item.textContent = `${city.charAt(0).toUpperCase() + city.slice(1)}: ${count} incidents`;
+            locList.appendChild(item);
+        });
+    }
+    
+    populateSourceCitations(cd.details || []);
+}
         
         function populateSourceCitations(details) {
             const deathDetails = details.filter(d => d.type === 'deaths').slice(0, 5);
