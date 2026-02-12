@@ -22,11 +22,35 @@
             box-sizing: border-box;
         }
 
+        /* CSS Variables for Light/Dark Mode */
+:root {
+    /* Light Mode Colors */
+    --bg-color: #f5f5f5;
+    --container-bg: #ffffff;
+    --card-bg: #ffffff;
+    --card-border: #e1e8ed;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-muted: #95a5a6;
+}
+
+[data-theme="dark"] {
+    /* Dark Mode Colors */
+    --bg-color: #1a1a1a;
+    --container-bg: #2d2d2d;
+    --card-bg: #2d2d2d;
+    --card-border: #404040;
+    --text-primary: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --text-muted: #808080;
+}
+        
         body {
             font-family: 'Times New Roman', Times, serif;
             font-size: 14px;
-            background-color: #f5f5f5;
-            color: #2c3e50;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease, direction 0.3s ease;
             line-height: 1.6;
             padding: 20px;
             transition: direction 0.3s ease;
@@ -46,9 +70,14 @@
             width: 100%;
             height: 100%;
             background-color: rgba(245, 245, 245, 0.75);
+            transition: background-color 0.3s ease;
             pointer-events: none;
             z-index: -1;
         }
+
+        [data-theme="dark"] body::before {
+    background-color: rgba(26, 26, 26, 0.85);
+}
 
         [dir="rtl"] {
             direction: rtl;
@@ -69,6 +98,19 @@
             position: relative;
         }
 
+        .header-logo {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 35px;
+    left: 35px;
+    border-radius: 50%;
+}
+
+[dir="rtl"] .header-logo {
+    left: auto;
+    right: 35px;
+}
         h1 {
             font-size: 28px;
             font-weight: bold;
@@ -101,6 +143,78 @@
             right: auto;
             left: 35px;
         }
+
+        /* Theme Toggle */
+.theme-toggle {
+    position: absolute;
+    top: 90px;
+    right: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+[dir="rtl"] .theme-toggle {
+    right: auto;
+    left: 35px;
+}
+
+.theme-toggle-label {
+    font-size: 11px;
+    color: rgba(255,255,255,0.9);
+    margin-right: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+
+.theme-toggle-switch {
+    position: relative;
+    width: 50px;
+    height: 26px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255,255,255,0.3);
+}
+
+.theme-toggle-switch:hover {
+    background: rgba(255,255,255,0.3);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.theme-toggle-slider {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 18px;
+    height: 18px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+.theme-toggle-slider::before {
+    content: '☀️';
+}
+
+[data-theme="dark"] .theme-toggle-slider {
+    transform: translateX(24px);
+}
+
+[data-theme="dark"] .theme-toggle-slider::before {
+    content: '🌙';
+}
 
         .lang-btn {
             background: rgba(255,255,255,0.2);
@@ -1847,12 +1961,26 @@
     
     <div class="container">
         <header>
+            <!-- Logo added here -->
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" 
+                 alt="Asifah Analytics Logo" 
+                 class="header-logo">
+            
             <div class="language-switcher">
                 <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
                 <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
                 <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
                 <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
             </div>
+            
+            <!-- Theme toggle added here -->
+            <div class="theme-toggle">
+                <span class="theme-toggle-label" data-i18n="themeToggle">Toggle: Light - Dark</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()">
+                    <div class="theme-toggle-slider"></div>
+                </div>
+            </div>
+            
             <h1 data-i18n="header">ASIFAH ANALYTICS</h1>
             <h2 data-i18n="subtitle">Regional Multi-Actor Conflict Probability Dashboard - The Middle East</h2>
         </header>
@@ -2661,11 +2789,31 @@
     <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
+        <script>
+    const BACKEND_URL = 'https://asifah-backend.onrender.com';
+
+    // Theme Management
+    function initTheme() {
+        const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('asifah-theme', newTheme);
+    }
+
+    // Initialize theme on page load
+    initTheme();
+
 const translations = {
             en: {
                 // Header
                 header: "ASIFAH ANALYTICS",
                 subtitle: "Regional Multi-Actor Conflict Probability Dashboard - The Middle East",
+                themeToggle: "Toggle: Light - Dark",  
                 
                 // Target Names
                 targetHezbollah: "HIZBALLAH",
@@ -2759,6 +2907,7 @@ const translations = {
                 // Header
                 header: "אסיפה אנליטיקס",
                 subtitle: "לוח מחוונים אזורי להסתברות סכסוכים רב-שחקנים - המזרח התיכון",
+                themeToggle: "מעבר: בהיר - כהה", 
                 
                 // Target Names
                 targetHezbollah: "חיזבאללה",
@@ -2852,6 +3001,7 @@ const translations = {
                 // Header
                 header: "عاصفة أناليتكس",
                 subtitle: "لوحة التحكم الإقليمية لاحتمالات الصراع متعدد الأطراف - الشرق الأوسط",
+                themeToggle: "التبديل: فاتح - داكن",
                 
                 // Target Names
                 targetHezbollah: "حزب الله",
@@ -2945,6 +3095,7 @@ const translations = {
                 // Header
                 header: "آسیفه آنالیتیکس",
                 subtitle: "داشبورد منطقه‌ای احتمال درگیری چند بازیگر - خاورمیانه",
+                themeToggle: "تغییر: روشن - تیره",
                 
                 // Target Names
                 targetHezbollah: "حزب‌الله",
