@@ -1092,11 +1092,26 @@
                         </div>
                     </div>
                     
-                    <div class="stability-metric-item">
+                    <div class="stability-metric-item" style="grid-column: span 2;">
                         <span class="stability-icon">🛢️</span>
                         <div class="stability-metric-content">
-                            <div class="stability-metric-label">Oil (Brent)</div>
+                            <div class="stability-metric-label" data-i18n="oilBrentLabel">Oil (Brent)</div>
                             <div class="stability-metric-value" id="oil-price-value">Loading...</div>
+                            
+                            <!-- Sparkline Canvas -->
+                            <canvas id="oil-sparkline" width="200" height="40" style="margin-top: 8px;"></canvas>
+                            
+                            <!-- OPEC Stats -->
+                            <div id="opec-stats" style="margin-top: 12px; font-size: 11px; color: var(--text-secondary); line-height: 1.6;">
+                                <div style="font-weight: 600; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    <span data-i18n="opecStatsTitle">Iran Energy Reserves (OPEC ASB 2025)</span>
+                                </div>
+                                <div>🛢️ <span data-i18n="oilReserves">Oil</span>: <strong id="oil-reserves-value">208.6 Bn bbl</strong> <span style="color: var(--text-muted);">(#3 globally)</span></div>
+                                <div>💨 <span data-i18n="gasReserves">Gas</span>: <strong id="gas-reserves-value">33.988 tcm</strong> <span style="color: var(--text-muted);">(#2 globally)</span></div>
+                                <div style="margin-top: 6px; font-size: 10px; color: var(--text-muted); font-style: italic;">
+                                    <span data-i18n="opecLastUpdated">Last updated</span>: <span id="opec-date">July 2, 2025</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -1332,7 +1347,12 @@
                 injuriesLabel: "INJURIES",
                 arrestsLabel: "ARRESTS",
                 verified: "Verified",
-                lastUpdated: "Last updated:"
+                lastUpdated: "Last updated:",
+                oilBrentLabel: "Oil (Brent)",
+                opecStatsTitle: "Iran Energy Reserves (OPEC ASB 2025)",
+                oilReserves: "Oil",
+                gasReserves: "Gas",
+                opecLastUpdated: "Last updated",
             },
             he: {
                 pageTitle: "🇮🇷 מעקב הפגנות באיראן",
@@ -1356,7 +1376,12 @@
                 injuriesLabel: "פצועים",
                 arrestsLabel: "מעצרים",
                 verified: "מאומת",
-                lastUpdated: "עודכן לאחרונה:"
+                lastUpdated: "עודכן לאחרונה:",
+                oilBrentLabel: "נפט (ברנט)",
+                opecStatsTitle: "עתודות אנרגיה איראניות (OPEC ASB 2025)",
+                oilReserves: "נפט",
+                gasReserves: "גז",
+                opecLastUpdated: "עודכן לאחרונה",
             },
             ar: {
                 pageTitle: "🇮🇷 متابعة احتجاجات إيران",
@@ -1380,7 +1405,12 @@
                 injuriesLabel: "الإصابات",
                 arrestsLabel: "الاعتقالات",
                 verified: "تم التحقق",
-                lastUpdated: "آخر تحديث:"
+                lastUpdated: "آخر تحديث:",
+                oilBrentLabel: "نفط (برنت)",
+                opecStatsTitle: "احتياطيات الطاقة الإيرانية (OPEC ASB 2025)",
+                oilReserves: "نفط",
+                gasReserves: "غاز",
+                opecLastUpdated: "آخر تحديث",
             },
             fa: {
                 pageTitle: "🇮🇷 پیگیری اعتراضات ایران",
@@ -1404,7 +1434,12 @@
                 injuriesLabel: "مجروحان",
                 arrestsLabel: "بازداشت‌ها",
                 verified: "تأیید شده",
-                lastUpdated: "آخرین به‌روزرسانی:"
+                lastUpdated: "آخرین به‌روزرسانی:",
+                oilBrentLabel: "نفت (برنت)",
+                opecStatsTitle: "ذخایر انرژی ایران (OPEC ASB 2025)",
+                oilReserves: "نفت",
+                gasReserves: "گاز",
+                opecLastUpdated: "آخرین به‌روزرسانی",
             }
         };
 
@@ -1462,7 +1497,7 @@
             }
         }
 
-        function updateMetrics(data) {
+function updateMetrics(data) {
             const intensity = data.intensity || 0;
             document.getElementById('protest-intensity').textContent = intensity + '%';
             document.getElementById('protest-intensity').className = 'metric-value ' + getIntensityClass(intensity);
@@ -1557,6 +1592,7 @@
                 protestIntensityMini.innerHTML = `<span style="color: ${intensityColor};">${intensityLabel}</span> (${intensity}%)`;
             }
             
+            // OLD OIL PRICE CODE - WILL BE REPLACED BY NEW ENDPOINT
             const oilPriceElement = document.getElementById('oil-price-value');
             if (oilPriceElement && data.oil_price) {
                 const oilPrice = data.oil_price.price;
@@ -1632,6 +1668,91 @@
                     });
                 }
             }
+        }
+
+        // =========================================
+        // NEW: IRAN OIL DATA FUNCTIONS
+        // =========================================
+
+        // Fetch Iran oil data from new endpoint
+        async function fetchIranOilData() {
+            try {
+                const response = await fetch('https://asifah-backend.onrender.com/api/iran-oil-data');
+                const data = await response.json();
+                
+                if (data.success && data.oil_price) {
+                    // Update oil price with arrow
+                    const oilPrice = data.oil_price;
+                    const arrow = oilPrice.arrow || '→';
+                    const changeColor = oilPrice.trend === 'up' ? '#51cf66' : oilPrice.trend === 'down' ? '#ff6b6b' : '#a0aec0';
+                    const changeSign = oilPrice.percent_change >= 0 ? '+' : '';
+                    
+                    document.getElementById('oil-price-value').innerHTML = 
+                        `$${oilPrice.current_price}/bbl ${arrow} <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${oilPrice.percent_change}%)</span>`;
+                    
+                    // Draw sparkline
+                    if (data.sparkline && data.sparkline.data) {
+                        drawOilSparkline(data.sparkline.data);
+                    }
+                    
+                    // Update OPEC stats if provided
+                    if (data.reserves) {
+                        const reserves = data.reserves;
+                        document.getElementById('oil-reserves-value').textContent = 
+                            `${reserves.oil_reserves.amount} ${reserves.oil_reserves.unit}`;
+                        document.getElementById('gas-reserves-value').textContent = 
+                            `${reserves.gas_reserves.amount} ${reserves.gas_reserves.unit}`;
+                        document.getElementById('opec-date').textContent = reserves.source.date;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching Iran oil data:', error);
+                // Fallback handled by old code in updateMetrics
+            }
+        }
+        
+        // Draw sparkline chart on canvas
+        function drawOilSparkline(data) {
+            const canvas = document.getElementById('oil-sparkline');
+            if (!canvas || !data || data.length === 0) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Get price values
+            const prices = data.map(d => d.price);
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+            const priceRange = maxPrice - minPrice;
+            
+            // Calculate points
+            const stepX = width / (prices.length - 1);
+            const points = prices.map((price, i) => ({
+                x: i * stepX,
+                y: height - ((price - minPrice) / priceRange) * height
+            }));
+            
+            // Draw line
+            ctx.beginPath();
+            ctx.moveTo(points[0].x, points[0].y);
+            points.forEach(point => ctx.lineTo(point.x, point.y));
+            ctx.strokeStyle = '#6495ED';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Draw gradient fill
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            ctx.closePath();
+            const gradient = ctx.createLinearGradient(0, 0, 0, height);
+            gradient.addColorStop(0, 'rgba(100, 149, 237, 0.3)');
+            gradient.addColorStop(1, 'rgba(100, 149, 237, 0.05)');
+            ctx.fillStyle = gradient;
+            ctx.fill();
         }
 
         function getIntensityClass(value) {
@@ -1739,7 +1860,9 @@
         window.addEventListener('DOMContentLoaded', () => {
             startLoadingProgress();
             fetchProtestData();
+            fetchIranOilData(); // NEW: Fetch oil data
             setInterval(fetchProtestData, 30 * 60 * 1000);
+            setInterval(fetchIranOilData, 15 * 60 * 1000); // NEW: Refresh oil data every 15 min
         });
     </script>
 </body>
