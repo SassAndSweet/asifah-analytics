@@ -1765,59 +1765,6 @@ function updateMetrics(data) {
             }
         }
 
-        // =========================================
-// UPDATE TO fetchIranOilData() FUNCTION
-// =========================================
-
-// FIND THIS SECTION (around line 1490):
-
-        // Update OPEC stats if provided
-        if (data.reserves) {
-            const reserves = data.reserves;
-            document.getElementById('oil-reserves-value').textContent = 
-                `${reserves.oil_reserves.amount} ${reserves.oil_reserves.unit}`;
-            document.getElementById('gas-reserves-value').textContent = 
-                `${reserves.gas_reserves.amount} ${reserves.gas_reserves.unit}`;
-            document.getElementById('opec-date').textContent = reserves.source.date;
-        }
-
-// ADD THIS CODE IMMEDIATELY AFTER THE ABOVE SECTION:
-
-        // Update production status (NEW!)
-        if (data.production_status) {
-            const ps = data.production_status;
-            
-            // Update status indicator
-            document.getElementById('production-status-emoji').textContent = ps.emoji;
-            document.getElementById('production-status-text').textContent = ps.status_text;
-            document.getElementById('production-status-detail').textContent = ps.status_detail;
-            
-            // Update source info
-            document.getElementById('production-source-name').textContent = ps.production_source || 'OPEC';
-            document.getElementById('production-source-link').href = ps.production_source_url || '#';
-            
-            // Format date (e.g., "Dec 2025")
-            if (ps.production_date) {
-                const date = new Date(ps.production_date);
-                const formatted = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-                document.getElementById('production-date').textContent = formatted;
-            }
-            
-            // Show/hide news link
-            const newsLinkDiv = document.getElementById('production-news-link');
-            if (ps.news_link) {
-                newsLinkDiv.style.display = 'block';
-                newsLinkDiv.querySelector('a').href = ps.news_link;
-            } else {
-                newsLinkDiv.style.display = 'none';
-            }
-        }
-
-// =========================================
-// COMPLETE UPDATED fetchIranOilData() FUNCTION
-// (Full replacement if easier)
-// =========================================
-
 async function fetchIranOilData() {
     try {
         const response = await fetch('https://asifah-backend.onrender.com/api/iran-oil-data');
