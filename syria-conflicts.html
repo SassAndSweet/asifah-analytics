@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Syria Conflict Tracker v2.8.1 - Last updated: Feb 12, 2025 -->
+<!-- Asifah Analytics - Syria Conflict Tracker v2.8.2 - Last updated: Feb 14, 2025 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Syria Conflict Tracker | Asifah Analytics v2.8.1</title>
+    <title>Syria Conflict Tracker | Asifah Analytics v2.8.2</title>
     
     <!-- Favicon using Asifah Analytics logo -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
@@ -557,6 +557,122 @@
             text-decoration: underline;
         }
 
+        /* Knowledge Library Styles */
+        .knowledge-library {
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        .knowledge-library h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .library-icon {
+            font-size: 28px;
+        }
+
+        .knowledge-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .knowledge-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px var(--metric-hover-shadow);
+        }
+
+        .knowledge-header {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%);
+            padding: 18px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+
+        .knowledge-header:hover {
+            background: linear-gradient(135deg, rgba(192, 132, 252, 0.15) 0%, rgba(168, 85, 247, 0.15) 100%);
+        }
+
+        .knowledge-header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+
+        .category-icon {
+            font-size: 22px;
+        }
+
+        .collapse-icon {
+            font-size: 20px;
+            color: var(--syria-accent);
+            transition: transform 0.3s ease;
+        }
+
+        .knowledge-card.collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .knowledge-content {
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .knowledge-card.collapsed .knowledge-content {
+            max-height: 0;
+            padding: 0 20px;
+            overflow: hidden;
+        }
+
+        .knowledge-content p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .knowledge-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .knowledge-content li {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .knowledge-content strong {
+            color: var(--text-primary);
+        }
+
         .news-section {
             background: var(--container-bg);
             border: 2px solid var(--card-border);
@@ -697,21 +813,25 @@
             font-size: 11px;
         }
 
-        .articles-container::-webkit-scrollbar {
+        .articles-container::-webkit-scrollbar,
+        .knowledge-content::-webkit-scrollbar {
             width: 8px;
         }
 
-        .articles-container::-webkit-scrollbar-track {
+        .articles-container::-webkit-scrollbar-track,
+        .knowledge-content::-webkit-scrollbar-track {
             background: var(--article-bg);
             border-radius: 4px;
         }
 
-        .articles-container::-webkit-scrollbar-thumb {
+        .articles-container::-webkit-scrollbar-thumb,
+        .knowledge-content::-webkit-scrollbar-thumb {
             background: var(--card-border);
             border-radius: 4px;
         }
 
-        .articles-container::-webkit-scrollbar-thumb:hover {
+        .articles-container::-webkit-scrollbar-thumb:hover,
+        .knowledge-content::-webkit-scrollbar-thumb:hover {
             background: var(--text-muted);
         }
 
@@ -750,6 +870,10 @@
                 display: block;
                 width: fit-content;
                 margin: 0 auto 15px;
+            }
+
+            .knowledge-categories {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -897,6 +1021,182 @@
             </div>
         </div>
 
+        <!-- Knowledge Library Section -->
+        <div class="knowledge-library">
+            <h2>
+                <span class="library-icon">📚</span>
+                <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
+            </h2>
+            
+            <div class="knowledge-categories">
+                <!-- Security & Conflict -->
+                <div class="knowledge-card" id="card-security">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('security')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">⚔️</span>
+                            <span data-i18n="catSecurity">Security & Conflict</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Post-Assad Security Landscape:</strong> Following the fall of the Assad regime in late 2024, Syria has fragmented into multiple zones of control with competing armed factions vying for territorial dominance.</p>
+                        
+                        <p><strong>Major Armed Groups:</strong></p>
+                        <ul>
+                            <li><strong>Syrian National Army (SNA):</strong> Turkish-backed opposition forces controlling parts of northern Syria</li>
+                            <li><strong>Syrian Democratic Forces (SDF):</strong> Kurdish-led coalition controlling northeastern Syria</li>
+                            <li><strong>Hayat Tahrir al-Sham (HTS):</strong> Islamist group controlling Idlib and surrounding areas</li>
+                            <li><strong>ISIS Remnants:</strong> Sleeper cells active in desert regions and displacement camps</li>
+                            <li><strong>Local Militias:</strong> Various tribal and regional armed groups</li>
+                        </ul>
+
+                        <p><strong>Primary Flashpoints:</strong> Clashes frequently occur along factional boundaries, particularly in Aleppo countryside, Deir ez-Zor, and areas surrounding displacement camps like al-Hol.</p>
+
+                        <p><strong>Violence Patterns:</strong> Post-regime violence includes inter-factional fighting, revenge killings, ISIS attacks on security forces, and tribal conflicts over resource control.</p>
+                    </div>
+                </div>
+
+                <!-- Economic & Financial Stability -->
+                <div class="knowledge-card" id="card-economic">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('economic')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">💰</span>
+                            <span data-i18n="catEconomic">Economic & Financial Stability</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Economic Collapse:</strong> Syria's economy has contracted by more than 60% since 2011, with currency devaluation, hyperinflation, and widespread poverty.</p>
+                        
+                        <p><strong>Resource Control:</strong></p>
+                        <ul>
+                            <li><strong>Oil and gas:</strong> Primary fields in SDF-controlled northeast; limited production and smuggling networks</li>
+                            <li><strong>Agriculture:</strong> Key breadbasket regions divided among factions; drought and infrastructure damage reduce output</li>
+                            <li><strong>Trade routes:</strong> Border crossings and supply routes controlled by various armed groups</li>
+                        </ul>
+
+                        <p><strong>Currency Crisis:</strong> Syrian pound has lost over 95% of pre-war value; multiple exchange rates; dollarization in some regions; reliance on remittances.</p>
+
+                        <p><strong>Economic Activity:</strong> Formal economy largely collapsed; informal and black markets dominate; smuggling networks; war economy sustains armed factions; reconstruction minimal due to sanctions and insecurity.</p>
+
+                        <p><strong>Sanctions Impact:</strong> US and EU sanctions restrict reconstruction investment, complicate aid delivery, and limit banking access, though humanitarian exemptions exist.</p>
+                    </div>
+                </div>
+
+                <!-- Governance & Political Dynamics -->
+                <div class="knowledge-card" id="card-governance">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('governance')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🏛️</span>
+                            <span data-i18n="catGovernance">Governance & Political Dynamics</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Governance Vacuum:</strong> The collapse of centralized Assad regime control has created a patchwork of competing governance structures, with no unified authority emerging.</p>
+                        
+                        <p><strong>De Facto Administrations:</strong></p>
+                        <ul>
+                            <li><strong>Autonomous Administration of North and East Syria (AANES):</strong> Kurdish-led self-governance in northeastern regions</li>
+                            <li><strong>Syrian Salvation Government:</strong> HTS-controlled administration in Idlib</li>
+                            <li><strong>Turkish-backed councils:</strong> Local governance structures in SNA-controlled areas</li>
+                            <li><strong>Tribal councils:</strong> Traditional governance in eastern and southern regions</li>
+                        </ul>
+
+                        <p><strong>Political Transition Challenges:</strong> Efforts at political transition face obstacles including factional competition, external interference, sectarian divisions, and absence of inclusive representation mechanisms.</p>
+
+                        <p><strong>International Engagement:</strong> UN-led Geneva process remains stalled; regional powers pursue competing political visions; reconstruction aid conditioned on political reforms.</p>
+                    </div>
+                </div>
+
+                <!-- Regional & External Influence -->
+                <div class="knowledge-card" id="card-regional">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('regional')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🌍</span>
+                            <span data-i18n="catRegional">Regional & External Influence</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>External Involvement:</strong> Multiple regional and international actors maintain military presence and political influence in Syria's post-Assad landscape.</p>
+                        
+                        <p><strong>Turkey:</strong></p>
+                        <ul>
+                            <li>Controls northern buffer zones through proxy forces (SNA)</li>
+                            <li>Primary objective: prevent Kurdish autonomy along border</li>
+                            <li>Hosts 3.6+ million Syrian refugees</li>
+                            <li>Conducts periodic military operations against SDF</li>
+                        </ul>
+
+                        <p><strong>Iran:</strong></p>
+                        <ul>
+                            <li>Maintains limited military presence despite Assad regime collapse</li>
+                            <li>Supports aligned militias in strategic areas</li>
+                            <li>Interested in preserving land corridor to Lebanon</li>
+                            <li>Faces resource constraints limiting engagement</li>
+                        </ul>
+
+                        <p><strong>Russia:</strong></p>
+                        <ul>
+                            <li>Maintains military bases at Tartus and Hmeimim</li>
+                            <li>Reduced military footprint post-Assad</li>
+                            <li>Focus on preserving strategic coastal access</li>
+                            <li>Limited appetite for large-scale intervention</li>
+                        </ul>
+
+                        <p><strong>United States:</strong></p>
+                        <ul>
+                            <li>Partners with SDF in counter-ISIS operations</li>
+                            <li>Maintains approximately 900 troops in northeast</li>
+                            <li>Controls strategic oil fields in partnership with SDF</li>
+                            <li>Enforces sanctions regime</li>
+                        </ul>
+
+                        <p><strong>Israel:</strong></p>
+                        <ul>
+                            <li>Conducts periodic airstrikes against Iranian positions</li>
+                            <li>Occupies Golan Heights buffer zone</li>
+                            <li>Primary concern: preventing Iranian weapons transfers to Hezbollah</li>
+                        </ul>
+
+                        <p><strong>Gulf States:</strong> Gradually re-engaging diplomatically; Arab League readmitted Syria in 2023; limited reconstruction investment pending political settlement.</p>
+                    </div>
+                </div>
+
+                <!-- Structural Risk Indicators -->
+                <div class="knowledge-card" id="card-structural">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('structural')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">📈</span>
+                            <span data-i18n="catStructural">Structural Risk Indicators</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Displacement Crisis:</strong> Syria faces one of the world's largest displacement crises with millions of internally displaced persons (IDPs) and refugees in neighboring countries.</p>
+                        
+                        <p><strong>IDP Demographics:</strong></p>
+                        <ul>
+                            <li><strong>Camp populations:</strong> Approximately 1 million people in formal camps including al-Hol, Roj, and northern settlements</li>
+                            <li><strong>Informal settlements:</strong> Additional millions in makeshift camps and urban displacement</li>
+                            <li><strong>Recent displacement:</strong> Post-Assad factional fighting has triggered new waves of internal displacement</li>
+                        </ul>
+
+                        <p><strong>Humanitarian Access:</strong> Aid delivery is hampered by factional control of territory, cross-border restrictions, damaged infrastructure, and security threats to aid workers.</p>
+
+                        <p><strong>Critical Needs:</strong> Food insecurity affects majority of population; medical services severely degraded; water and sanitation infrastructure damaged; education systems disrupted; protection concerns especially for women and children.</p>
+
+                        <p><strong>Infrastructure Collapse:</strong> Years of conflict have devastated critical infrastructure including power grids, water systems, roads, hospitals, and schools. Reconstruction is hampered by lack of funding, ongoing insecurity, and international sanctions.</p>
+
+                        <p><strong>Demographic Shifts:</strong> War-induced population movements have altered sectarian and ethnic balances in key regions, creating new tensions and complicating future reconciliation efforts.</p>
+
+                        <p><strong>Institutional Decay:</strong> State institutions have largely collapsed or become hollowed out, with limited capacity to provide basic services, enforce law, or manage reconstruction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="news-section">
             <h2 data-i18n="newsTitle">News Coverage</h2>
             
@@ -916,7 +1216,7 @@
         </div>
 
         <footer>
-            <p><strong>Asifah Analytics v2.8.1 | Syria Conflict Tracker</strong></p>
+            <p><strong>Asifah Analytics v2.8.2 | Syria Conflict Tracker</strong></p>
             <p><strong>Data Sources:</strong> NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Syria Direct and SOHR RSS feeds, Reddit for community intelligence, UNHCR for displacement data, ACAPS for humanitarian analysis, plus other OSINT sources.</p>
             <p><strong>For inquiries, contact:</strong> <a href="mailto:asifahanalytics@gmail.com" style="color: var(--syria-accent); text-decoration: none;">asifahanalytics@gmail.com</a></p>
             <p style="margin-top: 10px; font-size: 11px;">Updated every 30 minutes | Not for operational use</p>
@@ -1014,6 +1314,12 @@
                 factionsLabel: "Active Factions",
                 locationsLabel: "Clash Locations",
                 estimated: "ESTIMATED",
+                knowledgeLibraryTitle: "Knowledge Library",
+                catSecurity: "Security & Conflict",
+                catEconomic: "Economic & Financial Stability",
+                catGovernance: "Governance & Political Dynamics",
+                catRegional: "Regional & External Influence",
+                catStructural: "Structural Risk Indicators",
                 newsTitle: "News Coverage",
                 tabSyriaDirect: "Syria Direct",
                 tabSOHR: "SOHR",
@@ -1034,6 +1340,12 @@
                 factionsLabel: "פלגים פעילים",
                 locationsLabel: "מיקומי עימותים",
                 estimated: "משוער",
+                knowledgeLibraryTitle: "ספריית ידע",
+                catSecurity: "ביטחון וסכסוך",
+                catEconomic: "יציבות כלכלית ופיננסית",
+                catGovernance: "ממשל ודינמיקה פוליטית",
+                catRegional: "השפעה אזורית וחיצונית",
+                catStructural: "מדדי סיכון מבניים",
                 newsTitle: "כיסוי חדשותי",
                 tabSyriaDirect: "סוריה ישירות",
                 tabSOHR: "SOHR",
@@ -1054,6 +1366,12 @@
                 factionsLabel: "الفصائل النشطة",
                 locationsLabel: "مواقع الاشتباكات",
                 estimated: "تقديري",
+                knowledgeLibraryTitle: "مكتبة المعرفة",
+                catSecurity: "الأمن والنزاع",
+                catEconomic: "الاستقرار الاقتصادي والمالي",
+                catGovernance: "الحوكمة والديناميكيات السياسية",
+                catRegional: "النفوذ الإقليمي والخارجي",
+                catStructural: "مؤشرات المخاطر الهيكلية",
                 newsTitle: "التغطية الإخبارية",
                 tabSyriaDirect: "سوريا مباشر",
                 tabSOHR: "SOHR",
@@ -1074,6 +1392,12 @@
                 factionsLabel: "جناح‌های فعال",
                 locationsLabel: "مکان‌های درگیری",
                 estimated: "تخمینی",
+                knowledgeLibraryTitle: "کتابخانه دانش",
+                catSecurity: "امنیت و درگیری",
+                catEconomic: "ثبات اقتصادی و مالی",
+                catGovernance: "حکومت و پویایی‌های سیاسی",
+                catRegional: "نفوذ منطقه‌ای و خارجی",
+                catStructural: "شاخص‌های ریسک ساختاری",
                 newsTitle: "پوشش خبری",
                 tabSyriaDirect: "سوریه مستقیم",
                 tabSOHR: "SOHR",
@@ -1110,6 +1434,14 @@
                     element.textContent = t[key];
                 }
             });
+        }
+
+        // Knowledge Library Toggle Function
+        function toggleKnowledgeCard(cardId) {
+            const card = document.getElementById(`card-${cardId}`);
+            if (card) {
+                card.classList.toggle('collapsed');
+            }
         }
 
         async function fetchConflictData() {
@@ -1153,46 +1485,46 @@
         }
 
         function updateMetrics(data) {
-    const cd = data.conflict_data || {};
-    const displacement = data.displacement_enhanced || {};
-    
-    // Update deaths count
-    document.getElementById('deathCount').textContent = cd.deaths || 0;
-    
-    // Update displaced count (use enhanced data if available)
-    const totalDisplaced = displacement.total_idps || cd.displaced || 0;
-    document.getElementById('displacedCount').textContent = totalDisplaced.toLocaleString();
-    
-    // Update clashes and factions
-    document.getElementById('clashCount').textContent = cd.factional_clashes || 0;
-    document.getElementById('factionCount').textContent = cd.num_factions || 0;
-    
-    // NEW: Update displacement breakdown stats
-    const breakdown = displacement.idp_breakdown || {};
-    document.getElementById('idpCount').textContent = (breakdown.in_camps || 0).toLocaleString();
-    document.getElementById('campCount').textContent = (breakdown.with_host_communities || 0).toLocaleString();
-    document.getElementById('recentDisplacement').textContent = `+${(breakdown.recent_movements || 0).toLocaleString()}`;
-    
-    // Update factions list
-    if (cd.active_factions && cd.active_factions.length > 0) {
-        document.getElementById('factionList').textContent = cd.active_factions.join(', ');
-    }
-    
-    // Update clash locations
-    const locList = document.getElementById('locationsList');
-    locList.innerHTML = '';
-    if (cd.clash_locations) {
-        const locations = Object.entries(cd.clash_locations).slice(0, 10);
-        locations.forEach(([city, count]) => {
-            const item = document.createElement('div');
-            item.className = 'location-item';
-            item.textContent = `${city.charAt(0).toUpperCase() + city.slice(1)}: ${count} incidents`;
-            locList.appendChild(item);
-        });
-    }
-    
-    populateSourceCitations(cd.details || []);
-}
+            const cd = data.conflict_data || {};
+            const displacement = data.displacement_enhanced || {};
+            
+            // Update deaths count
+            document.getElementById('deathCount').textContent = cd.deaths || 0;
+            
+            // Update displaced count (use enhanced data if available)
+            const totalDisplaced = displacement.total_idps || cd.displaced || 0;
+            document.getElementById('displacedCount').textContent = totalDisplaced.toLocaleString();
+            
+            // Update clashes and factions
+            document.getElementById('clashCount').textContent = cd.factional_clashes || 0;
+            document.getElementById('factionCount').textContent = cd.num_factions || 0;
+            
+            // Update displacement breakdown stats
+            const breakdown = displacement.idp_breakdown || {};
+            document.getElementById('idpCount').textContent = (breakdown.in_camps || 0).toLocaleString();
+            document.getElementById('campCount').textContent = (breakdown.with_host_communities || 0).toLocaleString();
+            document.getElementById('recentDisplacement').textContent = `+${(breakdown.recent_movements || 0).toLocaleString()}`;
+            
+            // Update factions list
+            if (cd.active_factions && cd.active_factions.length > 0) {
+                document.getElementById('factionList').textContent = cd.active_factions.join(', ');
+            }
+            
+            // Update clash locations
+            const locList = document.getElementById('locationsList');
+            locList.innerHTML = '';
+            if (cd.clash_locations) {
+                const locations = Object.entries(cd.clash_locations).slice(0, 10);
+                locations.forEach(([city, count]) => {
+                    const item = document.createElement('div');
+                    item.className = 'location-item';
+                    item.textContent = `${city.charAt(0).toUpperCase() + city.slice(1)}: ${count} incidents`;
+                    locList.appendChild(item);
+                });
+            }
+            
+            populateSourceCitations(cd.details || []);
+        }
         
         function populateSourceCitations(details) {
             const deathDetails = details.filter(d => d.type === 'deaths').slice(0, 5);
