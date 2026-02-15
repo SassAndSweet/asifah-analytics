@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Captagon Trade Snapshot - Last updated: Feb 15, 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Captagon Trade Snapshot | Asifah Analytics</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS Variables for Light/Dark Mode */
+        :root {
+            --bg-color: #f0f4f7;
+            --container-bg: #ffffff;
+            --card-bg: #e8ecf0;
+            --card-teal: #6eb3c7;
+            --card-border: #d1dce3;
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6c7d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3f5f;
+            --header-gradient-end: #2a5875;
+            --header-text: #ffffff;
+            --captagon-accent: #2e6da4;
+            --warning-accent: #d9534f;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #363636;
+            --card-teal: #4a7b8c;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3f5f;
+            --header-gradient-end: #2a5875;
+            --header-text: #ffffff;
+            --captagon-accent: #4a90c4;
+            --warning-accent: #e76a66;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        /* Watermark Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1400px;
+            height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        [data-theme="dark"] body::before {
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            text-align: center;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: normal;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+        }
+
+        /* Back button */
+        .back-link {
+            display: inline-block;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        [dir="rtl"] .back-link {
+            left: auto;
+            right: 20px;
+        }
+
+        /* Header Controls Container */
+        .header-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        [dir="rtl"] .header-controls {
+            right: auto;
+            left: 20px;
+            align-items: flex-start;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3f5f;
+            border-color: white;
+        }
+
+        /* Theme Toggle */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+        .theme-toggle-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theme-toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-switch:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .theme-toggle-slider::before {
+            content: '☀️';
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(24px);
+        }
+
+        [data-theme="dark"] .theme-toggle-slider::before {
+            content: '🌙';
+        }
+
+        /* Content Cards Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-card.teal-card {
+            background: linear-gradient(135deg, #6eb3c7 0%, #5a9fb8 100%);
+            color: white;
+            border-color: #5a9fb8;
+        }
+
+        .info-card.teal-card h2,
+        .info-card.teal-card li,
+        .info-card.teal-card p,
+        .info-card.teal-card strong {
+            color: white;
+        }
+
+        .info-card.teal-card li::before {
+            color: white;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .info-card h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--captagon-accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .info-card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--captagon-accent);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .info-card strong {
+            color: var(--text-primary);
+        }
+
+        .info-card p {
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* Process flow */
+        .process-flow {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--captagon-accent);
+        }
+
+        .process-flow p {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Watchlist section */
+        .watchlist-card {
+            background: linear-gradient(135deg, #d9534f 0%, #c94d4d 100%);
+            border-color: #c94d4d;
+            color: white;
+        }
+
+        .watchlist-card h2 {
+            color: white;
+        }
+
+        .watchlist-card li,
+        .watchlist-card p,
+        .watchlist-card strong {
+            color: white;
+        }
+
+        .watchlist-card li::before {
+            color: white;
+        }
+
+        .watchlist-card a {
+            color: white !important;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .watchlist-card a:hover {
+            color: #e8f4f8 !important;
+            text-decoration: none;
+        }
+
+        /* Links section */
+        .links-section {
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .links-section h2 {
+            font-size: 22px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--captagon-accent);
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        .resource-link:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--captagon-accent);
+            transform: translateX(5px);
+        }
+
+        .resource-link::before {
+            content: "📄 ";
+            margin-right: 8px;
+        }
+
+        /* PDF Download Button */
+        .download-section {
+            background: var(--container-bg);
+            border: 2px solid var(--captagon-accent);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--captagon-accent) 0%, #2a5875 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(46, 109, 164, 0.3);
+        }
+
+        .download-button:hover {
+            background: linear-gradient(135deg, #2a5875 0%, #1e3f5f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 109, 164, 0.4);
+        }
+
+        .download-button::before {
+            content: "⬇️ ";
+            margin-right: 8px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
+            font-size: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .copyright-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+            font-size: 11px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .back-link {
+                position: static;
+                display: block;
+                margin: 0 auto 15px;
+                width: fit-content;
+            }
+
+            .header-controls {
+                position: static;
+                align-items: center;
+                margin: 15px auto 0;
+            }
+
+            header {
+                padding: 25px 20px;
+            }
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="syria-conflicts.html" class="back-link" data-i18n="backLink">← Back to Syria</a>
+            
+            <!-- Header Controls Container -->
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                    <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                    <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
+                </div>
+                
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Toggle</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" 
+                 alt="Asifah Analytics Logo" 
+                 class="header-logo">
+            
+            <h1 data-i18n="pageTitle">💊 CAPTAGON SNAPSHOT</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Illicit Trade, Security Risk, and State Fragility in Syria & Lebanon</div>
+        </header>
+
+        <div class="content-grid">
+            <!-- What is Captagon -->
+            <div class="info-card">
+                <h2><span class="card-icon">🔬</span> <span data-i18n="cardWhat">What is Captagon</span></h2>
+                <ul>
+                    <li data-i18n="whatBullet1"><strong>Synthetic amphetamine-type stimulant</strong> produced illicitly at scale</li>
+                    <li data-i18n="whatBullet2"><strong>Low production cost;</strong> high retail margins</li>
+                    <li data-i18n="whatBullet3"><strong>Easily concealed</strong> in commercial cargo</li>
+                    <li data-i18n="whatBullet4"><strong>Demand concentrated</strong> in Gulf markets</li>
+                </ul>
+            </div>
+
+            <!-- Why This Matters -->
+            <div class="info-card">
+                <h2><span class="card-icon">⚠️</span> <span data-i18n="cardWhy">Why This Matters</span></h2>
+                <ul>
+                    <li data-i18n="whyBullet1"><strong>Generates significant illicit cash flows</strong></li>
+                    <li data-i18n="whyBullet2"><strong>Funds protection and patronage networks</strong></li>
+                    <li data-i18n="whyBullet3"><strong>Distorts border and customs institutions</strong></li>
+                    <li data-i18n="whyBullet4"><strong>Complicates reconstruction</strong> and donor engagement</li>
+                </ul>
+            </div>
+
+            <!-- How the Trade Works -->
+            <div class="info-card teal-card">
+                <h2><span class="card-icon">🔄</span> <span data-i18n="cardHow">How the Trade Works</span></h2>
+                <div class="process-flow">
+                    <p data-i18n="processFlow">Precursors → Manufacturing → Concealment → Transit → Export → Retail → Cash Recycling</p>
+                </div>
+                <ul>
+                    <li data-i18n="howBullet1"><strong>Multi-hop shipping routes</strong></li>
+                    <li data-i18n="howBullet2"><strong>Commercial cargo concealment</strong></li>
+                    <li data-i18n="howBullet3"><strong>Revenues reinvested</strong> into protection networks</li>
+                </ul>
+            </div>
+
+            <!-- Syria: Current State -->
+            <div class="info-card">
+                <h2><span class="card-icon">🇸🇾</span> <span data-i18n="cardSyria">Syria: Current State</span></h2>
+                <ul>
+                    <li data-i18n="syriaBullet1"><strong>Historic concentration</strong> of manufacturing capacity</li>
+                    <li data-i18n="syriaBullet2"><strong>Revenue substitute</strong> amid sanctions pressure</li>
+                    <li data-i18n="syriaBullet3"><strong>Fragmentation</strong> following regime disruption</li>
+                    <li data-i18n="syriaBullet4"><strong>Trafficking networks</strong> remain adaptive</li>
+                </ul>
+            </div>
+
+            <!-- Lebanon: Transit & Exposure -->
+            <div class="info-card">
+                <h2><span class="card-icon">🇱🇧</span> <span data-i18n="cardLebanon">Lebanon: Transit & Exposure</span></h2>
+                <ul>
+                    <li data-i18n="lebanonBullet1"><strong>Cross-border logistics</strong> with Syria</li>
+                    <li data-i18n="lebanonBullet2"><strong>Port of Beirut and airport</strong> seizure points</li>
+                    <li data-i18n="lebanonBullet3"><strong>Cargo concealment</strong> within licit trade flows</li>
+                    <li data-i18n="lebanonBullet4"><strong>Gulf trade restrictions</strong> following interceptions</li>
+                </ul>
+            </div>
+
+            <!-- Watchlist Indicators -->
+            <div class="info-card watchlist-card">
+                <h2><span class="card-icon">🚨</span> <span data-i18n="cardWatchlist">Watchlist Indicators</span></h2>
+                <ul>
+                    <li data-i18n="watchlistBullet1"><strong>Major multi-million pill seizures</strong></li>
+                    <li data-i18n="watchlistBullet2"><strong>New sanctions designations</strong></li>
+                    <li data-i18n="watchlistBullet3"><strong>Gulf trade bans</strong> or diplomatic pressure</li>
+                    <li data-i18n="watchlistBullet4"><strong>Border enforcement changes</strong></li>
+                </ul>
+                <p style="margin-top: 15px; font-size: 13px;">
+                    <strong data-i18n="liveTracker">Live tracker →</strong>
+                    <a href="index.html">
+                        <span data-i18n="asifahAnalytics">Asifah Analytics</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- PDF Download Section -->
+        <div class="download-section">
+            <h2 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px;" data-i18n="downloadTitle">📥 Download Original One-Pager</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+                <span data-i18n="downloadSubtitle">Get the PDF version for offline reference or printing</span>
+                <span style="color: var(--text-muted); font-size: 12px; display: block; margin-top: 5px;">
+                    * <span data-i18n="englishOnly">English only</span>
+                </span>
+            </p>
+            <a href="https://github.com/SassAndSweet/asifah-analytics/raw/main/resources/Asifah_Captagon_Snapshot.pdf" 
+               download="Asifah_Captagon_Snapshot.pdf"
+               class="download-button">
+               <span data-i18n="downloadButton">Download PDF One-Pager</span>
+            </a>
+        </div>
+
+        <!-- Key Reports Section -->
+        <div class="links-section">
+            <h2 data-i18n="keyReportsTitle">📚 Key Reports</h2>
+            <div class="links-grid">
+                <a href="https://www.unodc.org/documents/scientific/Captagon_research_brief.pdf" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkUNODC">UNODC Captagon Research Brief</span>
+                </a>
+                <a href="https://www.emcdda.europa.eu/publications/topic-overviews/captagon_en" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkEUDA">EUDA Captagon Regional Assessment</span>
+                </a>
+                <a href="https://home.treasury.gov/news/press-releases" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkTreasury">U.S. Treasury Sanctions Designations</span>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Prepared by ASIFAH ANALYTICS</strong></p>
+            <p style="margin-top: 10px;">
+                <strong>Sources:</strong> UNODC • EUDA • U.S. Treasury • Open-source reporting<br>
+                <strong>Updated:</strong> February 2026
+            </p>
+            
+            <div class="copyright-footer">
+                © 2026 Asifah Analytics (RCGG). All rights reserved.<br>
+                Educational and research use only. Not an official U.S. Government product.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Translation System
+        const translations = {
+            en: {
+                pageTitle: "💊 CAPTAGON SNAPSHOT",
+                pageSubtitle: "Illicit Trade, Security Risk, and State Fragility in Syria & Lebanon",
+                backLink: "← Back to Syria",
+                themeToggle: "Toggle",
+                
+                // Card Titles
+                cardWhat: "What is Captagon",
+                cardWhy: "Why This Matters",
+                cardHow: "How the Trade Works",
+                cardSyria: "Syria: Current State",
+                cardLebanon: "Lebanon: Transit & Exposure",
+                cardWatchlist: "Watchlist Indicators",
+                
+                // What is Captagon
+                whatBullet1: "Synthetic amphetamine-type stimulant produced illicitly at scale",
+                whatBullet2: "Low production cost; high retail margins",
+                whatBullet3: "Easily concealed in commercial cargo",
+                whatBullet4: "Demand concentrated in Gulf markets",
+                
+                // Why This Matters
+                whyBullet1: "Generates significant illicit cash flows",
+                whyBullet2: "Funds protection and patronage networks",
+                whyBullet3: "Distorts border and customs institutions",
+                whyBullet4: "Complicates reconstruction and donor engagement",
+                
+                // How the Trade Works
+                processFlow: "Precursors → Manufacturing → Concealment → Transit → Export → Retail → Cash Recycling",
+                howBullet1: "Multi-hop shipping routes",
+                howBullet2: "Commercial cargo concealment",
+                howBullet3: "Revenues reinvested into protection networks",
+                
+                // Syria
+                syriaBullet1: "Historic concentration of manufacturing capacity",
+                syriaBullet2: "Revenue substitute amid sanctions pressure",
+                syriaBullet3: "Fragmentation following regime disruption",
+                syriaBullet4: "Trafficking networks remain adaptive",
+                
+                // Lebanon
+                lebanonBullet1: "Cross-border logistics with Syria",
+                lebanonBullet2: "Port of Beirut and airport seizure points",
+                lebanonBullet3: "Cargo concealment within licit trade flows",
+                lebanonBullet4: "Gulf trade restrictions following interceptions",
+                
+                // Watchlist
+                watchlistBullet1: "Major multi-million pill seizures",
+                watchlistBullet2: "New sanctions designations",
+                watchlistBullet3: "Gulf trade bans or diplomatic pressure",
+                watchlistBullet4: "Border enforcement changes",
+                liveTracker: "Live tracker →",
+                asifahAnalytics: "Asifah Analytics",
+                
+                // Download Section
+                downloadTitle: "📥 Download Original One-Pager",
+                downloadSubtitle: "Get the PDF version for offline reference or printing",
+                englishOnly: "English only",
+                downloadButton: "Download PDF One-Pager",
+                
+                // Key Reports
+                keyReportsTitle: "📚 Key Reports",
+                linkUNODC: "UNODC Captagon Research Brief",
+                linkEUDA: "EUDA Captagon Regional Assessment",
+                linkTreasury: "U.S. Treasury Sanctions Designations",
+                
+                // Footer
+                footerPrepared: "Prepared by ASIFAH ANALYTICS",
+                footerSources: "Sources:",
+                footerSourcesList: "UNODC • EUDA • U.S. Treasury • Open-source reporting",
+                footerUpdated: "Updated:",
+                footerUpdateDate: "February 2026",
+                footerCopyright: "© 2026 Asifah Analytics (RCGG). All rights reserved.",
+                footerDisclaimer: "Educational and research use only. Not an official U.S. Government product.",
+                footerProhibition: "Unauthorized use, reproduction, or distribution prohibited."
+            },
+            he: {
+                pageTitle: "💊 מבט על קפטגון",
+                pageSubtitle: "סחר לא חוקי, סיכון ביטחוני ושבירות מדינה בסוריה ולבנון",
+                backLink: "→ חזרה לסוריה",
+                themeToggle: "החלף",
+                
+                cardWhat: "מה זה קפטגון",
+                cardWhy: "למה זה חשוב",
+                cardHow: "איך הסחר עובד",
+                cardSyria: "סוריה: מצב נוכחי",
+                cardLebanon: "לבנון: מעבר וחשיפה",
+                cardWatchlist: "מדדי מעקב",
+                
+                whatBullet1: "ממריץ סינטטי מסוג אמפטמין המיוצר באופן לא חוקי בקנה מידה גדול",
+                whatBullet2: "עלות ייצור נמוכה; רווחי קמעונאות גבוהים",
+                whatBullet3: "מוסתר בקלות במטען מסחרי",
+                whatBullet4: "ביקוש מרוכז בשווקי המפרץ",
+                
+                whyBullet1: "מייצר תזרימי מזומנים בלתי חוקיים משמעותיים",
+                whyBullet2: "ממן רשתות הגנה וחסות",
+                whyBullet3: "מעוות מוסדות גבול ומכס",
+                whyBullet4: "מסבך שיקום ומעורבות תורמים",
+                
+                processFlow: "חומרי גלם → ייצור → הסתרה → מעבר → יצוא → קמעונאות → מחזור מזומנים",
+                howBullet1: "מסלולי משלוח רב-שלביים",
+                howBullet2: "הסתרת מטען מסחרי",
+                howBullet3: "הכנסות מושקעות מחדש ברשתות הגנה",
+                
+                syriaBullet1: "ריכוז היסטורי של קיבולת ייצור",
+                syriaBullet2: "תחליף הכנסות תחת לחץ סנקציות",
+                syriaBullet3: "פיצול בעקבות שיבוש המשטר",
+                syriaBullet4: "רשתות סחר נשארות מסתגלות",
+                
+                lebanonBullet1: "לוגיסטיקה חוצת גבול עם סוריה",
+                lebanonBullet2: "נמל ביירות ושדה תעופה כנקודות תפיסה",
+                lebanonBullet3: "הסתרת מטען בזרמי סחר חוקיים",
+                lebanonBullet4: "הגבלות סחר במפרץ בעקבות עיכובים",
+                
+                watchlistBullet1: "תפיסות גדולות של מיליוני כדורים",
+                watchlistBullet2: "ייעודי סנקציות חדשים",
+                watchlistBullet3: "איסורי סחר במפרץ או לחץ דיפלומטי",
+                watchlistBullet4: "שינויים באכיפת גבולות",
+                liveTracker: "מעקב חי →",
+                asifahAnalytics: "אסיפה אנליטיקס",
+                
+                downloadTitle: "📥 הורד דף מידע מקורי",
+                downloadSubtitle: "קבל גרסת PDF להתייחסות לא מקוונת או הדפסה",
+                englishOnly: "אנגלית בלבד",
+                downloadButton: "הורד PDF",
+                
+                keyReportsTitle: "📚 דוחות מפתח",
+                linkUNODC: "תקציר מחקר קפטגון של UNODC",
+                linkEUDA: "הערכה אזורית של EUDA על קפטגון",
+                linkTreasury: "ייעודי סנקציות של משרד האוצר האמריקאי",
+                
+                footerPrepared: "הוכן על ידי אסיפה אנליטיקס",
+                footerSources: "מקורות:",
+                footerSourcesList: "UNODC • EUDA • משרד האוצר האמריקאי • דיווח בקוד פתוח",
+                footerUpdated: "עודכן:",
+                footerUpdateDate: "פברואר 2026",
+                footerCopyright: "© 2026 אסיפה אנליטיקס (RCGG). כל הזכויות שמורות.",
+                footerDisclaimer: "לשימוש חינוכי ומחקרי בלבד. אינו מוצר רשמי של ממשלת ארה\"ב.",
+                footerProhibition: "שימוש, שכפול או הפצה לא מורשים אסורים."
+            },
+            ar: {
+                pageTitle: "💊 لمحة عن الكبتاجون",
+                pageSubtitle: "التجارة غير المشروعة والمخاطر الأمنية وهشاشة الدولة في سوريا ولبنان",
+                backLink: "→ العودة إلى سوريا",
+                themeToggle: "تبديل",
+                
+                cardWhat: "ما هو الكبتاجون",
+                cardWhy: "لماذا هذا مهم",
+                cardHow: "كيف تعمل التجارة",
+                cardSyria: "سوريا: الوضع الحالي",
+                cardLebanon: "لبنان: العبور والتعرض",
+                cardWatchlist: "مؤشرات المراقبة",
+                
+                whatBullet1: "منشط اصطناعي من نوع الأمفيتامين يُنتج بشكل غير مشروع على نطاق واسع",
+                whatBullet2: "تكلفة إنتاج منخفضة؛ هوامش ربح بالتجزئة عالية",
+                whatBullet3: "يُخفى بسهولة في الشحنات التجارية",
+                whatBullet4: "الطلب مركز في أسواق الخليج",
+                
+                whyBullet1: "يولد تدفقات نقدية غير مشروعة كبيرة",
+                whyBullet2: "يمول شبكات الحماية والمحسوبية",
+                whyBullet3: "يشوه مؤسسات الحدود والجمارك",
+                whyBullet4: "يعقد إعادة الإعمار ومشاركة المانحين",
+                
+                processFlow: "المواد الأولية ← التصنيع ← الإخفاء ← العبور ← التصدير ← التجزئة ← إعادة تدوير النقد",
+                howBullet1: "طرق شحن متعددة المراحل",
+                howBullet2: "إخفاء الشحنات التجارية",
+                howBullet3: "إعادة استثمار العائدات في شبكات الحماية",
+                
+                syriaBullet1: "تركيز تاريخي لقدرة التصنيع",
+                syriaBullet2: "بديل للإيرادات تحت ضغط العقوبات",
+                syriaBullet3: "التفتت بعد تعطل النظام",
+                syriaBullet4: "شبكات التهريب تبقى قابلة للتكيف",
+                
+                lebanonBullet1: "لوجستيات عبر الحدود مع سوريا",
+                lebanonBullet2: "ميناء بيروت والمطار كنقاط مصادرة",
+                lebanonBullet3: "إخفاء الشحنات ضمن تدفقات التجارة المشروعة",
+                lebanonBullet4: "قيود التجارة الخليجية بعد الاعتراضات",
+                
+                watchlistBullet1: "مصادرات كبرى لملايين الحبوب",
+                watchlistBullet2: "تعيينات عقوبات جديدة",
+                watchlistBullet3: "حظر التجارة الخليجية أو الضغط الدبلوماسي",
+                watchlistBullet4: "تغييرات في إنفاذ الحدود",
+                liveTracker: "متتبع حي ←",
+                asifahAnalytics: "عاصفة أناليتكس",
+                
+                downloadTitle: "📥 تحميل الصفحة الأصلية",
+                downloadSubtitle: "احصل على نسخة PDF للرجوع إليها دون اتصال أو للطباعة",
+                englishOnly: "الإنجليزية فقط",
+                downloadButton: "تحميل PDF",
+                
+                keyReportsTitle: "📚 تقارير رئيسية",
+                linkUNODC: "موجز بحث الكبتاجون من UNODC",
+                linkEUDA: "تقييم إقليمي للكبتاجون من EUDA",
+                linkTreasury: "تعيينات عقوبات وزارة الخزانة الأمريكية",
+                
+                footerPrepared: "أعدت من قبل عاصفة أناليتكس",
+                footerSources: "المصادر:",
+                footerSourcesList: "UNODC • EUDA • وزارة الخزانة الأمريكية • تقارير مفتوحة المصدر",
+                footerUpdated: "محدث:",
+                footerUpdateDate: "فبراير 2026",
+                footerCopyright: "© 2026 عاصفة أناليتكس (RCGG). جميع الحقوق محفوظة.",
+                footerDisclaimer: "للاستخدام التعليمي والبحثي فقط. ليس منتجًا رسميًا للحكومة الأمريكية.",
+                footerProhibition: "يُحظر الاستخدام أو النسخ أو التوزيع غير المصرح به."
+            },
+            fa: {
+                pageTitle: "💊 خلاصه کپتاگون",
+                pageSubtitle: "تجارت غیرقانونی، خطر امنیتی و شکنندگی دولت در سوریه و لبنان",
+                backLink: "→ بازگشت به سوریه",
+                themeToggle: "تعویض",
+                
+                cardWhat: "کپتاگون چیست",
+                cardWhy: "چرا این مهم است",
+                cardHow: "چگونه تجارت کار می‌کند",
+                cardSyria: "سوریه: وضعیت فعلی",
+                cardLebanon: "لبنان: عبور و قرار گرفتن در معرض",
+                cardWatchlist: "شاخص‌های نظارت",
+                
+                whatBullet1: "محرک مصنوعی از نوع آمفتامین که به طور غیرقانونی در مقیاس وسیع تولید می‌شود",
+                whatBullet2: "هزینه تولید پایین؛ حاشیه سود خرده‌فروشی بالا",
+                whatBullet3: "به راحتی در بار تجاری پنهان می‌شود",
+                whatBullet4: "تقاضا در بازارهای خلیج متمرکز است",
+                
+                whyBullet1: "جریان‌های نقدی غیرقانونی قابل توجه ایجاد می‌کند",
+                whyBullet2: "شبکه‌های حمایت و حمایت مالی را تأمین می‌کند",
+                whyBullet3: "نهادهای مرزی و گمرکی را تحریف می‌کند",
+                whyBullet4: "بازسازی و مشارکت اهداکنندگان را پیچیده می‌کند",
+                
+                processFlow: "پیش‌سازها ← تولید ← پنهان‌سازی ← عبور ← صادرات ← خرده‌فروشی ← بازیافت نقدی",
+                howBullet1: "مسیرهای حمل و نقل چند مرحله‌ای",
+                howBullet2: "پنهان‌سازی بار تجاری",
+                howBullet3: "درآمدها دوباره در شبکه‌های حمایتی سرمایه‌گذاری می‌شوند",
+                
+                syriaBullet1: "تمرکز تاریخی ظرفیت تولید",
+                syriaBullet2: "جایگزین درآمد در فشار تحریم‌ها",
+                syriaBullet3: "تکه‌تکه شدن پس از اختلال رژیم",
+                syriaBullet4: "شبکه‌های قاچاق سازگار باقی می‌مانند",
+                
+                lebanonBullet1: "لجستیک فرامرزی با سوریه",
+                lebanonBullet2: "بندر بیروت و فرودگاه به عنوان نقاط توقیف",
+                lebanonBullet3: "پنهان‌سازی بار در جریان‌های تجاری قانونی",
+                lebanonBullet4: "محدودیت‌های تجاری خلیج پس از رهگیری‌ها",
+                
+                watchlistBullet1: "توقیف‌های بزرگ چند میلیون قرصی",
+                watchlistBullet2: "تعیین تحریم‌های جدید",
+                watchlistBullet3: "ممنوعیت تجاری خلیج یا فشار دیپلماتیک",
+                watchlistBullet4: "تغییرات در اجرای مرزی",
+                liveTracker: "ردیاب زنده ←",
+                asifahAnalytics: "آسیفه آنالیتیکس",
+                
+                downloadTitle: "📥 دانلود صفحه اصلی",
+                downloadSubtitle: "نسخه PDF را برای مرجع آفلاین یا چاپ دریافت کنید",
+                englishOnly: "فقط انگلیسی",
+                downloadButton: "دانلود PDF",
+                
+                keyReportsTitle: "📚 گزارش‌های کلیدی",
+                linkUNODC: "خلاصه تحقیق کپتاگون UNODC",
+                linkEUDA: "ارزیابی منطقه‌ای کپتاگون EUDA",
+                linkTreasury: "تعیین تحریم‌های وزارت خزانه‌داری آمریکا",
+                
+                footerPrepared: "تهیه شده توسط آسیفه آنالیتیکس",
+                footerSources: "منابع:",
+                footerSourcesList: "UNODC • EUDA • وزارت خزانه‌داری آمریکا • گزارش منبع باز",
+                footerUpdated: "به‌روزرسانی:",
+                footerUpdateDate: "فوریه 2026",
+                footerCopyright: "© 2026 آسیفه آنالیتیکس (RCGG). تمامی حقوق محفوظ است.",
+                footerDisclaimer: "فقط برای استفاده آموزشی و تحقیقاتی. محصول رسمی دولت ایالات متحده نیست.",
+                footerProhibition: "استفاده، تکثیر یا توزیع غیرمجاز ممنوع است."
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Language Switching
+        function switchLanguage(lang, button) {
+            currentLang = lang;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if (button) button.classList.add('active');
+            
+            // Set RTL for Hebrew, Arabic, Farsi
+            const isRTL = lang === 'he' || lang === 'ar' || lang === 'fa';
+            document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+            document.body.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+            
+            // Update all text
+            updateUIText();
+        }
+
+        function updateUIText() {
+            const t = translations[currentLang];
+            
+            // Update all elements with data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    element.textContent = t[key];
+                }
+            });
+        }
+
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('asifah-theme', newTheme);
+        }
+
+        // Initialize on page load
+        initTheme();
+    </script>
+</body>
+</html>
