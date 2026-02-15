@@ -3457,26 +3457,67 @@ async function scanTarget(targetName, days) {
         }
 
         function displayHeadlinesWithWeights(targetId, data) {
-            const container = document.getElementById(`${targetId}-headlines`);
-            const t = translations[currentLanguage];
-            if (!data || !data.top_scoring_articles || data.top_scoring_articles.length === 0) {
-                container.innerHTML = `<h4>${t.recentHeadlines || 'Recent Headlines:'}</h4><p style="color: #7f8c8d; font-style: italic;">No actionable headlines found</p>`;
-                return;
-            }
-            const topArticles = data.top_scoring_articles.slice(0, 10);
-            let html = `<h4>${t.recentHeadlines || 'Recent Headlines:'} (Weighted by Impact)</h4>`;
-            topArticles.forEach(article => {
-                const date = article.publishedAt ? new Date(article.publishedAt).toLocaleDateString() : 'Unknown date';
-                const contributionPercent = Math.abs(article.contribution_percent || 0);
-                const isDeescalation = article.deescalation || false;
-                const icon = isDeescalation ? '🕊️' : '⚠️';
-                let impactClass = 'low-impact';
-                if (contributionPercent >= 10) impactClass = 'high-impact';
-                else if (contributionPercent >= 5) impactClass = 'medium-impact';
-                html += `<div class="headline-item"><a href="${article.url}" target="_blank" rel="noopener noreferrer">${icon} ${article.title || 'Untitled article'}</a><span class="article-weight-badge ${impactClass}">${contributionPercent.toFixed(1)}% impact</span><div class="article-contribution-bar"><div class="article-contribution-fill ${isDeescalation ? 'deescalation' : ''}" style="width: ${Math.min(contributionPercent, 100)}%"></div></div><div class="article-scoring-details"><span><strong>Source:</strong> ${article.source}</span><span><strong>Date:</strong> ${date}</span><span><strong>Severity:</strong> ${(article.severity || 0).toFixed(1)}</span><span><strong>Source Weight:</strong> ${(article.source_weight || 0).toFixed(2)}</span><span><strong>Time Decay:</strong> ${(article.time_decay || 0).toFixed(2)}</span></div></div>`;
-            });
-            container.innerHTML = html;
+    const container = document.getElementById(`${targetId}-headlines`);
+    const t = translations[currentLanguage];
+    
+    // ✅ FIXED - Check for recent_headlines
+    if (!data || !data.recent_headlines || data.recent_headlines.length === 0) {
+        container.innerHTML = `<h4>${t.recentHeadlines || 'Recent Headlines:'}</h4><p style="color: #7f8c8d; font-style: italic;">No actionable headlines found</p>`;
+        return;
+    }
+    
+    // ✅ FIXED - Use recent_headlines from backend
+    const headlines = data.recent_headlines.slice(0, 10);
+    let html = `<h4>${t.recentHeadlines || 'Recent Headlines:'} (Weighted by Impact)</h4>`;
+    
+    headlines.forEach(headline => {
+        const date = headline.published ? new Date(headline.published).toLocaleDateString() : 'Unknown date';
+        const weight = headline.weight || 0;
+        const threatType = headline.threat_type || 'Unknown';
+        
+        // Color coding by threat type
+        let icon = '⚠️';
+        let borderColor = '#1e3a5f';
+        if (threatType === 'Reverse Threat') {
+            icon = '🔴';
+            borderColor = '#f39c12';
+        } else if (threatType === 'US Strike') {
+            icon = '🇺🇸';
+            borderColor = '#3498db';
+        } else if (threatType === 'Israel Strike') {
+            icon = '🇮🇱';
+            borderColor = '#c0392b';
         }
+        
+        // Impact badge
+        let impactClass = 'low-impact';
+        if (weight >= 2.0) impactClass = 'high-impact';
+        else if (weight >= 1.0) impactClass = 'medium-impact';
+        
+        html += `
+            <div class="headline-item" style="border-left-color: ${borderColor};">
+                <a href="${headline.url}" target="_blank" rel="noopener noreferrer">
+                    ${icon} ${headline.title || 'Untitled article'}
+                </a>
+                <span class="article-weight-badge ${impactClass}">
+                    Weight: ${weight.toFixed(2)}
+                </span>
+                <div class="article-contribution-bar">
+                    <div class="article-contribution-fill" style="width: ${Math.min(weight * 20, 100)}%"></div>
+                </div>
+                <div class="article-scoring-details">
+                    <span><strong>Source:</strong> ${headline.source}</span>
+                    <span><strong>Date:</strong> ${date}</span>
+                    <span><strong>Type:</strong> ${threatType}</span>
+                    ${headline.phrase ? `<span><strong>Phrase:</strong> "${headline.phrase}"</span>` : ''}
+                    ${headline.why_included ? `<span><strong>Why:</strong> ${headline.why_included}</span>` : ''}
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
 
 async function updateFlightCancellations() {
             const grid = document.getElementById('flightCancellationsGrid');
