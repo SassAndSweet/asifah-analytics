@@ -2841,6 +2841,7 @@
 
     <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
+        const LEBANON_BACKEND_URL = 'https://lebanon-stability-backend.onrender.com';
 
     // Theme Management
     function initTheme() {
@@ -3517,6 +3518,224 @@ async function scanTarget(targetName, days) {
     });
     
     container.innerHTML = html;
+}
+
+        // ========================================
+// STANDALONE PAGE SCANNERS
+// ========================================
+
+// Iran Protests Page Scanner
+async function scanIranProtests() {
+    const button = document.querySelector('.scan-btn');
+    const statusDiv = document.querySelector('.scan-status');
+    
+    if (!button || !statusDiv) {
+        console.error('[Iran Protests] Missing button or status div');
+        return;
+    }
+    
+    // Show loading state
+    button.disabled = true;
+    button.textContent = '⏳ Scanning...';
+    statusDiv.textContent = 'Analyzing social media, news sources, and HRANA reports...';
+    statusDiv.style.display = 'block';
+    
+    try {
+        console.log('[Iran Protests] Calling backend:', BACKEND_URL);
+        
+        const response = await fetch(`${BACKEND_URL}/scan-iran-protests`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'API returned success: false');
+        }
+        
+        console.log('[Iran Protests] ✅ Data received:', data);
+        
+        // Update protest intensity
+        const intensity = data.protest_intensity || 0;
+        const intensityLevel = data.intensity_level || 'Unknown';
+        
+        // Update main display
+        const intensityDisplay = document.querySelector('.intensity-value');
+        if (intensityDisplay) {
+            intensityDisplay.textContent = `${intensity}/100`;
+        }
+        
+        const levelDisplay = document.querySelector('.intensity-level');
+        if (levelDisplay) {
+            levelDisplay.textContent = intensityLevel;
+            levelDisplay.className = `intensity-level ${intensityLevel.toLowerCase()}`;
+        }
+        
+        // Success message
+        statusDiv.textContent = `✅ Protest Intensity: ${intensity}/100 (${intensityLevel})`;
+        statusDiv.style.color = '#4ade80';
+        
+        button.textContent = '🔄 Refresh Data';
+        button.disabled = false;
+        
+    } catch (error) {
+        console.error('[Iran Protests] Error:', error);
+        
+        statusDiv.textContent = `❌ Error: ${error.message}`;
+        statusDiv.style.color = '#ef4444';
+        
+        button.textContent = '🔄 Retry';
+        button.disabled = false;
+    }
+}
+
+// Syria Conflict Page Scanner
+async function scanSyriaConflict() {
+    const button = document.querySelector('.scan-btn');
+    const statusDiv = document.querySelector('.scan-status');
+    
+    if (!button || !statusDiv) {
+        console.error('[Syria] Missing button or status div');
+        return;
+    }
+    
+    // Show loading state
+    button.disabled = true;
+    button.textContent = '⏳ Scanning...';
+    statusDiv.textContent = 'Analyzing conflict indicators, military activity, and regional threats...';
+    statusDiv.style.display = 'block';
+    
+    try {
+        console.log('[Syria] Calling backend:', BACKEND_URL);
+        
+        const response = await fetch(`${BACKEND_URL}/api/syria-conflict?refresh=true`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'API returned success: false');
+        }
+        
+        console.log('[Syria] ✅ Data received:', data);
+        
+        // Update probability display
+        const probability = data.probability || 0;
+        const timeline = data.timeline || 'Unknown';
+        
+        const probDisplay = document.querySelector('.probability-display');
+        if (probDisplay) {
+            probDisplay.textContent = `${probability}%`;
+            
+            // Add color class based on threat level
+            probDisplay.classList.remove('low', 'medium', 'high');
+            if (probability < 34) probDisplay.classList.add('low');
+            else if (probability >= 67) probDisplay.classList.add('high');
+            else probDisplay.classList.add('medium');
+        }
+        
+        const timelineDisplay = document.querySelector('.timeline-display');
+        if (timelineDisplay) {
+            timelineDisplay.textContent = timeline;
+        }
+        
+        // Success message
+        statusDiv.textContent = `✅ Strike Probability: ${probability}% (${timeline})`;
+        statusDiv.style.color = '#4ade80';
+        
+        button.textContent = '🔄 Refresh Data';
+        button.disabled = false;
+        
+    } catch (error) {
+        console.error('[Syria] Error:', error);
+        
+        statusDiv.textContent = `❌ Error: ${error.message}`;
+        statusDiv.style.color = '#ef4444';
+        
+        button.textContent = '🔄 Retry';
+        button.disabled = false;
+    }
+}
+
+// Lebanon Stability Page Scanner
+async function scanLebanonStability() {
+    const button = document.querySelector('.scan-btn');
+    const statusDiv = document.querySelector('.scan-status');
+    
+    if (!button || !statusDiv) {
+        console.error('[Lebanon] Missing button or status div');
+        return;
+    }
+    
+    // Show loading state
+    button.disabled = true;
+    button.textContent = '⏳ Scanning...';
+    statusDiv.textContent = 'Fetching currency, bonds, Hezbollah activity, gold reserves...';
+    statusDiv.style.display = 'block';
+    
+    try {
+        console.log('[Lebanon] Calling new backend:', LEBANON_BACKEND_URL);
+        
+        const response = await fetch(`${LEBANON_BACKEND_URL}/scan-lebanon-stability`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'API returned success: false');
+        }
+        
+        console.log('[Lebanon] ✅ Data received:', data);
+        
+        // Update stability score
+        const stability = data.stability || {};
+        const score = stability.score || 0;
+        const riskLevel = stability.risk_level || 'Unknown';
+        const trend = stability.trend || 'stable';
+        
+        // Update main display
+        const scoreDisplay = document.querySelector('.stability-score');
+        if (scoreDisplay) {
+            scoreDisplay.textContent = `${score}/100`;
+        }
+        
+        const levelDisplay = document.querySelector('.risk-level');
+        if (levelDisplay) {
+            levelDisplay.textContent = riskLevel;
+            levelDisplay.className = `risk-level ${stability.risk_color || 'gray'}`;
+        }
+        
+        const trendDisplay = document.querySelector('.trend-indicator');
+        if (trendDisplay) {
+            const trendIcon = trend === 'improving' ? '📈' : 
+                            trend === 'worsening' ? '📉' : '➡️';
+            trendDisplay.textContent = `${trendIcon} ${trend}`;
+        }
+        
+        // Success message
+        statusDiv.textContent = `✅ Stability: ${score}/100 (${riskLevel})`;
+        statusDiv.style.color = '#4ade80';
+        
+        button.textContent = '🔄 Refresh Data';
+        button.disabled = false;
+        
+    } catch (error) {
+        console.error('[Lebanon] Error:', error);
+        
+        statusDiv.textContent = `❌ Error: ${error.message}`;
+        statusDiv.style.color = '#ef4444';
+        
+        button.textContent = '🔄 Retry';
+        button.disabled = false;
+    }
 }
 
 async function updateFlightCancellations() {
