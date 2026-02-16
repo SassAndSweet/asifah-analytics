@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Hizballah Financing Snapshot - Last updated: Feb 16, 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Hizballah Financing Networks | Asifah Analytics</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* CSS Variables for Light/Dark Mode */
+        :root {
+            --bg-color: #f0f4f7;
+            --container-bg: #ffffff;
+            --card-bg: #e8ecf0;
+            --card-teal: #6eb3c7;
+            --card-border: #d1dce3;
+            --text-primary: #2c3e50;
+            --text-secondary: #5a6c7d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3f5f;
+            --header-gradient-end: #2a5875;
+            --header-text: #ffffff;
+            --accent: #2e6da4;
+            --warning-accent: #d9534f;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #363636;
+            --card-teal: #4a7b8c;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3f5f;
+            --header-gradient-end: #2a5875;
+            --header-text: #ffffff;
+            --accent: #4a90c4;
+            --warning-accent: #e76a66;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        /* Watermark Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1400px;
+            height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.5;
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        [data-theme="dark"] body::before {
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            text-align: center;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            font-weight: normal;
+            opacity: 0.95;
+            letter-spacing: 0.5px;
+        }
+
+        /* Back button */
+        .back-link {
+            display: inline-block;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        [dir="rtl"] .back-link {
+            left: auto;
+            right: 20px;
+        }
+
+        /* Header Controls Container */
+        .header-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: flex-end;
+        }
+
+        [dir="rtl"] .header-controls {
+            right: auto;
+            left: 20px;
+            align-items: flex-start;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            display: flex;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .lang-btn.active {
+            background: white;
+            color: #1e3f5f;
+            border-color: white;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.9);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .theme-toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 26px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-switch:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .theme-toggle-slider::before {
+            content: '☀️';
+        }
+
+        [data-theme="dark"] .theme-toggle-slider {
+            transform: translateX(24px);
+        }
+
+        [data-theme="dark"] .theme-toggle-slider::before {
+            content: '🌙';
+        }
+
+        /* Content Cards Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .info-card.teal-card {
+            background: linear-gradient(135deg, #6eb3c7 0%, #5a9fb8 100%);
+            color: white;
+            border-color: #5a9fb8;
+        }
+
+        .info-card.teal-card h2,
+        .info-card.teal-card li,
+        .info-card.teal-card p,
+        .info-card.teal-card strong {
+            color: white;
+        }
+
+        .info-card.teal-card li::before {
+            color: white;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .info-card h2 {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-icon {
+            font-size: 24px;
+        }
+
+        .info-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-card li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .info-card li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .info-card strong {
+            color: var(--text-primary);
+        }
+
+        .info-card p {
+            line-height: 1.6;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* Watchlist section */
+        .watchlist-card {
+            background: linear-gradient(135deg, #d9534f 0%, #c94d4d 100%);
+            border-color: #c94d4d;
+            color: white;
+        }
+
+        .watchlist-card h2 {
+            color: white;
+        }
+
+        .watchlist-card li,
+        .watchlist-card p,
+        .watchlist-card strong {
+            color: white;
+        }
+
+        .watchlist-card li::before {
+            color: white;
+        }
+
+        .watchlist-card a {
+            color: white !important;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        .watchlist-card a:hover {
+            color: #e8f4f8 !important;
+            text-decoration: none;
+        }
+
+        /* Links section */
+        .links-section {
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .links-section h2 {
+            font-size: 22px;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 15px 20px;
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-size: 15px;
+        }
+
+        .resource-link:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .resource-link::before {
+            content: "📄 ";
+            margin-right: 8px;
+        }
+
+        /* PDF Download Button */
+        .download-section {
+            background: var(--container-bg);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .download-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--accent) 0%, #2a5875 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(46, 109, 164, 0.3);
+        }
+
+        .download-button:hover {
+            background: linear-gradient(135deg, #2a5875 0%, #1e3f5f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 109, 164, 0.4);
+        }
+
+        .download-button::before {
+            content: "⬇️ ";
+            margin-right: 8px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 2px solid var(--card-border);
+            font-size: 12px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .copyright-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+            font-size: 11px;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .links-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .back-link {
+                position: static;
+                display: block;
+                margin: 0 auto 15px;
+                width: fit-content;
+            }
+
+            .header-controls {
+                position: static;
+                align-items: center;
+                margin: 15px auto 0;
+            }
+
+            header {
+                padding: 25px 20px;
+            }
+        }
+
+        [dir="rtl"] {
+            direction: rtl;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/" class="back-link" data-i18n="backLink">← Back to Dashboard</a>
+            
+            <!-- Header Controls Container -->
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                    <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                    <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
+                </div>
+                
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Toggle</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" 
+                 alt="Asifah Analytics Logo" 
+                 class="header-logo">
+            
+            <h1 data-i18n="pageTitle">💰 HIZBALLAH FINANCING NETWORKS</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Illicit Revenue Streams, Sanctions Evasion, and Conflict Sustainability</div>
+        </header>
+
+        <div class="content-grid">
+            <!-- Core Revenue Streams -->
+            <div class="info-card">
+                <h2><span class="card-icon">💰</span> <span data-i18n="cardRevenue">Core Revenue Streams</span></h2>
+                <ul>
+                    <li data-i18n="revBullet1"><strong>Iranian state support</strong></li>
+                    <li data-i18n="revBullet2"><strong>Trade-Based Money Laundering (TBML)</strong></li>
+                    <li data-i18n="revBullet3"><strong>Illicit trade linkages</strong> (incl. Captagon)</li>
+                    <li data-i18n="revBullet4"><strong>Procurement & front companies</strong></li>
+                    <li data-i18n="revBullet5"><strong>Diaspora-linked fundraising</strong></li>
+                </ul>
+            </div>
+
+            <!-- Trade-Based Money Laundering -->
+            <div class="info-card">
+                <h2><span class="card-icon">📦</span> <span data-i18n="cardTBML">Trade-Based Money Laundering</span></h2>
+                <ul>
+                    <li data-i18n="tbmlBullet1"><strong>Trade mis-invoicing schemes</strong></li>
+                    <li data-i18n="tbmlBullet2"><strong>Free-trade zone exploitation</strong></li>
+                    <li data-i18n="tbmlBullet3"><strong>Maritime routing concealment</strong></li>
+                    <li data-i18n="tbmlBullet4"><strong>Dual-use goods procurement</strong></li>
+                </ul>
+            </div>
+
+            <!-- Cryptocurrency & Stablecoins -->
+            <div class="info-card teal-card">
+                <h2><span class="card-icon">💱</span> <span data-i18n="cardCrypto">Cryptocurrency & Stablecoins</span></h2>
+                <ul>
+                    <li data-i18n="cryptoBullet1"><strong>Wallet-linked fundraising campaigns</strong></li>
+                    <li data-i18n="cryptoBullet2"><strong>Stablecoin transfers</strong> to limit volatility</li>
+                    <li data-i18n="cryptoBullet3"><strong>Peer-to-peer value movement</strong></li>
+                    <li data-i18n="cryptoBullet4"><strong>Supplementary</strong> to traditional networks</li>
+                </ul>
+            </div>
+
+            <!-- Historical Iran Linkages -->
+            <div class="info-card">
+                <h2><span class="card-icon">🇮🇷</span> <span data-i18n="cardIran">Historical Iran Linkages</span></h2>
+                <ul>
+                    <li data-i18n="iranBullet1"><strong>Direct financial & material support</strong></li>
+                    <li data-i18n="iranBullet2"><strong>Regional proxy coordination</strong></li>
+                    <li data-i18n="iranBullet3"><strong>Sanctions resilience mechanisms</strong></li>
+                    <li data-i18n="iranBullet4"><strong>Weapons procurement channels</strong></li>
+                </ul>
+            </div>
+
+            <!-- Lebanon: Impact & Exposure -->
+            <div class="info-card">
+                <h2><span class="card-icon">🇱🇧</span> <span data-i18n="cardLebanon">Lebanon: Impact & Exposure</span></h2>
+                <ul>
+                    <li data-i18n="lebanonBullet1"><strong>Parallel financial channels</strong></li>
+                    <li data-i18n="lebanonBullet2"><strong>Customs & port vulnerabilities</strong></li>
+                    <li data-i18n="lebanonBullet3"><strong>Institutional opacity risks</strong></li>
+                    <li data-i18n="lebanonBullet4"><strong>Increased systemic fragility</strong></li>
+                </ul>
+            </div>
+
+            <!-- Watchlist Indicators -->
+            <div class="info-card watchlist-card">
+                <h2><span class="card-icon">🚨</span> <span data-i18n="cardWatchlist">Watchlist Indicators</span></h2>
+                <ul>
+                    <li data-i18n="watchlistBullet1"><strong>New sanctions</strong> on TBML facilitators</li>
+                    <li data-i18n="watchlistBullet2"><strong>Crypto wallet designations</strong></li>
+                    <li data-i18n="watchlistBullet3"><strong>Major financial seizures</strong></li>
+                    <li data-i18n="watchlistBullet4"><strong>Iranian funding posture shifts</strong></li>
+                </ul>
+                <p style="margin-top: 15px; font-size: 13px;">
+                    <strong data-i18n="liveTracker">Live tracker →</strong>
+                    <a href="/">
+                        <span data-i18n="asifahAnalytics">Asifah Analytics</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <!-- PDF Download Section -->
+        <div class="download-section">
+            <h2 style="font-size: 20px; color: var(--text-primary); margin-bottom: 15px;" data-i18n="downloadTitle">📥 Download Original One-Pager</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 14px;">
+                <span data-i18n="downloadSubtitle">Get the PDF version for offline reference or printing</span>
+                <span style="color: var(--text-muted); font-size: 12px; display: block; margin-top: 5px;">
+                    * <span data-i18n="englishOnly">English only</span>
+                </span>
+            </p>
+            <a href="https://github.com/SassAndSweet/asifah-analytics/raw/main/resources/Asifah_Hizballah_Financing_Snapshot.pdf" 
+               download="Asifah_Hizballah_Financing_Snapshot.pdf"
+               class="download-button">
+               <span data-i18n="downloadButton">Download PDF One-Pager</span>
+            </a>
+        </div>
+
+        <!-- Key Reports Section -->
+        <div class="links-section">
+            <h2 data-i18n="keyReportsTitle">📚 Key Reports</h2>
+            <div class="links-grid">
+                <a href="https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/lebanon-related-sanctions" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkTreasury">U.S. Treasury Lebanon Sanctions</span>
+                </a>
+                <a href="https://www.un.org/securitycouncil/sanctions/1636/panel_experts/reports" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkUN">UN Panel of Experts on Lebanon</span>
+                </a>
+                <a href="https://www.fatf-gafi.org/en/countries/lebanon.html" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkFATF">FATF Mutual Evaluations</span>
+                </a>
+                <a href="https://www.europol.europa.eu/publications-events/publications?f%5B0%5D=publication_type%3A175" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkEuropol">Europol Terrorist Financing Reports</span>
+                </a>
+                <a href="https://ofac.treasury.gov/recent-actions/20250101" 
+                   target="_blank" 
+                   class="resource-link">
+                   <span data-i18n="linkOFAC">OFAC Enforcement Actions</span>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Prepared by ASIFAH ANALYTICS</strong></p>
+            <p style="margin-top: 10px;">
+                <strong>Sources:</strong> U.S. Treasury • UN Panel • FATF • Europol • OFAC<br>
+                <strong>Updated:</strong> March 2026
+            </p>
+            
+            <div class="copyright-footer">
+                © 2026 Asifah Analytics (RCGG). All rights reserved.<br>
+                Educational and research use only. Not an official U.S. Government product.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Translation System
+        const translations = {
+            en: {
+                pageTitle: "💰 HIZBALLAH FINANCING NETWORKS",
+                pageSubtitle: "Illicit Revenue Streams, Sanctions Evasion, and Conflict Sustainability",
+                backLink: "← Back to Dashboard",
+                themeToggle: "Toggle",
+                
+                // Card Titles
+                cardRevenue: "Core Revenue Streams",
+                cardTBML: "Trade-Based Money Laundering",
+                cardCrypto: "Cryptocurrency & Stablecoins",
+                cardIran: "Historical Iran Linkages",
+                cardLebanon: "Lebanon: Impact & Exposure",
+                cardWatchlist: "Watchlist Indicators",
+                
+                // Core Revenue
+                revBullet1: "Iranian state support",
+                revBullet2: "Trade-Based Money Laundering (TBML)",
+                revBullet3: "Illicit trade linkages (incl. Captagon)",
+                revBullet4: "Procurement & front companies",
+                revBullet5: "Diaspora-linked fundraising",
+                
+                // TBML
+                tbmlBullet1: "Trade mis-invoicing schemes",
+                tbmlBullet2: "Free-trade zone exploitation",
+                tbmlBullet3: "Maritime routing concealment",
+                tbmlBullet4: "Dual-use goods procurement",
+                
+                // Crypto
+                cryptoBullet1: "Wallet-linked fundraising campaigns",
+                cryptoBullet2: "Stablecoin transfers to limit volatility",
+                cryptoBullet3: "Peer-to-peer value movement",
+                cryptoBullet4: "Supplementary to traditional networks",
+                
+                // Iran
+                iranBullet1: "Direct financial & material support",
+                iranBullet2: "Regional proxy coordination",
+                iranBullet3: "Sanctions resilience mechanisms",
+                iranBullet4: "Weapons procurement channels",
+                
+                // Lebanon
+                lebanonBullet1: "Parallel financial channels",
+                lebanonBullet2: "Customs & port vulnerabilities",
+                lebanonBullet3: "Institutional opacity risks",
+                lebanonBullet4: "Increased systemic fragility",
+                
+                // Watchlist
+                watchlistBullet1: "New sanctions on TBML facilitators",
+                watchlistBullet2: "Crypto wallet designations",
+                watchlistBullet3: "Major financial seizures",
+                watchlistBullet4: "Iranian funding posture shifts",
+                liveTracker: "Live tracker →",
+                asifahAnalytics: "Asifah Analytics",
+                
+                // Download Section
+                downloadTitle: "📥 Download Original One-Pager",
+                downloadSubtitle: "Get the PDF version for offline reference or printing",
+                englishOnly: "English only",
+                downloadButton: "Download PDF One-Pager",
+                
+                // Key Reports
+                keyReportsTitle: "📚 Key Reports",
+                linkTreasury: "U.S. Treasury Lebanon Sanctions",
+                linkUN: "UN Panel of Experts on Lebanon",
+                linkFATF: "FATF Mutual Evaluations",
+                linkEuropol: "Europol Terrorist Financing Reports",
+                linkOFAC: "OFAC Enforcement Actions"
+            },
+            he: {
+                pageTitle: "💰 רשתות מימון חיזבאללה",
+                pageSubtitle: "זרמי הכנסה לא חוקיים, התחמקות מסנקציות וקיימות עימותים",
+                backLink: "→ חזרה ללוח הבקרה",
+                themeToggle: "החלף",
+                
+                cardRevenue: "זרמי הכנסה עיקריים",
+                cardTBML: "הלבנת הון מבוססת סחר",
+                cardCrypto: "קריפטו ומטבעות יציבים",
+                cardIran: "קשרים היסטוריים לאיראן",
+                cardLebanon: "לבנון: השפעה וחשיפה",
+                cardWatchlist: "מדדי מעקב",
+                
+                revBullet1: "תמיכה ממלכתית איראנית",
+                revBullet2: "הלבנת הון מבוססת סחר (TBML)",
+                revBullet3: "קשרי סחר לא חוקיים (כולל קפטגון)",
+                revBullet4: "רכש וחברות חזית",
+                revBullet5: "גיוס כספים מקושר לתפוצות",
+                
+                tbmlBullet1: "תוכניות חשבוניות שגויות בסחר",
+                tbmlBullet2: "ניצול אזורי סחר חופשי",
+                tbmlBullet3: "הסתרת ניתוב ימי",
+                tbmlBullet4: "רכש סחורות כפול שימוש",
+                
+                cryptoBullet1: "קמפיינים לגיוס כספים מקושרי ארנק",
+                cryptoBullet2: "העברות מטבעות יציבים להגבלת תנודתיות",
+                cryptoBullet3: "תנועת ערך עמית-לעמית",
+                cryptoBullet4: "משלים לרשתות מסורתיות",
+                
+                iranBullet1: "תמיכה פיננסית וחומרית ישירה",
+                iranBullet2: "תיאום פרוקסי אזורי",
+                iranBullet3: "מנגנוני עמידות בסנקציות",
+                iranBullet4: "ערוצי רכש נשק",
+                
+                lebanonBullet1: "ערוצים פיננסיים מקבילים",
+                lebanonBullet2: "פגיעויות מכס ונמל",
+                lebanonBullet3: "סיכוני אטימות מוסדית",
+                lebanonBullet4: "שבירות מערכתית מוגברת",
+                
+                watchlistBullet1: "סנקציות חדשות על מנחי TBML",
+                watchlistBullet2: "ייעוד ארנקי קריפטו",
+                watchlistBullet3: "תפיסות פיננסיות גדולות",
+                watchlistBullet4: "שינויי עמדת מימון איראנית",
+                liveTracker: "מעקב חי →",
+                asifahAnalytics: "אסיפה אנליטיקס",
+                
+                downloadTitle: "📥 הורד דף מידע מקורי",
+                downloadSubtitle: "קבל גרסת PDF להתייחסות לא מקוונת או הדפסה",
+                englishOnly: "אנגלית בלבד",
+                downloadButton: "הורד PDF",
+                
+                keyReportsTitle: "📚 דוחות מפתח",
+                linkTreasury: "סנקציות לבנון של משרד האוצר האמריקאי",
+                linkUN: "פאנל מומחי האו\"ם על לבנון",
+                linkFATF: "הערכות הדדיות של FATF",
+                linkEuropol: "דוחות מימון טרור של אירופול",
+                linkOFAC: "פעולות אכיפה של OFAC"
+            },
+            ar: {
+                pageTitle: "💰 شبكات تمويل حزب الله",
+                pageSubtitle: "تدفقات الإيرادات غير المشروعة والتهرب من العقوبات واستدامة الصراع",
+                backLink: "→ العودة إلى لوحة التحكم",
+                themeToggle: "تبديل",
+                
+                cardRevenue: "تدفقات الإيرادات الأساسية",
+                cardTBML: "غسل الأموال القائم على التجارة",
+                cardCrypto: "العملات المشفرة والعملات المستقرة",
+                cardIran: "الروابط التاريخية مع إيران",
+                cardLebanon: "لبنان: التأثير والتعرض",
+                cardWatchlist: "مؤشرات المراقبة",
+                
+                revBullet1: "الدعم الحكومي الإيراني",
+                revBullet2: "غسل الأموال القائم على التجارة (TBML)",
+                revBullet3: "روابط التجارة غير المشروعة (بما في ذلك الكبتاجون)",
+                revBullet4: "المشتريات والشركات الوهمية",
+                revBullet5: "جمع التبرعات المرتبط بالشتات",
+                
+                tbmlBullet1: "مخططات إساءة تسعير التجارة",
+                tbmlBullet2: "استغلال المناطق التجارية الحرة",
+                tbmlBullet3: "إخفاء المسارات البحرية",
+                tbmlBullet4: "شراء سلع ذات استخدام مزدوج",
+                
+                cryptoBullet1: "حملات جمع تبرعات مرتبطة بالمحفظة",
+                cryptoBullet2: "تحويلات العملات المستقرة للحد من التقلبات",
+                cryptoBullet3: "حركة القيمة من نظير إلى نظير",
+                cryptoBullet4: "مكملة للشبكات التقليدية",
+                
+                iranBullet1: "الدعم المالي والمادي المباشر",
+                iranBullet2: "تنسيق الوكيل الإقليمي",
+                iranBullet3: "آليات المرونة في العقوبات",
+                iranBullet4: "قنوات شراء الأسلحة",
+                
+                lebanonBullet1: "قنوات مالية موازية",
+                lebanonBullet2: "نقاط ضعف الجمارك والموانئ",
+                lebanonBullet3: "مخاطر عدم الشفافية المؤسسية",
+                lebanonBullet4: "زيادة الهشاشة النظامية",
+                
+                watchlistBullet1: "عقوبات جديدة على ميسري TBML",
+                watchlistBullet2: "تعيينات محفظة العملات المشفرة",
+                watchlistBullet3: "مصادرات مالية كبرى",
+                watchlistBullet4: "تحولات موقف التمويل الإيراني",
+                liveTracker: "متتبع حي ←",
+                asifahAnalytics: "عاصفة أناليتكس",
+                
+                downloadTitle: "📥 تحميل الصفحة الأصلية",
+                downloadSubtitle: "احصل على نسخة PDF للرجوع إليها دون اتصال أو للطباعة",
+                englishOnly: "الإنجليزية فقط",
+                downloadButton: "تحميل PDF",
+                
+                keyReportsTitle: "📚 تقارير رئيسية",
+                linkTreasury: "عقوبات لبنان من وزارة الخزانة الأمريكية",
+                linkUN: "فريق خبراء الأمم المتحدة حول لبنان",
+                linkFATF: "تقييمات متبادلة من FATF",
+                linkEuropol: "تقارير تمويل الإرهاب من يوروبول",
+                linkOFAC: "إجراءات إنفاذ OFAC"
+            },
+            fa: {
+                pageTitle: "💰 شبکه‌های تامین مالی حزب‌الله",
+                pageSubtitle: "جریان‌های درآمد غیرقانونی، فرار از تحریم‌ها و پایداری درگیری",
+                backLink: "→ بازگشت به داشبورد",
+                themeToggle: "تعویض",
+                
+                cardRevenue: "جریان‌های درآمد اصلی",
+                cardTBML: "پولشویی مبتنی بر تجارت",
+                cardCrypto: "ارز دیجیتال و استیبل‌کوین‌ها",
+                cardIran: "پیوندهای تاریخی با ایران",
+                cardLebanon: "لبنان: تاثیر و قرار گرفتن در معرض",
+                cardWatchlist: "شاخص‌های نظارت",
+                
+                revBullet1: "حمایت دولتی ایران",
+                revBullet2: "پولشویی مبتنی بر تجارت (TBML)",
+                revBullet3: "پیوندهای تجارت غیرقانونی (شامل کپتاگون)",
+                revBullet4: "تدارکات و شرکت‌های پوششی",
+                revBullet5: "جمع‌آوری کمک مالی مرتبط با دیاسپورا",
+                
+                tbmlBullet1: "طرح‌های اشتباه در صورتحساب تجاری",
+                tbmlBullet2: "سوءاستفاده از مناطق تجارت آزاد",
+                tbmlBullet3: "پنهان‌سازی مسیریابی دریایی",
+                tbmlBullet4: "تدارکات کالاهای دو منظوره",
+                
+                cryptoBullet1: "کمپین‌های جمع‌آوری کمک مالی مرتبط با کیف پول",
+                cryptoBullet2: "انتقال استیبل‌کوین برای محدود کردن نوسانات",
+                cryptoBullet3: "جابجایی ارزش همتا به همتا",
+                cryptoBullet4: "مکمل شبکه‌های سنتی",
+                
+                iranBullet1: "حمایت مالی و مادی مستقیم",
+                iranBullet2: "هماهنگی نیروهای نیابتی منطقه‌ای",
+                iranBullet3: "مکانیسم‌های مقاومت در برابر تحریم‌ها",
+                iranBullet4: "کانال‌های تدارکات تسلیحات",
+                
+                lebanonBullet1: "کانال‌های مالی موازی",
+                lebanonBullet2: "آسیب‌پذیری‌های گمرک و بندر",
+                lebanonBullet3: "ریسک‌های عدم شفافیت نهادی",
+                lebanonBullet4: "افزایش شکنندگی سیستمی",
+                
+                watchlistBullet1: "تحریم‌های جدید بر تسهیل‌کنندگان TBML",
+                watchlistBullet2: "تعیین کیف پول‌های کریپتو",
+                watchlistBullet3: "مصادره‌های مالی بزرگ",
+                watchlistBullet4: "تغییر موضع تامین مالی ایران",
+                liveTracker: "ردیاب زنده ←",
+                asifahAnalytics: "آسیفه آنالیتیکس",
+                
+                downloadTitle: "📥 دانلود صفحه اصلی",
+                downloadSubtitle: "نسخه PDF را برای مرجع آفلاین یا چاپ دریافت کنید",
+                englishOnly: "فقط انگلیسی",
+                downloadButton: "دانلود PDF",
+                
+                keyReportsTitle: "📚 گزارش‌های کلیدی",
+                linkTreasury: "تحریم‌های لبنان وزارت خزانه‌داری آمریکا",
+                linkUN: "پانل کارشناسان سازمان ملل درباره لبنان",
+                linkFATF: "ارزیابی‌های متقابل FATF",
+                linkEuropol: "گزارش‌های تامین مالی تروریسم یوروپل",
+                linkOFAC: "اقدامات اجرایی OFAC"
+            }
+        };
+
+        let currentLang = 'en';
+
+        // Language Switching
+        function switchLanguage(lang, button) {
+            currentLang = lang;
+            
+            // Update active button
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if (button) button.classList.add('active');
+            
+            // Set RTL for Hebrew, Arabic, Farsi
+            const isRTL = lang === 'he' || lang === 'ar' || lang === 'fa';
+            document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+            document.body.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+            
+            // Update all text
+            updateUIText();
+        }
+
+        function updateUIText() {
+            const t = translations[currentLang];
+            
+            // Update all elements with data-i18n attributes
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (t[key]) {
+                    element.textContent = t[key];
+                }
+            });
+        }
+
+        // Theme Management
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('asifah-theme', newTheme);
+        }
+
+        // Initialize on page load
+        initTheme();
+    </script>
+</body>
+</html>
