@@ -1394,18 +1394,24 @@
             </div>
         </div>
 
-        <!-- Protest Intensity + Geographic Spread side by side -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-title" id="metric-title-intensity" data-i18n="metricTitleIntensity">Protest Intensity</div>
-                <div class="metric-value" id="protest-intensity">--</div>
-                <div class="metric-subtitle" id="intensity-level">Loading...</div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-title" id="metric-title-geography" data-i18n="metricTitleGeography">Geographic Spread</div>
-                <div class="metric-value" id="total-cities">--</div>
-                <div class="metric-subtitle" id="geography-subtitle" data-i18n="geographySubtitle">Cities affected</div>
+        <!-- Combined Protest Intensity + Geographic Spread -->
+        <div style="margin-bottom: 30px;">
+            <div class="metric-card" style="grid-column: 1 / -1;">
+                <!-- Top row: Intensity + City Count side by side -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div>
+                        <div class="metric-title" id="metric-title-intensity" data-i18n="metricTitleIntensity">Protest Intensity</div>
+                        <div class="metric-value" id="protest-intensity">--</div>
+                        <div class="metric-subtitle" id="intensity-level">Loading...</div>
+                    </div>
+                    <div>
+                        <div class="metric-title" id="metric-title-geography" data-i18n="metricTitleGeography">Geographic Spread</div>
+                        <div class="metric-value" id="total-cities">--</div>
+                        <div class="metric-subtitle" id="geography-subtitle" data-i18n="geographySubtitle">Cities affected</div>
+                    </div>
+                </div>
+                
+                <!-- Cities pills -->
                 <div class="cities-container" id="cities-list"></div>
                 
                 <!-- IRAN MAP -->
@@ -2151,19 +2157,19 @@
                 document.getElementById('arrests-7d').textContent = casualties_enhanced.recent_7d.arrests || 0;
                 document.getElementById('arrests-30d').textContent = `~${casualties_enhanced.recent_30d?.arrests || 0}`;
                 document.getElementById('arrests-trend').innerHTML = formatTrend(casualties_enhanced.trends?.arrests);
-                document.getElementById('arrests-cumulative').textContent = casualties_enhanced.cumulative?.arrests || '53,166+';
+                document.getElementById('arrests-cumulative').textContent = (casualties_enhanced.cumulative?.arrests && casualties_enhanced.cumulative.arrests !== 'Data unavailable') ? casualties_enhanced.cumulative.arrests : '53,166+';
                 document.getElementById('arrests-avg').textContent = casualties_enhanced.averages?.arrests_per_week || '--';
                 
                 document.getElementById('deaths-7d').textContent = casualties_enhanced.recent_7d.deaths || 0;
                 document.getElementById('deaths-30d').textContent = `~${casualties_enhanced.recent_30d?.deaths || 0}`;
                 document.getElementById('deaths-trend').innerHTML = formatTrend(casualties_enhanced.trends?.deaths);
-                document.getElementById('deaths-cumulative').textContent = casualties_enhanced.cumulative?.deaths || '6,506+';
+                document.getElementById('deaths-cumulative').textContent = (casualties_enhanced.cumulative?.deaths && casualties_enhanced.cumulative.deaths !== 'Data unavailable') ? casualties_enhanced.cumulative.deaths : '6,506+';
                 document.getElementById('deaths-avg').textContent = casualties_enhanced.averages?.deaths_per_week || '--';
                 
                 document.getElementById('injuries-7d').textContent = casualties_enhanced.recent_7d.injuries || 0;
                 document.getElementById('injuries-30d').textContent = `~${casualties_enhanced.recent_30d?.injuries || 0}`;
                 document.getElementById('injuries-trend').innerHTML = formatTrend(casualties_enhanced.trends?.injuries);
-                document.getElementById('injuries-cumulative').textContent = casualties_enhanced.cumulative?.injuries || '25,845+';
+                document.getElementById('injuries-cumulative').textContent = (casualties_enhanced.cumulative?.injuries && casualties_enhanced.cumulative.injuries !== 'Data unavailable') ? casualties_enhanced.cumulative.injuries : '25,845+';
                 document.getElementById('injuries-avg').textContent = casualties_enhanced.averages?.injuries_per_week || '--';
             }
             
