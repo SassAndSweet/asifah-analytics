@@ -939,6 +939,7 @@
 
     <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
+        const LEBANON_BACKEND_URL = 'https://lebanon-stability-backend.onrender.com';
 
         // Theme Management
         function initTheme() {
@@ -1007,7 +1008,7 @@
         // Fetch trend data for sparklines
         async function loadTrendData() {
             try {
-                const response = await fetch(`${BACKEND_URL}/api/lebanon-trends?days=30`);
+                const response = await fetch(`${LEBANON_BACKEND_URL}/api/lebanon-trends?days=30`);
                 const data = await response.json();
                 
                 if (data.success && data.days_collected >= 3) {
@@ -1185,7 +1186,7 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 30000);
                 
-                const response = await fetch(`${BACKEND_URL}/scan-lebanon-stability`, {
+                const response = await fetch(`${LEBANON_BACKEND_URL}/scan-lebanon-stability`, {
                     signal: controller.signal
                 });
                 
