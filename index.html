@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asifah Analytics - Regional Conflict Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: #050a14;
+            color: #e0e8f0;
+        }
+
+        /* ── Full-screen hero with background image ── */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('Asifah_Analytics_-_Landing_Page_2_16_26.png') center top / cover no-repeat;
+            z-index: 0;
+        }
+
+        /* Gradient overlay to darken the bottom for button readability */
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(5, 10, 20, 0) 0%,
+                rgba(5, 10, 20, 0) 40%,
+                rgba(5, 10, 20, 0.6) 60%,
+                rgba(5, 10, 20, 0.92) 80%,
+                rgba(5, 10, 20, 1) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 58vh;
+        }
+
+        /* ── Region selector section ── */
+        .region-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .region-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 300;
+            font-size: 14px;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            color: rgba(100, 220, 255, 0.6);
+            margin-bottom: 28px;
+        }
+
+        /* ── Button grid ── */
+        .region-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            max-width: 900px;
+            padding: 0 24px;
+            margin-bottom: 50px;
+        }
+
+        /* ── Individual region button ── */
+        .region-btn {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 250px;
+            padding: 22px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .region-btn .btn-label {
+            position: relative;
+            z-index: 2;
+        }
+
+        .region-btn .btn-status {
+            position: relative;
+            z-index: 2;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 400;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 8px;
+            opacity: 0.8;
+        }
+
+        /* ── ACTIVE region (Middle East) ── */
+        .region-btn.active {
+            background: linear-gradient(135deg, rgba(0, 180, 255, 0.15) 0%, rgba(0, 120, 200, 0.1) 100%);
+            border: 1.5px solid rgba(0, 200, 255, 0.5);
+            color: #ffffff;
+            box-shadow: 
+                0 0 20px rgba(0, 180, 255, 0.15),
+                inset 0 0 30px rgba(0, 180, 255, 0.05);
+        }
+
+        .region-btn.active::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.08), transparent);
+            z-index: 0;
+        }
+
+        .region-btn.active:hover {
+            border-color: rgba(0, 220, 255, 0.8);
+            box-shadow: 
+                0 0 35px rgba(0, 180, 255, 0.3),
+                0 0 80px rgba(0, 180, 255, 0.1),
+                inset 0 0 40px rgba(0, 180, 255, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .region-btn.active .btn-status {
+            color: #64dcff;
+        }
+
+        /* Subtle pulse on the active button */
+        .region-btn.active::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 11px;
+            border: 1px solid rgba(0, 200, 255, 0.3);
+            animation: pulse-border 3s ease-in-out infinite;
+            z-index: 1;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        /* ── INACTIVE / Coming Soon regions ── */
+        .region-btn.inactive {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.35);
+            cursor: default;
+        }
+
+        .region-btn.inactive .btn-status {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .region-btn.inactive:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Lock icon for inactive */
+        .lock-icon {
+            font-size: 14px;
+            margin-bottom: 4px;
+            opacity: 0.4;
+        }
+
+        /* ── Footer ── */
+        .landing-footer {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding: 0 24px 40px;
+            max-width: 700px;
+        }
+
+        .landing-footer p {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.25);
+            line-height: 1.7;
+            letter-spacing: 0.3px;
+        }
+
+        .landing-footer a {
+            color: rgba(100, 220, 255, 0.5);
+            text-decoration: none;
+        }
+
+        .landing-footer a:hover {
+            color: rgba(100, 220, 255, 0.8);
+        }
+
+        .copyright {
+            margin-top: 16px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.15);
+            letter-spacing: 1px;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .hero-content {
+                padding-top: 52vh;
+            }
+
+            .region-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .region-btn {
+                width: 85vw;
+                max-width: 320px;
+                padding: 18px 16px;
+                font-size: 14px;
+            }
+
+            .region-label {
+                font-size: 12px;
+                letter-spacing: 3px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content {
+                padding-top: 48vh;
+            }
+        }
+
+        /* ── Entrance animations ── */
+        .region-label {
+            animation: fadeUp 0.8s ease-out 0.3s both;
+        }
+
+        .region-btn:nth-child(1) { animation: fadeUp 0.6s ease-out 0.5s both; }
+        .region-btn:nth-child(2) { animation: fadeUp 0.6s ease-out 0.65s both; }
+        .region-btn:nth-child(3) { animation: fadeUp 0.6s ease-out 0.8s both; }
+        .region-btn:nth-child(4) { animation: fadeUp 0.6s ease-out 0.95s both; }
+        .region-btn:nth-child(5) { animation: fadeUp 0.6s ease-out 1.1s both; }
+
+        .landing-footer { animation: fadeUp 0.6s ease-out 1.3s both; }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+
+            <div class="region-section">
+                <div class="region-label">Select Region</div>
+            </div>
+
+            <div class="region-grid">
+
+                <a href="middle-east.html" class="region-btn active">
+                    <span class="btn-label">The Middle East</span>
+                    <span class="btn-status">● Live Dashboard</span>
+                </a>
+
+                <div class="region-btn inactive">
+                    <span class="lock-icon">🔒</span>
+                    <span class="btn-label">Western Hemisphere</span>
+                    <span class="btn-status">Under Development</span>
+                </div>
+
+                <div class="region-btn inactive">
+                    <span class="lock-icon">🔒</span>
+                    <span class="btn-label">Africa</span>
+                    <span class="btn-status">Future Expansion</span>
+                </div>
+
+                <div class="region-btn inactive">
+                    <span class="lock-icon">🔒</span>
+                    <span class="btn-label">Europe</span>
+                    <span class="btn-status">Future Expansion</span>
+                </div>
+
+                <div class="region-btn inactive">
+                    <span class="lock-icon">🔒</span>
+                    <span class="btn-label">Asia & The Pacific</span>
+                    <span class="btn-status">Future Development</span>
+                </div>
+
+            </div>
+
+            <div class="landing-footer">
+                <p>ASIFAH ANALYTICS provides open-source intelligence monitoring and conflict probability assessments across global regions. Data is aggregated from multilingual news sources, prediction markets, and community intelligence feeds.</p>
+                <div class="copyright">© 2025 Asifah Analytics. All rights reserved.</div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>
