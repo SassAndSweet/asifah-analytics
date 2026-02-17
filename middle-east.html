@@ -1759,6 +1759,383 @@
             border-radius: 50%;
         }
 
+        /* ========================================= */
+        /* CYBERPUNK ACCENT LAYER                    */
+        /* ========================================= */
+        
+        /* Scanline overlay on header */
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 255, 255, 0.015) 2px,
+                rgba(0, 255, 255, 0.015) 4px
+            );
+            pointer-events: none;
+            border-radius: 12px;
+            z-index: 1;
+        }
+
+        /* Cyan glow on expanded cards */
+        .target-card.expanded {
+            border-color: rgba(0, 210, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.08), 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        [data-theme="dark"] .target-card.expanded {
+            border-color: rgba(0, 210, 255, 0.4);
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.15), 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Monospace probability numbers */
+        .gauge-text,
+        .collapsed-percentage,
+        .threat-probability,
+        .combined-value {
+            font-family: 'Courier New', 'Consolas', monospace;
+        }
+
+        /* Subtle grid background for dark mode */
+        [data-theme="dark"] body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Glow effect on risk badges in dark mode */
+        [data-theme="dark"] .risk-very-high {
+            box-shadow: 0 0 8px rgba(255, 107, 107, 0.4);
+        }
+        [data-theme="dark"] .risk-high {
+            box-shadow: 0 0 8px rgba(255, 140, 66, 0.4);
+        }
+
+        /* Cyan accent on collapse toggle buttons */
+        [data-theme="dark"] .collapse-toggle-btn {
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+        }
+        [data-theme="dark"] .collapse-toggle-btn:hover {
+            background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+            box-shadow: 0 0 12px rgba(6, 182, 212, 0.3);
+        }
+
+        /* Cyan accent on scan buttons in dark mode */
+        [data-theme="dark"] .card-scan-button {
+            background: linear-gradient(180deg, #164e63 0%, #0e3a4a 100%);
+            border: 1px solid rgba(0, 210, 255, 0.2);
+        }
+        [data-theme="dark"] .card-scan-button:hover:not(:disabled) {
+            background: linear-gradient(180deg, #0e3a4a 0%, #0c4a6e 100%);
+            box-shadow: 0 0 16px rgba(0, 210, 255, 0.2);
+            border-color: rgba(0, 210, 255, 0.4);
+        }
+
+        /* Header gradient with cyan tint in dark mode */
+        [data-theme="dark"] header {
+            background: linear-gradient(135deg, #0f172a 0%, #164e63 50%, #0f172a 100%);
+            border: 1px solid rgba(0, 210, 255, 0.15);
+        }
+
+        /* Card backgrounds in dark mode */
+        [data-theme="dark"] .target-card {
+            background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%);
+            border-color: #334155;
+        }
+        [data-theme="dark"] .target-card.low-threat {
+            background: linear-gradient(to bottom, #1e293b 0%, #022c22 100%);
+            border-color: #065f46;
+        }
+        [data-theme="dark"] .target-card.medium-threat {
+            background: linear-gradient(to bottom, #1e293b 0%, #422006 100%);
+            border-color: #92400e;
+        }
+        [data-theme="dark"] .target-card.high-threat {
+            background: linear-gradient(to bottom, #1e293b 0%, #450a0a 100%);
+            border-color: #991b1b;
+        }
+        [data-theme="dark"] .target-card h3 {
+            color: #67e8f9;
+            border-bottom-color: #0891b2;
+        }
+        [data-theme="dark"] .collapsed-title {
+            color: #67e8f9;
+        }
+        [data-theme="dark"] .timeline-display {
+            background-color: rgba(15, 23, 42, 0.6);
+            border-color: #334155;
+        }
+        [data-theme="dark"] .headline-item {
+            background-color: rgba(30, 41, 59, 0.8);
+            border-left-color: #0891b2;
+        }
+        [data-theme="dark"] .headline-item:hover {
+            background-color: rgba(30, 58, 95, 0.5);
+        }
+        [data-theme="dark"] .headline-item a {
+            color: #e2e8f0;
+        }
+        [data-theme="dark"] .threat-matrix-section {
+            background: rgba(0, 210, 255, 0.03);
+            border-color: rgba(0, 210, 255, 0.15);
+        }
+        [data-theme="dark"] .expand-matrix-button {
+            background: linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(0, 210, 255, 0.05) 100%);
+            border-color: rgba(0, 210, 255, 0.2);
+            color: #67e8f9;
+        }
+        [data-theme="dark"] .threat-section {
+            background: rgba(0, 0, 0, 0.2);
+            border-left-color: rgba(0, 210, 255, 0.4);
+        }
+        [data-theme="dark"] .section-title {
+            color: #22d3ee;
+        }
+        [data-theme="dark"] footer {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .rate-limit-box {
+            background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%);
+            border-color: #334155;
+        }
+        [data-theme="dark"] .disclaimer {
+            background-color: rgba(120, 53, 15, 0.2);
+            border-color: #92400e;
+            color: #fbbf24;
+        }
+        [data-theme="dark"] .card-scan-controls {
+            background: rgba(15, 23, 42, 0.6);
+            border-color: #334155;
+        }
+
+        /* ========================================= */
+        /* WEATHER WIDGET                            */
+        /* ========================================= */
+
+        .weather-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 10px;
+            border: 1px solid #bae6fd;
+        }
+
+        [data-theme="dark"] .weather-section {
+            background: linear-gradient(135deg, rgba(8, 145, 178, 0.1) 0%, rgba(14, 116, 144, 0.05) 100%);
+            border-color: rgba(0, 210, 255, 0.15);
+        }
+
+        .weather-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #0369a1;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .weather-title {
+            color: #22d3ee;
+        }
+
+        .weather-forecast {
+            display: flex;
+            gap: 6px;
+            justify-content: space-between;
+            overflow-x: auto;
+        }
+
+        .weather-day {
+            flex: 1;
+            min-width: 55px;
+            text-align: center;
+            padding: 8px 4px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] .weather-day {
+            background: rgba(15, 23, 42, 0.5);
+            border-color: rgba(0, 210, 255, 0.1);
+        }
+
+        .weather-day-name {
+            font-size: 10px;
+            font-weight: bold;
+            color: #64748b;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        [data-theme="dark"] .weather-day-name {
+            color: #94a3b8;
+        }
+
+        .weather-icon {
+            font-size: 20px;
+            margin: 4px 0;
+        }
+
+        .weather-temps {
+            font-size: 11px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .weather-high {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .weather-low {
+            color: #2563eb;
+        }
+
+        [data-theme="dark"] .weather-high {
+            color: #fca5a5;
+        }
+
+        [data-theme="dark"] .weather-low {
+            color: #93c5fd;
+        }
+
+        .weather-conditions {
+            font-size: 9px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .weather-strike-note {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: rgba(234, 179, 8, 0.1);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            border-radius: 6px;
+            font-size: 11px;
+            color: #854d0e;
+            text-align: center;
+            font-style: italic;
+        }
+
+        [data-theme="dark"] .weather-strike-note {
+            background: rgba(234, 179, 8, 0.05);
+            border-color: rgba(234, 179, 8, 0.2);
+            color: #fbbf24;
+        }
+
+        .weather-loading {
+            text-align: center;
+            padding: 15px;
+            color: #64748b;
+            font-size: 12px;
+            font-style: italic;
+        }
+
+        /* ========================================= */
+        /* JORDAN CARD STYLING                       */
+        /* ========================================= */
+
+        #jordan-card h3 {
+            border-bottom-color: #059669;
+        }
+        #jordan-card.low-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #ecfdf5 100%);
+            border-color: #6ee7b7;
+        }
+        #jordan-card.medium-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #f0fdf4 100%);
+            border-color: #86efac;
+        }
+        #jordan-card.high-threat {
+            background: linear-gradient(to bottom, #ffffff 0%, #fef2f2 100%);
+            border-color: #fca5a5;
+            animation: jordan-threat-pulse 3s ease-in-out infinite;
+        }
+        @keyframes jordan-threat-pulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+            50% { box-shadow: 0 4px 20px rgba(5, 150, 105, 0.25); }
+        }
+
+        [data-theme="dark"] #jordan-card.low-threat {
+            background: linear-gradient(to bottom, #1e293b 0%, #022c22 100%);
+            border-color: #065f46;
+        }
+        [data-theme="dark"] #jordan-card h3 {
+            border-bottom-color: #10b981;
+        }
+
+        /* Jordan defensive posture styling */
+        .defensive-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(5, 150, 105, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid rgba(5, 150, 105, 0.6);
+        }
+
+        [data-theme="dark"] .defensive-section {
+            background: rgba(5, 150, 105, 0.08);
+            border-left-color: rgba(16, 185, 129, 0.6);
+        }
+
+        .defensive-section .section-title {
+            color: #059669;
+        }
+
+        [data-theme="dark"] .defensive-section .section-title {
+            color: #34d399;
+        }
+
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #64748b;
+            color: white;
+            border-radius: 50%;
+            font-size: 10px;
+            text-align: center;
+            line-height: 16px;
+            cursor: help;
+            margin-left: 6px;
+            position: relative;
+        }
+
+        .tooltip-icon:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            white-space: nowrap;
+            max-width: 300px;
+            white-space: normal;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
         .threat-matrix-section {
             margin: 25px 0;
             padding: 20px;
@@ -2146,6 +2523,14 @@
                 <div class="gauge-text medium" id="iran-prob">--</div>
             </div>
         </div>
+
+        <!-- WEATHER WIDGET -->
+        <div class="weather-section" id="iran-weather">
+            <div class="weather-title">🌤️ 7-Day Forecast — Tehran</div>
+            <div class="weather-forecast" id="iran-weather-forecast">
+                <div class="weather-loading">Loading weather data...</div>
+            </div>
+        </div>
         
         <div class="timeline-display">
             <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
@@ -2316,6 +2701,14 @@
                         stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
                 </svg>
                 <div class="gauge-text medium" id="hezbollah-prob">--</div>
+            </div>
+        </div>
+
+        <!-- WEATHER WIDGET -->
+        <div class="weather-section" id="hezbollah-weather">
+            <div class="weather-title">🌤️ 7-Day Forecast — Beirut</div>
+            <div class="weather-forecast" id="hezbollah-weather-forecast">
+                <div class="weather-loading">Loading weather data...</div>
             </div>
         </div>
         
@@ -2490,6 +2883,14 @@
                 <div class="gauge-text medium" id="houthis-prob">--</div>
             </div>
         </div>
+
+        <!-- WEATHER WIDGET -->
+        <div class="weather-section" id="houthis-weather">
+            <div class="weather-title">🌤️ 7-Day Forecast — Sanaa</div>
+            <div class="weather-forecast" id="houthis-weather-forecast">
+                <div class="weather-loading">Loading weather data...</div>
+            </div>
+        </div>
         
         <div class="timeline-display">
             <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
@@ -2648,6 +3049,14 @@
                 <div class="gauge-text medium" id="syria-prob">--</div>
             </div>
         </div>
+
+        <!-- WEATHER WIDGET -->
+        <div class="weather-section" id="syria-weather">
+            <div class="weather-title">🌤️ 7-Day Forecast — Damascus</div>
+            <div class="weather-forecast" id="syria-weather-forecast">
+                <div class="weather-loading">Loading weather data...</div>
+            </div>
+        </div>
         
         <div class="timeline-display">
             <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
@@ -2738,6 +3147,210 @@
     </div>
 </div>
 
+        <!-- JORDAN CARD -->
+<div class="target-card collapsed" id="jordan-card" data-target="jordan">
+    
+    <!-- COLLAPSED VIEW -->
+    <div class="card-collapsed-view">
+        <div class="collapsed-header">
+            <div class="collapsed-title">🇯🇴 JORDAN</div>
+            <button class="collapse-toggle-btn" onclick="toggleCard('jordan-card')">
+                Expand ▼
+            </button>
+        </div>
+        
+        <div class="collapsed-metric">
+            <div class="collapsed-metric-label">Threat Exposure</div>
+            <div class="collapsed-metric-value">
+                <div class="collapsed-percentage" id="jordanCollapsedScore">--</div>
+                <div class="collapsed-bar">
+                    <div class="collapsed-bar-fill" id="jordanCollapsedBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="collapsed-timestamp" id="jordanCollapsedTimestamp">
+            Loading...
+        </div>
+        
+        <div class="expand-instructions">
+            Click "Expand" to update data and view full analysis
+        </div>
+    </div>
+    
+    <!-- EXPANDED VIEW -->
+    <div class="card-expanded-view">
+        <h3><span class="target-flag">🇯🇴</span> <span data-i18n="targetJordan">JORDAN</span></h3>
+        
+        <button class="collapse-toggle-btn" onclick="toggleCard('jordan-card')" style="margin-bottom: 15px; width: 100%;">
+            Collapse ▲
+        </button>
+        
+        <div class="card-scan-controls">
+            <div class="card-time-window">
+                <label><input type="radio" name="jordan-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                <label><input type="radio" name="jordan-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                <label><input type="radio" name="jordan-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                <label><input type="radio" name="jordan-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+            </div>
+            <button class="card-scan-button" onclick="scanSingleTarget('jordan')">
+                <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+            </button>
+            <div class="loading" id="jordan-loading">
+                <div class="loading-spinner"></div>
+                <span data-i18n="loadingText">Scanning...</span>
+            </div>
+        </div>
+
+        <div class="probability-display">
+            <div class="probability-label">Threat Exposure Index</div>
+            <div class="gauge-container">
+                <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                    <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                    <circle class="gauge-progress medium" id="jordan-gauge" cx="100" cy="100" r="85"
+                        stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="gauge-text medium" id="jordan-prob">--</div>
+            </div>
+        </div>
+        
+        <!-- WEATHER WIDGET -->
+        <div class="weather-section" id="jordan-weather">
+            <div class="weather-title">🌤️ 7-Day Forecast — Amman</div>
+            <div class="weather-forecast" id="jordan-weather-forecast">
+                <div class="weather-loading">Loading weather data...</div>
+            </div>
+        </div>
+        
+        <div class="timeline-display">
+            <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+            <div class="timeline-value" id="jordan-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+            <div class="timeline-bar" id="jordan-bar">
+                <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+                <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+                <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+                <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+            </div>
+        </div>
+
+        <div class="threat-matrix-section">
+            <button class="expand-matrix-button" onclick="toggleJordanThreatMatrix()">
+                <span class="expand-matrix-text" id="jordan-matrix-btn-text">
+                    📊 View Threat Assessment ▼
+                </span>
+            </button>
+            
+            <div class="threat-matrix-details" id="jordan-matrix-details">
+                
+                <!-- INCOMING THREATS (4 vectors) -->
+                <div class="threat-section">
+                    <div class="section-title">INCOMING THREATS</div>
+                    
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇮🇷</span>
+                            <span>Iran / Militia Strike</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="jordan-iran-militia-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="jordan-iran-militia-bar" style="width: 0%; background: #ff6b6b;"></div>
+                            </div>
+                            <span class="risk-badge" id="jordan-iran-militia-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇸🇾</span>
+                            <span>Syria Border / ISIS</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="jordan-syria-isis-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="jordan-syria-isis-bar" style="width: 0%; background: #ff8c42;"></div>
+                            </div>
+                            <span class="risk-badge" id="jordan-syria-isis-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇵🇸</span>
+                            <span>Palestinian Unrest</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="jordan-palestinian-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="jordan-palestinian-bar" style="width: 0%; background: #ffd93d;"></div>
+                            </div>
+                            <span class="risk-badge" id="jordan-palestinian-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🎯</span>
+                            <span>US Base Targeting</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="jordan-us-base-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="jordan-us-base-bar" style="width: 0%; background: #6495ED;"></div>
+                            </div>
+                            <span class="risk-badge" id="jordan-us-base-risk">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DEFENSIVE POSTURE (2 metrics) -->
+                <div class="defensive-section">
+                    <div class="section-title">🛡️ DEFENSIVE POSTURE</div>
+                    
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🛡️</span>
+                            <span>Coalition Air Defense</span>
+                            <span class="tooltip-icon" data-tooltip="Probability of active intercept operations against hostile aerial threats transiting Jordanian airspace">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="jordan-air-defense-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="jordan-air-defense-bar" style="width: 0%; background: #10b981;"></div>
+                            </div>
+                            <span class="risk-badge" id="jordan-air-defense-risk" style="background: #10b981; color: #fff;">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🚧</span>
+                            <span>Border Operations</span>
+                            <span class="tooltip-icon" data-tooltip="Probability of active border security operations against smuggling and ISIS infiltration">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="jordan-border-ops-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="jordan-border-ops-bar" style="width: 0%; background: #059669;"></div>
+                            </div>
+                            <span class="risk-badge" id="jordan-border-ops-risk" style="background: #059669; color: #fff;">--</span>
+                        </div>
+                    </div>
+                    
+                    <div id="jordan-tension-boost-note" style="font-size: 11px; color: #64748b; margin-top: 10px; font-style: italic; display: none;">
+                        ⚡ Air defense elevated due to Iran-Israel tensions
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="headlines-section" id="jordan-headlines">
+            <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+            <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+        </div>
+    </div>
+</div>
+        
 </div><!-- End targets-grid -->
 </div><!-- End main-content-wrapper -->
 
@@ -2882,6 +3495,7 @@ const translations = {
                 targetIran: "IRAN",
                 targetHouthis: "HOUTHIS (YEMEN)",
                 targetSyria: "SYRIA",
+                targetJordan: "JORDAN",
                 
                 // Time Window Options
                 hours24: "24 Hours",
@@ -2974,6 +3588,7 @@ const translations = {
                 targetIran: "איראן",
                 targetHouthis: "חות'ים (תימן)",
                 targetSyria: "סוריה",
+                targetJordan: "ירדן",
                 
                 // Time Window Options
                 hours24: "24 שעות",
@@ -3066,6 +3681,7 @@ const translations = {
                 targetIran: "إيران",
                 targetHouthis: "الحوثيون (اليمن)",
                 targetSyria: "سوريا",
+                targetJordan: "الأردن",
                 
                 // Time Window Options
                 hours24: "24 ساعة",
@@ -3158,6 +3774,7 @@ const translations = {
                 targetIran: "ایران",
                 targetHouthis: "حوثی‌ها (یمن)",
                 targetSyria: "سوریه",
+                targetJordan: "اردن",
                 
                 // Time Window Options
                 hours24: "24 ساعت",
@@ -3412,7 +4029,8 @@ async function scanTarget(targetName, days) {
         'iran': '/api/iran-strike-probability',
         'hezbollah': '/api/hezbollah-activity',
         'houthis': '/api/houthis-threat',
-        'syria': '/api/syria-conflict'
+        'syria': '/api/syria-conflict',
+        'jordan': '/api/jordan-threat'
     };
     
     const endpoint = endpointMap[targetName];
@@ -4138,7 +4756,7 @@ async function updateFlightCancellations() {
 
         // Collapse all cards except the specified one
         function collapseOtherCards(exceptCardId) {
-            const allCards = ['iran-card', 'hezbollah-card', 'houthis-card', 'syria-card'];
+            const allCards = ['iran-card', 'hezbollah-card', 'houthis-card', 'syria-card', 'jordan-card'];
             
             allCards.forEach(cardId => {
                 if (cardId !== exceptCardId) {
@@ -4198,13 +4816,24 @@ async function loadCollapsedData() {
     
     // Syria
     try {
-        const response = await fetch(`${BACKEND_URL}/api/syria-conflict`);  // FIXED: Added (
+        const response = await fetch(`${BACKEND_URL}/api/syria-conflict`);
         if (response.ok) {
             const data = await response.json();
             updateCollapsedView('syria', data.probability, data.last_updated);
         }
     } catch (e) {
         console.warn('Syria collapsed data failed:', e);
+    }
+    
+    // Jordan
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/jordan-threat`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('jordan', data.probability, data.last_updated);
+        }
+    } catch (e) {
+        console.warn('Jordan collapsed data failed:', e);
     }
 }
 
@@ -4236,12 +4865,15 @@ async function loadCollapsedData() {
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
             initLanguage();
             fetchRateLimitStatus();
             
             // Load collapsed card data
             loadCollapsedData();
+            
+            // Load weather for all capitals on page load
+            loadAllWeather();
             
             try {
                 fetchPolymarketData();
@@ -4262,6 +4894,201 @@ async function loadCollapsedData() {
                 console.warn('Flight cancellations init failed:', e);
             }
         });
+
+        // ========================================
+        // JORDAN-SPECIFIC THREAT MATRIX
+        // ========================================
+
+        function toggleJordanThreatMatrix() {
+            const details = document.getElementById('jordan-matrix-details');
+            const btnText = document.getElementById('jordan-matrix-btn-text');
+            if (details.classList.contains('show')) {
+                details.classList.remove('show');
+                btnText.innerHTML = '📊 View Threat Assessment ▼';
+            } else {
+                details.classList.add('show');
+                btnText.innerHTML = '📊 Hide Threat Assessment ▲';
+                loadJordanThreatMatrix();
+            }
+        }
+
+        async function loadJordanThreatMatrix() {
+            try {
+                const days = parseInt(document.querySelector('input[name="jordan-timeWindow"]:checked').value);
+                const response = await fetch(`${BACKEND_URL}/api/jordan-threat?days=${days}`);
+                const data = await response.json();
+                if (!data.success) return;
+
+                // Incoming threats
+                const incoming = data.incoming_threats || {};
+                
+                const vectors = [
+                    { key: 'iran_militia', id: 'iran-militia' },
+                    { key: 'syria_isis', id: 'syria-isis' },
+                    { key: 'palestinian_unrest', id: 'palestinian' },
+                    { key: 'us_base', id: 'us-base' }
+                ];
+
+                vectors.forEach(v => {
+                    const threat = incoming[v.key] || {};
+                    const prob = threat.probability || 0;
+                    const risk = threat.risk_level || 'low';
+                    
+                    const probEl = document.getElementById(`jordan-${v.id}-prob`);
+                    const barEl = document.getElementById(`jordan-${v.id}-bar`);
+                    const riskEl = document.getElementById(`jordan-${v.id}-risk`);
+                    
+                    if (probEl) probEl.textContent = prob.toFixed(1) + '%';
+                    if (barEl) barEl.style.width = prob + '%';
+                    if (riskEl) {
+                        riskEl.textContent = risk.replace('_', ' ').toUpperCase();
+                        riskEl.className = `risk-badge ${getRiskClass(risk)}`;
+                    }
+                });
+
+                // Defensive posture
+                const defensive = data.defensive_posture || {};
+                
+                const airDef = defensive.coalition_air_defense || {};
+                const airProb = airDef.probability || airDef.base_probability || 0;
+                document.getElementById('jordan-air-defense-prob').textContent = airProb.toFixed(1) + '%';
+                document.getElementById('jordan-air-defense-bar').style.width = airProb + '%';
+                document.getElementById('jordan-air-defense-risk').textContent = airProb > 50 ? 'ACTIVE' : airProb > 25 ? 'ELEVATED' : 'STANDBY';
+
+                const borderOps = defensive.border_operations || {};
+                const borderProb = borderOps.probability || 0;
+                document.getElementById('jordan-border-ops-prob').textContent = borderProb.toFixed(1) + '%';
+                document.getElementById('jordan-border-ops-bar').style.width = borderProb + '%';
+                document.getElementById('jordan-border-ops-risk').textContent = borderProb > 50 ? 'ACTIVE' : borderProb > 25 ? 'ELEVATED' : 'ROUTINE';
+
+                // Tension boost indicator
+                const tensionBoost = airDef.tension_boost || 0;
+                const boostNote = document.getElementById('jordan-tension-boost-note');
+                if (boostNote) {
+                    if (tensionBoost > 0) {
+                        boostNote.style.display = 'block';
+                        boostNote.textContent = `⚡ Air defense elevated +${tensionBoost.toFixed(0)}% due to Iran-Israel tensions`;
+                    } else {
+                        boostNote.style.display = 'none';
+                    }
+                }
+
+                console.log('[Jordan Matrix] ✅ Loaded');
+            } catch (error) {
+                console.error('[Jordan Matrix] Error:', error);
+            }
+        }
+
+        // ========================================
+        // WEATHER SYSTEM (Open-Meteo, free, no key)
+        // ========================================
+
+        const WEATHER_CAPITALS = {
+            iran:      { name: 'Tehran',   lat: 35.6892, lon: 51.3890 },
+            hezbollah: { name: 'Beirut',   lat: 33.8938, lon: 35.5018 },
+            houthis:   { name: 'Sanaa',    lat: 15.3547, lon: 44.2066 },
+            syria:     { name: 'Damascus', lat: 33.5138, lon: 36.2765 },
+            jordan:    { name: 'Amman',    lat: 31.9454, lon: 35.9284 }
+        };
+
+        function weatherCodeToEmoji(code) {
+            if (code === 0) return '☀️';
+            if (code === 1) return '🌤️';
+            if (code === 2) return '⛅';
+            if (code === 3) return '☁️';
+            if ([45, 48].includes(code)) return '🌫️';
+            if ([51, 53, 55, 56, 57].includes(code)) return '🌦️';
+            if ([61, 63, 65, 66, 67].includes(code)) return '🌧️';
+            if ([71, 73, 75, 77].includes(code)) return '🌨️';
+            if ([80, 81, 82].includes(code)) return '🌧️';
+            if ([85, 86].includes(code)) return '🌨️';
+            if ([95, 96, 99].includes(code)) return '⛈️';
+            return '🌤️';
+        }
+
+        function weatherCodeToLabel(code) {
+            if (code === 0) return 'Clear';
+            if (code <= 3) return 'Partly Cloudy';
+            if ([45, 48].includes(code)) return 'Fog';
+            if (code <= 57) return 'Drizzle';
+            if (code <= 67) return 'Rain';
+            if (code <= 77) return 'Snow';
+            if (code <= 82) return 'Showers';
+            if (code <= 86) return 'Snow Showers';
+            if (code >= 95) return 'Thunderstorm';
+            return 'Unknown';
+        }
+
+        function isStrikeFavorable(code) {
+            return code <= 2;
+        }
+
+        async function loadWeather(target) {
+            const capital = WEATHER_CAPITALS[target];
+            if (!capital) return;
+            
+            const container = document.getElementById(`${target}-weather-forecast`);
+            if (!container) return;
+
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${capital.lat}&longitude=${capital.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=7`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data.daily) throw new Error('No daily data');
+
+                const days = data.daily.time;
+                const codes = data.daily.weather_code;
+                const highs = data.daily.temperature_2m_max;
+                const lows = data.daily.temperature_2m_min;
+
+                let clearNights = 0;
+                let html = '';
+
+                for (let i = 0; i < days.length; i++) {
+                    const date = new Date(days[i]);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const emoji = weatherCodeToEmoji(codes[i]);
+                    const label = weatherCodeToLabel(codes[i]);
+                    const favorable = isStrikeFavorable(codes[i]);
+                    if (favorable) clearNights++;
+
+                    html += `
+                        <div class="weather-day" style="${favorable ? 'border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);' : ''}">
+                            <div class="weather-day-name">${dayName}</div>
+                            <div class="weather-icon">${emoji}</div>
+                            <div class="weather-temps">
+                                <span class="weather-high">${Math.round(highs[i])}°</span>
+                                <span class="weather-low">${Math.round(lows[i])}°</span>
+                            </div>
+                            <div class="weather-conditions">${label}</div>
+                        </div>
+                    `;
+                }
+
+                if (clearNights >= 4) {
+                    html += `</div><div class="weather-strike-note">⚠️ ${clearNights}/7 clear days — favorable conditions for aerial operations</div>`;
+                } else if (clearNights >= 2) {
+                    html += `</div><div class="weather-strike-note">🌤️ ${clearNights}/7 clear days — mixed conditions window</div>`;
+                } else {
+                    html += `</div><div class="weather-strike-note">☁️ ${clearNights}/7 clear days — poor conditions for aerial operations</div>`;
+                }
+
+                container.innerHTML = html;
+
+            } catch (error) {
+                console.warn(`[Weather] Failed for ${target}:`, error);
+                container.innerHTML = '<div class="weather-loading">Weather data unavailable</div>';
+            }
+        }
+
+        async function loadAllWeather() {
+            const targets = Object.keys(WEATHER_CAPITALS);
+            for (const target of targets) {
+                loadWeather(target);
+            }
+        }
+
     </script>
 </body>
 </html>
