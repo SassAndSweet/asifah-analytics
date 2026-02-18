@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v1.0.0 - Feb 18, 2026 -->
+<!-- COPYRIGHT © 2025-2026 Asifah Analytics. All rights reserved. -->
+<html lang="en" dir="ltr">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Military Posture Tracker | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Hebrew:wght@400;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ========================================
+           LIGHT MODE (Blue Shades)
+           ======================================== */
+        :root {
+            --bg-primary: #edf2f7;
+            --bg-secondary: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f7fafc;
+            --bg-signal: #f0f5fa;
+            --border-color: #d1dce6;
+            --border-accent: #3182ce;
+            --text-primary: #1a2a3a;
+            --text-secondary: #4a6178;
+            --text-muted: #8899aa;
+            --text-inverse: #ffffff;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --accent-blue: #3182ce;
+            --accent-cyan: #0bc5ea;
+            --accent-green: #38a169;
+            --accent-yellow: #d69e2e;
+            --accent-orange: #dd6b20;
+            --accent-red: #e53e3e;
+            --alert-green-bg: #f0fff4;
+            --alert-yellow-bg: #fffff0;
+            --alert-orange-bg: #fffaf0;
+            --alert-red-bg: #fff5f5;
+            --alert-green-border: #38a169;
+            --alert-yellow-border: #d69e2e;
+            --alert-orange-border: #dd6b20;
+            --alert-red-border: #e53e3e;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --grid-color: transparent;
+            --scanline-opacity: 0;
+            --glow-opacity: 0;
+            --watermark-opacity: 0.04;
+            --cyber-border: var(--border-color);
+            --badge-bg: #edf2f7;
+            --badge-text: #2d3748;
+            --loading-bg: rgba(237,242,247,0.95);
+            --font-display: 'Rajdhani', sans-serif;
+            --font-mono: 'Share Tech Mono', monospace;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        /* ========================================
+           DARK MODE (Cyber / Tactical)
+           ======================================== */
+        [data-theme="dark"] {
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: #1a2332;
+            --bg-card-hover: #1f2b3d;
+            --bg-signal: #151d2b;
+            --border-color: #2a3a4e;
+            --border-accent: #00d4ff;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --text-inverse: #0a0e17;
+            --header-gradient-start: #0d1b2a;
+            --header-gradient-end: #1b2838;
+            --accent-blue: #00d4ff;
+            --accent-cyan: #00ffd5;
+            --accent-green: #00ff88;
+            --accent-yellow: #ffcc00;
+            --accent-orange: #ff8c00;
+            --accent-red: #ff3b3b;
+            --alert-green-bg: rgba(0,255,136,0.08);
+            --alert-yellow-bg: rgba(255,204,0,0.08);
+            --alert-orange-bg: rgba(255,140,0,0.08);
+            --alert-red-bg: rgba(255,59,59,0.08);
+            --alert-green-border: #00ff88;
+            --alert-yellow-border: #ffcc00;
+            --alert-orange-border: #ff8c00;
+            --alert-red-border: #ff3b3b;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 24px rgba(0,212,255,0.08);
+            --grid-color: rgba(0,212,255,0.04);
+            --scanline-opacity: 0.03;
+            --glow-opacity: 1;
+            --watermark-opacity: 0.03;
+            --cyber-border: rgba(0,212,255,0.15);
+            --badge-bg: rgba(0,212,255,0.1);
+            --badge-text: #00d4ff;
+            --loading-bg: rgba(10,14,23,0.95);
+        }
+
+        /* ========================================
+           BASE STYLES
+           ======================================== */
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: all 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        /* Cyber grid background (dark mode only) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Scanline overlay (dark mode only) */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0,212,255,var(--scanline-opacity)) 2px,
+                rgba(0,212,255,var(--scanline-opacity)) 4px
+            );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Watermark */
+        .watermark {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-display);
+            font-size: 6rem;
+            font-weight: 700;
+            opacity: var(--watermark-opacity);
+            color: var(--text-primary);
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+        }
+
+        /* ========================================
+           HEADER
+           ======================================== */
+        .header {
+            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+            padding: 20px 30px;
+            margin-bottom: 24px;
+            border-radius: 0 0 12px 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .header {
+            border-bottom: 1px solid var(--cyber-border);
+            box-shadow: 0 0 30px rgba(0,212,255,0.05);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            opacity: var(--glow-opacity);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        [data-theme="dark"] .header-logo {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(0,212,255,0.3);
+        }
+
+        .header-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        [data-theme="dark"] .header-title {
+            text-shadow: 0 0 20px rgba(0,212,255,0.4);
+        }
+
+        .header-subtitle {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .ctrl-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .ctrl-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.4);
+        }
+
+        [data-theme="dark"] .ctrl-btn:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 10px rgba(0,212,255,0.2);
+        }
+
+        .ctrl-btn.active {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        /* ========================================
+           DEFCON-STYLE STATUS STRIP
+           ======================================== */
+        .status-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .status-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .status-card {
+            border-color: var(--cyber-border);
+        }
+
+        .status-card.alert-elevated {
+            border-left: 4px solid var(--accent-yellow);
+            background: var(--alert-yellow-bg);
+        }
+
+        .status-card.alert-high {
+            border-left: 4px solid var(--accent-orange);
+            background: var(--alert-orange-bg);
+        }
+
+        .status-card.alert-surge {
+            border-left: 4px solid var(--accent-red);
+            background: var(--alert-red-bg);
+        }
+
+        [data-theme="dark"] .status-card.alert-surge {
+            box-shadow: 0 0 20px rgba(255,59,59,0.1);
+            animation: pulse-red 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,59,59,0.1); }
+            50% { box-shadow: 0 0 30px rgba(255,59,59,0.2); }
+        }
+
+        .status-card .label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .status-card .value {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .status-card .sub {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* ========================================
+           SECTION HEADERS
+           ======================================== */
+        .section-header {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 28px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        [data-theme="dark"] .section-header {
+            border-bottom-color: var(--cyber-border);
+        }
+
+        .section-header .icon { font-size: 1.3rem; }
+
+        /* ========================================
+           ACTOR CARDS GRID
+           ======================================== */
+        .actor-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 16px;
+        }
+
+        .actor-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .actor-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        [data-theme="dark"] .actor-card {
+            border-color: var(--cyber-border);
+        }
+
+        [data-theme="dark"] .actor-card:hover {
+            box-shadow: 0 0 20px rgba(0,212,255,0.08);
+            border-color: rgba(0,212,255,0.3);
+        }
+
+        .actor-card .actor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .actor-card .actor-flag {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .actor-card .actor-name {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .actor-card .actor-tier {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-family: var(--font-display);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .alert-badge.normal { background: var(--alert-green-bg); color: var(--accent-green); border: 1px solid var(--alert-green-border); }
+        .alert-badge.elevated { background: var(--alert-yellow-bg); color: var(--accent-yellow); border: 1px solid var(--alert-yellow-border); }
+        .alert-badge.high { background: var(--alert-orange-bg); color: var(--accent-orange); border: 1px solid var(--alert-orange-border); }
+        .alert-badge.surge { background: var(--alert-red-bg); color: var(--accent-red); border: 1px solid var(--alert-red-border); }
+
+        [data-theme="dark"] .alert-badge.surge {
+            box-shadow: 0 0 8px rgba(255,59,59,0.3);
+        }
+
+        .actor-stats {
+            display: flex;
+            gap: 16px;
+            margin: 12px 0;
+        }
+
+        .actor-stat {
+            text-align: center;
+        }
+
+        .actor-stat .stat-value {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .actor-stat .stat-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .actor-top-signal {
+            background: var(--bg-signal);
+            border-radius: 6px;
+            padding: 10px 12px;
+            margin-top: 10px;
+            border-left: 3px solid var(--accent-blue);
+        }
+
+        .actor-top-signal .signal-title {
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        .actor-top-signal .signal-meta {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ========================================
+           TARGET POSTURE CARDS
+           ======================================== */
+        .target-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .target-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        [data-theme="dark"] .target-card {
+            border-color: var(--cyber-border);
+        }
+
+        .target-card.elevated { border-top: 3px solid var(--accent-yellow); }
+        .target-card.high { border-top: 3px solid var(--accent-orange); }
+        .target-card.surge { border-top: 3px solid var(--accent-red); }
+
+        .target-name {
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .target-score {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .target-score-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ========================================
+           ASSET DISTRIBUTION BAR
+           ======================================== */
+        .asset-bar-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .asset-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 16px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        [data-theme="dark"] .asset-chip {
+            border-color: var(--cyber-border);
+        }
+
+        .asset-chip .chip-icon { font-size: 1.4rem; }
+
+        .asset-chip .chip-label {
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .asset-chip .chip-count {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        /* ========================================
+           SIGNAL FEED
+           ======================================== */
+        .signal-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .signal-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .signal-item:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-blue);
+        }
+
+        [data-theme="dark"] .signal-item {
+            border-color: var(--cyber-border);
+        }
+
+        [data-theme="dark"] .signal-item:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 12px rgba(0,212,255,0.08);
+        }
+
+        .signal-item .signal-icons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            min-width: 40px;
+        }
+
+        .signal-item .signal-flag { font-size: 1.4rem; }
+        .signal-item .signal-asset-icon { font-size: 1rem; }
+
+        .signal-item .signal-body { flex: 1; }
+
+        .signal-item .signal-headline {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .signal-item .signal-headline a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .signal-item .signal-headline a:hover {
+            color: var(--accent-blue);
+            text-decoration: underline;
+        }
+
+        .signal-item .signal-details {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .signal-weight {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 50px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: var(--font-display);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+            background: var(--accent-blue);
+        }
+
+        .signal-weight.high { background: var(--accent-orange); }
+        .signal-weight.critical { background: var(--accent-red); }
+
+        /* ========================================
+           SOURCE BREAKDOWN FOOTER
+           ======================================== */
+        .source-footer {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            margin-top: 32px;
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .source-item {
+            text-align: center;
+        }
+
+        .source-item .source-count {
+            font-family: var(--font-display);
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+        }
+
+        .source-item .source-label {
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* ========================================
+           FOOTER / COPYRIGHT
+           ======================================== */
+        .page-footer {
+            text-align: center;
+            padding: 24px 20px;
+            margin-top: 20px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .page-footer .copyright {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+        }
+
+        .page-footer .back-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-family: var(--font-display);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-decoration: none;
+            letter-spacing: 1px;
+        }
+
+        .page-footer .back-link:hover { text-decoration: underline; }
+
+        /* ========================================
+           LOADING STATE
+           ======================================== */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--loading-bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+
+        .loading-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        [data-theme="dark"] .loading-spinner {
+            border-color: var(--cyber-border);
+            border-top-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0,212,255,0.15);
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-text {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-top: 16px;
+            letter-spacing: 2px;
+        }
+
+        /* ========================================
+           ERROR STATE
+           ======================================== */
+        .error-banner {
+            background: var(--alert-red-bg);
+            border: 1px solid var(--alert-red-border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            text-align: center;
+            font-family: var(--font-display);
+            color: var(--accent-red);
+            display: none;
+        }
+
+        /* ========================================
+           LAST UPDATED BAR
+           ======================================== */
+        .updated-bar {
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 8px;
+            letter-spacing: 1px;
+        }
+
+        /* ========================================
+           RTL SUPPORT
+           ======================================== */
+        [dir="rtl"] .actor-top-signal { border-left: none; border-right: 3px solid var(--accent-blue); }
+        [dir="rtl"] .target-card.elevated { border-top: 3px solid var(--accent-yellow); }
+        [dir="rtl"] .status-card.alert-elevated { border-left: none; border-right: 4px solid var(--accent-yellow); }
+        [dir="rtl"] .status-card.alert-high { border-left: none; border-right: 4px solid var(--accent-orange); }
+        [dir="rtl"] .status-card.alert-surge { border-left: none; border-right: 4px solid var(--accent-red); }
+
+        /* ========================================
+           RESPONSIVE
+           ======================================== */
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; gap: 12px; align-items: flex-start; }
+            .header-controls { flex-wrap: wrap; }
+            .header-title { font-size: 1.2rem; }
+            .status-strip { grid-template-columns: repeat(2, 1fr); }
+            .actor-grid { grid-template-columns: 1fr; }
+            .target-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="watermark">ASIFAH ANALYTICS</div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" data-i18n="loading">SCANNING MILITARY POSTURE...</div>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="header-top">
+        <div class="header-brand">
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics" class="header-logo">
+            <div>
+                <div class="header-title" data-i18n="pageTitle">Military Posture Tracker</div>
+                <div class="header-subtitle" data-i18n="pageSubtitle">MULTI-ACTOR DEPLOYMENT INTELLIGENCE</div>
+            </div>
+        </div>
+        <div class="header-controls">
+            <!-- Language switcher -->
+            <button class="ctrl-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="ctrl-btn" onclick="setLanguage('ar')">عربي</button>
+            <button class="ctrl-btn" onclick="setLanguage('he')">עברית</button>
+            <button class="ctrl-btn" onclick="setLanguage('fa')">فارسی</button>
+            <!-- Theme toggle -->
+            <button class="ctrl-btn" id="themeToggle" onclick="toggleTheme()">🌙</button>
+            <!-- Refresh -->
+            <button class="ctrl-btn" id="refreshBtn" onclick="refreshData()" data-i18n-title="refresh" title="Refresh">⟳</button>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+
+    <!-- ERROR BANNER -->
+    <div class="error-banner" id="errorBanner"></div>
+
+    <!-- STATUS STRIP -->
+    <div class="status-strip" id="statusStrip">
+        <div class="status-card" id="statusArticles">
+            <div class="label" data-i18n="articlesScanned">ARTICLES SCANNED</div>
+            <div class="value" id="totalArticles">—</div>
+            <div class="sub" data-i18n="last7Days">Last 7 days</div>
+        </div>
+        <div class="status-card" id="statusSignals">
+            <div class="label" data-i18n="signalsDetected">SIGNALS DETECTED</div>
+            <div class="value" id="totalSignals">—</div>
+        </div>
+        <div class="status-card" id="statusActors">
+            <div class="label" data-i18n="activeActors">ACTIVE ACTORS</div>
+            <div class="value" id="activeActors">—</div>
+        </div>
+        <div class="status-card" id="statusTension">
+            <div class="label" data-i18n="tensionMultiplier">TENSION MULTIPLIER</div>
+            <div class="value" id="tensionMultiplier">—</div>
+            <div class="sub" id="tensionSub"></div>
+        </div>
+    </div>
+
+    <!-- ACTIVE ACTORS -->
+    <div class="section-header"><span class="icon">🎖️</span> <span data-i18n="sectionActors">Active Military Actors</span></div>
+    <div class="actor-grid" id="actorGrid"></div>
+
+    <!-- TARGET POSTURES -->
+    <div class="section-header"><span class="icon">🎯</span> <span data-i18n="sectionTargets">Target Posture Assessment</span></div>
+    <div class="target-grid" id="targetGrid"></div>
+
+    <!-- ASSET DISTRIBUTION -->
+    <div class="section-header"><span class="icon">⚙️</span> <span data-i18n="sectionAssets">Asset Distribution</span></div>
+    <div class="asset-bar-container" id="assetBar"></div>
+
+    <!-- SIGNAL FEED -->
+    <div class="section-header"><span class="icon">📡</span> <span data-i18n="sectionSignals">Signal Feed (Weighted by Impact)</span></div>
+    <div class="signal-feed" id="signalFeed"></div>
+
+    <!-- SOURCE BREAKDOWN -->
+    <div class="source-footer" id="sourceFooter"></div>
+
+    <!-- LAST UPDATED -->
+    <div class="updated-bar" id="updatedBar"></div>
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+        <div class="copyright">© 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0</div>
+        <a href="index.html" class="back-link" data-i18n="backToMain">← Back to Main Dashboard</a>
+    </div>
+</div>
+
+<script>
+// ========================================
+// CONFIGURATION
+// ========================================
+const API_BASE = 'https://asifah-analytics-backend.onrender.com';
+const ENDPOINT = `${API_BASE}/api/military-posture`;
+
+// ========================================
+// i18n TRANSLATIONS
+// ========================================
+const TRANSLATIONS = {
+    en: {
+        pageTitle: 'Military Posture Tracker',
+        pageSubtitle: 'MULTI-ACTOR DEPLOYMENT INTELLIGENCE',
+        loading: 'SCANNING MILITARY POSTURE...',
+        articlesScanned: 'ARTICLES SCANNED',
+        signalsDetected: 'SIGNALS DETECTED',
+        activeActors: 'ACTIVE ACTORS',
+        tensionMultiplier: 'TENSION MULTIPLIER',
+        last7Days: 'Last 7 days',
+        sectionActors: 'Active Military Actors',
+        sectionTargets: 'Target Posture Assessment',
+        sectionAssets: 'Asset Distribution',
+        sectionSignals: 'Signal Feed (Weighted by Impact)',
+        backToMain: '← Back to Main Dashboard',
+        refresh: 'Refresh',
+        signals: 'signals',
+        score: 'Score',
+        tier: 'Tier',
+        topSignal: 'Top Signal',
+        source: 'Source',
+        noData: 'No data available. Click refresh to scan.',
+        defenseRSS: 'DEFENSE RSS',
+        gdelt: 'GDELT',
+        newsapi: 'NEWSAPI',
+        reddit: 'REDDIT',
+        lastUpdated: 'Last Updated',
+        scanTime: 'Scan Time',
+    },
+    ar: {
+        pageTitle: 'متتبع الوضع العسكري',
+        pageSubtitle: 'استخبارات النشر متعدد الأطراف',
+        loading: 'جارٍ مسح الوضع العسكري...',
+        articlesScanned: 'المقالات الممسوحة',
+        signalsDetected: 'الإشارات المكتشفة',
+        activeActors: 'الأطراف النشطة',
+        tensionMultiplier: 'مُضاعف التوتر',
+        last7Days: 'آخر 7 أيام',
+        sectionActors: 'الأطراف العسكرية النشطة',
+        sectionTargets: 'تقييم وضع الأهداف',
+        sectionAssets: 'توزيع الأصول',
+        sectionSignals: 'تغذية الإشارات (مرجحة بالتأثير)',
+        backToMain: '→ العودة للوحة الرئيسية',
+        refresh: 'تحديث',
+        signals: 'إشارات',
+        score: 'النتيجة',
+        tier: 'المستوى',
+        topSignal: 'أعلى إشارة',
+        source: 'المصدر',
+        noData: 'لا توجد بيانات. انقر للتحديث.',
+        defenseRSS: 'RSS الدفاعية',
+        gdelt: 'GDELT',
+        newsapi: 'NEWSAPI',
+        reddit: 'ريديت',
+        lastUpdated: 'آخر تحديث',
+        scanTime: 'وقت المسح',
+    },
+    he: {
+        pageTitle: 'מעקב מצב צבאי',
+        pageSubtitle: 'מודיעין פריסה רב-שחקנים',
+        loading: 'סורק מצב צבאי...',
+        articlesScanned: 'כתבות נסרקו',
+        signalsDetected: 'אותות זוהו',
+        activeActors: 'שחקנים פעילים',
+        tensionMultiplier: 'מכפיל מתח',
+        last7Days: '7 ימים אחרונים',
+        sectionActors: 'שחקנים צבאיים פעילים',
+        sectionTargets: 'הערכת מצב מטרות',
+        sectionAssets: 'פיזור נכסים',
+        sectionSignals: 'פיד אותות (משוקלל לפי השפעה)',
+        backToMain: '← חזרה ללוח הראשי',
+        refresh: 'רענן',
+        signals: 'אותות',
+        score: 'ציון',
+        tier: 'דרג',
+        topSignal: 'אות מוביל',
+        source: 'מקור',
+        noData: 'אין נתונים. לחץ לרענון.',
+        defenseRSS: 'RSS ביטחוני',
+        gdelt: 'GDELT',
+        newsapi: 'NEWSAPI',
+        reddit: 'רדיט',
+        lastUpdated: 'עדכון אחרון',
+        scanTime: 'זמן סריקה',
+    },
+    fa: {
+        pageTitle: 'ردیاب وضعیت نظامی',
+        pageSubtitle: 'اطلاعات استقرار چند بازیگر',
+        loading: 'در حال اسکن وضعیت نظامی...',
+        articlesScanned: 'مقالات اسکن شده',
+        signalsDetected: 'سیگنال‌های شناسایی شده',
+        activeActors: 'بازیگران فعال',
+        tensionMultiplier: 'ضریب تنش',
+        last7Days: '۷ روز گذشته',
+        sectionActors: 'بازیگران نظامی فعال',
+        sectionTargets: 'ارزیابی وضعیت اهداف',
+        sectionAssets: 'توزیع دارایی‌ها',
+        sectionSignals: 'فید سیگنال (وزن‌دهی شده بر اساس تأثیر)',
+        backToMain: '← بازگشت به داشبورد اصلی',
+        refresh: 'بروزرسانی',
+        signals: 'سیگنال',
+        score: 'امتیاز',
+        tier: 'رده',
+        topSignal: 'سیگنال برتر',
+        source: 'منبع',
+        noData: 'داده‌ای موجود نیست. برای اسکن کلیک کنید.',
+        defenseRSS: 'RSS دفاعی',
+        gdelt: 'GDELT',
+        newsapi: 'NEWSAPI',
+        reddit: 'ردیت',
+        lastUpdated: 'آخرین بروزرسانی',
+        scanTime: 'زمان اسکن',
+    }
+};
+
+let currentLang = 'en';
+
+// ========================================
+// LANGUAGE FUNCTIONS
+// ========================================
+function setLanguage(lang) {
+    currentLang = lang;
+    const rtlLangs = ['ar', 'he', 'fa'];
+    document.documentElement.dir = rtlLangs.includes(lang) ? 'rtl' : 'ltr';
+    document.documentElement.lang = lang;
+
+    if (rtlLangs.includes(lang)) {
+        document.body.style.fontFamily = "'Noto Sans Arabic', 'Noto Sans Hebrew', var(--font-body)";
+    } else {
+        document.body.style.fontFamily = '';
+    }
+
+    // Update static i18n elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
+            el.textContent = TRANSLATIONS[lang][key];
+        }
+    });
+
+    // Update button active states
+    document.querySelectorAll('.ctrl-btn').forEach(btn => btn.classList.remove('active'));
+    event?.target?.classList?.add('active');
+
+    // Re-render dynamic content
+    if (window._lastData) renderAll(window._lastData);
+}
+
+// ========================================
+// THEME FUNCTIONS
+// ========================================
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    document.getElementById('themeToggle').textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('mil-theme', next);
+}
+
+function loadTheme() {
+    const saved = localStorage.getItem('mil-theme') || 'dark';  // Default to dark for the MIL page
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeToggle').textContent = saved === 'dark' ? '☀️' : '🌙';
+}
+
+// ========================================
+// ASSET ICON MAP
+// ========================================
+const ASSET_ICONS = {
+    carrier_strike_group: '🚢',
+    submarine: '🔱',
+    bomber_deployment: '✈️',
+    amphibious_group: '⚓',
+    fighter_surge: '🛩️',
+    air_defense: '🛡️',
+    isr_assets: '👁️',
+    ground_forces: '🪖',
+    logistics: '📦',
+    missile_test: '🚀',
+    naval_exercise: '⚓',
+    unspecified: '⚠️'
+};
+
+const ASSET_LABELS = {
+    carrier_strike_group: 'Carrier Strike Groups',
+    submarine: 'Submarines',
+    bomber_deployment: 'Strategic Bombers',
+    amphibious_group: 'Amphibious Groups',
+    fighter_surge: 'Fighter Surges',
+    air_defense: 'Air Defense',
+    isr_assets: 'ISR Assets',
+    ground_forces: 'Ground Forces',
+    logistics: 'Logistics',
+    missile_test: 'Missile Tests',
+    naval_exercise: 'Naval Exercises',
+    unspecified: 'General Activity'
+};
+
+const TIER_LABELS = { 1: 'TIER 1 — STRIKE', 2: 'TIER 2 — ADVERSARY', 3: 'TIER 3 — REGIONAL', 4: 'TIER 4 — ALLIANCE' };
+
+// ========================================
+// DATA FETCH
+// ========================================
+async function fetchData(forceRefresh = false) {
+    const loader = document.getElementById('loadingOverlay');
+    const errorBanner = document.getElementById('errorBanner');
+    loader.classList.remove('hidden');
+    errorBanner.style.display = 'none';
+
+    try {
+        const url = forceRefresh ? `${ENDPOINT}?refresh=true` : ENDPOINT;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+
+        if (!data.success) throw new Error(data.error || 'Unknown error');
+
+        window._lastData = data;
+        renderAll(data);
+    } catch (err) {
+        console.error('[Military Tracker] Fetch error:', err);
+        errorBanner.textContent = `⚠️ ${err.message}. Try refreshing.`;
+        errorBanner.style.display = 'block';
+    } finally {
+        loader.classList.add('hidden');
+    }
+}
+
+function refreshData() {
+    fetchData(true);
+}
+
+// ========================================
+// RENDER ALL
+// ========================================
+function renderAll(data) {
+    const t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+
+    // Status strip
+    document.getElementById('totalArticles').textContent = data.total_articles_scanned?.toLocaleString() || '—';
+    document.getElementById('totalSignals').textContent = data.total_signals_detected || '—';
+    document.getElementById('activeActors').textContent = data.active_actor_count || '—';
+    document.getElementById('tensionMultiplier').textContent = `${data.tension_multiplier || 1.0}x`;
+
+    // Tension strip alert class
+    const tensionCard = document.getElementById('statusTension');
+    tensionCard.className = 'status-card';
+    if (data.tension_multiplier >= 1.5) tensionCard.classList.add('alert-surge');
+    else if (data.tension_multiplier >= 1.3) tensionCard.classList.add('alert-high');
+    else if (data.tension_multiplier >= 1.15) tensionCard.classList.add('alert-elevated');
+
+    const tensionSub = document.getElementById('tensionSub');
+    if (data.active_actor_count >= 4) tensionSub.textContent = '4+ actors = MAX multiplier';
+    else if (data.active_actor_count === 3) tensionSub.textContent = '3 actors active';
+    else if (data.active_actor_count === 2) tensionSub.textContent = '2 actors active';
+    else tensionSub.textContent = '';
+
+    renderActors(data.actor_summaries || {}, t);
+    renderTargets(data.target_postures || {}, t);
+    renderAssets(data.asset_distribution || {});
+    renderSignals(data.top_signals || [], t);
+    renderSources(data.source_breakdown || {}, t);
+
+    // Updated bar
+    const updatedBar = document.getElementById('updatedBar');
+    const dt = data.last_updated ? new Date(data.last_updated) : new Date();
+    updatedBar.textContent = `${t.lastUpdated}: ${dt.toLocaleString()} | ${t.scanTime}: ${data.scan_time_seconds || '?'}s | v${data.version || '1.0.0'}`;
+}
+
+// ========================================
+// RENDER ACTOR CARDS
+// ========================================
+function renderActors(actors, t) {
+    const grid = document.getElementById('actorGrid');
+    grid.innerHTML = '';
+
+    const sorted = Object.entries(actors).sort((a, b) => b[1].total_score - a[1].total_score);
+
+    for (const [id, actor] of sorted) {
+        const topSig = actor.top_signals?.[0];
+        const card = document.createElement('div');
+        card.className = 'actor-card';
+
+        card.innerHTML = `
+            <div class="actor-header">
+                <div>
+                    <span class="actor-flag">${actor.flag || '🏴'}</span>
+                    <span class="actor-name">${actor.name || id}</span>
+                    <div class="actor-tier">${TIER_LABELS[actor.tier] || `TIER ${actor.tier}`}</div>
+                </div>
+                <span class="alert-badge ${actor.alert_level || 'normal'}">${(actor.alert_level || 'NORMAL').toUpperCase()}</span>
+            </div>
+            <div class="actor-stats">
+                <div class="actor-stat">
+                    <div class="stat-value">${actor.signal_count || 0}</div>
+                    <div class="stat-label">${t.signals}</div>
+                </div>
+                <div class="actor-stat">
+                    <div class="stat-value">${actor.total_score?.toFixed(1) || '0'}</div>
+                    <div class="stat-label">${t.score}</div>
+                </div>
+            </div>
+            ${topSig ? `
+            <div class="actor-top-signal">
+                <div class="signal-title">${topSig.asset_icon || '⚠️'} ${topSig.article_title || ''}</div>
+                <div class="signal-meta">${topSig.source || ''} · ${t.topSignal}</div>
+            </div>
+            ` : ''}
+        `;
+
+        grid.appendChild(card);
+    }
+}
+
+// ========================================
+// RENDER TARGET POSTURES
+// ========================================
+function renderTargets(targets, t) {
+    const grid = document.getElementById('targetGrid');
+    grid.innerHTML = '';
+
+    const sorted = Object.entries(targets).sort((a, b) => b[1].score - a[1].score);
+
+    for (const [name, posture] of sorted) {
+        const card = document.createElement('div');
+        card.className = `target-card ${posture.alert_level || 'normal'}`;
+
+        const colorMap = {
+            normal: 'var(--accent-green)',
+            elevated: 'var(--accent-yellow)',
+            high: 'var(--accent-orange)',
+            surge: 'var(--accent-red)'
+        };
+
+        card.innerHTML = `
+            <div class="target-name">${posture.alert_icon || '🟢'} ${name.replace(/_/g, ' ')}</div>
+            <div style="display:flex; align-items:baseline; gap:10px;">
+                <div class="target-score" style="color:${colorMap[posture.alert_level] || 'var(--text-primary)'}">${posture.score?.toFixed(1) || '0'}</div>
+                <span class="alert-badge ${posture.alert_level || 'normal'}">${(posture.alert_label || 'Normal').toUpperCase()}</span>
+            </div>
+            <div class="target-score-label">${t.score} · ${posture.tension_multiplier || 1.0}x multiplier</div>
+        `;
+
+        grid.appendChild(card);
+    }
+}
+
+// ========================================
+// RENDER ASSET DISTRIBUTION
+// ========================================
+function renderAssets(assets) {
+    const bar = document.getElementById('assetBar');
+    bar.innerHTML = '';
+
+    const sorted = Object.entries(assets).sort((a, b) => b[1] - a[1]);
+
+    for (const [type, count] of sorted) {
+        const chip = document.createElement('div');
+        chip.className = 'asset-chip';
+        chip.innerHTML = `
+            <span class="chip-icon">${ASSET_ICONS[type] || '⚠️'}</span>
+            <div>
+                <div class="chip-count">${count}</div>
+                <div class="chip-label">${ASSET_LABELS[type] || type}</div>
+            </div>
+        `;
+        bar.appendChild(chip);
+    }
+}
+
+// ========================================
+// RENDER SIGNAL FEED
+// ========================================
+function renderSignals(signals, t) {
+    const feed = document.getElementById('signalFeed');
+    feed.innerHTML = '';
+
+    // De-duplicate by URL
+    const seen = new Set();
+    const unique = signals.filter(s => {
+        if (seen.has(s.article_url)) return false;
+        seen.add(s.article_url);
+        return true;
+    });
+
+    for (const sig of unique.slice(0, 20)) {
+        const item = document.createElement('div');
+        item.className = 'signal-item';
+
+        const weightClass = sig.weight >= 5.0 ? 'critical' : sig.weight >= 3.0 ? 'high' : '';
+        const pubDate = sig.published ? new Date(sig.published).toLocaleDateString() : '';
+
+        item.innerHTML = `
+            <div class="signal-icons">
+                <span class="signal-flag">${sig.actor_flag || '🏴'}</span>
+                <span class="signal-asset-icon">${sig.asset_icon || '⚠️'}</span>
+            </div>
+            <div class="signal-body">
+                <div class="signal-headline">
+                    <a href="${sig.article_url || '#'}" target="_blank" rel="noopener">${sig.article_title || 'Untitled'}</a>
+                </div>
+                <div class="signal-details">
+                    <span>${sig.actor_name || ''}</span>
+                    <span>${sig.asset_label || 'Activity'}</span>
+                    <span>${sig.source || ''}</span>
+                    <span>${pubDate}</span>
+                </div>
+            </div>
+            <div class="signal-weight ${weightClass}">${sig.weight?.toFixed(1) || '?'}</div>
+        `;
+
+        feed.appendChild(item);
+    }
+}
+
+// ========================================
+// RENDER SOURCE BREAKDOWN
+// ========================================
+function renderSources(breakdown, t) {
+    const footer = document.getElementById('sourceFooter');
+    footer.innerHTML = '';
+
+    const sources = [
+        { key: 'defense_rss', label: t.defenseRSS },
+        { key: 'gdelt', label: t.gdelt },
+        { key: 'newsapi', label: t.newsapi },
+        { key: 'reddit', label: t.reddit }
+    ];
+
+    for (const src of sources) {
+        const item = document.createElement('div');
+        item.className = 'source-item';
+        item.innerHTML = `
+            <div class="source-count">${(breakdown[src.key] || 0).toLocaleString()}</div>
+            <div class="source-label">${src.label}</div>
+        `;
+        footer.appendChild(item);
+    }
+}
+
+// ========================================
+// INIT
+// ========================================
+document.addEventListener('DOMContentLoaded', () => {
+    loadTheme();
+    fetchData();
+});
+</script>
+</body>
+</html>
