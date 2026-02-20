@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Military Asset & Deployment Tracker v1.1.0 - Feb 18, 2026 -->
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.0.0 - Feb 20, 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
 <html lang="en" dir="ltr">
 <head>
@@ -18,178 +18,81 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Hebrew:wght@400;600;700&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        /* ====== LIGHT MODE ====== */
         :root {
-            --bg-primary: #f0f4f7;
-            --bg-card: #ffffff;
-            --bg-signal: #f0f5fa;
-            --border-color: #d1dce6;
-            --text-primary: #2c3e50;
-            --text-secondary: #4a6178;
-            --text-muted: #8899aa;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
-            --accent-blue: #3182ce;
-            --accent-cyan: #0bc5ea;
-            --accent-green: #38a169;
-            --accent-yellow: #d69e2e;
-            --accent-orange: #dd6b20;
-            --accent-red: #e53e3e;
+            --bg-primary: #f0f4f7; --bg-card: #ffffff; --bg-signal: #f0f5fa;
+            --border-color: #d1dce6; --text-primary: #2c3e50; --text-secondary: #4a6178; --text-muted: #8899aa;
+            --header-gradient-start: #1e3a5f; --header-gradient-end: #2c5282;
+            --accent-blue: #3182ce; --accent-cyan: #0bc5ea; --accent-green: #38a169;
+            --accent-yellow: #d69e2e; --accent-orange: #dd6b20; --accent-red: #e53e3e;
             --alert-green-bg: #f0fff4; --alert-green-border: #38a169;
             --alert-yellow-bg: #fffff0; --alert-yellow-border: #d69e2e;
             --alert-orange-bg: #fffaf0; --alert-orange-border: #dd6b20;
             --alert-red-bg: #fff5f5; --alert-red-border: #e53e3e;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --grid-color: transparent;
-            --scanline-opacity: 0;
-            --glow-opacity: 0;
-            --watermark-opacity: 0.5;
-            --watermark-size: 500px;
-            --cyber-border: var(--border-color);
-            --loading-bg: rgba(240,244,247,0.95);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08); --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+            --grid-color: transparent; --scanline-opacity: 0; --glow-opacity: 0;
+            --watermark-opacity: 0.5; --watermark-size: 500px;
+            --cyber-border: var(--border-color); --loading-bg: rgba(240,244,247,0.95);
+            --evac-bg: #fff5f5; --evac-border: #e53e3e;
+            --theatre-header-bg: rgba(0,0,0,0.03); --collapse-icon-color: #4a6178;
         }
-
-        /* ====== DARK MODE ====== */
         [data-theme="dark"] {
-            --bg-primary: #0a0e17;
-            --bg-card: #1a2332;
-            --bg-signal: #151d2b;
-            --border-color: #2a3a4e;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --header-gradient-start: #0d1b2a;
-            --header-gradient-end: #1b2838;
-            --accent-blue: #00d4ff;
-            --accent-cyan: #00ffd5;
-            --accent-green: #00ff88;
-            --accent-yellow: #ffcc00;
-            --accent-orange: #ff8c00;
-            --accent-red: #ff3b3b;
+            --bg-primary: #0a0e17; --bg-card: #1a2332; --bg-signal: #151d2b;
+            --border-color: #2a3a4e; --text-primary: #e2e8f0; --text-secondary: #94a3b8; --text-muted: #64748b;
+            --header-gradient-start: #0d1b2a; --header-gradient-end: #1b2838;
+            --accent-blue: #00d4ff; --accent-cyan: #00ffd5; --accent-green: #00ff88;
+            --accent-yellow: #ffcc00; --accent-orange: #ff8c00; --accent-red: #ff3b3b;
             --alert-green-bg: rgba(0,255,136,0.08); --alert-green-border: #00ff88;
             --alert-yellow-bg: rgba(255,204,0,0.08); --alert-yellow-border: #ffcc00;
             --alert-orange-bg: rgba(255,140,0,0.08); --alert-orange-border: #ff8c00;
             --alert-red-bg: rgba(255,59,59,0.08); --alert-red-border: #ff3b3b;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-            --grid-color: rgba(0,212,255,0.04);
-            --scanline-opacity: 0.03;
-            --glow-opacity: 1;
-            --watermark-opacity: 1;
-            --watermark-size: 800px;
-            --cyber-border: rgba(0,212,255,0.15);
-            --loading-bg: rgba(10,14,23,0.95);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3); --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --grid-color: rgba(0,212,255,0.04); --scanline-opacity: 0.03; --glow-opacity: 1;
+            --watermark-opacity: 1; --watermark-size: 800px;
+            --cyber-border: rgba(0,212,255,0.15); --loading-bg: rgba(10,14,23,0.95);
+            --evac-bg: rgba(255,59,59,0.1); --evac-border: #ff3b3b;
+            --theatre-header-bg: rgba(0,212,255,0.04); --collapse-icon-color: #94a3b8;
         }
-
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            min-height: 100vh;
-            transition: background-color 0.4s ease, color 0.4s ease;
-            overflow-x: hidden;
-        }
-
-        /* Cyber grid (dark only) */
-        body::before {
-            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 40px 40px; pointer-events: none; z-index: 0;
-        }
-        /* Scanlines (dark only) */
-        body::after {
-            content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,var(--scanline-opacity)) 2px, rgba(0,212,255,var(--scanline-opacity)) 4px);
-            pointer-events: none; z-index: 0;
-        }
-
+        body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; transition: background-color 0.4s ease, color 0.4s ease; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-image: linear-gradient(var(--grid-color) 1px, transparent 1px), linear-gradient(90deg, var(--grid-color) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: 0; }
+        body::after { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,212,255,var(--scanline-opacity)) 2px, rgba(0,212,255,var(--scanline-opacity)) 4px); pointer-events: none; z-index: 0; }
         .container { max-width: 1280px; margin: 0 auto; padding: 0 20px 40px; position: relative; z-index: 1; }
-
-        /* Watermark logo */
-        .watermark {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: var(--watermark-size); height: var(--watermark-size);
-            opacity: var(--watermark-opacity); pointer-events: none; z-index: 0;
-            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-            background-size: 135%; background-repeat: no-repeat; background-position: center;
-            border-radius: 50%;
-            transition: all 0.4s ease;
-        }
-
-        /* ====== HEADER ====== */
-        .header {
-            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
-            padding: 16px 30px; margin-bottom: 24px; border-radius: 0 0 12px 12px;
-            position: relative; overflow: hidden;
-        }
+        .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: var(--watermark-size); height: var(--watermark-size); opacity: var(--watermark-opacity); pointer-events: none; z-index: 0; background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png'); background-size: 135%; background-repeat: no-repeat; background-position: center; border-radius: 50%; transition: all 0.4s ease; }
+        .header { background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end)); padding: 16px 30px; margin-bottom: 24px; border-radius: 0 0 12px 12px; position: relative; overflow: hidden; }
         [data-theme="dark"] .header { border-bottom: 1px solid var(--cyber-border); box-shadow: 0 0 30px rgba(0,212,255,0.05); }
-        .header::after {
-            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
-            opacity: var(--glow-opacity);
-        }
-
+        .header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent); opacity: var(--glow-opacity); }
         .header-row-1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
         [data-theme="dark"] .header-logo { border-color: var(--accent-cyan); box-shadow: 0 0 12px rgba(0,212,255,0.3); }
         .header-right-controls { display: flex; gap: 8px; align-items: center; }
-
-        .home-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3);
-            color: #fff; padding: 6px 16px; border-radius: 6px; cursor: pointer;
-            font-family: 'Times New Roman', Times, serif; font-size: 0.85rem; font-weight: 600;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s;
-        }
+        .home-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-family: 'Times New Roman', Times, serif; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s; }
         .home-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
-
-        .lang-btn {
-            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; padding: 5px 12px; border-radius: 5px; cursor: pointer;
-            font-family: 'Times New Roman', Times, serif; font-size: 0.8rem; transition: all 0.3s;
-        }
+        .lang-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-family: 'Times New Roman', Times, serif; font-size: 0.8rem; transition: all 0.3s; }
         .lang-btn:hover { background: rgba(255,255,255,0.2); }
         .lang-btn.active { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
-
         .header-row-2 { text-align: center; padding-bottom: 4px; }
-        .header-title {
-            font-family: 'Times New Roman', Times, serif; font-size: 1.8rem; font-weight: 700;
-            color: #ffffff; letter-spacing: 4px; text-transform: uppercase;
-        }
+        .header-title { font-family: 'Times New Roman', Times, serif; font-size: 1.8rem; font-weight: 700; color: #ffffff; letter-spacing: 4px; text-transform: uppercase; }
         [data-theme="dark"] .header-title { text-shadow: 0 0 20px rgba(0,212,255,0.4); }
         .header-subtitle { font-size: 0.85rem; color: rgba(255,255,255,0.6); letter-spacing: 2px; margin-top: 4px; }
-
         .header-row-3 { display: flex; justify-content: flex-end; align-items: center; margin-top: 6px; }
-
         .toggle-container { display: flex; align-items: center; gap: 8px; color: rgba(255,255,255,0.7); font-size: 0.8rem; letter-spacing: 1px; }
         .toggle-label { text-transform: uppercase; }
-        .toggle-switch {
-            position: relative; width: 44px; height: 22px; background: rgba(255,255,255,0.2);
-            border-radius: 11px; cursor: pointer; transition: background 0.3s; border: 1px solid rgba(255,255,255,0.3);
-        }
-        .toggle-switch::after {
-            content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px;
-            background: #fff; border-radius: 50%; transition: transform 0.3s;
-        }
+        .toggle-switch { position: relative; width: 44px; height: 22px; background: rgba(255,255,255,0.2); border-radius: 11px; cursor: pointer; transition: background 0.3s; border: 1px solid rgba(255,255,255,0.3); }
+        .toggle-switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; border-radius: 50%; transition: transform 0.3s; }
         .toggle-switch.active { background: rgba(0,212,255,0.4); border-color: rgba(0,212,255,0.6); }
         .toggle-switch.active::after { transform: translateX(22px); }
-
-        .refresh-btn {
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
-            color: #fff; width: 34px; height: 34px; border-radius: 6px; cursor: pointer;
-            font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s; margin-left: 12px;
-        }
+        .refresh-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 34px; height: 34px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: all 0.3s; margin-left: 12px; }
         .refresh-btn:hover { background: rgba(255,255,255,0.2); }
-
-        /* ====== STATUS STRIP ====== */
+        .evac-banner { background: var(--evac-bg); border: 2px solid var(--evac-border); border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: none; animation: evac-pulse 2s ease-in-out infinite; }
+        .evac-banner.visible { display: block; }
+        @keyframes evac-pulse { 0%,100%{box-shadow:0 0 10px rgba(255,59,59,0.1)} 50%{box-shadow:0 0 25px rgba(255,59,59,0.25)} }
+        .evac-banner-title { font-size: 0.9rem; font-weight: 700; color: var(--accent-red); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .evac-banner-items { display: flex; flex-direction: column; gap: 6px; }
+        .evac-banner-item { font-size: 0.8rem; color: var(--text-primary); }
+        .evac-banner-item a { color: var(--accent-red); text-decoration: none; }
+        .evac-banner-item a:hover { text-decoration: underline; }
+        .evac-subtype { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
         .status-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
-        .status-card {
-            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px;
-            padding: 16px 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.3s;
-        }
+        .status-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.3s; }
         [data-theme="dark"] .status-card { border-color: var(--cyber-border); }
         .status-card.alert-elevated { border-left: 4px solid var(--accent-yellow); background: var(--alert-yellow-bg); }
         .status-card.alert-high { border-left: 4px solid var(--accent-orange); background: var(--alert-orange-bg); }
@@ -199,21 +102,25 @@
         .status-card .label { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
         .status-card .value { font-size: 2rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
         .status-card .sub { font-size: 0.75rem; color: var(--text-secondary); margin-top: 4px; }
-
-        /* ====== SECTION HEADERS ====== */
-        .section-header {
-            font-size: 1.2rem; font-weight: 700; color: var(--text-primary); letter-spacing: 2px;
-            text-transform: uppercase; margin: 28px 0 16px; padding-bottom: 8px;
-            border-bottom: 2px solid var(--border-color); display: flex; align-items: center; gap: 10px;
-        }
+        .section-header { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); letter-spacing: 2px; text-transform: uppercase; margin: 28px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); display: flex; align-items: center; gap: 10px; }
         [data-theme="dark"] .section-header { border-bottom-color: var(--cyber-border); }
-
-        /* ====== ACTOR CARDS ====== */
-        .actor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-        .actor-card {
-            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px;
-            padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.3s;
-        }
+        .theatre-section { margin-bottom: 20px; }
+        .theatre-header { display: flex; justify-content: space-between; align-items: center; background: var(--theatre-header-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px 20px; cursor: pointer; transition: all 0.3s; user-select: none; margin-bottom: 12px; }
+        .theatre-header:hover { border-color: var(--accent-blue); }
+        [data-theme="dark"] .theatre-header { border-color: var(--cyber-border); }
+        [data-theme="dark"] .theatre-header:hover { border-color: var(--accent-cyan); }
+        .theatre-header-left { display: flex; align-items: center; gap: 12px; }
+        .theatre-icon { font-size: 1.3rem; }
+        .theatre-label { font-size: 1.05rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; }
+        .theatre-score-badge { font-size: 0.7rem; padding: 3px 10px; border-radius: 4px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-left: 10px; }
+        .theatre-header-right { display: flex; align-items: center; gap: 10px; }
+        .theatre-actor-count { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px; }
+        .collapse-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: var(--collapse-icon-color); font-size: 1.2rem; transition: transform 0.3s; }
+        .theatre-section.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .theatre-body { overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 1; }
+        .theatre-section.collapsed .theatre-body { max-height: 0 !important; opacity: 0; }
+        .actor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 8px; }
+        .actor-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.3s; }
         .actor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
         [data-theme="dark"] .actor-card { border-color: var(--cyber-border); }
         [data-theme="dark"] .actor-card:hover { box-shadow: 0 0 20px rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.3); }
@@ -221,22 +128,19 @@
         .actor-flag { font-size: 1.2rem; }
         .actor-name { font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; }
         .actor-tier { font-size: 0.65rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-
         .alert-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
         .alert-badge.normal { background: var(--alert-green-bg); color: var(--accent-green); border: 1px solid var(--alert-green-border); }
         .alert-badge.elevated { background: var(--alert-yellow-bg); color: var(--accent-yellow); border: 1px solid var(--alert-yellow-border); }
         .alert-badge.high { background: var(--alert-orange-bg); color: var(--accent-orange); border: 1px solid var(--alert-orange-border); }
         .alert-badge.surge { background: var(--alert-red-bg); color: var(--accent-red); border: 1px solid var(--alert-red-border); }
         [data-theme="dark"] .alert-badge.surge { box-shadow: 0 0 8px rgba(255,59,59,0.3); }
-
         .actor-stats { display: flex; gap: 16px; margin: 12px 0; }
         .actor-stat .stat-value { font-size: 1.4rem; font-weight: 700; color: var(--accent-blue); }
         .actor-stat .stat-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; }
         .actor-top-signal { background: var(--bg-signal); border-radius: 6px; padding: 10px 12px; margin-top: 10px; border-left: 3px solid var(--accent-blue); }
         .actor-top-signal .signal-title { font-size: 0.8rem; color: var(--text-primary); line-height: 1.4; }
         .actor-top-signal .signal-meta { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
-
-        /* ====== TARGET CARDS ====== */
+        .loc-badge { display: inline-block; font-size: 0.6rem; padding: 1px 6px; border-radius: 3px; background: rgba(255,140,0,0.15); color: var(--accent-orange); margin-left: 6px; font-weight: 600; }
         .target-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
         .target-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); }
         [data-theme="dark"] .target-card { border-color: var(--cyber-border); }
@@ -246,24 +150,18 @@
         .target-name { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .target-score { font-size: 2rem; font-weight: 700; line-height: 1; }
         .target-score-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
-
-        /* ====== ASSETS ====== */
         .asset-bar-container { display: flex; gap: 12px; flex-wrap: wrap; }
         .asset-chip { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 16px; box-shadow: var(--shadow-sm); }
         [data-theme="dark"] .asset-chip { border-color: var(--cyber-border); }
         .chip-icon { font-size: 1.4rem; }
         .chip-label { font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); }
         .chip-count { font-size: 1.2rem; font-weight: 700; color: var(--accent-blue); }
-
-        /* ====== SIGNAL FEED ====== */
         .signal-feed { display: flex; flex-direction: column; gap: 8px; }
-        .signal-item {
-            background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px;
-            padding: 14px 18px; display: flex; align-items: flex-start; gap: 14px; box-shadow: var(--shadow-sm); transition: all 0.3s;
-        }
+        .signal-item { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 14px 18px; display: flex; align-items: flex-start; gap: 14px; box-shadow: var(--shadow-sm); transition: all 0.3s; }
         .signal-item:hover { box-shadow: var(--shadow-md); border-color: var(--accent-blue); }
         [data-theme="dark"] .signal-item { border-color: var(--cyber-border); }
         [data-theme="dark"] .signal-item:hover { border-color: var(--accent-cyan); }
+        .signal-item.evac-signal { border-left: 3px solid var(--accent-red); }
         .signal-icons { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 40px; }
         .signal-flag { font-size: 1.4rem; }
         .signal-asset-icon { font-size: 1rem; }
@@ -275,8 +173,6 @@
         .signal-weight { min-width: 50px; padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: 700; color: #fff; background: var(--accent-blue); text-align: center; }
         .signal-weight.high { background: var(--accent-orange); }
         .signal-weight.critical { background: var(--accent-red); }
-
-        /* ====== FOOTER ====== */
         .source-footer { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-top: 32px; padding: 20px; border-top: 1px solid var(--border-color); }
         .source-count { font-size: 1.4rem; font-weight: 700; color: var(--accent-blue); text-align: center; }
         .source-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; text-align: center; }
@@ -284,8 +180,6 @@
         .page-footer .copyright { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px; }
         .page-footer .back-link { display: inline-block; margin-top: 10px; font-size: 0.85rem; font-weight: 600; color: var(--accent-blue); text-decoration: none; }
         .page-footer .back-link:hover { text-decoration: underline; }
-
-        /* ====== LOADING ====== */
         .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--loading-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s; }
         .loading-overlay.hidden { opacity: 0; pointer-events: none; }
         .loading-spinner { width: 48px; height: 48px; border: 3px solid var(--border-color); border-top-color: var(--accent-blue); border-radius: 50%; animation: spin 1s linear infinite; }
@@ -294,21 +188,13 @@
         .loading-text { font-size: 0.85rem; color: var(--text-secondary); margin-top: 16px; letter-spacing: 2px; }
         .error-banner { background: var(--alert-red-bg); border: 1px solid var(--alert-red-border); border-radius: 8px; padding: 16px 20px; text-align: center; color: var(--accent-red); display: none; }
         .updated-bar { font-size: 0.65rem; color: var(--text-muted); text-align: center; padding: 8px; letter-spacing: 1px; }
-
-        /* ====== RTL ====== */
         [dir="rtl"] .actor-top-signal { border-left: none; border-right: 3px solid var(--accent-blue); }
+        [dir="rtl"] .signal-item.evac-signal { border-left: none; border-right: 3px solid var(--accent-red); }
         [dir="rtl"] .status-card.alert-elevated { border-left: none; border-right: 4px solid var(--accent-yellow); }
         [dir="rtl"] .status-card.alert-high { border-left: none; border-right: 4px solid var(--accent-orange); }
         [dir="rtl"] .status-card.alert-surge { border-left: none; border-right: 4px solid var(--accent-red); }
         [dir="rtl"] .header-row-3 { justify-content: flex-start; }
-
-        @media (max-width: 768px) {
-            .header-row-1 { flex-direction: column; gap: 10px; align-items: flex-start; }
-            .header-right-controls { flex-wrap: wrap; }
-            .header-title { font-size: 1.3rem; letter-spacing: 2px; }
-            .status-strip { grid-template-columns: repeat(2, 1fr); }
-            .actor-grid, .target-grid { grid-template-columns: 1fr; }
-        }
+        @media (max-width: 768px) { .header-row-1 { flex-direction: column; gap: 10px; align-items: flex-start; } .header-right-controls { flex-wrap: wrap; } .header-title { font-size: 1.3rem; letter-spacing: 2px; } .status-strip { grid-template-columns: repeat(2, 1fr); } .actor-grid, .target-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
@@ -317,7 +203,6 @@
     <div class="loading-spinner"></div>
     <div class="loading-text" data-i18n="loading">SCANNING MILITARY POSTURE...</div>
 </div>
-
 <header class="header">
     <div class="header-row-1">
         <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics" class="header-logo">
@@ -341,36 +226,33 @@
         <button class="refresh-btn" onclick="refreshData()" title="Refresh">&#x27F3;</button>
     </div>
 </header>
-
 <div class="container">
     <div class="error-banner" id="errorBanner"></div>
+    <div class="evac-banner" id="evacBanner">
+        <div class="evac-banner-title">&#128680; BASE EVACUATION / DEPARTURE ALERTS</div>
+        <div class="evac-banner-items" id="evacBannerItems"></div>
+    </div>
     <div class="status-strip">
         <div class="status-card" id="statusArticles"><div class="label" data-i18n="articlesScanned">ARTICLES SCANNED</div><div class="value" id="totalArticles">&mdash;</div><div class="sub" data-i18n="last7Days">Last 7 days</div></div>
         <div class="status-card" id="statusSignals"><div class="label" data-i18n="signalsDetected">SIGNALS DETECTED</div><div class="value" id="totalSignals">&mdash;</div></div>
         <div class="status-card" id="statusActors"><div class="label" data-i18n="activeActors">ACTIVE ACTORS</div><div class="value" id="activeActors">&mdash;</div></div>
         <div class="status-card" id="statusTension"><div class="label" data-i18n="tensionMultiplier">TENSION MULTIPLIER</div><div class="value" id="tensionMultiplier">&mdash;</div><div class="sub" id="tensionSub"></div></div>
     </div>
-
     <div class="section-header"><span class="icon">&#127894;</span> <span data-i18n="sectionActors">Active Military Actors</span></div>
-    <div class="actor-grid" id="actorGrid"></div>
-
+    <div id="theatreContainer"></div>
     <div class="section-header"><span class="icon">&#127919;</span> <span data-i18n="sectionTargets">Target Posture Assessment</span></div>
     <div class="target-grid" id="targetGrid"></div>
-
     <div class="section-header"><span class="icon">&#9881;</span> <span data-i18n="sectionAssets">Asset Distribution</span></div>
     <div class="asset-bar-container" id="assetBar"></div>
-
     <div class="section-header"><span class="icon">&#128225;</span> <span data-i18n="sectionSignals">Signal Feed (Weighted by Impact)</span></div>
     <div class="signal-feed" id="signalFeed"></div>
-
     <div class="source-footer" id="sourceFooter"></div>
     <div class="updated-bar" id="updatedBar"></div>
     <div class="page-footer">
-        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v1.1.0</div>
+        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.0.0</div>
         <a href="index.html" class="back-link" data-i18n="backToMain">&larr; Back to Main Dashboard</a>
     </div>
 </div>
-
 <script>
 var API_BASE = 'https://asifah-backend.onrender.com';
 var ENDPOINT = API_BASE + '/api/military-posture';
@@ -384,26 +266,25 @@ var TRANSLATIONS = {
 
 var currentLang = 'en';
 var TIER_LABELS = { 1:'TIER 1 \u2014 STRIKE', 2:'TIER 2 \u2014 ADVERSARY', 3:'TIER 3 \u2014 REGIONAL', 4:'TIER 4 \u2014 ALLIANCE' };
-var ASSET_ICONS = { carrier_strike_group:'\uD83D\uDEA2', submarine:'\uD83D\uDD31', bomber_deployment:'\u2708\uFE0F', amphibious_group:'\u2693', fighter_surge:'\uD83D\uDEE9\uFE0F', air_defense:'\uD83D\uDEE1\uFE0F', isr_assets:'\uD83D\uDC41\uFE0F', ground_forces:'\uD83E\uDE96', logistics:'\uD83D\uDCE6', missile_test:'\uD83D\uDE80', naval_exercise:'\u2693', unspecified:'\u26A0\uFE0F' };
-var ASSET_LABELS = { carrier_strike_group:'Carrier Strike Groups', submarine:'Submarines', bomber_deployment:'Strategic Bombers', amphibious_group:'Amphibious Groups', fighter_surge:'Fighter Surges', air_defense:'Air Defense', isr_assets:'ISR Assets', ground_forces:'Ground Forces', logistics:'Logistics', missile_test:'Missile Tests', naval_exercise:'Naval Exercises', unspecified:'General Activity' };
+var ASSET_ICONS = { carrier_strike_group:'\uD83D\uDEA2', submarine:'\uD83D\uDD31', bomber_deployment:'\u2708\uFE0F', amphibious_group:'\u2693', fighter_surge:'\uD83D\uDEE9\uFE0F', air_defense:'\uD83D\uDEE1\uFE0F', isr_assets:'\uD83D\uDC41\uFE0F', ground_forces:'\uD83E\uDE96', logistics:'\uD83D\uDCE6', missile_test:'\uD83D\uDE80', naval_exercise:'\u2693', base_evacuation:'\uD83D\uDEA8', military_posturing:'\u26A0\uFE0F', unspecified:'\u26A0\uFE0F' };
+var ASSET_LABELS = { carrier_strike_group:'Carrier Strike Groups', submarine:'Submarines', bomber_deployment:'Strategic Bombers', amphibious_group:'Amphibious Groups', fighter_surge:'Fighter Surges', air_defense:'Air Defense', isr_assets:'ISR Assets', ground_forces:'Ground Forces', logistics:'Logistics', missile_test:'Missile Tests', naval_exercise:'Naval Exercises', base_evacuation:'Base Evacuations', military_posturing:'Posturing/Threats', unspecified:'General Activity' };
+
+/* ====== THEATRE ordering & fallback if backend doesn't send groupings ====== */
+var THEATRE_ORDER = [
+    { id:'asia_pacific', label:'Asia & The Pacific Theatre', icon:'\uD83C\uDF0F', actors:['china'] },
+    { id:'europe', label:'European Theatre', icon:'\uD83C\uDF0D', actors:['nato','russia','turkey','ukraine'] },
+    { id:'middle_east', label:'Middle East & North Africa', icon:'\uD83D\uDD4C', actors:['us','israel','iran','egypt','jordan','kuwait','qatar','saudi_arabia','uae'] }
+];
 
 function setLanguage(lang) {
     currentLang = lang;
     var rtl = ['ar','he','fa'];
     document.documentElement.dir = rtl.indexOf(lang) >= 0 ? 'rtl' : 'ltr';
     document.documentElement.lang = lang;
-    if (rtl.indexOf(lang) >= 0) {
-        document.body.style.fontFamily = "'Noto Sans Arabic', 'Noto Sans Hebrew', 'Times New Roman', serif";
-    } else {
-        document.body.style.fontFamily = '';
-    }
+    if (rtl.indexOf(lang) >= 0) { document.body.style.fontFamily = "'Noto Sans Arabic', 'Noto Sans Hebrew', 'Times New Roman', serif"; }
+    else { document.body.style.fontFamily = ''; }
     var els = document.querySelectorAll('[data-i18n]');
-    for (var i = 0; i < els.length; i++) {
-        var key = els[i].getAttribute('data-i18n');
-        if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) {
-            els[i].textContent = TRANSLATIONS[lang][key];
-        }
-    }
+    for (var i = 0; i < els.length; i++) { var key = els[i].getAttribute('data-i18n'); if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) els[i].textContent = TRANSLATIONS[lang][key]; }
     var btns = document.querySelectorAll('.lang-btn');
     for (var j = 0; j < btns.length; j++) btns[j].classList.remove('active');
     if (event && event.target) event.target.classList.add('active');
@@ -415,7 +296,7 @@ function toggleTheme() {
     var next = current === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', next);
     var toggle = document.getElementById('themeToggle');
-    if (next === 'dark') { toggle.classList.add('active'); } else { toggle.classList.remove('active'); }
+    if (next === 'dark') toggle.classList.add('active'); else toggle.classList.remove('active');
     localStorage.setItem('mil-theme', next);
 }
 
@@ -423,7 +304,12 @@ function loadTheme() {
     var saved = localStorage.getItem('mil-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', saved);
     var toggle = document.getElementById('themeToggle');
-    if (saved === 'dark') { toggle.classList.add('active'); } else { toggle.classList.remove('active'); }
+    if (saved === 'dark') toggle.classList.add('active'); else toggle.classList.remove('active');
+}
+
+function toggleTheatre(theatreId) {
+    var section = document.getElementById('theatre-' + theatreId);
+    if (section) section.classList.toggle('collapsed');
 }
 
 async function fetchData(forceRefresh) {
@@ -441,7 +327,7 @@ async function fetchData(forceRefresh) {
         renderAll(data);
     } catch (err) {
         console.error('[Military Tracker] Fetch error:', err);
-        errorBanner.innerHTML = '\u26A0\uFE0F Failed to fetch. Try refreshing.';
+        errorBanner.innerHTML = '\u26A0\uFE0F Failed to fetch military posture data. Try refreshing. (' + err.message + ')';
         errorBanner.style.display = 'block';
     } finally {
         loader.classList.add('hidden');
@@ -455,7 +341,7 @@ function renderAll(data) {
     document.getElementById('totalArticles').textContent = (data.total_articles_scanned || 0).toLocaleString();
     document.getElementById('totalSignals').textContent = data.total_signals_detected || 0;
     document.getElementById('activeActors').textContent = data.active_actor_count || 0;
-    document.getElementById('tensionMultiplier').textContent = (data.tension_multiplier || 1.0) + 'x';
+    document.getElementById('tensionMultiplier').textContent = (data.tension_multiplier || 1.0).toFixed(2) + 'x';
 
     var tc = document.getElementById('statusTension');
     tc.className = 'status-card';
@@ -464,36 +350,124 @@ function renderAll(data) {
     else if (data.tension_multiplier >= 1.15) tc.classList.add('alert-elevated');
 
     var ts = document.getElementById('tensionSub');
-    if (data.active_actor_count >= 4) ts.textContent = '4+ actors = MAX multiplier';
-    else if (data.active_actor_count === 3) ts.textContent = '3 actors active';
-    else if (data.active_actor_count === 2) ts.textContent = '2 actors active';
+    var ac = data.active_actor_count || 0;
+    if (ac >= 5) ts.textContent = ac + ' actors = MAX+ multiplier';
+    else if (ac === 4) ts.textContent = '4 actors active';
+    else if (ac === 3) ts.textContent = '3 actors active';
+    else if (ac === 2) ts.textContent = '2 actors active';
     else ts.textContent = '';
 
-    renderActors(data.actor_summaries || {}, t);
+    renderEvacBanner(data.evacuation_alerts || []);
+    renderTheatres(data.actor_summaries || {}, data.theatre_groupings || null, t);
     renderTargets(data.target_postures || {}, t);
     renderAssets(data.asset_distribution || {});
     renderSignals(data.top_signals || [], t);
     renderSources(data.source_breakdown || {}, t);
 
     var dt = data.last_updated ? new Date(data.last_updated) : new Date();
-    document.getElementById('updatedBar').textContent = t.lastUpdated + ': ' + dt.toLocaleString() + ' | ' + t.scanTime + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '1.1.0');
+    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.0.0');
 }
 
-function renderActors(actors, t) {
-    var grid = document.getElementById('actorGrid');
-    grid.innerHTML = '';
-    var sorted = Object.entries(actors).sort(function(a, b) { return b[1].total_score - a[1].total_score; });
-    for (var i = 0; i < sorted.length; i++) {
-        var id = sorted[i][0], actor = sorted[i][1];
-        var topSig = actor.top_signals && actor.top_signals[0];
-        var card = document.createElement('div');
-        card.className = 'actor-card';
-        var sigHtml = '';
-        if (topSig) {
-            sigHtml = '<div class="actor-top-signal"><div class="signal-title">' + (topSig.asset_icon||'\u26A0\uFE0F') + ' ' + (topSig.article_title||'') + '</div><div class="signal-meta">' + (topSig.source||'') + ' \u00B7 ' + t.topSignal + '</div></div>';
+function renderEvacBanner(alerts) {
+    var banner = document.getElementById('evacBanner');
+    var items = document.getElementById('evacBannerItems');
+    if (!alerts || alerts.length === 0) { banner.classList.remove('visible'); return; }
+    banner.classList.add('visible');
+    items.innerHTML = '';
+    for (var i = 0; i < Math.min(alerts.length, 5); i++) {
+        var a = alerts[i];
+        var subtypeLabel = (a.subtype || 'alert').replace(/_/g, ' ').toUpperCase();
+        var div = document.createElement('div');
+        div.className = 'evac-banner-item';
+        div.innerHTML = '<span class="evac-subtype">[' + subtypeLabel + ']</span> <a href="' + (a.url || '#') + '" target="_blank" rel="noopener">' + (a.title || 'Evacuation signal detected') + '</a> <span style="font-size:0.65rem;color:var(--text-muted)">(' + (a.source || '') + ')</span>';
+        items.appendChild(div);
+    }
+}
+
+function renderTheatres(actors, theatreGroupings, t) {
+    var container = document.getElementById('theatreContainer');
+    container.innerHTML = '';
+
+    for (var ti = 0; ti < THEATRE_ORDER.length; ti++) {
+        var theatre = THEATRE_ORDER[ti];
+        var section = document.createElement('div');
+        section.className = 'theatre-section';
+        section.id = 'theatre-' + theatre.id;
+
+        /* Collect actors for this theatre — sorted alphabetically by name */
+        var theatreActors = [];
+        var theatreScore = 0;
+        for (var ai = 0; ai < theatre.actors.length; ai++) {
+            var actorId = theatre.actors[ai];
+            if (actors[actorId]) {
+                theatreActors.push({ id: actorId, data: actors[actorId] });
+                theatreScore += actors[actorId].total_score || 0;
+            }
         }
-        card.innerHTML = '<div class="actor-header"><div><span class="actor-flag">' + (actor.flag||'\uD83C\uDFF4') + '</span> <span class="actor-name">' + (actor.name||id) + '</span><div class="actor-tier">' + (TIER_LABELS[actor.tier]||'TIER '+actor.tier) + '</div></div><span class="alert-badge ' + (actor.alert_level||'normal') + '">' + (actor.alert_level||'NORMAL').toUpperCase() + '</span></div><div class="actor-stats"><div class="actor-stat"><div class="stat-value">' + (actor.signal_count||0) + '</div><div class="stat-label">' + t.signals + '</div></div><div class="actor-stat"><div class="stat-value">' + (actor.total_score ? actor.total_score.toFixed(1) : '0') + '</div><div class="stat-label">' + t.score + '</div></div></div>' + sigHtml;
-        grid.appendChild(card);
+        theatreActors.sort(function(a, b) { return (a.data.name || '').localeCompare(b.data.name || ''); });
+
+        /* Determine theatre alert level */
+        var theatreAlert = 'normal';
+        if (theatreScore >= 50) theatreAlert = 'surge';
+        else if (theatreScore >= 25) theatreAlert = 'high';
+        else if (theatreScore >= 10) theatreAlert = 'elevated';
+
+        /* Theatre header */
+        var header = document.createElement('div');
+        header.className = 'theatre-header';
+        header.onclick = (function(id) { return function() { toggleTheatre(id); }; })(theatre.id);
+        header.innerHTML = '<div class="theatre-header-left">' +
+            '<span class="theatre-icon">' + theatre.icon + '</span>' +
+            '<span class="theatre-label">' + theatre.label + '</span>' +
+            '<span class="theatre-score-badge alert-badge ' + theatreAlert + '">' + theatreAlert.toUpperCase() + ' \u2014 ' + theatreScore.toFixed(1) + '</span>' +
+            '</div>' +
+            '<div class="theatre-header-right">' +
+            '<span class="theatre-actor-count">' + theatreActors.length + ' actors</span>' +
+            '<div class="collapse-icon">\u25BC</div>' +
+            '</div>';
+
+        /* Theatre body */
+        var body = document.createElement('div');
+        body.className = 'theatre-body';
+
+        var grid = document.createElement('div');
+        grid.className = 'actor-grid';
+
+        for (var j = 0; j < theatreActors.length; j++) {
+            var id = theatreActors[j].id;
+            var actor = theatreActors[j].data;
+            var topSig = actor.top_signals && actor.top_signals[0];
+            var card = document.createElement('div');
+            card.className = 'actor-card';
+
+            var sigHtml = '';
+            if (topSig) {
+                var locBadge = '';
+                if (topSig.hotspot_location && topSig.location_multiplier > 1) {
+                    locBadge = '<span class="loc-badge">' + topSig.hotspot_location + ' ' + topSig.location_multiplier + 'x</span>';
+                }
+                sigHtml = '<div class="actor-top-signal"><div class="signal-title">' +
+                    (topSig.asset_icon || '\u26A0\uFE0F') + ' ' + (topSig.article_title || '') + locBadge +
+                    '</div><div class="signal-meta">' + (topSig.source || '') + ' \u00B7 ' + (t.topSignal || 'Top Signal') + '</div></div>';
+            }
+
+            card.innerHTML = '<div class="actor-header"><div>' +
+                '<span class="actor-flag">' + (actor.flag || '\uD83C\uDFF4') + '</span> ' +
+                '<span class="actor-name">' + (actor.name || id) + '</span>' +
+                '<div class="actor-tier">' + (TIER_LABELS[actor.tier] || 'TIER ' + actor.tier) + '</div>' +
+                '</div><span class="alert-badge ' + (actor.alert_level || 'normal') + '">' + (actor.alert_level || 'NORMAL').toUpperCase() + '</span></div>' +
+                '<div class="actor-stats">' +
+                '<div class="actor-stat"><div class="stat-value">' + (actor.signal_count || 0) + '</div><div class="stat-label">' + (t.signals || 'signals') + '</div></div>' +
+                '<div class="actor-stat"><div class="stat-value">' + (actor.total_score ? actor.total_score.toFixed(1) : '0') + '</div><div class="stat-label">' + (t.score || 'Score') + '</div></div>' +
+                '</div>' + sigHtml;
+
+            grid.appendChild(card);
+        }
+
+        body.appendChild(grid);
+        section.appendChild(header);
+        section.appendChild(body);
+        container.appendChild(section);
     }
 }
 
@@ -505,8 +479,12 @@ function renderTargets(targets, t) {
     for (var i = 0; i < sorted.length; i++) {
         var name = sorted[i][0], p = sorted[i][1];
         var card = document.createElement('div');
-        card.className = 'target-card ' + (p.alert_level||'normal');
-        card.innerHTML = '<div class="target-name">' + (p.alert_icon||'\uD83D\uDFE2') + ' ' + name.replace(/_/g,' ') + '</div><div style="display:flex;align-items:baseline;gap:10px"><div class="target-score" style="color:' + (colorMap[p.alert_level]||'var(--text-primary)') + '">' + (p.score ? p.score.toFixed(1) : '0') + '</div><span class="alert-badge ' + (p.alert_level||'normal') + '">' + (p.alert_label||'Normal').toUpperCase() + '</span></div><div class="target-score-label">' + t.score + ' \u00B7 ' + (p.tension_multiplier||1.0) + 'x multiplier</div>';
+        card.className = 'target-card ' + (p.alert_level || 'normal');
+        card.innerHTML = '<div class="target-name">' + (p.alert_icon || '\uD83D\uDFE2') + ' ' + name.replace(/_/g, ' ') + '</div>' +
+            '<div style="display:flex;align-items:baseline;gap:10px">' +
+            '<div class="target-score" style="color:' + (colorMap[p.alert_level] || 'var(--text-primary)') + '">' + (p.score ? p.score.toFixed(1) : '0') + '</div>' +
+            '<span class="alert-badge ' + (p.alert_level || 'normal') + '">' + (p.alert_label || 'Normal').toUpperCase() + '</span>' +
+            '</div><div class="target-score-label">' + (t.score || 'Score') + ' \u00B7 ' + (p.tension_multiplier || 1.0) + 'x multiplier</div>';
         grid.appendChild(card);
     }
 }
@@ -519,7 +497,7 @@ function renderAssets(assets) {
         var type = sorted[i][0], count = sorted[i][1];
         var chip = document.createElement('div');
         chip.className = 'asset-chip';
-        chip.innerHTML = '<span class="chip-icon">' + (ASSET_ICONS[type]||'\u26A0\uFE0F') + '</span><div><div class="chip-count">' + count + '</div><div class="chip-label">' + (ASSET_LABELS[type]||type) + '</div></div>';
+        chip.innerHTML = '<span class="chip-icon">' + (ASSET_ICONS[type] || '\u26A0\uFE0F') + '</span><div><div class="chip-count">' + count + '</div><div class="chip-label">' + (ASSET_LABELS[type] || type) + '</div></div>';
         bar.appendChild(chip);
     }
 }
@@ -532,13 +510,21 @@ function renderSignals(signals, t) {
     for (var i = 0; i < signals.length; i++) {
         if (!seen[signals[i].article_url]) { seen[signals[i].article_url] = true; unique.push(signals[i]); }
     }
-    for (var j = 0; j < Math.min(unique.length, 20); j++) {
+    for (var j = 0; j < Math.min(unique.length, 25); j++) {
         var sig = unique[j];
         var item = document.createElement('div');
-        item.className = 'signal-item';
+        var isEvac = sig.asset === 'base_evacuation';
+        item.className = 'signal-item' + (isEvac ? ' evac-signal' : '');
         var wc = sig.weight >= 5.0 ? 'critical' : sig.weight >= 3.0 ? 'high' : '';
         var pd = sig.published ? new Date(sig.published).toLocaleDateString() : '';
-        item.innerHTML = '<div class="signal-icons"><span class="signal-flag">' + (sig.actor_flag||'\uD83C\uDFF4') + '</span><span class="signal-asset-icon">' + (sig.asset_icon||'\u26A0\uFE0F') + '</span></div><div class="signal-body"><div class="signal-headline"><a href="' + (sig.article_url||'#') + '" target="_blank" rel="noopener">' + (sig.article_title||'Untitled') + '</a></div><div class="signal-details"><span>' + (sig.actor_name||'') + '</span><span>' + (sig.asset_label||'Activity') + '</span><span>' + (sig.source||'') + '</span><span>' + pd + '</span></div></div><div class="signal-weight ' + wc + '">' + (sig.weight ? sig.weight.toFixed(1) : '?') + '</div>';
+        var locInfo = '';
+        if (sig.hotspot_location && sig.location_multiplier > 1) {
+            locInfo = '<span style="color:var(--accent-orange);font-size:0.6rem">\u00B7 ' + sig.hotspot_location + ' ' + sig.location_multiplier + 'x</span>';
+        }
+        item.innerHTML = '<div class="signal-icons"><span class="signal-flag">' + (sig.actor_flag || '\uD83C\uDFF4') + '</span><span class="signal-asset-icon">' + (sig.asset_icon || ASSET_ICONS[sig.asset] || '\u26A0\uFE0F') + '</span></div>' +
+            '<div class="signal-body"><div class="signal-headline"><a href="' + (sig.article_url || '#') + '" target="_blank" rel="noopener">' + (sig.article_title || 'Untitled') + '</a></div>' +
+            '<div class="signal-details"><span>' + (sig.actor_name || '') + '</span><span>' + (sig.asset_label || 'Activity') + '</span><span>' + (sig.source || '') + '</span><span>' + pd + '</span>' + locInfo + '</div></div>' +
+            '<div class="signal-weight ' + wc + '">' + (sig.weight ? sig.weight.toFixed(1) : '?') + '</div>';
         feed.appendChild(item);
     }
 }
@@ -546,10 +532,10 @@ function renderSignals(signals, t) {
 function renderSources(breakdown, t) {
     var footer = document.getElementById('sourceFooter');
     footer.innerHTML = '';
-    var sources = [{key:'defense_rss',label:t.defenseRSS},{key:'gdelt',label:t.gdelt},{key:'newsapi',label:t.newsapi},{key:'reddit',label:t.reddit}];
+    var sources = [{key:'defense_rss',label:t.defenseRSS||'DEFENSE RSS'},{key:'gdelt',label:t.gdelt||'GDELT'},{key:'newsapi',label:t.newsapi||'NEWSAPI'},{key:'reddit',label:t.reddit||'REDDIT'}];
     for (var i = 0; i < sources.length; i++) {
         var item = document.createElement('div');
-        item.innerHTML = '<div class="source-count">' + ((breakdown[sources[i].key]||0).toLocaleString()) + '</div><div class="source-label">' + sources[i].label + '</div>';
+        item.innerHTML = '<div class="source-count">' + ((breakdown[sources[i].key] || 0).toLocaleString()) + '</div><div class="source-label">' + sources[i].label + '</div>';
         footer.appendChild(item);
     }
 }
