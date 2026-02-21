@@ -2565,23 +2565,24 @@
 /* Desktop Layout */
 @media (min-width: 1200px) {
     .main-content-wrapper {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 30px;
+        display: block;
         max-width: 1400px;
         margin: 0 auto;
         padding: 0 20px;
     }
     
     .osint-sidebar {
-        position: sticky;
-        top: 120px;
-        height: fit-content;
-        order: -1; /* Force to left */
+        /* Moved to bottom section — no sticky positioning needed */
     }
 }
 
-/* Mobile Layout */
+/* Targets grid - 2 columns on desktop */
+.targets-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+}
+
 @media (max-width: 1199px) {
     .main-content-wrapper {
         display: flex;
@@ -2594,10 +2595,42 @@
     
     .targets-grid {
         order: 1;
+        grid-template-columns: 1fr;
     }
     
     .osint-feed-widget iframe {
         height: 500px !important;
+    }
+
+    /* Bottom section: IG feed left, NOTAMs/Flights right */
+.bottom-content-wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.bottom-right-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.bottom-content-wrapper .osint-sidebar {
+    position: sticky;
+    top: 20px;
+    height: fit-content;
+}
+
+/* Stack on mobile */
+@media (max-width: 1199px) {
+    .bottom-content-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    .bottom-content-wrapper .osint-sidebar {
+        position: static;
+        order: 99;
     }
 }
         </style>
@@ -2637,27 +2670,7 @@
 
         <!-- Main Content Wrapper (Sidebar + Threat Cards) -->
 <div class="main-content-wrapper">
-    
-    <!-- OSINT Feed Sidebar (LEFT SIDE) -->
-    <aside class="osint-sidebar osint-left">
-        <div class="osint-feed-container">
-            <div class="osint-feed-header">
-                <span style="font-size: 24px;">📸</span>
-                <h3>OSINT FEED</h3>
-            </div>
-            
-<div class="osint-feed-widget">
-    <!-- SnapWidget -->
-    <script src="https://snapwidget.com/js/snapwidget.js"></script>
-    <iframe src="https://snapwidget.com/embed/1117696" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; border-radius:5px; width:100%; height:600px" title="Real-time OSINT + probability modeling for Middle East conflicts. Personal research project | Not affiliated with USG | Analysis ≠ official position"></iframe>
-</div>
-            
-            <a href="https://www.instagram.com/asifahanalytics/" target="_blank" class="osint-follow-button">
-                📷 Follow @asifahanalytics →
-            </a>
-        </div>
-    </aside>
-    
+       
     <!-- Threat Cards Wrapper -->
     <div class="targets-grid">
 <!-- IRAN CARD -->
@@ -3593,42 +3606,67 @@
 </div><!-- End targets-grid -->
 </div><!-- End main-content-wrapper -->
 
-<!-- NOTAM Widget (above flights) -->
-<div class="notam-widget" id="notamWidget">
-    <div class="notam-widget-header">
-        <div class="notam-widget-title" data-i18n="notamWidgetTitle">Active NOTAMs - Middle East</div>
-        <div class="notam-status-badge" id="notamStatusBadge">
-            <span>Loading...</span>
-        </div>
-    </div>
+<!-- Bottom Section: OSINT Feed + NOTAMs/Flights side by side -->
+<div class="bottom-content-wrapper">
     
-    <div class="notam-scroll-container" id="notamScrollContainer">
-        <div class="notam-cards-wrapper" id="notamCardsWrapper">
-            <!-- NOTAM cards will be inserted here -->
+    <!-- LEFT: OSINT Feed -->
+    <aside class="osint-sidebar osint-left">
+        <div class="osint-feed-container">
+            <div class="osint-feed-header">
+                <span style="font-size: 24px;">📸</span>
+                <h3>OSINT FEED</h3>
+            </div>
+            
+            <div class="osint-feed-widget">
+                <!-- SnapWidget -->
+                <script src="https://snapwidget.com/js/snapwidget.js"></script>
+                <iframe src="https://snapwidget.com/embed/1117696" class="snapwidget-widget" allowtransparency="true" frameborder="0" scrolling="no" style="border:none; overflow:hidden; border-radius:5px; width:100%; height:600px" title="Real-time OSINT + probability modeling for Middle East conflicts. Personal research project | Not affiliated with USG | Analysis ≠ official position"></iframe>
+            </div>
+            
+            <a href="https://www.instagram.com/asifahanalytics/" target="_blank" class="osint-follow-button">
+                📷 Follow @asifahanalytics →
+            </a>
         </div>
-    </div>
-</div>
-
-<!-- Flight widget OUTSIDE the grid wrapper -->
-<div class="flight-widget" id="flightWidget">
-    <div class="flight-widget-header">
-        <div class="flight-widget-title" data-i18n="flightWidgetTitle">Flight Disruptions Monitor</div>
-        <div class="flight-status-badge normal" id="flightStatusBadge">
-            <span data-i18n="flightStatusNormal">All Routes Normal</span>
-        </div>
-    </div>
+    </aside>
     
-    <div class="flight-cancellations-grid" id="flightCancellationsGrid">
-        <div class="no-cancellations" data-i18n="noFlightDisruptions">
-            No major flight disruptions detected in target regions
+    <!-- RIGHT: NOTAMs + Flights stacked -->
+    <div class="bottom-right-stack">
+        
+        <!-- NOTAM Widget -->
+        <div class="notam-widget" id="notamWidget">
+            <div class="notam-widget-header">
+                <div class="notam-widget-title" data-i18n="notamWidgetTitle">Active NOTAMs - Middle East</div>
+                <div class="notam-status-badge" id="notamStatusBadge">
+                    <span>Loading...</span>
+                </div>
+            </div>
+            <div class="notam-scroll-container" id="notamScrollContainer">
+                <div class="notam-cards-wrapper" id="notamCardsWrapper">
+                    <!-- NOTAM cards will be inserted here -->
+                </div>
+            </div>
         </div>
-    </div>
-    
-    <!-- Expand/Collapse Button -->
-    <button id="flightExpandButton" class="flight-expand-button" style="display: none;">
-        Show 4 More ▼
-    </button>
-</div>
+        
+        <!-- Flight Widget -->
+        <div class="flight-widget" id="flightWidget">
+            <div class="flight-widget-header">
+                <div class="flight-widget-title" data-i18n="flightWidgetTitle">Flight Disruptions Monitor</div>
+                <div class="flight-status-badge normal" id="flightStatusBadge">
+                    <span data-i18n="flightStatusNormal">All Routes Normal</span>
+                </div>
+            </div>
+            <div class="flight-cancellations-grid" id="flightCancellationsGrid">
+                <div class="no-cancellations" data-i18n="noFlightDisruptions">
+                    No major flight disruptions detected in target regions
+                </div>
+            </div>
+            <button id="flightExpandButton" class="flight-expand-button" style="display: none;">
+                Show 4 More ▼
+            </button>
+        </div>
+        
+    </div><!-- End bottom-right-stack -->
+</div><!-- End bottom-content-wrapper -->
 
         <div class="rate-limit-box" id="rateLimitBox">
             <div class="rate-limit-item">
