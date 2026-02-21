@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Israel Stability Index v1.0.0 - Last updated: Feb 21, 2026 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Israel Stability Index | Asifah Analytics v1.0.0</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #ffffff;
+            --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
+            --accent: #6495ED;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #2d2d2d;
+            --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535;
+            --article-hover: #404040;
+            --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--loading-overlay-bg);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-spinner {
+            width: 60px; height: 60px;
+            border: 5px solid var(--loading-spinner-bg);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+        .loading-steps { margin-top: 20px; }
+        .loading-step {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease;
+        }
+        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.complete { color: #4ade80; }
+        .step-icon { font-size: 18px; min-width: 20px; }
+        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
+        .loading-error {
+            color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px;
+            background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 8px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px; border-radius: 12px; margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative; display: flex; align-items: center; gap: 30px;
+        }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+        .header-content { flex: 1; text-align: center; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+
+        .header-controls {
+            position: absolute; top: 35px; right: 35px;
+            display: flex; flex-direction: column; gap: 8px; z-index: 1000;
+        }
+        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+
+        .language-switcher {
+            display: flex; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: center; gap: 4px;
+            background: rgba(255,255,255,0.15); padding: 2px 8px;
+            border-radius: 5px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle-label {
+            font-size: 9px; color: rgba(255,255,255,0.9); margin-right: 4px;
+            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .theme-toggle-switch {
+            position: relative; width: 28px; height: 15px;
+            background: rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer;
+            transition: all 0.3s ease; border: 1.5px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider {
+            position: absolute; top: 1.5px; left: 1.5px; width: 9px; height: 9px;
+            background: white; border-radius: 50%; transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center; font-size: 6px;
+        }
+        .theme-toggle-slider::before { content: '\2600\FE0F'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(13px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '\1F319'; }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 14px; font-family: 'Times New Roman', Times, serif;
+            font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+
+        .back-link {
+            display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0;
+            padding: 12px 24px; background: rgba(255,255,255,0.2); color: white;
+            text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease; font-size: 14px; font-weight: bold;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        [dir="rtl"] .back-link { left: auto; right: 20px; }
+
+        /* Election year alert banner */
+        .election-banner {
+            background: linear-gradient(135deg, #1a3a6b 0%, #2c5282 100%);
+            border: 2px solid rgba(100,149,237,0.5);
+            border-radius: 10px; padding: 16px 22px; margin-bottom: 25px;
+            display: flex; align-items: flex-start; gap: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .election-banner-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+        .election-banner-text { color: #e8f0fe; font-size: 13px; line-height: 1.6; }
+        .election-banner-text strong { color: #ffffff; font-size: 14px; display: block; margin-bottom: 4px; }
+
+        /* Map Section */
+        .map-section {
+            background: var(--container-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
+        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+
+        /* Knowledge Library */
+        .knowledge-library {
+            background: var(--container-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .library-icon { font-size: 28px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
+        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
+        .knowledge-header {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.1) 0%, rgba(30, 82, 130, 0.1) 100%);
+            padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; transition: background 0.3s ease;
+        }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 82, 130, 0.15) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 22px; }
+        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content { padding: 20px; max-height: 600px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content strong { color: var(--text-primary); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 16px; background: var(--accent); color: white;
+            text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .report-link:hover { background: #4169E1; transform: translateX(3px); box-shadow: 0 4px 12px rgba(100, 149, 237, 0.3); }
+        [dir="rtl"] .report-link:hover { transform: translateX(-3px); }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Articles Section */
+        .articles-section {
+            background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item {
+            background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #1e3a5f;
+        }
+        [dir="rtl"] .article-item { border-left: none; border-right: 4px solid #1e3a5f; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        [dir="rtl"] .article-item:hover { transform: translateX(-4px); }
+        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .article-meta { font-size: 12px; color: var(--text-secondary); }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .article-link:hover { text-decoration: underline; }
+
+        /* Footer */
+        footer {
+            background: var(--container-bg); padding: 25px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
+            .header-logo { width: 60px; height: 60px; }
+            .header-content { text-align: center; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 24px; }
+            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Israel Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Fetching OSINT articles on Israel...</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Scanning Knesset &amp; coalition data...</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Analyzing Gaza &amp; West Bank indicators...</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Compiling IDF &amp; regional threat data...</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Rendering dashboard...</span>
+                </div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="middle-east.html" class="back-link" data-i18n="backLink">&#8592; Back to Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">&#x1F1EE;&#x1F1F1; ISRAEL STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Coalition Politics, IDF Operations, Palestinian Affairs &amp; Regional Threat Posture</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('he', this)">&#x05E2;&#x05D1;</button>
+                    <button class="lang-btn" onclick="switchLanguage('ar', this)">&#x0639;</button>
+                    <button class="lang-btn" onclick="switchLanguage('fa', this)">&#x0641;&#x0627;</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ELECTION YEAR BANNER -->
+        <div class="election-banner">
+            <span class="election-banner-icon">&#x1F5F3;&#xFE0F;</span>
+            <div class="election-banner-text">
+                <strong>2026 Election Year — Live Stability Scoring Under Development</strong>
+                Israel's coalition government faces ongoing fragility amid war pressures, hostage negotiations, and deep societal divisions over judicial reform. Full backend stability metrics for Israel are in development. The Knowledge Library below provides comprehensive background context in the interim.
+            </div>
+        </div>
+
+        <!-- MAP SECTION -->
+        <div class="map-section">
+            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Israel &amp; Surrounding Territories &#8212; Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Israel. Gaza, West Bank, and Lebanon border overlays coming soon.</div>
+            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
+                <iframe
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=33.5%2C29.4%2C36.1%2C33.5&layer=mapnik&marker=31.77%2C35.21"
+                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE LIBRARY -->
+        <div class="knowledge-library">
+            <h2>
+                <span class="library-icon">&#x1F4DA;</span>
+                <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
+            </h2>
+            <p class="open-source-disclaimer">
+                Note: Background information is compiled from open-source research, think tank analyses, and public government reporting. One-pager documents for each category are under development.
+            </p>
+
+            <div class="knowledge-categories">
+
+                <!-- Knesset & Coalition Politics -->
+                <div class="knowledge-card collapsed" id="card-government">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('government')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F3DB;&#xFE0F;</span>
+                            <span data-i18n="catGovernment">The Knesset &amp; Coalition Politics</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Israel is a parliamentary democracy</strong> operating under proportional representation with a 3.25% electoral threshold — one of the lowest in the democratic world. No party has ever won an outright Knesset majority, making coalition governments an unavoidable constant of Israeli political life.</p>
+
+                        <p><strong>Key Institutions:</strong></p>
+                        <ul>
+                            <li><strong>Knesset:</strong> Israel's 120-seat unicameral parliament. All legislation, budgets, and votes of no-confidence pass through the Knesset. The low threshold encourages small parties with outsized coalition leverage.</li>
+                            <li><strong>Prime Minister Benjamin Netanyahu (Likud):</strong> The longest-serving PM in Israeli history. Returned to office in December 2022 at the head of Israel's most right-wing government ever. Faces an ongoing criminal trial on charges of bribery, fraud, and breach of trust — a unique governance situation with no parallel in Western democracies.</li>
+                            <li><strong>President Isaac Herzog:</strong> Largely ceremonial role, but important as a unifying figure and international representative. Tasked with designating coalition-formation mandates after elections.</li>
+                        </ul>
+
+                        <p><strong>The Current Coalition (formed Dec 2022):</strong> Comprises Netanyahu's Likud, Religious Zionism (Smotrich), Otzma Yehudit (Ben Gvir), United Torah Judaism, and Shas — holding 64 of 120 seats. The far-right partners have extracted significant policy concessions, particularly on West Bank settlement expansion and oversight of Palestinian affairs. The coalition is structurally fragile: any single partner's withdrawal collapses the government.</p>
+
+                        <p><strong>Judicial Reform Crisis (2023):</strong> The coalition's attempt to curtail Supreme Court powers triggered the largest sustained protest movement in Israeli history — hundreds of thousands weekly for months. Reserve pilots and soldiers threatened to refuse service. The effort was paused following October 7 but remains a live political fault line, with the underlying legislation not formally withdrawn.</p>
+
+                        <p><strong>War Cabinet Dynamics:</strong> Following October 7, Netanyahu formed an emergency war cabinet including opposition leader Benny Gantz (who resigned in June 2024 in protest over the lack of a post-war plan) and Defense Minister Yoav Gallant (dismissed November 2024 amid disagreements over hostage negotiations). The far-right partners — particularly Ben Gvir and Smotrich — have wielded disproportionate influence over policy, at times threatening to collapse the government if Gaza ceasefire terms they oppose are accepted.</p>
+
+                        <div class="open-source-disclaimer">* Based on Knesset public records, Israel Democracy Institute, and Times of Israel / Haaretz reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.knesset.gov.il/main/eng/home.asp" target="_blank" class="report-link">&#x1F4D1; Knesset Official</a>
+                            <a href="https://en.idi.org.il/" target="_blank" class="report-link">&#x1F4D1; Israel Democracy Institute</a>
+                            <a href="https://www.timesofisrael.com/" target="_blank" class="report-link">&#x1F4D1; Times of Israel</a>
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/eastern-mediterranean/israelpalestine" target="_blank" class="report-link">&#x1F4D1; Crisis Group - Israel</a>
+                            <a href="https://carnegieendowment.org/topics/israel" target="_blank" class="report-link">&#x1F4D1; Carnegie - Israel</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IDF & Security Architecture -->
+                <div class="knowledge-card collapsed" id="card-military">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('military')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x2694;&#xFE0F;</span>
+                            <span data-i18n="catMilitary">IDF &amp; Security Architecture</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The Israel Defense Forces (IDF)</strong> is widely considered the most capable military in the Middle East. It is sustained by universal conscription — 32 months for men, 24 months for women — and an extensive trained reserve force that can be mobilized in 48–72 hours.</p>
+
+                        <p><strong>Key Capabilities:</strong></p>
+                        <ul>
+                            <li><strong>Israel Air Force (IAF):</strong> Operates F-35 Adirs, F-15Is, and F-16Is. Has conducted thousands of airstrikes in Syria against Iranian weapons transfers ("the campaign between the wars"), as well as strikes in Gaza, Lebanon, Iraq, and Yemen. Among the most capable air forces outside NATO.</li>
+                            <li><strong>Ground Forces:</strong> Merkava IV and V tanks (among the most protected in the world), elite special operations units including Sayeret Matkal, Shayetet 13, and the signals intelligence powerhouse Unit 8200.</li>
+                            <li><strong>Intelligence Services:</strong> Shin Bet (domestic counterterrorism/counterintelligence), Mossad (foreign intelligence and covert operations), and AMAN (Military Intelligence). All three suffered catastrophic intelligence failures ahead of October 7 — the worst in Israeli intelligence history.</li>
+                            <li><strong>Layered Missile Defense:</strong> Iron Dome (short-range rockets and mortars), David's Sling (medium-range ballistic missiles and cruise missiles), Arrow 2 and Arrow 3 (long-range ballistic missiles including exo-atmospheric intercepts). Successfully intercepted the majority of Iran's April 2024 mass drone and missile attack with allied support.</li>
+                            <li><strong>Nuclear Posture:</strong> Israel maintains deliberate ambiguity — neither confirming nor denying its nuclear weapons program. Estimated arsenal: 80–400 warheads. Israel is not a signatory to the Nuclear Non-Proliferation Treaty.</li>
+                        </ul>
+
+                        <p><strong>October 7 and Its Aftermath:</strong> Hamas's October 7, 2023 attack killed approximately 1,200 Israelis and foreign nationals and took ~250 hostages — the deadliest single day for Jews since the Holocaust. The IDF launched Operation Swords of Iron, its largest military campaign since 1948. The reserve mobilization (360,000+ troops called up within days) is unprecedented in Israeli history. Sustaining simultaneous operations in Gaza, Lebanon, Syria, and against Iranian threats has placed severe strain on manpower, equipment, and the economy.</p>
+
+                        <div class="open-source-disclaimer">* Based on IDF Spokesperson, IISS Military Balance, CSIS, and INSS assessments</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.idf.il/en/" target="_blank" class="report-link">&#x1F4D1; IDF Official</a>
+                            <a href="https://www.iiss.org/publications/the-military-balance/" target="_blank" class="report-link">&#x1F4D1; IISS Military Balance</a>
+                            <a href="https://www.inss.org.il/" target="_blank" class="report-link">&#x1F4D1; INSS (Israeli)</a>
+                            <a href="https://www.csis.org/programs/middle-east-program" target="_blank" class="report-link">&#x1F4D1; CSIS - Middle East</a>
+                            <a href="https://www.washingtoninstitute.org/" target="_blank" class="report-link">&#x1F4D1; WINEP</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Palestinian Affairs: Gaza & West Bank -->
+                <div class="knowledge-card collapsed" id="card-palestinian">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('palestinian')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F54A;&#xFE0F;</span>
+                            <span data-i18n="catPalestinian">Palestinian Affairs: Gaza &amp; West Bank</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The Israeli-Palestinian conflict remains the central unresolved issue</strong> in Israeli domestic politics and regional stability. Two separate Palestinian governing entities exist in the territories: Hamas in Gaza (post-2007) and the Palestinian Authority (PA) in most of the West Bank.</p>
+
+                        <p><strong>Gaza:</strong></p>
+                        <ul>
+                            <li><strong>Hamas Rule (2007–2023):</strong> Hamas seized full control of Gaza after defeating Fatah forces following its 2006 electoral victory. It governed approximately 2.3 million people in one of the most densely populated territories on Earth under a prolonged Israeli-Egyptian blockade.</li>
+                            <li><strong>October 7 Attack:</strong> Hamas's coordinated multi-point breach of the Gaza security fence on October 7, 2023 was the largest terrorist attack in Israeli history. Approximately 3,000 Hamas and allied fighters infiltrated southern Israel, killing ~1,200 people and taking ~250 hostages — including civilians, soldiers, and foreign nationals from dozens of countries.</li>
+                            <li><strong>Gaza War (2023–present):</strong> Israel's Operation Swords of Iron aimed to dismantle Hamas's military and governing capacity. Over 45,000 Palestinians have been killed (Gaza Health Ministry figures), with massive infrastructure destruction. The humanitarian situation drew unprecedented international condemnation and ICJ proceedings.</li>
+                            <li><strong>Ceasefire &amp; Hostage Deal (Jan 2025):</strong> A phased ceasefire agreement was reached in January 2025, pausing the fighting and allowing some hostage-for-prisoner exchanges. Phase 2 negotiations — covering a permanent end to the war and remaining hostages — remain contested and politically fraught for Netanyahu's coalition.</li>
+                            <li><strong>Post-War Governance:</strong> Who administers Gaza after the war is unresolved. The U.S. and regional partners have pushed for a reformed PA role; Israel's far-right coalition partners oppose any PA return; Hamas retains some organizational capacity.</li>
+                        </ul>
+
+                        <p><strong>West Bank:</strong></p>
+                        <ul>
+                            <li><strong>Palestinian Authority:</strong> Led by Mahmoud Abbas (89 years old, no electoral mandate since 2005). The PA administers Areas A and B under Oslo Accords arrangements but faces a deep legitimacy crisis, financial instability from Israeli tax revenue withholding, and growing armed resistance within its own territory (Jenin, Tulkarm, Nablus).</li>
+                            <li><strong>Settlements:</strong> Over 700,000 Israeli settlers live in the West Bank and East Jerusalem — up from ~115,000 in 1993 when Oslo was signed. Finance Minister Smotrich has direct administrative authority over civilian settlement matters. Settlement expansion accelerated significantly under the current government.</li>
+                            <li><strong>West Bank Violence:</strong> 2023 and 2024 recorded the highest levels of settler violence against Palestinians and IDF West Bank operations in decades. Displacement from IDF operations in refugee camps in the northern West Bank has reached tens of thousands.</li>
+                        </ul>
+
+                        <p><strong>Two-State Solution:</strong> The dominant parties in Israel's current government are explicitly and ideologically opposed to Palestinian statehood. The PA lacks both the legitimacy and territorial control to function as a credible partner. International calls for a political horizon continue but face structural barriers on all sides.</p>
+
+                        <div class="open-source-disclaimer">* Based on UN OCHA, B'Tselem, ICRC, and International Crisis Group reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.ochaopt.org/" target="_blank" class="report-link">&#x1F4D1; UN OCHA - OPT</a>
+                            <a href="https://www.btselem.org/english/" target="_blank" class="report-link">&#x1F4D1; B'Tselem</a>
+                            <a href="https://www.icrc.org/en/where-we-work/middle-east/israel-and-occupied-territories" target="_blank" class="report-link">&#x1F4D1; ICRC - Israel/OPT</a>
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/eastern-mediterranean/israelpalestine" target="_blank" class="report-link">&#x1F4D1; Crisis Group</a>
+                            <a href="https://www.unrwa.org/" target="_blank" class="report-link">&#x1F4D1; UNRWA</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regional Threat Environment -->
+                <div class="knowledge-card collapsed" id="card-regional">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('regional')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F30D;</span>
+                            <span data-i18n="catRegional">Regional Threat Environment</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Israel faces a multi-front threat environment</strong> with no historical precedent since 1948-1949, simultaneously managing active military operations in Gaza, a degraded but reconstituting Hezbollah on the northern border, direct Iranian escalation, and Houthi ballistic missile and drone attacks from 1,800 km away in Yemen.</p>
+
+                        <p><strong>Iran — The Primary Strategic Threat:</strong></p>
+                        <ul>
+                            <li>Iran funds, arms, trains, and strategically coordinates what it calls the "Axis of Resistance" — Hamas, Hezbollah, the Houthis, and Iraqi militias — as a forward deterrent and pressure tool against Israel.</li>
+                            <li>Iran conducted two unprecedented direct ballistic missile and drone attacks on Israeli territory: in April 2024 (~300 drones and missiles) and October 2024 (~180 ballistic missiles). Both were largely intercepted with U.S. and allied support. Israel conducted retaliatory strikes against Iranian air defense and missile production infrastructure.</li>
+                            <li><strong>Nuclear Program:</strong> Iran's uranium enrichment has reached 60% purity (weapons-grade is ~90%), with a breakout timeline estimated at weeks to a few months. Israel has long declared it will not allow Iran to acquire nuclear weapons and has conducted covert operations — including assassinations of nuclear scientists and the Natanz centrifuge sabotage — to delay the program.</li>
+                        </ul>
+
+                        <p><strong>Hezbollah — Northern Border:</strong></p>
+                        <ul>
+                            <li>Hezbollah possessed an estimated 100,000–150,000 rockets and missiles, including precision-guided munitions capable of targeting any point in Israel. Daily cross-border fire since October 7 displaced ~80,000 Israelis from northern communities.</li>
+                            <li>Israel's 2024 Lebanon campaign (September–November 2024) killed Hezbollah Secretary-General Hassan Nasrallah and most of the senior leadership in pager/radio device attacks and airstrikes. A ceasefire was reached November 2024. Hezbollah's long-term reconstitution trajectory — and whether it will abide by the ceasefire — is a critical variable.</li>
+                        </ul>
+
+                        <p><strong>Houthis — Red Sea &amp; Long-Range Missiles:</strong></p>
+                        <ul>
+                            <li>Yemen's Houthis fired dozens of ballistic missiles and drones at Israeli territory throughout the Gaza war, disrupting Ben Gurion Airport multiple times. Israel has struck Hodeidah port and Houthi military infrastructure in retaliatory strikes.</li>
+                        </ul>
+
+                        <p><strong>Abraham Accords &amp; Normalization:</strong> The 2020 Abraham Accords normalized relations with the UAE, Bahrain, Sudan, and Morocco. Saudi normalization — the most strategically significant potential agreement — was approaching in late 2023 before October 7 disrupted it. Saudi Arabia has since publicly conditioned normalization on credible progress toward Palestinian statehood.</p>
+
+                        <div class="open-source-disclaimer">* Based on IISS, Belfer Center, RAND, INSS, and Washington Institute analyses</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.iiss.org/" target="_blank" class="report-link">&#x1F4D1; IISS</a>
+                            <a href="https://www.belfercenter.org/project/middle-east" target="_blank" class="report-link">&#x1F4D1; Belfer Center</a>
+                            <a href="https://www.rand.org/topics/israel.html" target="_blank" class="report-link">&#x1F4D1; RAND - Israel</a>
+                            <a href="https://www.mei.edu/countries/israel" target="_blank" class="report-link">&#x1F4D1; MEI - Israel</a>
+                            <a href="https://www.inss.org.il/" target="_blank" class="report-link">&#x1F4D1; INSS (Israeli)</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economy, Society & War Costs -->
+                <div class="knowledge-card collapsed" id="card-economy">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('economy')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F4C9;</span>
+                            <span data-i18n="catEconomy">Economy, Society &amp; War Costs</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Israel has one of the most advanced economies in the Middle East</strong> — the so-called "Start-Up Nation" — with GDP per capita of approximately $55,000 and a global leadership position in cybersecurity, agricultural technology, and defense tech. But the ongoing war has imposed severe and escalating costs.</p>
+
+                        <p><strong>War Economic Impact:</strong></p>
+                        <ul>
+                            <li><strong>Defense Spending Surge:</strong> Defense spending jumped to approximately 8–9% of GDP — among the highest in the world outside active conflict states. The Bank of Israel estimated total direct and indirect war costs exceeding $56 billion through 2025.</li>
+                            <li><strong>Credit Rating Downgrades:</strong> In February 2024, Moody's downgraded Israel's credit rating for the first time in the country's history (A1 to A2), citing war risks and domestic political dysfunction. S&amp;P and Fitch followed with their own downgrades.</li>
+                            <li><strong>Tourism Collapse:</strong> Incoming tourism fell approximately 75% following October 7. Ben Gurion Airport experienced extended closures during Houthi ballistic missile attacks.</li>
+                            <li><strong>Displacement:</strong> ~80,000 Israelis displaced from northern border communities (Hezbollah fire); ~60,000 displaced from Gaza-envelope communities — many for more than a year.</li>
+                            <li><strong>Reserve Burden:</strong> The 360,000+ reserve call-up removed workers from the labor market at scale, suppressing output in construction, agriculture, tech, and services.</li>
+                        </ul>
+
+                        <p><strong>Structural Social Fault Lines:</strong></p>
+                        <ul>
+                            <li><strong>Judicial Reform Divide:</strong> The 2023 protests exposed a deep rupture between secular/liberal Israel and religious/nationalist Israel that the war paused but did not resolve.</li>
+                            <li><strong>Ultra-Orthodox Military Service:</strong> The Supreme Court ruled in 2024 that the state cannot fund yeshiva students who refuse military service — directly threatening the coalition's Haredi partners. The issue remains constitutionally and politically unresolved, with Haredi parties threatening to collapse the government over conscription.</li>
+                            <li><strong>Arab Citizens:</strong> ~21% of Israeli citizens are Arab. They face documented disparities in housing, employment, and political representation, though a growing segment has integrated into technology and professional sectors.</li>
+                            <li><strong>Hostage Families:</strong> The ~100 remaining hostages in Gaza (as of early 2026) and their families have become a major political force, staging continuous protests and demanding the government prioritize a deal over the war's military objectives — creating direct tension with the far-right coalition partners.</li>
+                        </ul>
+
+                        <div class="open-source-disclaimer">* Based on Bank of Israel, OECD, World Bank, IMF Article IV, and Israeli Central Bureau of Statistics</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.boi.org.il/en/" target="_blank" class="report-link">&#x1F4D1; Bank of Israel</a>
+                            <a href="https://www.oecd.org/israel/" target="_blank" class="report-link">&#x1F4D1; OECD - Israel</a>
+                            <a href="https://www.worldbank.org/en/country/israel" target="_blank" class="report-link">&#x1F4D1; World Bank - Israel</a>
+                            <a href="https://www.imf.org/en/Countries/ISR" target="_blank" class="report-link">&#x1F4D1; IMF - Israel</a>
+                            <a href="https://www.cbs.gov.il/en/pages/default.aspx" target="_blank" class="report-link">&#x1F4D1; Israeli CBS Data</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- U.S.-Israel Relations -->
+                <div class="knowledge-card collapsed" id="card-us">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('us')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F91D;</span>
+                            <span data-i18n="catUS">U.S.-Israel Relations &amp; Security Assistance</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The U.S.-Israel partnership is America's most extensive security relationship in the Middle East</strong>, grounded in shared democratic values, deep intelligence cooperation, defense technology co-development, and bipartisan political support — though the relationship has faced its most public strains in decades during the Gaza war.</p>
+
+                        <p><strong>Security Assistance:</strong></p>
+                        <ul>
+                            <li><strong>Annual Aid:</strong> Israel receives $3.8 billion annually in U.S. security assistance under a 10-year MOU signed in 2016 — the largest security assistance commitment to any country in U.S. history.</li>
+                            <li><strong>Emergency Supplemental:</strong> Congress approved a $14+ billion emergency supplemental for Israel in April 2024 following the Iranian direct missile attack.</li>
+                            <li><strong>Weapons Transfers:</strong> The U.S. has been Israel's primary weapons supplier throughout the Gaza war. The Biden administration briefly paused delivery of 2,000-lb bombs in May 2024 over Rafah civilian concerns — the first such pause in the relationship's history — before resuming. The Trump administration (2025–) has removed most humanitarian conditionalities.</li>
+                            <li><strong>Intelligence Cooperation:</strong> NSA–Unit 8200 signals intelligence sharing and CIA–Mossad operational cooperation are among the deepest between any two countries globally. The U.S. deployed carrier strike groups and Aegis destroyers to the region to deter Iranian escalation after October 7 — and played a direct role in intercepting the April 2024 Iranian missile and drone attack.</li>
+                        </ul>
+
+                        <p><strong>Key Tensions &amp; Legal Proceedings:</strong></p>
+                        <ul>
+                            <li><strong>ICJ Case:</strong> South Africa filed a case at the International Court of Justice alleging genocide by Israel in Gaza. The ICJ issued provisional measures orders. The U.S. has opposed the proceedings.</li>
+                            <li><strong>ICC Arrest Warrants:</strong> The International Criminal Court issued arrest warrants for Prime Minister Netanyahu and former Defense Minister Gallant in November 2024. The U.S. under both Biden and Trump opposed the warrants and threatened sanctions against the ICC.</li>
+                            <li><strong>Trump Administration (2025–):</strong> The return of Trump has brought markedly closer alignment with Netanyahu's government, reduced friction over humanitarian conditions, and a more permissive posture toward West Bank settlement expansion and annexation rhetoric.</li>
+                        </ul>
+
+                        <div class="open-source-disclaimer">* Based on State Department, Congressional Research Service, AIPAC, and J Street public reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.state.gov/u-s-relations-with-israel/" target="_blank" class="report-link">&#x1F4D1; State Dept - U.S.-Israel</a>
+                            <a href="https://sgp.fas.org/crs/mideast/" target="_blank" class="report-link">&#x1F4D1; CRS - Israel Reports</a>
+                            <a href="https://www.icj-cij.org/" target="_blank" class="report-link">&#x1F4D1; ICJ - Gaza Case</a>
+                            <a href="https://www.icc-cpi.int/" target="_blank" class="report-link">&#x1F4D1; ICC</a>
+                            <a href="https://www.dsca.mil/" target="_blank" class="report-link">&#x1F4D1; DSCA - Arms Sales</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- end knowledge-categories -->
+        </div><!-- end knowledge-library -->
+
+        <!-- RECENT ARTICLES -->
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">&#x1F4F0; Recent Israel Security &amp; Stability Articles (Last 7 Days)</div>
+            <div id="articlesContainer">
+                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
+            </div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, IDF Spokesperson, Knesset, Bank of Israel, and OSINT sources</div>
+            <div style="margin-top:15px; font-size:0.85em;">
+                Multilingual content from Arabic, Hebrew, and Farsi feeds via GDELT. Reddit community intelligence from r/israel, r/geopolitics, and related communities.
+            </div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v1.0.0</div>
+                <div style="font-size:0.8em;">Live stability scoring under development | Not for operational use</div>
+            </div>
+
+            <div style="margin-top:20px; padding:15px; background:rgba(100,149,237,0.1); border-radius:8px;">
+                <span style="font-size:0.9em;">
+                    If you find Asifah Analytics useful and want to support ongoing development, you can
+                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
+                </span>
+            </div>
+
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
+                &copy; 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://asifah-backend.onrender.com';
+
+        // Theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('asifah-theme', next);
+        }
+        initTheme();
+
+        // Knowledge Library Toggle
+        function toggleKnowledgeCard(cardId) {
+            const card = document.getElementById('card-' + cardId);
+            if (card) card.classList.toggle('collapsed');
+        }
+
+        // Loading Overlay
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+
+        function startLoadingProgress() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    const cur = document.getElementById(steps[loadingStepIndex]);
+                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '\u2713'; }
+                    loadingStepIndex++;
+                    const next = document.getElementById(steps[loadingStepIndex]);
+                    if (next) next.classList.add('active');
+                }
+            }, 5000);
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingError').style.display = 'block';
+                document.getElementById('loadingError').textContent = '\u26A0\uFE0F Loading is taking longer than expected. Please wait or refresh.';
+            }, 60000);
+        }
+
+        function hideLoadingOverlay() {
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '\u2713';
+            });
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) overlay.classList.add('hidden');
+            }, 500);
+        }
+
+        // Fetch Israel articles from backend
+        async function loadIsraelArticles() {
+            try {
+                const response = await fetch(BACKEND_URL + '/scan-osint?q=Israel+IDF+Gaza+Knesset+Netanyahu+West+Bank');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+
+                if (data.articles && data.articles.length > 0) {
+                    displayArticles(data.articles);
+                } else {
+                    displayArticlesFallbackStatic();
+                }
+            } catch (error) {
+                console.warn('Israel articles failed:', error.message);
+                displayArticlesFallbackStatic();
+            }
+        }
+
+        function displayArticles(articles) {
+            const container = document.getElementById('articlesContainer');
+            if (!articles || articles.length === 0) { displayArticlesFallbackStatic(); return; }
+
+            container.innerHTML = articles.slice(0, 20).map(article => {
+                const title = article.title || 'Untitled';
+                const source = article.source || article.source_name || '';
+                const published = article.published || article.publishedAt || article.date || '';
+                const url = article.url || article.link || '#';
+                const description = article.description || '';
+
+                let dateStr = 'Recent';
+                if (published) {
+                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+                    catch(e) { dateStr = published; }
+                }
+
+                return '<div class="article-item">' +
+                    '<div class="article-title">' + title + '</div>' +
+                    (description ? '<div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; line-height:1.5;">' + description.substring(0, 200) + (description.length > 200 ? '...' : '') + '</div>' : '') +
+                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
+                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
+                    '</div>';
+            }).join('');
+        }
+
+        function displayArticlesFallbackStatic() {
+            const container = document.getElementById('articlesContainer');
+            container.innerHTML =
+                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
+                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading. Check these curated sources in the meantime:</p>' +
+                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
+                '<a href="https://www.timesofisrael.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Times of Israel</a>' +
+                '<a href="https://www.haaretz.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Haaretz</a>' +
+                '<a href="https://www.jpost.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Jerusalem Post</a>' +
+                '<a href="https://www.aljazeera.com/tag/israel/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Israel</a>' +
+                '<a href="https://www.inss.org.il/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">INSS (Israeli Think Tank)</a>' +
+                '<a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - Middle East</a>' +
+                '</div>' +
+                '</div>';
+        }
+
+        // Translation system
+        const translations = {
+            en: {
+                pageTitle: "\uD83C\uDDEE\uD83C\uDDF1 ISRAEL STABILITY INDEX",
+                pageSubtitle: "Multi-Factor Analysis: Coalition Politics, IDF Operations, Palestinian Affairs & Regional Threat Posture",
+                backLink: "\u2190 Back to Dashboard",
+                themeToggle: "Theme",
+                lastUpdated: "Last updated: ",
+                mapTitle: "Israel & Surrounding Territories \u2014 Strategic Overview",
+                mapSubtitle: "Interactive map centered on Israel. Gaza, West Bank, and Lebanon border overlays coming soon.",
+                knowledgeLibraryTitle: "Knowledge Library",
+                catGovernment: "The Knesset & Coalition Politics",
+                catMilitary: "IDF & Security Architecture",
+                catPalestinian: "Palestinian Affairs: Gaza & West Bank",
+                catRegional: "Regional Threat Environment",
+                catEconomy: "Economy, Society & War Costs",
+                catUS: "U.S.-Israel Relations & Security Assistance",
+                recentArticles: "\uD83D\uDCF0 Recent Israel Security & Stability Articles (Last 7 Days)"
+            },
+            he: {
+                pageTitle: "\uD83C\uDDEE\uD83C\uDDF1 \u05DE\u05D3\u05D3 \u05D9\u05E6\u05D9\u05D1\u05D5\u05EA \u05D9\u05E9\u05E8\u05D0\u05DC",
+                pageSubtitle: "\u05E0\u05D9\u05EA\u05D5\u05D7 \u05E8\u05D1-\u05D2\u05D5\u05E8\u05DE\u05D9: \u05E4\u05D5\u05DC\u05D9\u05D8\u05D9\u05E7\u05EA \u05E7\u05D5\u05D0\u05DC\u05D9\u05E6\u05D9\u05D4, \u05DE\u05D1\u05E6\u05E2\u05D9 \u05E6\u05D4\u05DC, \u05E2\u05E0\u05D9\u05D9\u05DF \u05D4\u05E4\u05DC\u05E1\u05D8\u05D9\u05E0\u05D9 \u05D5\u05D0\u05D9\u05D5\u05DE\u05D9\u05DD \u05D0\u05D6\u05D5\u05E8\u05D9\u05D9\u05DD",
+                backLink: "\u2192 \u05D7\u05D6\u05E8\u05D4 \u05DC\u05DC\u05D5\u05D7 \u05D4\u05D1\u05E7\u05E8\u05D4",
+                themeToggle: "\u05E2\u05E8\u05DB\u05EA \u05E0\u05D5\u05E9\u05D0",
+                lastUpdated: "\u05E2\u05D5\u05D3\u05DB\u05DF \u05DC\u05D0\u05D7\u05E8\u05D5\u05E0\u05D4: ",
+                mapTitle: "\u05D9\u05E9\u05E8\u05D0\u05DC \u05D5\u05D4\u05E9\u05D8\u05D7\u05D9\u05DD \u2014 \u05E1\u05E7\u05D9\u05E8\u05D4 \u05D0\u05E1\u05D8\u05E8\u05D8\u05D2\u05D9\u05EA",
+                mapSubtitle: "\u05DE\u05E4\u05D4 \u05D0\u05D9\u05E0\u05D8\u05E8\u05D0\u05E7\u05D8\u05D9\u05D1\u05D9\u05EA. \u05E9\u05DB\u05D1\u05D5\u05EA \u05E2\u05D6\u05D4 \u05D5\u05D2\u05D3\u05D4 \u05DE\u05E2\u05E8\u05D1\u05D9\u05EA \u05D1\u05E7\u05E8\u05D5\u05D1.",
+                knowledgeLibraryTitle: "\u05E1\u05E4\u05E8\u05D9\u05D9\u05EA \u05D9\u05D3\u05E2",
+                catGovernment: "\u05D4\u05DB\u05E0\u05E1\u05EA \u05D5\u05E4\u05D5\u05DC\u05D9\u05D8\u05D9\u05E7\u05EA \u05D4\u05E7\u05D5\u05D0\u05DC\u05D9\u05E6\u05D9\u05D4",
+                catMilitary: "\u05E6\u05D4\"\u05DC \u05D5\u05DE\u05E2\u05E8\u05DA \u05D4\u05D1\u05D9\u05D8\u05D7\u05D5\u05DF",
+                catPalestinian: "\u05D4\u05E2\u05E0\u05D9\u05D9\u05DF \u05D4\u05E4\u05DC\u05E1\u05D8\u05D9\u05E0\u05D9: \u05E2\u05D6\u05D4 \u05D5\u05D2\u05D3\u05D4 \u05D4\u05DE\u05E2\u05E8\u05D1\u05D9\u05EA",
+                catRegional: "\u05E1\u05D1\u05D9\u05D1\u05EA \u05D4\u05D0\u05D9\u05D5\u05DD \u05D4\u05D0\u05D6\u05D5\u05E8\u05D9\u05EA",
+                catEconomy: "\u05DB\u05DC\u05DB\u05DC\u05D4, \u05D7\u05D1\u05E8\u05D4 \u05D5\u05E2\u05DC\u05D5\u05D9\u05D5\u05EA \u05D4\u05DE\u05DC\u05D7\u05DE\u05D4",
+                catUS: "\u05D9\u05D7\u05E1\u05D9 \u05D0\u05E8\u05D4\"\u05D1-\u05D9\u05E9\u05E8\u05D0\u05DC \u05D5\u05E1\u05D9\u05D5\u05E2 \u05D1\u05D9\u05D8\u05D7\u05D5\u05E0\u05D9",
+                recentArticles: "\uD83D\uDCF0 \u05DB\u05EA\u05D1\u05D5\u05EA \u05D0\u05D7\u05E8\u05D5\u05E0\u05D5\u05EA \u05E2\u05DC \u05D9\u05E9\u05E8\u05D0\u05DC"
+            },
+            ar: {
+                pageTitle: "\uD83C\uDDEE\uD83C\uDDF1 \u0645\u0624\u0634\u0631 \u0627\u0633\u062A\u0642\u0631\u0627\u0631 \u0625\u0633\u0631\u0627\u0626\u064A\u0644",
+                pageSubtitle: "\u062A\u062D\u0644\u064A\u0644 \u0645\u062A\u0639\u062F\u062F \u0627\u0644\u0639\u0648\u0627\u0645\u0644: \u0633\u064A\u0627\u0633\u0629 \u0627\u0644\u0627\u0626\u062A\u0644\u0627\u0641\u060C \u0639\u0645\u0644\u064A\u0627\u062A \u062C\u064A\u0634 \u0627\u0644\u062F\u0641\u0627\u0639\u060C \u0627\u0644\u0634\u0624\u0648\u0646 \u0627\u0644\u0641\u0644\u0633\u0637\u064A\u0646\u064A\u0629 \u0648\u0628\u064A\u0626\u0629 \u0627\u0644\u062A\u0647\u062F\u064A\u062F \u0627\u0644\u0625\u0642\u0644\u064A\u0645\u064A\u0629",
+                backLink: "\u2192 \u0627\u0644\u0639\u0648\u062F\u0629 \u0625\u0644\u0649 \u0644\u0648\u062D\u0629 \u0627\u0644\u062A\u062D\u0643\u0645",
+                themeToggle: "\u0627\u0644\u0633\u0645\u0629",
+                lastUpdated: "\u0622\u062E\u0631 \u062A\u062D\u062F\u064A\u062B: ",
+                mapTitle: "\u0625\u0633\u0631\u0627\u0626\u064A\u0644 \u0648\u0627\u0644\u0623\u0631\u0627\u0636\u064A \u0627\u0644\u0645\u062D\u064A\u0637\u0629 \u2014 \u0646\u0638\u0631\u0629 \u0627\u0633\u062A\u0631\u0627\u062A\u064A\u062C\u064A\u0629",
+                mapSubtitle: "\u062E\u0631\u064A\u0637\u0629 \u062A\u0641\u0627\u0639\u0644\u064A\u0629. \u0637\u0628\u0642\u0627\u062A \u063A\u0632\u0629 \u0648\u0627\u0644\u0636\u0641\u0629 \u0627\u0644\u063A\u0631\u0628\u064A\u0629 \u0642\u0631\u064A\u0628\u0627\u064B.",
+                knowledgeLibraryTitle: "\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u0645\u0639\u0631\u0641\u0629",
+                catGovernment: "\u0627\u0644\u0643\u0646\u064A\u0633\u062A \u0648\u0633\u064A\u0627\u0633\u0629 \u0627\u0644\u0627\u0626\u062A\u0644\u0627\u0641",
+                catMilitary: "\u062C\u064A\u0634 \u0627\u0644\u062F\u0641\u0627\u0639 \u0648\u0627\u0644\u0628\u0646\u064A\u0629 \u0627\u0644\u0623\u0645\u0646\u064A\u0629",
+                catPalestinian: "\u0627\u0644\u0634\u0624\u0648\u0646 \u0627\u0644\u0641\u0644\u0633\u0637\u064A\u0646\u064A\u0629: \u063A\u0632\u0629 \u0648\u0627\u0644\u0636\u0641\u0629 \u0627\u0644\u063A\u0631\u0628\u064A\u0629",
+                catRegional: "\u0628\u064A\u0626\u0629 \u0627\u0644\u062A\u0647\u062F\u064A\u062F \u0627\u0644\u0625\u0642\u0644\u064A\u0645\u064A\u0629",
+                catEconomy: "\u0627\u0644\u0627\u0642\u062A\u0635\u0627\u062F \u0648\u0627\u0644\u0645\u062C\u062A\u0645\u0639 \u0648\u062A\u0643\u0627\u0644\u064A\u0641 \u0627\u0644\u062D\u0631\u0628",
+                catUS: "\u0627\u0644\u0639\u0644\u0627\u0642\u0627\u062A \u0627\u0644\u0623\u0645\u0631\u064A\u0643\u064A\u0629 \u0627\u0644\u0625\u0633\u0631\u0627\u0626\u064A\u0644\u064A\u0629 \u0648\u0627\u0644\u0645\u0633\u0627\u0639\u062F\u0627\u062A \u0627\u0644\u0623\u0645\u0646\u064A\u0629",
+                recentArticles: "\uD83D\uDCF0 \u0623\u062D\u062F\u062B \u0627\u0644\u0645\u0642\u0627\u0644\u0627\u062A \u062D\u0648\u0644 \u0625\u0633\u0631\u0627\u0626\u064A\u0644"
+            },
+            fa: {
+                pageTitle: "\uD83C\uDDEE\uD83C\uDDF1 \u0634\u0627\u062E\u0635 \u062B\u0628\u0627\u062A \u0627\u0633\u0631\u0627\u0626\u06CC\u0644",
+                pageSubtitle: "\u062A\u062D\u0644\u06CC\u0644 \u0686\u0646\u062F\u0639\u0627\u0645\u0644\u06CC: \u0633\u06CC\u0627\u0633\u062A \u0627\u0626\u062A\u0644\u0627\u0641\u060C \u0639\u0645\u0644\u06CC\u0627\u062A \u0627\u0631\u062A\u0634\u060C \u0627\u0645\u0648\u0631 \u0641\u0644\u0633\u0637\u06CC\u0646\u06CC \u0648 \u0645\u062D\u06CC\u0637 \u062A\u0647\u062F\u06CC\u062F \u0645\u0646\u0637\u0642\u0647\u200C\u0627\u06CC",
+                backLink: "\u2192 \u0628\u0627\u0632\u06AF\u0634\u062A \u0628\u0647 \u062F\u0627\u0634\u0628\u0648\u0631\u062F",
+                themeToggle: "\u067E\u0648\u0633\u062A\u0647",
+                lastUpdated: "\u0622\u062E\u0631\u06CC\u0646 \u0628\u0647\u200C\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06CC: ",
+                mapTitle: "\u0627\u0633\u0631\u0627\u0626\u06CC\u0644 \u0648 \u0633\u0631\u0632\u0645\u06CC\u0646\u200C\u0647\u0627\u06CC \u0627\u0637\u0631\u0627\u0641 \u2014 \u0646\u0645\u0627\u06CC \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC\u06A9",
+                mapSubtitle: "\u0646\u0642\u0634\u0647 \u062A\u0639\u0627\u0645\u0644\u06CC. \u0644\u0627\u06CC\u0647\u200C\u0647\u0627\u06CC \u063A\u0632\u0647 \u0648 \u06A9\u0631\u0627\u0646\u0647 \u0628\u0627\u062E\u062A\u0631\u06CC \u0628\u0647 \u0632\u0648\u062F\u06CC.",
+                knowledgeLibraryTitle: "\u06A9\u062A\u0627\u0628\u062E\u0627\u0646\u0647 \u062F\u0627\u0646\u0634",
+                catGovernment: "\u06A9\u0646\u0633\u062A \u0648 \u0633\u06CC\u0627\u0633\u062A \u0627\u0626\u062A\u0644\u0627\u0641",
+                catMilitary: "\u0627\u0631\u062A\u0634 \u0627\u0633\u0631\u0627\u0626\u06CC\u0644 \u0648 \u0645\u0639\u0645\u0627\u0631\u06CC \u0627\u0645\u0646\u06CC\u062A\u06CC",
+                catPalestinian: "\u0627\u0645\u0648\u0631 \u0641\u0644\u0633\u0637\u06CC\u0646\u06CC: \u063A\u0632\u0647 \u0648 \u06A9\u0631\u0627\u0646\u0647 \u0628\u0627\u062E\u062A\u0631\u06CC",
+                catRegional: "\u0645\u062D\u06CC\u0637 \u062A\u0647\u062F\u06CC\u062F \u0645\u0646\u0637\u0642\u0647\u200C\u0627\u06CC",
+                catEconomy: "\u0627\u0642\u062A\u0635\u0627\u062F\u060C \u062C\u0627\u0645\u0639\u0647 \u0648 \u0647\u0632\u06CC\u0646\u0647\u200C\u0647\u0627\u06CC \u062C\u0646\u06AF",
+                catUS: "\u0631\u0648\u0627\u0628\u0637 \u0622\u0645\u0631\u06CC\u06A9\u0627-\u0627\u0633\u0631\u0627\u0626\u06CC\u0644 \u0648 \u06A9\u0645\u06A9\u200C\u0647\u0627\u06CC \u0627\u0645\u0646\u06CC\u062A\u06CC",
+                recentArticles: "\uD83D\uDCF0 \u062C\u062F\u06CC\u062F\u062A\u0631\u06CC\u0646 \u0645\u0642\u0627\u0644\u0627\u062A \u062F\u0631\u0628\u0627\u0631\u0647 \u0627\u0633\u0631\u0627\u0626\u06CC\u0644"
+            }
+        };
+
+        function switchLanguage(lang, button) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
+                        const currentText = element.textContent;
+                        if (currentText.includes(':')) {
+                            const timestamp = currentText.split(': ').slice(1).join(': ');
+                            element.textContent = translations[lang][key] + timestamp;
+                        } else {
+                            element.textContent = translations[lang][key] + 'Loading...';
+                        }
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            startLoadingProgress();
+
+            document.getElementById('lastUpdated').textContent =
+                'Last updated: ' + new Date().toLocaleString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric',
+                    hour: 'numeric', minute: '2-digit', hour12: true
+                });
+
+            loadIsraelArticles().then(() => {
+                hideLoadingOverlay();
+            }).catch(err => {
+                console.error('Error loading Israel data:', err);
+                hideLoadingOverlay();
+            });
+        });
+    </script>
+</body>
+</html>
