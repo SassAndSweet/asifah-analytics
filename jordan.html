@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Jordan Stability Index v1.0.0 - Last updated: Feb 20, 2026 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Jordan Stability Index | Asifah Analytics v1.0.0</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #ffffff;
+            --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --watermark-opacity: 0.03;
+            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
+            --accent: #6495ED;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #2d2d2d;
+            --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535;
+            --article-hover: #404040;
+            --watermark-opacity: 0.02;
+            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--loading-overlay-bg);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-spinner {
+            width: 60px; height: 60px;
+            border: 5px solid var(--loading-spinner-bg);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+        .loading-steps { margin-top: 20px; }
+        .loading-step {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease;
+        }
+        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.complete { color: #4ade80; }
+        .step-icon { font-size: 18px; min-width: 20px; }
+        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
+        .loading-error {
+            color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px;
+            background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 8px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px; border-radius: 12px; margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative; display: flex; align-items: center; gap: 30px;
+        }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+        .header-content { flex: 1; text-align: center; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+
+        .header-controls {
+            position: absolute; top: 35px; right: 35px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 1000;
+        }
+        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+
+        .language-switcher {
+            display: flex; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle-label {
+            font-size: 11px; color: rgba(255,255,255,0.9); margin-right: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .theme-toggle-switch {
+            position: relative; width: 50px; height: 26px;
+            background: rgba(255,255,255,0.2); border-radius: 13px; cursor: pointer;
+            transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+            background: white; border-radius: 50%; transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+        .theme-toggle-slider::before { content: '\2600\FE0F'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(24px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '\1F319'; }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 14px; font-family: 'Times New Roman', Times, serif;
+            font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+
+        .back-link {
+            display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0;
+            padding: 12px 24px; background: rgba(255,255,255,0.2); color: white;
+            text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease; font-size: 14px; font-weight: bold;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+
+        /* Map Section */
+        .map-section {
+            background: var(--container-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
+        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+
+        /* Knowledge Library */
+        .knowledge-library {
+            background: var(--container-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .library-icon { font-size: 28px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
+        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
+        .knowledge-header {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.1) 0%, rgba(30, 82, 130, 0.1) 100%);
+            padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; transition: background 0.3s ease;
+        }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 82, 130, 0.15) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 22px; }
+        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content { padding: 20px; max-height: 500px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content strong { color: var(--text-primary); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 16px; background: var(--accent); color: white;
+            text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .report-link:hover { background: #4169E1; transform: translateX(3px); box-shadow: 0 4px 12px rgba(100, 149, 237, 0.3); }
+        [dir="rtl"] .report-link:hover { transform: translateX(-3px); }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* Articles Section */
+        .articles-section {
+            background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item {
+            background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #1e3a5f;
+        }
+        [dir="rtl"] .article-item { border-left: none; border-right: 4px solid #1e3a5f; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        [dir="rtl"] .article-item:hover { transform: translateX(-4px); }
+        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .article-meta { font-size: 12px; color: var(--text-secondary); }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .article-link:hover { text-decoration: underline; }
+
+        /* Footer */
+        footer {
+            background: var(--container-bg); padding: 25px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
+            .header-logo { width: 60px; height: 60px; }
+            .header-content { text-align: center; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 24px; }
+            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Jordan Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Fetching OSINT articles on Jordan...</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Scanning U.S. military basing reports...</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Analyzing refugee &amp; economic indicators...</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Compiling governance &amp; security data...</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Rendering dashboard...</span>
+                </div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="middle-east.html" class="back-link" data-i18n="backLink">&#8592; Back to Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">&#x1F1EF;&#x1F1F4; JORDAN STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Hashemite Governance, Strategic Basing, Refugee Pressures &amp; Economic Vulnerabilities</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('he', this)">&#x05E2;&#x05D1;</button>
+                    <button class="lang-btn" onclick="switchLanguage('ar', this)">&#x0639;</button>
+                    <button class="lang-btn" onclick="switchLanguage('fa', this)">&#x05E4;&#x05D0;</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAP SECTION -->
+        <div class="map-section">
+            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Jordan &#8212; Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Jordan. U.S. basing overlays and border incident markers coming soon.</div>
+            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
+                <iframe 
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=34.9%2C29.2%2C39.3%2C33.4&layer=mapnik&marker=31.95%2C35.93"
+                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE LIBRARY -->
+        <div class="knowledge-library">
+            <h2>
+                <span class="library-icon">&#x1F4DA;</span>
+                <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
+            </h2>
+            <p class="open-source-disclaimer">
+                Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
+            </p>
+
+            <div class="knowledge-categories">
+                <!-- Hashemite Monarchy & Governance -->
+                <div class="knowledge-card collapsed" id="card-monarchy">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('monarchy')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F451;</span>
+                            <span data-i18n="catMonarchy">The Hashemite Monarchy &amp; Governance</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The Hashemite Kingdom of Jordan</strong> is a constitutional monarchy under King Abdullah II, who has ruled since 1999. The monarchy derives its legitimacy from the Hashemite dynasty's claimed descent from the Prophet Muhammad, tribal alliances, and the king's role as custodian of Islamic and Christian holy sites in Jerusalem.</p>
+
+                        <p><strong>Governance Structure:</strong></p>
+                        <ul>
+                            <li><strong>The King:</strong> Holds executive authority, appoints the prime minister, can dissolve parliament, and commands the armed forces. Real policy power is concentrated in the palace.</li>
+                            <li><strong>Crown Prince Hussein:</strong> Born 1994, increasingly visible in royal duties. Western-educated (Georgetown), military-trained. Represents generational transition.</li>
+                            <li><strong>Parliament:</strong> Bicameral — elected House of Representatives and appointed Senate. Limited legislative power; the king retains veto authority.</li>
+                            <li><strong>General Intelligence Directorate (GID/Mukhabarat):</strong> The most powerful security institution; monitors domestic dissent, manages tribal relations, and conducts counterterrorism operations. Key U.S. intelligence partner.</li>
+                        </ul>
+
+                        <p><strong>Reform Pressures:</strong> The monarchy has pursued controlled, incremental reforms since the Arab Spring protests of 2011-2012. The 2021 "sedition plot" involving Prince Hamzah (the king's half-brother) exposed rare internal fractures within the royal family. Constitutional amendments in 2022 strengthened the king's powers while nominally expanding political party activity.</p>
+
+                        <p><strong>Tribal Politics:</strong> Jordan's East Bank tribal communities form the traditional base of Hashemite support and dominate the military, security services, and civil service. Maintaining tribal loyalty through patronage, public sector employment, and military appointments is fundamental to regime stability.</p>
+
+                        <div class="open-source-disclaimer">* Based on Chatham House, Carnegie Endowment, and International Crisis Group analyses</div>
+
+                        <div class="report-links-grid">
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/eastern-mediterranean/jordan" target="_blank" class="report-link">&#x1F4D1; Crisis Group - Jordan</a>
+                            <a href="https://carnegieendowment.org/research/topic/jordan" target="_blank" class="report-link">&#x1F4D1; Carnegie - Jordan</a>
+                            <a href="https://freedomhouse.org/country/jordan" target="_blank" class="report-link">&#x1F4D1; Freedom House - Jordan</a>
+                            <a href="https://www.constituteproject.org/constitution/Jordan_2022" target="_blank" class="report-link">&#x1F4D1; Jordan Constitution</a>
+                            <a href="https://www.bti-project.org/en/reports/country-report/JOR" target="_blank" class="report-link">&#x1F4D1; BTI - Jordan Governance</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Strategic Buffer State -->
+                <div class="knowledge-card collapsed" id="card-buffer">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('buffer')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F6E1;&#xFE0F;</span>
+                            <span data-i18n="catBuffer">Strategic Buffer State &amp; Regional Position</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Jordan occupies one of the most strategically critical positions in the Middle East</strong>, sharing borders with Israel/Palestine, Syria, Iraq, Saudi Arabia, and Egypt (across the Gulf of Aqaba). Its stability is considered a vital national security interest by the United States, Israel, and the Gulf states.</p>
+
+                        <p><strong>Why Jordan Matters:</strong></p>
+                        <ul>
+                            <li><strong>Israel-Jordan Peace Treaty (1994):</strong> One of only two Arab-Israeli peace agreements (alongside Egypt). Jordan provides a stable eastern border for Israel and serves as a diplomatic bridge to the wider Arab world.</li>
+                            <li><strong>Buffer Against Spillover:</strong> Jordan has absorbed shocks from the Iraq War (2003), Syrian Civil War (2011-present), and the rise of ISIS without state collapse — a remarkable record given its resource constraints.</li>
+                            <li><strong>Custodianship of Holy Sites:</strong> The Hashemites hold custodianship over the Haram al-Sharif/Temple Mount in Jerusalem under the 1994 peace treaty, giving Jordan outsized influence on Israeli-Palestinian dynamics.</li>
+                            <li><strong>Intelligence Cooperation:</strong> The GID is considered one of the most effective intelligence services in the region. It maintains deep partnerships with the CIA, Mossad, and MI6, and plays a critical role in regional counterterrorism.</li>
+                        </ul>
+
+                        <p><strong>Tensions with Israel:</strong> Despite the formal peace treaty, popular sentiment in Jordan is overwhelmingly sympathetic to the Palestinian cause. The Gaza conflict beginning in October 2023 placed severe strain on the relationship, with Jordan recalling its ambassador and public protests demanding treaty abrogation. The monarchy must balance its strategic relationship with Israel against domestic opinion.</p>
+
+                        <div class="open-source-disclaimer">* Based on Brookings Institution, RAND Corporation, and Congressional Research Service reports</div>
+
+                        <div class="report-links-grid">
+                            <a href="https://www.brookings.edu/topic/jordan/" target="_blank" class="report-link">&#x1F4D1; Brookings - Jordan</a>
+                            <a href="https://crsreports.congress.gov/" target="_blank" class="report-link">&#x1F4D1; CRS - Jordan Reports</a>
+                            <a href="https://www.rand.org/topics/jordan.html" target="_blank" class="report-link">&#x1F4D1; RAND - Jordan</a>
+                            <a href="https://www.washingtoninstitute.org/policy-analysis?field_associated_regions_target_id%5B94%5D=94" target="_blank" class="report-link">&#x1F4D1; WINEP - Jordan</a>
+                            <a href="https://www.mei.edu/countries/jordan" target="_blank" class="report-link">&#x1F4D1; MEI - Jordan</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- US Military Presence & Basing -->
+                <div class="knowledge-card collapsed" id="card-basing">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('basing')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F3D7;&#xFE0F;</span>
+                            <span data-i18n="catBasing">U.S. Military Presence &amp; Basing</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Jordan hosts a significant and growing U.S. military presence</strong>, making it one of America's most important forward operating platforms in the CENTCOM area of responsibility. Approximately 3,000+ U.S. troops are stationed in Jordan.</p>
+
+                        <p><strong>Key Installations:</strong></p>
+                        <ul>
+                            <li><strong>Muwaffaq Salti Air Base:</strong> Primary U.S. air operations hub in Jordan. Hosts F-15E Strike Eagles, MQ-9 Reapers, and aerial refueling assets. Used for strikes against ISIS and Iran-backed militia targets in Syria.</li>
+                            <li><strong>Tower 22 (Al-Tanf Border Post):</strong> Small U.S. outpost near the Jordan-Syria-Iraq tri-border area. Site of the January 2024 drone attack by Iran-backed militants that killed three U.S. soldiers — the deadliest attack on U.S. forces in the Middle East since the 2021 Afghanistan withdrawal.</li>
+                            <li><strong>Zarqa Training Center:</strong> Used for joint U.S.-Jordanian training exercises and special operations preparation.</li>
+                        </ul>
+
+                        <p><strong>Eager Lion Exercise:</strong> Annual U.S.-Jordanian military exercise, typically involving 7,000+ troops from 20+ nations. One of CENTCOM's largest bilateral exercises, focused on conventional warfare, counterterrorism, and border security scenarios.</p>
+
+                        <p><strong>U.S. Military Aid:</strong> Jordan receives approximately $1.65 billion annually in U.S. foreign assistance, with roughly $425 million in Foreign Military Financing (FMF). A 2022 Memorandum of Understanding committed $10.2 billion over seven years — the largest such agreement with any country outside of Israel and Egypt.</p>
+
+                        <div class="open-source-disclaimer">* Based on CENTCOM public affairs, Congressional Research Service, and Department of Defense reports</div>
+
+                        <div class="report-links-grid">
+                            <a href="https://www.centcom.mil/" target="_blank" class="report-link">&#x1F4D1; U.S. CENTCOM</a>
+                            <a href="https://www.defense.gov/" target="_blank" class="report-link">&#x1F4D1; Department of Defense</a>
+                            <a href="https://sgp.fas.org/crs/mideast/" target="_blank" class="report-link">&#x1F4D1; CRS - Middle East Security</a>
+                            <a href="https://www.state.gov/u-s-relations-with-jordan/" target="_blank" class="report-link">&#x1F4D1; State Dept - U.S.-Jordan</a>
+                            <a href="https://www.dsca.mil/" target="_blank" class="report-link">&#x1F4D1; DSCA - Arms Sales</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Refugee Crisis & Demographics -->
+                <div class="knowledge-card collapsed" id="card-refugees">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('refugees')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F6D1;</span>
+                            <span data-i18n="catRefugees">Refugee Crisis &amp; Demographics</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Jordan hosts one of the highest per-capita refugee populations in the world</strong>, placing extraordinary strain on a country with limited natural resources and a population of approximately 11 million.</p>
+
+                        <p><strong>Refugee Populations:</strong></p>
+                        <ul>
+                            <li><strong>Syrian Refugees:</strong> ~1.3 million Syrians in Jordan (UNHCR registered: ~660,000; actual estimated: 1.3M+). The Za'atari camp in northern Jordan is one of the largest refugee camps in the world.</li>
+                            <li><strong>Palestinian Population:</strong> Approximately 2.4 million registered Palestinian refugees (UNRWA), many with Jordanian citizenship. Palestinians constitute an estimated 50-70% of Jordan's total population, creating a complex demographic and political dynamic.</li>
+                            <li><strong>Iraqi Refugees:</strong> An estimated 66,000 registered Iraqi refugees, with actual numbers believed to be considerably higher.</li>
+                            <li><strong>Other Populations:</strong> Yemeni, Sudanese, Somali, and Libyan refugees in smaller numbers.</li>
+                        </ul>
+
+                        <p><strong>Impact on Jordan:</strong> The refugee influx has strained water supplies (Jordan is the world's second most water-scarce country), overwhelmed public schools and hospitals, driven up housing costs, and contributed to youth unemployment exceeding 40%. International donor fatigue has reduced funding even as needs persist.</p>
+
+                        <p><strong>Palestinian Identity Question:</strong> The large Palestinian-origin population creates enduring tensions with East Bank Jordanians over national identity, economic opportunity, and political representation. The monarchy carefully manages this divide, which has historically been the most sensitive fault line in Jordanian politics.</p>
+
+                        <div class="open-source-disclaimer">* Based on UNHCR Jordan, UNRWA, and World Bank assessments</div>
+
+                        <div class="report-links-grid">
+                            <a href="https://www.unhcr.org/jordan.html" target="_blank" class="report-link">&#x1F4D1; UNHCR - Jordan</a>
+                            <a href="https://www.unrwa.org/where-we-work/jordan" target="_blank" class="report-link">&#x1F4D1; UNRWA - Jordan</a>
+                            <a href="https://www.worldbank.org/en/country/jordan" target="_blank" class="report-link">&#x1F4D1; World Bank - Jordan</a>
+                            <a href="https://reliefweb.int/country/jor" target="_blank" class="report-link">&#x1F4D1; ReliefWeb - Jordan</a>
+                            <a href="https://data.unhcr.org/en/situations/syria/location/36" target="_blank" class="report-link">&#x1F4D1; UNHCR Data Portal</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economic Vulnerabilities -->
+                <div class="knowledge-card collapsed" id="card-economy">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('economy')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F4C9;</span>
+                            <span data-i18n="catEconomy">Economic Vulnerabilities</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Jordan's economy is structurally dependent on foreign aid, remittances, and external support</strong>, making it uniquely vulnerable to disruptions in any of these revenue streams. Unlike its Gulf neighbors, Jordan has minimal oil and gas reserves.</p>
+
+                        <p><strong>Key Vulnerabilities:</strong></p>
+                        <ul>
+                            <li><strong>Aid Dependency:</strong> Foreign grants and assistance constitute a significant portion of government revenue. The U.S., EU, Gulf states, and international financial institutions provide critical budgetary support.</li>
+                            <li><strong>Water Crisis:</strong> Jordan is the second most water-scarce country on Earth. Per capita water availability is roughly 100 cubic meters/year — well below the 500 m³ threshold for "absolute scarcity." Climate change and population growth are worsening the crisis.</li>
+                            <li><strong>Youth Unemployment:</strong> Official unemployment hovers around 22%, with youth unemployment exceeding 40%. Among young women, unemployment approaches 60%. This is considered the most destabilizing long-term pressure.</li>
+                            <li><strong>IMF Austerity:</strong> Successive IMF programs have required subsidy cuts, tax increases, and public sector wage restraint — measures that have triggered street protests, most notably in 2018 when PM Hani al-Mulki resigned after nationwide demonstrations.</li>
+                            <li><strong>Debt:</strong> Public debt exceeds 90% of GDP. Debt servicing consumes a growing share of government expenditure, crowding out social spending.</li>
+                            <li><strong>Remittances:</strong> Jordanian workers abroad (primarily in Gulf states) send home approximately $4 billion annually, constituting ~10% of GDP. Gulf economic diversification and labor nationalization policies threaten this lifeline.</li>
+                        </ul>
+
+                        <p><strong>Energy Dependency:</strong> Jordan imports ~90% of its energy needs. The loss of subsidized Iraqi oil (post-2003) and disruptions to Egyptian gas pipeline supplies have forced costly reliance on LNG imports, though a natural gas pipeline from Israel has partially offset this since 2020 — a politically sensitive arrangement.</p>
+
+                        <p><strong>Tourism — A Bright Spot Under Pressure:</strong> Tourism is one of Jordan's most important economic sectors, contributing roughly 10-12% of GDP and employing an estimated 50,000+ workers directly. Petra, Wadi Rum, the Dead Sea, and Jerash are world-class destinations. Jordan welcomed over 5 million visitors in 2023, generating approximately $6 billion in revenue. However, the sector is acutely sensitive to regional instability — the October 2023 Gaza conflict and subsequent regional escalation depressed bookings significantly. Tourism revenue also skews toward high-end visitors and package tours, meaning disruptions hit the hospitality workforce hard and fast.</p>
+
+                        <div class="open-source-disclaimer">* Based on World Bank, IMF Article IV consultations, and EBRD assessments</div>
+
+                        <div class="report-links-grid">
+                            <a href="https://www.imf.org/en/Countries/JOR" target="_blank" class="report-link">&#x1F4D1; IMF - Jordan</a>
+                            <a href="https://www.worldbank.org/en/country/jordan" target="_blank" class="report-link">&#x1F4D1; World Bank - Jordan</a>
+                            <a href="https://www.ebrd.com/jordan.html" target="_blank" class="report-link">&#x1F4D1; EBRD - Jordan</a>
+                            <a href="https://www.mota.gov.jo/" target="_blank" class="report-link">&#x1F4D1; Jordan Ministry of Tourism</a>
+                            <a href="https://data.worldbank.org/country/jordan" target="_blank" class="report-link">&#x1F4D1; World Bank Data - Jordan</a>
+                            <a href="https://www.ilo.org/beirut/countries/jordan" target="_blank" class="report-link">&#x1F4D1; ILO - Jordan Labor</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tribal & Social Dynamics -->
+                <div class="knowledge-card collapsed" id="card-tribal">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('tribal')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">&#x1F3D8;&#xFE0F;</span>
+                            <span data-i18n="catTribal">Tribal &amp; Social Dynamics</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Jordan's tribal structure is not a relic — it is the load-bearing architecture of the state.</strong> The Hashemite monarchy's survival for over a century rests on a carefully managed social contract with the East Bank Bedouin tribes, who in return for loyalty receive privileged access to military careers, civil service positions, and state patronage.</p>
+
+                        <p><strong>Key Tribal Dynamics:</strong></p>
+                        <ul>
+                            <li><strong>East Bank Tribes:</strong> The Bani Hassan, Abbadi, Howeitat, Bani Sakher, and Majali are among the largest and most politically influential tribal confederations. They dominate the Jordanian Armed Forces (JAF), the General Intelligence Directorate (GID), and rural governance structures.</li>
+                            <li><strong>The Social Contract:</strong> Tribes provide political loyalty and military manpower; the monarchy provides public sector employment, land grants, and dispute mediation. This contract has been strained by IMF austerity measures that cut subsidies and froze public sector hiring — directly threatening the patronage system.</li>
+                            <li><strong>Tribal vs. Palestinian Fault Line:</strong> The most sensitive social divide in Jordan runs between East Bank tribal Jordanians (~35-40% of population) and Jordanians of Palestinian origin (~50-60%). Palestinians dominate the private sector and urban commerce; East Bankers dominate security services and government. Each group perceives itself as disadvantaged.</li>
+                            <li><strong>Tribal Justice:</strong> Customary tribal law (particularly <em>jalwa</em> — collective punishment through forced displacement of an offender's extended family) still operates alongside the formal legal system, especially in rural areas. The government has attempted to curtail these practices with mixed success.</li>
+                        </ul>
+
+                        <p><strong>Youth &amp; Social Pressures:</strong> Over 60% of Jordan's population is under 30. Urban youth — both East Bank and Palestinian-origin — increasingly reject traditional tribal hierarchies and express frustration through social media activism, protests over economic conditions, and demands for democratic reform. The 2011-2012 Arab Spring protests and the 2018 anti-austerity demonstrations both drew significant tribal participation, signaling that even the monarchy's traditional base has limits.</p>
+
+                        <p><strong>Women &amp; Civil Society:</strong> Jordan maintains a relatively active civil society by regional standards, though space has contracted since 2011. Women hold reserved parliamentary seats (15 of 130) and have increasing labor force participation, but "honor" killings, guardianship laws, and citizenship restrictions (Jordanian women married to non-Jordanians cannot pass citizenship to children) remain contested issues.</p>
+
+                        <p><strong>Digital &amp; Media Landscape:</strong> Jordan has high internet penetration (~85%) and an active social media sphere. The government monitors online dissent closely; cybercrime and press laws have been used to prosecute journalists and activists. Amendments to the Cybercrime Law in 2023 drew widespread criticism from press freedom organizations for broadening government authority to restrict online speech.</p>
+
+                        <div class="open-source-disclaimer">* Based on International Crisis Group, Chatham House, and academic research from the Center for Strategic Studies (University of Jordan)</div>
+
+                        <div class="report-links-grid">
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/eastern-mediterranean/jordan" target="_blank" class="report-link">&#x1F4D1; Crisis Group - Jordan</a>
+                            <a href="https://www.chathamhouse.org/regions/middle-east-and-north-africa/jordan" target="_blank" class="report-link">&#x1F4D1; Chatham House - Jordan</a>
+                            <a href="https://jcss.org/" target="_blank" class="report-link">&#x1F4D1; CSS - Univ. of Jordan</a>
+                            <a href="https://rsf.org/en/country/jordan" target="_blank" class="report-link">&#x1F4D1; RSF - Press Freedom</a>
+                            <a href="https://www.hrw.org/middle-east/n-africa/jordan" target="_blank" class="report-link">&#x1F4D1; Human Rights Watch</a>
+                            <a href="https://www.amnesty.org/en/location/middle-east-and-north-africa/jordan/" target="_blank" class="report-link">&#x1F4D1; Amnesty International</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT ARTICLES -->
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">&#x1F4F0; Recent Jordan Security &amp; Stability Articles (Last 7 Days)</div>
+            <div id="articlesContainer">
+                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
+            </div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, CENTCOM, UNHCR, World Bank, and OSINT sources</div>
+            <div style="margin-top:15px; font-size:0.85em;">
+                Multilingual content from Arabic, Hebrew, and Farsi feeds via GDELT. Reddit community intelligence from r/Jordan, r/geopolitics, and related communities.
+            </div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+            
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v1.0.0</div>
+                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
+            </div>
+
+            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
+                <span style="font-size:0.9em;">
+                    If you find Asifah Analytics useful and want to support ongoing development, you can 
+                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
+                </span>
+            </div>
+
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
+                &copy; 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://asifah-backend.onrender.com';
+
+        // Theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('asifah-theme', next);
+        }
+        initTheme();
+
+        // Knowledge Library Toggle
+        function toggleKnowledgeCard(cardId) {
+            const card = document.getElementById('card-' + cardId);
+            if (card) card.classList.toggle('collapsed');
+        }
+
+        // Loading Overlay
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+
+        function startLoadingProgress() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    const cur = document.getElementById(steps[loadingStepIndex]);
+                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '\u2713'; }
+                    loadingStepIndex++;
+                    const next = document.getElementById(steps[loadingStepIndex]);
+                    if (next) next.classList.add('active');
+                }
+            }, 5000);
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingError').style.display = 'block';
+                document.getElementById('loadingError').textContent = '\u26A0\uFE0F Loading is taking longer than expected. Please wait or refresh.';
+            }, 60000);
+        }
+
+        function hideLoadingOverlay() {
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '\u2713';
+            });
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) overlay.classList.add('hidden');
+            }, 500);
+        }
+
+        // Fetch Jordan articles from backend
+        async function loadJordanArticles() {
+            try {
+                const response = await fetch(BACKEND_URL + '/scan-jordan');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                
+                if (data.success && data.articles && data.articles.length > 0) {
+                    displayArticles(data.articles);
+                } else {
+                    await loadJordanArticlesFallback();
+                }
+            } catch (error) {
+                console.warn('Primary Jordan endpoint failed:', error.message);
+                await loadJordanArticlesFallback();
+            }
+        }
+
+        async function loadJordanArticlesFallback() {
+            try {
+                const response = await fetch(BACKEND_URL + '/scan-osint?q=Jordan+military+Amman+refugees');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                
+                if (data.articles && data.articles.length > 0) {
+                    displayArticles(data.articles);
+                } else {
+                    displayArticlesFallbackStatic();
+                }
+            } catch (error) {
+                console.warn('Fallback also failed:', error.message);
+                displayArticlesFallbackStatic();
+            }
+        }
+
+        function displayArticles(articles) {
+            const container = document.getElementById('articlesContainer');
+            if (!articles || articles.length === 0) {
+                displayArticlesFallbackStatic();
+                return;
+            }
+
+            container.innerHTML = articles.slice(0, 20).map(article => {
+                const title = article.title || 'Untitled';
+                const source = article.source || article.source_name || '';
+                const published = article.published || article.publishedAt || article.date || '';
+                const url = article.url || article.link || '#';
+                const description = article.description || '';
+                
+                let dateStr = 'Recent';
+                if (published) {
+                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } 
+                    catch(e) { dateStr = published; }
+                }
+
+                return '<div class="article-item">' +
+                    '<div class="article-title">' + title + '</div>' +
+                    (description ? '<div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; line-height:1.5;">' + description.substring(0, 200) + (description.length > 200 ? '...' : '') + '</div>' : '') +
+                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
+                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
+                    '</div>';
+            }).join('');
+        }
+
+        function displayArticlesFallbackStatic() {
+            const container = document.getElementById('articlesContainer');
+            container.innerHTML = 
+                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
+                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed is being configured for Jordan.</p>' +
+                '<p style="font-size:13px; margin-bottom:20px;">In the meantime, check these curated OSINT sources:</p>' +
+                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
+                '<a href="https://www.jordantimes.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Jordan Times</a>' +
+                '<a href="https://www.aljazeera.com/tag/jordan/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Jordan</a>' +
+                '<a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - Middle East</a>' +
+                '<a href="https://www.crisisgroup.org/middle-east-north-africa/eastern-mediterranean/jordan" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Crisis Group</a>' +
+                '<a href="https://www.centcom.mil/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">U.S. CENTCOM</a>' +
+                '</div>' +
+                '</div>';
+        }
+
+        // Translation system
+        const translations = {
+            en: {
+                pageTitle: "\uD83C\uDDEF\uD83C\uDDF4 JORDAN STABILITY INDEX",
+                pageSubtitle: "Multi-Factor Analysis: Hashemite Governance, Strategic Basing, Refugee Pressures & Economic Vulnerabilities",
+                backLink: "\u2190 Back to Dashboard",
+                themeToggle: "Theme",
+                lastUpdated: "Last updated: ",
+                mapTitle: "Jordan \u2014 Strategic Overview",
+                mapSubtitle: "Interactive map centered on Jordan. U.S. basing overlays and border incident markers coming soon.",
+                knowledgeLibraryTitle: "Knowledge Library",
+                catMonarchy: "The Hashemite Monarchy & Governance",
+                catBuffer: "Strategic Buffer State & Regional Position",
+                catBasing: "U.S. Military Presence & Basing",
+                catRefugees: "Refugee Crisis & Demographics",
+                catEconomy: "Economic Vulnerabilities",
+                catTribal: "Tribal & Social Dynamics",
+                recentArticles: "\uD83D\uDCF0 Recent Jordan Security & Stability Articles (Last 7 Days)"
+            },
+            he: {
+                pageTitle: "\uD83C\uDDEF\uD83C\uDDF4 \u05DE\u05D3\u05D3 \u05D9\u05E6\u05D9\u05D1\u05D5\u05EA \u05D9\u05E8\u05D3\u05DF",
+                pageSubtitle: "\u05E0\u05D9\u05EA\u05D5\u05D7 \u05E8\u05D1-\u05D2\u05D5\u05E8\u05DE\u05D9: \u05DE\u05DE\u05E9\u05DC \u05D4\u05D0\u05E9\u05DE\u05D9, \u05D1\u05E1\u05D9\u05E1\u05D9\u05DD \u05D0\u05E1\u05D8\u05E8\u05D8\u05D2\u05D9\u05D9\u05DD, \u05DC\u05D7\u05E6\u05D9\u05DD \u05E4\u05DC\u05D9\u05D8\u05D9\u05DD \u05D5\u05E4\u05D2\u05D9\u05E2\u05D5\u05EA \u05DB\u05DC\u05DB\u05DC\u05D9\u05D5\u05EA",
+                backLink: "\u2192 \u05D7\u05D6\u05E8\u05D4 \u05DC\u05DC\u05D5\u05D7 \u05D4\u05D1\u05E7\u05E8\u05D4",
+                themeToggle: "\u05E2\u05E8\u05DB\u05EA \u05E0\u05D5\u05E9\u05D0",
+                lastUpdated: "\u05E2\u05D5\u05D3\u05DB\u05DF \u05DC\u05D0\u05D7\u05E8\u05D5\u05E0\u05D4: ",
+                mapTitle: "\u05D9\u05E8\u05D3\u05DF \u2014 \u05E1\u05E7\u05D9\u05E8\u05D4 \u05D0\u05E1\u05D8\u05E8\u05D8\u05D2\u05D9\u05EA",
+                mapSubtitle: "\u05DE\u05E4\u05D4 \u05D0\u05D9\u05E0\u05D8\u05E8\u05D0\u05E7\u05D8\u05D9\u05D1\u05D9\u05EA. \u05E9\u05DB\u05D1\u05D5\u05EA \u05D1\u05E1\u05D9\u05E1\u05D9\u05DD \u05D1\u05E7\u05E8\u05D5\u05D1.",
+                knowledgeLibraryTitle: "\u05E1\u05E4\u05E8\u05D9\u05D9\u05EA \u05D9\u05D3\u05E2",
+                catMonarchy: "\u05D4\u05DE\u05DC\u05D5\u05DB\u05D4 \u05D4\u05D4\u05D0\u05E9\u05DE\u05D9\u05EA \u05D5\u05DE\u05DE\u05E9\u05DC",
+                catBuffer: "\u05DE\u05D3\u05D9\u05E0\u05EA \u05D7\u05D5\u05E6\u05E5 \u05D0\u05E1\u05D8\u05E8\u05D8\u05D2\u05D9\u05EA \u05D5\u05DE\u05E2\u05DE\u05D3 \u05D0\u05D6\u05D5\u05E8\u05D9",
+                catBasing: "\u05E0\u05D5\u05DB\u05D7\u05D5\u05EA \u05E6\u05D1\u05D0\u05D9\u05EA \u05D0\u05DE\u05E8\u05D9\u05E7\u05E0\u05D9\u05EA \u05D5\u05D1\u05E1\u05D9\u05E1\u05D9\u05DD",
+                catRefugees: "\u05DE\u05E9\u05D1\u05E8 \u05E4\u05DC\u05D9\u05D8\u05D9\u05DD \u05D5\u05D3\u05DE\u05D5\u05D2\u05E8\u05E4\u05D9\u05D4",
+                catEconomy: "\u05E4\u05D2\u05D9\u05E2\u05D5\u05D9\u05D5\u05EA \u05DB\u05DC\u05DB\u05DC\u05D9\u05D5\u05EA",
+                catTribal: "\u05D3\u05D9\u05E0\u05DE\u05D9\u05E7\u05D4 \u05E9\u05D1\u05D8\u05D9\u05EA \u05D5\u05D7\u05D1\u05E8\u05EA\u05D9\u05EA",
+                recentArticles: "\uD83D\uDCF0 \u05DB\u05EA\u05D1\u05D5\u05EA \u05D0\u05D7\u05E8\u05D5\u05E0\u05D5\u05EA \u05E2\u05DC \u05D9\u05E8\u05D3\u05DF"
+            },
+            ar: {
+                pageTitle: "\uD83C\uDDEF\uD83C\uDDF4 \u0645\u0624\u0634\u0631 \u0627\u0633\u062A\u0642\u0631\u0627\u0631 \u0627\u0644\u0623\u0631\u062F\u0646",
+                pageSubtitle: "\u062A\u062D\u0644\u064A\u0644 \u0645\u062A\u0639\u062F\u062F \u0627\u0644\u0639\u0648\u0627\u0645\u0644: \u0627\u0644\u062D\u0643\u0645 \u0627\u0644\u0647\u0627\u0634\u0645\u064A\u060C \u0627\u0644\u0642\u0648\u0627\u0639\u062F \u0627\u0644\u0627\u0633\u062A\u0631\u0627\u062A\u064A\u062C\u064A\u0629\u060C \u0636\u063A\u0648\u0637 \u0627\u0644\u0644\u0627\u062C\u0626\u064A\u0646 \u0648\u0627\u0644\u0647\u0634\u0627\u0634\u0629 \u0627\u0644\u0627\u0642\u062A\u0635\u0627\u062F\u064A\u0629",
+                backLink: "\u2192 \u0627\u0644\u0639\u0648\u062F\u0629 \u0625\u0644\u0649 \u0644\u0648\u062D\u0629 \u0627\u0644\u062A\u062D\u0643\u0645",
+                themeToggle: "\u0627\u0644\u0633\u0645\u0629",
+                lastUpdated: "\u0622\u062E\u0631 \u062A\u062D\u062F\u064A\u062B: ",
+                mapTitle: "\u0627\u0644\u0623\u0631\u062F\u0646 \u2014 \u0646\u0638\u0631\u0629 \u0627\u0633\u062A\u0631\u0627\u062A\u064A\u062C\u064A\u0629",
+                mapSubtitle: "\u062E\u0631\u064A\u0637\u0629 \u062A\u0641\u0627\u0639\u0644\u064A\u0629. \u0637\u0628\u0642\u0627\u062A \u0627\u0644\u0642\u0648\u0627\u0639\u062F \u0642\u0631\u064A\u0628\u0627\u064B.",
+                knowledgeLibraryTitle: "\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u0645\u0639\u0631\u0641\u0629",
+                catMonarchy: "\u0627\u0644\u0645\u0645\u0644\u0643\u0629 \u0627\u0644\u0647\u0627\u0634\u0645\u064A\u0629 \u0648\u0627\u0644\u062D\u0643\u0645",
+                catBuffer: "\u062F\u0648\u0644\u0629 \u062D\u0627\u062C\u0632\u0629 \u0627\u0633\u062A\u0631\u0627\u062A\u064A\u062C\u064A\u0629 \u0648\u0645\u0648\u0642\u0639 \u0625\u0642\u0644\u064A\u0645\u064A",
+                catBasing: "\u0627\u0644\u0648\u062C\u0648\u062F \u0627\u0644\u0639\u0633\u0643\u0631\u064A \u0627\u0644\u0623\u0645\u0631\u064A\u0643\u064A \u0648\u0627\u0644\u0642\u0648\u0627\u0639\u062F",
+                catRefugees: "\u0623\u0632\u0645\u0629 \u0627\u0644\u0644\u0627\u062C\u0626\u064A\u0646 \u0648\u0627\u0644\u062F\u064A\u0645\u0648\u063A\u0631\u0627\u0641\u064A\u0627",
+                catEconomy: "\u0627\u0644\u0647\u0634\u0627\u0634\u0629 \u0627\u0644\u0627\u0642\u062A\u0635\u0627\u062F\u064A\u0629",
+                catTribal: "\u0627\u0644\u062F\u064A\u0646\u0627\u0645\u064A\u0627\u062A \u0627\u0644\u0642\u0628\u0644\u064A\u0629 \u0648\u0627\u0644\u0627\u062C\u062A\u0645\u0627\u0639\u064A\u0629",
+                recentArticles: "\uD83D\uDCF0 \u0623\u062D\u062F\u062B \u0627\u0644\u0645\u0642\u0627\u0644\u0627\u062A \u0639\u0646 \u0627\u0644\u0623\u0631\u062F\u0646"
+            },
+            fa: {
+                pageTitle: "\uD83C\uDDEF\uD83C\uDDF4 \u0634\u0627\u062E\u0635 \u062B\u0628\u0627\u062A \u0627\u0631\u062F\u0646",
+                pageSubtitle: "\u062A\u062D\u0644\u06CC\u0644 \u0686\u0646\u062F\u0639\u0627\u0645\u0644\u06CC: \u062D\u06A9\u0648\u0645\u062A \u0647\u0627\u0634\u0645\u06CC\u060C \u067E\u0627\u06CC\u06AF\u0627\u0647\u200C\u0647\u0627\u06CC \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC\u06A9\u060C \u0641\u0634\u0627\u0631\u0647\u0627\u06CC \u067E\u0646\u0627\u0647\u0646\u062F\u06AF\u06CC \u0648 \u0622\u0633\u06CC\u0628\u200C\u067E\u0630\u06CC\u0631\u06CC \u0627\u0642\u062A\u0635\u0627\u062F\u06CC",
+                backLink: "\u2192 \u0628\u0627\u0632\u06AF\u0634\u062A \u0628\u0647 \u062F\u0627\u0634\u0628\u0648\u0631\u062F",
+                themeToggle: "\u067E\u0648\u0633\u062A\u0647",
+                lastUpdated: "\u0622\u062E\u0631\u06CC\u0646 \u0628\u0647\u200C\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06CC: ",
+                mapTitle: "\u0627\u0631\u062F\u0646 \u2014 \u0646\u0645\u0627\u06CC \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC\u06A9",
+                mapSubtitle: "\u0646\u0642\u0634\u0647 \u062A\u0639\u0627\u0645\u0644\u06CC. \u0644\u0627\u06CC\u0647\u200C\u0647\u0627\u06CC \u067E\u0627\u06CC\u06AF\u0627\u0647 \u0628\u0647 \u0632\u0648\u062F\u06CC.",
+                knowledgeLibraryTitle: "\u06A9\u062A\u0627\u0628\u062E\u0627\u0646\u0647 \u062F\u0627\u0646\u0634",
+                catMonarchy: "\u067E\u0627\u062F\u0634\u0627\u0647\u06CC \u0647\u0627\u0634\u0645\u06CC \u0648 \u062D\u06A9\u0648\u0645\u062A",
+                catBuffer: "\u062F\u0648\u0644\u062A \u062D\u0627\u0626\u0644 \u0627\u0633\u062A\u0631\u0627\u062A\u0698\u06CC\u06A9 \u0648 \u062C\u0627\u06CC\u06AF\u0627\u0647 \u0645\u0646\u0637\u0642\u0647\u200C\u0627\u06CC",
+                catBasing: "\u062D\u0636\u0648\u0631 \u0646\u0638\u0627\u0645\u06CC \u0622\u0645\u0631\u06CC\u06A9\u0627 \u0648 \u067E\u0627\u06CC\u06AF\u0627\u0647\u200C\u0647\u0627",
+                catRefugees: "\u0628\u062D\u0631\u0627\u0646 \u067E\u0646\u0627\u0647\u0646\u062F\u06AF\u0627\u0646 \u0648 \u062C\u0645\u0639\u06CC\u062A\u200C\u0634\u0646\u0627\u0633\u06CC",
+                catEconomy: "\u0622\u0633\u06CC\u0628\u200C\u067E\u0630\u06CC\u0631\u06CC\u200C\u0647\u0627\u06CC \u0627\u0642\u062A\u0635\u0627\u062F\u06CC",
+                catTribal: "\u067E\u0648\u06CC\u0627\u06CC\u06CC\u200C\u0647\u0627\u06CC \u0642\u0628\u06CC\u0644\u0647\u200C\u0627\u06CC \u0648 \u0627\u062C\u062A\u0645\u0627\u0639\u06CC",
+                recentArticles: "\uD83D\uDCF0 \u062C\u062F\u06CC\u062F\u062A\u0631\u06CC\u0646 \u0645\u0642\u0627\u0644\u0627\u062A \u062F\u0631\u0628\u0627\u0631\u0647 \u0627\u0631\u062F\u0646"
+            }
+        };
+
+        function switchLanguage(lang, button) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
+                        const currentText = element.textContent;
+                        if (currentText.includes(':')) {
+                            const timestamp = currentText.split(': ').slice(1).join(': ');
+                            element.textContent = translations[lang][key] + timestamp;
+                        } else {
+                            element.textContent = translations[lang][key] + 'Loading...';
+                        }
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            startLoadingProgress();
+            
+            document.getElementById('lastUpdated').textContent = 
+                'Last updated: ' + new Date().toLocaleString('en-US', { 
+                    month: 'short', day: 'numeric', year: 'numeric', 
+                    hour: 'numeric', minute: '2-digit', hour12: true 
+                });
+            
+            loadJordanArticles().then(() => {
+                hideLoadingOverlay();
+            }).catch(err => {
+                console.error('Error loading Jordan data:', err);
+                hideLoadingOverlay();
+            });
+        });
+    </script>
+</body>
+</html>
