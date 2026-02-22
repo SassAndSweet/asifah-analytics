@@ -290,6 +290,25 @@
         .error-message { background-color: #f8d7da; border: 2px solid #f5c6cb; color: #721c24; padding: 18px; border-radius: 10px; margin: 20px 0; display: none; }
         .error-message.show { display: block; }
 
+        /* ===== WEATHER WIDGET ===== */
+        .weather-section { margin: 20px 0; padding: 15px; background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-radius: 10px; border: 1px solid #bae6fd; }
+        .weather-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: #0369a1; font-weight: bold; margin-bottom: 12px; text-align: center; }
+        .weather-forecast { display: flex; gap: 6px; justify-content: space-between; overflow-x: auto; }
+        .weather-day { flex: 1; min-width: 55px; text-align: center; padding: 8px 4px; background: rgba(255,255,255,0.7); border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); }
+        .weather-day-name { font-size: 10px; font-weight: bold; color: #475569; margin-bottom: 4px; }
+        .weather-icon { font-size: 22px; margin: 4px 0; }
+        .weather-temps { font-size: 12px; font-weight: 600; }
+        .weather-high { color: #dc2626; }
+        .weather-low { color: #2563eb; margin-left: 4px; }
+        .weather-conditions { font-size: 9px; color: #64748b; margin-top: 3px; }
+        .weather-loading { text-align: center; padding: 20px; color: #7f8c8d; font-style: italic; font-size: 12px; }
+        .weather-strike-note { text-align: center; margin-top: 10px; font-size: 11px; padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.04); font-weight: 500; }
+
+        /* ===== COUNTRY STABILITY BUTTON ===== */
+        .country-stability-btn { display: block; width: 100%; padding: 14px 20px; margin: 15px 0; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8a 100%); color: white; border: 2px solid rgba(255,255,255,0.1); border-radius: 10px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
+        .country-stability-btn:hover { background: linear-gradient(135deg, #2c5f8a 0%, #3b7fc4 100%); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,58,95,0.3); }
+        .country-stability-btn .btn-subtitle { display: block; font-size: 10px; font-weight: normal; letter-spacing: 0.5px; margin-top: 4px; opacity: 0.7; text-transform: none; }
+
         /* CYBERPUNK DARK MODE */
         .target-card.expanded { border-color: rgba(0, 210, 255, 0.3); box-shadow: 0 0 20px rgba(0, 210, 255, 0.08), 0 4px 12px rgba(0,0,0,0.08); }
         [data-theme="dark"] .target-card.expanded { border-color: rgba(0, 210, 255, 0.4); box-shadow: 0 0 30px rgba(0, 210, 255, 0.15); }
@@ -312,6 +331,14 @@
         [data-theme="dark"] .card-scan-button { background: linear-gradient(180deg, #164e63 0%, #0e3a4a 100%); border: 1px solid rgba(0, 210, 255, 0.2); }
         [data-theme="dark"] .mil-posture-awaiting { background: rgba(100, 116, 139, 0.1); border-color: #475569; color: #94a3b8; }
         [data-theme="dark"] .disclaimer { background-color: rgba(120, 53, 15, 0.2); border-color: #92400e; color: #fbbf24; }
+        [data-theme="dark"] .weather-section { background: linear-gradient(135deg, rgba(8,145,178,0.1) 0%, rgba(14,116,144,0.05) 100%); border-color: rgba(0,210,255,0.15); }
+        [data-theme="dark"] .weather-title { color: #22d3ee; }
+        [data-theme="dark"] .weather-day { background: rgba(15,23,42,0.5); border-color: rgba(0,210,255,0.1); }
+        [data-theme="dark"] .weather-day-name { color: #94a3b8; }
+        [data-theme="dark"] .weather-conditions { color: #94a3b8; }
+        [data-theme="dark"] .weather-strike-note { background: rgba(0,210,255,0.05); color: #e2e8f0; }
+        [data-theme="dark"] .country-stability-btn { background: linear-gradient(135deg, #0e3a4a 0%, #164e63 100%); border-color: rgba(0,210,255,0.2); }
+        [data-theme="dark"] .country-stability-btn:hover { background: linear-gradient(135deg, #164e63 0%, #0891b2 100%); box-shadow: 0 4px 12px rgba(0,210,255,0.2); }
         [data-theme="dark"] .notam-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #92400e; }
         [data-theme="dark"] .flight-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #991b1b; }
 
@@ -402,6 +429,13 @@
                             <div class="gauge-text medium" id="greenland-prob">--</div>
                         </div>
                     </div>
+                    <!-- WEATHER WIDGET -->
+                    <div class="weather-section" id="greenland-weather">
+                        <div class="weather-title">🌤️ 7-Day Forecast — Nuuk</div>
+                        <div class="weather-forecast" id="greenland-weather-forecast">
+                            <div class="weather-loading">Loading weather data...</div>
+                        </div>
+                    </div>
                     <div class="timeline-display">
                         <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
                         <div class="timeline-value" id="greenland-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
@@ -414,6 +448,10 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
+                    <a href="greenland.html" class="country-stability-btn">
+                        🇬🇱 Greenland Stability Index
+                        <span class="btn-subtitle">Sovereignty, Arctic security & resource analysis — Coming Soon</span>
+                    </a>
                     <div class="headlines-section" id="greenland-headlines">
                         <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
                         <p style="color:#7f8c8d; font-style:italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
@@ -462,6 +500,13 @@
                             <div class="gauge-text medium" id="poland-prob">--</div>
                         </div>
                     </div>
+                    <!-- WEATHER WIDGET -->
+                    <div class="weather-section" id="poland-weather">
+                        <div class="weather-title">🌤️ 7-Day Forecast — Warsaw</div>
+                        <div class="weather-forecast" id="poland-weather-forecast">
+                            <div class="weather-loading">Loading weather data...</div>
+                        </div>
+                    </div>
                     <div class="timeline-display">
                         <div class="timeline-label">Projected Timeline</div>
                         <div class="timeline-value" id="poland-timeline">Awaiting scan...</div>
@@ -474,6 +519,10 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
+                    <a href="poland.html" class="country-stability-btn">
+                        🇵🇱 Poland Stability Index
+                        <span class="btn-subtitle">NATO eastern flank, defense spending & border dynamics — Coming Soon</span>
+                    </a>
                     <div class="headlines-section" id="poland-headlines">
                         <h4>Recent Headlines:</h4>
                         <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
@@ -522,6 +571,13 @@
                             <div class="gauge-text medium" id="russia-prob">--</div>
                         </div>
                     </div>
+                    <!-- WEATHER WIDGET -->
+                    <div class="weather-section" id="russia-weather">
+                        <div class="weather-title">🌤️ 7-Day Forecast — Moscow</div>
+                        <div class="weather-forecast" id="russia-weather-forecast">
+                            <div class="weather-loading">Loading weather data...</div>
+                        </div>
+                    </div>
                     <div class="timeline-display">
                         <div class="timeline-label">Projected Timeline</div>
                         <div class="timeline-value" id="russia-timeline">Awaiting scan...</div>
@@ -534,6 +590,10 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
+                    <a href="russia.html" class="country-stability-btn">
+                        🇷🇺 Russia Stability Index
+                        <span class="btn-subtitle">Sanctions impact, force posture & internal dynamics — Coming Soon</span>
+                    </a>
                     <div class="headlines-section" id="russia-headlines">
                         <h4>Recent Headlines:</h4>
                         <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
@@ -581,6 +641,13 @@
                             <div class="gauge-text medium" id="ukraine-prob">--</div>
                         </div>
                     </div>
+                    <!-- WEATHER WIDGET -->
+                    <div class="weather-section" id="ukraine-weather">
+                        <div class="weather-title">🌤️ 7-Day Forecast — Kyiv</div>
+                        <div class="weather-forecast" id="ukraine-weather-forecast">
+                            <div class="weather-loading">Loading weather data...</div>
+                        </div>
+                    </div>
                     <div class="timeline-display">
                         <div class="timeline-label">Projected Timeline</div>
                         <div class="timeline-value" id="ukraine-timeline">Awaiting scan...</div>
@@ -593,6 +660,10 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
+                    <a href="ukraine.html" class="country-stability-btn">
+                        🇺🇦 Ukraine Stability Index
+                        <span class="btn-subtitle">Frontline dynamics, aid flows & ceasefire analysis — Coming Soon</span>
+                    </a>
                     <div class="headlines-section" id="ukraine-headlines">
                         <h4>Recent Headlines:</h4>
                         <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
@@ -909,48 +980,62 @@
             else segments[3]?.classList.add('active');
         }
 
-        // Headlines
+        // Headlines — handle multiple backend response formats
         const headlinesEl = document.getElementById(`${target}-headlines`);
-        if (headlinesEl && data.articles && data.articles.length > 0) {
+        // Try all known field names from our backends
+        const articlesList = data.articles || data.top_scoring_articles || data.recent_headlines || [];
+        if (headlinesEl && articlesList.length > 0) {
             let html = `<h4>${translations[currentLang]?.recentHeadlines || 'Recent Headlines:'}</h4>`;
-            const maxContribution = Math.max(...data.articles.map(a => Math.abs(a.weighted_contribution || 0)), 1);
+            
+            // Normalize articles to common format
+            const normalized = articlesList.map(a => ({
+                title: a.title || 'Untitled',
+                url: a.url || '#',
+                source: a.source || (a.source_name ? a.source_name : 'Unknown'),
+                published: a.published || a.publishedAt || '',
+                weight: a.source_weight || a.weight || 0.5,
+                contribution: a.weighted_contribution || a.contribution || 0,
+                severity: a.severity || a.threat_type || 'standard',
+                decay: a.time_decay || 1,
+                deescalation: a.deescalation || false
+            }));
 
-            data.articles.slice(0, 15).forEach(article => {
-                const weight = (article.source_weight || 0.5).toFixed(2);
-                const contribution = article.weighted_contribution || 0;
+            const maxContribution = Math.max(...normalized.map(a => Math.abs(a.contribution)), 1);
+
+            normalized.slice(0, 15).forEach(article => {
+                const weight = parseFloat(article.weight).toFixed(2);
+                const contribution = parseFloat(article.contribution);
                 const absContrib = Math.abs(contribution);
                 const barWidth = Math.min((absContrib / maxContribution) * 100, 100);
-                const isDeescalation = contribution < 0;
+                const isDeescalation = contribution < 0 || article.deescalation;
 
                 let impactClass = 'low-impact';
                 let impactLabel = 'LOW';
                 if (absContrib > 3) { impactClass = 'high-impact'; impactLabel = 'HIGH'; }
                 else if (absContrib > 1) { impactClass = 'medium-impact'; impactLabel = 'MED'; }
 
-                const title = article.title || 'Untitled';
-                const url = article.url || '#';
-                const source = article.source || 'Unknown';
                 const published = article.published ? new Date(article.published).toLocaleDateString() : '';
-                const severity = article.severity || 'standard';
-                const decay = (article.time_decay || 1).toFixed(2);
+                const decay = parseFloat(article.decay).toFixed(2);
 
                 html += `
                 <div class="headline-item">
-                    <a href="${url}" target="_blank">${title}</a>
+                    <a href="${article.url}" target="_blank">${article.title}</a>
                     <span class="article-weight-badge ${impactClass}">${impactLabel}</span>
                     <div class="article-contribution-bar">
                         <div class="article-contribution-fill ${isDeescalation ? 'deescalation' : ''}" style="width:${barWidth}%"></div>
                     </div>
                     <div class="article-scoring-details">
                         <span>Weight: ${weight}</span>
-                        <span>Severity: ${severity}</span>
+                        <span>Severity: ${article.severity}</span>
                         <span>Decay: ${decay}</span>
                         <span>Contribution: ${contribution > 0 ? '+' : ''}${contribution.toFixed(2)}</span>
                     </div>
-                    <div class="source">${source} ${published ? '• ' + published : ''}</div>
+                    <div class="source">${article.source} ${published ? '• ' + published : ''}</div>
                 </div>`;
             });
             headlinesEl.innerHTML = html;
+        } else if (headlinesEl && articlesList.length === 0) {
+            headlinesEl.innerHTML = `<h4>${translations[currentLang]?.recentHeadlines || 'Recent Headlines:'}</h4><p style="color:#7f8c8d; font-style:italic;">No articles returned — backend may be using cached data or API limits reached.</p>`;
         }
 
         // Update rate limits
@@ -1099,11 +1184,113 @@
         document.getElementById('errorMessage').classList.remove('show');
     }
 
+    // ===== WEATHER WIDGET =====
+    const WEATHER_CAPITALS = {
+        'greenland': { name: 'Nuuk', lat: 64.17, lon: -51.74 },
+        'poland':    { name: 'Warsaw', lat: 52.23, lon: 21.01 },
+        'russia':    { name: 'Moscow', lat: 55.75, lon: 37.62 },
+        'ukraine':   { name: 'Kyiv', lat: 50.45, lon: 30.52 }
+    };
+
+    function getWeatherEmoji(code) {
+        if (code === 0) return '☀️';
+        if (code <= 3) return '⛅';
+        if (code <= 48) return '🌫️';
+        if (code <= 57) return '🌧️';
+        if (code <= 67) return '🌧️';
+        if (code <= 77) return '🌨️';
+        if (code <= 82) return '🌧️';
+        if (code <= 86) return '🌨️';
+        if (code <= 99) return '⛈️';
+        return '🌤️';
+    }
+
+    function getWeatherLabel(code) {
+        if (code === 0) return 'Clear';
+        if (code <= 3) return 'Partly Cloudy';
+        if (code <= 48) return 'Fog';
+        if (code <= 57) return 'Drizzle';
+        if (code <= 67) return 'Rain';
+        if (code <= 77) return 'Snow';
+        if (code <= 82) return 'Showers';
+        if (code <= 86) return 'Snow Showers';
+        if (code <= 99) return 'Thunderstorm';
+        return 'Cloudy';
+    }
+
+    function isClearDay(code) {
+        return code <= 3;
+    }
+
+    async function loadWeather(target) {
+        const config = WEATHER_CAPITALS[target];
+        if (!config) return;
+        const container = document.getElementById(`${target}-weather-forecast`);
+        if (!container) return;
+
+        try {
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${config.lat}&longitude=${config.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=7`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+
+            const days = data.daily.time;
+            const codes = data.daily.weather_code;
+            const highs = data.daily.temperature_2m_max;
+            const lows = data.daily.temperature_2m_min;
+
+            let html = '';
+            let clearNights = 0;
+
+            for (let i = 0; i < days.length; i++) {
+                const date = new Date(days[i] + 'T12:00:00');
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                const emoji = getWeatherEmoji(codes[i]);
+                const label = getWeatherLabel(codes[i]);
+                if (isClearDay(codes[i])) clearNights++;
+
+                html += `
+                    <div class="weather-day" style="${isClearDay(codes[i]) ? 'border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);' : ''}">
+                        <div class="weather-day-name">${dayName}</div>
+                        <div class="weather-icon">${emoji}</div>
+                        <div class="weather-temps">
+                            <span class="weather-high">${Math.round(highs[i])}°</span>
+                            <span class="weather-low">${Math.round(lows[i])}°</span>
+                        </div>
+                        <div class="weather-conditions">${label}</div>
+                    </div>
+                `;
+            }
+
+            if (clearNights >= 4) {
+                html += `</div><div class="weather-strike-note">⚠️ ${clearNights}/7 clear days — favorable conditions for aerial operations</div>`;
+            } else if (clearNights >= 2) {
+                html += `</div><div class="weather-strike-note">🌤️ ${clearNights}/7 clear days — mixed conditions window</div>`;
+            } else {
+                html += `</div><div class="weather-strike-note">☁️ ${clearNights}/7 clear days — poor conditions for aerial operations</div>`;
+            }
+
+            container.innerHTML = html;
+
+        } catch (error) {
+            console.warn(`[Weather] Failed for ${target}:`, error);
+            container.innerHTML = '<div class="weather-loading">Weather data unavailable</div>';
+        }
+    }
+
+    async function loadAllWeather() {
+        const targets = Object.keys(WEATHER_CAPITALS);
+        for (const target of targets) {
+            loadWeather(target);
+        }
+    }
+
     // ===== INIT =====
     document.addEventListener('DOMContentLoaded', function() {
         loadNotams();
         loadFlights();
         fetchRateLimits();
+        loadAllWeather();
     });
 
     </script>
