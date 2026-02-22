@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asifah Analytics - European Conflict Probability Dashboard</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #f5f5f5; --container-bg: #ffffff; --card-bg: #ffffff;
+            --card-border: #e1e8ed; --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d; --text-muted: #95a5a6;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
+            --card-border: #404040; --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0; --text-muted: #808080;
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            line-height: 1.6; padding: 20px;
+            background-image: url('Ukraine_on_fire.png');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-attachment: fixed;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(245, 245, 245, 0.78);
+            transition: background-color 0.3s ease;
+            pointer-events: none; z-index: -1;
+        }
+        [data-theme="dark"] body::before { background-color: rgba(26, 26, 26, 0.88); }
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #1a2744 0%, #1e3a5f 50%, #2c5282 100%);
+            color: white; padding: 35px; border-radius: 12px;
+            margin-bottom: 30px; box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative; min-height: 140px;
+        }
+        header::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.015) 2px, rgba(0,255,255,0.015) 4px);
+            pointer-events: none; border-radius: 12px; z-index: 1;
+        }
+        .header-content { text-align: center; max-width: 800px; margin: 0 auto; padding-top: 10px; }
+        .header-logo { width: 80px; height: 80px; position: absolute; top: 35px; left: 35px; border-radius: 50%; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        h2 { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .home-button {
+            position: absolute; top: 35px; right: 310px;
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.2); padding: 6px 14px; border-radius: 6px;
+            color: white; text-decoration: none;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px; font-weight: bold;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px); transition: all 0.2s ease; z-index: 2;
+        }
+        .home-button:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); transform: translateY(-2px); }
+        .language-switcher {
+            position: absolute; top: 35px; right: 35px;
+            display: flex; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .lang-btn {
+            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px; font-weight: bold; border-radius: 6px;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+        .theme-toggle {
+            position: absolute; top: 90px; right: 35px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle-label { font-size: 11px; color: rgba(255,255,255,0.9); margin-right: 8px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .theme-toggle-switch {
+            position: relative; width: 50px; height: 26px;
+            background: rgba(255,255,255,0.2); border-radius: 13px;
+            cursor: pointer; transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+            background: white; border-radius: 50%; transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(24px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+
+        /* TARGETS GRID */
+        .targets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 30px; }
+
+        /* TARGET CARDS */
+        .target-card {
+            background: var(--card-bg); border-radius: 16px; padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden;
+        }
+        .target-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.15); }
+        .target-card.low-threat { background: linear-gradient(to bottom, #ffffff 0%, #f0f9f4 100%); border-color: #a3d9b1; }
+        .target-card.medium-threat { background: linear-gradient(to bottom, #ffffff 0%, #fff9f0 100%); border-color: #f5c99d; }
+        .target-card.high-threat { background: linear-gradient(to bottom, #ffffff 0%, #fff5f5 100%); border-color: #f5a9a3; animation: high-threat-pulse 3s ease-in-out infinite; }
+        @keyframes high-threat-pulse { 0%, 100% { box-shadow: 0 4px 12px rgba(0,0,0,0.08); } 50% { box-shadow: 0 4px 20px rgba(192, 57, 43, 0.25); } }
+
+        /* Collapsible */
+        .target-card.collapsed { cursor: pointer; min-height: auto; padding: 20px; }
+        .target-card.collapsed:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        .target-card.collapsed .card-collapsed-view { display: block; }
+        .target-card.collapsed .card-expanded-view { display: none; }
+        .target-card.expanded .card-collapsed-view { display: none; }
+        .target-card.expanded .card-expanded-view { display: block; }
+        .collapsed-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .collapsed-title { font-size: 20px; font-weight: bold; color: #1e3a5f; }
+        .collapse-toggle-btn {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white; border: none; padding: 8px 16px; border-radius: 6px;
+            font-size: 12px; font-weight: bold; cursor: pointer; transition: all 0.3s ease; white-space: nowrap;
+        }
+        .collapse-toggle-btn:hover { background: linear-gradient(135deg, #2980b9 0%, #1e5a8a 100%); transform: translateY(-2px); }
+        .collapsed-metric { margin-bottom: 12px; }
+        .collapsed-metric-label { font-size: 14px; color: #6b7280; margin-bottom: 8px; }
+        .collapsed-metric-value { display: flex; align-items: center; gap: 12px; }
+        .collapsed-percentage { font-size: 28px; font-weight: bold; color: #1e3a5f; font-family: 'Courier New', monospace; }
+        .collapsed-bar { flex: 1; height: 12px; background: #e5e7eb; border-radius: 6px; overflow: hidden; }
+        .collapsed-bar-fill { height: 100%; border-radius: 6px; transition: width 0.6s ease; }
+        .collapsed-timestamp { font-size: 11px; color: #9ca3af; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .collapsed-timestamp::before { content: "📅"; }
+        .expand-instructions { font-size: 12px; color: #6b7280; font-style: italic; margin-top: 8px; }
+
+        /* Expanded */
+        .target-card h3 { font-size: 20px; font-weight: bold; color: #1e3a5f; margin-bottom: 20px; text-align: center; border-bottom: 3px solid #1e3a5f; padding-bottom: 12px; letter-spacing: 1px; }
+        .card-scan-controls { background: linear-gradient(to bottom, #f8f9fa 0%, #ffffff 100%); padding: 20px; border-radius: 10px; margin-bottom: 20px; border: 2px solid #e1e8ed; }
+        .card-time-window { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+        .card-time-window label { display: inline-flex; align-items: center; cursor: pointer; font-size: 13px; }
+        .card-time-window input[type="radio"] { margin-right: 6px; cursor: pointer; }
+        .card-scan-button {
+            background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%); color: white; border: none;
+            padding: 12px 30px; font-family: 'Times New Roman', Times, serif; font-size: 14px; font-weight: bold;
+            border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transition: all 0.3s ease; position: relative; overflow: hidden; letter-spacing: 0.5px; width: 100%;
+        }
+        .card-scan-button:hover:not(:disabled) { background: linear-gradient(180deg, #2c3e50 0%, #1e3a5f 100%); box-shadow: 0 6px 16px rgba(0,0,0,0.35); transform: translateY(-2px); }
+        .card-scan-button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .card-scan-button.scanning::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: scan-shimmer 1.5s infinite;
+        }
+        @keyframes scan-shimmer { to { left: 100%; } }
+        .loading { display: none; text-align: center; padding: 15px; font-style: italic; color: #7f8c8d; font-size: 13px; }
+        .loading.active { display: block; }
+        .loading-spinner { display: inline-block; width: 18px; height: 18px; border: 3px solid #f3f3f3; border-top: 3px solid #1e3a5f; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; vertical-align: middle; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Gauge */
+        .probability-display { text-align: center; margin-bottom: 25px; position: relative; }
+        .probability-label { font-size: 13px; color: #7f8c8d; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .gauge-container { position: relative; width: 200px; height: 200px; margin: 0 auto 15px; }
+        .gauge-svg { transform: rotate(-90deg); }
+        .gauge-background { fill: none; stroke: #ecf0f1; stroke-width: 18; }
+        .gauge-progress { fill: none; stroke-width: 18; stroke-linecap: round; transition: stroke-dasharray 1s ease-in-out, stroke 0.3s ease; }
+        .gauge-progress.low { stroke: #27ae60; }
+        .gauge-progress.medium { stroke: #f39c12; }
+        .gauge-progress.high { stroke: #c0392b; }
+        .gauge-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 48px; font-weight: bold; font-family: 'Courier New', monospace; }
+        .gauge-text.low { color: #27ae60; }
+        .gauge-text.medium { color: #f39c12; }
+        .gauge-text.high { color: #c0392b; }
+
+        /* Timeline */
+        .timeline-display { margin-bottom: 25px; padding: 18px; background-color: #f8f9fa; border-radius: 10px; border: 1px solid #e1e8ed; }
+        .timeline-label { font-size: 12px; color: #7f8c8d; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; text-align: center; }
+        .timeline-value { font-size: 15px; font-weight: bold; color: #2c3e50; text-align: center; margin-bottom: 12px; }
+        .timeline-bar { display: flex; height: 28px; border-radius: 8px; overflow: hidden; background-color: #e1e8ed; margin-top: 8px; }
+        .timeline-segment { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: #7f8c8d; border-right: 2px solid white; transition: all 0.3s ease; }
+        .timeline-segment:last-child { border-right: none; }
+        .timeline-segment.active { background-color: #1e3a5f; color: white; transform: scaleY(1.1); }
+
+        /* Mil Posture */
+        .mil-posture-awaiting { display: flex; align-items: center; gap: 8px; padding: 10px 14px; background: rgba(100, 116, 139, 0.08); border: 1px dashed #94a3b8; border-radius: 8px; font-size: 12px; color: #64748b; margin: 20px 0 5px 0; }
+        .mil-page-btn { padding: 6px 14px; background: linear-gradient(135deg, #334155 0%, #1e293b 100%); color: white; border: 1px solid #475569; border-radius: 6px; font-size: 11px; font-weight: bold; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; }
+        .mil-page-btn:hover { background: linear-gradient(135deg, #475569 0%, #334155 100%); transform: translateY(-1px); }
+
+        /* Headlines */
+        .headlines-section { margin-top: 25px; max-height: 400px; overflow-y: auto; border-top: 2px solid #e1e8ed; padding-top: 18px; }
+        .headlines-section::-webkit-scrollbar { width: 8px; }
+        .headlines-section::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .headlines-section::-webkit-scrollbar-thumb { background: #bdc3c7; border-radius: 4px; }
+        .headlines-section h4 { font-size: 14px; font-weight: bold; color: #34495e; margin-bottom: 12px; letter-spacing: 0.5px; }
+        .headline-item { padding: 12px; margin-bottom: 12px; background-color: #f8f9fa; border-left: 4px solid #1e3a5f; border-radius: 6px; font-size: 12px; transition: all 0.2s ease; }
+        .headline-item:hover { background-color: #e8f4f8; border-left-width: 6px; transform: translateX(4px); }
+        .headline-item a { color: #2c3e50; text-decoration: none; font-weight: 500; }
+        .headline-item a:hover { color: #1e3a5f; text-decoration: underline; }
+        .headline-item .source { color: #7f8c8d; font-style: italic; font-size: 11px; margin-top: 6px; }
+        .article-weight-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: 8px; }
+        .article-weight-badge.high-impact { background-color: #c0392b; color: white; }
+        .article-weight-badge.medium-impact { background-color: #f39c12; color: white; }
+        .article-weight-badge.low-impact { background-color: #27ae60; color: white; }
+        .article-contribution-bar { height: 6px; background-color: #ecf0f1; border-radius: 3px; margin-top: 6px; overflow: hidden; }
+        .article-contribution-fill { height: 100%; background: linear-gradient(90deg, #c0392b 0%, #e74c3c 100%); transition: width 0.5s ease; }
+        .article-contribution-fill.deescalation { background: linear-gradient(90deg, #27ae60 0%, #2ecc71 100%); }
+        .article-scoring-details { font-size: 10px; color: #7f8c8d; margin-top: 6px; display: flex; gap: 12px; flex-wrap: wrap; }
+
+        /* NOTAM Widget */
+        .notam-widget { background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid #f59e0b; }
+        .notam-widget-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .notam-widget-title { font-size: 17px; font-weight: bold; color: #92400e; letter-spacing: 0.5px; }
+        .notam-widget-title::before { content: "⚠️ "; font-size: 20px; margin-right: 8px; }
+        .notam-status-badge { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+        .notam-scroll-container { position: relative; overflow: hidden; padding: 10px 0; }
+        .notam-cards-wrapper { display: flex; gap: 20px; animation: scroll-notams 30s linear infinite; width: max-content; }
+        .notam-cards-wrapper:hover { animation-play-state: paused; }
+        @keyframes scroll-notams { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .notam-card { min-width: 320px; max-width: 320px; background: linear-gradient(135deg, #fffbeb 0%, #fff 100%); border: 2px solid #fde68a; border-radius: 10px; padding: 18px; transition: all 0.3s ease; flex-shrink: 0; }
+        .notam-card:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(245, 158, 11, 0.2); }
+        .notam-card.type-red { background: linear-gradient(135deg, #fef2f2 0%, #fff 100%); border-color: #fecaca; }
+        .notam-card.type-orange { background: linear-gradient(135deg, #fff7ed 0%, #fff 100%); border-color: #fed7aa; }
+        .notam-card.type-yellow { background: linear-gradient(135deg, #fefce8 0%, #fff 100%); border-color: #fef08a; }
+        .notam-card.type-blue { background: linear-gradient(135deg, #eff6ff 0%, #fff 100%); border-color: #bfdbfe; }
+        .notam-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+        .notam-country { font-size: 15px; font-weight: bold; color: #374151; flex: 1; }
+        .notam-type-badge { padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: bold; text-transform: uppercase; white-space: nowrap; }
+        .notam-type-badge.type-red { background: #fee2e2; color: #991b1b; }
+        .notam-type-badge.type-orange { background: #ffedd5; color: #9a3412; }
+        .notam-type-badge.type-yellow { background: #fef9c3; color: #854d0e; }
+        .notam-type-badge.type-blue { background: #dbeafe; color: #1e40af; }
+        .notam-summary { font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 12px; min-height: 60px; }
+        .notam-details { font-size: 11px; color: #6b7280; line-height: 1.8; }
+        .no-notams { text-align: center; padding: 40px 20px; color: #6b7280; }
+        .no-notams::before { content: "✓"; display: block; font-size: 48px; color: #10b981; margin-bottom: 15px; }
+
+        /* Flight Widget */
+        .flight-widget { background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid #e74c3c; }
+        .flight-widget-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+        .flight-widget-title { font-size: 17px; font-weight: bold; color: #c0392b; letter-spacing: 0.5px; }
+        .flight-widget-title::before { content: "✈️ "; font-size: 20px; margin-right: 8px; }
+        .flight-status-badge { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .flight-status-badge.normal { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .flight-status-badge.active { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+        .flight-cancellations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .cancellation-card { background: linear-gradient(135deg, #fff5f5 0%, #fff 100%); border: 2px solid #fecaca; border-radius: 10px; padding: 18px; transition: all 0.3s ease; }
+        .cancellation-card:hover { border-color: #f87171; transform: translateY(-4px); }
+        .cancellation-airline { font-size: 16px; font-weight: bold; color: #991b1b; margin-bottom: 8px; }
+        .cancellation-details { font-size: 13px; color: #6b7280; line-height: 1.6; }
+        .no-cancellations { text-align: center; padding: 30px; color: #6b7280; font-style: italic; }
+        .no-cancellations::before { content: "✓"; display: block; font-size: 48px; color: #10b981; margin-bottom: 10px; }
+
+        /* Rate Limit */
+        .rate-limit-box { background: linear-gradient(to bottom, #fff 0%, #f8f9fa 100%); padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid #e1e8ed; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .rate-limit-item { display: flex; flex-direction: column; align-items: center; min-width: 120px; }
+        .rate-limit-label { font-size: 11px; text-transform: uppercase; color: #7f8c8d; margin-bottom: 8px; letter-spacing: 1px; font-weight: bold; }
+        .rate-limit-value { font-size: 24px; font-weight: bold; color: #2c3e50; }
+        .rate-limit-value.success { color: #27ae60; }
+        .rate-limit-value.warning { color: #f39c12; }
+        .rate-limit-value.danger { color: #c0392b; }
+
+        /* Footer */
+        footer { background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); font-size: 12px; }
+        .footer-content { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 25px; }
+        .footer-section { flex: 1; min-width: 250px; }
+        .footer-section h4 { font-size: 13px; font-weight: bold; color: var(--text-primary); margin-bottom: 10px; }
+        .disclaimer { background-color: #fff3cd; border: 2px solid #ffc107; padding: 18px; border-radius: 10px; margin-top: 25px; font-size: 12px; color: #856404; }
+        .disclaimer strong { display: block; margin-bottom: 8px; font-size: 13px; }
+        .copyright-footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.1); text-align: center; color: #606060; font-size: 11px; }
+        .error-message { background-color: #f8d7da; border: 2px solid #f5c6cb; color: #721c24; padding: 18px; border-radius: 10px; margin: 20px 0; display: none; }
+        .error-message.show { display: block; }
+
+        /* CYBERPUNK DARK MODE */
+        .target-card.expanded { border-color: rgba(0, 210, 255, 0.3); box-shadow: 0 0 20px rgba(0, 210, 255, 0.08), 0 4px 12px rgba(0,0,0,0.08); }
+        [data-theme="dark"] .target-card.expanded { border-color: rgba(0, 210, 255, 0.4); box-shadow: 0 0 30px rgba(0, 210, 255, 0.15); }
+        [data-theme="dark"] body::after { content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(0, 210, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 210, 255, 0.03) 1px, transparent 1px); background-size: 40px 40px; pointer-events: none; z-index: -1; }
+        [data-theme="dark"] header { background: linear-gradient(135deg, #0f172a 0%, #164e63 50%, #0f172a 100%); border: 1px solid rgba(0, 210, 255, 0.15); }
+        [data-theme="dark"] .target-card { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #334155; }
+        [data-theme="dark"] .target-card h3 { color: #67e8f9; border-bottom-color: #0891b2; }
+        [data-theme="dark"] .collapsed-title { color: #67e8f9; }
+        [data-theme="dark"] .target-card.low-threat { background: linear-gradient(to bottom, #1e293b 0%, #022c22 100%); border-color: #065f46; }
+        [data-theme="dark"] .target-card.medium-threat { background: linear-gradient(to bottom, #1e293b 0%, #422006 100%); border-color: #92400e; }
+        [data-theme="dark"] .target-card.high-threat { background: linear-gradient(to bottom, #1e293b 0%, #450a0a 100%); border-color: #991b1b; }
+        [data-theme="dark"] .timeline-display { background-color: rgba(15, 23, 42, 0.6); border-color: #334155; }
+        [data-theme="dark"] .headline-item { background-color: rgba(30, 41, 59, 0.8); border-left-color: #0891b2; }
+        [data-theme="dark"] .headline-item:hover { background-color: rgba(30, 58, 95, 0.5); }
+        [data-theme="dark"] .headline-item a { color: #e2e8f0; }
+        [data-theme="dark"] footer { background: #1e293b; border-color: #334155; }
+        [data-theme="dark"] .rate-limit-box { background: linear-gradient(to bottom, #1e293b 0%, #0f172a 100%); border-color: #334155; }
+        [data-theme="dark"] .card-scan-controls { background: rgba(15, 23, 42, 0.6); border-color: #334155; }
+        [data-theme="dark"] .collapse-toggle-btn { background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%); }
+        [data-theme="dark"] .card-scan-button { background: linear-gradient(180deg, #164e63 0%, #0e3a4a 100%); border: 1px solid rgba(0, 210, 255, 0.2); }
+        [data-theme="dark"] .mil-posture-awaiting { background: rgba(100, 116, 139, 0.1); border-color: #475569; color: #94a3b8; }
+        [data-theme="dark"] .disclaimer { background-color: rgba(120, 53, 15, 0.2); border-color: #92400e; color: #fbbf24; }
+        [data-theme="dark"] .notam-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #92400e; }
+        [data-theme="dark"] .flight-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #991b1b; }
+
+        /* Card-specific accents */
+        #greenland-card h3 { border-bottom-color: #0ea5e9; }
+        [data-theme="dark"] #greenland-card h3 { border-bottom-color: #38bdf8; }
+        #ukraine-card h3 { border-bottom-color: #f59e0b; }
+        [data-theme="dark"] #ukraine-card h3 { border-bottom-color: #fbbf24; color: #fbbf24; }
+        #russia-card h3 { border-bottom-color: #dc2626; }
+        [data-theme="dark"] #russia-card h3 { border-bottom-color: #f87171; color: #f87171; }
+        #poland-card h3 { border-bottom-color: #dc2626; }
+
+        @media (max-width: 768px) {
+            header { padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; min-height: auto; }
+            .header-logo { position: static; width: 60px; height: 60px; margin: 0 auto; }
+            .header-content { padding-top: 0; max-width: 100%; }
+            h1 { font-size: 20px; } h2 { font-size: 14px; }
+            .language-switcher, .theme-toggle { position: static; width: 100%; max-width: 300px; justify-content: center; }
+            .home-button { position: static; width: 100%; max-width: 300px; justify-content: center; }
+            .targets-grid { grid-template-columns: 1fr; }
+            .flight-cancellations-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <a href="https://asifahanalytics.com" class="home-button" title="Home">🏠 <span data-i18n="homeButton">HOME</span></a>
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('ru', this)">RU</button>
+                <button class="lang-btn" onclick="switchLanguage('fr', this)">FR</button>
+                <button class="lang-btn" onclick="switchLanguage('de', this)">DE</button>
+            </div>
+            <div class="theme-toggle">
+                <span class="theme-toggle-label" data-i18n="themeToggle">Light / Dark</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()"><div class="theme-toggle-slider"></div></div>
+            </div>
+            <div class="header-content">
+                <h1 data-i18n="header">ASIFAH ANALYTICS</h1>
+                <h2 data-i18n="subtitle">European Conflict Probability Dashboard</h2>
+            </div>
+        </header>
+
+        <div id="errorMessage" class="error-message"></div>
+
+        <!-- ========== TARGET CARDS ========== -->
+        <div class="targets-grid">
+
+            <!-- GREENLAND -->
+            <div class="target-card collapsed" id="greenland-card" data-target="greenland">
+                <div class="card-collapsed-view">
+                    <div class="collapsed-header">
+                        <div class="collapsed-title">🇬🇱 <span data-i18n="targetGreenland">GREENLAND</span></div>
+                        <button class="collapse-toggle-btn" onclick="event.stopPropagation(); toggleCard('greenland-card');" data-i18n="expandBtn">Expand ▼</button>
+                    </div>
+                    <div class="collapsed-metric">
+                        <div class="collapsed-metric-label" data-i18n="conflictProbability">Conflict Probability</div>
+                        <div class="collapsed-metric-value">
+                            <div class="collapsed-percentage" id="greenlandCollapsedScore">--</div>
+                            <div class="collapsed-bar"><div class="collapsed-bar-fill" id="greenlandCollapsedBar" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="collapsed-timestamp" id="greenlandCollapsedTimestamp">Awaiting first scan...</div>
+                    <div class="expand-instructions" data-i18n="expandInstructions">Click "Expand" to update data and view full analysis</div>
+                </div>
+                <div class="card-expanded-view">
+                    <h3>🇬🇱 <span data-i18n="targetGreenland">GREENLAND</span></h3>
+                    <button class="collapse-toggle-btn" onclick="toggleCard('greenland-card')" style="margin-bottom:15px;width:100%;" data-i18n="collapseBtn">Collapse ▲</button>
+                    <div class="card-scan-controls">
+                        <div class="card-time-window">
+                            <label><input type="radio" name="greenland-timeWindow" value="1"> <span data-i18n="hours24">24h</span></label>
+                            <label><input type="radio" name="greenland-timeWindow" value="2"> <span data-i18n="hours48">48h</span></label>
+                            <label><input type="radio" name="greenland-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                            <label><input type="radio" name="greenland-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+                        </div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('greenland')"><span data-i18n="scanButton">Scan OSINT — Update Forecast</span></button>
+                        <div class="loading" id="greenland-loading"><div class="loading-spinner"></div><span data-i18n="loadingText">Scanning open sources...</span></div>
+                    </div>
+                    <div class="probability-display">
+                        <div class="probability-label" data-i18n="conflictProbability">Conflict Probability</div>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                                <circle class="gauge-progress medium" id="greenland-gauge" cx="100" cy="100" r="85" stroke-dasharray="0 534"></circle>
+                            </svg>
+                            <div class="gauge-text medium" id="greenland-prob">--</div>
+                        </div>
+                    </div>
+                    <div class="timeline-display">
+                        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                        <div class="timeline-value" id="greenland-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+                        <div class="timeline-bar" id="greenland-bar">
+                            <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
+                            <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
+                        </div>
+                    </div>
+                    <div class="mil-posture-awaiting" id="greenland-mil-posture">
+                        🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
+                        <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
+                    </div>
+                    <div class="headlines-section" id="greenland-headlines">
+                        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- UKRAINE -->
+
+            <div class="target-card collapsed" id="poland-card" data-target="poland">
+                <div class="card-collapsed-view">
+                    <div class="collapsed-header">
+                        <div class="collapsed-title">🇵🇱 <span data-i18n="targetPoland">POLAND</span></div>
+                        <button class="collapse-toggle-btn" onclick="event.stopPropagation(); toggleCard('poland-card');" data-i18n="expandBtn">Expand ▼</button>
+                    </div>
+                    <div class="collapsed-metric">
+                        <div class="collapsed-metric-label">Conflict Probability</div>
+                        <div class="collapsed-metric-value">
+                            <div class="collapsed-percentage" id="polandCollapsedScore">--</div>
+                            <div class="collapsed-bar"><div class="collapsed-bar-fill" id="polandCollapsedBar" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="collapsed-timestamp" id="polandCollapsedTimestamp">Awaiting first scan...</div>
+                    <div class="expand-instructions">Click "Expand" to update data and view full analysis</div>
+                </div>
+                <div class="card-expanded-view">
+                    <h3>🇵🇱 <span data-i18n="targetPoland">POLAND</span></h3>
+                    <button class="collapse-toggle-btn" onclick="toggleCard('poland-card')" style="margin-bottom:15px;width:100%;">Collapse ▲</button>
+                    <div class="card-scan-controls">
+                        <div class="card-time-window">
+                            <label><input type="radio" name="poland-timeWindow" value="1"> 24h</label>
+                            <label><input type="radio" name="poland-timeWindow" value="2"> 48h</label>
+                            <label><input type="radio" name="poland-timeWindow" value="7" checked> 7 Days</label>
+                            <label><input type="radio" name="poland-timeWindow" value="30"> 30 Days</label>
+                        </div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('poland')">Scan OSINT — Update Forecast</button>
+                        <div class="loading" id="poland-loading"><div class="loading-spinner"></div>Scanning open sources...</div>
+                    </div>
+                    <div class="probability-display">
+                        <div class="probability-label">Conflict Probability</div>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                                <circle class="gauge-progress medium" id="poland-gauge" cx="100" cy="100" r="85" stroke-dasharray="0 534"></circle>
+                            </svg>
+                            <div class="gauge-text medium" id="poland-prob">--</div>
+                        </div>
+                    </div>
+                    <div class="timeline-display">
+                        <div class="timeline-label">Projected Timeline</div>
+                        <div class="timeline-value" id="poland-timeline">Awaiting scan...</div>
+                        <div class="timeline-bar" id="poland-bar">
+                            <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
+                            <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
+                        </div>
+                    </div>
+                    <div class="mil-posture-awaiting" id="poland-mil-posture">
+                        🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
+                        <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
+                    </div>
+                    <div class="headlines-section" id="poland-headlines">
+                        <h4>Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="target-card collapsed" id="russia-card" data-target="russia">
+                <div class="card-collapsed-view">
+                    <div class="collapsed-header">
+                        <div class="collapsed-title">🇷🇺 <span data-i18n="targetRussia">RUSSIA</span></div>
+                        <button class="collapse-toggle-btn" onclick="event.stopPropagation(); toggleCard('russia-card');" data-i18n="expandBtn">Expand ▼</button>
+                    </div>
+                    <div class="collapsed-metric">
+                        <div class="collapsed-metric-label">Conflict Probability</div>
+                        <div class="collapsed-metric-value">
+                            <div class="collapsed-percentage" id="russiaCollapsedScore">--</div>
+                            <div class="collapsed-bar"><div class="collapsed-bar-fill" id="russiaCollapsedBar" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="collapsed-timestamp" id="russiaCollapsedTimestamp">Awaiting first scan...</div>
+                    <div class="expand-instructions">Click "Expand" to update data and view full analysis</div>
+                </div>
+                <div class="card-expanded-view">
+                    <h3>🇷🇺 <span data-i18n="targetRussia">RUSSIA</span></h3>
+                    <button class="collapse-toggle-btn" onclick="toggleCard('russia-card')" style="margin-bottom:15px;width:100%;">Collapse ▲</button>
+                    <div class="card-scan-controls">
+                        <div class="card-time-window">
+                            <label><input type="radio" name="russia-timeWindow" value="1"> 24h</label>
+                            <label><input type="radio" name="russia-timeWindow" value="2"> 48h</label>
+                            <label><input type="radio" name="russia-timeWindow" value="7" checked> 7 Days</label>
+                            <label><input type="radio" name="russia-timeWindow" value="30"> 30 Days</label>
+                        </div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('russia')">Scan OSINT — Update Forecast</button>
+                        <div class="loading" id="russia-loading"><div class="loading-spinner"></div>Scanning open sources...</div>
+                    </div>
+                    <div class="probability-display">
+                        <div class="probability-label">Conflict Probability</div>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                                <circle class="gauge-progress medium" id="russia-gauge" cx="100" cy="100" r="85" stroke-dasharray="0 534"></circle>
+                            </svg>
+                            <div class="gauge-text medium" id="russia-prob">--</div>
+                        </div>
+                    </div>
+                    <div class="timeline-display">
+                        <div class="timeline-label">Projected Timeline</div>
+                        <div class="timeline-value" id="russia-timeline">Awaiting scan...</div>
+                        <div class="timeline-bar" id="russia-bar">
+                            <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
+                            <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
+                        </div>
+                    </div>
+                    <div class="mil-posture-awaiting" id="russia-mil-posture">
+                        🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
+                        <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
+                    </div>
+                    <div class="headlines-section" id="russia-headlines">
+                        <h4>Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- POLAND -->
+            <div class="target-card collapsed" id="ukraine-card" data-target="ukraine">
+                <div class="card-collapsed-view">
+                    <div class="collapsed-header">
+                        <div class="collapsed-title">🇺🇦 <span data-i18n="targetUkraine">UKRAINE</span></div>
+                        <button class="collapse-toggle-btn" onclick="event.stopPropagation(); toggleCard('ukraine-card');" data-i18n="expandBtn">Expand ▼</button>
+                    </div>
+                    <div class="collapsed-metric">
+                        <div class="collapsed-metric-label" data-i18n="conflictProbability">Conflict Probability</div>
+                        <div class="collapsed-metric-value">
+                            <div class="collapsed-percentage" id="ukraineCollapsedScore">--</div>
+                            <div class="collapsed-bar"><div class="collapsed-bar-fill" id="ukraineCollapsedBar" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="collapsed-timestamp" id="ukraineCollapsedTimestamp">Awaiting first scan...</div>
+                    <div class="expand-instructions" data-i18n="expandInstructions">Click "Expand" to update data and view full analysis</div>
+                </div>
+                <div class="card-expanded-view">
+                    <h3>🇺🇦 <span data-i18n="targetUkraine">UKRAINE</span></h3>
+                    <button class="collapse-toggle-btn" onclick="toggleCard('ukraine-card')" style="margin-bottom:15px;width:100%;" data-i18n="collapseBtn">Collapse ▲</button>
+                    <div class="card-scan-controls">
+                        <div class="card-time-window">
+                            <label><input type="radio" name="ukraine-timeWindow" value="1"> 24h</label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="2"> 48h</label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="7" checked> 7 Days</label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="30"> 30 Days</label>
+                        </div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('ukraine')">Scan OSINT — Update Forecast</button>
+                        <div class="loading" id="ukraine-loading"><div class="loading-spinner"></div>Scanning open sources...</div>
+                    </div>
+                    <div class="probability-display">
+                        <div class="probability-label">Conflict Probability</div>
+                        <div class="gauge-container">
+                            <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                                <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                                <circle class="gauge-progress medium" id="ukraine-gauge" cx="100" cy="100" r="85" stroke-dasharray="0 534"></circle>
+                            </svg>
+                            <div class="gauge-text medium" id="ukraine-prob">--</div>
+                        </div>
+                    </div>
+                    <div class="timeline-display">
+                        <div class="timeline-label">Projected Timeline</div>
+                        <div class="timeline-value" id="ukraine-timeline">Awaiting scan...</div>
+                        <div class="timeline-bar" id="ukraine-bar">
+                            <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
+                            <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
+                        </div>
+                    </div>
+                    <div class="mil-posture-awaiting" id="ukraine-mil-posture">
+                        🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
+                        <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
+                    </div>
+                    <div class="headlines-section" id="ukraine-headlines">
+                        <h4>Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RUSSIA -->
+        </div><!-- end targets-grid -->
+
+        <!-- ========== NOTAM WIDGET ========== -->
+        <div class="notam-widget" id="notamWidget">
+            <div class="notam-widget-header">
+                <div class="notam-widget-title" data-i18n="notamTitle">European NOTAM Monitor</div>
+                <div class="notam-status-badge" id="notamStatusBadge" data-i18n="notamScanning">SCANNING...</div>
+            </div>
+            <div class="notam-scroll-container">
+                <div class="notam-cards-wrapper" id="notamCardsWrapper">
+                    <div style="padding:30px; text-align:center; color:#7f8c8d; font-style:italic; width:100%;">Loading NOTAMs...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== FLIGHT WIDGET ========== -->
+        <div class="flight-widget" id="flightWidget">
+            <div class="flight-widget-header">
+                <div class="flight-widget-title" data-i18n="flightTitle">European Flight Disruption Monitor</div>
+                <div class="flight-status-badge normal" id="flightStatusBadge" data-i18n="flightScanning">SCANNING...</div>
+            </div>
+            <div class="flight-cancellations-grid" id="flightCancellationsGrid">
+                <div style="padding:30px; text-align:center; color:#7f8c8d; font-style:italic; grid-column: 1/-1;">Loading flight data...</div>
+            </div>
+        </div>
+
+        <!-- ========== RATE LIMIT ========== -->
+        <div class="rate-limit-box" id="rateLimitBox">
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="rlRequests">Requests Used</div>
+                <div class="rate-limit-value" id="rlUsed">--</div>
+            </div>
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="rlRemaining">Remaining</div>
+                <div class="rate-limit-value success" id="rlRemaining">--</div>
+            </div>
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="rlLimit">Daily Limit</div>
+                <div class="rate-limit-value" id="rlLimit">--</div>
+            </div>
+            <div class="rate-limit-item">
+                <div class="rate-limit-label" data-i18n="rlReset">Resets In</div>
+                <div class="rate-limit-value" id="rlReset">--</div>
+            </div>
+        </div>
+
+        <!-- ========== FOOTER ========== -->
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 data-i18n="footerSources">Data Sources</h4>
+                    <p>NewsAPI, GDELT, RSS Feeds (Kyiv Independent, Meduza, ISW, Arctic Today), Reddit, NOTAM aggregators, and flight tracking data.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footerMethodology">Methodology</h4>
+                    <p>Source-weighted OSINT aggregation with time-decay scoring, keyword severity multipliers, de-escalation detection, and momentum analysis. Probability floor: 10%, ceiling: 95%.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footerContact">Contact</h4>
+                    <p>Built by Asifah Analytics — <a href="https://asifahanalytics.com" style="color:#2563eb;">asifahanalytics.com</a></p>
+                </div>
+            </div>
+            <div class="disclaimer">
+                <strong>⚠️ DISCLAIMER</strong>
+                This dashboard provides probability estimates based on open-source intelligence aggregation and algorithmic analysis. It does not constitute intelligence assessments, military advice, or policy recommendations. Probabilities reflect media signal intensity and should not be interpreted as ground-truth predictions. Always consult authoritative sources for decision-making.
+            </div>
+            <div class="support-footer" style="margin-top:40px; padding:15px 20px; background:rgba(139,92,246,0.05); border:1px solid rgba(139,92,246,0.2); border-radius:8px; text-align:center; font-size:13px; color:#505050;">
+                If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6; text-decoration:none; font-weight:bold;">buy me a coffee</a>
+            </div>
+            <div style="text-align:center; margin-top:25px; padding-top:15px; border-top:1px solid rgba(255,255,255,0.1);">
+                <a href="privacy.html" style="color:#67e8f9; text-decoration:none; font-size:13px;">Privacy Policy</a>
+                <span style="color:#64748b; margin:0 12px;">|</span>
+                <a href="contact.html" style="color:#67e8f9; text-decoration:none; font-size:13px;">Contact</a>
+            </div>
+            <div class="copyright-footer">
+                © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div><!-- end container -->
+
+    <script>
+    /* ================================================
+       ASIFAH ANALYTICS — EUROPE DASHBOARD v1.0.0
+       JavaScript Engine
+       ================================================ */
+
+    const API_BASE = 'https://asifa-europe-backend.onrender.com';
+    const TARGETS = ['greenland', 'ukraine', 'russia', 'poland'];
+    const CIRCUMFERENCE = 2 * Math.PI * 85; // ~534
+
+    // ===== TRANSLATIONS =====
+    const translations = {
+        en: {
+            header: "ASIFAH ANALYTICS",
+            subtitle: "European Conflict Probability Dashboard",
+            homeButton: "HOME",
+            themeToggle: "Light / Dark",
+            conflictProbability: "Conflict Probability",
+            projectedTimeline: "Projected Timeline",
+            awaitingScan: "Awaiting scan...",
+            recentHeadlines: "Recent Headlines:",
+            clickToScan: "Click scan to load latest intelligence",
+            scanButton: "Scan OSINT — Update Forecast",
+            loadingText: "Scanning open sources...",
+            expandBtn: "Expand ▼",
+            collapseBtn: "Collapse ▲",
+            expandInstructions: 'Click "Expand" to update data and view full analysis',
+            hours24: "24h", hours48: "48h", days7: "7 Days", days30: "30 Days",
+            targetGreenland: "GREENLAND", targetUkraine: "UKRAINE",
+            targetRussia: "RUSSIA", targetPoland: "POLAND",
+            notamTitle: "European NOTAM Monitor",
+            notamScanning: "SCANNING...",
+            flightTitle: "European Flight Disruption Monitor",
+            flightScanning: "SCANNING...",
+            rlRequests: "Requests Used", rlRemaining: "Remaining",
+            rlLimit: "Daily Limit", rlReset: "Resets In",
+            footerSources: "Data Sources", footerMethodology: "Methodology", footerContact: "Contact"
+        },
+        ru: {
+            header: "АСИФА АНАЛИТИКА",
+            subtitle: "Панель вероятности конфликтов в Европе",
+            homeButton: "ГЛАВНАЯ",
+            themeToggle: "Свет / Тьма",
+            conflictProbability: "Вероятность конфликта",
+            projectedTimeline: "Прогнозируемые сроки",
+            awaitingScan: "Ожидание сканирования...",
+            recentHeadlines: "Последние заголовки:",
+            clickToScan: "Нажмите для загрузки разведданных",
+            scanButton: "Сканировать OSINT — обновить прогноз",
+            loadingText: "Сканирование открытых источников...",
+            expandBtn: "Развернуть ▼",
+            collapseBtn: "Свернуть ▲",
+            expandInstructions: 'Нажмите "Развернуть" для обновления данных',
+            hours24: "24ч", hours48: "48ч", days7: "7 дней", days30: "30 дней",
+            targetGreenland: "ГРЕНЛАНДИЯ", targetUkraine: "УКРАИНА",
+            targetRussia: "РОССИЯ", targetPoland: "ПОЛЬША",
+            notamTitle: "Европейский монитор NOTAM",
+            notamScanning: "СКАНИРОВАНИЕ...",
+            flightTitle: "Монитор нарушений рейсов в Европе",
+            flightScanning: "СКАНИРОВАНИЕ...",
+            rlRequests: "Запросов использовано", rlRemaining: "Осталось",
+            rlLimit: "Дневной лимит", rlReset: "Сброс через",
+            footerSources: "Источники данных", footerMethodology: "Методология", footerContact: "Контакт"
+        },
+        fr: {
+            header: "ASIFAH ANALYTICS",
+            subtitle: "Tableau de probabilité de conflit en Europe",
+            homeButton: "ACCUEIL",
+            themeToggle: "Clair / Sombre",
+            conflictProbability: "Probabilité de conflit",
+            projectedTimeline: "Chronologie projetée",
+            awaitingScan: "En attente du scan...",
+            recentHeadlines: "Derniers titres :",
+            clickToScan: "Cliquer pour charger les dernières analyses",
+            scanButton: "Scanner OSINT — Mettre à jour les prévisions",
+            loadingText: "Analyse des sources ouvertes...",
+            expandBtn: "Développer ▼",
+            collapseBtn: "Réduire ▲",
+            expandInstructions: 'Cliquez "Développer" pour actualiser les données',
+            hours24: "24h", hours48: "48h", days7: "7 Jours", days30: "30 Jours",
+            targetGreenland: "GROENLAND", targetUkraine: "UKRAINE",
+            targetRussia: "RUSSIE", targetPoland: "POLOGNE",
+            notamTitle: "Moniteur NOTAM européen",
+            notamScanning: "ANALYSE...",
+            flightTitle: "Moniteur des perturbations de vols européens",
+            flightScanning: "ANALYSE...",
+            rlRequests: "Requêtes utilisées", rlRemaining: "Restant",
+            rlLimit: "Limite quotidienne", rlReset: "Réinitialisation dans",
+            footerSources: "Sources de données", footerMethodology: "Méthodologie", footerContact: "Contact"
+        },
+        de: {
+            header: "ASIFAH ANALYTICS",
+            subtitle: "Europäisches Konfliktwahrscheinlichkeits-Dashboard",
+            homeButton: "STARTSEITE",
+            themeToggle: "Hell / Dunkel",
+            conflictProbability: "Konfliktwahrscheinlichkeit",
+            projectedTimeline: "Prognostizierter Zeitrahmen",
+            awaitingScan: "Warte auf Scan...",
+            recentHeadlines: "Aktuelle Schlagzeilen:",
+            clickToScan: "Klicken Sie zum Laden der neuesten Analysen",
+            scanButton: "OSINT scannen — Prognose aktualisieren",
+            loadingText: "Offene Quellen werden gescannt...",
+            expandBtn: "Erweitern ▼",
+            collapseBtn: "Einklappen ▲",
+            expandInstructions: 'Klicken Sie "Erweitern" um Daten zu aktualisieren',
+            hours24: "24h", hours48: "48h", days7: "7 Tage", days30: "30 Tage",
+            targetGreenland: "GRÖNLAND", targetUkraine: "UKRAINE",
+            targetRussia: "RUSSLAND", targetPoland: "POLEN",
+            notamTitle: "Europäischer NOTAM-Monitor",
+            notamScanning: "SCANNEN...",
+            flightTitle: "Europäischer Flugstörungsmonitor",
+            flightScanning: "SCANNEN...",
+            rlRequests: "Anfragen verwendet", rlRemaining: "Verbleibend",
+            rlLimit: "Tageslimit", rlReset: "Zurücksetzung in",
+            footerSources: "Datenquellen", footerMethodology: "Methodik", footerContact: "Kontakt"
+        }
+    };
+
+    let currentLang = 'en';
+
+    function switchLanguage(lang, btn) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                el.textContent = translations[lang][key];
+            }
+        });
+    }
+
+    // ===== THEME =====
+    function toggleTheme() {
+        const html = document.documentElement;
+        const current = html.getAttribute('data-theme');
+        html.setAttribute('data-theme', current === 'dark' ? '' : 'dark');
+        localStorage.setItem('europeTheme', current === 'dark' ? 'light' : 'dark');
+    }
+    // Load saved theme
+    (function() {
+        const saved = localStorage.getItem('europeTheme');
+        if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+
+    // ===== CARD TOGGLE =====
+    function toggleCard(cardId) {
+        const card = document.getElementById(cardId);
+        if (card.classList.contains('collapsed')) {
+            card.classList.remove('collapsed');
+            card.classList.add('expanded');
+        } else {
+            card.classList.remove('expanded');
+            card.classList.add('collapsed');
+        }
+    }
+
+    // ===== SCAN TARGET =====
+    async function scanSingleTarget(target) {
+        const loading = document.getElementById(`${target}-loading`);
+        const scanBtns = document.querySelectorAll(`#${target}-card .card-scan-button`);
+        const timeWindowRadio = document.querySelector(`input[name="${target}-timeWindow"]:checked`);
+        const days = timeWindowRadio ? timeWindowRadio.value : '7';
+
+        loading.classList.add('active');
+        scanBtns.forEach(b => { b.disabled = true; b.classList.add('scanning'); });
+
+        try {
+            const response = await fetch(`${API_BASE}/api/europe/threat/${target}?days=${days}`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            displayTargetData(target, data);
+            hideError();
+        } catch (err) {
+            console.error(`Error scanning ${target}:`, err);
+            showError(`Failed to scan ${target}: ${err.message}. Backend may be warming up — try again in 30 seconds.`);
+        } finally {
+            loading.classList.remove('active');
+            scanBtns.forEach(b => { b.disabled = false; b.classList.remove('scanning'); });
+        }
+    }
+
+    // ===== DISPLAY TARGET DATA =====
+    function displayTargetData(target, data) {
+        const prob = data.probability || 0;
+        const probRounded = Math.round(prob);
+        const level = prob >= 60 ? 'high' : prob >= 35 ? 'medium' : 'low';
+
+        // Update gauge
+        const gauge = document.getElementById(`${target}-gauge`);
+        const gaugeText = document.getElementById(`${target}-prob`);
+        const dashLen = (prob / 100) * CIRCUMFERENCE;
+        gauge.setAttribute('stroke-dasharray', `${dashLen} ${CIRCUMFERENCE}`);
+        gauge.className = `gauge-progress ${level}`;
+        gaugeText.textContent = `${probRounded}%`;
+        gaugeText.className = `gauge-text ${level}`;
+
+        // Update collapsed view
+        const collapsedScore = document.getElementById(`${target}CollapsedScore`);
+        const collapsedBar = document.getElementById(`${target}CollapsedBar`);
+        const collapsedTimestamp = document.getElementById(`${target}CollapsedTimestamp`);
+        if (collapsedScore) collapsedScore.textContent = `${probRounded}%`;
+        if (collapsedBar) {
+            collapsedBar.style.width = `${probRounded}%`;
+            collapsedBar.style.background = level === 'high' ? '#ef4444' : level === 'medium' ? '#f59e0b' : '#10b981';
+        }
+        if (collapsedTimestamp) collapsedTimestamp.textContent = new Date().toLocaleString();
+
+        // Update card threat level
+        const card = document.getElementById(`${target}-card`);
+        card.classList.remove('low-threat', 'medium-threat', 'high-threat');
+        card.classList.add(`${level}-threat`);
+
+        // Timeline
+        const timelineEl = document.getElementById(`${target}-timeline`);
+        const timelineBar = document.getElementById(`${target}-bar`);
+        const timeline = data.timeline || 'Unknown';
+        if (timelineEl) timelineEl.textContent = timeline;
+        if (timelineBar) {
+            const segments = timelineBar.querySelectorAll('.timeline-segment');
+            segments.forEach(s => s.classList.remove('active'));
+            if (timeline.includes('0-30') || timeline.includes('Imminent')) segments[0]?.classList.add('active');
+            else if (timeline.includes('31-90') || timeline.includes('1-3')) segments[1]?.classList.add('active');
+            else if (timeline.includes('91-180') || timeline.includes('3-6')) segments[2]?.classList.add('active');
+            else segments[3]?.classList.add('active');
+        }
+
+        // Headlines
+        const headlinesEl = document.getElementById(`${target}-headlines`);
+        if (headlinesEl && data.articles && data.articles.length > 0) {
+            let html = `<h4>${translations[currentLang]?.recentHeadlines || 'Recent Headlines:'}</h4>`;
+            const maxContribution = Math.max(...data.articles.map(a => Math.abs(a.weighted_contribution || 0)), 1);
+
+            data.articles.slice(0, 15).forEach(article => {
+                const weight = (article.source_weight || 0.5).toFixed(2);
+                const contribution = article.weighted_contribution || 0;
+                const absContrib = Math.abs(contribution);
+                const barWidth = Math.min((absContrib / maxContribution) * 100, 100);
+                const isDeescalation = contribution < 0;
+
+                let impactClass = 'low-impact';
+                let impactLabel = 'LOW';
+                if (absContrib > 3) { impactClass = 'high-impact'; impactLabel = 'HIGH'; }
+                else if (absContrib > 1) { impactClass = 'medium-impact'; impactLabel = 'MED'; }
+
+                const title = article.title || 'Untitled';
+                const url = article.url || '#';
+                const source = article.source || 'Unknown';
+                const published = article.published ? new Date(article.published).toLocaleDateString() : '';
+                const severity = article.severity || 'standard';
+                const decay = (article.time_decay || 1).toFixed(2);
+
+                html += `
+                <div class="headline-item">
+                    <a href="${url}" target="_blank">${title}</a>
+                    <span class="article-weight-badge ${impactClass}">${impactLabel}</span>
+                    <div class="article-contribution-bar">
+                        <div class="article-contribution-fill ${isDeescalation ? 'deescalation' : ''}" style="width:${barWidth}%"></div>
+                    </div>
+                    <div class="article-scoring-details">
+                        <span>Weight: ${weight}</span>
+                        <span>Severity: ${severity}</span>
+                        <span>Decay: ${decay}</span>
+                        <span>Contribution: ${contribution > 0 ? '+' : ''}${contribution.toFixed(2)}</span>
+                    </div>
+                    <div class="source">${source} ${published ? '• ' + published : ''}</div>
+                </div>`;
+            });
+            headlinesEl.innerHTML = html;
+        }
+
+        // Update rate limits
+        fetchRateLimits();
+    }
+
+    // ===== NOTAM LOADER =====
+    async function loadNotams() {
+        try {
+            const response = await fetch(`${API_BASE}/api/europe/notams`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            displayNotams(data);
+        } catch (err) {
+            console.error('NOTAM load error:', err);
+            document.getElementById('notamCardsWrapper').innerHTML = '<div style="padding:30px;text-align:center;color:#c0392b;">Failed to load NOTAMs. Backend may be warming up.</div>';
+            document.getElementById('notamStatusBadge').textContent = 'ERROR';
+        }
+    }
+
+    function displayNotams(data) {
+        const wrapper = document.getElementById('notamCardsWrapper');
+        const badge = document.getElementById('notamStatusBadge');
+        const notams = data.notams || [];
+
+        if (notams.length === 0) {
+            wrapper.innerHTML = '<div class="no-notams"><div class="no-notams-title">No Active Alerts</div><div class="no-notams-subtitle">No critical NOTAMs detected across European airspace</div></div>';
+            badge.textContent = 'CLEAR';
+            badge.style.background = '#d1fae5';
+            badge.style.color = '#065f46';
+            wrapper.style.animation = 'none';
+            return;
+        }
+
+        badge.textContent = `${notams.length} ACTIVE`;
+        badge.style.background = '#fef3c7';
+        badge.style.color = '#92400e';
+
+        let html = '';
+        const allNotams = [...notams, ...notams]; // duplicate for scroll
+
+        allNotams.forEach(notam => {
+            const typeColor = getNotamTypeColor(notam.classification || notam.type || '');
+            html += `
+            <div class="notam-card type-${typeColor}">
+                <div class="notam-header">
+                    <div class="notam-country">${notam.region || notam.country || 'Unknown'}</div>
+                    <span class="notam-type-badge type-${typeColor}">${notam.classification || notam.type || 'NOTICE'}</span>
+                </div>
+                <div class="notam-summary">${notam.summary || notam.description || 'No details available'}</div>
+                <div class="notam-details">
+                    ${notam.fir ? `<div><strong>FIR:</strong> ${notam.fir}</div>` : ''}
+                    ${notam.effective ? `<div><strong>Effective:</strong> ${notam.effective}</div>` : ''}
+                    ${notam.source_url ? `<a class="notam-link" href="${notam.source_url}" target="_blank">View Source →</a>` : ''}
+                </div>
+            </div>`;
+        });
+        wrapper.innerHTML = html;
+    }
+
+    function getNotamTypeColor(type) {
+        const t = (type || '').toLowerCase();
+        if (t.includes('conflict') || t.includes('closure') || t.includes('no-fly')) return 'red';
+        if (t.includes('military') || t.includes('drone') || t.includes('exercise')) return 'orange';
+        if (t.includes('gps') || t.includes('restricted') || t.includes('interference')) return 'yellow';
+        return 'blue';
+    }
+
+    // ===== FLIGHT LOADER =====
+    async function loadFlights() {
+        try {
+            const response = await fetch(`${API_BASE}/api/europe/flights`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            displayFlights(data);
+        } catch (err) {
+            console.error('Flight load error:', err);
+            document.getElementById('flightCancellationsGrid').innerHTML = '<div style="padding:30px;text-align:center;color:#c0392b;grid-column:1/-1;">Failed to load flight data.</div>';
+        }
+    }
+
+    function displayFlights(data) {
+        const grid = document.getElementById('flightCancellationsGrid');
+        const badge = document.getElementById('flightStatusBadge');
+        const disruptions = data.disruptions || [];
+
+        if (disruptions.length === 0) {
+            grid.innerHTML = '<div class="no-cancellations" style="grid-column:1/-1;"><div style="font-size:16px;font-weight:bold;margin-bottom:8px;">No Active Disruptions</div><div>All monitored European carriers operating normally</div></div>';
+            badge.textContent = 'NORMAL';
+            badge.className = 'flight-status-badge normal';
+            return;
+        }
+
+        badge.textContent = `${disruptions.length} DISRUPTION${disruptions.length > 1 ? 'S' : ''}`;
+        badge.className = 'flight-status-badge active';
+
+        let html = '';
+        disruptions.forEach(d => {
+            html += `
+            <div class="cancellation-card">
+                <div class="cancellation-airline">🚫 ${d.airline || 'Unknown Airline'}</div>
+                <div class="cancellation-details">
+                    ${d.route ? `<div><strong>Route:</strong> ${d.route}</div>` : ''}
+                    ${d.reason ? `<div><strong>Reason:</strong> ${d.reason}</div>` : ''}
+                    ${d.status ? `<div><strong>Status:</strong> ${d.status}</div>` : ''}
+                    ${d.since ? `<div><strong>Since:</strong> ${d.since}</div>` : ''}
+                    ${d.source_url ? `<div><a href="${d.source_url}" target="_blank" style="color:#2563eb;font-weight:600;">View Source →</a></div>` : ''}
+                </div>
+            </div>`;
+        });
+        grid.innerHTML = html;
+    }
+
+    // ===== RATE LIMITS =====
+    async function fetchRateLimits() {
+        try {
+            const response = await fetch(`${API_BASE}/rate-limit`);
+            if (!response.ok) return;
+            const data = await response.json();
+            const used = data.requests_today || 0;
+            const limit = data.daily_limit || 100;
+            const remaining = data.remaining || (limit - used);
+            const reset = data.reset_time || 'Midnight UTC';
+
+            document.getElementById('rlUsed').textContent = used;
+            document.getElementById('rlRemaining').textContent = remaining;
+            document.getElementById('rlLimit').textContent = limit;
+            document.getElementById('rlReset').textContent = reset;
+
+            const pct = used / limit;
+            const remEl = document.getElementById('rlRemaining');
+            remEl.className = 'rate-limit-value ' + (pct > 0.9 ? 'danger' : pct > 0.7 ? 'warning' : 'success');
+        } catch (err) {
+            console.error('Rate limit fetch error:', err);
+        }
+    }
+
+    // ===== ERROR HANDLING =====
+    function showError(msg) {
+        const el = document.getElementById('errorMessage');
+        el.textContent = msg;
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 15000);
+    }
+    function hideError() {
+        document.getElementById('errorMessage').classList.remove('show');
+    }
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', function() {
+        loadNotams();
+        loadFlights();
+        fetchRateLimits();
+    });
+
+    </script>
+</body>
+</html>
