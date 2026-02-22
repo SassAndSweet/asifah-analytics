@@ -47,6 +47,71 @@
         [data-theme="dark"] body::before { background-color: rgba(26, 26, 26, 0.88); }
         .container { max-width: 1400px; margin: 0 auto; }
 
+        /* ===== LOADING OVERLAY ===== */
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('Ukraine_on_fire.png');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .loading-overlay::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 39, 68, 0.82);
+            backdrop-filter: blur(4px);
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loading-overlay-content {
+            position: relative; z-index: 1;
+            text-align: center; max-width: 500px; padding: 0 20px;
+        }
+        .loading-overlay-logo {
+            width: 100px; height: 100px; border-radius: 50%;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            animation: logo-pulse 2s ease-in-out infinite;
+        }
+        @keyframes logo-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 30px rgba(0,210,255,0.3); }
+        }
+        .loading-overlay-title {
+            font-size: 26px; font-weight: bold; color: white;
+            letter-spacing: 3px; margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+        .loading-overlay-subtitle {
+            font-size: 14px; color: rgba(255,255,255,0.8);
+            letter-spacing: 1px; margin-bottom: 30px;
+        }
+        .loading-spinner-ring {
+            width: 50px; height: 50px; margin: 0 auto 20px;
+            border: 4px solid rgba(255,255,255,0.15);
+            border-top-color: #67e8f9;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-steps { margin-top: 15px; }
+        .loading-step {
+            display: flex; align-items: center; justify-content: center;
+            gap: 10px; padding: 8px 0; font-size: 13px;
+            color: rgba(255,255,255,0.4);
+            transition: all 0.4s ease;
+        }
+        .loading-step.active { color: #67e8f9; }
+        .loading-step.complete { color: rgba(255,255,255,0.7); }
+        .loading-step .step-icon { font-size: 14px; width: 20px; }
+        .loading-error {
+            display: none; margin-top: 20px; padding: 12px 20px;
+            background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 8px; color: #fca5a5; font-size: 12px;
+        }
+
         /* HEADER */
         header {
             background: linear-gradient(135deg, #1a2744 0%, #1e3a5f 50%, #2c5282 100%);
@@ -175,7 +240,6 @@
         .loading { display: none; text-align: center; padding: 15px; font-style: italic; color: #7f8c8d; font-size: 13px; }
         .loading.active { display: block; }
         .loading-spinner { display: inline-block; width: 18px; height: 18px; border: 3px solid #f3f3f3; border-top: 3px solid #1e3a5f; border-radius: 50%; animation: spin 1s linear infinite; margin-right: 8px; vertical-align: middle; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* Gauge */
         .probability-display { text-align: center; margin-bottom: 25px; position: relative; }
@@ -304,10 +368,31 @@
         .weather-loading { text-align: center; padding: 20px; color: #7f8c8d; font-style: italic; font-size: 12px; }
         .weather-strike-note { text-align: center; margin-top: 10px; font-size: 11px; padding: 6px 12px; border-radius: 6px; background: rgba(0,0,0,0.04); font-weight: 500; }
 
-        /* ===== COUNTRY STABILITY BUTTON ===== */
-        .country-stability-btn { display: block; width: 100%; padding: 14px 20px; margin: 15px 0; background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8a 100%); color: white; border: 2px solid rgba(255,255,255,0.1); border-radius: 10px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; text-align: center; text-decoration: none; cursor: pointer; transition: all 0.3s ease; }
-        .country-stability-btn:hover { background: linear-gradient(135deg, #2c5f8a 0%, #3b7fc4 100%); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,58,95,0.3); }
-        .country-stability-btn .btn-subtitle { display: block; font-size: 10px; font-weight: normal; letter-spacing: 0.5px; margin-top: 4px; opacity: 0.7; text-transform: none; }
+        /* ===== COUNTRY STABILITY BUTTON (RED — matches Middle East) ===== */
+        .country-stability-btn {
+            display: block; width: fit-content; margin: 0 auto 20px;
+            padding: 10px 24px;
+            background: linear-gradient(180deg, #c0392b 0%, #a93226 100%);
+            color: white; border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            font-family: 'Times New Roman', serif;
+            font-size: 14px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            text-align: center; text-decoration: none; cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 8px rgba(192, 57, 43, 0.3);
+        }
+        .country-stability-btn:hover {
+            background: linear-gradient(180deg, #a93226 0%, #922b21 100%);
+            border-color: rgba(255,255,255,0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(192, 57, 43, 0.4);
+        }
+        .country-stability-btn::before { content: "📊 "; }
+        .country-stability-btn .btn-subtitle {
+            display: block; font-size: 10px; font-weight: normal;
+            letter-spacing: 0.5px; margin-top: 4px; opacity: 0.7; text-transform: none;
+        }
 
         /* CYBERPUNK DARK MODE */
         .target-card.expanded { border-color: rgba(0, 210, 255, 0.3); box-shadow: 0 0 20px rgba(0, 210, 255, 0.08), 0 4px 12px rgba(0,0,0,0.08); }
@@ -337,8 +422,8 @@
         [data-theme="dark"] .weather-day-name { color: #94a3b8; }
         [data-theme="dark"] .weather-conditions { color: #94a3b8; }
         [data-theme="dark"] .weather-strike-note { background: rgba(0,210,255,0.05); color: #e2e8f0; }
-        [data-theme="dark"] .country-stability-btn { background: linear-gradient(135deg, #0e3a4a 0%, #164e63 100%); border-color: rgba(0,210,255,0.2); }
-        [data-theme="dark"] .country-stability-btn:hover { background: linear-gradient(135deg, #164e63 0%, #0891b2 100%); box-shadow: 0 4px 12px rgba(0,210,255,0.2); }
+        [data-theme="dark"] .country-stability-btn { background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 100%); border-color: rgba(239,68,68,0.3); }
+        [data-theme="dark"] .country-stability-btn:hover { background: linear-gradient(180deg, #b91c1c 0%, #991b1b 100%); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
         [data-theme="dark"] .notam-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #92400e; }
         [data-theme="dark"] .flight-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #991b1b; }
 
@@ -364,6 +449,35 @@
     </style>
 </head>
 <body>
+
+    <!-- ========== LOADING OVERLAY ========== -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-overlay-content">
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics" class="loading-overlay-logo">
+            <div class="loading-overlay-title">ASIFAH ANALYTICS</div>
+            <div class="loading-overlay-subtitle">European Conflict Probability Dashboard</div>
+            <div class="loading-spinner-ring"></div>
+            <div class="loading-steps">
+                <div class="loading-step active" id="loadStep1">
+                    <span class="step-icon">⏳</span> Connecting to OSINT backend...
+                </div>
+                <div class="loading-step" id="loadStep2">
+                    <span class="step-icon">⏳</span> Loading cached threat scores...
+                </div>
+                <div class="loading-step" id="loadStep3">
+                    <span class="step-icon">⏳</span> Fetching NOTAM & flight data...
+                </div>
+                <div class="loading-step" id="loadStep4">
+                    <span class="step-icon">⏳</span> Rendering dashboard...
+                </div>
+            </div>
+            <div class="loading-error" id="loadingError">
+                ⚠️ Backend may be warming up. Dashboard will load momentarily — or <a href="" onclick="location.reload()" style="color:#67e8f9;">refresh the page</a>.
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
@@ -386,7 +500,7 @@
 
         <div id="errorMessage" class="error-message"></div>
 
-        <!-- ========== TARGET CARDS ========== -->
+        <!-- ========== TARGET CARDS (ALPHABETICAL) ========== -->
         <div class="targets-grid">
 
             <!-- GREENLAND -->
@@ -403,12 +517,16 @@
                             <div class="collapsed-bar"><div class="collapsed-bar-fill" id="greenlandCollapsedBar" style="width:0%"></div></div>
                         </div>
                     </div>
-                    <div class="collapsed-timestamp" id="greenlandCollapsedTimestamp">Awaiting first scan...</div>
+                    <div class="collapsed-timestamp" id="greenlandCollapsedTimestamp">Loading...</div>
                     <div class="expand-instructions" data-i18n="expandInstructions">Click "Expand" to update data and view full analysis</div>
                 </div>
                 <div class="card-expanded-view">
                     <h3>🇬🇱 <span data-i18n="targetGreenland">GREENLAND</span></h3>
                     <button class="collapse-toggle-btn" onclick="toggleCard('greenland-card')" style="margin-bottom:15px;width:100%;" data-i18n="collapseBtn">Collapse ▲</button>
+                    <a href="greenland.html" class="country-stability-btn">
+                        🇬🇱 Greenland Stability Index
+                        <span class="btn-subtitle">Sovereignty, Arctic security & resource analysis — Coming Soon</span>
+                    </a>
                     <div class="card-scan-controls">
                         <div class="card-time-window">
                             <label><input type="radio" name="greenland-timeWindow" value="1"> <span data-i18n="hours24">24h</span></label>
@@ -429,12 +547,9 @@
                             <div class="gauge-text medium" id="greenland-prob">--</div>
                         </div>
                     </div>
-                    <!-- WEATHER WIDGET -->
                     <div class="weather-section" id="greenland-weather">
                         <div class="weather-title">🌤️ 7-Day Forecast — Nuuk</div>
-                        <div class="weather-forecast" id="greenland-weather-forecast">
-                            <div class="weather-loading">Loading weather data...</div>
-                        </div>
+                        <div class="weather-forecast" id="greenland-weather-forecast"><div class="weather-loading">Loading weather data...</div></div>
                     </div>
                     <div class="timeline-display">
                         <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
@@ -448,10 +563,6 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
-                    <a href="greenland.html" class="country-stability-btn">
-                        🇬🇱 Greenland Stability Index
-                        <span class="btn-subtitle">Sovereignty, Arctic security & resource analysis — Coming Soon</span>
-                    </a>
                     <div class="headlines-section" id="greenland-headlines">
                         <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
                         <p style="color:#7f8c8d; font-style:italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
@@ -459,8 +570,7 @@
                 </div>
             </div>
 
-            <!-- UKRAINE -->
-
+            <!-- POLAND -->
             <div class="target-card collapsed" id="poland-card" data-target="poland">
                 <div class="card-collapsed-view">
                     <div class="collapsed-header">
@@ -468,30 +578,34 @@
                         <button class="collapse-toggle-btn" onclick="event.stopPropagation(); toggleCard('poland-card');" data-i18n="expandBtn">Expand ▼</button>
                     </div>
                     <div class="collapsed-metric">
-                        <div class="collapsed-metric-label">Conflict Probability</div>
+                        <div class="collapsed-metric-label" data-i18n="conflictProbability">Conflict Probability</div>
                         <div class="collapsed-metric-value">
                             <div class="collapsed-percentage" id="polandCollapsedScore">--</div>
                             <div class="collapsed-bar"><div class="collapsed-bar-fill" id="polandCollapsedBar" style="width:0%"></div></div>
                         </div>
                     </div>
-                    <div class="collapsed-timestamp" id="polandCollapsedTimestamp">Awaiting first scan...</div>
-                    <div class="expand-instructions">Click "Expand" to update data and view full analysis</div>
+                    <div class="collapsed-timestamp" id="polandCollapsedTimestamp">Loading...</div>
+                    <div class="expand-instructions" data-i18n="expandInstructions">Click "Expand" to update data and view full analysis</div>
                 </div>
                 <div class="card-expanded-view">
                     <h3>🇵🇱 <span data-i18n="targetPoland">POLAND</span></h3>
-                    <button class="collapse-toggle-btn" onclick="toggleCard('poland-card')" style="margin-bottom:15px;width:100%;">Collapse ▲</button>
+                    <button class="collapse-toggle-btn" onclick="toggleCard('poland-card')" style="margin-bottom:15px;width:100%;" data-i18n="collapseBtn">Collapse ▲</button>
+                    <a href="poland.html" class="country-stability-btn">
+                        🇵🇱 Poland Stability Index
+                        <span class="btn-subtitle">NATO eastern flank, defense spending & border dynamics — Coming Soon</span>
+                    </a>
                     <div class="card-scan-controls">
                         <div class="card-time-window">
-                            <label><input type="radio" name="poland-timeWindow" value="1"> 24h</label>
-                            <label><input type="radio" name="poland-timeWindow" value="2"> 48h</label>
-                            <label><input type="radio" name="poland-timeWindow" value="7" checked> 7 Days</label>
-                            <label><input type="radio" name="poland-timeWindow" value="30"> 30 Days</label>
+                            <label><input type="radio" name="poland-timeWindow" value="1"> <span data-i18n="hours24">24h</span></label>
+                            <label><input type="radio" name="poland-timeWindow" value="2"> <span data-i18n="hours48">48h</span></label>
+                            <label><input type="radio" name="poland-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                            <label><input type="radio" name="poland-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
                         </div>
-                        <button class="card-scan-button" onclick="scanSingleTarget('poland')">Scan OSINT — Update Forecast</button>
-                        <div class="loading" id="poland-loading"><div class="loading-spinner"></div>Scanning open sources...</div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('poland')"><span data-i18n="scanButton">Scan OSINT — Update Forecast</span></button>
+                        <div class="loading" id="poland-loading"><div class="loading-spinner"></div><span data-i18n="loadingText">Scanning open sources...</span></div>
                     </div>
                     <div class="probability-display">
-                        <div class="probability-label">Conflict Probability</div>
+                        <div class="probability-label" data-i18n="conflictProbability">Conflict Probability</div>
                         <div class="gauge-container">
                             <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
                                 <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
@@ -500,16 +614,13 @@
                             <div class="gauge-text medium" id="poland-prob">--</div>
                         </div>
                     </div>
-                    <!-- WEATHER WIDGET -->
                     <div class="weather-section" id="poland-weather">
                         <div class="weather-title">🌤️ 7-Day Forecast — Warsaw</div>
-                        <div class="weather-forecast" id="poland-weather-forecast">
-                            <div class="weather-loading">Loading weather data...</div>
-                        </div>
+                        <div class="weather-forecast" id="poland-weather-forecast"><div class="weather-loading">Loading weather data...</div></div>
                     </div>
                     <div class="timeline-display">
-                        <div class="timeline-label">Projected Timeline</div>
-                        <div class="timeline-value" id="poland-timeline">Awaiting scan...</div>
+                        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                        <div class="timeline-value" id="poland-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
                         <div class="timeline-bar" id="poland-bar">
                             <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
                             <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
@@ -519,19 +630,14 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
-                    <a href="poland.html" class="country-stability-btn">
-                        🇵🇱 Poland Stability Index
-                        <span class="btn-subtitle">NATO eastern flank, defense spending & border dynamics — Coming Soon</span>
-                    </a>
                     <div class="headlines-section" id="poland-headlines">
-                        <h4>Recent Headlines:</h4>
-                        <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
+                        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                     </div>
                 </div>
             </div>
 
-
-
+            <!-- RUSSIA -->
             <div class="target-card collapsed" id="russia-card" data-target="russia">
                 <div class="card-collapsed-view">
                     <div class="collapsed-header">
@@ -539,30 +645,34 @@
                         <button class="collapse-toggle-btn" onclick="event.stopPropagation(); toggleCard('russia-card');" data-i18n="expandBtn">Expand ▼</button>
                     </div>
                     <div class="collapsed-metric">
-                        <div class="collapsed-metric-label">Conflict Probability</div>
+                        <div class="collapsed-metric-label" data-i18n="conflictProbability">Conflict Probability</div>
                         <div class="collapsed-metric-value">
                             <div class="collapsed-percentage" id="russiaCollapsedScore">--</div>
                             <div class="collapsed-bar"><div class="collapsed-bar-fill" id="russiaCollapsedBar" style="width:0%"></div></div>
                         </div>
                     </div>
-                    <div class="collapsed-timestamp" id="russiaCollapsedTimestamp">Awaiting first scan...</div>
-                    <div class="expand-instructions">Click "Expand" to update data and view full analysis</div>
+                    <div class="collapsed-timestamp" id="russiaCollapsedTimestamp">Loading...</div>
+                    <div class="expand-instructions" data-i18n="expandInstructions">Click "Expand" to update data and view full analysis</div>
                 </div>
                 <div class="card-expanded-view">
                     <h3>🇷🇺 <span data-i18n="targetRussia">RUSSIA</span></h3>
-                    <button class="collapse-toggle-btn" onclick="toggleCard('russia-card')" style="margin-bottom:15px;width:100%;">Collapse ▲</button>
+                    <button class="collapse-toggle-btn" onclick="toggleCard('russia-card')" style="margin-bottom:15px;width:100%;" data-i18n="collapseBtn">Collapse ▲</button>
+                    <a href="russia.html" class="country-stability-btn">
+                        🇷🇺 Russia Stability Index
+                        <span class="btn-subtitle">Sanctions impact, force posture & internal dynamics — Coming Soon</span>
+                    </a>
                     <div class="card-scan-controls">
                         <div class="card-time-window">
-                            <label><input type="radio" name="russia-timeWindow" value="1"> 24h</label>
-                            <label><input type="radio" name="russia-timeWindow" value="2"> 48h</label>
-                            <label><input type="radio" name="russia-timeWindow" value="7" checked> 7 Days</label>
-                            <label><input type="radio" name="russia-timeWindow" value="30"> 30 Days</label>
+                            <label><input type="radio" name="russia-timeWindow" value="1"> <span data-i18n="hours24">24h</span></label>
+                            <label><input type="radio" name="russia-timeWindow" value="2"> <span data-i18n="hours48">48h</span></label>
+                            <label><input type="radio" name="russia-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                            <label><input type="radio" name="russia-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
                         </div>
-                        <button class="card-scan-button" onclick="scanSingleTarget('russia')">Scan OSINT — Update Forecast</button>
-                        <div class="loading" id="russia-loading"><div class="loading-spinner"></div>Scanning open sources...</div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('russia')"><span data-i18n="scanButton">Scan OSINT — Update Forecast</span></button>
+                        <div class="loading" id="russia-loading"><div class="loading-spinner"></div><span data-i18n="loadingText">Scanning open sources...</span></div>
                     </div>
                     <div class="probability-display">
-                        <div class="probability-label">Conflict Probability</div>
+                        <div class="probability-label" data-i18n="conflictProbability">Conflict Probability</div>
                         <div class="gauge-container">
                             <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
                                 <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
@@ -571,16 +681,13 @@
                             <div class="gauge-text medium" id="russia-prob">--</div>
                         </div>
                     </div>
-                    <!-- WEATHER WIDGET -->
                     <div class="weather-section" id="russia-weather">
                         <div class="weather-title">🌤️ 7-Day Forecast — Moscow</div>
-                        <div class="weather-forecast" id="russia-weather-forecast">
-                            <div class="weather-loading">Loading weather data...</div>
-                        </div>
+                        <div class="weather-forecast" id="russia-weather-forecast"><div class="weather-loading">Loading weather data...</div></div>
                     </div>
                     <div class="timeline-display">
-                        <div class="timeline-label">Projected Timeline</div>
-                        <div class="timeline-value" id="russia-timeline">Awaiting scan...</div>
+                        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                        <div class="timeline-value" id="russia-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
                         <div class="timeline-bar" id="russia-bar">
                             <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
                             <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
@@ -590,18 +697,14 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
-                    <a href="russia.html" class="country-stability-btn">
-                        🇷🇺 Russia Stability Index
-                        <span class="btn-subtitle">Sanctions impact, force posture & internal dynamics — Coming Soon</span>
-                    </a>
                     <div class="headlines-section" id="russia-headlines">
-                        <h4>Recent Headlines:</h4>
-                        <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
+                        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                     </div>
                 </div>
             </div>
 
-            <!-- POLAND -->
+            <!-- UKRAINE -->
             <div class="target-card collapsed" id="ukraine-card" data-target="ukraine">
                 <div class="card-collapsed-view">
                     <div class="collapsed-header">
@@ -615,24 +718,28 @@
                             <div class="collapsed-bar"><div class="collapsed-bar-fill" id="ukraineCollapsedBar" style="width:0%"></div></div>
                         </div>
                     </div>
-                    <div class="collapsed-timestamp" id="ukraineCollapsedTimestamp">Awaiting first scan...</div>
+                    <div class="collapsed-timestamp" id="ukraineCollapsedTimestamp">Loading...</div>
                     <div class="expand-instructions" data-i18n="expandInstructions">Click "Expand" to update data and view full analysis</div>
                 </div>
                 <div class="card-expanded-view">
                     <h3>🇺🇦 <span data-i18n="targetUkraine">UKRAINE</span></h3>
                     <button class="collapse-toggle-btn" onclick="toggleCard('ukraine-card')" style="margin-bottom:15px;width:100%;" data-i18n="collapseBtn">Collapse ▲</button>
+                    <a href="ukraine.html" class="country-stability-btn">
+                        🇺🇦 Ukraine Stability Index
+                        <span class="btn-subtitle">Frontline dynamics, aid flows & ceasefire analysis — Coming Soon</span>
+                    </a>
                     <div class="card-scan-controls">
                         <div class="card-time-window">
-                            <label><input type="radio" name="ukraine-timeWindow" value="1"> 24h</label>
-                            <label><input type="radio" name="ukraine-timeWindow" value="2"> 48h</label>
-                            <label><input type="radio" name="ukraine-timeWindow" value="7" checked> 7 Days</label>
-                            <label><input type="radio" name="ukraine-timeWindow" value="30"> 30 Days</label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="1"> <span data-i18n="hours24">24h</span></label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="2"> <span data-i18n="hours48">48h</span></label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                            <label><input type="radio" name="ukraine-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
                         </div>
-                        <button class="card-scan-button" onclick="scanSingleTarget('ukraine')">Scan OSINT — Update Forecast</button>
-                        <div class="loading" id="ukraine-loading"><div class="loading-spinner"></div>Scanning open sources...</div>
+                        <button class="card-scan-button" onclick="scanSingleTarget('ukraine')"><span data-i18n="scanButton">Scan OSINT — Update Forecast</span></button>
+                        <div class="loading" id="ukraine-loading"><div class="loading-spinner"></div><span data-i18n="loadingText">Scanning open sources...</span></div>
                     </div>
                     <div class="probability-display">
-                        <div class="probability-label">Conflict Probability</div>
+                        <div class="probability-label" data-i18n="conflictProbability">Conflict Probability</div>
                         <div class="gauge-container">
                             <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
                                 <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
@@ -641,16 +748,13 @@
                             <div class="gauge-text medium" id="ukraine-prob">--</div>
                         </div>
                     </div>
-                    <!-- WEATHER WIDGET -->
                     <div class="weather-section" id="ukraine-weather">
                         <div class="weather-title">🌤️ 7-Day Forecast — Kyiv</div>
-                        <div class="weather-forecast" id="ukraine-weather-forecast">
-                            <div class="weather-loading">Loading weather data...</div>
-                        </div>
+                        <div class="weather-forecast" id="ukraine-weather-forecast"><div class="weather-loading">Loading weather data...</div></div>
                     </div>
                     <div class="timeline-display">
-                        <div class="timeline-label">Projected Timeline</div>
-                        <div class="timeline-value" id="ukraine-timeline">Awaiting scan...</div>
+                        <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+                        <div class="timeline-value" id="ukraine-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
                         <div class="timeline-bar" id="ukraine-bar">
                             <div class="timeline-segment">0-30d</div><div class="timeline-segment">31-90d</div>
                             <div class="timeline-segment">91-180d</div><div class="timeline-segment">180+d</div>
@@ -660,18 +764,13 @@
                         🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
                         <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
                     </div>
-                    <a href="ukraine.html" class="country-stability-btn">
-                        🇺🇦 Ukraine Stability Index
-                        <span class="btn-subtitle">Frontline dynamics, aid flows & ceasefire analysis — Coming Soon</span>
-                    </a>
                     <div class="headlines-section" id="ukraine-headlines">
-                        <h4>Recent Headlines:</h4>
-                        <p style="color:#7f8c8d; font-style:italic;">Click scan to load latest intelligence</p>
+                        <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+                        <p style="color:#7f8c8d; font-style:italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
                     </div>
                 </div>
             </div>
 
-            <!-- RUSSIA -->
         </div><!-- end targets-grid -->
 
         <!-- ========== NOTAM WIDGET ========== -->
@@ -755,13 +854,69 @@
 
     <script>
     /* ================================================
-       ASIFAH ANALYTICS — EUROPE DASHBOARD v1.0.0
+       ASIFAH ANALYTICS — EUROPE DASHBOARD v1.1.0
        JavaScript Engine
+       Changelog v1.1.0:
+       - Added loading overlay with step progression
+       - Added cache/preload for collapsed card scores
+       - Fixed card order (alphabetical)
+       - Red stability buttons matching Middle East
        ================================================ */
 
     const API_BASE = 'https://asifa-europe-backend.onrender.com';
-    const TARGETS = ['greenland', 'ukraine', 'russia', 'poland'];
+    const TARGETS = ['greenland', 'poland', 'russia', 'ukraine'];
     const CIRCUMFERENCE = 2 * Math.PI * 85; // ~534
+
+    // ===== LOADING OVERLAY =====
+    let loadingInterval;
+    let loadingTimeout;
+    const loadingSteps = ['loadStep1', 'loadStep2', 'loadStep3', 'loadStep4'];
+    let currentLoadingStep = 0;
+
+    function advanceLoadingStep() {
+        if (currentLoadingStep < loadingSteps.length) {
+            const step = document.getElementById(loadingSteps[currentLoadingStep]);
+            if (step) {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '✓';
+            }
+        }
+        currentLoadingStep++;
+        if (currentLoadingStep < loadingSteps.length) {
+            const nextStep = document.getElementById(loadingSteps[currentLoadingStep]);
+            if (nextStep) nextStep.classList.add('active');
+        }
+    }
+
+    function hideLoadingOverlay() {
+        if (loadingInterval) clearInterval(loadingInterval);
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        // Mark all steps complete
+        loadingSteps.forEach(id => {
+            const step = document.getElementById(id);
+            if (step) {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '✓';
+            }
+        });
+        setTimeout(() => {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) overlay.classList.add('hidden');
+        }, 600);
+    }
+
+    function startLoadingProgress() {
+        loadingInterval = setInterval(() => {
+            advanceLoadingStep();
+            if (currentLoadingStep >= loadingSteps.length) clearInterval(loadingInterval);
+        }, 3000);
+        // Show error hint after 45 seconds
+        loadingTimeout = setTimeout(() => {
+            document.getElementById('loadingError').style.display = 'block';
+        }, 45000);
+    }
 
     // ===== TRANSLATIONS =====
     const translations = {
@@ -792,79 +947,52 @@
             footerSources: "Data Sources", footerMethodology: "Methodology", footerContact: "Contact"
         },
         ru: {
-            header: "АСИФА АНАЛИТИКА",
-            subtitle: "Панель вероятности конфликтов в Европе",
-            homeButton: "ГЛАВНАЯ",
-            themeToggle: "Свет / Тьма",
-            conflictProbability: "Вероятность конфликта",
-            projectedTimeline: "Прогнозируемые сроки",
-            awaitingScan: "Ожидание сканирования...",
-            recentHeadlines: "Последние заголовки:",
+            header: "АСИФА АНАЛИТИКА", subtitle: "Панель вероятности конфликтов в Европе",
+            homeButton: "ГЛАВНАЯ", themeToggle: "Свет / Тьма",
+            conflictProbability: "Вероятность конфликта", projectedTimeline: "Прогнозируемые сроки",
+            awaitingScan: "Ожидание сканирования...", recentHeadlines: "Последние заголовки:",
             clickToScan: "Нажмите для загрузки разведданных",
-            scanButton: "Сканировать OSINT — обновить прогноз",
-            loadingText: "Сканирование открытых источников...",
-            expandBtn: "Развернуть ▼",
-            collapseBtn: "Свернуть ▲",
+            scanButton: "Сканировать OSINT — обновить прогноз", loadingText: "Сканирование открытых источников...",
+            expandBtn: "Развернуть ▼", collapseBtn: "Свернуть ▲",
             expandInstructions: 'Нажмите "Развернуть" для обновления данных',
             hours24: "24ч", hours48: "48ч", days7: "7 дней", days30: "30 дней",
-            targetGreenland: "ГРЕНЛАНДИЯ", targetUkraine: "УКРАИНА",
-            targetRussia: "РОССИЯ", targetPoland: "ПОЛЬША",
-            notamTitle: "Европейский монитор NOTAM",
-            notamScanning: "СКАНИРОВАНИЕ...",
-            flightTitle: "Монитор нарушений рейсов в Европе",
-            flightScanning: "СКАНИРОВАНИЕ...",
+            targetGreenland: "ГРЕНЛАНДИЯ", targetUkraine: "УКРАИНА", targetRussia: "РОССИЯ", targetPoland: "ПОЛЬША",
+            notamTitle: "Европейский монитор NOTAM", notamScanning: "СКАНИРОВАНИЕ...",
+            flightTitle: "Монитор нарушений рейсов в Европе", flightScanning: "СКАНИРОВАНИЕ...",
             rlRequests: "Запросов использовано", rlRemaining: "Осталось",
             rlLimit: "Дневной лимит", rlReset: "Сброс через",
             footerSources: "Источники данных", footerMethodology: "Методология", footerContact: "Контакт"
         },
         fr: {
-            header: "ASIFAH ANALYTICS",
-            subtitle: "Tableau de probabilité de conflit en Europe",
-            homeButton: "ACCUEIL",
-            themeToggle: "Clair / Sombre",
-            conflictProbability: "Probabilité de conflit",
-            projectedTimeline: "Chronologie projetée",
-            awaitingScan: "En attente du scan...",
-            recentHeadlines: "Derniers titres :",
+            header: "ASIFAH ANALYTICS", subtitle: "Tableau de probabilité de conflit en Europe",
+            homeButton: "ACCUEIL", themeToggle: "Clair / Sombre",
+            conflictProbability: "Probabilité de conflit", projectedTimeline: "Chronologie projetée",
+            awaitingScan: "En attente du scan...", recentHeadlines: "Derniers titres :",
             clickToScan: "Cliquer pour charger les dernières analyses",
-            scanButton: "Scanner OSINT — Mettre à jour les prévisions",
-            loadingText: "Analyse des sources ouvertes...",
-            expandBtn: "Développer ▼",
-            collapseBtn: "Réduire ▲",
+            scanButton: "Scanner OSINT — Mettre à jour les prévisions", loadingText: "Analyse des sources ouvertes...",
+            expandBtn: "Développer ▼", collapseBtn: "Réduire ▲",
             expandInstructions: 'Cliquez "Développer" pour actualiser les données',
             hours24: "24h", hours48: "48h", days7: "7 Jours", days30: "30 Jours",
-            targetGreenland: "GROENLAND", targetUkraine: "UKRAINE",
-            targetRussia: "RUSSIE", targetPoland: "POLOGNE",
-            notamTitle: "Moniteur NOTAM européen",
-            notamScanning: "ANALYSE...",
-            flightTitle: "Moniteur des perturbations de vols européens",
-            flightScanning: "ANALYSE...",
+            targetGreenland: "GROENLAND", targetUkraine: "UKRAINE", targetRussia: "RUSSIE", targetPoland: "POLOGNE",
+            notamTitle: "Moniteur NOTAM européen", notamScanning: "ANALYSE...",
+            flightTitle: "Moniteur des perturbations de vols européens", flightScanning: "ANALYSE...",
             rlRequests: "Requêtes utilisées", rlRemaining: "Restant",
             rlLimit: "Limite quotidienne", rlReset: "Réinitialisation dans",
             footerSources: "Sources de données", footerMethodology: "Méthodologie", footerContact: "Contact"
         },
         de: {
-            header: "ASIFAH ANALYTICS",
-            subtitle: "Europäisches Konfliktwahrscheinlichkeits-Dashboard",
-            homeButton: "STARTSEITE",
-            themeToggle: "Hell / Dunkel",
-            conflictProbability: "Konfliktwahrscheinlichkeit",
-            projectedTimeline: "Prognostizierter Zeitrahmen",
-            awaitingScan: "Warte auf Scan...",
-            recentHeadlines: "Aktuelle Schlagzeilen:",
+            header: "ASIFAH ANALYTICS", subtitle: "Europäisches Konfliktwahrscheinlichkeits-Dashboard",
+            homeButton: "STARTSEITE", themeToggle: "Hell / Dunkel",
+            conflictProbability: "Konfliktwahrscheinlichkeit", projectedTimeline: "Prognostizierter Zeitrahmen",
+            awaitingScan: "Warte auf Scan...", recentHeadlines: "Aktuelle Schlagzeilen:",
             clickToScan: "Klicken Sie zum Laden der neuesten Analysen",
-            scanButton: "OSINT scannen — Prognose aktualisieren",
-            loadingText: "Offene Quellen werden gescannt...",
-            expandBtn: "Erweitern ▼",
-            collapseBtn: "Einklappen ▲",
+            scanButton: "OSINT scannen — Prognose aktualisieren", loadingText: "Offene Quellen werden gescannt...",
+            expandBtn: "Erweitern ▼", collapseBtn: "Einklappen ▲",
             expandInstructions: 'Klicken Sie "Erweitern" um Daten zu aktualisieren',
             hours24: "24h", hours48: "48h", days7: "7 Tage", days30: "30 Tage",
-            targetGreenland: "GRÖNLAND", targetUkraine: "UKRAINE",
-            targetRussia: "RUSSLAND", targetPoland: "POLEN",
-            notamTitle: "Europäischer NOTAM-Monitor",
-            notamScanning: "SCANNEN...",
-            flightTitle: "Europäischer Flugstörungsmonitor",
-            flightScanning: "SCANNEN...",
+            targetGreenland: "GRÖNLAND", targetUkraine: "UKRAINE", targetRussia: "RUSSLAND", targetPoland: "POLEN",
+            notamTitle: "Europäischer NOTAM-Monitor", notamScanning: "SCANNEN...",
+            flightTitle: "Europäischer Flugstörungsmonitor", flightScanning: "SCANNEN...",
             rlRequests: "Anfragen verwendet", rlRemaining: "Verbleibend",
             rlLimit: "Tageslimit", rlReset: "Zurücksetzung in",
             footerSources: "Datenquellen", footerMethodology: "Methodik", footerContact: "Kontakt"
@@ -892,7 +1020,6 @@
         html.setAttribute('data-theme', current === 'dark' ? '' : 'dark');
         localStorage.setItem('europeTheme', current === 'dark' ? 'light' : 'dark');
     }
-    // Load saved theme
     (function() {
         const saved = localStorage.getItem('europeTheme');
         if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
@@ -907,6 +1034,47 @@
         } else {
             card.classList.remove('expanded');
             card.classList.add('collapsed');
+        }
+    }
+
+    // ===== CACHE/PRELOAD SYSTEM =====
+    // Loads cached scores from the backend on page load so collapsed cards show last-known %
+    async function loadCachedScores() {
+        for (const target of TARGETS) {
+            try {
+                // Try to fetch cached data (uses backend's server-side cache — no new API calls burned)
+                const response = await fetch(`${API_BASE}/api/europe/threat/${target}?days=7`);
+                if (!response.ok) continue;
+                const data = await response.json();
+                const prob = data.probability || 0;
+                const probRounded = Math.round(prob);
+                const level = prob >= 60 ? 'high' : prob >= 35 ? 'medium' : 'low';
+
+                // Update collapsed card
+                const collapsedScore = document.getElementById(`${target}CollapsedScore`);
+                const collapsedBar = document.getElementById(`${target}CollapsedBar`);
+                const collapsedTimestamp = document.getElementById(`${target}CollapsedTimestamp`);
+                const card = document.getElementById(`${target}-card`);
+
+                if (collapsedScore) collapsedScore.textContent = `${probRounded}%`;
+                if (collapsedBar) {
+                    collapsedBar.style.width = `${probRounded}%`;
+                    collapsedBar.style.background = level === 'high' ? '#ef4444' : level === 'medium' ? '#f59e0b' : '#10b981';
+                }
+                if (collapsedTimestamp) {
+                    const ts = data.cached_at || data.timestamp || null;
+                    collapsedTimestamp.textContent = ts ? `As of ${new Date(ts).toLocaleString()}` : new Date().toLocaleString();
+                }
+                if (card) {
+                    card.classList.remove('low-threat', 'medium-threat', 'high-threat');
+                    card.classList.add(`${level}-threat`);
+                }
+            } catch (err) {
+                console.warn(`[Cache] Could not preload ${target}:`, err.message);
+                // Leave as "--" — that's fine for first-time/cold-start
+                const ts = document.getElementById(`${target}CollapsedTimestamp`);
+                if (ts) ts.textContent = 'Awaiting first scan...';
+            }
         }
     }
 
@@ -980,14 +1148,11 @@
             else segments[3]?.classList.add('active');
         }
 
-        // Headlines — handle multiple backend response formats
+        // Headlines
         const headlinesEl = document.getElementById(`${target}-headlines`);
-        // Try all known field names from our backends
         const articlesList = data.articles || data.top_scoring_articles || data.recent_headlines || [];
         if (headlinesEl && articlesList.length > 0) {
             let html = `<h4>${translations[currentLang]?.recentHeadlines || 'Recent Headlines:'}</h4>`;
-            
-            // Normalize articles to common format
             const normalized = articlesList.map(a => ({
                 title: a.title || 'Untitled',
                 url: a.url || '#',
@@ -999,24 +1164,18 @@
                 decay: a.time_decay || 1,
                 deescalation: a.deescalation || false
             }));
-
             const maxContribution = Math.max(...normalized.map(a => Math.abs(a.contribution)), 1);
-
             normalized.slice(0, 15).forEach(article => {
                 const weight = parseFloat(article.weight).toFixed(2);
                 const contribution = parseFloat(article.contribution);
                 const absContrib = Math.abs(contribution);
                 const barWidth = Math.min((absContrib / maxContribution) * 100, 100);
                 const isDeescalation = contribution < 0 || article.deescalation;
-
-                let impactClass = 'low-impact';
-                let impactLabel = 'LOW';
+                let impactClass = 'low-impact', impactLabel = 'LOW';
                 if (absContrib > 3) { impactClass = 'high-impact'; impactLabel = 'HIGH'; }
                 else if (absContrib > 1) { impactClass = 'medium-impact'; impactLabel = 'MED'; }
-
                 const published = article.published ? new Date(article.published).toLocaleDateString() : '';
                 const decay = parseFloat(article.decay).toFixed(2);
-
                 html += `
                 <div class="headline-item">
                     <a href="${article.url}" target="_blank">${article.title}</a>
@@ -1038,7 +1197,6 @@
             headlinesEl.innerHTML = `<h4>${translations[currentLang]?.recentHeadlines || 'Recent Headlines:'}</h4><p style="color:#7f8c8d; font-style:italic;">No articles returned — backend may be using cached data or API limits reached.</p>`;
         }
 
-        // Update rate limits
         fetchRateLimits();
     }
 
@@ -1060,23 +1218,17 @@
         const wrapper = document.getElementById('notamCardsWrapper');
         const badge = document.getElementById('notamStatusBadge');
         const notams = data.notams || [];
-
         if (notams.length === 0) {
             wrapper.innerHTML = '<div class="no-notams"><div class="no-notams-title">No Active Alerts</div><div class="no-notams-subtitle">No critical NOTAMs detected across European airspace</div></div>';
             badge.textContent = 'CLEAR';
-            badge.style.background = '#d1fae5';
-            badge.style.color = '#065f46';
+            badge.style.background = '#d1fae5'; badge.style.color = '#065f46';
             wrapper.style.animation = 'none';
             return;
         }
-
         badge.textContent = `${notams.length} ACTIVE`;
-        badge.style.background = '#fef3c7';
-        badge.style.color = '#92400e';
-
+        badge.style.background = '#fef3c7'; badge.style.color = '#92400e';
         let html = '';
-        const allNotams = [...notams, ...notams]; // duplicate for scroll
-
+        const allNotams = [...notams, ...notams];
         allNotams.forEach(notam => {
             const typeColor = getNotamTypeColor(notam.classification || notam.type || '');
             html += `
@@ -1121,17 +1273,13 @@
         const grid = document.getElementById('flightCancellationsGrid');
         const badge = document.getElementById('flightStatusBadge');
         const disruptions = data.disruptions || [];
-
         if (disruptions.length === 0) {
             grid.innerHTML = '<div class="no-cancellations" style="grid-column:1/-1;"><div style="font-size:16px;font-weight:bold;margin-bottom:8px;">No Active Disruptions</div><div>All monitored European carriers operating normally</div></div>';
-            badge.textContent = 'NORMAL';
-            badge.className = 'flight-status-badge normal';
+            badge.textContent = 'NORMAL'; badge.className = 'flight-status-badge normal';
             return;
         }
-
         badge.textContent = `${disruptions.length} DISRUPTION${disruptions.length > 1 ? 'S' : ''}`;
         badge.className = 'flight-status-badge active';
-
         let html = '';
         disruptions.forEach(d => {
             html += `
@@ -1159,12 +1307,10 @@
             const limit = data.daily_limit || 100;
             const remaining = data.remaining || (limit - used);
             const reset = data.reset_time || 'Midnight UTC';
-
             document.getElementById('rlUsed').textContent = used;
             document.getElementById('rlRemaining').textContent = remaining;
             document.getElementById('rlLimit').textContent = limit;
             document.getElementById('rlReset').textContent = reset;
-
             const pct = used / limit;
             const remEl = document.getElementById('rlRemaining');
             remEl.className = 'rate-limit-value ' + (pct > 0.9 ? 'danger' : pct > 0.7 ? 'warning' : 'success');
@@ -1176,13 +1322,10 @@
     // ===== ERROR HANDLING =====
     function showError(msg) {
         const el = document.getElementById('errorMessage');
-        el.textContent = msg;
-        el.classList.add('show');
+        el.textContent = msg; el.classList.add('show');
         setTimeout(() => el.classList.remove('show'), 15000);
     }
-    function hideError() {
-        document.getElementById('errorMessage').classList.remove('show');
-    }
+    function hideError() { document.getElementById('errorMessage').classList.remove('show'); }
 
     // ===== WEATHER WIDGET =====
     const WEATHER_CAPITALS = {
@@ -1218,37 +1361,30 @@
         return 'Cloudy';
     }
 
-    function isClearDay(code) {
-        return code <= 3;
-    }
+    function isClearDay(code) { return code <= 3; }
 
     async function loadWeather(target) {
         const config = WEATHER_CAPITALS[target];
         if (!config) return;
         const container = document.getElementById(`${target}-weather-forecast`);
         if (!container) return;
-
         try {
             const url = `https://api.open-meteo.com/v1/forecast?latitude=${config.lat}&longitude=${config.lon}&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&forecast_days=7`;
             const response = await fetch(url);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-
             const days = data.daily.time;
             const codes = data.daily.weather_code;
             const highs = data.daily.temperature_2m_max;
             const lows = data.daily.temperature_2m_min;
-
             let html = '';
             let clearNights = 0;
-
             for (let i = 0; i < days.length; i++) {
                 const date = new Date(days[i] + 'T12:00:00');
                 const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
                 const emoji = getWeatherEmoji(codes[i]);
                 const label = getWeatherLabel(codes[i]);
                 if (isClearDay(codes[i])) clearNights++;
-
                 html += `
                     <div class="weather-day" style="${isClearDay(codes[i]) ? 'border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);' : ''}">
                         <div class="weather-day-name">${dayName}</div>
@@ -1258,10 +1394,8 @@
                             <span class="weather-low">${Math.round(lows[i])}°</span>
                         </div>
                         <div class="weather-conditions">${label}</div>
-                    </div>
-                `;
+                    </div>`;
             }
-
             if (clearNights >= 4) {
                 html += `</div><div class="weather-strike-note">⚠️ ${clearNights}/7 clear days — favorable conditions for aerial operations</div>`;
             } else if (clearNights >= 2) {
@@ -1269,9 +1403,7 @@
             } else {
                 html += `</div><div class="weather-strike-note">☁️ ${clearNights}/7 clear days — poor conditions for aerial operations</div>`;
             }
-
             container.innerHTML = html;
-
         } catch (error) {
             console.warn(`[Weather] Failed for ${target}:`, error);
             container.innerHTML = '<div class="weather-loading">Weather data unavailable</div>';
@@ -1279,18 +1411,32 @@
     }
 
     async function loadAllWeather() {
-        const targets = Object.keys(WEATHER_CAPITALS);
-        for (const target of targets) {
+        for (const target of Object.keys(WEATHER_CAPITALS)) {
             loadWeather(target);
         }
     }
 
     // ===== INIT =====
-    document.addEventListener('DOMContentLoaded', function() {
-        loadNotams();
-        loadFlights();
-        fetchRateLimits();
-        loadAllWeather();
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Start loading overlay progress
+        startLoadingProgress();
+
+        // Fire all data loads in parallel
+        const cachePromise = loadCachedScores();
+        const notamPromise = loadNotams();
+        const flightPromise = loadFlights();
+        const weatherPromise = loadAllWeather();
+        const ratePromise = fetchRateLimits();
+
+        // Wait for at least the cache + NOTAMs to resolve before hiding overlay
+        try {
+            await Promise.allSettled([cachePromise, notamPromise, flightPromise]);
+        } catch (e) {
+            console.warn('Some init loads failed:', e);
+        }
+
+        // Hide overlay
+        hideLoadingOverlay();
     });
 
     </script>
