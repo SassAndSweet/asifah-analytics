@@ -5788,41 +5788,6 @@ async function updateFlightCancellations() {
                 document.getElementById(`${target}-combined-value`).textContent = 'Error';
             }
         }
-
-        // ========================================
-// LOADING SCREEN CONTROLLER
-// ========================================
-const loadingMessages = [
-    'INITIALIZING THREAT FEEDS...',
-    'CONNECTING TO OSINT SOURCES...',
-    'LOADING REGIONAL DATA...',
-    'CALIBRATING PROBABILITY MODELS...',
-    'READY.'
-];
-
-function runLoadingSequence() {
-    const screen = document.getElementById('pageLoadScreen');
-    const statusText = document.getElementById('loadingStatusText');
-    const bar = document.getElementById('loadingBar');
-    let step = 0;
-    const totalSteps = loadingMessages.length;
-
-    function nextStep() {
-        if (step >= totalSteps) {
-            screen.style.transition = 'opacity 0.7s ease';
-            screen.style.opacity = '0';
-            setTimeout(() => screen.remove(), 700);
-            return;
-        }
-        statusText.textContent = loadingMessages[step];
-        bar.style.width = `${((step + 1) / totalSteps) * 100}%`;
-        step++;
-        setTimeout(nextStep, step === totalSteps ? 400 : 550);
-    }
-    nextStep();
-}
-
-runLoadingSequence();
         
 // ===========================================
         // COLLAPSIBLE CARD SYSTEM
