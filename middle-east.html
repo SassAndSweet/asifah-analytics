@@ -2806,7 +2806,7 @@
 }
         </style>
 
-    <!-- ========================================= -->
+<!-- ========================================= -->
 <!-- PAGE LOADING SCREEN                       -->
 <!-- ========================================= -->
 <div id="pageLoadScreen" style="
@@ -2814,35 +2814,108 @@
     top: 0; left: 0;
     width: 100%; height: 100%;
     z-index: 9999;
-    background: 
-        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.75)),
-        url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Iran_on_fire.png') center/cover no-repeat;
+    background: #0a0e1a;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     font-family: 'Courier New', monospace;
+    transition: opacity 0.8s ease;
 ">
-    <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
-         style="width: 90px; height: 90px; border-radius: 50%; margin-bottom: 30px; box-shadow: 0 0 30px rgba(0,210,255,0.4);">
-    <div style="font-size: 22px; font-weight: bold; color: #00d2ff; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; text-shadow: 0 0 20px rgba(0,210,255,0.8);">
-        ASIFAH ANALYTICS
-    </div>
-    <div style="font-size: 13px; color: #67e8f9; letter-spacing: 2px; margin-bottom: 35px; opacity: 0.85;">
-        REGIONAL THREAT ASSESSMENT SYSTEM
-    </div>
-    <div id="loadingStatusText" style="font-size: 12px; color: #00d2ff; letter-spacing: 1.5px; margin-bottom: 25px; min-height: 20px; text-shadow: 0 0 10px rgba(0,210,255,0.6);">
-        INITIALIZING THREAT FEEDS...
-    </div>
-    <!-- Animated bar -->
-    <div style="width: 280px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin-bottom: 40px;">
-        <div id="loadingBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #0891b2, #00d2ff); border-radius: 2px; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(0,210,255,0.8);"></div>
-    </div>
-    <div style="font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 2px;">
-        FOR RESEARCH PURPOSES ONLY · NOT OFFICIAL U.S. GOVERNMENT
+    <!-- Iran_on_fire background image -->
+    <div style="position: absolute; inset: 0; background: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Iran_on_fire.png') center/cover no-repeat; opacity: 0.35; z-index: 0;"></div>
+    <!-- Radial vignette -->
+    <div style="position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(10,14,26,0.3) 0%, rgba(10,14,26,0.85) 70%, rgba(10,14,26,0.98) 100%); z-index: 1;"></div>
+    
+    <!-- Content -->
+    <div style="position: relative; z-index: 2; text-align: center;">
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+             style="width: 90px; height: 90px; border-radius: 50%; margin-bottom: 30px; border: 2px solid rgba(0, 180, 255, 0.3); box-shadow: 0 0 30px rgba(0,210,255,0.4); animation: loadPulse 2s ease-in-out infinite;">
+        <div style="font-size: 22px; font-weight: bold; color: #00d2ff; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 12px; text-shadow: 0 0 20px rgba(0,210,255,0.8);">
+            ASIFAH ANALYTICS
+        </div>
+        <div style="font-size: 13px; color: #67e8f9; letter-spacing: 2px; margin-bottom: 35px; opacity: 0.85;">
+            MIDDLE EAST CONFLICT PROBABILITY DASHBOARD
+        </div>
+        <!-- Spinner ring -->
+        <div style="width: 50px; height: 50px; border: 3px solid rgba(0,180,255,0.1); border-top: 3px solid rgba(0,180,255,0.8); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 25px;"></div>
+        <!-- Loading steps -->
+        <div id="loadingSteps" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 30px;">
+            <div id="loadStep1" style="color: rgba(100, 220, 255, 0.9); transition: all 0.3s ease;">🔄 Connecting to backend...</div>
+            <div id="loadStep2" style="transition: all 0.3s ease;">⏳ Loading cached threat scores...</div>
+            <div id="loadStep3" style="transition: all 0.3s ease;">⏳ Fetching NOTAMs & flight data...</div>
+            <div id="loadStep4" style="transition: all 0.3s ease;">⏳ Rendering dashboard...</div>
+        </div>
+        <!-- Animated bar -->
+        <div style="width: 280px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin: 0 auto 40px;">
+            <div id="loadingBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #0891b2, #00d2ff); border-radius: 2px; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(0,210,255,0.8);"></div>
+        </div>
+        <!-- Error hint (appears after 45s) -->
+        <div id="loadingError" style="display: none; margin: 0 auto 20px; max-width: 320px; padding: 10px 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; color: #fca5a5; font-size: 12px;">
+            ⚠️ Backend may be warming up on Render (free tier). This can take 30-60 seconds on first visit.
+        </div>
+        <div style="font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 2px;">
+            FOR RESEARCH PURPOSES ONLY · NOT OFFICIAL U.S. GOVERNMENT
+        </div>
     </div>
 </div>
+
+<style>
+    @keyframes loadPulse {
+        0%, 100% { transform: scale(1); opacity: 0.9; box-shadow: 0 0 30px rgba(0,180,255,0.15); }
+        50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 50px rgba(0,180,255,0.3); }
+    }
+</style>
+
+<script>
+// ========================================
+// LOADING OVERLAY CONTROLLER
+// ========================================
+(function() {
+    let loadTimeout = null;
+    const steps = ['loadStep1', 'loadStep2', 'loadStep3', 'loadStep4'];
+    const bar = document.getElementById('loadingBar');
     
+    function advanceStep(index) {
+        if (index > 0) {
+            const prev = document.getElementById(steps[index - 1]);
+            if (prev) { prev.style.color = 'rgba(80, 255, 160, 0.9)'; prev.textContent = prev.textContent.replace('🔄', '✅').replace('⏳', '✅'); }
+        }
+        if (index < steps.length) {
+            const curr = document.getElementById(steps[index]);
+            if (curr) { curr.style.color = 'rgba(100, 220, 255, 0.9)'; curr.textContent = curr.textContent.replace('⏳', '🔄'); }
+        }
+        if (bar) bar.style.width = ((index + 1) / steps.length * 100) + '%';
+    }
+    
+    // Auto-advance steps on timers
+    setTimeout(() => advanceStep(1), 3000);
+    setTimeout(() => advanceStep(2), 6000);
+    setTimeout(() => advanceStep(3), 9000);
+    
+    // Show error hint after 45 seconds
+    loadTimeout = setTimeout(() => {
+        const err = document.getElementById('loadingError');
+        if (err) err.style.display = 'block';
+    }, 45000);
+    
+    // Expose hide function globally
+    window.hidePageLoadScreen = function() {
+        if (loadTimeout) clearTimeout(loadTimeout);
+        // Mark all steps complete
+        steps.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) { el.style.color = 'rgba(80, 255, 160, 0.9)'; el.textContent = el.textContent.replace('⏳', '✅').replace('🔄', '✅'); }
+        });
+        if (bar) bar.style.width = '100%';
+        setTimeout(() => {
+            const screen = document.getElementById('pageLoadScreen');
+            if (screen) { screen.style.opacity = '0'; setTimeout(() => { screen.style.display = 'none'; }, 800); }
+        }, 600);
+    };
+})();
+</script>
+
 <header>
             <!-- Logo added here -->
             <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" 
@@ -2867,6 +2940,14 @@
                     <div class="theme-toggle-slider"></div>
                 </div>
             </div>
+            
+            <!-- NEW: Wrap title/subtitle in container -->
+            <div class="header-content">
+                <h1 data-i18n="header">ASIFAH ANALYTICS</h1>
+                <h2 data-i18n="subtitle">Regional Multi-Actor Conflict Probability Dashboard - The Middle East</h2>
+            </div>
+        </header>
+        <div id="errorMessage" class="error-message"></div>
             
             <!-- NEW: Wrap title/subtitle in container -->
             <div class="header-content">
@@ -5891,8 +5972,14 @@ window.addEventListener('DOMContentLoaded', () => {
             initLanguage();
             fetchRateLimitStatus();
             
-            // Load collapsed card data
-            loadCollapsedData();
+            // Load collapsed card data + hide loading screen when done
+            Promise.allSettled([
+                loadCollapsedData(),
+                updateNotams(),
+                (!window.__disableFlightCancellations) ? updateFlightCancellations() : Promise.resolve()
+            ]).then(() => {
+                if (window.hidePageLoadScreen) window.hidePageLoadScreen();
+            });
             
             // Load weather for all capitals on page load
             loadAllWeather();
