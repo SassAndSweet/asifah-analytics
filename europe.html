@@ -1269,10 +1269,18 @@
         }
     }
 
+    let flightDisruptionsData = [];
+    let flightVisibleCount = 4;
+    const FLIGHT_PAGE_SIZE = 4;
+    const FLIGHT_MAX_VISIBLE = 20;
+
     function displayFlights(data) {
         const grid = document.getElementById('flightCancellationsGrid');
         const badge = document.getElementById('flightStatusBadge');
-        const disruptions = data.disruptions || [];
+        const disruptions = data.disruptions || data.cancellations || [];
+        flightDisruptionsData = disruptions;
+        flightVisibleCount = FLIGHT_PAGE_SIZE;
+
         if (disruptions.length === 0) {
             grid.innerHTML = '<div class="no-cancellations" style="grid-column:1/-1;"><div style="font-size:16px;font-weight:bold;margin-bottom:8px;">No Active Disruptions</div><div>All monitored European carriers operating normally</div></div>';
             badge.textContent = 'NORMAL'; badge.className = 'flight-status-badge normal';
@@ -1280,21 +1288,59 @@
         }
         badge.textContent = `${disruptions.length} DISRUPTION${disruptions.length > 1 ? 'S' : ''}`;
         badge.className = 'flight-status-badge active';
+        renderFlightCards();
+    }
+
+    function renderFlightCards() {
+        const grid = document.getElementById('flightCancellationsGrid');
+        const visible = flightDisruptionsData.slice(0, flightVisibleCount);
         let html = '';
-        disruptions.forEach(d => {
+        visible.forEach(d => {
             html += `
             <div class="cancellation-card">
                 <div class="cancellation-airline">🚫 ${d.airline || 'Unknown Airline'}</div>
                 <div class="cancellation-details">
-                    ${d.route ? `<div><strong>Route:</strong> ${d.route}</div>` : ''}
+                    ${d.title ? `<div><strong>Headline:</strong> ${d.title}</div>` : ''}
+                    ${d.destination ? `<div><strong>Route:</strong> ${d.destination}</div>` : (d.route ? `<div><strong>Route:</strong> ${d.route}</div>` : '')}
                     ${d.reason ? `<div><strong>Reason:</strong> ${d.reason}</div>` : ''}
                     ${d.status ? `<div><strong>Status:</strong> ${d.status}</div>` : ''}
-                    ${d.since ? `<div><strong>Since:</strong> ${d.since}</div>` : ''}
+                    ${d.date ? `<div><strong>Date:</strong> ${new Date(d.date).toLocaleDateString()}</div>` : (d.since ? `<div><strong>Since:</strong> ${d.since}</div>` : '')}
+                    ${d.source ? `<div><strong>Source:</strong> ${d.source}</div>` : ''}
                     ${d.source_url ? `<div><a href="${d.source_url}" target="_blank" style="color:#2563eb;font-weight:600;">View Source →</a></div>` : ''}
                 </div>
             </div>`;
         });
+
+        // Show "Load More" button if there are more disruptions to show
+        const remaining = flightDisruptionsData.length - flightVisibleCount;
+        if (remaining > 0 && flightVisibleCount < FLIGHT_MAX_VISIBLE) {
+            const nextBatch = Math.min(remaining, FLIGHT_PAGE_SIZE);
+            html += `
+            <div style="grid-column:1/-1; text-align:center; padding:15px;">
+                <button onclick="loadMoreFlights()" style="
+                    background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%);
+                    color: white; border: none; padding: 10px 25px;
+                    font-family: 'Times New Roman', serif; font-size: 13px; font-weight: bold;
+                    border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
+                    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+                ">Show ${nextBatch} More Disruption${nextBatch > 1 ? 's' : ''} (${remaining} remaining)</button>
+                <div style="margin-top:8px; font-size:11px; color:#7f8c8d;">
+                    Showing ${visible.length} of ${flightDisruptionsData.length} (max ${FLIGHT_MAX_VISIBLE})
+                </div>
+            </div>`;
+        } else if (flightVisibleCount >= FLIGHT_MAX_VISIBLE && flightDisruptionsData.length > FLIGHT_MAX_VISIBLE) {
+            html += `
+            <div style="grid-column:1/-1; text-align:center; padding:10px; font-size:12px; color:#7f8c8d;">
+                Showing ${FLIGHT_MAX_VISIBLE} of ${flightDisruptionsData.length} disruptions (limit reached)
+            </div>`;
+        }
+
         grid.innerHTML = html;
+    }
+
+    function loadMoreFlights() {
+        flightVisibleCount = Math.min(flightVisibleCount + FLIGHT_PAGE_SIZE, FLIGHT_MAX_VISIBLE);
+        renderFlightCards();
     }
 
     // ===== RATE LIMITS =====
