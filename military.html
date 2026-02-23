@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.0.0 - Feb 20, 2026 -->
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.3.0 - Feb 22, 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
 <html lang="en" dir="ltr">
 <head>
@@ -249,7 +249,7 @@
     <div class="source-footer" id="sourceFooter"></div>
     <div class="updated-bar" id="updatedBar"></div>
     <div class="page-footer">
-        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.0.0</div>
+        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.3.0</div>
         <a href="index.html" class="back-link" data-i18n="backToMain">&larr; Back to Main Dashboard</a>
     </div>
 </div>
@@ -266,13 +266,17 @@ var TRANSLATIONS = {
 
 var currentLang = 'en';
 var TIER_LABELS = { 1:'TIER 1 \u2014 STRIKE', 2:'TIER 2 \u2014 ADVERSARY', 3:'TIER 3 \u2014 REGIONAL', 4:'TIER 4 \u2014 ALLIANCE' };
-var ASSET_ICONS = { carrier_strike_group:'\uD83D\uDEA2', submarine:'\uD83D\uDD31', bomber_deployment:'\u2708\uFE0F', amphibious_group:'\u2693', fighter_surge:'\uD83D\uDEE9\uFE0F', air_defense:'\uD83D\uDEE1\uFE0F', isr_assets:'\uD83D\uDC41\uFE0F', ground_forces:'\uD83E\uDE96', logistics:'\uD83D\uDCE6', missile_test:'\uD83D\uDE80', naval_exercise:'\u2693', base_evacuation:'\uD83D\uDEA8', military_posturing:'\u26A0\uFE0F', unspecified:'\u26A0\uFE0F' };
-var ASSET_LABELS = { carrier_strike_group:'Carrier Strike Groups', submarine:'Submarines', bomber_deployment:'Strategic Bombers', amphibious_group:'Amphibious Groups', fighter_surge:'Fighter Surges', air_defense:'Air Defense', isr_assets:'ISR Assets', ground_forces:'Ground Forces', logistics:'Logistics', missile_test:'Missile Tests', naval_exercise:'Naval Exercises', base_evacuation:'Base Evacuations', military_posturing:'Posturing/Threats', unspecified:'General Activity' };
 
-/* ====== THEATRE ordering & fallback if backend doesn't send groupings ====== */
+/* ====== ASSET ICONS — v2.3.0: added drone_incursion ====== */
+var ASSET_ICONS = { carrier_strike_group:'\uD83D\uDEA2', submarine:'\uD83D\uDD31', bomber_deployment:'\u2708\uFE0F', amphibious_group:'\u2693', fighter_surge:'\uD83D\uDEE9\uFE0F', air_defense:'\uD83D\uDEE1\uFE0F', isr_assets:'\uD83D\uDC41\uFE0F', ground_forces:'\uD83E\uDE96', logistics:'\uD83D\uDCE6', missile_test:'\uD83D\uDE80', naval_exercise:'\u2693', base_evacuation:'\uD83D\uDEA8', military_posturing:'\u26A0\uFE0F', drone_incursion:'\uD83D\uDEF8', unspecified:'\u26A0\uFE0F' };
+
+/* ====== ASSET LABELS — v2.3.0: added drone_incursion ====== */
+var ASSET_LABELS = { carrier_strike_group:'Carrier Strike Groups', submarine:'Submarines', bomber_deployment:'Strategic Bombers', amphibious_group:'Amphibious Groups', fighter_surge:'Fighter Surges', air_defense:'Air Defense', isr_assets:'ISR Assets', ground_forces:'Ground Forces', logistics:'Logistics', missile_test:'Missile Tests', naval_exercise:'Naval Exercises', base_evacuation:'Base Evacuations', military_posturing:'Posturing/Threats', drone_incursion:'Drone Incursions', unspecified:'General Activity' };
+
+/* ====== THEATRE ordering — v2.3.0: added greenland + poland to Europe ====== */
 var THEATRE_ORDER = [
     { id:'asia_pacific', label:'Asia & The Pacific Theatre', icon:'\uD83C\uDF0F', actors:['china'] },
-    { id:'europe', label:'European Theatre', icon:'\uD83C\uDF0D', actors:['nato','russia','turkey','ukraine'] },
+    { id:'europe', label:'European Theatre', icon:'\uD83C\uDF0D', actors:['nato','russia','turkey','ukraine','greenland','poland'] },
     { id:'middle_east', label:'Middle East & North Africa', icon:'\uD83D\uDD4C', actors:['us','israel','iran','egypt','jordan','kuwait','qatar','saudi_arabia','uae'] }
 ];
 
@@ -365,7 +369,7 @@ function renderAll(data) {
     renderSources(data.source_breakdown || {}, t);
 
     var dt = data.last_updated ? new Date(data.last_updated) : new Date();
-    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.0.0');
+    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.3.0');
 }
 
 function renderEvacBanner(alerts) {
@@ -394,7 +398,6 @@ function renderTheatres(actors, theatreGroupings, t) {
         section.className = 'theatre-section';
         section.id = 'theatre-' + theatre.id;
 
-        /* Collect actors for this theatre — sorted alphabetically by name */
         var theatreActors = [];
         var theatreScore = 0;
         for (var ai = 0; ai < theatre.actors.length; ai++) {
@@ -406,13 +409,11 @@ function renderTheatres(actors, theatreGroupings, t) {
         }
         theatreActors.sort(function(a, b) { return (a.data.name || '').localeCompare(b.data.name || ''); });
 
-        /* Determine theatre alert level */
         var theatreAlert = 'normal';
         if (theatreScore >= 50) theatreAlert = 'surge';
         else if (theatreScore >= 25) theatreAlert = 'high';
         else if (theatreScore >= 10) theatreAlert = 'elevated';
 
-        /* Theatre header */
         var header = document.createElement('div');
         header.className = 'theatre-header';
         header.onclick = (function(id) { return function() { toggleTheatre(id); }; })(theatre.id);
@@ -426,7 +427,6 @@ function renderTheatres(actors, theatreGroupings, t) {
             '<div class="collapse-icon">\u25BC</div>' +
             '</div>';
 
-        /* Theatre body */
         var body = document.createElement('div');
         body.className = 'theatre-body';
 
