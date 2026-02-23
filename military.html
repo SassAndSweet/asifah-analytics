@@ -150,6 +150,19 @@
         .target-name { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .target-score { font-size: 2rem; font-weight: 700; line-height: 1; }
         .target-score-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; }
+        .target-drivers { margin-top: 10px; padding: 8px 10px; background: var(--bg-signal); border-radius: 6px; border-left: 3px solid var(--accent-blue); }
+        .target-drivers-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+        .target-drivers-text { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.5; }
+        .target-drivers-text .driver-tag { display: inline-block; padding: 2px 8px; margin: 2px 3px 2px 0; background: rgba(49,130,206,0.1); border: 1px solid rgba(49,130,206,0.2); border-radius: 4px; font-size: 0.65rem; font-weight: 600; color: var(--accent-blue); white-space: nowrap; }
+        [data-theme="dark"] .target-drivers { border-left-color: var(--accent-cyan); }
+        [data-theme="dark"] .target-drivers-text .driver-tag { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.2); color: var(--accent-cyan); }
+        .target-card.surge .target-drivers { border-left-color: var(--accent-red); }
+        .target-card.surge .target-drivers-text .driver-tag { background: rgba(229,62,62,0.1); border-color: rgba(229,62,62,0.2); color: var(--accent-red); }
+        [data-theme="dark"] .target-card.surge .target-drivers-text .driver-tag { background: rgba(255,59,59,0.1); border-color: rgba(255,59,59,0.25); color: var(--accent-red); }
+        .target-card.high .target-drivers { border-left-color: var(--accent-orange); }
+        .target-card.high .target-drivers-text .driver-tag { background: rgba(221,107,32,0.1); border-color: rgba(221,107,32,0.2); color: var(--accent-orange); }
+        .target-card.elevated .target-drivers { border-left-color: var(--accent-yellow); }
+        .target-card.elevated .target-drivers-text .driver-tag { background: rgba(214,158,46,0.1); border-color: rgba(214,158,46,0.2); color: var(--accent-yellow); }
         .asset-bar-container { display: flex; gap: 12px; flex-wrap: wrap; }
         .asset-chip { display: flex; align-items: center; gap: 8px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 16px; box-shadow: var(--shadow-sm); }
         [data-theme="dark"] .asset-chip { border-color: var(--cyber-border); }
@@ -479,12 +492,50 @@ function renderTargets(targets, t) {
     for (var i = 0; i < sorted.length; i++) {
         var name = sorted[i][0], p = sorted[i][1];
         var card = document.createElement('div');
-        card.className = 'target-card ' + (p.alert_level || 'normal');
-        card.innerHTML = '<div class="target-name">' + (p.alert_icon || '\uD83D\uDFE2') + ' ' + name.replace(/_/g, ' ') + '</div>' +
-            '<div style="display:flex;align-items:baseline;gap:10px">' +
-            '<div class="target-score" style="color:' + (colorMap[p.alert_level] || 'var(--text-primary)') + '">' + (p.score ? p.score.toFixed(1) : '0') + '</div>' +
-            '<span class="alert-badge ' + (p.alert_level || 'normal') + '">' + (p.alert_label || 'Normal').toUpperCase() + '</span>' +
-            '</div><div class="target-score-label">' + (t.score || 'Score') + ' \u00B7 ' + (p.tension_multiplier || 1.0) + 'x multiplier</div>';
+        card.className = 'target-card ' + (p.alert_level||'normal');
+
+        // Extract driver tags from top_signals
+        var driversHtml = '';
+        var signals = p.top_signals || [];
+        if (signals.length > 0) {
+            var driverTags = [];
+            var seenLabels = {};
+            for (var j = 0; j < Math.min(signals.length, 5); j++) {
+                var sig = signals[j];
+                // Add asset type tag (e.g., "Carrier Strike Groups", "Strategic Bombers")
+                var assetLabel = sig.asset_label || sig.asset || '';
+                if (assetLabel && !seenLabels[assetLabel]) {
+                    seenLabels[assetLabel] = true;
+                    driverTags.push(assetLabel);
+                }
+                // Add actor tag (e.g., "🇺🇸 US CENTCOM", "🇮🇷 Iran")
+                var actorTag = (sig.actor_flag || '') + ' ' + (sig.actor_name || '');
+                actorTag = actorTag.trim();
+                if (actorTag && !seenLabels[actorTag]) {
+                    seenLabels[actorTag] = true;
+                    driverTags.push(actorTag);
+                }
+            }
+            // Build tag HTML (max 6 tags to keep it compact)
+            if (driverTags.length > 0) {
+                var tagsStr = '';
+                for (var k = 0; k < Math.min(driverTags.length, 6); k++) {
+                    tagsStr += '<span class="driver-tag">' + driverTags[k] + '</span>';
+                }
+                // Add top headline as a one-liner
+                var topHeadline = signals[0].article_title || '';
+                if (topHeadline.length > 80) topHeadline = topHeadline.substring(0, 77) + '...';
+                var headlineHtml = topHeadline ? '<div style="margin-top:4px;font-size:0.65rem;color:var(--text-muted);font-style:italic;">\u201C' + topHeadline + '\u201D</div>' : '';
+
+                driversHtml = '<div class="target-drivers"><div class="target-drivers-label">Key Drivers</div><div class="target-drivers-text">' + tagsStr + '</div>' + headlineHtml + '</div>';
+            }
+        }
+
+        var displayName = name.replace(/_/g,' ');
+        if (displayName.toLowerCase() === 'hezbollah') displayName = 'HIZBALLAH';
+        else displayName = displayName.toUpperCase();
+
+        card.innerHTML = '<div class="target-name">' + (p.alert_icon||'\uD83D\uDFE2') + ' ' + displayName + '</div><div style="display:flex;align-items:baseline;gap:10px"><div class="target-score" style="color:' + (colorMap[p.alert_level]||'var(--text-primary)') + '">' + (p.score ? p.score.toFixed(1) : '0') + '</div><span class="alert-badge ' + (p.alert_level||'normal') + '">' + (p.alert_label||'Normal').toUpperCase() + '</span></div><div class="target-score-label">' + t.score + ' \u00B7 ' + (p.tension_multiplier||1.0) + 'x multiplier</div>' + driversHtml;
         grid.appendChild(card);
     }
 }
