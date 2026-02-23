@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Russia Stability Index v1.0.0 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Russia Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #f5f5f5; --container-bg: #ffffff; --card-bg: #ffffff;
+            --card-border: #e1e8ed; --text-primary: #2c3e50; --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6; --metric-bg: #ffffff; --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa; --article-hover: #e8f4f8; --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(245,245,245,0.98); --loading-spinner-bg: rgba(127,29,29,0.2);
+            --accent: #991b1b;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
+            --card-border: #404040; --text-primary: #e0e0e0; --text-secondary: #b0b0b0;
+            --text-muted: #808080; --metric-bg: #2d2d2d; --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535; --article-hover: #404040; --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(26,26,26,0.98); --loading-spinner-bg: rgba(127,29,29,0.3);
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif; font-size: 14px;
+            background-color: var(--bg-color); color: var(--text-primary);
+            line-height: 1.6; padding: 20px; min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease; position: relative;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: cover; background-repeat: no-repeat; background-position: center;
+            opacity: var(--watermark-opacity); z-index: 0; pointer-events: none;
+        }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--loading-overlay-bg); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-spinner { width: 60px; height: 60px; border: 5px solid var(--loading-spinner-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 30px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+        .loading-steps { margin-top: 20px; }
+        .loading-step { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease; }
+        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.complete { color: #4ade80; }
+        .step-icon { font-size: 18px; min-width: 20px; }
+        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
+        .loading-error { color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; }
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        header { background: linear-gradient(135deg, #1c1917 0%, #78350f 100%); color: white; padding: 35px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); position: relative; display: flex; align-items: center; gap: 30px; }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+        .header-content { flex: 1; text-align: center; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+        .header-controls { position: absolute; top: 35px; right: 35px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; }
+        .language-switcher { display: flex; gap: 8px; background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); }
+        .theme-toggle { display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; backdrop-filter: blur(10px); }
+        .theme-toggle-label { font-size: 9px; color: rgba(255,255,255,0.9); margin-right: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .theme-toggle-switch { position: relative; width: 28px; height: 15px; background: rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 1.5px solid rgba(255,255,255,0.3); }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider { position: absolute; top: 1.5px; left: 1.5px; width: 9px; height: 9px; background: white; border-radius: 50%; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 6px; }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(13px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+        .lang-btn { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #1c1917; border-color: white; }
+        .back-link { display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0; padding: 12px 24px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); transition: all 0.2s ease; font-size: 14px; font-weight: bold; }
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .map-section { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
+        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
+        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+        .knowledge-library { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
+        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .library-icon { font-size: 28px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
+        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
+        .knowledge-header { background: linear-gradient(135deg, rgba(153,27,27,0.1) 0%, rgba(120,53,15,0.1) 100%); padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease; }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(153,27,27,0.15) 0%, rgba(120,53,15,0.15) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 22px; }
+        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content { padding: 20px; max-height: 600px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content strong { color: var(--text-primary); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+        .report-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold; transition: all 0.3s ease; }
+        .report-link:hover { background: #7f1d1d; transform: translateX(3px); box-shadow: 0 4px 12px rgba(153,27,27,0.3); }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .articles-section { background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); transition: background 0.3s ease, border-color 0.3s ease; }
+        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item { background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #991b1b; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .article-meta { font-size: 12px; color: var(--text-secondary); }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .article-link:hover { text-decoration: underline; }
+        footer { background: var(--container-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary); transition: background 0.3s ease, border-color 0.3s ease; }
+        [data-theme="dark"] header { background: linear-gradient(135deg, #0c0a09 0%, #451a03 100%); border: 1px solid rgba(153,27,27,0.2); }
+        [data-theme="dark"] .knowledge-header { background: linear-gradient(135deg, rgba(153,27,27,0.08) 0%, rgba(120,53,15,0.08) 100%); }
+        [data-theme="dark"] .article-item { border-left-color: #dc2626; }
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
+            .header-logo { width: 60px; height: 60px; margin-top: 0; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 22px; }
+            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Russia Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1"><span class="step-icon">⏳</span><span>Fetching OSINT articles on Russia...</span></div>
+                <div class="loading-step" id="step2"><span class="step-icon">⏳</span><span>Scanning sanctions &amp; economic indicators...</span></div>
+                <div class="loading-step" id="step3"><span class="step-icon">⏳</span><span>Analyzing military posture &amp; force deployment...</span></div>
+                <div class="loading-step" id="step4"><span class="step-icon">⏳</span><span>Rendering dashboard...</span></div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">🇷🇺 RUSSIA STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Sanctions Impact, Military Posture, Internal Dynamics &amp; Global Alignment</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('fr', this)">FR</button>
+                    <button class="lang-btn" onclick="switchLanguage('ru', this)">RU</button>
+                    <button class="lang-btn" onclick="switchLanguage('de', this)">DE</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()"><div class="theme-toggle-slider"></div></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAP -->
+        <div class="map-section">
+            <h2>🗺️ <span data-i18n="mapTitle">Russia — Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on European Russia. Military districts, frontline positions, and sanctions infrastructure overlays coming soon.</div>
+            <div style="width:100%; height:450px; border:2px solid var(--card-border); border-radius:8px; overflow:hidden;">
+                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=27%2C45%2C60%2C70&layer=mapnik&marker=55.76%2C37.62" width="100%" height="100%" frameborder="0" scrolling="no" style="border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE LIBRARY -->
+        <div class="knowledge-library">
+            <h2><span class="library-icon">📚</span> <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span></h2>
+            <p class="open-source-disclaimer">Note: Background information is compiled from open-source research, think tank analyses, and public government reporting.</p>
+
+            <div class="knowledge-categories">
+
+                <!-- Government & Political System -->
+                <div class="knowledge-card collapsed" id="card-government">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('government')">
+                        <div class="knowledge-header-title"><span class="category-icon">🏛️</span> <span data-i18n="catGovernment">Government &amp; Political System</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Russia is a federal semi-presidential republic in formal structure</strong>, but in practice operates as a consolidated authoritarian system centered on President Vladimir Putin, who has held power as either president or prime minister since 1999 — making him the longest-serving Russian/Soviet leader since Stalin.</p>
+                        <ul>
+                            <li><strong>Putin's Consolidation:</strong> Constitutional amendments approved in 2020 effectively allow Putin to remain in office until 2036. The March 2024 presidential "election" — with no genuine opposition permitted — returned Putin with an officially reported 87% of the vote. Independent observers described it as neither free nor fair.</li>
+                            <li><strong>State Duma:</strong> The 450-seat lower house is dominated by United Russia and aligned parties. The Duma functions primarily as a legislative rubber stamp rather than an independent deliberative body. Genuine opposition parties are excluded or suppressed.</li>
+                            <li><strong>Security Services:</strong> The FSB (domestic security), SVR (foreign intelligence), and GRU (military intelligence) wield enormous power. The "siloviki" — the security and military establishment — form the core of Putin's power base alongside loyal oligarchs.</li>
+                            <li><strong>Succession Question:</strong> Putin (age 72) has no public succession plan. The lack of institutional mechanisms for orderly power transfer is widely considered one of Russia's most significant long-term stability risks. Historical Russian/Soviet leadership transitions have frequently been chaotic.</li>
+                            <li><strong>Prigozhin Mutiny (June 2023):</strong> Wagner Group leader Yevgeny Prigozhin's brief armed march on Moscow — before it was negotiated to a halt — represented the most serious challenge to Kremlin authority in Putin's tenure. Prigozhin was killed in a plane crash two months later.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Carnegie Russia Eurasia Center, Levada Center, IISS, and Chatham House reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://carnegieendowment.org/programs/russia-eurasia" target="_blank" class="report-link">📑 Carnegie - Russia</a>
+                            <a href="https://www.levada.ru/en/" target="_blank" class="report-link">📑 Levada Center</a>
+                            <a href="https://www.chathamhouse.org/regions/russia-and-eurasia" target="_blank" class="report-link">📑 Chatham House</a>
+                            <a href="https://freedomhouse.org/country/russia" target="_blank" class="report-link">📑 Freedom House</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Military & Nuclear -->
+                <div class="knowledge-card collapsed" id="card-military">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('military')">
+                        <div class="knowledge-header-title"><span class="category-icon">⚔️</span> <span data-i18n="catMilitary">Military &amp; Nuclear Posture</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Russia maintains the world's largest nuclear arsenal and the second-largest conventional military</strong>, though the Ukraine war has exposed significant weaknesses in doctrine, equipment, logistics, and personnel quality that have fundamentally altered global assessments of Russian military capability.</p>
+                        <ul>
+                            <li><strong>Nuclear Arsenal:</strong> Approximately 5,580 nuclear warheads (deployed, reserve, and retired) — the world's largest stockpile. The strategic triad includes ICBMs (Topol-M, Yars, Sarmat in development), submarine-launched ballistic missiles (Bulava on Borei-class SSBNs), and air-launched cruise missiles on Tu-160 and Tu-95 bombers.</li>
+                            <li><strong>Nuclear Doctrine:</strong> Russia's revised 2024 nuclear doctrine lowered the threshold for nuclear use — stating that aggression by a non-nuclear state supported by a nuclear power could trigger a nuclear response. Western analysts view this as deliberate ambiguity designed to deter deeper Western involvement in Ukraine.</li>
+                            <li><strong>Conventional Forces — Ukraine Losses:</strong> Russia has suffered enormous equipment and personnel losses in Ukraine — estimated at over 300,000 casualties (killed and wounded), thousands of tanks, armored vehicles, and aircraft. The pre-war force structure has been fundamentally degraded.</li>
+                            <li><strong>Mobilization &amp; Recruitment:</strong> The September 2022 "partial mobilization" called up approximately 300,000 reservists. Russia has since relied on high-salary contracts, recruitment from prisons, and foreign fighters (including from Nepal and Central Africa) to sustain force levels without declaring another formal mobilization.</li>
+                            <li><strong>Defense Industrial Base:</strong> Russia has shifted to a wartime production footing — increasing tank, artillery shell, and drone manufacturing. However, it remains dependent on imported components (particularly microelectronics) that are subject to Western export controls. Sanctions evasion through third countries is a constant cat-and-mouse dynamic.</li>
+                            <li><strong>North Korean &amp; Iranian Support:</strong> North Korea has provided millions of artillery shells and reportedly deployed troops. Iran has supplied Shahed-series kamikaze drones. Both relationships have deepened into broader military-technical cooperation that concerns Western intelligence agencies.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on IISS, SIPRI, RUSI, Janes, and CSIS reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
+                            <a href="https://www.sipri.org/" target="_blank" class="report-link">📑 SIPRI</a>
+                            <a href="https://www.rusi.org/" target="_blank" class="report-link">📑 RUSI</a>
+                            <a href="https://www.csis.org/" target="_blank" class="report-link">📑 CSIS</a>
+                            <a href="https://www.armscontrol.org/" target="_blank" class="report-link">📑 Arms Control Assoc.</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sanctions & Economy -->
+                <div class="knowledge-card collapsed" id="card-sanctions">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('sanctions')">
+                        <div class="knowledge-header-title"><span class="category-icon">💰</span> <span data-i18n="catSanctions">Sanctions &amp; Economic Impact</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Russia faces the most comprehensive sanctions regime ever imposed on a major economy</strong> — targeting financial institutions, energy exports, technology imports, and individual oligarchs. The long-term impact is significant but Russia has demonstrated greater short-term resilience than many initially expected.</p>
+                        <ul>
+                            <li><strong>Financial Sanctions:</strong> Approximately $300 billion in Russian Central Bank reserves have been frozen in Western jurisdictions. Major Russian banks have been disconnected from SWIFT. The ruble experienced sharp initial volatility but was stabilized through capital controls and energy revenues.</li>
+                            <li><strong>Energy Revenues:</strong> Oil and gas revenues — historically representing approximately 40% of Russia's federal budget — have been hit by the G7 oil price cap ($60/barrel for crude). Russia has redirected significant export volumes to China, India, and Turkey at discounted prices. Revenue has declined but not collapsed.</li>
+                            <li><strong>Technology Restrictions:</strong> Export controls on advanced semiconductors, precision machine tools, and dual-use technologies aim to degrade Russia's ability to produce advanced weapons systems. Evidence suggests significant impact on high-end military production, though sanctions evasion through intermediary countries continues.</li>
+                            <li><strong>Wartime Economy:</strong> Russia's economy has shifted to a de facto wartime footing — with defense spending exceeding 6% of GDP (some estimates suggest over 8% when including security services). This has created short-term GDP growth driven by military production but at the cost of civilian economic investment, labor market distortions, and accelerating inflation.</li>
+                            <li><strong>Brain Drain:</strong> An estimated 500,000–1 million Russians — disproportionately young, educated, and tech-skilled — have emigrated since February 2022. The long-term impact on Russia's technology sector and innovation capacity is considered severe.</li>
+                            <li><strong>Shadow Fleet:</strong> Russia has assembled a "shadow fleet" of aging oil tankers to circumvent Western shipping restrictions — raising significant environmental and insurance concerns in European and Arctic waters.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on EU sanctions database, OFAC/Treasury, IMF, World Bank, and KSE Institute tracking</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.treasury.gov/resource-center/sanctions" target="_blank" class="report-link">📑 U.S. Treasury OFAC</a>
+                            <a href="https://www.consilium.europa.eu/en/policies/sanctions/restrictive-measures-against-russia-over-ukraine/" target="_blank" class="report-link">📑 EU Sanctions</a>
+                            <a href="https://kse.ua/sanctions/" target="_blank" class="report-link">📑 KSE Sanctions Tracker</a>
+                            <a href="https://www.imf.org/en/Countries/RUS" target="_blank" class="report-link">📑 IMF - Russia</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Internal Dissent -->
+                <div class="knowledge-card collapsed" id="card-dissent">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('dissent')">
+                        <div class="knowledge-header-title"><span class="category-icon">✊</span> <span data-i18n="catDissent">Internal Dissent &amp; Civil Society</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Russia's domestic political space has been dramatically constricted since the Ukraine invasion.</strong> Independent media, opposition movements, and civil society organizations have been systematically eliminated, driven underground, or forced into exile — creating one of the most restrictive information environments among major nations.</p>
+                        <ul>
+                            <li><strong>Navalny:</strong> Opposition leader Alexei Navalny died in an Arctic penal colony in February 2024 under circumstances widely attributed to state action. His death removed the most prominent remaining domestic opposition figure and signaled the Kremlin's willingness to eliminate even imprisoned dissidents.</li>
+                            <li><strong>Media Suppression:</strong> Independent outlets (Novaya Gazeta, Meduza, TV Rain) have been shut down or forced to operate from exile. The "foreign agent" and "undesirable organization" laws have been used to criminalize contact with Western institutions. Criticizing the war is a criminal offense carrying up to 15 years imprisonment.</li>
+                            <li><strong>Anti-War Movement:</strong> Anti-war protests in February-March 2022 resulted in over 16,000 detentions. The protest movement was effectively suppressed through mass arrests, criminal prosecution, and emigration. Organized domestic opposition to the war is now almost entirely covert.</li>
+                            <li><strong>Ethnic Minorities &amp; Regions:</strong> Casualty rates in the Ukraine war have been disproportionately borne by ethnic minority regions (Dagestan, Buryatia) and economically disadvantaged areas — a pattern that has generated localized resentment but not yet organized resistance.</li>
+                            <li><strong>Exile Opposition:</strong> A significant Russian opposition community operates from abroad (Lithuania, Georgia, Germany, Israel). Its ability to influence events inside Russia is limited by the Kremlin's information control, though exile media outlets reach millions of Russians through VPNs.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Memorial, OVD-Info, RSF, Amnesty International, and Human Rights Watch</div>
+                        <div class="report-links-grid">
+                            <a href="https://ovd.info/en" target="_blank" class="report-link">📑 OVD-Info (Detentions)</a>
+                            <a href="https://www.amnesty.org/en/location/europe-and-central-asia/russian-federation/" target="_blank" class="report-link">📑 Amnesty - Russia</a>
+                            <a href="https://www.hrw.org/europe/central-asia/russia" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                            <a href="https://rsf.org/en/country/russia" target="_blank" class="report-link">📑 RSF - Press Freedom</a>
+                            <a href="https://memorialinternational.org/en/" target="_blank" class="report-link">📑 Memorial International</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ukraine War Strategy -->
+                <div class="knowledge-card collapsed" id="card-ukraine">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('ukraine')">
+                        <div class="knowledge-header-title"><span class="category-icon">🎯</span> <span data-i18n="catUkraine">Ukraine War Strategy &amp; Objectives</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Russia's full-scale invasion of Ukraine (February 24, 2022) represents the largest conventional military conflict in Europe since 1945</strong> and has fundamentally altered the European security architecture, global energy markets, and the international rules-based order.</p>
+                        <ul>
+                            <li><strong>Stated Objectives:</strong> Russia's publicly stated objectives have evolved — from initial "denazification and demilitarization" to effective control of four Ukrainian oblasts (Donetsk, Luhansk, Zaporizhzhia, Kherson, all illegally annexed in September 2022) and prevention of Ukraine's NATO membership. Analysts debate whether Moscow's actual minimum acceptable outcome extends beyond these stated goals.</li>
+                            <li><strong>Military Situation:</strong> After initial failures at Kyiv, the conflict has become a grinding attritional war concentrated in eastern and southern Ukraine. Russia holds approximately 18% of Ukrainian territory (including Crimea). Front lines have moved slowly despite massive resource expenditure by both sides.</li>
+                            <li><strong>Escalation Dynamics:</strong> Russia has deployed Iranian-designed drones, North Korean ammunition, and increasingly sophisticated strike packages against Ukrainian infrastructure — including sustained campaigns against the energy grid, civilian infrastructure, and port facilities.</li>
+                            <li><strong>Ceasefire Prospects:</strong> Multiple ceasefire proposals have been floated (Trump "peace plan," Chinese framework, various third-party mediations). Key obstacles include: Ukraine's insistence on territorial integrity, Russia's refusal to withdraw from occupied territories, security guarantees for Ukraine, and the question of sanctions relief.</li>
+                            <li><strong>War Crimes &amp; Accountability:</strong> The ICC issued arrest warrants for Putin and Children's Rights Commissioner Maria Lvova-Belova in March 2023 for the unlawful deportation of Ukrainian children. Documented atrocities at Bucha, Irpin, and Mariupol have been extensively investigated by UN mechanisms, the ICC, and independent investigators.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on ISW, RUSI, IISS, UN Human Rights Monitoring Mission, and ICC reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.understandingwar.org/" target="_blank" class="report-link">📑 ISW</a>
+                            <a href="https://www.rusi.org/" target="_blank" class="report-link">📑 RUSI</a>
+                            <a href="https://www.icc-cpi.int/" target="_blank" class="report-link">📑 ICC</a>
+                            <a href="https://www.ohchr.org/en/countries/ukraine" target="_blank" class="report-link">📑 UN OHCHR - Ukraine</a>
+                            <a href="https://www.crisisgroup.org/europe-central-asia/eastern-europe/ukraine" target="_blank" class="report-link">📑 Crisis Group</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Russia-China -->
+                <div class="knowledge-card collapsed" id="card-china">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('china')">
+                        <div class="knowledge-header-title"><span class="category-icon">🌐</span> <span data-i18n="catChina">Russia-China &amp; Global Alignment</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The Russia-China relationship has deepened significantly since the Ukraine invasion</strong>, evolving from a "partnership without limits" (as declared weeks before the invasion) into Russia's most critical international relationship as Western isolation has intensified.</p>
+                        <ul>
+                            <li><strong>Economic Dependence:</strong> China has become Russia's most important trading partner, with bilateral trade exceeding $240 billion in 2024. Russia has become heavily dependent on Chinese imports for consumer goods, electronics, automobiles, and industrial equipment that Western sanctions have cut off.</li>
+                            <li><strong>Energy Corridor:</strong> Russia has redirected oil and gas exports toward China via the Power of Siberia pipeline and increased LNG and crude shipments. A second major pipeline (Power of Siberia 2) has been under negotiation. China benefits from discounted Russian energy.</li>
+                            <li><strong>Technology Transfer:</strong> China provides Russia with dual-use technologies — including components that appear in Russian weapons systems. While China officially denies providing lethal military aid, Western intelligence has documented Chinese components in Russian drones and precision munitions.</li>
+                            <li><strong>Strategic Coordination:</strong> Joint military exercises, coordinated UN vetoes, aligned positions on international institutions, and shared opposition to what both describe as "U.S. hegemony" constitute a deepening strategic alignment — though it falls short of a formal alliance.</li>
+                            <li><strong>BRICS &amp; Alternative Order:</strong> Russia has invested heavily in BRICS (expanded in 2024 to include Iran, Saudi Arabia, UAE, Egypt, Ethiopia) as an alternative to Western-led institutions. De-dollarization efforts, alternative payment systems, and South-South diplomatic engagement are central to Russia's strategy for circumventing isolation.</li>
+                            <li><strong>Global South Outreach:</strong> Russia maintains significant diplomatic and military relationships across Africa (Wagner/Africa Corps), the Middle East (Syria, Iran), Latin America (Venezuela, Cuba, Nicaragua), and Central/South Asia — positioning itself as an anti-Western alternative partner.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on SIPRI, Brookings, Carnegie, IISS, and academic research</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.sipri.org/" target="_blank" class="report-link">📑 SIPRI</a>
+                            <a href="https://www.brookings.edu/" target="_blank" class="report-link">📑 Brookings</a>
+                            <a href="https://carnegieendowment.org/" target="_blank" class="report-link">📑 Carnegie</a>
+                            <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                            <a href="https://ecfr.eu/" target="_blank" class="report-link">📑 ECFR</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ARTICLES -->
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">📰 Recent Russia Security &amp; Stability Articles (Last 7 Days)</div>
+            <div id="articlesContainer"><div style="text-align:center; color:var(--text-secondary); padding:30px;">Loading articles...</div></div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, ISW, SIPRI, and OSINT sources</div>
+            <div style="margin-top:15px;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics — Russia Stability Index v1.0.0</div>
+            </div>
+            <div style="margin-top:20px; padding:15px; background:rgba(153,27,27,0.1); border-radius:8px;">
+                <span style="font-size:0.9em;">If you find Asifah Analytics useful, you can <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a></span>
+            </div>
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>Unauthorized use, reproduction, or distribution prohibited.</div>
+        </footer>
+    </div>
+
+    <script>
+    const API_BASE = 'https://asifa-europe-backend.onrender.com';
+    function initTheme() { const s = localStorage.getItem('asifah-theme') || 'light'; document.documentElement.setAttribute('data-theme', s); }
+    function toggleTheme() { const c = document.documentElement.getAttribute('data-theme'); const n = c === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); localStorage.setItem('asifah-theme', n); }
+    initTheme();
+    function toggleKnowledgeCard(id) { const c = document.getElementById('card-' + id); if (c) c.classList.toggle('collapsed'); }
+    let loadingStepIndex = 0, loadingInterval = null, loadingTimeout = null;
+    function startLoadingProgress() {
+        const steps = ['step1','step2','step3','step4'];
+        loadingInterval = setInterval(() => {
+            if (loadingStepIndex < steps.length - 1) {
+                const cur = document.getElementById(steps[loadingStepIndex]);
+                if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '✓'; }
+                loadingStepIndex++;
+                const next = document.getElementById(steps[loadingStepIndex]);
+                if (next) next.classList.add('active');
+            }
+        }, 4000);
+        loadingTimeout = setTimeout(() => { document.getElementById('loadingError').style.display = 'block'; document.getElementById('loadingError').textContent = '⚠️ Loading is taking longer than expected.'; }, 60000);
+    }
+    function hideLoadingOverlay() {
+        if (loadingInterval) clearInterval(loadingInterval);
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        document.querySelectorAll('.loading-step').forEach(s => { s.classList.remove('active'); s.classList.add('complete'); s.querySelector('.step-icon').textContent = '✓'; });
+        setTimeout(() => { const o = document.getElementById('loadingOverlay'); if (o) o.classList.add('hidden'); }, 500);
+    }
+    async function loadArticles() {
+        try {
+            const r = await fetch(`${API_BASE}/api/europe/articles/russia`);
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const d = await r.json();
+            const articles = d.articles || d.recent_headlines || [];
+            if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
+        } catch (e) { console.warn('Articles failed:', e.message); displayFallback(); }
+    }
+    function displayArticles(articles) {
+        const c = document.getElementById('articlesContainer');
+        c.innerHTML = articles.slice(0, 20).map(a => {
+            const title = a.title || 'Untitled';
+            const source = a.source || a.source_name || '';
+            const published = a.published || a.publishedAt || '';
+            const url = a.url || '#';
+            const desc = a.description || '';
+            let ds = 'Recent';
+            if (published) { try { ds = new Date(published).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) { ds = published; } }
+            return `<div class="article-item"><div class="article-title">${title}</div>${desc ? `<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;">${desc.substring(0,200)}${desc.length > 200 ? '...' : ''}</div>` : ''}<div class="article-meta">${source} • ${ds}</div>${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}</div>`;
+        }).join('');
+    }
+    function displayFallback() {
+        document.getElementById('articlesContainer').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><p style="font-size:16px;margin-bottom:15px;">📡 Live article feed loading. Check these curated sources:</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px;"><a href="https://meduza.io/en" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Meduza</a><a href="https://www.themoscowtimes.com/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Moscow Times</a><a href="https://www.understandingwar.org/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">ISW</a><a href="https://www.reuters.com/world/europe/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Reuters</a></div></div>';
+    }
+
+    const translations = {
+        en: { pageTitle:"🇷🇺 RUSSIA STABILITY INDEX", pageSubtitle:"Multi-Factor Analysis: Sanctions Impact, Military Posture, Internal Dynamics & Global Alignment", backLink:"← Back to Europe Dashboard", themeToggle:"Theme", lastUpdated:"Last updated: ", mapTitle:"Russia — Strategic Overview", mapSubtitle:"Interactive map centered on European Russia. Military districts, frontline positions, and sanctions infrastructure overlays coming soon.", knowledgeLibraryTitle:"Knowledge Library", catGovernment:"Government & Political System", catMilitary:"Military & Nuclear Posture", catSanctions:"Sanctions & Economic Impact", catDissent:"Internal Dissent & Civil Society", catUkraine:"Ukraine War Strategy & Objectives", catChina:"Russia-China & Global Alignment", recentArticles:"📰 Recent Russia Security & Stability Articles (Last 7 Days)" },
+        fr: { pageTitle:"🇷🇺 INDICE DE STABILITÉ DE LA RUSSIE", pageSubtitle:"Analyse multifactorielle : Impact des sanctions, posture militaire, dynamiques internes et alignement mondial", backLink:"← Retour au tableau de bord Europe", themeToggle:"Thème", lastUpdated:"Dernière mise à jour : ", mapTitle:"Russie — Vue stratégique", mapSubtitle:"Carte interactive centrée sur la Russie européenne.", knowledgeLibraryTitle:"Bibliothèque de connaissances", catGovernment:"Gouvernement et système politique", catMilitary:"Posture militaire et nucléaire", catSanctions:"Sanctions et impact économique", catDissent:"Dissidence interne et société civile", catUkraine:"Stratégie et objectifs de guerre en Ukraine", catChina:"Relations Russie-Chine et alignement mondial", recentArticles:"📰 Articles récents sur la Russie" },
+        ru: { pageTitle:"🇷🇺 ИНДЕКС СТАБИЛЬНОСТИ РОССИИ", pageSubtitle:"Многофакторный анализ: влияние санкций, военная позиция, внутренняя динамика и глобальное выравнивание", backLink:"← Назад к панели Европы", themeToggle:"Тема", lastUpdated:"Последнее обновление: ", mapTitle:"Россия — Стратегический обзор", mapSubtitle:"Интерактивная карта европейской России.", knowledgeLibraryTitle:"Библиотека знаний", catGovernment:"Правительство и политическая система", catMilitary:"Военная и ядерная позиция", catSanctions:"Санкции и экономическое воздействие", catDissent:"Внутреннее инакомыслие и гражданское общество", catUkraine:"Стратегия и цели войны в Украине", catChina:"Россия-Китай и глобальное выравнивание", recentArticles:"📰 Последние статьи о России" },
+        de: { pageTitle:"🇷🇺 RUSSLAND-STABILITÄTSINDEX", pageSubtitle:"Mehrfaktorenanalyse: Sanktionsauswirkungen, Militärhaltung, interne Dynamik und globale Ausrichtung", backLink:"← Zurück zum Europa-Dashboard", themeToggle:"Design", lastUpdated:"Letzte Aktualisierung: ", mapTitle:"Russland — Strategischer Überblick", mapSubtitle:"Interaktive Karte des europäischen Russlands.", knowledgeLibraryTitle:"Wissensbibliothek", catGovernment:"Regierung und politisches System", catMilitary:"Militär- und Nuklearhaltung", catSanctions:"Sanktionen und wirtschaftliche Auswirkungen", catDissent:"Innere Dissidenz und Zivilgesellschaft", catUkraine:"Ukraine-Kriegsstrategie und Ziele", catChina:"Russland-China und globale Ausrichtung", recentArticles:"📰 Aktuelle Artikel über Russland" }
+    };
+    function switchLanguage(lang, button) {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
+                    const parts = el.textContent.split(': '); const ts = parts.length > 1 ? parts.slice(1).join(': ') : 'Loading...';
+                    el.textContent = translations[lang][key] + ts;
+                } else { el.textContent = translations[lang][key]; }
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        startLoadingProgress();
+        document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
+        loadArticles().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
+    });
+    </script>
+</body>
+</html>

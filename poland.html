@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Poland Stability Index v1.0.0 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poland Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #f5f5f5; --container-bg: #ffffff; --card-bg: #ffffff;
+            --card-border: #e1e8ed; --text-primary: #2c3e50; --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6; --metric-bg: #ffffff; --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa; --article-hover: #e8f4f8; --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(245,245,245,0.98); --loading-spinner-bg: rgba(220,38,38,0.2);
+            --accent: #dc2626;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
+            --card-border: #404040; --text-primary: #e0e0e0; --text-secondary: #b0b0b0;
+            --text-muted: #808080; --metric-bg: #2d2d2d; --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535; --article-hover: #404040; --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(26,26,26,0.98); --loading-spinner-bg: rgba(220,38,38,0.3);
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif; font-size: 14px;
+            background-color: var(--bg-color); color: var(--text-primary);
+            line-height: 1.6; padding: 20px; min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease; position: relative;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: cover; background-repeat: no-repeat; background-position: center;
+            opacity: var(--watermark-opacity); z-index: 0; pointer-events: none;
+        }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--loading-overlay-bg); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s ease; }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-spinner { width: 60px; height: 60px; border: 5px solid var(--loading-spinner-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 30px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+        .loading-steps { margin-top: 20px; }
+        .loading-step { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease; }
+        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.complete { color: #4ade80; }
+        .step-icon { font-size: 18px; min-width: 20px; }
+        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
+        .loading-error { color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; }
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        header { background: linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%); color: white; padding: 35px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); position: relative; display: flex; align-items: center; gap: 30px; }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+        .header-content { flex: 1; text-align: center; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+        .header-controls { position: absolute; top: 35px; right: 35px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; }
+        .language-switcher { display: flex; gap: 8px; background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); }
+        .theme-toggle { display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; backdrop-filter: blur(10px); }
+        .theme-toggle-label { font-size: 9px; color: rgba(255,255,255,0.9); margin-right: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .theme-toggle-switch { position: relative; width: 28px; height: 15px; background: rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 1.5px solid rgba(255,255,255,0.3); }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider { position: absolute; top: 1.5px; left: 1.5px; width: 9px; height: 9px; background: white; border-radius: 50%; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 6px; }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(13px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+        .lang-btn { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #7f1d1d; border-color: white; }
+        .back-link { display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0; padding: 12px 24px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); transition: all 0.2s ease; font-size: 14px; font-weight: bold; }
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .map-section { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
+        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
+        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+        .knowledge-library { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
+        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .library-icon { font-size: 28px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
+        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
+        .knowledge-header { background: linear-gradient(135deg, rgba(220,38,38,0.1) 0%, rgba(127,29,29,0.1) 100%); padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease; }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(220,38,38,0.15) 0%, rgba(127,29,29,0.15) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 22px; }
+        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content { padding: 20px; max-height: 600px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content strong { color: var(--text-primary); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+        .report-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold; transition: all 0.3s ease; }
+        .report-link:hover { background: #b91c1c; transform: translateX(3px); box-shadow: 0 4px 12px rgba(220,38,38,0.3); }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .articles-section { background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); transition: background 0.3s ease, border-color 0.3s ease; }
+        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item { background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #dc2626; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .article-meta { font-size: 12px; color: var(--text-secondary); }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .article-link:hover { text-decoration: underline; }
+        footer { background: var(--container-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary); transition: background 0.3s ease, border-color 0.3s ease; }
+        [data-theme="dark"] header { background: linear-gradient(135deg, #450a0a 0%, #991b1b 100%); border: 1px solid rgba(220,38,38,0.2); }
+        [data-theme="dark"] .knowledge-header { background: linear-gradient(135deg, rgba(220,38,38,0.08) 0%, rgba(127,29,29,0.08) 100%); }
+        [data-theme="dark"] .article-item { border-left-color: #f87171; }
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
+            .header-logo { width: 60px; height: 60px; margin-top: 0; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 22px; }
+            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Poland Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1"><span class="step-icon">⏳</span><span>Fetching OSINT articles on Poland...</span></div>
+                <div class="loading-step" id="step2"><span class="step-icon">⏳</span><span>Scanning NATO eastern flank &amp; defense data...</span></div>
+                <div class="loading-step" id="step3"><span class="step-icon">⏳</span><span>Analyzing border security &amp; EU dynamics...</span></div>
+                <div class="loading-step" id="step4"><span class="step-icon">⏳</span><span>Rendering dashboard...</span></div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">🇵🇱 POLAND STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: NATO Eastern Flank, Defense Modernization, Border Security &amp; EU-Poland Dynamics</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('fr', this)">FR</button>
+                    <button class="lang-btn" onclick="switchLanguage('ru', this)">RU</button>
+                    <button class="lang-btn" onclick="switchLanguage('de', this)">DE</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()"><div class="theme-toggle-slider"></div></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAP -->
+        <div class="map-section">
+            <h2>🗺️ <span data-i18n="mapTitle">Poland — Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Poland. NATO infrastructure, Suwalki Gap, and border dynamics overlays coming soon.</div>
+            <div style="width:100%; height:450px; border:2px solid var(--card-border); border-radius:8px; overflow:hidden;">
+                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=14.1%2C49.0%2C24.2%2C55.0&layer=mapnik&marker=52.23%2C21.01" width="100%" height="100%" frameborder="0" scrolling="no" style="border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE LIBRARY -->
+        <div class="knowledge-library">
+            <h2><span class="library-icon">📚</span> <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span></h2>
+            <p class="open-source-disclaimer">Note: Background information is compiled from open-source research, think tank analyses, and public government reporting.</p>
+
+            <div class="knowledge-categories">
+
+                <!-- Government & Politics -->
+                <div class="knowledge-card collapsed" id="card-government">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('government')">
+                        <div class="knowledge-header-title"><span class="category-icon">🏛️</span> <span data-i18n="catGovernment">Government &amp; Political Dynamics</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Poland is a parliamentary republic and the largest country in Central Europe</strong> with a population of approximately 38 million. It occupies a pivotal position as NATO's eastern frontier state, directly bordering Russia (Kaliningrad exclave), Belarus, Ukraine, and Lithuania.</p>
+                        <ul>
+                            <li><strong>Government (2023–present):</strong> Prime Minister Donald Tusk leads a coalition government formed in December 2023 after defeating the Law and Justice (PiS) party that had governed since 2015. The coalition includes Civic Platform (KO), Third Way (Polska 2050/PSL), and the New Left — a broad centrist-to-left grouping united primarily by opposition to PiS's democratic backsliding.</li>
+                            <li><strong>PiS Legacy &amp; Ongoing Tensions:</strong> The previous PiS government under Jarosław Kaczyński pursued judicial reforms that the EU deemed a threat to rule of law, triggering Article 7 proceedings and the freezing of approximately €36 billion in EU recovery funds. President Andrzej Duda (PiS-aligned, term ends August 2025) has used veto power to block several Tusk government initiatives, creating a period of divided government.</li>
+                            <li><strong>2025 Presidential Election:</strong> Poland's presidential election is a critical variable — determining whether Tusk gains a cooperative president or faces continued institutional friction. The outcome will significantly affect Poland's ability to advance judicial reforms, unlock remaining EU funds, and consolidate democratic institutions.</li>
+                            <li><strong>Media &amp; Civil Society:</strong> PiS transformed public media into a state propaganda outlet during its tenure. The Tusk government moved to restore independence to public broadcasting, though the process has faced legal and political complications. Civil society organizations remain active and resilient.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on European Commission, Freedom House, Sejm official records, and Politico Europe reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.sejm.gov.pl/english.html" target="_blank" class="report-link">📑 Sejm (Parliament)</a>
+                            <a href="https://freedomhouse.org/country/poland" target="_blank" class="report-link">📑 Freedom House</a>
+                            <a href="https://ec.europa.eu/commission/presscorner/home/en" target="_blank" class="report-link">📑 European Commission</a>
+                            <a href="https://www.amnesty.org/en/location/europe-and-central-asia/poland/" target="_blank" class="report-link">📑 Amnesty - Poland</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Military & NATO -->
+                <div class="knowledge-card collapsed" id="card-military">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('military')">
+                        <div class="knowledge-header-title"><span class="category-icon">⚔️</span> <span data-i18n="catMilitary">Military Modernization &amp; NATO Eastern Flank</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Poland is undertaking the most ambitious military modernization in Europe</strong>, driven by proximity to Russia and the Ukraine war. It is on track to field the largest conventional ground force in the EU and has committed to defense spending levels that exceed most NATO allies.</p>
+                        <ul>
+                            <li><strong>Defense Spending:</strong> Poland has raised defense spending to approximately 4% of GDP — the highest in NATO by percentage. The "Shield of Poland" program encompasses massive procurement across all domains. Total defense expenditure exceeded $30 billion in 2024.</li>
+                            <li><strong>Key Acquisitions:</strong> 250 M1A2 Abrams SEPv3 tanks, 1,000 K2 Black Panther tanks (with domestic co-production), 672 K9 Thunder self-propelled howitzers, 96 AH-64E Apache attack helicopters, 48 FA-50 light combat aircraft (with F-35A procurement in progress), Patriot PAC-3 air defense batteries, HIMARS rocket launchers, and next-generation infantry fighting vehicles.</li>
+                            <li><strong>Troop Strength:</strong> Poland aims to expand its armed forces from approximately 150,000 to 300,000 active-duty personnel — potentially fielding the largest land army in the EU. Reserve and territorial defense forces are being expanded simultaneously.</li>
+                            <li><strong>NATO Forward Presence:</strong> Poland hosts NATO's Enhanced Forward Presence battle group (led by the U.S.), the V Corps forward headquarters, rotational U.S. Army armored brigade combat teams, and the NATO Force Integration Unit. It is the primary hub for NATO's eastern defense posture.</li>
+                            <li><strong>Suwalki Gap:</strong> The 65-km corridor between Poland and Lithuania — bordered by Russian Kaliningrad and Belarus — is considered NATO's most vulnerable point. Defending this corridor is central to Polish and allied war planning.</li>
+                            <li><strong>Aegis Ashore:</strong> Poland hosts a U.S. Aegis Ashore ballistic missile defense installation at Redzikowo — the first land-based BMD site on NATO's eastern flank, operational since 2024.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Polish MOD, IISS Military Balance, CSIS, and NATO official statements</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.gov.pl/web/national-defence" target="_blank" class="report-link">📑 Polish MOD</a>
+                            <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
+                            <a href="https://www.csis.org/programs/europe-russia-and-eurasia-program" target="_blank" class="report-link">📑 CSIS - Europe</a>
+                            <a href="https://www.nato.int/cps/en/natohq/topics_136388.htm" target="_blank" class="report-link">📑 NATO Enhanced FP</a>
+                            <a href="https://www.rand.org/" target="_blank" class="report-link">📑 RAND</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Border Security -->
+                <div class="knowledge-card collapsed" id="card-border">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('border')">
+                        <div class="knowledge-header-title"><span class="category-icon">🛡️</span> <span data-i18n="catBorder">Border Security &amp; Belarus Migration Crisis</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Poland's eastern border is simultaneously the EU's external frontier and a NATO boundary</strong> — making border security a matter of national, European, and alliance-wide concern. Since 2021, Belarus (under Lukashenko, with Russian backing) has weaponized migration flows as a hybrid warfare tactic.</p>
+                        <ul>
+                            <li><strong>Belarus Hybrid Campaign:</strong> Beginning in 2021, the Lukashenko regime deliberately facilitated the transport of migrants from the Middle East and Africa to the Polish-Belarusian border, creating a humanitarian and security crisis. Thousands of migrants were pushed toward the border in freezing conditions.</li>
+                            <li><strong>Border Wall:</strong> Poland constructed a 186-km steel barrier along its Belarus border (completed mid-2022) at a cost of approximately €350 million. The wall includes surveillance systems, motion sensors, and thermal cameras.</li>
+                            <li><strong>Pushback Controversy:</strong> Human rights organizations including Amnesty International, Human Rights Watch, and the UNHCR documented systematic pushbacks of asylum seekers at the Poland-Belarus border — including cases where individuals were denied access to asylum procedures and pushed back in dangerous conditions. Multiple deaths were reported in the border forest area.</li>
+                            <li><strong>Militarized Border Zone:</strong> Poland declared an exclusion zone along the Belarus border, restricting media and humanitarian access. Thousands of troops were deployed alongside Border Guard forces. The militarization drew criticism from press freedom organizations.</li>
+                            <li><strong>Ukraine Border:</strong> The Polish-Ukrainian border became Europe's largest refugee corridor in 2022, with over 1.5 million Ukrainian refugees initially hosted in Poland — the largest single-country refugee intake in recent European history.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Frontex, UNHCR, Amnesty International, Human Rights Watch, and Grupa Granica reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.amnesty.org/en/" target="_blank" class="report-link">📑 Amnesty International</a>
+                            <a href="https://www.hrw.org/europe/central-asia/poland" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                            <a href="https://www.unhcr.org/" target="_blank" class="report-link">📑 UNHCR</a>
+                            <a href="https://frontex.europa.eu/" target="_blank" class="report-link">📑 Frontex</a>
+                            <a href="https://rsf.org/en/country/poland" target="_blank" class="report-link">📑 RSF - Press Freedom</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economy & EU -->
+                <div class="knowledge-card collapsed" id="card-economy">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('economy')">
+                        <div class="knowledge-header-title"><span class="category-icon">📊</span> <span data-i18n="catEconomy">Economy &amp; EU Relations</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Poland has been Europe's economic success story</strong> — the only EU member state to avoid recession during the 2008 financial crisis and one of the fastest-growing economies in the bloc over the past three decades. Its GDP has more than tripled since EU accession in 2004.</p>
+                        <ul>
+                            <li><strong>GDP:</strong> Approximately $750 billion (PPP), making Poland the EU's 6th-largest economy. GDP per capita has risen from approximately 49% of the EU average at accession to over 80% — a remarkable convergence story.</li>
+                            <li><strong>EU Funds:</strong> Poland is the largest net recipient of EU structural funds — receiving tens of billions of euros for infrastructure, digital transformation, and regional development. The frozen €36 billion in recovery funds under PiS has been progressively unlocked under Tusk as rule-of-law conditions are addressed.</li>
+                            <li><strong>Energy Transition:</strong> Poland remains heavily coal-dependent (~70% of electricity from coal), making it an outlier in EU climate policy. Energy diversification is underway — including LNG terminals, nuclear power plant plans (first reactor by ~2033–2035 with Westinghouse), and growing renewable capacity.</li>
+                            <li><strong>Inflation &amp; Cost of Living:</strong> Poland experienced elevated inflation following the energy crisis (peaking above 18% in 2023), which has since declined but remains a political concern. The central bank (NBP) has navigated a challenging path between growth support and inflation control.</li>
+                            <li><strong>Labor Market:</strong> Very low unemployment (~5%) and growing labor shortages, partially offset by Ukrainian refugee workforce integration and increasing immigration from South and Southeast Asia.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on European Commission, World Bank, IMF, and NBP reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://ec.europa.eu/info/business-economy-euro/economic-performance-and-forecasts/economic-performance-country_en" target="_blank" class="report-link">📑 EU Econ Forecasts</a>
+                            <a href="https://www.worldbank.org/en/country/poland" target="_blank" class="report-link">📑 World Bank - Poland</a>
+                            <a href="https://www.imf.org/en/Countries/POL" target="_blank" class="report-link">📑 IMF - Poland</a>
+                            <a href="https://www.nbp.pl/homen.aspx" target="_blank" class="report-link">📑 NBP (Central Bank)</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ukraine Refugees -->
+                <div class="knowledge-card collapsed" id="card-refugees">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('refugees')">
+                        <div class="knowledge-header-title"><span class="category-icon">🕊️</span> <span data-i18n="catRefugees">Ukraine Refugee Integration</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Poland has hosted the largest number of Ukrainian refugees in Europe</strong> — a massive undertaking that has tested social services, housing, and public attitudes while also contributing to the labor force and economic growth.</p>
+                        <ul>
+                            <li><strong>Scale:</strong> Over 1.5 million Ukrainians crossed into Poland in the first weeks of the invasion; approximately 950,000–1 million remain as of early 2026. This represents the largest refugee intake by any single European country since World War II.</li>
+                            <li><strong>EU Temporary Protection:</strong> Ukrainian refugees received automatic temporary protection under the EU directive — granting work permits, healthcare access, and school enrollment without individual asylum processing. Poland's implementation was swift and effective.</li>
+                            <li><strong>Labor Market Integration:</strong> A significant majority of working-age Ukrainian refugees in Poland have found employment — contributing to sectors with labor shortages including construction, logistics, healthcare, and services. The economic contribution has partially offset the fiscal cost of hosting.</li>
+                            <li><strong>Social Tensions:</strong> Initial outpouring of solidarity has gradually been tested by competition for housing, public services, and social benefits. Polling shows declining public support for open-ended hosting, particularly as the war continues without clear resolution. Far-right parties have sought to exploit refugee fatigue.</li>
+                            <li><strong>Historical Context:</strong> The Polish-Ukrainian relationship carries deep historical complexity — including the Volhynia massacres of WWII, which remain a sensitive and unresolved historical grievance. Despite this, the wartime solidarity has generally strengthened bilateral relations.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on UNHCR, IOM, Polish Office for Foreigners, and OSW Centre for Eastern Studies</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.unhcr.org/emergencies/ukraine-emergency" target="_blank" class="report-link">📑 UNHCR Ukraine Response</a>
+                            <a href="https://www.iom.int/" target="_blank" class="report-link">📑 IOM</a>
+                            <a href="https://www.osw.waw.pl/en" target="_blank" class="report-link">📑 OSW - Centre for Eastern Studies</a>
+                            <a href="https://www.hrw.org/" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- U.S.-Poland Defense -->
+                <div class="knowledge-card collapsed" id="card-us">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('us')">
+                        <div class="knowledge-header-title"><span class="category-icon">🤝</span> <span data-i18n="catUS">U.S.-Poland Defense Partnership</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Poland has become the United States' most important bilateral defense partner in continental Europe</strong> — a transformation driven by Russia's invasion of Ukraine, Poland's massive defense spending, and its strategic position as the primary logistics hub for Western military support to Ukraine.</p>
+                        <ul>
+                            <li><strong>U.S. Force Posture:</strong> Approximately 10,000 U.S. troops are permanently or rotationally based in Poland — the largest sustained U.S. military presence in Central-Eastern Europe. This includes the V Corps forward headquarters in Poznań, rotational armored brigade combat teams, and various support and logistics elements.</li>
+                            <li><strong>Enhanced Defense Cooperation Agreement (EDCA):</strong> The 2020 agreement formalized expanded U.S. presence and access — including the establishment of a division-level headquarters, rotational forces, and infrastructure investments at Polish military installations.</li>
+                            <li><strong>Aegis Ashore Redzikowo:</strong> The U.S. ballistic missile defense installation in Redzikowo — operational since 2024 — provides critical BMD coverage for NATO's eastern flank. It has been a source of significant Russian objection and a frequent target of Russian diplomatic complaints.</li>
+                            <li><strong>Arms Sales:</strong> Poland's defense procurement from the U.S. represents one of the largest FMS (Foreign Military Sales) portfolios in Europe: Abrams tanks, Apache helicopters, HIMARS, Patriot systems, and the planned F-35 acquisition. Total committed value exceeds $30 billion.</li>
+                            <li><strong>Ukraine Support Hub:</strong> Poland serves as the primary corridor for Western military equipment flowing into Ukraine — managing a massive logistics operation through rail, road, and air corridors that has been essential to Ukraine's war effort.</li>
+                            <li><strong>Integrated Air and Missile Defense:</strong> Poland's acquisition of Patriot PAC-3, IBCS (Integrated Battle Command System), and the Wisła/Narew air defense programs are designed for deep interoperability with U.S. and NATO systems.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on U.S. DoD, State Department, DSCA, CRS, and Polish MOD reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.state.gov/u-s-relations-with-poland/" target="_blank" class="report-link">📑 State Dept - Poland</a>
+                            <a href="https://www.dsca.mil/" target="_blank" class="report-link">📑 DSCA - Arms Sales</a>
+                            <a href="https://sgp.fas.org/crs/" target="_blank" class="report-link">📑 CRS Reports</a>
+                            <a href="https://www.eucom.mil/" target="_blank" class="report-link">📑 EUCOM</a>
+                            <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ARTICLES -->
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">📰 Recent Poland Security &amp; Stability Articles (Last 7 Days)</div>
+            <div id="articlesContainer"><div style="text-align:center; color:var(--text-secondary); padding:30px;">Loading articles...</div></div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, Polish MOD, NATO, and OSINT sources</div>
+            <div style="margin-top:15px;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics — Poland Stability Index v1.0.0</div>
+            </div>
+            <div style="margin-top:20px; padding:15px; background:rgba(220,38,38,0.1); border-radius:8px;">
+                <span style="font-size:0.9em;">If you find Asifah Analytics useful, you can <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a></span>
+            </div>
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>Unauthorized use, reproduction, or distribution prohibited.</div>
+        </footer>
+    </div>
+
+    <script>
+    const API_BASE = 'https://asifa-europe-backend.onrender.com';
+    function initTheme() { const s = localStorage.getItem('asifah-theme') || 'light'; document.documentElement.setAttribute('data-theme', s); }
+    function toggleTheme() { const c = document.documentElement.getAttribute('data-theme'); const n = c === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); localStorage.setItem('asifah-theme', n); }
+    initTheme();
+    function toggleKnowledgeCard(id) { const c = document.getElementById('card-' + id); if (c) c.classList.toggle('collapsed'); }
+    let loadingStepIndex = 0, loadingInterval = null, loadingTimeout = null;
+    function startLoadingProgress() {
+        const steps = ['step1','step2','step3','step4'];
+        loadingInterval = setInterval(() => {
+            if (loadingStepIndex < steps.length - 1) {
+                const cur = document.getElementById(steps[loadingStepIndex]);
+                if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '✓'; }
+                loadingStepIndex++;
+                const next = document.getElementById(steps[loadingStepIndex]);
+                if (next) next.classList.add('active');
+            }
+        }, 4000);
+        loadingTimeout = setTimeout(() => { document.getElementById('loadingError').style.display = 'block'; document.getElementById('loadingError').textContent = '⚠️ Loading is taking longer than expected.'; }, 60000);
+    }
+    function hideLoadingOverlay() {
+        if (loadingInterval) clearInterval(loadingInterval);
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        document.querySelectorAll('.loading-step').forEach(s => { s.classList.remove('active'); s.classList.add('complete'); s.querySelector('.step-icon').textContent = '✓'; });
+        setTimeout(() => { const o = document.getElementById('loadingOverlay'); if (o) o.classList.add('hidden'); }, 500);
+    }
+    async function loadArticles() {
+        try {
+            const r = await fetch(`${API_BASE}/api/europe/articles/poland`);
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const d = await r.json();
+            const articles = d.articles || d.recent_headlines || [];
+            if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
+        } catch (e) { console.warn('Articles failed:', e.message); displayFallback(); }
+    }
+    function displayArticles(articles) {
+        const c = document.getElementById('articlesContainer');
+        c.innerHTML = articles.slice(0, 20).map(a => {
+            const title = a.title || 'Untitled';
+            const source = a.source || a.source_name || '';
+            const published = a.published || a.publishedAt || '';
+            const url = a.url || '#';
+            const desc = a.description || '';
+            let ds = 'Recent';
+            if (published) { try { ds = new Date(published).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) { ds = published; } }
+            return `<div class="article-item"><div class="article-title">${title}</div>${desc ? `<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;">${desc.substring(0,200)}${desc.length > 200 ? '...' : ''}</div>` : ''}<div class="article-meta">${source} • ${ds}</div>${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}</div>`;
+        }).join('');
+    }
+    function displayFallback() {
+        document.getElementById('articlesContainer').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><p style="font-size:16px;margin-bottom:15px;">📡 Live article feed loading. Check these curated sources:</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px;"><a href="https://notesfrompoland.com/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Notes from Poland</a><a href="https://www.osw.waw.pl/en" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">OSW - Eastern Studies</a><a href="https://www.reuters.com/world/europe/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Reuters - Europe</a></div></div>';
+    }
+
+    const translations = {
+        en: { pageTitle:"🇵🇱 POLAND STABILITY INDEX", pageSubtitle:"Multi-Factor Analysis: NATO Eastern Flank, Defense Modernization, Border Security & EU-Poland Dynamics", backLink:"← Back to Europe Dashboard", themeToggle:"Theme", lastUpdated:"Last updated: ", mapTitle:"Poland — Strategic Overview", mapSubtitle:"Interactive map centered on Poland. NATO infrastructure, Suwalki Gap, and border dynamics overlays coming soon.", knowledgeLibraryTitle:"Knowledge Library", catGovernment:"Government & Political Dynamics", catMilitary:"Military Modernization & NATO Eastern Flank", catBorder:"Border Security & Belarus Migration Crisis", catEconomy:"Economy & EU Relations", catRefugees:"Ukraine Refugee Integration", catUS:"U.S.-Poland Defense Partnership", recentArticles:"📰 Recent Poland Security & Stability Articles (Last 7 Days)" },
+        fr: { pageTitle:"🇵🇱 INDICE DE STABILITÉ DE LA POLOGNE", pageSubtitle:"Analyse multifactorielle : Flanc est de l'OTAN, modernisation de la défense, sécurité frontalière et dynamiques UE-Pologne", backLink:"← Retour au tableau de bord Europe", themeToggle:"Thème", lastUpdated:"Dernière mise à jour : ", mapTitle:"Pologne — Vue stratégique", mapSubtitle:"Carte interactive centrée sur la Pologne.", knowledgeLibraryTitle:"Bibliothèque de connaissances", catGovernment:"Gouvernement et dynamiques politiques", catMilitary:"Modernisation militaire et flanc est de l'OTAN", catBorder:"Sécurité frontalière et crise migratoire biélorusse", catEconomy:"Économie et relations avec l'UE", catRefugees:"Intégration des réfugiés ukrainiens", catUS:"Partenariat de défense É.-U.-Pologne", recentArticles:"📰 Articles récents sur la Pologne" },
+        ru: { pageTitle:"🇵🇱 ИНДЕКС СТАБИЛЬНОСТИ ПОЛЬШИ", pageSubtitle:"Многофакторный анализ: восточный фланг НАТО, модернизация обороны, безопасность границ и динамика ЕС-Польша", backLink:"← Назад к панели Европы", themeToggle:"Тема", lastUpdated:"Последнее обновление: ", mapTitle:"Польша — Стратегический обзор", mapSubtitle:"Интерактивная карта Польши.", knowledgeLibraryTitle:"Библиотека знаний", catGovernment:"Правительство и политическая динамика", catMilitary:"Военная модернизация и восточный фланг НАТО", catBorder:"Безопасность границ и миграционный кризис Беларуси", catEconomy:"Экономика и отношения с ЕС", catRefugees:"Интеграция украинских беженцев", catUS:"Оборонное партнёрство США-Польша", recentArticles:"📰 Последние статьи о Польше" },
+        de: { pageTitle:"🇵🇱 POLEN-STABILITÄTSINDEX", pageSubtitle:"Mehrfaktorenanalyse: NATO-Ostflanke, Verteidigungsmodernisierung, Grenzsicherheit und EU-Polen-Dynamik", backLink:"← Zurück zum Europa-Dashboard", themeToggle:"Design", lastUpdated:"Letzte Aktualisierung: ", mapTitle:"Polen — Strategischer Überblick", mapSubtitle:"Interaktive Karte von Polen.", knowledgeLibraryTitle:"Wissensbibliothek", catGovernment:"Regierung und politische Dynamik", catMilitary:"Militärmodernisierung und NATO-Ostflanke", catBorder:"Grenzsicherheit und Belarus-Migrationskrise", catEconomy:"Wirtschaft und EU-Beziehungen", catRefugees:"Integration ukrainischer Flüchtlinge", catUS:"Verteidigungspartnerschaft USA-Polen", recentArticles:"📰 Aktuelle Artikel über Polen" }
+    };
+    function switchLanguage(lang, button) {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
+                    const parts = el.textContent.split(': '); const ts = parts.length > 1 ? parts.slice(1).join(': ') : 'Loading...';
+                    el.textContent = translations[lang][key] + ts;
+                } else { el.textContent = translations[lang][key]; }
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+        startLoadingProgress();
+        document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
+        loadArticles().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
+    });
+    </script>
+</body>
+</html>

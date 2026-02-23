@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Greenland Stability Index v1.0.0 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Greenland Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #f5f5f5; --container-bg: #ffffff; --card-bg: #ffffff;
+            --card-border: #e1e8ed; --text-primary: #2c3e50; --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6; --metric-bg: #ffffff; --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa; --article-hover: #e8f4f8; --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(245,245,245,0.98); --loading-spinner-bg: rgba(14,165,233,0.2);
+            --accent: #0ea5e9;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
+            --card-border: #404040; --text-primary: #e0e0e0; --text-secondary: #b0b0b0;
+            --text-muted: #808080; --metric-bg: #2d2d2d; --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535; --article-hover: #404040; --watermark-opacity: 0.5;
+            --loading-overlay-bg: rgba(26,26,26,0.98); --loading-spinner-bg: rgba(14,165,233,0.3);
+        }
+        body {
+            font-family: 'Times New Roman', Times, serif; font-size: 14px;
+            background-color: var(--bg-color); color: var(--text-primary);
+            line-height: 1.6; padding: 20px; min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease; position: relative;
+        }
+        body::before {
+            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: cover; background-repeat: no-repeat; background-position: center;
+            opacity: var(--watermark-opacity); z-index: 0; pointer-events: none;
+        }
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--loading-overlay-bg); backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-spinner {
+            width: 60px; height: 60px; border: 5px solid var(--loading-spinner-bg);
+            border-top-color: var(--accent); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 30px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+        .loading-steps { margin-top: 20px; }
+        .loading-step {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease;
+        }
+        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.complete { color: #4ade80; }
+        .step-icon { font-size: 18px; min-width: 20px; }
+        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
+        .loading-error {
+            color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px;
+            background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px;
+        }
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+        header {
+            background: linear-gradient(135deg, #0c4a6e 0%, #0ea5e9 100%);
+            color: white; padding: 35px; border-radius: 12px; margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15); position: relative;
+            display: flex; align-items: center; gap: 30px;
+        }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+        .header-content { flex: 1; text-align: center; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+        .header-controls { position: absolute; top: 35px; right: 35px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; }
+        .language-switcher { display: flex; gap: 8px; background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); }
+        .theme-toggle { display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; backdrop-filter: blur(10px); }
+        .theme-toggle-label { font-size: 9px; color: rgba(255,255,255,0.9); margin-right: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .theme-toggle-switch { position: relative; width: 28px; height: 15px; background: rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 1.5px solid rgba(255,255,255,0.3); }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider { position: absolute; top: 1.5px; left: 1.5px; width: 9px; height: 9px; background: white; border-radius: 50%; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 6px; }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(13px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+        .lang-btn { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #0c4a6e; border-color: white; }
+        .back-link { display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0; padding: 12px 24px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); transition: all 0.2s ease; font-size: 14px; font-weight: bold; }
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .map-section { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
+        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
+        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+        .knowledge-library { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
+        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .library-icon { font-size: 28px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
+        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
+        .knowledge-header { background: linear-gradient(135deg, rgba(14,165,233,0.1) 0%, rgba(12,74,110,0.1) 100%); padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease; }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(14,165,233,0.15) 0%, rgba(12,74,110,0.15) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 22px; }
+        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content { padding: 20px; max-height: 600px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content strong { color: var(--text-primary); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+        .report-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold; transition: all 0.3s ease; }
+        .report-link:hover { background: #0284c7; transform: translateX(3px); box-shadow: 0 4px 12px rgba(14,165,233,0.3); }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .articles-section { background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); transition: background 0.3s ease, border-color 0.3s ease; }
+        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item { background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #0ea5e9; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .article-meta { font-size: 12px; color: var(--text-secondary); }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .article-link:hover { text-decoration: underline; }
+        footer { background: var(--container-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary); transition: background 0.3s ease, border-color 0.3s ease; }
+        [data-theme="dark"] header { background: linear-gradient(135deg, #0f172a 0%, #0c4a6e 100%); border: 1px solid rgba(14,165,233,0.2); }
+        [data-theme="dark"] .knowledge-header { background: linear-gradient(135deg, rgba(14,165,233,0.08) 0%, rgba(12,74,110,0.08) 100%); }
+        [data-theme="dark"] .article-item { border-left-color: #38bdf8; }
+        [data-theme="dark"] .article-item:hover { background: var(--article-hover); }
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
+            .header-logo { width: 60px; height: 60px; margin-top: 0; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 22px; }
+            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Greenland Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1"><span class="step-icon">⏳</span><span>Fetching OSINT articles on Greenland...</span></div>
+                <div class="loading-step" id="step2"><span class="step-icon">⏳</span><span>Scanning Arctic security &amp; sovereignty data...</span></div>
+                <div class="loading-step" id="step3"><span class="step-icon">⏳</span><span>Analyzing critical minerals &amp; resource indicators...</span></div>
+                <div class="loading-step" id="step4"><span class="step-icon">⏳</span><span>Rendering dashboard...</span></div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">🇬🇱 GREENLAND STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Sovereignty &amp; Self-Governance, Arctic Security, Critical Minerals &amp; Great Power Competition</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('fr', this)">FR</button>
+                    <button class="lang-btn" onclick="switchLanguage('ru', this)">RU</button>
+                    <button class="lang-btn" onclick="switchLanguage('de', this)">DE</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()"><div class="theme-toggle-slider"></div></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- MAP -->
+        <div class="map-section">
+            <h2>🗺️ <span data-i18n="mapTitle">Greenland — Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Greenland. Pituffik Space Base, mineral deposits, and shipping route overlays coming soon.</div>
+            <div style="width:100%; height:450px; border:2px solid var(--card-border); border-radius:8px; overflow:hidden;">
+                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-60%2C59%2C-20%2C84&layer=mapnik&marker=64.17%2C-51.74" width="100%" height="100%" frameborder="0" scrolling="no" style="border:none;"></iframe>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE LIBRARY -->
+        <div class="knowledge-library">
+            <h2><span class="library-icon">📚</span> <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span></h2>
+            <p class="open-source-disclaimer">Note: Background information is compiled from open-source research, think tank analyses, and public government reporting.</p>
+
+            <div class="knowledge-categories">
+
+                <!-- Governance & Self-Rule -->
+                <div class="knowledge-card collapsed" id="card-governance">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('governance')">
+                        <div class="knowledge-header-title"><span class="category-icon">🏛️</span> <span data-i18n="catGovernance">Governance &amp; Self-Rule</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Greenland is a self-governing territory within the Kingdom of Denmark.</strong> The 2009 Self-Government Act transferred substantial authority — including control over natural resources, policing, and the judiciary — to Greenland's parliament (Inatsisartut), while Denmark retains control over foreign affairs, defense, and monetary policy.</p>
+                        <ul>
+                            <li><strong>Inatsisartut:</strong> Greenland's 31-seat parliament, elected by proportional representation. The government (Naalakkersuisut) is led by the Premier. Political parties span the spectrum from pro-independence (Inuit Ataqatigiit, Naleraq) to those favoring continued Danish ties (Siumut, Demokraatit).</li>
+                            <li><strong>Independence Movement:</strong> Polling consistently shows a majority of Greenlanders support eventual independence from Denmark. The primary barriers are economic — Greenland receives an annual block grant of approximately DKK 3.9 billion (~$560 million) from Copenhagen, representing roughly half of Greenland's public budget.</li>
+                            <li><strong>Population:</strong> Approximately 56,000 people — one of the least densely populated territories on Earth. The capital Nuuk holds roughly one-third of the population.</li>
+                            <li><strong>Danish Constitutional Framework:</strong> While the Self-Government Act provides a legal pathway to independence through a referendum, the details of separation — particularly economic arrangements and NATO obligations — would require negotiation between Nuuk and Copenhagen.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Government of Greenland, Danish Ministry of Foreign Affairs, and Nordic Council reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://naalakkersuisut.gl/en" target="_blank" class="report-link">📑 Gov of Greenland</a>
+                            <a href="https://www.stm.dk/statsministeren/greenland-and-the-faroe-islands/" target="_blank" class="report-link">📑 Danish PM Office</a>
+                            <a href="https://www.norden.org/" target="_blank" class="report-link">📑 Nordic Council</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Critical Minerals & Resources -->
+                <div class="knowledge-card collapsed" id="card-minerals">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('minerals')">
+                        <div class="knowledge-header-title"><span class="category-icon">⛏️</span> <span data-i18n="catMinerals">Critical Minerals &amp; Rare Earths</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Greenland possesses some of the world's largest untapped deposits of critical minerals</strong> essential to the green energy transition, defense manufacturing, and advanced technology — placing it at the center of U.S.-China-EU supply chain competition.</p>
+                        <ul>
+                            <li><strong>Rare Earth Elements (REE):</strong> The Kvanefjeld (Kuannersuit) deposit is among the world's largest known REE resources, containing significant quantities of neodymium, praseodymium, and dysprosium — essential for wind turbines, EV motors, and precision-guided munitions. In 2021, Greenland's parliament banned uranium mining, effectively blocking the Kvanefjeld project (the ore body contains uranium alongside rare earths).</li>
+                            <li><strong>Uranium &amp; Thorium:</strong> Greenland's rare earth deposits are co-located with radioactive materials. The uranium mining ban reflects deep Inuit environmental and cultural concerns — a policy fault line that directly impacts great-power resource competition.</li>
+                            <li><strong>Other Minerals:</strong> Significant deposits of zinc, lead, iron ore, ruby, sapphire, graphite, lithium, and nickel. Several exploration-stage projects are active, though Greenland's harsh climate, limited infrastructure, and strict environmental regulations create high barriers to extraction.</li>
+                            <li><strong>Oil &amp; Gas:</strong> Offshore exploration was pursued in the 2010s but Greenland halted new oil and gas licenses in 2021, citing climate commitments. Estimated offshore resources are substantial but commercially unproven at current prices.</li>
+                            <li><strong>Ice Sheet Retreat:</strong> Climate change is making previously inaccessible mineral deposits reachable. Geological surveys continue to reveal new resource potential as the ice sheet recedes — raising both economic opportunity and environmental controversy.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on USGS, Greenland Mineral Authority, EU Critical Raw Materials Act, and CSIS research</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.usgs.gov/" target="_blank" class="report-link">📑 USGS</a>
+                            <a href="https://www.govmin.gl/" target="_blank" class="report-link">📑 Greenland Minerals Auth.</a>
+                            <a href="https://www.csis.org/programs/europe-russia-and-eurasia-program" target="_blank" class="report-link">📑 CSIS - Arctic</a>
+                            <a href="https://single-market-economy.ec.europa.eu/sectors/raw-materials/areas-specific-interest/critical-raw-materials_en" target="_blank" class="report-link">📑 EU Critical Raw Materials</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Arctic Strategic Position -->
+                <div class="knowledge-card collapsed" id="card-arctic">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('arctic')">
+                        <div class="knowledge-header-title"><span class="category-icon">🧊</span> <span data-i18n="catArctic">Arctic Strategic Position</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Greenland occupies one of the most strategically significant positions in the Arctic</strong> — controlling approaches to the GIUK Gap (Greenland-Iceland-UK), North Atlantic shipping lanes, and providing early-warning and space surveillance capabilities critical to U.S. and NATO defense architecture.</p>
+                        <ul>
+                            <li><strong>Pituffik Space Base (formerly Thule Air Base):</strong> The U.S. military's northernmost installation, located at 76°N. Hosts the 12th Space Warning Squadron operating ballistic missile early-warning radar and space surveillance sensors. A cornerstone of U.S. missile defense and space domain awareness since 1951.</li>
+                            <li><strong>GIUK Gap:</strong> The Greenland-Iceland-UK maritime corridor is a critical chokepoint for Russian submarine access to the North Atlantic. During the Cold War, NATO invested heavily in monitoring this gap; its strategic importance has surged again with Russian submarine activity at levels not seen since the 1980s.</li>
+                            <li><strong>Northern Sea Route:</strong> As Arctic ice recedes, the Northern Sea Route along Russia's coast and the Northwest Passage through the Canadian Archipelago are becoming seasonally navigable — with major implications for global shipping, resource extraction, and military access.</li>
+                            <li><strong>Undersea Cables:</strong> Greenland lies along planned and existing transatlantic fiber-optic cable routes. Protecting undersea communications infrastructure from sabotage (a risk highlighted by the 2022 Nord Stream pipeline attacks) has become a NATO priority.</li>
+                            <li><strong>Climate &amp; Access:</strong> The Greenland ice sheet — the world's second-largest — is losing approximately 270 billion tons of ice annually. This opens new coastal areas to development but also raises global sea levels by approximately 0.7mm/year.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on U.S. DoD Arctic Strategy, NATO Arctic assessments, RAND Corporation, and Arctic Institute</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.defense.gov/Spotlights/Arctic/" target="_blank" class="report-link">📑 DoD Arctic Strategy</a>
+                            <a href="https://www.nato.int/" target="_blank" class="report-link">📑 NATO</a>
+                            <a href="https://www.rand.org/topics/arctic-region.html" target="_blank" class="report-link">📑 RAND - Arctic</a>
+                            <a href="https://www.thearcticinstitute.org/" target="_blank" class="report-link">📑 Arctic Institute</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inuit Self-Determination -->
+                <div class="knowledge-card collapsed" id="card-inuit">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('inuit')">
+                        <div class="knowledge-header-title"><span class="category-icon">🏔️</span> <span data-i18n="catInuit">Inuit Self-Determination &amp; Indigenous Rights</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Greenland's population is approximately 88% Inuit (Kalaallit).</strong> The island's political identity, governance structures, and policy priorities are shaped by indigenous self-determination — a factor that external actors (particularly the U.S. and China) have often underestimated in their strategic calculations.</p>
+                        <ul>
+                            <li><strong>Historical Trauma:</strong> Denmark's colonial administration imposed forced relocations (including the displacement of Inuit from the Thule area when the U.S. built its air base in 1953), cultural suppression, and a 1960s-70s program of forced contraception of Inuit women — for which Denmark formally apologized in 2022.</li>
+                            <li><strong>Language &amp; Culture:</strong> Kalaallisut (West Greenlandic) is the official language. Cultural revitalization efforts are central to Greenlandic national identity and politics. The relationship between Greenlandic identity and Danish/Western institutions remains a significant political dynamic.</li>
+                            <li><strong>Inuit Circumpolar Council (ICC):</strong> Greenlandic Inuit are part of the broader transnational Inuit community spanning Canada, Alaska, and Chukotka (Russia). The ICC holds Permanent Participant status in the Arctic Council and advocates for indigenous sovereignty over Arctic resources and decision-making.</li>
+                            <li><strong>Resource Sovereignty:</strong> The uranium mining ban, restrictions on offshore oil exploration, and skepticism of large-scale foreign mining projects reflect a political culture that prioritizes environmental stewardship and community consent — sometimes at odds with external strategic interests.</li>
+                            <li><strong>Social Challenges:</strong> Greenland faces elevated rates of suicide (among the highest globally), alcohol-related harm, housing shortages, and limited healthcare access outside Nuuk. These challenges are linked to rapid modernization, colonial legacies, and the harsh physical environment.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on ICC, Amnesty International, IWGIA, and UN Permanent Forum on Indigenous Issues</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.inuitcircumpolar.com/" target="_blank" class="report-link">📑 Inuit Circumpolar Council</a>
+                            <a href="https://www.amnesty.org/en/" target="_blank" class="report-link">📑 Amnesty International</a>
+                            <a href="https://www.iwgia.org/" target="_blank" class="report-link">📑 IWGIA</a>
+                            <a href="https://www.un.org/development/desa/indigenouspeoples/" target="_blank" class="report-link">📑 UN Indigenous Forum</a>
+                            <a href="https://www.hrw.org/" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Climate Change & Resource Access -->
+                <div class="knowledge-card collapsed" id="card-climate">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('climate')">
+                        <div class="knowledge-header-title"><span class="category-icon">🌡️</span> <span data-i18n="catClimate">Climate Change &amp; Environmental Security</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Greenland is ground zero for climate change</strong> — both as a victim of accelerating ice loss and as a potential beneficiary of newly accessible resources and shipping routes. The climate dimension intersects with every other factor on this dashboard.</p>
+                        <ul>
+                            <li><strong>Ice Sheet:</strong> Contains enough water to raise global sea levels by approximately 7.4 meters if fully melted. Current loss rate: ~270 billion tons/year, accelerating. The 2012 melt event saw 97% of the surface ice sheet experience some degree of melting — previously thought impossible.</li>
+                            <li><strong>Permafrost Thaw:</strong> Infrastructure damage from thawing permafrost threatens existing settlements, airstrips, and military installations. Adaptation costs are substantial relative to Greenland's small economy.</li>
+                            <li><strong>Fisheries:</strong> Greenland's economy is heavily dependent on fishing (primarily shrimp and halibut), which accounts for over 90% of exports. Warming waters are shifting fish populations — creating both new opportunities (Atlantic cod moving north) and threats to existing catches.</li>
+                            <li><strong>Arctic Shipping:</strong> The seasonal opening of Arctic shipping routes could transform Greenland's economic geography — but also increases pollution risks, search-and-rescue demands, and sovereignty enforcement challenges in waters where Greenland has limited Coast Guard capacity.</li>
+                            <li><strong>Tourism:</strong> A rapidly growing sector as climate awareness and adventure tourism drive visitors. Greenland's government is balancing economic opportunity against environmental and cultural carrying capacity.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on IPCC, NASA, NSIDC, and Danish Meteorological Institute data</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.ipcc.ch/" target="_blank" class="report-link">📑 IPCC</a>
+                            <a href="https://nsidc.org/greenland-today/" target="_blank" class="report-link">📑 NSIDC - Greenland</a>
+                            <a href="https://climate.nasa.gov/" target="_blank" class="report-link">📑 NASA Climate</a>
+                            <a href="https://www.dmi.dk/en/" target="_blank" class="report-link">📑 Danish Met Institute</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- U.S.-Denmark-Greenland Relations -->
+                <div class="knowledge-card collapsed" id="card-us">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('us')">
+                        <div class="knowledge-header-title"><span class="category-icon">🤝</span> <span data-i18n="catUS">U.S.-Denmark-Greenland Relations &amp; Great Power Competition</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Greenland has become a focal point of great-power competition</strong> between the United States, China, Russia, and the EU — driven by its strategic location, critical mineral wealth, and the geopolitical implications of Arctic climate change.</p>
+                        <ul>
+                            <li><strong>Trump "Purchase" Proposal:</strong> In August 2019, President Trump publicly proposed purchasing Greenland from Denmark — a suggestion rejected by both Danish and Greenlandic leaders. Trump returned to the theme in his 2024 campaign and 2025 presidency, stating he would not rule out military or economic pressure to acquire Greenland. The rhetoric has significantly elevated Greenland's profile in U.S. strategic discourse.</li>
+                            <li><strong>U.S. Military Presence:</strong> Pituffik Space Base is the primary U.S. footprint. The U.S. also reopened a consulate in Nuuk in 2020 after a 70-year absence — widely interpreted as a strategic counter to growing Chinese interest. A $12.1 million investment package was announced to strengthen ties.</li>
+                            <li><strong>Chinese Interest:</strong> A Chinese state-owned company attempted to win the contract to build airports in Greenland in 2018 — blocked after U.S. and Danish pressure. China has also pursued rare earth mining interests. Greenland represents a potential entry point for Chinese influence in the Arctic, which Beijing claims "near-Arctic" status for.</li>
+                            <li><strong>Danish Defense Investments:</strong> Denmark announced the "Arctic Capacity Package" — approximately DKK 1.5 billion for Arctic defense — including long-range drones, patrol vessels, and surveillance infrastructure. Critics argue these investments remain inadequate given the scale of the territory and the growing threat environment.</li>
+                            <li><strong>Russia:</strong> Russian military activity in the Arctic has increased significantly — including submarine patrols, bomber flights, and the militarization of Arctic bases. While Russia does not make direct claims on Greenlandic territory, its growing Arctic assertiveness shapes the security environment.</li>
+                            <li><strong>EU:</strong> The European Union views Greenland's critical minerals as essential to its "strategic autonomy" from China. The EU-Greenland strategic partnership on raw materials (signed 2023) aims to develop a secure supply chain — though implementation remains early-stage.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on CSIS, Brookings, Atlantic Council, Danish DIIS, and Congressional Research Service reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.csis.org/" target="_blank" class="report-link">📑 CSIS</a>
+                            <a href="https://www.brookings.edu/" target="_blank" class="report-link">📑 Brookings</a>
+                            <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                            <a href="https://www.diis.dk/en" target="_blank" class="report-link">📑 DIIS (Danish)</a>
+                            <a href="https://sgp.fas.org/crs/" target="_blank" class="report-link">📑 CRS Reports</a>
+                            <a href="https://www.hrw.org/europe/central-asia/greenland" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ARTICLES -->
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">📰 Recent Greenland Security &amp; Stability Articles (Last 7 Days)</div>
+            <div id="articlesContainer"><div style="text-align:center; color:var(--text-secondary); padding:30px;">Loading articles...</div></div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, Arctic Today, Government of Greenland, and OSINT sources</div>
+            <div style="margin-top:15px;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics — Greenland Stability Index v1.0.0</div>
+            </div>
+            <div style="margin-top:20px; padding:15px; background:rgba(14,165,233,0.1); border-radius:8px;">
+                <span style="font-size:0.9em;">If you find Asifah Analytics useful, you can <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a></span>
+            </div>
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>Unauthorized use, reproduction, or distribution prohibited.</div>
+        </footer>
+    </div>
+
+    <script>
+    const API_BASE = 'https://asifa-europe-backend.onrender.com';
+    function initTheme() { const s = localStorage.getItem('asifah-theme') || 'light'; document.documentElement.setAttribute('data-theme', s); }
+    function toggleTheme() { const c = document.documentElement.getAttribute('data-theme'); const n = c === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); localStorage.setItem('asifah-theme', n); }
+    initTheme();
+    function toggleKnowledgeCard(id) { const c = document.getElementById('card-' + id); if (c) c.classList.toggle('collapsed'); }
+
+    let loadingStepIndex = 0, loadingInterval = null, loadingTimeout = null;
+    function startLoadingProgress() {
+        const steps = ['step1','step2','step3','step4'];
+        loadingInterval = setInterval(() => {
+            if (loadingStepIndex < steps.length - 1) {
+                const cur = document.getElementById(steps[loadingStepIndex]);
+                if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '✓'; }
+                loadingStepIndex++;
+                const next = document.getElementById(steps[loadingStepIndex]);
+                if (next) next.classList.add('active');
+            }
+        }, 4000);
+        loadingTimeout = setTimeout(() => { document.getElementById('loadingError').style.display = 'block'; document.getElementById('loadingError').textContent = '⚠️ Loading is taking longer than expected. Please wait or refresh.'; }, 60000);
+    }
+    function hideLoadingOverlay() {
+        if (loadingInterval) clearInterval(loadingInterval);
+        if (loadingTimeout) clearTimeout(loadingTimeout);
+        document.querySelectorAll('.loading-step').forEach(s => { s.classList.remove('active'); s.classList.add('complete'); s.querySelector('.step-icon').textContent = '✓'; });
+        setTimeout(() => { const o = document.getElementById('loadingOverlay'); if (o) o.classList.add('hidden'); }, 500);
+    }
+
+    async function loadArticles() {
+        try {
+            const r = await fetch(`${API_BASE}/api/europe/articles/greenland`);
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const d = await r.json();
+            const articles = d.articles || d.recent_headlines || [];
+            if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
+        } catch (e) { console.warn('Articles failed:', e.message); displayFallback(); }
+    }
+    function displayArticles(articles) {
+        const c = document.getElementById('articlesContainer');
+        c.innerHTML = articles.slice(0, 20).map(a => {
+            const title = a.title || 'Untitled';
+            const source = a.source || a.source_name || '';
+            const published = a.published || a.publishedAt || '';
+            const url = a.url || '#';
+            const desc = a.description || '';
+            let ds = 'Recent';
+            if (published) { try { ds = new Date(published).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) { ds = published; } }
+            return `<div class="article-item"><div class="article-title">${title}</div>${desc ? `<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;">${desc.substring(0,200)}${desc.length > 200 ? '...' : ''}</div>` : ''}<div class="article-meta">${source} • ${ds}</div>${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}</div>`;
+        }).join('');
+    }
+    function displayFallback() {
+        document.getElementById('articlesContainer').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><p style="font-size:16px;margin-bottom:15px;">📡 Live article feed loading. Check these curated sources:</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px;"><a href="https://www.arctictoday.com/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Arctic Today</a><a href="https://www.highnorthnews.com/en" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">High North News</a><a href="https://www.reuters.com/world/europe/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Reuters - Europe</a></div></div>';
+    }
+
+    const translations = {
+        en: { pageTitle:"🇬🇱 GREENLAND STABILITY INDEX", pageSubtitle:"Multi-Factor Analysis: Sovereignty & Self-Governance, Arctic Security, Critical Minerals & Great Power Competition", backLink:"← Back to Europe Dashboard", themeToggle:"Theme", lastUpdated:"Last updated: ", mapTitle:"Greenland — Strategic Overview", mapSubtitle:"Interactive map centered on Greenland. Pituffik Space Base, mineral deposits, and shipping route overlays coming soon.", knowledgeLibraryTitle:"Knowledge Library", catGovernance:"Governance & Self-Rule", catMinerals:"Critical Minerals & Rare Earths", catArctic:"Arctic Strategic Position", catInuit:"Inuit Self-Determination & Indigenous Rights", catClimate:"Climate Change & Environmental Security", catUS:"U.S.-Denmark-Greenland Relations & Great Power Competition", recentArticles:"📰 Recent Greenland Security & Stability Articles (Last 7 Days)" },
+        fr: { pageTitle:"🇬🇱 INDICE DE STABILITÉ DU GROENLAND", pageSubtitle:"Analyse multifactorielle : Souveraineté, sécurité arctique, minéraux critiques et compétition entre grandes puissances", backLink:"← Retour au tableau de bord Europe", themeToggle:"Thème", lastUpdated:"Dernière mise à jour : ", mapTitle:"Groenland — Vue stratégique", mapSubtitle:"Carte interactive centrée sur le Groenland.", knowledgeLibraryTitle:"Bibliothèque de connaissances", catGovernance:"Gouvernance et autonomie", catMinerals:"Minéraux critiques et terres rares", catArctic:"Position stratégique arctique", catInuit:"Autodétermination inuite et droits autochtones", catClimate:"Changement climatique et sécurité environnementale", catUS:"Relations É.-U.-Danemark-Groenland", recentArticles:"📰 Articles récents sur le Groenland" },
+        ru: { pageTitle:"🇬🇱 ИНДЕКС СТАБИЛЬНОСТИ ГРЕНЛАНДИИ", pageSubtitle:"Многофакторный анализ: суверенитет, арктическая безопасность, критические минералы и конкуренция великих держав", backLink:"← Назад к панели Европы", themeToggle:"Тема", lastUpdated:"Последнее обновление: ", mapTitle:"Гренландия — Стратегический обзор", mapSubtitle:"Интерактивная карта Гренландии.", knowledgeLibraryTitle:"Библиотека знаний", catGovernance:"Управление и самоуправление", catMinerals:"Критические минералы и редкоземельные элементы", catArctic:"Стратегическое положение в Арктике", catInuit:"Самоопределение инуитов и права коренных народов", catClimate:"Изменение климата и экологическая безопасность", catUS:"Отношения США-Дания-Гренландия", recentArticles:"📰 Последние статьи о Гренландии" },
+        de: { pageTitle:"🇬🇱 GRÖNLAND-STABILITÄTSINDEX", pageSubtitle:"Mehrfaktorenanalyse: Souveränität, arktische Sicherheit, kritische Mineralien und Großmächtekonkurrenz", backLink:"← Zurück zum Europa-Dashboard", themeToggle:"Design", lastUpdated:"Letzte Aktualisierung: ", mapTitle:"Grönland — Strategischer Überblick", mapSubtitle:"Interaktive Karte von Grönland.", knowledgeLibraryTitle:"Wissensbibliothek", catGovernance:"Regierung und Selbstverwaltung", catMinerals:"Kritische Mineralien und Seltene Erden", catArctic:"Strategische Position in der Arktis", catInuit:"Inuit-Selbstbestimmung und indigene Rechte", catClimate:"Klimawandel und Umweltsicherheit", catUS:"Beziehungen USA-Dänemark-Grönland", recentArticles:"📰 Aktuelle Artikel über Grönland" }
+    };
+    function switchLanguage(lang, button) {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
+                    const parts = el.textContent.split(': '); const ts = parts.length > 1 ? parts.slice(1).join(': ') : 'Loading...';
+                    el.textContent = translations[lang][key] + ts;
+                } else { el.textContent = translations[lang][key]; }
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        startLoadingProgress();
+        document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
+        loadArticles().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
+    });
+    </script>
+</body>
+</html>

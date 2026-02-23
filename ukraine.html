@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Ukraine Stability Index v1.0.0 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Z9114D1Z5C');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ukraine Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg-color:#f5f5f5;--container-bg:#fff;--card-bg:#fff;--card-border:#e1e8ed;--text-primary:#2c3e50;--text-secondary:#7f8c8d;--text-muted:#95a5a6;--metric-bg:#fff;--metric-hover-shadow:rgba(0,0,0,.15);--article-bg:#f8f9fa;--article-hover:#e8f4f8;--watermark-opacity:.5;--loading-overlay-bg:rgba(245,245,245,.98);--loading-spinner-bg:rgba(37,99,235,.2);--accent:#2563eb}
+        [data-theme="dark"]{--bg-color:#1a1a1a;--container-bg:#2d2d2d;--card-bg:#2d2d2d;--card-border:#404040;--text-primary:#e0e0e0;--text-secondary:#b0b0b0;--text-muted:#808080;--metric-bg:#2d2d2d;--metric-hover-shadow:rgba(255,255,255,.1);--article-bg:#353535;--article-hover:#404040;--watermark-opacity:.5;--loading-overlay-bg:rgba(26,26,26,.98);--loading-spinner-bg:rgba(37,99,235,.3)}
+        body{font-family:'Times New Roman',Times,serif;font-size:14px;background-color:var(--bg-color);color:var(--text-primary);line-height:1.6;padding:20px;min-height:100vh;transition:background-color .3s,color .3s;position:relative}
+        body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;background-image:url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');background-size:cover;background-repeat:no-repeat;background-position:center;opacity:var(--watermark-opacity);z-index:0;pointer-events:none}
+        .loading-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--loading-overlay-bg);backdrop-filter:blur(10px);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s,visibility .5s}
+        .loading-overlay.hidden{opacity:0;visibility:hidden}
+        .loading-spinner{width:60px;height:60px;border:5px solid var(--loading-spinner-bg);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:30px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-status{text-align:center;max-width:500px;padding:0 20px}
+        .loading-title{font-size:24px;font-weight:bold;color:var(--accent);margin-bottom:20px;letter-spacing:1px}
+        .loading-steps{margin-top:20px}
+        .loading-step{display:flex;align-items:center;justify-content:center;gap:12px;padding:12px;font-size:15px;color:var(--text-secondary);transition:all .3s}
+        .loading-step.active{color:var(--accent);font-weight:bold}.loading-step.complete{color:#4ade80}
+        .step-icon{font-size:18px;min-width:20px}
+        .loading-progress{margin-top:25px;font-size:13px;color:var(--text-secondary);font-style:italic}
+        .loading-error{color:#f87171;font-size:16px;margin-top:20px;padding:15px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:8px}
+        .container{max-width:1400px;margin:0 auto;position:relative;z-index:1}
+        header{background:linear-gradient(135deg,#1e3a5f 0%,#eab308 100%);color:#fff;padding:35px;border-radius:12px;margin-bottom:30px;box-shadow:0 6px 20px rgba(0,0,0,.15);position:relative;display:flex;align-items:center;gap:30px}
+        .header-logo{width:80px;height:80px;flex-shrink:0;border-radius:50%;margin-top:48px}
+        .header-content{flex:1;text-align:center}
+        h1{font-size:28px;font-weight:bold;margin-bottom:10px;letter-spacing:2px;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+        .subtitle{font-size:16px;font-weight:normal;opacity:.95;letter-spacing:.5px}
+        .last-updated{font-size:13px;opacity:.85;margin-top:10px}
+        .header-controls{position:absolute;top:35px;right:35px;display:flex;flex-direction:column;gap:8px;z-index:1000}
+        .language-switcher{display:flex;gap:8px;background:rgba(255,255,255,.15);padding:8px 12px;border-radius:8px;backdrop-filter:blur(10px)}
+        .theme-toggle{display:flex;align-items:center;justify-content:center;gap:4px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:5px;backdrop-filter:blur(10px)}
+        .theme-toggle-label{font-size:9px;color:rgba(255,255,255,.9);margin-right:4px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+        .theme-toggle-switch{position:relative;width:28px;height:15px;background:rgba(255,255,255,.2);border-radius:8px;cursor:pointer;transition:all .3s;border:1.5px solid rgba(255,255,255,.3)}
+        .theme-toggle-switch:hover{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.5)}
+        .theme-toggle-slider{position:absolute;top:1.5px;left:1.5px;width:9px;height:9px;background:#fff;border-radius:50%;transition:transform .3s;display:flex;align-items:center;justify-content:center;font-size:6px}
+        .theme-toggle-slider::before{content:'☀️'}
+        [data-theme="dark"] .theme-toggle-slider{transform:translateX(13px)}
+        [data-theme="dark"] .theme-toggle-slider::before{content:'🌙'}
+        .lang-btn{background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);color:#fff;padding:6px 14px;font-family:'Times New Roman',serif;font-size:14px;font-weight:bold;border-radius:6px;cursor:pointer;transition:all .2s}
+        .lang-btn:hover{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.5)}
+        .lang-btn.active{background:#fff;color:#1e3a5f;border-color:#fff}
+        .back-link{display:inline-block;position:absolute;top:20px;left:20px;margin:0;padding:12px 24px;background:rgba(255,255,255,.2);color:#fff;text-decoration:none;border-radius:8px;border:2px solid rgba(255,255,255,.3);transition:all .2s;font-size:14px;font-weight:bold}
+        .back-link:hover{background:rgba(255,255,255,.3);border-color:rgba(255,255,255,.5)}
+        .map-section{background:var(--container-bg);border:2px solid var(--card-border);border-radius:12px;padding:25px;margin-bottom:30px;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:background .3s,border-color .3s}
+        .map-section h2{font-size:20px;margin-bottom:10px;color:var(--text-primary)}
+        .map-subtitle{font-size:13px;color:var(--text-secondary);margin-bottom:15px;font-style:italic}
+        .knowledge-library{background:var(--container-bg);border:2px solid var(--card-border);border-radius:12px;padding:25px;margin-bottom:30px;box-shadow:0 4px 12px rgba(0,0,0,.08);transition:background .3s,border-color .3s}
+        .knowledge-library h2{font-size:24px;margin-bottom:20px;color:var(--text-primary);display:flex;align-items:center;gap:10px}
+        .library-icon{font-size:28px}
+        .knowledge-categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+        .knowledge-card{background:var(--card-bg);border:2px solid var(--card-border);border-radius:10px;overflow:hidden;transition:all .3s}
+        .knowledge-card:hover{transform:translateY(-3px);box-shadow:0 6px 16px var(--metric-hover-shadow)}
+        .knowledge-header{background:linear-gradient(135deg,rgba(37,99,235,.1) 0%,rgba(234,179,8,.1) 100%);padding:18px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .3s}
+        .knowledge-header:hover{background:linear-gradient(135deg,rgba(37,99,235,.15) 0%,rgba(234,179,8,.15) 100%)}
+        .knowledge-header-title{display:flex;align-items:center;gap:12px;font-size:16px;font-weight:bold;color:var(--text-primary)}
+        .category-icon{font-size:22px}
+        .collapse-icon{font-size:20px;color:var(--accent);transition:transform .3s}
+        .knowledge-card.collapsed .collapse-icon{transform:rotate(-90deg)}
+        .knowledge-content{padding:20px;max-height:600px;overflow-y:auto;transition:max-height .3s,padding .3s}
+        .knowledge-card.collapsed .knowledge-content{max-height:0;padding:0 20px;overflow:hidden}
+        .knowledge-content p{font-size:13px;line-height:1.6;color:var(--text-secondary);margin-bottom:12px}
+        .knowledge-content ul{margin-left:20px;margin-bottom:12px}
+        .knowledge-content li{font-size:13px;line-height:1.6;color:var(--text-secondary);margin-bottom:6px}
+        .knowledge-content strong{color:var(--text-primary)}
+        .open-source-disclaimer{font-size:11px;color:var(--text-muted);font-style:italic;margin-top:12px;padding-top:12px;border-top:1px solid var(--card-border)}
+        .report-links-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:15px}
+        .report-link{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--accent);color:#fff;text-decoration:none;border-radius:6px;font-size:12px;font-weight:bold;transition:all .3s}
+        .report-link:hover{background:#1d4ed8;transform:translateX(3px);box-shadow:0 4px 12px rgba(37,99,235,.3)}
+        .knowledge-content::-webkit-scrollbar{width:8px}
+        .knowledge-content::-webkit-scrollbar-track{background:var(--article-bg);border-radius:4px}
+        .knowledge-content::-webkit-scrollbar-thumb{background:var(--card-border);border-radius:4px}
+        .articles-section{background:var(--container-bg);border-radius:12px;padding:25px;margin-bottom:30px;box-shadow:0 4px 12px rgba(0,0,0,.08);border:2px solid var(--card-border);transition:background .3s,border-color .3s}
+        .section-title{font-size:20px;margin-bottom:20px;color:var(--text-primary);font-weight:bold;letter-spacing:.5px}
+        .article-item{background:var(--article-bg);padding:15px;border-radius:8px;margin-bottom:10px;transition:background .2s,transform .2s;border-left:4px solid #2563eb}
+        .article-item:hover{background:var(--article-hover);transform:translateX(4px)}
+        .article-title{color:var(--text-primary);font-size:14px;margin-bottom:5px;font-weight:500}
+        .article-meta{font-size:12px;color:var(--text-secondary)}
+        .article-link{color:var(--accent);text-decoration:none;font-size:13px}
+        .article-link:hover{text-decoration:underline}
+        footer{background:var(--container-bg);padding:25px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.08);border:2px solid var(--card-border);font-size:12px;text-align:center;margin-top:40px;color:var(--text-secondary);transition:background .3s,border-color .3s}
+        [data-theme="dark"] header{background:linear-gradient(135deg,#0f172a 0%,#854d0e 100%);border:1px solid rgba(37,99,235,.2)}
+        [data-theme="dark"] .knowledge-header{background:linear-gradient(135deg,rgba(37,99,235,.08) 0%,rgba(234,179,8,.08) 100%)}
+        [data-theme="dark"] .article-item{border-left-color:#60a5fa}
+        @media(max-width:768px){header{flex-direction:column;gap:20px;padding:25px 20px}.header-logo{width:60px;height:60px;margin-top:0}.header-controls{position:static;align-items:center}h1{font-size:22px}.back-link{position:static;display:block;width:fit-content;margin:0 auto 15px}.knowledge-categories{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Ukraine Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1"><span class="step-icon">⏳</span><span>Fetching OSINT articles on Ukraine...</span></div>
+                <div class="loading-step" id="step2"><span class="step-icon">⏳</span><span>Scanning frontline &amp; territorial data...</span></div>
+                <div class="loading-step" id="step3"><span class="step-icon">⏳</span><span>Analyzing aid flows &amp; ceasefire indicators...</span></div>
+                <div class="loading-step" id="step4"><span class="step-icon">⏳</span><span>Rendering dashboard...</span></div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display:none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">🇺🇦 UKRAINE STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Frontline Dynamics, Western Aid Flows, Ceasefire Prospects &amp; Reconstruction</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en',this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('fr',this)">FR</button>
+                    <button class="lang-btn" onclick="switchLanguage('ru',this)">RU</button>
+                    <button class="lang-btn" onclick="switchLanguage('de',this)">DE</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()"><div class="theme-toggle-slider"></div></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="map-section">
+            <h2>🗺️ <span data-i18n="mapTitle">Ukraine — Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Ukraine. Frontline positions, occupied territories, and aid corridors coming soon.</div>
+            <div style="width:100%;height:450px;border:2px solid var(--card-border);border-radius:8px;overflow:hidden;">
+                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=22%2C44%2C40%2C53&layer=mapnik&marker=50.45%2C30.52" width="100%" height="100%" frameborder="0" scrolling="no" style="border:none;"></iframe>
+            </div>
+        </div>
+
+        <div class="knowledge-library">
+            <h2><span class="library-icon">📚</span> <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span></h2>
+            <p class="open-source-disclaimer">Note: Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
+            <div class="knowledge-categories">
+
+                <!-- Government & Wartime Politics -->
+                <div class="knowledge-card collapsed" id="card-government">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('government')">
+                        <div class="knowledge-header-title"><span class="category-icon">🏛️</span> <span data-i18n="catGovernment">Government &amp; Wartime Politics</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Ukraine is a semi-presidential republic</strong> that has governed under martial law since February 24, 2022. President Volodymyr Zelensky — a former comedian and actor elected in 2019 with 73% of the vote — has become the face of Ukrainian resistance and the country's wartime leadership.</p>
+                        <ul>
+                            <li><strong>Martial Law:</strong> Continuously extended since the invasion began. Under martial law, presidential elections scheduled for March 2024 were postponed. Zelensky's democratic mandate has been a subject of Russian propaganda exploitation, though Ukrainian law provides for postponement during active hostilities and legal scholars broadly support the constitutionality.</li>
+                            <li><strong>Verkhovna Rada:</strong> Ukraine's 450-seat parliament continues to function, passing wartime legislation including mobilization laws, economic measures, and EU integration bills. Cross-party unity that characterized the early war period has given way to more normal political competition, though core defense consensus remains.</li>
+                            <li><strong>Corruption &amp; Reform:</strong> Ukraine has made significant anti-corruption progress as a condition of EU accession — including reforms to the judiciary, anti-corruption agencies (NABU, SAPO, HACC), and procurement systems. Wartime conditions create both new corruption risks (defense procurement, aid distribution) and new reform momentum (EU conditionality).</li>
+                            <li><strong>EU Accession:</strong> Ukraine received EU candidate status in June 2022 and opened accession negotiations in June 2024 — historically rapid progress driven by wartime solidarity. The accession process is expected to take years and requires meeting extensive reform benchmarks across rule of law, economic governance, and institutional capacity.</li>
+                            <li><strong>Cabinet Changes:</strong> Zelensky has conducted several government reshuffles during the war — including dismissing senior defense officials amid corruption allegations. The most significant was the September 2023 replacement of Defense Minister Oleksii Reznikov with Rustem Umerov.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Rada official records, European Commission, Freedom House, and Transparency International reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.rada.gov.ua/en" target="_blank" class="report-link">📑 Verkhovna Rada</a>
+                            <a href="https://freedomhouse.org/country/ukraine" target="_blank" class="report-link">📑 Freedom House</a>
+                            <a href="https://www.transparency.org/en/countries/ukraine" target="_blank" class="report-link">📑 Transparency Int'l</a>
+                            <a href="https://neighbourhood-enlargement.ec.europa.eu/european-neighbourhood-policy/countries-region/ukraine_en" target="_blank" class="report-link">📑 EU - Ukraine</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Armed Forces -->
+                <div class="knowledge-card collapsed" id="card-military">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('military')">
+                        <div class="knowledge-header-title"><span class="category-icon">⚔️</span> <span data-i18n="catMilitary">Armed Forces &amp; Defense Posture</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The Armed Forces of Ukraine (ZSU) have transformed from a post-Soviet military</strong> into one of the most combat-experienced forces in the world — conducting simultaneous offensive and defensive operations across a 1,200+ km front line while integrating Western weapons systems at unprecedented speed.</p>
+                        <ul>
+                            <li><strong>Force Size:</strong> Ukraine's military has expanded from approximately 250,000 pre-invasion to an estimated 800,000–1,000,000 under arms (including reserves, territorial defense, and National Guard). Mobilization has been a major political challenge — the April 2024 mobilization law lowered the conscription age and tightened draft enforcement.</li>
+                            <li><strong>Western Weapons Integration:</strong> Ukraine operates an extraordinary mix of Soviet-era and Western equipment: Leopard 2 tanks, Bradley/Marder IFVs, HIMARS, Storm Shadow/SCALP cruise missiles, Patriot PAC-3 air defense, and F-16 fighters (delivered 2024). Integration of NATO-standard systems while fighting is historically unprecedented.</li>
+                            <li><strong>Drone Warfare:</strong> Ukraine has pioneered large-scale drone warfare — deploying thousands of FPV kamikaze drones, long-range strike UAVs, and naval drones that have effectively neutralized much of Russia's Black Sea Fleet. Ukraine's domestic drone production capacity has become a critical military asset.</li>
+                            <li><strong>Casualty &amp; Attrition:</strong> Both sides have suffered enormous casualties. Western estimates suggest Ukrainian military casualties (killed and wounded) in the hundreds of thousands. The sustainability of manpower, equipment, and ammunition is a constant strategic concern.</li>
+                            <li><strong>Deep Strike Capability:</strong> Ukraine has developed indigenous long-range strike systems capable of reaching targets deep inside Russia — including attacks on Russian oil infrastructure, military bases, and logistics hubs. Western-supplied weapons have been subject to evolving restrictions on use against Russian territory.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on ISW, RUSI, IISS Military Balance, and Ukrainian MOD reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.understandingwar.org/" target="_blank" class="report-link">📑 ISW</a>
+                            <a href="https://www.rusi.org/" target="_blank" class="report-link">📑 RUSI</a>
+                            <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
+                            <a href="https://www.mil.gov.ua/en/" target="_blank" class="report-link">📑 Ukraine MOD</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Frontline Dynamics -->
+                <div class="knowledge-card collapsed" id="card-frontline">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('frontline')">
+                        <div class="knowledge-header-title"><span class="category-icon">🎯</span> <span data-i18n="catFrontline">Frontline Dynamics &amp; Territorial Control</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The Russia-Ukraine war is the largest land war in Europe since 1945</strong>, with active combat along a front line stretching from the Kherson region in the south through Zaporizhzhia, Donetsk, and Luhansk to the Russian-Ukrainian border in the northeast.</p>
+                        <ul>
+                            <li><strong>Occupied Territory:</strong> Russia occupies approximately 18% of Ukraine's internationally recognized territory — including Crimea (annexed 2014), most of Luhansk and Donetsk oblasts, a significant portion of Zaporizhzhia oblast, and the left bank of Kherson oblast. Russia illegally annexed four oblasts in September 2022 without controlling them fully.</li>
+                            <li><strong>Bakhmut-Avdiivka Axis:</strong> Intense attritional fighting in Donetsk oblast has characterized much of 2023–2025. Russia captured Bakhmut (May 2023) and Avdiivka (February 2024) at enormous cost, pursuing incremental territorial gains through "meat grinder" tactics.</li>
+                            <li><strong>Kursk Incursion:</strong> Ukraine's August 2024 cross-border incursion into Russia's Kursk region was a strategic surprise — seizing hundreds of square kilometers of Russian territory. The operation demonstrated Ukrainian offensive capability and complicated Russian force allocation.</li>
+                            <li><strong>Black Sea:</strong> Ukraine's naval drone campaign has forced Russia's Black Sea Fleet to largely withdraw from Crimea to Novorossiysk, reopening grain export corridors and demonstrating the vulnerability of conventional naval forces to asymmetric attack.</li>
+                            <li><strong>Infrastructure Warfare:</strong> Russia has conducted sustained campaigns against Ukrainian energy infrastructure — particularly the electrical grid, targeting power plants and substations to undermine civilian morale and industrial capacity during winter months.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on ISW, DeepState, UK MOD Intelligence Updates, and OSINT analysts</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.understandingwar.org/" target="_blank" class="report-link">📑 ISW Daily Updates</a>
+                            <a href="https://deepstatemap.live/en" target="_blank" class="report-link">📑 DeepState Map</a>
+                            <a href="https://www.gov.uk/government/collections/ministry-of-defence-intelligence-updates" target="_blank" class="report-link">📑 UK MOD Intel</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economy & Reconstruction -->
+                <div class="knowledge-card collapsed" id="card-economy">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('economy')">
+                        <div class="knowledge-header-title"><span class="category-icon">📊</span> <span data-i18n="catEconomy">Economy &amp; Reconstruction</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Ukraine's economy contracted by approximately 29% in 2022</strong> — one of the sharpest wartime economic declines in modern history. It has since partially recovered but remains heavily dependent on international financial support and faces staggering reconstruction costs.</p>
+                        <ul>
+                            <li><strong>War Damage:</strong> The World Bank estimated total reconstruction and recovery costs at approximately $486 billion as of early 2024 — and the figure continues to grow. Infrastructure damage includes housing, energy systems, transportation networks, schools, hospitals, and industrial capacity.</li>
+                            <li><strong>International Financial Support:</strong> Ukraine's budget is sustained by massive international aid — approximately $40+ billion annually from the U.S., EU, and other partners. The EU committed a €50 billion support package (2024–2027). Without external financing, Ukraine's government would be unable to maintain basic services.</li>
+                            <li><strong>Grain Exports:</strong> Ukraine was the world's 5th-largest grain exporter pre-war. The Black Sea Grain Initiative (expired July 2023) was partially replaced by a Ukrainian-organized corridor. Agricultural exports have partially recovered but remain below pre-war levels and face ongoing Russian interference.</li>
+                            <li><strong>Displaced Population:</strong> Approximately 6.5 million Ukrainians are externally displaced across Europe (the largest refugee crisis since WWII), with another 3.7 million internally displaced. The demographic impact — particularly of young, educated emigration — poses long-term economic challenges.</li>
+                            <li><strong>Frozen Russian Assets:</strong> Approximately $300 billion in frozen Russian Central Bank reserves are held in Western jurisdictions. The EU and G7 have agreed to use the windfall profits from these assets (~$3 billion annually) for Ukraine, with debate ongoing about seizing the principal.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on World Bank, IMF, KSE Institute, NBU, and EU Commission reporting</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.worldbank.org/en/country/ukraine" target="_blank" class="report-link">📑 World Bank - Ukraine</a>
+                            <a href="https://www.imf.org/en/Countries/UKR" target="_blank" class="report-link">📑 IMF - Ukraine</a>
+                            <a href="https://kse.ua/" target="_blank" class="report-link">📑 KSE Institute</a>
+                            <a href="https://www.unhcr.org/emergencies/ukraine-emergency" target="_blank" class="report-link">📑 UNHCR Ukraine</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ceasefire & Negotiations -->
+                <div class="knowledge-card collapsed" id="card-ceasefire">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('ceasefire')">
+                        <div class="knowledge-header-title"><span class="category-icon">🕊️</span> <span data-i18n="catCeasefire">Ceasefire Prospects &amp; Peace Negotiations</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The path to ending the Russia-Ukraine war remains deeply uncertain</strong>, with fundamental incompatibilities between the positions of the belligerents, competing frameworks from external mediators, and evolving U.S. policy under the Trump administration creating a volatile diplomatic landscape.</p>
+                        <ul>
+                            <li><strong>Ukraine's Position:</strong> Zelensky's "Peace Formula" demands complete Russian withdrawal from all internationally recognized Ukrainian territory (including Crimea), accountability for war crimes, security guarantees, and reparations. Ukraine has indicated willingness to negotiate sequencing but not on the principle of territorial integrity.</li>
+                            <li><strong>Russia's Position:</strong> Russia demands recognition of its annexation of Crimea and four Ukrainian oblasts, Ukrainian neutrality (no NATO membership), "denazification" (regime change), limits on Ukrainian military capabilities, and sanctions relief. These positions are effectively non-negotiable for Ukraine.</li>
+                            <li><strong>Trump Factor:</strong> President Trump has repeatedly stated he could end the war "in 24 hours" and appointed special envoys for the conflict. The administration's approach — including potential leverage through conditioning aid to Ukraine — has created significant uncertainty among both Ukrainian and European allies about the future of Western support.</li>
+                            <li><strong>Zelensky Peace Summit:</strong> Ukraine hosted a peace summit in Switzerland (June 2024) attended by over 90 countries. Russia was not invited and China did not attend. The summit produced a joint communiqué on nuclear safety, food security, and prisoner exchange but did not advance territorial negotiations.</li>
+                            <li><strong>Frozen Conflict Risk:</strong> Many analysts assess that the most likely near-term outcome is a protracted frozen conflict or Korean War-style armistice — with contested territory, no formal peace treaty, and ongoing low-level hostilities. The terms of any ceasefire — particularly security guarantees for Ukraine — are the central strategic question.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on ICG, Chatham House, Brookings, Carnegie, and ECFR analysis</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.crisisgroup.org/europe-central-asia/eastern-europe/ukraine" target="_blank" class="report-link">📑 Crisis Group</a>
+                            <a href="https://www.chathamhouse.org/" target="_blank" class="report-link">📑 Chatham House</a>
+                            <a href="https://www.brookings.edu/" target="_blank" class="report-link">📑 Brookings</a>
+                            <a href="https://ecfr.eu/" target="_blank" class="report-link">📑 ECFR</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Western Aid & NATO -->
+                <div class="knowledge-card collapsed" id="card-aid">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('aid')">
+                        <div class="knowledge-header-title"><span class="category-icon">🤝</span> <span data-i18n="catAid">Western Military Aid &amp; NATO Path</span></div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Western military and financial support has been the decisive factor</strong> enabling Ukraine's continued resistance — totaling over $200 billion in committed aid from the U.S., EU, and allied nations since February 2022. The sustainability and trajectory of this support is Ukraine's most critical external variable.</p>
+                        <ul>
+                            <li><strong>U.S. Aid:</strong> The United States has committed over $75 billion in total assistance (military, financial, and humanitarian). Key military deliveries include HIMARS, Patriot PAC-3, Abrams tanks, Bradley IFVs, and F-16 fighter jets. Congressional approval has been episodically contested, with a six-month delay in 2024 before a $61 billion supplemental was passed.</li>
+                            <li><strong>EU Support:</strong> The EU has committed approximately €90+ billion in total support, including the €50 billion Ukraine Facility (2024–2027), military assistance through the European Peace Facility, and ammunition procurement initiatives. European defense industrial production has scaled up but remains below demand.</li>
+                            <li><strong>NATO Path:</strong> NATO's 2023 Vilnius Summit stated Ukraine's future is in NATO but did not offer a timeline or formal invitation. Ukraine seeks concrete security guarantees — whether through NATO membership, bilateral agreements, or alternative frameworks — as a prerequisite for any ceasefire that leaves territory contested.</li>
+                            <li><strong>Bilateral Security Agreements:</strong> Over 20 countries have signed bilateral security agreements with Ukraine, committing to long-term defense support, training, and intelligence sharing. These are not Article 5-equivalent guarantees but represent significant political commitments.</li>
+                            <li><strong>Trump Administration Uncertainty:</strong> The return of the Trump administration has introduced fundamental uncertainty about the trajectory of U.S. support. European allies are urgently planning for scenarios involving reduced American commitment — accelerating EU defense integration discussions and bilateral European support frameworks.</li>
+                            <li><strong>Training &amp; Interoperability:</strong> NATO allies have trained tens of thousands of Ukrainian soldiers in combined arms operations, equipment operation, and leadership. Ukraine's military is transitioning toward NATO standards — a process that will take years but has already significantly improved combat effectiveness.</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on Kiel Institute Ukraine Aid Tracker, U.S. DoD, EU Council, and NATO official statements</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.ifw-kiel.de/topics/war-against-ukraine/ukraine-support-tracker/" target="_blank" class="report-link">📑 Kiel Aid Tracker</a>
+                            <a href="https://www.defense.gov/Spotlights/Support-for-Ukraine/" target="_blank" class="report-link">📑 U.S. DoD - Ukraine</a>
+                            <a href="https://www.consilium.europa.eu/en/policies/eu-response-ukraine-invasion/" target="_blank" class="report-link">📑 EU Council</a>
+                            <a href="https://www.nato.int/cps/en/natohq/topics_37750.htm" target="_blank" class="report-link">📑 NATO - Ukraine</a>
+                            <a href="https://www.amnesty.org/en/location/europe-and-central-asia/ukraine/" target="_blank" class="report-link">📑 Amnesty - Ukraine</a>
+                            <a href="https://www.hrw.org/europe/central-asia/ukraine" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">📰 Recent Ukraine Security &amp; Stability Articles (Last 7 Days)</div>
+            <div id="articlesContainer"><div style="text-align:center;color:var(--text-secondary);padding:30px;">Loading articles...</div></div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, ISW, Kiel Institute, and OSINT sources</div>
+            <div style="margin-top:15px;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:25px;padding:15px;background:var(--article-bg);border-radius:8px;"><div style="font-size:.9em;margin-bottom:8px;">Asifah Analytics — Ukraine Stability Index v1.0.0</div></div>
+            <div style="margin-top:20px;padding:15px;background:rgba(37,99,235,.1);border-radius:8px;"><span style="font-size:.9em;">If you find Asifah Analytics useful, you can <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a></span></div>
+            <div style="margin-top:25px;font-size:.75em;color:var(--text-muted);">© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>Unauthorized use, reproduction, or distribution prohibited.</div>
+        </footer>
+    </div>
+
+    <script>
+    const API_BASE='https://asifa-europe-backend.onrender.com';
+    function initTheme(){const s=localStorage.getItem('asifah-theme')||'light';document.documentElement.setAttribute('data-theme',s)}
+    function toggleTheme(){const c=document.documentElement.getAttribute('data-theme');const n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('asifah-theme',n)}
+    initTheme();
+    function toggleKnowledgeCard(id){const c=document.getElementById('card-'+id);if(c)c.classList.toggle('collapsed')}
+    let loadingStepIndex=0,loadingInterval=null,loadingTimeout=null;
+    function startLoadingProgress(){
+        const steps=['step1','step2','step3','step4'];
+        loadingInterval=setInterval(()=>{
+            if(loadingStepIndex<steps.length-1){
+                const cur=document.getElementById(steps[loadingStepIndex]);
+                if(cur){cur.classList.remove('active');cur.classList.add('complete');cur.querySelector('.step-icon').textContent='✓'}
+                loadingStepIndex++;
+                const next=document.getElementById(steps[loadingStepIndex]);
+                if(next)next.classList.add('active');
+            }
+        },4000);
+        loadingTimeout=setTimeout(()=>{document.getElementById('loadingError').style.display='block';document.getElementById('loadingError').textContent='⚠️ Loading is taking longer than expected.'},60000);
+    }
+    function hideLoadingOverlay(){
+        if(loadingInterval)clearInterval(loadingInterval);if(loadingTimeout)clearTimeout(loadingTimeout);
+        document.querySelectorAll('.loading-step').forEach(s=>{s.classList.remove('active');s.classList.add('complete');s.querySelector('.step-icon').textContent='✓'});
+        setTimeout(()=>{const o=document.getElementById('loadingOverlay');if(o)o.classList.add('hidden')},500);
+    }
+    async function loadArticles(){
+        try{
+            const r=await fetch(`${API_BASE}/api/europe/articles/ukraine`);
+            if(!r.ok)throw new Error('HTTP '+r.status);
+            const d=await r.json();const articles=d.articles||d.recent_headlines||[];
+            if(articles.length>0){displayArticles(articles)}else{displayFallback()}
+        }catch(e){console.warn('Articles failed:',e.message);displayFallback()}
+    }
+    function displayArticles(articles){
+        const c=document.getElementById('articlesContainer');
+        c.innerHTML=articles.slice(0,20).map(a=>{
+            const title=a.title||'Untitled';const source=a.source||a.source_name||'';const published=a.published||a.publishedAt||'';const url=a.url||'#';const desc=a.description||'';
+            let ds='Recent';if(published){try{ds=new Date(published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}catch(e){ds=published}}
+            return`<div class="article-item"><div class="article-title">${title}</div>${desc?`<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5">${desc.substring(0,200)}${desc.length>200?'...':''}</div>`:''}<div class="article-meta">${source} • ${ds}</div>${url!=='#'?`<a href="${url}" target="_blank" class="article-link">Read article →</a>`:''}</div>`
+        }).join('');
+    }
+    function displayFallback(){
+        document.getElementById('articlesContainer').innerHTML='<div style="text-align:center;padding:30px;color:var(--text-secondary)"><p style="font-size:16px;margin-bottom:15px">📡 Live article feed loading. Check these curated sources:</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px"><a href="https://www.understandingwar.org/" target="_blank" style="padding:10px 18px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold">ISW</a><a href="https://www.pravda.com.ua/eng/" target="_blank" style="padding:10px 18px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold">Ukrayinska Pravda</a><a href="https://www.kyivindependent.com/" target="_blank" style="padding:10px 18px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold">Kyiv Independent</a><a href="https://www.reuters.com/world/europe/" target="_blank" style="padding:10px 18px;background:var(--accent);color:#fff;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold">Reuters</a></div></div>';
+    }
+
+    const translations={
+        en:{pageTitle:"🇺🇦 UKRAINE STABILITY INDEX",pageSubtitle:"Multi-Factor Analysis: Frontline Dynamics, Western Aid Flows, Ceasefire Prospects & Reconstruction",backLink:"← Back to Europe Dashboard",themeToggle:"Theme",lastUpdated:"Last updated: ",mapTitle:"Ukraine — Strategic Overview",mapSubtitle:"Interactive map centered on Ukraine. Frontline positions, occupied territories, and aid corridors coming soon.",knowledgeLibraryTitle:"Knowledge Library",catGovernment:"Government & Wartime Politics",catMilitary:"Armed Forces & Defense Posture",catFrontline:"Frontline Dynamics & Territorial Control",catEconomy:"Economy & Reconstruction",catCeasefire:"Ceasefire Prospects & Peace Negotiations",catAid:"Western Military Aid & NATO Path",recentArticles:"📰 Recent Ukraine Security & Stability Articles (Last 7 Days)"},
+        fr:{pageTitle:"🇺🇦 INDICE DE STABILITÉ DE L'UKRAINE",pageSubtitle:"Analyse multifactorielle : Dynamiques du front, flux d'aide occidentale, perspectives de cessez-le-feu et reconstruction",backLink:"← Retour au tableau de bord Europe",themeToggle:"Thème",lastUpdated:"Dernière mise à jour : ",mapTitle:"Ukraine — Vue stratégique",mapSubtitle:"Carte interactive centrée sur l'Ukraine.",knowledgeLibraryTitle:"Bibliothèque de connaissances",catGovernment:"Gouvernement et politique de guerre",catMilitary:"Forces armées et posture de défense",catFrontline:"Dynamiques du front et contrôle territorial",catEconomy:"Économie et reconstruction",catCeasefire:"Perspectives de cessez-le-feu et négociations",catAid:"Aide militaire occidentale et voie vers l'OTAN",recentArticles:"📰 Articles récents sur l'Ukraine"},
+        ru:{pageTitle:"🇺🇦 ИНДЕКС СТАБИЛЬНОСТИ УКРАИНЫ",pageSubtitle:"Многофакторный анализ: динамика фронта, потоки западной помощи, перспективы перемирия и восстановление",backLink:"← Назад к панели Европы",themeToggle:"Тема",lastUpdated:"Последнее обновление: ",mapTitle:"Украина — Стратегический обзор",mapSubtitle:"Интерактивная карта Украины.",knowledgeLibraryTitle:"Библиотека знаний",catGovernment:"Правительство и военная политика",catMilitary:"Вооружённые силы и оборонная позиция",catFrontline:"Динамика фронта и территориальный контроль",catEconomy:"Экономика и восстановление",catCeasefire:"Перспективы перемирия и мирные переговоры",catAid:"Западная военная помощь и путь в НАТО",recentArticles:"📰 Последние статьи об Украине"},
+        de:{pageTitle:"🇺🇦 UKRAINE-STABILITÄTSINDEX",pageSubtitle:"Mehrfaktorenanalyse: Frontdynamik, westliche Hilfsströme, Waffenstillstandsaussichten und Wiederaufbau",backLink:"← Zurück zum Europa-Dashboard",themeToggle:"Design",lastUpdated:"Letzte Aktualisierung: ",mapTitle:"Ukraine — Strategischer Überblick",mapSubtitle:"Interaktive Karte der Ukraine.",knowledgeLibraryTitle:"Wissensbibliothek",catGovernment:"Regierung und Kriegspolitik",catMilitary:"Streitkräfte und Verteidigungshaltung",catFrontline:"Frontdynamik und Territorialkontrolle",catEconomy:"Wirtschaft und Wiederaufbau",catCeasefire:"Waffenstillstandsaussichten und Friedensverhandlungen",catAid:"Westliche Militärhilfe und NATO-Weg",recentArticles:"📰 Aktuelle Artikel über die Ukraine"}
+    };
+    function switchLanguage(lang,button){
+        document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));button.classList.add('active');
+        document.querySelectorAll('[data-i18n]').forEach(el=>{
+            const key=el.getAttribute('data-i18n');
+            if(translations[lang]&&translations[lang][key]){
+                if(key==='lastUpdated'&&el.id==='lastUpdated'){const parts=el.textContent.split(': ');const ts=parts.length>1?parts.slice(1).join(': '):'Loading...';el.textContent=translations[lang][key]+ts}
+                else{el.textContent=translations[lang][key]}
+            }
+        });
+    }
+    document.addEventListener('DOMContentLoaded',()=>{
+        startLoadingProgress();
+        document.getElementById('lastUpdated').textContent='Last updated: '+new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true});
+        loadArticles().then(()=>hideLoadingOverlay()).catch(()=>hideLoadingOverlay());
+    });
+    </script>
+</body>
+</html>
