@@ -1145,15 +1145,77 @@
                     </div>
                 </div>
 
-                <!-- Bond Yields -->
+               <!-- Bond Yields & Debt Status (v2.9.1 Enhanced) -->
                 <div class="metric-card">
                     <div class="metric-title" data-i18n="bondYield">10Y EUROBOND YIELD</div>
-                    <div class="metric-value" id="bondYield">--</div>
-                    <div class="metric-subtitle" data-i18n="bondSubtitle">Sovereign default risk</div>
+                    <div style="display: flex; align-items: baseline; gap: 10px;">
+                        <div class="metric-value" id="bondYield">--</div>
+                        <span id="bondTrendArrow" style="font-size: 20px; font-weight: bold;">→</span>
+                    </div>
+                    <div class="metric-subtitle" id="bondChange" style="margin-bottom: 8px;">Sovereign default risk</div>
+                    
                     <div class="sparkline-container" id="bondSparklineContainer" style="display:none;">
                         <span class="sparkline-label">30-Day:</span>
                         <canvas id="bondSparkline" class="sparkline-canvas"></canvas>
                         <span class="sparkline-status" id="bondSparklineStatus">Loading...</span>
+                    </div>
+                    
+                    <!-- Default Timeline -->
+                    <div style="margin-top: 12px; padding: 10px; background: var(--article-bg); border-radius: 8px; border-left: 3px solid #f87171;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600;">
+                            ⚠️ SOVEREIGN DEFAULT
+                        </div>
+                        <div style="font-size: 13px; color: var(--text-primary); font-weight: 600;">
+                            March 9, 2020 — <span id="daysInDefault">--</span> days
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
+                            $30B total defaulted Eurobond debt
+                        </div>
+                    </div>
+
+                    <!-- Bond Price / Recovery -->
+                    <div style="margin-top: 10px; padding: 10px; background: var(--article-bg); border-radius: 8px;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
+                            💰 EUROBOND PRICE
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <span id="bondPriceCents" style="font-size: 22px; font-weight: bold; color: var(--text-primary);">--¢</span>
+                            <span style="font-size: 11px; color: var(--text-secondary);">per $1 face value</span>
+                        </div>
+                        <div style="font-size: 10px; color: var(--text-muted); margin-top: 6px;">
+                            Implied recovery: <span id="impliedRecovery" style="font-weight: 600;">--</span>%
+                        </div>
+                        <!-- Comparison bar -->
+                        <div style="margin-top: 8px; font-size: 9px; color: var(--text-muted);">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                                <span>🇻🇪 Venezuela 8¢</span>
+                                <span>🇱🇧 Lebanon <span id="bondCompLebanon">--</span>¢</span>
+                                <span>🇦🇷 Argentina 35¢</span>
+                                <span>🇱🇰 Sri Lanka 50¢</span>
+                            </div>
+                            <div style="height: 6px; background: linear-gradient(90deg, #f87171 0%, #fb923c 30%, #facc15 60%, #4ade80 100%); border-radius: 3px; position: relative;">
+                                <div id="bondPriceMarker" style="position: absolute; top: -3px; width: 12px; height: 12px; background: #6495ED; border-radius: 50%; border: 2px solid var(--card-bg); left: 40%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Restructuring Status -->
+                    <div style="margin-top: 10px; padding: 10px; background: var(--article-bg); border-radius: 8px;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
+                            🏛️ RESTRUCTURING STATUS
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span id="restructuringStatus" style="font-size: 14px; font-weight: bold; color: var(--text-primary);">Loading...</span>
+                            <span id="restructuringIcon" style="font-size: 18px;">⚪</span>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
+                            IMF target: <span style="font-weight: 600;">End-2026</span>
+                        </div>
+                        <div style="font-size: 9px; color: var(--text-muted); margin-top: 6px; line-height: 1.4;">
+                            GS scenarios — Base: 28¢ | Bull: 40¢ | Bear: 17¢
+                        </div>
+                        <!-- Restructuring articles -->
+                        <div id="restructuringArticles" style="margin-top: 8px;"></div>
                     </div>
                 </div>
 
@@ -1769,12 +1831,60 @@
                 }
             }
 
-            // Bonds
+            // Bonds (v2.9.1 enhanced)
             const bonds = data.bonds || {};
             if (bonds.yield) {
                 document.getElementById('bondYield').textContent = `${bonds.yield.toFixed(1)}%`;
             } else {
                 document.getElementById('bondYield').textContent = 'N/A';
+            }
+            
+            // Yield trend arrow
+            if (bonds.yield_arrow) {
+                const arrowEl = document.getElementById('bondTrendArrow');
+                arrowEl.textContent = bonds.yield_arrow;
+                const arrowColor = bonds.yield_trend === 'rising' ? '#f87171' : 
+                                   bonds.yield_trend === 'falling' ? '#4ade80' : '#7a9ab8';
+                arrowEl.style.color = arrowColor;
+                
+                const changeText = bonds.yield_change ? 
+                    `${bonds.yield_arrow} ${Math.abs(bonds.yield_change).toFixed(1)}% (24h) • ${bonds.source}` :
+                    `Sovereign default risk • ${bonds.source}`;
+                document.getElementById('bondChange').textContent = changeText;
+            }
+            
+            // Default timeline
+            if (bonds.days_in_default) {
+                document.getElementById('daysInDefault').textContent = bonds.days_in_default.toLocaleString();
+            }
+            
+            // Bond price
+            if (bonds.eurobond_price_cents) {
+                document.getElementById('bondPriceCents').textContent = `${bonds.eurobond_price_cents}¢`;
+                document.getElementById('impliedRecovery').textContent = bonds.implied_recovery_pct;
+                document.getElementById('bondCompLebanon').textContent = bonds.eurobond_price_cents;
+                
+                // Position the marker on the comparison bar (0-60 cent range)
+                const markerPct = Math.min(Math.max((bonds.eurobond_price_cents / 60) * 100, 2), 98);
+                document.getElementById('bondPriceMarker').style.left = `${markerPct}%`;
+            }
+            
+            // Restructuring status
+            if (bonds.restructuring) {
+                const r = bonds.restructuring;
+                document.getElementById('restructuringStatus').textContent = r.status || 'Unknown';
+                document.getElementById('restructuringIcon').textContent = r.icon || '⚪';
+                
+                // Restructuring articles
+                if (r.articles && r.articles.length > 0) {
+                    document.getElementById('restructuringArticles').innerHTML = r.articles.slice(0, 3).map(a => `
+                        <div style="margin-top: 4px;">
+                            <a href="${a.url}" target="_blank" style="color: #6495ED; text-decoration: none; font-size: 0.8em;">
+                                → ${a.title ? a.title.substring(0, 55) + (a.title.length > 55 ? '...' : '') : 'Article'}
+                            </a>
+                        </div>
+                    `).join('');
+                }
             }
             
             // Hezbollah Activity
