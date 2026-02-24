@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Lebanon Stability Index v2.8.0 - Last updated: Feb 9, 2025 -->
+<!-- Asifah Analytics - Lebanon Stability Index v2.9.0 - Last updated: Feb 24, 2026 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,7 +7,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Lebanon Stability Index | Asifah Analytics v2.8.0</title>
+    <title>Lebanon Stability Index | Asifah Analytics v2.9.0</title>
     
     <!-- Favicon using Asifah Analytics logo -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
@@ -22,9 +22,12 @@
             box-sizing: border-box;
         }
 
-        /* CSS Variables for Light/Dark Mode */
+        /* ============================================
+           CSS Variables for Light/Dark Mode
+           v2.9.0: Cyber blue dark theme + watermark fix
+           ============================================ */
         :root {
-            /* Light Mode Colors (matching landing page) */
+            /* Light Mode Colors */
             --bg-color: #f5f5f5;
             --container-bg: #ffffff;
             --card-bg: #ffffff;
@@ -40,31 +43,39 @@
             --metric-hover-shadow: rgba(0,0,0,0.15);
             --article-bg: #f8f9fa;
             --article-hover: #e8f4f8;
-            --watermark-opacity: 0.03;
             --loading-overlay-bg: rgba(245, 245, 245, 0.98);
             --loading-spinner-bg: rgba(100, 149, 237, 0.2);
+            /* Watermark: visible but subtle on light */
+            --watermark-opacity: 0.50;
+            /* Card glow (none on light) */
+            --card-glow: none;
+            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         [data-theme="dark"] {
-            /* Dark Mode Colors */
-            --bg-color: #1a1a1a;
-            --container-bg: #2d2d2d;
-            --card-bg: #2d2d2d;
-            --card-border: #404040;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
+            /* v2.9.0: Cyber Blue Dark Mode */
+            --bg-color: #0a0e1a;
+            --container-bg: #111827;
+            --card-bg: #111827;
+            --card-border: #1e3a5f;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --header-gradient-start: #0f1a2e;
+            --header-gradient-end: #1e3a5f;
             --header-text: #ffffff;
-            --stability-bg: rgba(45, 45, 45, 0.95);
-            --metric-bg: #2d2d2d;
-            --metric-hover-shadow: rgba(255,255,255,0.1);
-            --article-bg: #353535;
-            --article-hover: #404040;
-            --watermark-opacity: 0.02;
-            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
+            --stability-bg: rgba(17, 24, 39, 0.95);
+            --metric-bg: #111827;
+            --metric-hover-shadow: rgba(100, 149, 237, 0.15);
+            --article-bg: #1a2332;
+            --article-hover: #243447;
+            --loading-overlay-bg: rgba(10, 14, 26, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.4);
+            /* Watermark: prominent cyber blue glow in dark mode */
+            --watermark-opacity: 0.85;
+            /* Card glow effects */
+            --card-glow: 0 0 1px rgba(100, 149, 237, 0.1);
+            --card-hover-glow: 0 0 20px rgba(100, 149, 237, 0.2), 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         body {
@@ -79,15 +90,23 @@
             position: relative;
         }
 
-        /* Watermark Background */
+        /* ============================================
+           Watermark Background - v2.9.0 FIXED
+           Light: 50% opacity, subtle
+           Dark: Near-full with blue tint via filter
+           ============================================ */
         body::before {
             content: '';
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
+            width: 90vmin;
+            height: 90vmin;
+            min-width: 600px;
+            min-height: 600px;
+            max-width: 1000px;
+            max-height: 1000px;
             background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
             background-size: contain;
             background-repeat: no-repeat;
@@ -96,6 +115,11 @@
             z-index: 0;
             pointer-events: none;
             user-select: none;
+        }
+
+        /* Dark mode: tint the watermark with cyber blue */
+        [data-theme="dark"] body::before {
+            filter: brightness(0.3) sepia(1) hue-rotate(180deg) saturate(3);
         }
 
         /* Loading Overlay Styles */
@@ -212,6 +236,12 @@
             display: flex;
             align-items: center;
             gap: 30px;
+        }
+
+        /* Dark mode: add subtle blue border to header */
+        [data-theme="dark"] header {
+            border: 1px solid rgba(100, 149, 237, 0.2);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(100, 149, 237, 0.05);
         }
 
         .header-logo {
@@ -368,9 +398,9 @@
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--card-glow);
             border: 2px solid var(--card-border);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .stability-title {
@@ -393,6 +423,12 @@
         .stability-score.yellow { color: #facc15; }
         .stability-score.orange { color: #fb923c; }
         .stability-score.red { color: #f87171; }
+
+        /* Dark mode: add glow to score colors */
+        [data-theme="dark"] .stability-score.green { text-shadow: 0 0 20px rgba(74, 222, 128, 0.3); }
+        [data-theme="dark"] .stability-score.yellow { text-shadow: 0 0 20px rgba(250, 204, 21, 0.3); }
+        [data-theme="dark"] .stability-score.orange { text-shadow: 0 0 20px rgba(251, 146, 60, 0.3); }
+        [data-theme="dark"] .stability-score.red { text-shadow: 0 0 20px rgba(248, 113, 113, 0.3); }
 
         .stability-label {
             text-align: center;
@@ -471,14 +507,19 @@
             background: var(--metric-bg);
             border-radius: 12px;
             padding: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--card-glow);
             border: 2px solid var(--card-border);
-            transition: transform 0.2s, background 0.3s ease, border-color 0.3s ease, box-shadow 0.2s;
+            transition: transform 0.2s, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .metric-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px var(--metric-hover-shadow);
+            box-shadow: var(--card-hover-glow);
+        }
+
+        /* Dark mode: blue border glow on hover */
+        [data-theme="dark"] .metric-card:hover {
+            border-color: rgba(100, 149, 237, 0.4);
         }
 
         .metric-title {
@@ -488,6 +529,11 @@
             letter-spacing: 1px;
             margin-bottom: 10px;
             font-weight: bold;
+        }
+
+        /* Dark mode: accent the metric titles */
+        [data-theme="dark"] .metric-title {
+            color: #6495ED;
         }
 
         .metric-value {
@@ -574,9 +620,9 @@
             border-radius: 12px;
             padding: 25px;
             margin-top: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--card-glow);
             border: 2px solid var(--card-border);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .section-title {
@@ -596,9 +642,18 @@
             border-left: 4px solid #1e3a5f;
         }
 
+        /* Dark mode: brighter accent border on articles */
+        [data-theme="dark"] .article-item {
+            border-left-color: #6495ED;
+        }
+
         [dir="rtl"] .article-item {
             border-left: none;
             border-right: 4px solid #1e3a5f;
+        }
+
+        [dir="rtl"][data-theme="dark"] .article-item {
+            border-right-color: #6495ED;
         }
 
         .article-item:hover {
@@ -632,12 +687,17 @@
             text-decoration: underline;
         }
 
+        /* Dark mode: brighter link color */
+        [data-theme="dark"] .article-link {
+            color: #7dabf8;
+        }
+
         /* Footer */
         footer {
             background: var(--container-bg);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--card-glow);
             border: 2px solid var(--card-border);
             font-size: 12px;
             text-align: center;
@@ -675,8 +735,8 @@
             border-radius: 12px;
             padding: 25px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s ease, border-color 0.3s ease;
+            box-shadow: var(--card-glow);
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .knowledge-library h2 {
@@ -708,7 +768,11 @@
 
         .knowledge-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 16px var(--metric-hover-shadow);
+            box-shadow: var(--card-hover-glow);
+        }
+
+        [data-theme="dark"] .knowledge-card:hover {
+            border-color: rgba(100, 149, 237, 0.4);
         }
 
         .knowledge-header {
@@ -723,6 +787,15 @@
 
         .knowledge-header:hover {
             background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 82, 130, 0.15) 100%);
+        }
+
+        /* Dark mode: stronger gradient on knowledge headers */
+        [data-theme="dark"] .knowledge-header {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.08) 0%, rgba(30, 58, 95, 0.15) 100%);
+        }
+
+        [data-theme="dark"] .knowledge-header:hover {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 58, 95, 0.25) 100%);
         }
 
         .knowledge-header-title {
@@ -854,13 +927,25 @@
             background: var(--text-muted);
         }
 
+        /* Dark mode: cyber scrollbar */
+        [data-theme="dark"] .knowledge-content::-webkit-scrollbar-thumb {
+            background: #1e3a5f;
+        }
+
+        [data-theme="dark"] .knowledge-content::-webkit-scrollbar-thumb:hover {
+            background: #6495ED;
+        }
+
         /* RTL Support */
         [dir="rtl"] .pdf-link-section {
             border-left: none;
             border-right: 4px solid #6495ED;
         }
 
-            @media (max-width: 768px) {
+        /* ============================================
+           Responsive - v2.9.0: fixed extra brace
+           ============================================ */
+        @media (max-width: 768px) {
             header {
                 flex-direction: column;
                 gap: 20px;
@@ -892,10 +977,9 @@
                 margin: 0 auto 15px;
             }
 
-    .knowledge-categories {
-        grid-template-columns: 1fr;
-    }
-}
+            .knowledge-categories {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -953,7 +1037,8 @@
                     <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
                     <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
                     <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
-                    <button class="lang-btn" onclick="switchLanguage('fa', this)">פא</button>
+                    <!-- v2.9.0: Fixed - was showing Hebrew chars, now shows Farsi -->
+                    <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
                 </div>
                 
                 <div class="theme-toggle">
@@ -1015,54 +1100,50 @@
                 </div>
 
                 <!-- Currency Status -->
-<div class="metric-card">
-    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
-    <div class="metric-value" id="currencyRate">--</div>
-    <div class="metric-subtitle" id="currencyChange">--</div>
-    <div id="currencyTrend" style="margin-top:10px;"></div>
-    
-    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
-        <span class="sparkline-label">30-Day:</span>
-        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
-        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
-    </div>
-    
-    <!-- Gold Reserves Info (ENHANCED!) -->
-    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
-        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
-            🪙 GOLD RESERVES
-        </div>
-        
-        <!-- Dynamic Gold Value -->
-        <div style="font-size: 18px; color: var(--text-primary); margin-bottom: 6px; font-weight: bold;">
-            <span id="goldValue">~$40-50B</span> USD
-        </div>
-        
-        <!-- Gold Holdings -->
-        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
-            286.8 tons • <span id="goldPrice">$2,750/oz</span>
-        </div>
-        
-        <!-- Gold Price Sparkline -->
-        <div class="sparkline-container" id="goldSparklineContainer" style="display:none; margin-top: 8px;">
-            <span class="sparkline-label" style="font-size: 10px;">Gold Price (30d):</span>
-            <canvas id="goldSparkline" class="sparkline-canvas" style="max-width: 100px;"></canvas>
-            <span class="sparkline-status" id="goldSparklineStatus" style="font-size: 10px;">Loading...</span>
-        </div>
-        
-        <!-- Static Info -->
-        <div style="font-size: 9px; color: var(--text-muted); line-height: 1.5; margin-top: 8px;">
-            2nd largest ME reserves • Protected by 1986 law • 
-            <span id="goldGdpPct">~200%</span> of GDP
-            <a href="https://www.euronews.com/business/2026/02/06/lebanons-424bn-gold-dilemma-a-crisis-lifeline-or-a-last-resort" 
-               target="_blank" 
-               style="color: #6495ED; text-decoration: none; margin-left: 4px;"
-               title="Euronews - Lebanon's Gold Reserves">
-                📊
-            </a>
-        </div>
-    </div>
-</div>
+                <div class="metric-card">
+                    <div class="metric-title" data-i18n="currency">CURRENCY (LBP/USD)</div>
+                    <div class="metric-value" id="currencyRate">--</div>
+                    <div class="metric-subtitle" id="currencyChange">--</div>
+                    <div id="currencyTrend" style="margin-top:10px;"></div>
+                    
+                    <div class="sparkline-container" id="currencySparklineContainer" style="display:none;">
+                        <span class="sparkline-label">30-Day:</span>
+                        <canvas id="currencySparkline" class="sparkline-canvas"></canvas>
+                        <span class="sparkline-status" id="currencySparklineStatus">Loading...</span>
+                    </div>
+                    
+                    <!-- Gold Reserves Info -->
+                    <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
+                            🪙 GOLD RESERVES
+                        </div>
+                        
+                        <div style="font-size: 18px; color: var(--text-primary); margin-bottom: 6px; font-weight: bold;">
+                            <span id="goldValue">~$40-50B</span> USD
+                        </div>
+                        
+                        <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">
+                            286.8 tons • <span id="goldPrice">$2,750/oz</span>
+                        </div>
+                        
+                        <div class="sparkline-container" id="goldSparklineContainer" style="display:none; margin-top: 8px;">
+                            <span class="sparkline-label" style="font-size: 10px;">Gold Price (30d):</span>
+                            <canvas id="goldSparkline" class="sparkline-canvas" style="max-width: 100px;"></canvas>
+                            <span class="sparkline-status" id="goldSparklineStatus" style="font-size: 10px;">Loading...</span>
+                        </div>
+                        
+                        <div style="font-size: 9px; color: var(--text-muted); line-height: 1.5; margin-top: 8px;">
+                            2nd largest ME reserves • Protected by 1986 law • 
+                            <span id="goldGdpPct">~200%</span> of GDP
+                            <a href="https://www.euronews.com/business/2026/02/06/lebanons-424bn-gold-dilemma-a-crisis-lifeline-or-a-last-resort" 
+                               target="_blank" 
+                               style="color: #6495ED; text-decoration: none; margin-left: 4px;"
+                               title="Euronews - Lebanon's Gold Reserves">
+                                📊
+                            </a>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- Bond Yields -->
                 <div class="metric-card">
@@ -1102,190 +1183,189 @@
             </div>
 
             <!-- Knowledge Library Section -->
-<div class="knowledge-library">
-    <h2>
-        <span class="library-icon">📚</span>
-        <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
-    </h2>
-    <p class="open-source-disclaimer">
-        Note: Background information is compiled from open-source research and analysis. For detailed assessments, see linked one-pager documents below.
-    </p>
-    
-    <div class="knowledge-categories">
-        <!-- Security & Hezbollah Dynamics -->
-        <div class="knowledge-card collapsed" id="card-security">
-            <div class="knowledge-header" onclick="toggleKnowledgeCard('security')">
-                <div class="knowledge-header-title">
-                    <span class="category-icon">⚔️</span>
-                    <span data-i18n="catSecurity">Security & Hezbollah Dynamics</span>
-                </div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Hezbollah's Military Capabilities:</strong> Despite the November 2024 ceasefire with Israel, Hezbollah maintains significant military infrastructure in southern Lebanon. The group possesses an estimated arsenal of precision-guided missiles, anti-tank weapons, and drone capabilities developed with Iranian support.</p>
+            <div class="knowledge-library">
+                <h2>
+                    <span class="library-icon">📚</span>
+                    <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
+                </h2>
+                <p class="open-source-disclaimer">
+                    Note: Background information is compiled from open-source research and analysis. For detailed assessments, see linked one-pager documents below.
+                </p>
                 
-                <p><strong>Israeli Strikes & Ceasefire Violations:</strong> Israel conducts periodic airstrikes targeting alleged Hezbollah weapons depots and rearmament activities, citing violations of UNSCR 1701. These operations raise tensions and test the fragile ceasefire arrangements established post-conflict.</p>
+                <div class="knowledge-categories">
+                    <!-- Security & Hezbollah Dynamics -->
+                    <div class="knowledge-card collapsed" id="card-security">
+                        <div class="knowledge-header" onclick="toggleKnowledgeCard('security')">
+                            <div class="knowledge-header-title">
+                                <span class="category-icon">⚔️</span>
+                                <span data-i18n="catSecurity">Security & Hezbollah Dynamics</span>
+                            </div>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="knowledge-content">
+                            <p><strong>Hezbollah's Military Capabilities:</strong> Despite the November 2024 ceasefire with Israel, Hezbollah maintains significant military infrastructure in southern Lebanon. The group possesses an estimated arsenal of precision-guided missiles, anti-tank weapons, and drone capabilities developed with Iranian support.</p>
+                            
+                            <p><strong>Israeli Strikes & Ceasefire Violations:</strong> Israel conducts periodic airstrikes targeting alleged Hezbollah weapons depots and rearmament activities, citing violations of UNSCR 1701. These operations raise tensions and test the fragile ceasefire arrangements established post-conflict.</p>
 
-                <p><strong>UNIFIL Withdrawal:</strong> The United Nations Interim Force in Lebanon (UNIFIL) is drawing down operations, with most peacekeepers scheduled to leave by 2027. This withdrawal creates a security vacuum along the Blue Line, raising concerns about border monitoring and conflict prevention capabilities.</p>
+                            <p><strong>UNIFIL Withdrawal:</strong> The United Nations Interim Force in Lebanon (UNIFIL) is drawing down operations, with most peacekeepers scheduled to leave by 2027. This withdrawal creates a security vacuum along the Blue Line, raising concerns about border monitoring and conflict prevention capabilities.</p>
 
-                <p><strong>Southern Border Security:</strong> The Lebanese Armed Forces (LAF) face challenges asserting authority in southern regions historically controlled by Hezbollah. Limited resources, sectarian considerations, and Hezbollah's parallel security apparatus complicate efforts to establish unified state control.</p>
+                            <p><strong>Southern Border Security:</strong> The Lebanese Armed Forces (LAF) face challenges asserting authority in southern regions historically controlled by Hezbollah. Limited resources, sectarian considerations, and Hezbollah's parallel security apparatus complicate efforts to establish unified state control.</p>
 
-                <p><strong>Rearmament Concerns:</strong> Intelligence reports indicate ongoing weapons transfers from Syria to Hezbollah positions in Lebanon. Western officials cite evidence of arms smuggling through official border crossings and unofficial routes, potentially rebuilding Hezbollah's military capacity faster than the LAF can monitor.</p>
+                            <p><strong>Rearmament Concerns:</strong> Intelligence reports indicate ongoing weapons transfers from Syria to Hezbollah positions in Lebanon. Western officials cite evidence of arms smuggling through official border crossings and unofficial routes, potentially rebuilding Hezbollah's military capacity faster than the LAF can monitor.</p>
 
-                <!-- PDF Resource Link -->
-                <div class="pdf-link-section">
-                    <div class="pdf-link-title">📄 Detailed Analysis:</div>
-                    <a href="hizballah-financing.html" class="pdf-link">
-                        <span class="pdf-icon">📑</span>
-                        <span>Hizballah Financing One-Pager</span>
-                    </a>
-                    <p class="open-source-disclaimer">Comprehensive assessment of Hezbollah's financial networks, revenue sources, and economic influence in Lebanon.</p>
+                            <div class="pdf-link-section">
+                                <div class="pdf-link-title">📄 Detailed Analysis:</div>
+                                <a href="hizballah-financing.html" class="pdf-link">
+                                    <span class="pdf-icon">📑</span>
+                                    <span>Hizballah Financing One-Pager</span>
+                                </a>
+                                <p class="open-source-disclaimer">Comprehensive assessment of Hezbollah's financial networks, revenue sources, and economic influence in Lebanon.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Economic & Financial Collapse -->
+                    <div class="knowledge-card collapsed" id="card-economic">
+                        <div class="knowledge-header" onclick="toggleKnowledgeCard('economic')">
+                            <div class="knowledge-header-title">
+                                <span class="category-icon">💰</span>
+                                <span data-i18n="catEconomic">Economic & Financial Collapse</span>
+                            </div>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="knowledge-content">
+                            <p><strong>Currency Crisis:</strong> The Lebanese pound has collapsed from 1,500 LBP/USD (official rate) to over 89,000 LBP/USD on the black market, representing a 98% devaluation. This hyperinflation has wiped out savings, destroyed purchasing power, and created multiple exchange rates that complicate economic activity.</p>
+                            
+                            <p><strong>Banking Sector Failure:</strong> Lebanon's banking system effectively collapsed in 2019, imposing severe capital controls that prevent depositors from accessing their savings. Banks hold an estimated $70 billion in trapped deposits, with many accounts denominated in now-worthless Lebanese pounds or subject to arbitrary "haircuts" on dollar withdrawals.</p>
+
+                            <p><strong>Gold Reserves - Strategic Asset:</strong></p>
+                            <ul>
+                                <li><strong>Holdings:</strong> Lebanon possesses 286.8 metric tons of gold, the second-largest reserves in the Middle East after Saudi Arabia</li>
+                                <li><strong>Current Value:</strong> See live valuation in the Currency card above (updated dynamically from spot gold prices)</li>
+                                <li><strong>GDP Comparison:</strong> Gold reserves represent over 100% of Lebanon's estimated $20 billion GDP — see live percentage above</li>
+                                <li><strong>Legal Protection:</strong> Protected by 1986 law requiring parliamentary approval for sale; 60% stored in Beirut vaults, 40% in United States</li>
+                                <li><strong>Political Debate:</strong> Ongoing disputes over whether to sell gold to fund government operations, restructure debt, or maintain as strategic reserve</li>
+                            </ul>
+
+                            <p><strong>Sovereign Default:</strong> Lebanon defaulted on its Eurobond debt in March 2020, becoming the first Middle Eastern country to default on sovereign bonds. Negotiations with creditors remain stalled, with 10-year Eurobond yields trading at distressed levels (~45%) reflecting markets' expectation of substantial haircuts on principal.</p>
+
+                            <p><strong>Informal Economy & Smuggling:</strong> The formal economy has contracted dramatically, with GDP falling from $55 billion (2018) to an estimated $20 billion (2025). The informal economy now dominates, including fuel smuggling to Syria, captagon production and trafficking, and various black market activities that generate revenue outside state control.</p>
+
+                            <div class="pdf-link-section">
+                                <div class="pdf-link-title">📄 Detailed Analysis:</div>
+                                <a href="captagon-trade.html" class="pdf-link">
+                                    <span class="pdf-icon">📑</span>
+                                    <span>Captagon Trade - Lebanon Focus</span>
+                                </a>
+                                <p class="open-source-disclaimer">Analysis of captagon production networks in Lebanon, trafficking routes, and economic impact of the illicit drug trade.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Governance & Political Stability -->
+                    <div class="knowledge-card collapsed" id="card-governance">
+                        <div class="knowledge-header" onclick="toggleKnowledgeCard('governance')">
+                            <div class="knowledge-header-title">
+                                <span class="category-icon">🏛️</span>
+                                <span data-i18n="catGovernance">Governance & Political Stability</span>
+                            </div>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="knowledge-content">
+                            <p><strong>Presidential Election (2025):</strong> After a 26-month presidential vacancy, Lebanon elected Joseph Aoun as president on January 9, 2025. A former Lebanese Armed Forces commander, Aoun's election broke a prolonged deadlock but faces challenges building consensus across deeply fractured sectarian political blocs.</p>
+                            
+                            <p><strong>Parliamentary Elections (May 2026):</strong> Lebanon's next parliamentary elections are scheduled for May 10, 2026 (Decree No. 2438). These elections will test whether reform-oriented candidates can challenge entrenched sectarian parties, or if traditional political elites maintain their grip on power despite the economic crisis.</p>
+
+                            <p><strong>Sectarian Power-Sharing System:</strong></p>
+                            <ul>
+                                <li><strong>Confessional Model:</strong> Lebanon's political system allocates positions by religious sect (Maronite president, Sunni prime minister, Shia speaker of parliament)</li>
+                                <li><strong>Paralysis:</strong> Consensus requirements across sectarian lines often result in prolonged government formation crises and policy gridlock</li>
+                                <li><strong>Reform Challenges:</strong> Efforts to reduce sectarianism face resistance from established parties whose power bases depend on maintaining confessional structures</li>
+                                <li><strong>Hezbollah's Veto:</strong> Hezbollah and allied parties hold effective veto power over government decisions, particularly on security and foreign policy issues</li>
+                            </ul>
+
+                            <p><strong>Government Formation Challenges:</strong> Even after presidential elections, forming a functioning cabinet typically takes months of negotiation. Disputes over ministerial portfolios, policy programs, and Hezbollah's weapons regularly stall government formation, leaving caretaker administrations unable to implement major reforms.</p>
+
+                            <p><strong>Judicial Independence:</strong> Lebanon's judiciary faces severe challenges including political interference, resource constraints, and allegations of corruption. The judicial council investigating the 2020 Beirut port explosion has faced repeated obstruction, highlighting the difficulty of holding powerful political actors accountable.</p>
+
+                            <p><strong>State Capacity Erosion:</strong> Years of economic crisis, corruption, and brain drain have hollowed out state institutions. Public services have degraded dramatically, with ministries unable to pay salaries, maintain infrastructure, or deliver basic services, further undermining public trust in government.</p>
+                        </div>
+                    </div>
+
+                    <!-- Regional & External Influence -->
+                    <div class="knowledge-card collapsed" id="card-regional">
+                        <div class="knowledge-header" onclick="toggleKnowledgeCard('regional')">
+                            <div class="knowledge-header-title">
+                                <span class="category-icon">🌍</span>
+                                <span data-i18n="catRegional">Regional & External Influence</span>
+                            </div>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="knowledge-content">
+                            <p><strong>Iranian Support to Hezbollah:</strong> Iran provides Hezbollah with estimated hundreds of millions of dollars annually in financial support, weapons, and training. This relationship makes Hezbollah a key component of Iran's regional deterrence strategy and "axis of resistance," while giving Tehran significant influence over Lebanese politics.</p>
+                            
+                            <p><strong>Syrian Instability Spillover:</strong></p>
+                            <ul>
+                                <li><strong>Refugee Crisis:</strong> Lebanon hosts approximately 1.5 million Syrian refugees, representing nearly 25% of Lebanon's population and straining already degraded public services</li>
+                                <li><strong>Border Security:</strong> The porous Syrian-Lebanese border facilitates weapons smuggling, captagon trafficking, and movement of armed actors between the two countries</li>
+                                <li><strong>Post-Assad Dynamics:</strong> Syria's ongoing instability following the Assad regime's collapse (2024) has complicated Lebanon's security calculations and Hezbollah's supply lines</li>
+                            </ul>
+
+                            <p><strong>Gulf Arab Relations:</strong> Saudi Arabia and other Gulf states historically provided Lebanon with financial support and investment. However, tensions over Hezbollah's role in regional conflicts led to a gradual withdrawal of Gulf engagement. Recent diplomatic overtures suggest cautious re-engagement, but conditional on addressing Hezbollah's influence.</p>
+
+                            <p><strong>US Sanctions & Caesar Act:</strong></p>
+                            <ul>
+                                <li><strong>Hezbollah Sanctions:</strong> Extensive US Treasury designations target Hezbollah's financial networks, businesses, and individual operatives</li>
+                                <li><strong>Caesar Act:</strong> US sanctions on Syria complicate Lebanon's economic ties with its neighbor, particularly regarding energy imports and border trade</li>
+                                <li><strong>Banking Restrictions:</strong> International banks' de-risking has further isolated Lebanon's financial sector from global markets</li>
+                                <li><strong>Humanitarian Exemptions:</strong> Some sanctions include exemptions for humanitarian aid, though implementation challenges remain</li>
+                            </ul>
+
+                            <p><strong>French Diplomatic Engagement:</strong> France, Lebanon's former colonial power, maintains active diplomatic involvement. French initiatives have included hosting donor conferences, mediating political negotiations, and providing humanitarian assistance. However, French leverage remains limited without Lebanese political consensus on reforms.</p>
+
+                            <p><strong>International Donor Conditionality:</strong> International financial institutions and donor countries condition reconstruction aid on implementing anti-corruption measures, restructuring the banking sector, and reducing Hezbollah's influence. Lebanon's failure to meet these conditions has left billions in pledged aid largely undisbursed.</p>
+                        </div>
+                    </div>
+
+                    <!-- Structural Risk Indicators -->
+                    <div class="knowledge-card collapsed" id="card-structural">
+                        <div class="knowledge-header" onclick="toggleKnowledgeCard('structural')">
+                            <div class="knowledge-header-title">
+                                <span class="category-icon">📈</span>
+                                <span data-i18n="catStructural">Structural Risk Indicators</span>
+                            </div>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="knowledge-content">
+                            <p><strong>Electricity Crisis:</strong> Lebanon's national electricity company (EDL) provides only 2-4 hours of power daily in many areas. Citizens rely on expensive private generators, with fuel costs consuming significant portions of household budgets. The electricity crisis reflects broader state failure, corruption in the energy sector, and inability to maintain basic infrastructure.</p>
+                            
+                            <p><strong>Water Infrastructure Collapse:</strong></p>
+                            <ul>
+                                <li><strong>Access:</strong> Only 50-60% of population has reliable access to piped water; many rely on private water trucks</li>
+                                <li><strong>Quality:</strong> Degraded treatment facilities and aging pipes compromise water quality and public health</li>
+                                <li><strong>Management:</strong> Weak regulatory oversight and political interference have prevented necessary investments in water infrastructure</li>
+                            </ul>
+
+                            <p><strong>Healthcare System Degradation:</strong> Lebanon's once-strong healthcare system has collapsed under economic pressures. Many hospitals operate at minimal capacity due to medicine shortages, fuel for generators, and emigration of medical professionals. The brain drain has particularly affected specialized medical care and emergency services.</p>
+
+                            <p><strong>Brain Drain & Emigration:</strong> An estimated 200,000+ Lebanese have emigrated since 2019, primarily young professionals and skilled workers. This exodus includes doctors, engineers, IT specialists, and entrepreneurs seeking opportunities abroad. The loss of human capital further undermines Lebanon's recovery prospects and hollows out professional sectors.</p>
+
+                            <p><strong>Poverty & Food Insecurity:</strong></p>
+                            <ul>
+                                <li><strong>Poverty Rate:</strong> Over 80% of population now lives below the poverty line, up from 28% in 2019</li>
+                                <li><strong>Food Security:</strong> Lebanon imports 80% of food; currency collapse has made basic goods unaffordable for many families</li>
+                                <li><strong>Malnutrition:</strong> Rising rates of malnutrition, particularly among children, as families cut meals and nutritional quality</li>
+                                <li><strong>Humanitarian Aid:</strong> International organizations provide essential support, but demand far exceeds available assistance</li>
+                            </ul>
+
+                            <p><strong>Education Crisis:</strong> Public schools lack basic resources, with teacher strikes common due to salary devaluation. Private schools, historically preferred by middle-class families, have become unaffordable. School attendance rates have dropped, and educational quality has declined significantly, threatening future human capital development.</p>
+
+                            <p><strong>Social Safety Net Collapse:</strong> Lebanon has no functional social safety net. The absence of unemployment insurance, adequate pension systems, or comprehensive public assistance leaves vulnerable populations completely exposed to economic shocks. This vulnerability increases social tensions and potential for unrest.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Economic & Financial Collapse -->
-        <div class="knowledge-card collapsed" id="card-economic">
-            <div class="knowledge-header" onclick="toggleKnowledgeCard('economic')">
-                <div class="knowledge-header-title">
-                    <span class="category-icon">💰</span>
-                    <span data-i18n="catEconomic">Economic & Financial Collapse</span>
-                </div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Currency Crisis:</strong> The Lebanese pound has collapsed from 1,500 LBP/USD (official rate) to over 89,000 LBP/USD on the black market, representing a 98% devaluation. This hyperinflation has wiped out savings, destroyed purchasing power, and created multiple exchange rates that complicate economic activity.</p>
-                
-                <p><strong>Banking Sector Failure:</strong> Lebanon's banking system effectively collapsed in 2019, imposing severe capital controls that prevent depositors from accessing their savings. Banks hold an estimated $70 billion in trapped deposits, with many accounts denominated in now-worthless Lebanese pounds or subject to arbitrary "haircuts" on dollar withdrawals.</p>
-
-                <p><strong>Gold Reserves - Strategic Asset:</strong></p>
-                <ul>
-                    <li><strong>Holdings:</strong> Lebanon possesses 286.8 metric tons of gold, the second-largest reserves in the Middle East after Saudi Arabia</li>
-                    <li><strong>Current Value:</strong> Approximately $25-27 billion at current gold prices (~$2,750/oz)</li>
-                    <li><strong>GDP Comparison:</strong> Gold reserves represent over 125% of Lebanon's estimated $20 billion GDP</li>
-                    <li><strong>Legal Protection:</strong> Protected by 1986 law requiring parliamentary approval for sale; 60% stored in Beirut vaults, 40% in United States</li>
-                    <li><strong>Political Debate:</strong> Ongoing disputes over whether to sell gold to fund government operations, restructure debt, or maintain as strategic reserve</li>
-                </ul>
-
-                <p><strong>Sovereign Default:</strong> Lebanon defaulted on its Eurobond debt in March 2020, becoming the first Middle Eastern country to default on sovereign bonds. Negotiations with creditors remain stalled, with 10-year Eurobond yields trading at distressed levels (~45%) reflecting markets' expectation of substantial haircuts on principal.</p>
-
-                <p><strong>Informal Economy & Smuggling:</strong> The formal economy has contracted dramatically, with GDP falling from $55 billion (2018) to an estimated $20 billion (2025). The informal economy now dominates, including fuel smuggling to Syria, captagon production and trafficking, and various black market activities that generate revenue outside state control.</p>
-
-                <!-- PDF Resource Link -->
-                <div class="pdf-link-section">
-                    <div class="pdf-link-title">📄 Detailed Analysis:</div>
-                    <a href="captagon-trade.html" class="pdf-link">
-                        <span class="pdf-icon">📑</span>
-                        <span>Captagon Trade - Lebanon Focus</span>
-                    </a>
-                    <p class="open-source-disclaimer">Analysis of captagon production networks in Lebanon, trafficking routes, and economic impact of the illicit drug trade.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Governance & Political Stability -->
-        <div class="knowledge-card collapsed" id="card-governance">
-            <div class="knowledge-header" onclick="toggleKnowledgeCard('governance')">
-                <div class="knowledge-header-title">
-                    <span class="category-icon">🏛️</span>
-                    <span data-i18n="catGovernance">Governance & Political Stability</span>
-                </div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Presidential Election (2025):</strong> After a 26-month presidential vacancy, Lebanon elected Joseph Aoun as president on January 9, 2025. A former Lebanese Armed Forces commander, Aoun's election broke a prolonged deadlock but faces challenges building consensus across deeply fractured sectarian political blocs.</p>
-                
-                <p><strong>Parliamentary Elections (May 2026):</strong> Lebanon's next parliamentary elections are scheduled for May 10, 2026 (Decree No. 2438). These elections will test whether reform-oriented candidates can challenge entrenched sectarian parties, or if traditional political elites maintain their grip on power despite the economic crisis.</p>
-
-                <p><strong>Sectarian Power-Sharing System:</strong></p>
-                <ul>
-                    <li><strong>Confessional Model:</strong> Lebanon's political system allocates positions by religious sect (Maronite president, Sunni prime minister, Shia speaker of parliament)</li>
-                    <li><strong>Paralysis:</strong> Consensus requirements across sectarian lines often result in prolonged government formation crises and policy gridlock</li>
-                    <li><strong>Reform Challenges:</strong> Efforts to reduce sectarianism face resistance from established parties whose power bases depend on maintaining confessional structures</li>
-                    <li><strong>Hezbollah's Veto:</strong> Hezbollah and allied parties hold effective veto power over government decisions, particularly on security and foreign policy issues</li>
-                </ul>
-
-                <p><strong>Government Formation Challenges:</strong> Even after presidential elections, forming a functioning cabinet typically takes months of negotiation. Disputes over ministerial portfolios, policy programs, and Hezbollah's weapons regularly stall government formation, leaving caretaker administrations unable to implement major reforms.</p>
-
-                <p><strong>Judicial Independence:</strong> Lebanon's judiciary faces severe challenges including political interference, resource constraints, and allegations of corruption. The judicial council investigating the 2020 Beirut port explosion has faced repeated obstruction, highlighting the difficulty of holding powerful political actors accountable.</p>
-
-                <p><strong>State Capacity Erosion:</strong> Years of economic crisis, corruption, and brain drain have hollowed out state institutions. Public services have degraded dramatically, with ministries unable to pay salaries, maintain infrastructure, or deliver basic services, further undermining public trust in government.</p>
-            </div>
-        </div>
-
-        <!-- Regional & External Influence -->
-        <div class="knowledge-card collapsed" id="card-regional">
-            <div class="knowledge-header" onclick="toggleKnowledgeCard('regional')">
-                <div class="knowledge-header-title">
-                    <span class="category-icon">🌍</span>
-                    <span data-i18n="catRegional">Regional & External Influence</span>
-                </div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Iranian Support to Hezbollah:</strong> Iran provides Hezbollah with estimated hundreds of millions of dollars annually in financial support, weapons, and training. This relationship makes Hezbollah a key component of Iran's regional deterrence strategy and "axis of resistance," while giving Tehran significant influence over Lebanese politics.</p>
-                
-                <p><strong>Syrian Instability Spillover:</strong></p>
-                <ul>
-                    <li><strong>Refugee Crisis:</strong> Lebanon hosts approximately 1.5 million Syrian refugees, representing nearly 25% of Lebanon's population and straining already degraded public services</li>
-                    <li><strong>Border Security:</strong> The porous Syrian-Lebanese border facilitates weapons smuggling, captagon trafficking, and movement of armed actors between the two countries</li>
-                    <li><strong>Post-Assad Dynamics:</strong> Syria's ongoing instability following the Assad regime's collapse (2024) has complicated Lebanon's security calculations and Hezbollah's supply lines</li>
-                </ul>
-
-                <p><strong>Gulf Arab Relations:</strong> Saudi Arabia and other Gulf states historically provided Lebanon with financial support and investment. However, tensions over Hezbollah's role in regional conflicts led to a gradual withdrawal of Gulf engagement. Recent diplomatic overtures suggest cautious re-engagement, but conditional on addressing Hezbollah's influence.</p>
-
-                <p><strong>US Sanctions & Caesar Act:</strong></p>
-                <ul>
-                    <li><strong>Hezbollah Sanctions:</strong> Extensive US Treasury designations target Hezbollah's financial networks, businesses, and individual operatives</li>
-                    <li><strong>Caesar Act:</strong> US sanctions on Syria complicate Lebanon's economic ties with its neighbor, particularly regarding energy imports and border trade</li>
-                    <li><strong>Banking Restrictions:</strong> International banks' de-risking has further isolated Lebanon's financial sector from global markets</li>
-                    <li><strong>Humanitarian Exemptions:</strong> Some sanctions include exemptions for humanitarian aid, though implementation challenges remain</li>
-                </ul>
-
-                <p><strong>French Diplomatic Engagement:</strong> France, Lebanon's former colonial power, maintains active diplomatic involvement. French initiatives have included hosting donor conferences, mediating political negotiations, and providing humanitarian assistance. However, French leverage remains limited without Lebanese political consensus on reforms.</p>
-
-                <p><strong>International Donor Conditionality:</strong> International financial institutions and donor countries condition reconstruction aid on implementing anti-corruption measures, restructuring the banking sector, and reducing Hezbollah's influence. Lebanon's failure to meet these conditions has left billions in pledged aid largely undisbursed.</p>
-            </div>
-        </div>
-
-        <!-- Structural Risk Indicators -->
-        <div class="knowledge-card collapsed" id="card-structural">
-            <div class="knowledge-header" onclick="toggleKnowledgeCard('structural')">
-                <div class="knowledge-header-title">
-                    <span class="category-icon">📈</span>
-                    <span data-i18n="catStructural">Structural Risk Indicators</span>
-                </div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Electricity Crisis:</strong> Lebanon's national electricity company (EDL) provides only 2-4 hours of power daily in many areas. Citizens rely on expensive private generators, with fuel costs consuming significant portions of household budgets. The electricity crisis reflects broader state failure, corruption in the energy sector, and inability to maintain basic infrastructure.</p>
-                
-                <p><strong>Water Infrastructure Collapse:</strong></p>
-                <ul>
-                    <li><strong>Access:</strong> Only 50-60% of population has reliable access to piped water; many rely on private water trucks</li>
-                    <li><strong>Quality:</strong> Degraded treatment facilities and aging pipes compromise water quality and public health</li>
-                    <li><strong>Management:</strong> Weak regulatory oversight and political interference have prevented necessary investments in water infrastructure</li>
-                </ul>
-
-                <p><strong>Healthcare System Degradation:</strong> Lebanon's once-strong healthcare system has collapsed under economic pressures. Many hospitals operate at minimal capacity due to medicine shortages, fuel for generators, and emigration of medical professionals. The brain drain has particularly affected specialized medical care and emergency services.</p>
-
-                <p><strong>Brain Drain & Emigration:</strong> An estimated 200,000+ Lebanese have emigrated since 2019, primarily young professionals and skilled workers. This exodus includes doctors, engineers, IT specialists, and entrepreneurs seeking opportunities abroad. The loss of human capital further undermines Lebanon's recovery prospects and hollows out professional sectors.</p>
-
-                <p><strong>Poverty & Food Insecurity:</strong></p>
-                <ul>
-                    <li><strong>Poverty Rate:</strong> Over 80% of population now lives below the poverty line, up from 28% in 2019</li>
-                    <li><strong>Food Security:</strong> Lebanon imports 80% of food; currency collapse has made basic goods unaffordable for many families</li>
-                    <li><strong>Malnutrition:</strong> Rising rates of malnutrition, particularly among children, as families cut meals and nutritional quality</li>
-                    <li><strong>Humanitarian Aid:</strong> International organizations provide essential support, but demand far exceeds available assistance</li>
-                </ul>
-
-                <p><strong>Education Crisis:</strong> Public schools lack basic resources, with teacher strikes common due to salary devaluation. Private schools, historically preferred by middle-class families, have become unaffordable. School attendance rates have dropped, and educational quality has declined significantly, threatening future human capital development.</p>
-
-                <p><strong>Social Safety Net Collapse:</strong> Lebanon has no functional social safety net. The absence of unemployment insurance, adequate pension systems, or comprehensive public assistance leaves vulnerable populations completely exposed to economic shocks. This vulnerability increases social tensions and potential for unrest.</p>
-            </div>
-        </div>
-    </div>
-</div>
             <!-- Recent Hezbollah-Related Articles -->
             <div class="articles-section">
                 <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 7 Days)</div>
@@ -1301,7 +1381,7 @@
             <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:#6495ED;">asifahanalytics@gmail.com</a></div>
             
             <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v2.8.0</div>
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v2.9.0</div>
                 <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
             </div>
 
@@ -1320,7 +1400,6 @@
     </div>
 
     <script>
-        const BACKEND_URL = 'https://asifah-backend.onrender.com';
         const LEBANON_BACKEND_URL = 'https://lebanon-stability-backend.onrender.com';
 
         // Theme Management
@@ -1336,7 +1415,6 @@
             localStorage.setItem('asifah-theme', newTheme);
         }
 
-        // Initialize theme on page load
         initTheme();
 
         // Loading Overlay Management
@@ -1409,7 +1487,7 @@
             }
         }
 
-// Create sparkline charts
+        // Create sparkline charts
         function createSparklines(trends) {
             const commonOptions = {
                 responsive: true,
@@ -1534,7 +1612,7 @@
                 document.getElementById('hezbollahSparklineContainer').style.display = 'flex';
             }
 
-            // Gold Price Sparkline (NEW!)
+            // Gold Price Sparkline
             if (trends.gold_price && trends.gold_price.length > 0) {
                 const ctx = document.getElementById('goldSparkline');
                 new Chart(ctx, {
@@ -1543,7 +1621,7 @@
                         labels: trends.dates,
                         datasets: [{
                             data: trends.gold_price,
-                            borderColor: '#fbbf24', // Gold color
+                            borderColor: '#fbbf24',
                             backgroundColor: 'rgba(251, 191, 36, 0.1)',
                             fill: true
                         }]
@@ -1630,12 +1708,9 @@
                 document.getElementById('daysWithPresident').textContent = govt.days_with_president || '0';
             }
             
-            // Calculate days until May 10, 2026 (failsafe in case backend hasn't updated)
             const electionDate = new Date('2026-05-10T00:00:00');
             const today = new Date();
             const daysUntil = Math.ceil((electionDate - today) / (1000 * 60 * 60 * 24));
-            
-            // Use backend value if available, otherwise use calculated value
             document.getElementById('daysUntilElection').textContent = govt.days_until_election || daysUntil;
             
             // Currency
@@ -1652,20 +1727,16 @@
                 const change24h = currency.change_24h || 0;
                 const pressure = currency.pressure || 'NEUTRAL';
                 
-                // Enhanced trend indicators with Billboard-style arrows
                 let trendIcon, trendText, trendColor;
                 if (Math.abs(change24h) < 0.01) {
-                    // No change
                     trendIcon = '➡️';
                     trendText = 'NO CHANGE';
                     trendColor = '#7a9ab8';
                 } else if (change24h > 0) {
-                    // Weakening (bad for Lebanon)
                     trendIcon = '⬇️';
                     trendText = 'WEAKENING';
                     trendColor = '#f87171';
                 } else {
-                    // Strengthening (good for Lebanon)
                     trendIcon = '⬆️';
                     trendText = 'STRENGTHENING';
                     trendColor = '#4ade80';
@@ -1683,20 +1754,21 @@
                 `;
             }
 
-            // Gold Reserves (NEW!)
-const gold = data.gold_reserves || {};
-if (gold.total_value_billions) {
-    document.getElementById('goldValue').textContent = gold.display_value || `$${gold.total_value_billions}B`;
-    
-    if (gold.price_per_oz) {
-        document.getElementById('goldPrice').textContent = 
-            `$${gold.price_per_oz.toLocaleString('en-US', {maximumFractionDigits: 0})}/oz`;
-    }
-    
-    if (gold.gdp_percentage) {
-        document.getElementById('goldGdpPct').textContent = `~${gold.gdp_percentage}%`;
-    }
-}
+            // Gold Reserves
+            const gold = data.gold_reserves || {};
+            if (gold.total_value_billions) {
+                document.getElementById('goldValue').textContent = gold.display_value || `$${gold.total_value_billions}B`;
+                
+                if (gold.price_per_oz) {
+                    document.getElementById('goldPrice').textContent = 
+                        `$${gold.price_per_oz.toLocaleString('en-US', {maximumFractionDigits: 0})}/oz`;
+                }
+                
+                if (gold.gdp_percentage) {
+                    document.getElementById('goldGdpPct').textContent = `~${gold.gdp_percentage}%`;
+                }
+            }
+
             // Bonds
             const bonds = data.bonds || {};
             if (bonds.yield) {
@@ -1764,121 +1836,121 @@ if (gold.total_value_billions) {
 
         // Translation system
         const translations = {
-    en: {
-        pageTitle: "🇱🇧 LEBANON STABILITY INDEX",
-        pageSubtitle: "Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status",
-        lastUpdated: "Last updated: ",
-        backLink: "← Back to Dashboard",
-        themeToggle: "Theme",
-        stabilityTitle: "LEBANON STABILITY INDEX",
-        stabilityLegend: "100 = Stable Regime | 0 = Imminent Collapse",
-        govStatus: "GOVERNMENT STATUS",
-        president: "President: Joseph Aoun",
-        daysInOffice: "Days in Office:",
-        elected: "Elected:",
-        daysUntilElections: "Days Until Elections:",
-        currency: "CURRENCY (LBP/USD)",
-        bondYield: "10Y EUROBOND YIELD",
-        bondSubtitle: "Sovereign default risk",
-        hezbollahActivity: "HEZBOLLAH ACTIVITY",
-        last7Days: "Last 7 days",
-        rearmamentReports: "Rearmament Reports",
-        strikeMentions: "Strike Mentions",
-        recentArticles: "📰 Recent Hezbollah & Security Articles (Last 7 Days)",
-        knowledgeLibraryTitle: "Knowledge Library",
-        catSecurity: "Security & Hezbollah Dynamics",
-        catEconomic: "Economic & Financial Collapse",
-        catGovernance: "Governance & Political Stability",
-        catRegional: "Regional & External Influence",
-        catStructural: "Structural Risk Indicators"
-    },
-    he: {
-        pageTitle: "🇱🇧 מדד יציבות לבנון",
-        pageSubtitle: "ניתוח רב-גורמי: מצב פוליטי, כלכלי, ביטחוני וחיזבאללה",
-        lastUpdated: "עודכן לאחרונה: ",
-        backLink: "→ חזרה למרכז הבקרה",
-        themeToggle: "ערכת נושא",
-        stabilityTitle: "מדד יציבות לבנון",
-        stabilityLegend: "100 = משטר יציב | 0 = קריסה קרובה",
-        govStatus: "סטטוס הממשלה",
-        president: "נשיא: ג'וזף עון",
-        daysInOffice: "ימים בתפקיד:",
-        elected: "נבחר:",
-        daysUntilElections: "ימים עד הבחירות:",
-        currency: "מטבע (לירה לבנונית/דולר)",
-        bondYield: "תשואת איגרות חוב 10 שנים",
-        bondSubtitle: "סיכון למחדל ריבוני",
-        hezbollahActivity: "פעילות חיזבאללה",
-        last7Days: "7 ימים אחרונים",
-        rearmamentReports: "דיווחי חימוש מחדש",
-        strikeMentions: "אזכורי תקיפות",
-        recentArticles: "📰 כתבות אחרונות על חיזבאללה וביטחון (7 ימים)",
-        knowledgeLibraryTitle: "ספריית ידע",
-        catSecurity: "ביטחון ודינמיקת חיזבאללה",
-        catEconomic: "קריסה כלכלית ופיננסית",
-        catGovernance: "ממשל ויציבות פוליטית",
-        catRegional: "השפעה אזורית וחיצונית",
-        catStructural: "מדדי סיכון מבניים"
-    },
-    ar: {
-        pageTitle: "🇱🇧 مؤشر استقرار لبنان",
-        pageSubtitle: "تحليل متعدد العوامل: الوضع السياسي والاقتصادي والأمني وحزب الله",
-        lastUpdated: "آخر تحديث: ",
-        backLink: "→ العودة إلى لوحة التحكم",
-        themeToggle: "السمة",
-        stabilityTitle: "مؤشر استقرار لبنان",
-        stabilityLegend: "100 = نظام مستقر | 0 = انهيار وشيك",
-        govStatus: "حالة الحكومة",
-        president: "الرئيس: جوزيف عون",
-        daysInOffice: "أيام في المنصب:",
-        elected: "انتخب:",
-        daysUntilElections: "أيام حتى الانتخابات:",
-        currency: "العملة (ليرة لبنانية/دولار)",
-        bondYield: "عائد السندات 10 سنوات",
-        bondSubtitle: "مخاطر التخلف عن السداد السيادي",
-        hezbollahActivity: "نشاط حزب الله",
-        last7Days: "آخر 7 أيام",
-        rearmamentReports: "تقارير إعادة التسلح",
-        strikeMentions: "إشارات الضربات",
-        recentArticles: "📰 مقالات حديثة عن حزب الله والأمن (7 أيام)",
-        knowledgeLibraryTitle: "مكتبة المعرفة",
-        catSecurity: "الأمن وديناميكيات حزب الله",
-        catEconomic: "الانهيار الاقتصادي والمالي",
-        catGovernance: "الحوكمة والاستقرار السياسي",
-        catRegional: "النفوذ الإقليمي والخارجي",
-        catStructural: "مؤشرات المخاطر الهيكلية"
-    },
-    fa: {
-        pageTitle: "🇱🇧 شاخص ثبات لبنان",
-        pageSubtitle: "تحلیل چندعاملی: وضعیت سیاسی، اقتصادی، امنیتی و حزب‌الله",
-        lastUpdated: "آخرین به‌روزرسانی: ",
-        backLink: "→ بازگشت به داشبورد",
-        themeToggle: "پوسته",
-        stabilityTitle: "شاخص ثبات لبنان",
-        stabilityLegend: "100 = رژیم پایدار | 0 = فروپاشی قریب‌الوقوع",
-        govStatus: "وضعیت دولت",
-        president: "رئیس‌جمهور: ژوزف عون",
-        daysInOffice: "روزهای در مقام:",
-        elected: "انتخاب شده:",
-        daysUntilElections: "روزها تا انتخابات:",
-        currency: "ارز (لیره لبنان/دلار)",
-        bondYield: "بازده اوراق قرضه 10 ساله",
-        bondSubtitle: "ریسک نکول حاکمیتی",
-        hezbollahActivity: "فعالیت حزب‌الله",
-        last7Days: "7 روز گذشته",
-        rearmamentReports: "گزارش‌های تسلیح مجدد",
-        strikeMentions: "اشاره به حملات",
-        recentArticles: "📰 مقالات اخیر درباره حزب‌الله و امنیت (7 روز)",
-        knowledgeLibraryTitle: "کتابخانه دانش",
-        catSecurity: "امنیت و پویایی‌های حزب‌الله",
-        catEconomic: "فروپاشی اقتصادی و مالی",
-        catGovernance: "حکومت و ثبات سیاسی",
-        catRegional: "نفوذ منطقه‌ای و خارجی",
-        catStructural: "شاخص‌های ریسک ساختاری"
-    }
-};
+            en: {
+                pageTitle: "🇱🇧 LEBANON STABILITY INDEX",
+                pageSubtitle: "Multi-Factor Analysis: Political, Economic, Security & Hezbollah Status",
+                lastUpdated: "Last updated: ",
+                backLink: "← Back to Dashboard",
+                themeToggle: "Theme",
+                stabilityTitle: "LEBANON STABILITY INDEX",
+                stabilityLegend: "100 = Stable Regime | 0 = Imminent Collapse",
+                govStatus: "GOVERNMENT STATUS",
+                president: "President: Joseph Aoun",
+                daysInOffice: "Days in Office:",
+                elected: "Elected:",
+                daysUntilElections: "Days Until Elections:",
+                currency: "CURRENCY (LBP/USD)",
+                bondYield: "10Y EUROBOND YIELD",
+                bondSubtitle: "Sovereign default risk",
+                hezbollahActivity: "HEZBOLLAH ACTIVITY",
+                last7Days: "Last 7 days",
+                rearmamentReports: "Rearmament Reports",
+                strikeMentions: "Strike Mentions",
+                recentArticles: "📰 Recent Hezbollah & Security Articles (Last 7 Days)",
+                knowledgeLibraryTitle: "Knowledge Library",
+                catSecurity: "Security & Hezbollah Dynamics",
+                catEconomic: "Economic & Financial Collapse",
+                catGovernance: "Governance & Political Stability",
+                catRegional: "Regional & External Influence",
+                catStructural: "Structural Risk Indicators"
+            },
+            he: {
+                pageTitle: "🇱🇧 מדד יציבות לבנון",
+                pageSubtitle: "ניתוח רב-גורמי: מצב פוליטי, כלכלי, ביטחוני וחיזבאללה",
+                lastUpdated: "עודכן לאחרונה: ",
+                backLink: "→ חזרה למרכז הבקרה",
+                themeToggle: "ערכת נושא",
+                stabilityTitle: "מדד יציבות לבנון",
+                stabilityLegend: "100 = משטר יציב | 0 = קריסה קרובה",
+                govStatus: "סטטוס הממשלה",
+                president: "נשיא: ג'וזף עון",
+                daysInOffice: "ימים בתפקיד:",
+                elected: "נבחר:",
+                daysUntilElections: "ימים עד הבחירות:",
+                currency: "מטבע (לירה לבנונית/דולר)",
+                bondYield: "תשואת איגרות חוב 10 שנים",
+                bondSubtitle: "סיכון למחדל ריבוני",
+                hezbollahActivity: "פעילות חיזבאללה",
+                last7Days: "7 ימים אחרונים",
+                rearmamentReports: "דיווחי חימוש מחדש",
+                strikeMentions: "אזכורי תקיפות",
+                recentArticles: "📰 כתבות אחרונות על חיזבאללה וביטחון (7 ימים)",
+                knowledgeLibraryTitle: "ספריית ידע",
+                catSecurity: "ביטחון ודינמיקת חיזבאללה",
+                catEconomic: "קריסה כלכלית ופיננסית",
+                catGovernance: "ממשל ויציבות פוליטית",
+                catRegional: "השפעה אזורית וחיצונית",
+                catStructural: "מדדי סיכון מבניים"
+            },
+            ar: {
+                pageTitle: "🇱🇧 مؤشر استقرار لبنان",
+                pageSubtitle: "تحليل متعدد العوامل: الوضع السياسي والاقتصادي والأمني وحزب الله",
+                lastUpdated: "آخر تحديث: ",
+                backLink: "→ العودة إلى لوحة التحكم",
+                themeToggle: "السمة",
+                stabilityTitle: "مؤشر استقرار لبنان",
+                stabilityLegend: "100 = نظام مستقر | 0 = انهيار وشيك",
+                govStatus: "حالة الحكومة",
+                president: "الرئيس: جوزيف عون",
+                daysInOffice: "أيام في المنصب:",
+                elected: "انتخب:",
+                daysUntilElections: "أيام حتى الانتخابات:",
+                currency: "العملة (ليرة لبنانية/دولار)",
+                bondYield: "عائد السندات 10 سنوات",
+                bondSubtitle: "مخاطر التخلف عن السداد السيادي",
+                hezbollahActivity: "نشاط حزب الله",
+                last7Days: "آخر 7 أيام",
+                rearmamentReports: "تقارير إعادة التسلح",
+                strikeMentions: "إشارات الضربات",
+                recentArticles: "📰 مقالات حديثة عن حزب الله والأمن (7 أيام)",
+                knowledgeLibraryTitle: "مكتبة المعرفة",
+                catSecurity: "الأمن وديناميكيات حزب الله",
+                catEconomic: "الانهيار الاقتصادي والمالي",
+                catGovernance: "الحوكمة والاستقرار السياسي",
+                catRegional: "النفوذ الإقليمي والخارجي",
+                catStructural: "مؤشرات المخاطر الهيكلية"
+            },
+            fa: {
+                pageTitle: "🇱🇧 شاخص ثبات لبنان",
+                pageSubtitle: "تحلیل چندعاملی: وضعیت سیاسی، اقتصادی، امنیتی و حزب‌الله",
+                lastUpdated: "آخرین به‌روزرسانی: ",
+                backLink: "→ بازگشت به داشبورد",
+                themeToggle: "پوسته",
+                stabilityTitle: "شاخص ثبات لبنان",
+                stabilityLegend: "100 = رژیم پایدار | 0 = فروپاشی قریب‌الوقوع",
+                govStatus: "وضعیت دولت",
+                president: "رئیس‌جمهور: ژوزف عون",
+                daysInOffice: "روزهای در مقام:",
+                elected: "انتخاب شده:",
+                daysUntilElections: "روزها تا انتخابات:",
+                currency: "ارز (لیره لبنان/دلار)",
+                bondYield: "بازده اوراق قرضه 10 ساله",
+                bondSubtitle: "ریسک نکول حاکمیتی",
+                hezbollahActivity: "فعالیت حزب‌الله",
+                last7Days: "7 روز گذشته",
+                rearmamentReports: "گزارش‌های تسلیح مجدد",
+                strikeMentions: "اشاره به حملات",
+                recentArticles: "📰 مقالات اخیر درباره حزب‌الله و امنیت (7 روز)",
+                knowledgeLibraryTitle: "کتابخانه دانش",
+                catSecurity: "امنیت و پویایی‌های حزب‌الله",
+                catEconomic: "فروپاشی اقتصادی و مالی",
+                catGovernance: "حکومت و ثبات سیاسی",
+                catRegional: "نفوذ منطقه‌ای و خارجی",
+                catStructural: "شاخص‌های ریسک ساختاری"
+            }
+        };
 
-function switchLanguage(lang, button) {
+        function switchLanguage(lang, button) {
             document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             button.classList.add('active');
 
@@ -1906,7 +1978,7 @@ function switchLanguage(lang, button) {
             });
         }
 
-        // Knowledge Library Toggle Function
+        // Knowledge Library Toggle
         function toggleKnowledgeCard(cardId) {
             const card = document.getElementById(`card-${cardId}`);
             if (card) {
