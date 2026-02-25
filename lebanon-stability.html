@@ -15,6 +15,10 @@
     <!-- Chart.js for sparklines -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
+    <!-- Leaflet for Lebanon Map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -942,6 +946,32 @@
             border-right: 4px solid #6495ED;
         }
 
+        /* Lebanon Map */
+        .lebanon-map-section {
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-glow);
+            transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .lebanon-map-section h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+
+        #lebanon-map {
+            width: 100%;
+            height: 450px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+        }
+
         /* ============================================
            Responsive - v2.9.0: fixed extra brace
            ============================================ */
@@ -1076,6 +1106,14 @@
                     <div class="metric-subtitle" data-i18n="president">President: Joseph Aoun</div>
                     <div class="government-status">
                         <div class="government-status-item">
+                            <span class="status-label">Prime Minister:</span>
+                            <span class="status-value">Nawaf Salam</span>
+                        </div>
+                        <div class="government-status-item">
+                            <span class="status-label">Speaker of Parliament:</span>
+                            <span class="status-value">Nabih Berri</span>
+                        </div>
+                        <div class="government-status-item">
                             <span class="status-label" data-i18n="daysInOffice">Days in Office:</span>
                             <span class="status-value" id="daysWithPresident">--</span>
                         </div>
@@ -1098,6 +1136,16 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Election News Scanner -->
+                    <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border);">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
+                            🗳️ ELECTION NEWS
+                        </div>
+                        <div id="electionNewsContainer" style="font-size: 12px;">
+                            <span style="color: var(--text-secondary); font-style: italic;">Loading...</span>
+                        </div>
+                    </div>
 
                 <!-- Currency Status -->
                 <div class="metric-card">
@@ -1242,6 +1290,12 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Lebanon Map -->
+            <div class="lebanon-map-section">
+                <h2>🗺️ Map of Lebanon</h2>
+                <div id="lebanon-map"></div>
             </div>
 
             <!-- Knowledge Library Section -->
@@ -1430,7 +1484,7 @@
 
             <!-- Recent Hezbollah-Related Articles -->
             <div class="articles-section">
-                <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 7 Days)</div>
+                <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 30 Days)</div>
                 <div id="articlesContainer"></div>
             </div>
         </div>
@@ -1727,7 +1781,9 @@
                 
                 displayData(data);
                 await loadTrendData();
+                loadElectionNews();
                 hideLoadingOverlay();
+                setTimeout(() => { initLebanonMap(); }, 300);
                 
             } catch (error) {
                 console.error('Error loading Lebanon data:', error);
@@ -1966,7 +2022,7 @@
                 last30Days: "Last 30 days",
                 rearmamentReports: "Rearmament Reports",
                 strikeMentions: "Strike Mentions",
-                recentArticles: "📰 Recent Hezbollah & Security Articles (Last 7 Days)",
+                recentArticles: "📰 Recent Hezbollah & Security Articles (Last 30 Days)",
                 knowledgeLibraryTitle: "Knowledge Library",
                 catSecurity: "Security & Hezbollah Dynamics",
                 catEconomic: "Economic & Financial Collapse",
@@ -1994,7 +2050,7 @@
                 last30Days: "30 ימים אחרונים",
                 rearmamentReports: "דיווחי חימוש מחדש",
                 strikeMentions: "אזכורי תקיפות",
-                recentArticles: "📰 כתבות אחרונות על חיזבאללה וביטחון (7 ימים)",
+                recentArticles: "📰 כתבות אחרונות על חיזבאללה וביטחון (30 ימים)",
                 knowledgeLibraryTitle: "ספריית ידע",
                 catSecurity: "ביטחון ודינמיקת חיזבאללה",
                 catEconomic: "קריסה כלכלית ופיננסית",
@@ -2022,7 +2078,7 @@
                 last30Days: "آخر 30 يومًا",
                 rearmamentReports: "تقارير إعادة التسلح",
                 strikeMentions: "إشارات الضربات",
-                recentArticles: "📰 مقالات حديثة عن حزب الله والأمن (7 أيام)",
+                recentArticles: "📰 مقالات حديثة عن حزب الله والأمن (30 يومًا)",
                 knowledgeLibraryTitle: "مكتبة المعرفة",
                 catSecurity: "الأمن وديناميكيات حزب الله",
                 catEconomic: "الانهيار الاقتصادي والمالي",
@@ -2050,7 +2106,7 @@
                 last30Days: "30 روز گذشته",
                 rearmamentReports: "گزارش‌های تسلیح مجدد",
                 strikeMentions: "اشاره به حملات",
-                recentArticles: "📰 مقالات اخیر درباره حزب‌الله و امنیت (7 روز)",
+                recentArticles: "📰 مقالات اخیر درباره حزب‌الله و امنیت (30 روز)",
                 knowledgeLibraryTitle: "کتابخانه دانش",
                 catSecurity: "امنیت و پویایی‌های حزب‌الله",
                 catEconomic: "فروپاشی اقتصادی و مالی",
@@ -2094,6 +2150,76 @@
             if (card) {
                 card.classList.toggle('collapsed');
             }
+        }
+
+        // Election News Scanner (Google News RSS, client-side)
+        async function loadElectionNews() {
+            try {
+                const query = encodeURIComponent('Lebanon 2026 parliamentary elections');
+                const url = `https://news.google.com/rss/search?q=${query}&hl=en-US&gl=US&ceid=US:en`;
+                const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+                
+                const response = await fetch(proxyUrl);
+                const text = await response.text();
+                const parser = new DOMParser();
+                const xml = parser.parseFromString(text, 'text/xml');
+                const items = xml.querySelectorAll('item');
+                
+                const container = document.getElementById('electionNewsContainer');
+                if (items.length === 0) {
+                    container.innerHTML = '<span style="color: var(--text-secondary);">No recent election articles</span>';
+                    return;
+                }
+                
+                const articles = Array.from(items).slice(0, 3);
+                container.innerHTML = articles.map(item => {
+                    const title = item.querySelector('title')?.textContent || 'Untitled';
+                    const link = item.querySelector('link')?.textContent || '#';
+                    const pubDate = item.querySelector('pubDate')?.textContent;
+                    const dateStr = pubDate ? new Date(pubDate).toLocaleDateString() : '';
+                    return `
+                        <div style="margin-bottom: 8px;">
+                            <a href="${link}" target="_blank" style="color: #6495ED; text-decoration: none; font-size: 11px; line-height: 1.4;">
+                                → ${title.length > 80 ? title.substring(0, 80) + '...' : title}
+                            </a>
+                            ${dateStr ? `<span style="color: var(--text-muted); font-size: 10px; margin-left: 4px;">${dateStr}</span>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading election news:', error);
+                document.getElementById('electionNewsContainer').innerHTML = 
+                    '<span style="color: var(--text-secondary); font-size: 11px;">Election news unavailable</span>';
+            }
+        }
+
+        // Initialize Lebanon Map (Leaflet/OpenStreetMap)
+        function initLebanonMap() {
+            const map = L.map('lebanon-map', {
+                center: [33.88, 35.50],
+                zoom: 8,
+                scrollWheelZoom: false
+            });
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 18
+            }).addTo(map);
+            
+            const markers = [
+                { lat: 33.8938, lng: 35.5018, name: 'Beirut', desc: 'Capital' },
+                { lat: 33.8547, lng: 35.8623, name: 'Baalbek', desc: 'Bekaa Valley' },
+                { lat: 33.2705, lng: 35.2038, name: 'Tyre (Sour)', desc: 'South Lebanon' },
+                { lat: 34.4367, lng: 35.8497, name: 'Tripoli', desc: 'North Lebanon' },
+                { lat: 33.3789, lng: 35.4840, name: 'Sidon (Saida)', desc: 'South Lebanon' },
+                { lat: 33.8114, lng: 35.4882, name: 'BEY Airport', desc: 'Rafic Hariri Intl' }
+            ];
+            
+            markers.forEach(m => {
+                L.marker([m.lat, m.lng])
+                    .addTo(map)
+                    .bindPopup(`<strong>${m.name}</strong><br>${m.desc}`);
+            });
         }
 
         // Load data on page load
