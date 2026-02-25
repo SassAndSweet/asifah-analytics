@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Iran Protests Tracker v2.9.0 - Last updated: Feb 16, 2026 -->
+<!-- Asifah Analytics - Iran Protests Tracker v3.0.0 - Last updated: Feb 25, 2026 -->
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
@@ -16,7 +16,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Iran Protests Tracker | Asifah Analytics v2.9.0</title>
+    <title>Iran Protests Tracker | Asifah Analytics v3.0.0</title>
     
     <!-- Favicon using Asifah Analytics logo -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
@@ -30,7 +30,6 @@
 
         /* CSS Variables for Light/Dark Mode */
         :root {
-            /* Light Mode Colors (matching Asifah Analytics blue theme) */
             --bg-color: #f5f5f5;
             --container-bg: #ffffff;
             --card-bg: #ffffff;
@@ -52,7 +51,6 @@
         }
 
         [data-theme="dark"] {
-            /* Dark Mode Colors */
             --bg-color: #1a1a1a;
             --container-bg: #2d2d2d;
             --card-bg: #2d2d2d;
@@ -84,7 +82,7 @@
             position: relative;
         }
 
-        /* Watermark Background - ENLARGED & BOLDER */
+        /* Watermark Background */
         body::before {
             content: '';
             position: fixed;
@@ -103,7 +101,7 @@
             user-select: none;
         }
 
-        /* Loading Overlay Styles */
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -247,7 +245,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Controls container on the right */
         .header-controls {
             position: absolute;
             top: 35px;
@@ -263,7 +260,6 @@
             left: 35px;
         }
 
-        /* Language Switcher */
         .language-switcher {
             display: flex;
             gap: 8px;
@@ -273,7 +269,6 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Theme Toggle */
         .theme-toggle {
             display: flex;
             align-items: center;
@@ -514,9 +509,58 @@
             font-weight: normal;
         }
 
-        .stability-metrics-grid {
+        /* 5-Component Stability Grid */
+        .stability-components-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stability-component {
+            padding: 14px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stability-component:hover {
+            background: var(--article-hover);
+            transform: translateY(-2px);
+        }
+
+        .component-icon {
+            font-size: 24px;
+            margin-bottom: 6px;
+        }
+
+        .component-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .component-score {
+            font-size: 22px;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .component-weight {
+            font-size: 9px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Economic Indicators Row (USD/IRR + Oil) */
+        .stability-econ-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
             margin: 20px 0;
         }
@@ -581,6 +625,70 @@
             font-weight: 600;
         }
 
+        /* Government Status Card */
+        .govt-card {
+            background: var(--metric-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .govt-card:hover {
+            box-shadow: 0 8px 20px var(--metric-hover-shadow);
+        }
+
+        .govt-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .govt-official {
+            padding: 15px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            transition: all 0.3s;
+        }
+
+        .govt-official:hover {
+            background: var(--article-hover);
+            transform: translateY(-2px);
+        }
+
+        .govt-official-title {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--iran-accent);
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .govt-official-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .govt-official-since {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .govt-official-note {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.4;
+        }
+
         /* Casualties Grid */
         .casualties-grid {
             display: grid;
@@ -604,22 +712,11 @@
             box-shadow: 0 8px 20px var(--metric-hover-shadow);
         }
 
-        .casualty-card.deaths {
-            border-color: var(--iran-accent);
-        }
+        .casualty-card.deaths { border-color: var(--iran-accent); }
+        .casualty-card.injuries { border-color: #ff8c42; }
+        .casualty-card.arrests { border-color: #4dabf7; }
 
-        .casualty-card.injuries {
-            border-color: #ff8c42;
-        }
-
-        .casualty-card.arrests {
-            border-color: #4dabf7;
-        }
-
-        .casualty-icon {
-            font-size: 36px;
-            margin-bottom: 10px;
-        }
+        .casualty-icon { font-size: 36px; margin-bottom: 10px; }
 
         .casualty-number {
             font-size: 42px;
@@ -628,17 +725,9 @@
             font-family: 'Courier New', monospace;
         }
 
-        .casualty-card.deaths .casualty-number {
-            color: var(--iran-accent);
-        }
-
-        .casualty-card.injuries .casualty-number {
-            color: #ff8c42;
-        }
-
-        .casualty-card.arrests .casualty-number {
-            color: #4dabf7;
-        }
+        .casualty-card.deaths .casualty-number { color: var(--iran-accent); }
+        .casualty-card.injuries .casualty-number { color: #ff8c42; }
+        .casualty-card.arrests .casualty-number { color: #4dabf7; }
 
         .casualty-label {
             font-size: 13px;
@@ -679,17 +768,9 @@
             margin-left: 8px;
         }
 
-        .trend-up {
-            color: #f87171;
-        }
-
-        .trend-down {
-            color: #4ade80;
-        }
-
-        .trend-neutral {
-            color: #a0aec0;
-        }
+        .trend-up { color: #f87171; }
+        .trend-down { color: #4ade80; }
+        .trend-neutral { color: #a0aec0; }
 
         .casualty-cumulative-value {
             font-size: 24px;
@@ -763,7 +844,7 @@
             transition: background 0.3s ease, border-color 0.3s ease;
         }
 
-        /* Knowledge Library Styles */
+        /* Knowledge Library */
         .knowledge-library {
             background: var(--container-bg);
             border: 2px solid var(--card-border);
@@ -783,9 +864,7 @@
             gap: 10px;
         }
 
-        .library-icon {
-            font-size: 28px;
-        }
+        .library-icon { font-size: 28px; }
 
         .knowledge-categories {
             display: grid;
@@ -829,9 +908,7 @@
             color: var(--text-primary);
         }
 
-        .category-icon {
-            font-size: 22px;
-        }
+        .category-icon { font-size: 22px; }
 
         .collapse-icon {
             font-size: 20px;
@@ -875,9 +952,7 @@
             margin-bottom: 6px;
         }
 
-        .knowledge-content strong {
-            color: var(--text-primary);
-        }
+        .knowledge-content strong { color: var(--text-primary); }
 
         .pdf-link-section {
             margin-top: 20px;
@@ -915,10 +990,6 @@
             background: #4169E1;
             transform: translateX(3px);
             box-shadow: 0 4px 12px rgba(100, 149, 237, 0.3);
-        }
-
-        .pdf-icon {
-            font-size: 16px;
         }
 
         .open-source-disclaimer {
@@ -961,26 +1032,11 @@
             margin-right: 6px;
         }
 
-        /* Scrollbar for knowledge content */
-        .knowledge-content::-webkit-scrollbar {
-            width: 8px;
-        }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-        .knowledge-content::-webkit-scrollbar-track {
-            background: var(--article-bg);
-            border-radius: 4px;
-        }
-
-        .knowledge-content::-webkit-scrollbar-thumb {
-            background: var(--card-border);
-            border-radius: 4px;
-        }
-
-        .knowledge-content::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
-
-        /* RTL Support */
         [dir="rtl"] .pdf-link-section {
             border-left: none;
             border-right: 4px solid var(--iran-accent);
@@ -1025,9 +1081,7 @@
             margin-bottom: -12px;
         }
 
-        .language-tabs button:hover {
-            color: var(--text-primary);
-        }
+        .language-tabs button:hover { color: var(--text-primary); }
 
         .language-tabs button.active {
             color: var(--iran-accent);
@@ -1048,9 +1102,7 @@
             transition: all 0.3s;
         }
 
-        .article:hover {
-            background: var(--article-hover);
-        }
+        .article:hover { background: var(--article-hover); }
 
         .article-title {
             font-size: 18px;
@@ -1064,9 +1116,7 @@
             text-decoration: none;
         }
 
-        .article-title a:hover {
-            text-decoration: underline;
-        }
+        .article-title a:hover { text-decoration: underline; }
 
         .article-description {
             font-size: 14px;
@@ -1088,13 +1138,8 @@
             font-size: 16px;
         }
 
-        .loading {
-            color: var(--iran-accent);
-        }
-
-        .error {
-            color: var(--iran-accent);
-        }
+        .loading { color: var(--iran-accent); }
+        .error { color: var(--iran-accent); }
 
         footer {
             background: var(--container-bg);
@@ -1138,23 +1183,10 @@
             font-size: 11px;
         }
 
-        .articles-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .articles-container::-webkit-scrollbar-track {
-            background: var(--article-bg);
-            border-radius: 4px;
-        }
-
-        .articles-container::-webkit-scrollbar-thumb {
-            background: var(--card-border);
-            border-radius: 4px;
-        }
-
-        .articles-container::-webkit-scrollbar-thumb:hover {
-            background: var(--text-muted);
-        }
+        .articles-container::-webkit-scrollbar { width: 8px; }
+        .articles-container::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .articles-container::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .articles-container::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
         [dir="rtl"] {
             direction: rtl;
@@ -1167,47 +1199,27 @@
                 gap: 20px;
                 padding: 25px 20px;
             }
-            
-            .header-logo {
-                width: 60px;
-                height: 60px;
-            }
-            
-            .header-content {
-                text-align: center;
-            }
-            
-            .header-controls {
-                position: static;
-                align-items: center;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
+            .header-logo { width: 60px; height: 60px; }
+            .header-content { text-align: center; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 24px; }
             .back-link {
                 position: static;
                 display: block;
                 width: fit-content;
                 margin: 0 auto 15px;
             }
-            
-            .metrics-grid {
-                grid-template-columns: 1fr;
-            }
+            .metrics-grid { grid-template-columns: 1fr; }
+            .casualties-grid { grid-template-columns: 1fr; }
+            .metric-value { font-size: 36px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+            .stability-components-grid { grid-template-columns: repeat(3, 1fr); }
+            .stability-econ-grid { grid-template-columns: 1fr; }
+            .govt-grid { grid-template-columns: 1fr; }
+        }
 
-            .casualties-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .metric-value {
-                font-size: 36px;
-            }
-
-            .knowledge-categories {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 480px) {
+            .stability-components-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
 </head>
@@ -1280,7 +1292,8 @@
             <span data-i18n="loading">Loading data...</span>
         </div>
 
-<div class="metrics-grid">
+        <!-- ========== REGIME STABILITY INDEX (full-width) ========== -->
+        <div class="metrics-grid">
             <div class="metric-card regime-stability-card">
                 <div class="metric-title" id="metric-title-stability" data-i18n="metricTitleStability">REGIME STABILITY INDEX</div>
                 <div class="stability-subtitle">100 = Stable Regime | 0 = Imminent Collapse</div>
@@ -1295,26 +1308,53 @@
                     </div>
                 </div>
                 
-                <div class="stability-metrics-grid">
+                <!-- 5 Stability Sub-Components -->
+                <div class="stability-components-grid" id="stability-components">
+                    <div class="stability-component" id="comp-protest">
+                        <div class="component-icon">📊</div>
+                        <div class="component-label">Protest Activity</div>
+                        <div class="component-score" id="comp-protest-score">--</div>
+                        <div class="component-weight">30% weight</div>
+                    </div>
+                    <div class="stability-component" id="comp-economic">
+                        <div class="component-icon">💱</div>
+                        <div class="component-label">Economic Pressure</div>
+                        <div class="component-score" id="comp-economic-score">--</div>
+                        <div class="component-weight">25% weight</div>
+                    </div>
+                    <div class="stability-component" id="comp-security">
+                        <div class="component-icon">🛡️</div>
+                        <div class="component-label">Security Response</div>
+                        <div class="component-score" id="comp-security-score">--</div>
+                        <div class="component-weight">20% weight</div>
+                    </div>
+                    <div class="stability-component" id="comp-geopolitical">
+                        <div class="component-icon">🌍</div>
+                        <div class="component-label">Geopolitical Tension</div>
+                        <div class="component-score" id="comp-geopolitical-score">--</div>
+                        <div class="component-weight">15% weight</div>
+                    </div>
+                    <div class="stability-component" id="comp-cohesion">
+                        <div class="component-icon">🏛️</div>
+                        <div class="component-label">Internal Cohesion</div>
+                        <div class="component-score" id="comp-cohesion-score">--</div>
+                        <div class="component-weight">10% weight</div>
+                    </div>
+                </div>
+
+                <!-- Economic Indicators Row: USD/IRR + Oil -->
+                <div class="stability-econ-grid">
                     <div class="stability-metric-item">
                         <span class="stability-icon">💱</span>
                         <div class="stability-metric-content">
-                            <div class="stability-metric-label">USD/IRR</div>
+                            <div class="stability-metric-label">USD/IRR (Black Market)</div>
                             <div class="stability-metric-value" id="usd-irr-value">--</div>
                             <div id="irr-trend" style="margin-top:8px; font-size:0.85em;"></div>
                         </div>
                     </div>
                     
                     <div class="stability-metric-item">
-                        <span class="stability-icon">📊</span>
-                        <div class="stability-metric-content">
-                            <div class="stability-metric-label">Protest Intensity</div>
-                            <div class="stability-metric-value" id="protest-intensity-mini">--</div>
-                        </div>
-                    </div>
-                    
-                    <div class="stability-metric-item">
-    <span class="stability-icon">🛢️</span>
+                        <span class="stability-icon">🛢️</span>
                         <div class="stability-metric-content">
                             <div class="stability-metric-label" data-i18n="oilBrentLabel">Oil (Brent)</div>
                             <div class="stability-metric-value" id="oil-price-value">Loading...</div>
@@ -1334,55 +1374,31 @@
                                 </div>
                             </div>
                             
-                            <!-- Production Status Section -->
+                            <!-- Production Status -->
                             <div id="production-status" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--card-border);">
                                 <div style="font-weight: 600; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; font-size: 11px; color: var(--text-secondary);">
                                     <span data-i18n="productionStatusTitle">Iran Oil Production Status</span>
                                 </div>
-                                
-                                <!-- Status Indicator -->
                                 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
                                     <span id="production-status-emoji" style="font-size: 20px;">🟢</span>
                                     <div style="flex: 1;">
-                                        <div id="production-status-text" style="font-weight: 700; font-size: 13px; color: var(--text-primary);">
-                                            EXPORTING OIL
-                                        </div>
-                                        <div id="production-status-detail" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
-                                            3.19M bpd (Normal operations)
-                                        </div>
+                                        <div id="production-status-text" style="font-weight: 700; font-size: 13px; color: var(--text-primary);">EXPORTING OIL</div>
+                                        <div id="production-status-detail" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">3.19M bpd (Normal operations)</div>
                                     </div>
                                 </div>
-                                
-                                <!-- Data Source -->
                                 <div style="font-size: 10px; color: var(--text-muted); margin-top: 8px;">
                                     <span data-i18n="productionSource">Source</span>: 
-                                    <a id="production-source-link" 
-                                       href="https://www.opec.org/opec_web/en/publications/338.htm" 
-                                       target="_blank" 
-                                       style="color: var(--iran-accent); text-decoration: none;">
+                                    <a id="production-source-link" href="https://www.opec.org/opec_web/en/publications/338.htm" target="_blank" style="color: var(--iran-accent); text-decoration: none;">
                                         <span id="production-source-name">OPEC</span>
                                     </a>
-                                    • 
-                                    <span id="production-date">Dec 2025</span>
+                                    • <span id="production-date">Dec 2025</span>
                                 </div>
-                                
-                                <!-- News Link (shown only when relevant) -->
                                 <div id="production-news-link" style="display: none; margin-top: 8px;">
-                                    <a href="#" 
-                                       target="_blank" 
-                                       style="font-size: 11px; color: var(--iran-accent); text-decoration: none; font-weight: 600;">
+                                    <a href="#" target="_blank" style="font-size: 11px; color: var(--iran-accent); text-decoration: none; font-weight: 600;">
                                         📰 <span data-i18n="viewNews">View Related News</span> →
                                     </a>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="stability-metric-item">
-                        <span class="stability-icon">🔴</span>
-                        <div class="stability-metric-content">
-                            <div class="stability-metric-label">Bond Yields</div>
-                            <div class="stability-metric-value" id="bond-yield-value">Coming Soon</div>
                         </div>
                     </div>
                 </div>
@@ -1390,14 +1406,50 @@
                 <div class="stability-trend-section">
                     <div class="metric-subtitle" id="stability-level">Loading...</div>
                     <div class="metric-explanation" id="stability-trend">Trend: --</div>
-               </div>
+                </div>
             </div>
         </div>
 
-        <!-- Combined Protest Intensity + Geographic Spread -->
+        <!-- ========== GOVERNMENT STATUS CARD ========== -->
+        <div class="govt-card">
+            <div class="metric-title" data-i18n="govtTitle">🏛️ GOVERNMENT STATUS</div>
+            <div id="govt-grid" class="govt-grid">
+                <div class="govt-official" id="govt-supreme-leader">
+                    <div class="govt-official-title">Supreme Leader</div>
+                    <div class="govt-official-name" id="govt-sl-name">Loading...</div>
+                    <div class="govt-official-since" id="govt-sl-since"></div>
+                    <div class="govt-official-note" id="govt-sl-note"></div>
+                </div>
+                <div class="govt-official" id="govt-president">
+                    <div class="govt-official-title">President</div>
+                    <div class="govt-official-name" id="govt-pres-name">Loading...</div>
+                    <div class="govt-official-since" id="govt-pres-since"></div>
+                    <div class="govt-official-note" id="govt-pres-note"></div>
+                </div>
+                <div class="govt-official" id="govt-speaker">
+                    <div class="govt-official-title">Speaker of Parliament</div>
+                    <div class="govt-official-name" id="govt-speaker-name">Loading...</div>
+                    <div class="govt-official-since" id="govt-speaker-since"></div>
+                    <div class="govt-official-note" id="govt-speaker-note"></div>
+                </div>
+                <div class="govt-official" id="govt-irgc">
+                    <div class="govt-official-title">IRGC Commander-in-Chief</div>
+                    <div class="govt-official-name" id="govt-irgc-name">Loading...</div>
+                    <div class="govt-official-since" id="govt-irgc-since"></div>
+                    <div class="govt-official-note" id="govt-irgc-note"></div>
+                </div>
+                <div class="govt-official" id="govt-quds">
+                    <div class="govt-official-title">Quds Force Commander</div>
+                    <div class="govt-official-name" id="govt-quds-name">Loading...</div>
+                    <div class="govt-official-since" id="govt-quds-since"></div>
+                    <div class="govt-official-note" id="govt-quds-note"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== PROTEST INTENSITY + GEOGRAPHIC SPREAD ========== -->
         <div style="margin-bottom: 30px;">
             <div class="metric-card" style="grid-column: 1 / -1;">
-                <!-- Top row: Intensity + City Count side by side -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                     <div>
                         <div class="metric-title" id="metric-title-intensity" data-i18n="metricTitleIntensity">Protest Intensity</div>
@@ -1411,10 +1463,9 @@
                     </div>
                 </div>
                 
-                <!-- Cities pills -->
                 <div class="cities-container" id="cities-list"></div>
                 
-                <!-- IRAN MAP -->
+                <!-- Iran Map -->
                 <div style="margin-top: 20px; width: 100%; height: 300px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
                     <iframe 
                         src="https://www.openstreetmap.org/export/embed.html?bbox=44.03%2C25.06%2C63.33%2C39.78&layer=mapnik&marker=32.42%2C53.68"
@@ -1428,12 +1479,11 @@
             </div>
         </div>
 
-        <!-- Casualties Grid -->
+        <!-- ========== CASUALTIES GRID ========== -->
         <div class="casualties-grid">
             <div class="casualty-card deaths">
                 <div class="casualty-icon">☠️</div>
                 <div class="casualty-label" id="deaths-label" data-i18n="deathsLabel">DEATHS</div>
-                
                 <div class="casualty-section">
                     <div class="casualty-section-title">RECENT:</div>
                     <div class="casualty-recent-values">
@@ -1442,25 +1492,21 @@
                         <span id="deaths-trend" class="casualty-trend">--</span>
                     </div>
                 </div>
-                
                 <div class="casualty-section">
                     <div class="casualty-cumulative-label">CUMULATIVE (Since Sept 2022):</div>
                     <div class="casualty-cumulative-value" id="deaths-cumulative">--</div>
                     <div class="casualty-avg">Average: <span id="deaths-avg">--</span>/week</div>
                 </div>
-                
                 <div class="casualty-footnote">
                     * Trend accuracy improves daily
                     <a href="https://www.en-hrana.org/day-47-of-the-protests-intensified-communication-restrictions-and-ongoing-arrests/" target="_blank" class="hrana-link">📊 HRANA Protest Death Toll (Day 47 Report) →</a>
                 </div>
-                
                 <div class="verified-badge" id="verified-badge" data-i18n="verified">Verified</div>
             </div>
             
             <div class="casualty-card injuries">
                 <div class="casualty-icon">🩹</div>
                 <div class="casualty-label" id="injuries-label" data-i18n="injuriesLabel">INJURIES</div>
-                
                 <div class="casualty-section">
                     <div class="casualty-section-title">RECENT:</div>
                     <div class="casualty-recent-values">
@@ -1469,25 +1515,21 @@
                         <span id="injuries-trend" class="casualty-trend">--</span>
                     </div>
                 </div>
-                
                 <div class="casualty-section">
                     <div class="casualty-cumulative-label">CUMULATIVE (Since Sept 2022):</div>
                     <div class="casualty-cumulative-value" id="injuries-cumulative">~--</div>
                     <div class="casualty-avg">Average: <span id="injuries-avg">--</span>/week</div>
                 </div>
-                
                 <div class="casualty-footnote">
                     * Trend accuracy improves daily
                     <a href="https://www.en-hrana.org/statements/" target="_blank" class="hrana-link">📊 HRANA Official Statements & Figures →</a>
                 </div>
-                
                 <div class="verified-badge" id="verified-badge2" data-i18n="verified">Verified</div>
             </div>
             
             <div class="casualty-card arrests">
                 <div class="casualty-icon">⛓️</div>
                 <div class="casualty-label" id="arrests-label" data-i18n="arrestsLabel">ARRESTS</div>
-                
                 <div class="casualty-section">
                     <div class="casualty-section-title">RECENT:</div>
                     <div class="casualty-recent-values">
@@ -1496,23 +1538,20 @@
                         <span id="arrests-trend" class="casualty-trend">--</span>
                     </div>
                 </div>
-                
                 <div class="casualty-section">
                     <div class="casualty-cumulative-label">CUMULATIVE (Since Sept 2022):</div>
                     <div class="casualty-cumulative-value" id="arrests-cumulative">~--</div>
                     <div class="casualty-avg">Average: <span id="arrests-avg">--</span>/week</div>
                 </div>
-                
                 <div class="casualty-footnote">
                     * Trend accuracy improves daily
                     <a href="https://www.en-hrana.org/category/news/" target="_blank" class="hrana-link">📊 HRANA Latest Arrest Reports →</a>
                 </div>
-                
                 <div class="verified-badge" id="verified-badge3" data-i18n="verified">Verified</div>
             </div>
         </div>
 
-        <!-- KNOWLEDGE LIBRARY SECTION -->
+        <!-- ========== KNOWLEDGE LIBRARY ========== -->
         <div class="knowledge-library">
             <h2>
                 <span class="library-icon">📚</span>
@@ -1520,7 +1559,7 @@
             </h2>
             
             <div class="knowledge-categories">
-                <!-- Category 1: Nuclear Program -->
+                <!-- Nuclear Program -->
                 <div class="knowledge-card collapsed" id="card-nuclear">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('nuclear')">
                         <div class="knowledge-header-title">
@@ -1530,36 +1569,25 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p data-i18n="nuclearDesc1"><strong>Iran's nuclear program</strong> remains a critical regional security concern. Following U.S. withdrawal from the Joint Comprehensive Plan of Action (JCPOA) in 2018, Iran has significantly expanded uranium enrichment activities.</p>
-                        
-                        <p data-i18n="nuclearDesc2"><strong>Current Status (2026):</strong></p>
+                        <p><strong>Iran's nuclear program</strong> remains a critical regional security concern. Following U.S. withdrawal from the Joint Comprehensive Plan of Action (JCPOA) in 2018, Iran has significantly expanded uranium enrichment activities.</p>
+                        <p><strong>Current Status (2026):</strong></p>
                         <ul>
-                            <li data-i18n="nuclearBullet1"><strong>Enrichment Levels:</strong> Iran has enriched uranium up to 60% purity (weapons-grade is 90%), with stockpiles exceeding JCPOA limits</li>
-                            <li data-i18n="nuclearBullet2"><strong>Centrifuge Installations:</strong> Advanced IR-6 centrifuges installed at Natanz and Fordow facilities</li>
-                            <li data-i18n="nuclearBullet3"><strong>IAEA Access:</strong> Limited inspections; Iran removed surveillance cameras in 2022</li>
-                            <li data-i18n="nuclearBullet4"><strong>Breakout Time:</strong> Estimated at weeks to months for sufficient weapons-grade material</li>
-                            <li data-i18n="nuclearBullet5"><strong>Negotiations:</strong> Indirect talks continue but remain stalled over sanctions relief</li>
+                            <li><strong>Enrichment Levels:</strong> Iran has enriched uranium up to 60% purity (weapons-grade is 90%), with stockpiles exceeding JCPOA limits</li>
+                            <li><strong>Centrifuge Installations:</strong> Advanced IR-6 centrifuges installed at Natanz and Fordow facilities</li>
+                            <li><strong>IAEA Access:</strong> Limited inspections; Iran removed surveillance cameras in 2022</li>
+                            <li><strong>Breakout Time:</strong> Estimated at weeks to months for sufficient weapons-grade material</li>
+                            <li><strong>Negotiations:</strong> Indirect talks continue but remain stalled over sanctions relief</li>
                         </ul>
-                        
-                        <div class="open-source-disclaimer" data-i18n="nuclearDisclaimer">
-                            * Based on IAEA reports, OSINT analysis, and public statements from U.S./Israeli intelligence
-                        </div>
-                        
+                        <div class="open-source-disclaimer">* Based on IAEA reports, OSINT analysis, and public statements from U.S./Israeli intelligence</div>
                         <div class="report-links-grid">
-                            <a href="https://www.iaea.org/newscenter/focus/iran" target="_blank" class="report-link">
-                                <span data-i18n="linkIAEA">IAEA Iran Reports</span>
-                            </a>
-                            <a href="https://www.state.gov/iran-nuclear-deal/" target="_blank" class="report-link">
-                                <span data-i18n="linkStateDept">U.S. State Department - Iran Nuclear</span>
-                            </a>
-                            <a href="https://www.armscontrol.org/factsheets/Timeline-of-Nuclear-Diplomacy-With-Iran" target="_blank" class="report-link">
-                                <span data-i18n="linkArmsControl">Arms Control Association Timeline</span>
-                            </a>
+                            <a href="https://www.iaea.org/newscenter/focus/iran" target="_blank" class="report-link">IAEA Iran Reports</a>
+                            <a href="https://www.state.gov/iran-nuclear-deal/" target="_blank" class="report-link">U.S. State Department - Iran Nuclear</a>
+                            <a href="https://www.armscontrol.org/factsheets/Timeline-of-Nuclear-Diplomacy-With-Iran" target="_blank" class="report-link">Arms Control Association Timeline</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category 2: Missile & Drone Capabilities -->
+                <!-- Missiles & Drones -->
                 <div class="knowledge-card collapsed" id="card-missiles">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('missiles')">
                         <div class="knowledge-header-title">
@@ -1569,38 +1597,26 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p data-i18n="missilesDesc1"><strong>Iran possesses the largest ballistic missile arsenal in the Middle East</strong>, with ranges capable of striking Israel, U.S. bases in the Gulf, and parts of Europe. Iran has also become a major producer and exporter of combat drones.</p>
-                        
-                        <p data-i18n="missilesDesc2"><strong>Key Systems:</strong></p>
+                        <p><strong>Iran possesses the largest ballistic missile arsenal in the Middle East</strong>, with ranges capable of striking Israel, U.S. bases in the Gulf, and parts of Europe. Iran has also become a major producer and exporter of combat drones.</p>
+                        <p><strong>Key Systems:</strong></p>
                         <ul>
-                            <li data-i18n="missilesBullet1"><strong>Shahab-3:</strong> 1,300 km range, liquid-fuel ballistic missile</li>
-                            <li data-i18n="missilesBullet2"><strong>Sejjil-2:</strong> 2,000 km range, solid-fuel (harder to intercept)</li>
-                            <li data-i18n="missilesBullet3"><strong>Kheibar Shekan:</strong> 1,450 km range, hypersonic glide vehicle capability</li>
-                            <li data-i18n="missilesBullet4"><strong>Shahed-136 Drones:</strong> Kamikaze UAVs used by Russia in Ukraine and by proxies</li>
-                            <li data-i18n="missilesBullet5"><strong>Mohajer-6:</strong> Armed reconnaissance drone with 200 km range</li>
+                            <li><strong>Shahab-3:</strong> 1,300 km range, liquid-fuel ballistic missile</li>
+                            <li><strong>Sejjil-2:</strong> 2,000 km range, solid-fuel (harder to intercept)</li>
+                            <li><strong>Kheibar Shekan:</strong> 1,450 km range, hypersonic glide vehicle capability</li>
+                            <li><strong>Shahed-136 Drones:</strong> Kamikaze UAVs used by Russia in Ukraine and by proxies</li>
+                            <li><strong>Mohajer-6:</strong> Armed reconnaissance drone with 200 km range</li>
                         </ul>
-                        
-                        <p data-i18n="missilesDesc3"><strong>Regional Impact:</strong> Iran supplies missiles and drones to Hezbollah (Lebanon), Houthis (Yemen), and Iraqi militias, enabling asymmetric warfare against Israel and Gulf states.</p>
-                        
-                        <div class="open-source-disclaimer" data-i18n="missilesDisclaimer">
-                            * Based on U.S. Defense Intelligence Agency, CSIS Missile Defense Project, and Jane's Defence
-                        </div>
-                        
+                        <p><strong>Regional Impact:</strong> Iran supplies missiles and drones to Hezbollah (Lebanon), Houthis (Yemen), and Iraqi militias, enabling asymmetric warfare against Israel and Gulf states.</p>
+                        <div class="open-source-disclaimer">* Based on U.S. Defense Intelligence Agency, CSIS Missile Defense Project, and Jane's Defence</div>
                         <div class="report-links-grid">
-                            <a href="https://missilethreat.csis.org/country/iran/" target="_blank" class="report-link">
-                                <span data-i18n="linkCSIS">CSIS Missile Threat - Iran</span>
-                            </a>
-                            <a href="https://www.defense.gov/News/Releases/Release/Article/3234567/dod-releases-report-on-iranian-military-power/" target="_blank" class="report-link">
-                                <span data-i18n="linkDOD">DoD Report on Iranian Military Power</span>
-                            </a>
-                            <a href="https://www.cfr.org/backgrounder/what-irans-ballistic-missile-program" target="_blank" class="report-link">
-                                <span data-i18n="linkCFR">CFR - Iran's Ballistic Missile Program</span>
-                            </a>
+                            <a href="https://missilethreat.csis.org/country/iran/" target="_blank" class="report-link">CSIS Missile Threat - Iran</a>
+                            <a href="https://www.defense.gov/News/Releases/Release/Article/3234567/dod-releases-report-on-iranian-military-power/" target="_blank" class="report-link">DoD Report on Iranian Military Power</a>
+                            <a href="https://www.cfr.org/backgrounder/what-irans-ballistic-missile-program" target="_blank" class="report-link">CFR - Iran's Ballistic Missile Program</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category 3: Regional Proxy Networks -->
+                <!-- Regional Proxy Networks -->
                 <div class="knowledge-card collapsed" id="card-proxies">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('proxies')">
                         <div class="knowledge-header-title">
@@ -1610,46 +1626,32 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p data-i18n="proxiesDesc1"><strong>Iran's "Axis of Resistance"</strong> is a network of state and non-state actors across the Middle East that receive military, financial, and political support from Tehran. This network enables Iran to project power and conduct asymmetric warfare while maintaining plausible deniability.</p>
-                        
-                        <p data-i18n="proxiesDesc2"><strong>Key Proxy Groups:</strong></p>
+                        <p><strong>Iran's "Axis of Resistance"</strong> is a network of state and non-state actors across the Middle East that receive military, financial, and political support from Tehran.</p>
+                        <p><strong>Key Proxy Groups:</strong></p>
                         <ul>
-                            <li data-i18n="proxiesBullet1"><strong>Hezbollah (Lebanon):</strong> Most powerful non-state actor; 150,000+ rockets/missiles; receives $700M+ annually from Iran</li>
-                            <li data-i18n="proxiesBullet2"><strong>Houthis (Yemen):</strong> Control northern Yemen; launched 200+ attacks on Red Sea shipping (2023-2024)</li>
-                            <li data-i18n="proxiesBullet3"><strong>Popular Mobilization Forces (Iraq):</strong> Coalition of Shia militias integrated into Iraqi security forces</li>
-                            <li data-i18n="proxiesBullet4"><strong>Hamas & Palestinian Islamic Jihad (Gaza):</strong> Receive weapons, training, and funding despite ideological differences</li>
-                            <li data-i18n="proxiesBullet5"><strong>Syrian Government:</strong> Iran provides military advisors, arms, and billions in economic aid</li>
+                            <li><strong>Hezbollah (Lebanon):</strong> Most powerful non-state actor; 150,000+ rockets/missiles; receives $700M+ annually from Iran</li>
+                            <li><strong>Houthis (Yemen):</strong> Control northern Yemen; launched 200+ attacks on Red Sea shipping (2023-2024)</li>
+                            <li><strong>Popular Mobilization Forces (Iraq):</strong> Coalition of Shia militias integrated into Iraqi security forces</li>
+                            <li><strong>Hamas & Palestinian Islamic Jihad (Gaza):</strong> Receive weapons, training, and funding despite ideological differences</li>
+                            <li><strong>Syrian Government:</strong> Iran provides military advisors, arms, and billions in economic aid</li>
                         </ul>
-                        
-                        <p data-i18n="proxiesDesc3"><strong>Strategic Purpose:</strong> Proxies allow Iran to pressure adversaries (Israel, Saudi Arabia, U.S. forces) without direct confrontation, maintain a forward defense posture, and expand regional influence.</p>
-                        
                         <div class="pdf-link-section">
-                            <div class="pdf-link-title" data-i18n="relatedOnePager">📑 RELATED ONE-PAGER:</div>
+                            <div class="pdf-link-title">📑 RELATED ONE-PAGER:</div>
                             <a href="hizballah-financing.html" class="pdf-link">
-                                <span class="pdf-icon">💰</span>
-                                <span data-i18n="hizballahFinancingLink">Hizballah Financing Networks</span>
+                                <span>💰</span>
+                                <span>Hizballah Financing Networks</span>
                             </a>
                         </div>
-                        
-                        <div class="open-source-disclaimer" data-i18n="proxiesDisclaimer">
-                            * Based on U.S. State Department, UN reports, and regional security analysis
-                        </div>
-                        
+                        <div class="open-source-disclaimer">* Based on U.S. State Department, UN reports, and regional security analysis</div>
                         <div class="report-links-grid">
-                            <a href="https://www.state.gov/reports/country-reports-on-terrorism-2023/iran/" target="_blank" class="report-link">
-                                <span data-i18n="linkStateTerrorism">State Dept - Iran Terrorism Report</span>
-                            </a>
-                            <a href="https://www.csis.org/programs/transnational-threats-project/terrorism-backgrounders/irans-support-terrorism" target="_blank" class="report-link">
-                                <span data-i18n="linkCSISProxies">CSIS - Iran's Support for Terrorism</span>
-                            </a>
-                            <a href="https://www.washingtoninstitute.org/policy-analysis/mapping-irans-proxies" target="_blank" class="report-link">
-                                <span data-i18n="linkWashInst">Washington Institute - Mapping Iran's Proxies</span>
-                            </a>
+                            <a href="https://www.state.gov/reports/country-reports-on-terrorism-2023/iran/" target="_blank" class="report-link">State Dept - Iran Terrorism Report</a>
+                            <a href="https://www.csis.org/programs/transnational-threats-project/terrorism-backgrounders/irans-support-terrorism" target="_blank" class="report-link">CSIS - Iran's Support for Terrorism</a>
+                            <a href="https://www.washingtoninstitute.org/policy-analysis/mapping-irans-proxies" target="_blank" class="report-link">Washington Institute - Mapping Iran's Proxies</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category 4: Sanctions & Economic Pressure -->
+                <!-- Sanctions -->
                 <div class="knowledge-card collapsed" id="card-sanctions">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('sanctions')">
                         <div class="knowledge-header-title">
@@ -1659,38 +1661,26 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p data-i18n="sanctionsDesc1"><strong>Iran faces the most comprehensive sanctions regime in modern history</strong>, targeting its energy sector, banking system, shipping, and military procurement. U.S. "maximum pressure" campaign (2018-present) has severely constrained Iran's economy.</p>
-                        
-                        <p data-i18n="sanctionsDesc2"><strong>Key Sanctions Categories:</strong></p>
+                        <p><strong>Iran faces the most comprehensive sanctions regime in modern history</strong>, targeting its energy sector, banking system, shipping, and military procurement.</p>
+                        <p><strong>Key Sanctions Categories:</strong></p>
                         <ul>
-                            <li data-i18n="sanctionsBullet1"><strong>Energy Sector:</strong> Oil exports fell from 2.5M bpd (2017) to ~1.5M bpd (2024); buyers face secondary sanctions</li>
-                            <li data-i18n="sanctionsBullet2"><strong>Banking & Finance:</strong> Cut off from SWIFT (2018); limited access to international financial system</li>
-                            <li data-i18n="sanctionsBullet3"><strong>IRGC Designation:</strong> Islamic Revolutionary Guard Corps designated as Foreign Terrorist Organization (2019)</li>
-                            <li data-i18n="sanctionsBullet4"><strong>Technology & Dual-Use:</strong> Restrictions on advanced computing, aerospace, and industrial equipment</li>
-                            <li data-i18n="sanctionsBullet5"><strong>Humanitarian Exemptions:</strong> Food, medicine, and medical devices exempt but payment challenges persist</li>
+                            <li><strong>Energy Sector:</strong> Oil exports fell from 2.5M bpd (2017) to ~1.5M bpd (2024); buyers face secondary sanctions</li>
+                            <li><strong>Banking & Finance:</strong> Cut off from SWIFT (2018); limited access to international financial system</li>
+                            <li><strong>IRGC Designation:</strong> Islamic Revolutionary Guard Corps designated as Foreign Terrorist Organization (2019)</li>
+                            <li><strong>Technology & Dual-Use:</strong> Restrictions on advanced computing, aerospace, and industrial equipment</li>
+                            <li><strong>Humanitarian Exemptions:</strong> Food, medicine, and medical devices exempt but payment challenges persist</li>
                         </ul>
-                        
-                        <p data-i18n="sanctionsDesc3"><strong>Economic Impact:</strong> Rial depreciation (98% since 2018), 40%+ inflation, GDP contraction, but regime has adapted through smuggling networks, cryptocurrency, and barter arrangements with China/Russia.</p>
-                        
-                        <div class="open-source-disclaimer" data-i18n="sanctionsDisclaimer">
-                            * Based on U.S. Treasury OFAC, IMF, World Bank, and sanctions compliance databases
-                        </div>
-                        
+                        <p><strong>Economic Impact:</strong> Rial depreciation (98% since 2018), 40%+ inflation, GDP contraction, but regime has adapted through smuggling networks, cryptocurrency, and barter arrangements with China/Russia.</p>
+                        <div class="open-source-disclaimer">* Based on U.S. Treasury OFAC, IMF, World Bank, and sanctions compliance databases</div>
                         <div class="report-links-grid">
-                            <a href="https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/iran-sanctions" target="_blank" class="report-link">
-                                <span data-i18n="linkTreasurySanctions">U.S. Treasury - Iran Sanctions</span>
-                            </a>
-                            <a href="https://www.europarl.europa.eu/thinktank/en/document/EPRS_BRI(2023)747084" target="_blank" class="report-link">
-                                <span data-i18n="linkEUSanctions">EU Parliament - Iran Sanctions Overview</span>
-                            </a>
-                            <a href="https://www.imf.org/en/Countries/IRN" target="_blank" class="report-link">
-                                <span data-i18n="linkIMF">IMF - Iran Economic Outlook</span>
-                            </a>
+                            <a href="https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/iran-sanctions" target="_blank" class="report-link">U.S. Treasury - Iran Sanctions</a>
+                            <a href="https://www.europarl.europa.eu/thinktank/en/document/EPRS_BRI(2023)747084" target="_blank" class="report-link">EU Parliament - Iran Sanctions Overview</a>
+                            <a href="https://www.imf.org/en/Countries/IRN" target="_blank" class="report-link">IMF - Iran Economic Outlook</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category 5: Internal Political Dynamics -->
+                <!-- Internal Political Dynamics (UPDATED for Pezeshkian) -->
                 <div class="knowledge-card collapsed" id="card-politics">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('politics')">
                         <div class="knowledge-header-title">
@@ -1700,52 +1690,40 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p data-i18n="politicsDesc1"><strong>Iran's political system</strong> is a theocratic republic with ultimate authority vested in the Supreme Leader (Ayatollah Ali Khamenei since 1989). Power struggles between reformists, moderates, and hardliners shape domestic and foreign policy.</p>
-                        
-                        <p data-i18n="politicsDesc2"><strong>Key Power Centers:</strong></p>
+                        <p><strong>Iran's political system</strong> is a theocratic republic with ultimate authority vested in the Supreme Leader (Ayatollah Ali Khamenei since 1989). Power struggles between reformists, moderates, and hardliners shape domestic and foreign policy.</p>
+                        <p><strong>Key Power Centers:</strong></p>
                         <ul>
-                            <li data-i18n="politicsBullet1"><strong>Supreme Leader:</strong> Controls military, judiciary, state media; appoints half of Guardian Council</li>
-                            <li data-i18n="politicsBullet2"><strong>President (Ebrahim Raisi, 2021-2024):</strong> Ultraconservative cleric; died in helicopter crash May 2024</li>
-                            <li data-i18n="politicsBullet3"><strong>Islamic Revolutionary Guard Corps (IRGC):</strong> Parallel military controlling ~40% of economy; Quds Force handles external operations</li>
-                            <li data-i18n="politicsBullet4"><strong>Guardian Council:</strong> Vets all candidates; blocked thousands of reformists in 2020-2024 elections</li>
-                            <li data-i18n="politicsBullet5"><strong>Parliament (Majles):</strong> Dominated by hardliners since 2020; limited influence on Supreme Leader decisions</li>
+                            <li><strong>Supreme Leader:</strong> Controls military, judiciary, state media; appoints half of Guardian Council</li>
+                            <li><strong>President (Masoud Pezeshkian, 2024-present):</strong> Reformist physician; 9th President; reform-oriented but constrained by Supreme Leader. Succeeded Ebrahim Raisi who died in a helicopter crash May 2024</li>
+                            <li><strong>Islamic Revolutionary Guard Corps (IRGC):</strong> Parallel military controlling ~40% of economy; Quds Force handles external operations</li>
+                            <li><strong>Guardian Council:</strong> Vets all candidates; blocked thousands of reformists in 2020-2024 elections</li>
+                            <li><strong>Parliament (Majles):</strong> Speaker Mohammad Bagher Ghalibaf (conservative); limited influence on Supreme Leader decisions</li>
                         </ul>
-                        
-                        <p data-i18n="politicsDesc3"><strong>Protests & Dissent:</strong> Mahsa Amini protests (2022-2023) represented the greatest challenge to the regime since 1979. Women's rights, economic grievances, and ethnic tensions (Kurds, Baluchis, Arabs) fuel ongoing unrest.</p>
-                        
-                        <p data-i18n="politicsDesc4"><strong>Succession Question:</strong> Khamenei (85 years old) has no clear successor; IRGC may play kingmaker role.</p>
-                        
-                        <div class="open-source-disclaimer" data-i18n="politicsDisclaimer">
-                            * Based on HRANA, Amnesty International, Human Rights Watch, and regional analysts
-                        </div>
-                        
+                        <p><strong>Protests & Dissent:</strong> Mahsa Amini protests (2022-2023) represented the greatest challenge to the regime since 1979. Women's rights, economic grievances, and ethnic tensions (Kurds, Baluchis, Arabs) fuel ongoing unrest.</p>
+                        <p><strong>Succession Question:</strong> Khamenei (86 years old) has no clear successor; IRGC may play kingmaker role.</p>
+                        <div class="open-source-disclaimer">* Based on HRANA, Amnesty International, Human Rights Watch, and regional analysts</div>
                         <div class="report-links-grid">
-                            <a href="https://en-hrana.org/" target="_blank" class="report-link">
-                                <span data-i18n="linkHRANA">HRANA - Human Rights Activists News Agency</span>
-                            </a>
-                            <a href="https://www.hrw.org/middle-east/north-africa/iran" target="_blank" class="report-link">
-                                <span data-i18n="linkHRW">Human Rights Watch - Iran</span>
-                            </a>
-                            <a href="https://www.mei.edu/countries/iran" target="_blank" class="report-link">
-                                <span data-i18n="linkMEI">Middle East Institute - Iran Analysis</span>
-                            </a>
+                            <a href="https://en-hrana.org/" target="_blank" class="report-link">HRANA - Human Rights Activists News Agency</a>
+                            <a href="https://www.hrw.org/middle-east/north-africa/iran" target="_blank" class="report-link">Human Rights Watch - Iran</a>
+                            <a href="https://www.mei.edu/countries/iran" target="_blank" class="report-link">Middle East Institute - Iran Analysis</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- ========== NEWS SECTION ========== -->
         <div class="news-section">
             <h2 id="news-title" data-i18n="newsTitle">News Coverage</h2>
             
             <div class="language-tabs">
-                <button onclick="showArticles('hrana')" class="active" data-lang="hrana" id="tab-hrana" data-i18n="tabHRANA">HRANA (--)</button>
-                <button onclick="showArticles('iranwire')" data-lang="iranwire" id="tab-iranwire" data-i18n="tabIranWire">Iran Wire (--)</button>
-                <button onclick="showArticles('en')" data-lang="en" id="tab-en" data-i18n="tabEnglish">English (--)</button>
-                <button onclick="showArticles('he')" data-lang="he" id="tab-he" data-i18n="tabHebrew">Hebrew (--)</button>
-                <button onclick="showArticles('ar')" data-lang="ar" id="tab-ar" data-i18n="tabArabic">Arabic (--)</button>
-                <button onclick="showArticles('fa')" data-lang="fa" id="tab-fa" data-i18n="tabFarsi">Farsi (--)</button>
-                <button onclick="showArticles('reddit')" data-lang="reddit" id="tab-reddit" data-i18n="tabReddit">Reddit (--)</button>
+                <button onclick="showArticles('hrana')" class="active" data-lang="hrana" id="tab-hrana">HRANA (--)</button>
+                <button onclick="showArticles('iranwire')" data-lang="iranwire" id="tab-iranwire">Iran Wire (--)</button>
+                <button onclick="showArticles('en')" data-lang="en" id="tab-en">English (--)</button>
+                <button onclick="showArticles('he')" data-lang="he" id="tab-he">Hebrew (--)</button>
+                <button onclick="showArticles('ar')" data-lang="ar" id="tab-ar">Arabic (--)</button>
+                <button onclick="showArticles('fa')" data-lang="fa" id="tab-fa">Farsi (--)</button>
+                <button onclick="showArticles('reddit')" data-lang="reddit" id="tab-reddit">Reddit (--)</button>
             </div>
 
             <div class="articles-container" id="articles-container">
@@ -1753,8 +1731,9 @@
             </div>
         </div>
 
+        <!-- ========== FOOTER ========== -->
         <footer>
-            <p><strong>Asifah Analytics v2.9.0</strong></p>
+            <p><strong>Asifah Analytics v3.0.0</strong></p>
             <p><strong>Data Sources:</strong> NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content, Iran Wire and HRANA RSS feeds, Reddit for community intelligence, plus other OSINT sources.</p>
             <p><strong>For inquiries, contact:</strong> <a href="mailto:asifahanalytics@gmail.com" style="color: var(--iran-accent); text-decoration: none;">asifahanalytics@gmail.com</a></p>
             <p style="margin-top: 10px; font-size: 11px;">Updated every 30 minutes | Not for operational use</p>
@@ -1774,7 +1753,9 @@
     </div>
 
     <script>
-        // Theme Management
+        // ============================================
+        // THEME MANAGEMENT
+        // ============================================
         function initTheme() {
             const savedTheme = localStorage.getItem('asifah-theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -1789,15 +1770,17 @@
 
         initTheme();
 
-        // Knowledge Library Toggle Function
+        // ============================================
+        // KNOWLEDGE LIBRARY TOGGLE
+        // ============================================
         function toggleKnowledgeCard(cardId) {
             const card = document.getElementById('card-' + cardId);
-            if (card) {
-                card.classList.toggle('collapsed');
-            }
+            if (card) card.classList.toggle('collapsed');
         }
 
-        // Loading Overlay Management
+        // ============================================
+        // LOADING OVERLAY
+        // ============================================
         let loadingStepIndex = 0;
         let loadingInterval = null;
         let loadingTimeout = null;
@@ -1813,12 +1796,9 @@
                         currentStep.classList.add('complete');
                         currentStep.querySelector('.step-icon').textContent = '✓';
                     }
-                    
                     loadingStepIndex++;
                     const nextStep = document.getElementById(steps[loadingStepIndex]);
-                    if (nextStep) {
-                        nextStep.classList.add('active');
-                    }
+                    if (nextStep) nextStep.classList.add('active');
                 }
             }, 8000);
             
@@ -1839,12 +1819,13 @@
             
             setTimeout(() => {
                 const overlay = document.getElementById('loadingOverlay');
-                if (overlay) {
-                    overlay.classList.add('hidden');
-                }
+                if (overlay) overlay.classList.add('hidden');
             }, 500);
         }
 
+        // ============================================
+        // TRANSLATIONS (trimmed for brevity — same keys as before)
+        // ============================================
         const translations = {
             en: {
                 pageTitle: "🇮🇷 IRAN PROTESTS TRACKER",
@@ -1877,86 +1858,13 @@
                 productionStatusTitle: "Iran Oil Production Status",
                 productionSource: "Source",
                 viewNews: "View Related News",
-                
-                // Knowledge Library
                 knowledgeLibraryTitle: "Knowledge Library",
                 catNuclear: "Nuclear Program & JCPOA Status",
                 catMissiles: "Missile & Drone Capabilities",
                 catProxies: "Regional Proxy Networks",
                 catSanctions: "Sanctions & Economic Pressure",
                 catPolitics: "Internal Political Dynamics",
-                relatedOnePager: "📑 RELATED ONE-PAGER:",
-                hizballahFinancingLink: "Hizballah Financing Networks",
-                
-                // Nuclear content
-                nuclearDesc1: "Iran's nuclear program remains a critical regional security concern. Following U.S. withdrawal from the Joint Comprehensive Plan of Action (JCPOA) in 2018, Iran has significantly expanded uranium enrichment activities.",
-                nuclearDesc2: "Current Status (2026):",
-                nuclearBullet1: "Enrichment Levels: Iran has enriched uranium up to 60% purity (weapons-grade is 90%), with stockpiles exceeding JCPOA limits",
-                nuclearBullet2: "Centrifuge Installations: Advanced IR-6 centrifuges installed at Natanz and Fordow facilities",
-                nuclearBullet3: "IAEA Access: Limited inspections; Iran removed surveillance cameras in 2022",
-                nuclearBullet4: "Breakout Time: Estimated at weeks to months for sufficient weapons-grade material",
-                nuclearBullet5: "Negotiations: Indirect talks continue but remain stalled over sanctions relief",
-                nuclearDisclaimer: "* Based on IAEA reports, OSINT analysis, and public statements from U.S./Israeli intelligence",
-                linkIAEA: "IAEA Iran Reports",
-                linkStateDept: "U.S. State Department - Iran Nuclear",
-                linkArmsControl: "Arms Control Association Timeline",
-                
-                // Missiles content
-                missilesDesc1: "Iran possesses the largest ballistic missile arsenal in the Middle East, with ranges capable of striking Israel, U.S. bases in the Gulf, and parts of Europe. Iran has also become a major producer and exporter of combat drones.",
-                missilesDesc2: "Key Systems:",
-                missilesBullet1: "Shahab-3: 1,300 km range, liquid-fuel ballistic missile",
-                missilesBullet2: "Sejjil-2: 2,000 km range, solid-fuel (harder to intercept)",
-                missilesBullet3: "Kheibar Shekan: 1,450 km range, hypersonic glide vehicle capability",
-                missilesBullet4: "Shahed-136 Drones: Kamikaze UAVs used by Russia in Ukraine and by proxies",
-                missilesBullet5: "Mohajer-6: Armed reconnaissance drone with 200 km range",
-                missilesDesc3: "Regional Impact: Iran supplies missiles and drones to Hezbollah (Lebanon), Houthis (Yemen), and Iraqi militias, enabling asymmetric warfare against Israel and Gulf states.",
-                missilesDisclaimer: "* Based on U.S. Defense Intelligence Agency, CSIS Missile Defense Project, and Jane's Defence",
-                linkCSIS: "CSIS Missile Threat - Iran",
-                linkDOD: "DoD Report on Iranian Military Power",
-                linkCFR: "CFR - Iran's Ballistic Missile Program",
-                
-                // Proxies content
-                proxiesDesc1: "Iran's \"Axis of Resistance\" is a network of state and non-state actors across the Middle East that receive military, financial, and political support from Tehran. This network enables Iran to project power and conduct asymmetric warfare while maintaining plausible deniability.",
-                proxiesDesc2: "Key Proxy Groups:",
-                proxiesBullet1: "Hezbollah (Lebanon): Most powerful non-state actor; 150,000+ rockets/missiles; receives $700M+ annually from Iran",
-                proxiesBullet2: "Houthis (Yemen): Control northern Yemen; launched 200+ attacks on Red Sea shipping (2023-2024)",
-                proxiesBullet3: "Popular Mobilization Forces (Iraq): Coalition of Shia militias integrated into Iraqi security forces",
-                proxiesBullet4: "Hamas & Palestinian Islamic Jihad (Gaza): Receive weapons, training, and funding despite ideological differences",
-                proxiesBullet5: "Syrian Government: Iran provides military advisors, arms, and billions in economic aid",
-                proxiesDesc3: "Strategic Purpose: Proxies allow Iran to pressure adversaries (Israel, Saudi Arabia, U.S. forces) without direct confrontation, maintain a forward defense posture, and expand regional influence.",
-                proxiesDisclaimer: "* Based on U.S. State Department, UN reports, and regional security analysis",
-                linkStateTerrorism: "State Dept - Iran Terrorism Report",
-                linkCSISProxies: "CSIS - Iran's Support for Terrorism",
-                linkWashInst: "Washington Institute - Mapping Iran's Proxies",
-                
-                // Sanctions content
-                sanctionsDesc1: "Iran faces the most comprehensive sanctions regime in modern history, targeting its energy sector, banking system, shipping, and military procurement. U.S. \"maximum pressure\" campaign (2018-present) has severely constrained Iran's economy.",
-                sanctionsDesc2: "Key Sanctions Categories:",
-                sanctionsBullet1: "Energy Sector: Oil exports fell from 2.5M bpd (2017) to ~1.5M bpd (2024); buyers face secondary sanctions",
-                sanctionsBullet2: "Banking & Finance: Cut off from SWIFT (2018); limited access to international financial system",
-                sanctionsBullet3: "IRGC Designation: Islamic Revolutionary Guard Corps designated as Foreign Terrorist Organization (2019)",
-                sanctionsBullet4: "Technology & Dual-Use: Restrictions on advanced computing, aerospace, and industrial equipment",
-                sanctionsBullet5: "Humanitarian Exemptions: Food, medicine, and medical devices exempt but payment challenges persist",
-                sanctionsDesc3: "Economic Impact: Rial depreciation (98% since 2018), 40%+ inflation, GDP contraction, but regime has adapted through smuggling networks, cryptocurrency, and barter arrangements with China/Russia.",
-                sanctionsDisclaimer: "* Based on U.S. Treasury OFAC, IMF, World Bank, and sanctions compliance databases",
-                linkTreasurySanctions: "U.S. Treasury - Iran Sanctions",
-                linkEUSanctions: "EU Parliament - Iran Sanctions Overview",
-                linkIMF: "IMF - Iran Economic Outlook",
-                
-                // Politics content
-                politicsDesc1: "Iran's political system is a theocratic republic with ultimate authority vested in the Supreme Leader (Ayatollah Ali Khamenei since 1989). Power struggles between reformists, moderates, and hardliners shape domestic and foreign policy.",
-                politicsDesc2: "Key Power Centers:",
-                politicsBullet1: "Supreme Leader: Controls military, judiciary, state media; appoints half of Guardian Council",
-                politicsBullet2: "President (Ebrahim Raisi, 2021-2024): Ultraconservative cleric; died in helicopter crash May 2024",
-                politicsBullet3: "Islamic Revolutionary Guard Corps (IRGC): Parallel military controlling ~40% of economy; Quds Force handles external operations",
-                politicsBullet4: "Guardian Council: Vets all candidates; blocked thousands of reformists in 2020-2024 elections",
-                politicsBullet5: "Parliament (Majles): Dominated by hardliners since 2020; limited influence on Supreme Leader decisions",
-                politicsDesc3: "Protests & Dissent: Mahsa Amini protests (2022-2023) represented the greatest challenge to the regime since 1979. Women's rights, economic grievances, and ethnic tensions (Kurds, Baluchis, Arabs) fuel ongoing unrest.",
-                politicsDesc4: "Succession Question: Khamenei (85 years old) has no clear successor; IRGC may play kingmaker role.",
-                politicsDisclaimer: "* Based on HRANA, Amnesty International, Human Rights Watch, and regional analysts",
-                linkHRANA: "HRANA - Human Rights Activists News Agency",
-                linkHRW: "Human Rights Watch - Iran",
-                linkMEI: "Middle East Institute - Iran Analysis"
+                govtTitle: "🏛️ GOVERNMENT STATUS"
             },
             he: {
                 pageTitle: "🇮🇷 מעקב הפגנות באיראן",
@@ -1989,15 +1897,13 @@
                 productionStatusTitle: "מצב ייצור נפט איראני",
                 productionSource: "מקור",
                 viewNews: "צפה בחדשות קשורות",
-                
                 knowledgeLibraryTitle: "ספריית ידע",
                 catNuclear: "תוכנית גרעין ומצב ה-JCPOA",
                 catMissiles: "יכולות טילים ומל\"טים",
                 catProxies: "רשתות פרוקסי אזוריות",
                 catSanctions: "סנקציות ולחץ כלכלי",
                 catPolitics: "דינמיקה פוליטית פנימית",
-                relatedOnePager: "📑 דף מידע קשור:",
-                hizballahFinancingLink: "רשתות מימון חיזבאללה"
+                govtTitle: "🏛️ מצב הממשל"
             },
             ar: {
                 pageTitle: "🇮🇷 متابعة احتجاجات إيران",
@@ -2030,15 +1936,13 @@
                 productionStatusTitle: "حالة إنتاج النفط الإيراني",
                 productionSource: "المصدر",
                 viewNews: "عرض الأخبار ذات الصلة",
-                
                 knowledgeLibraryTitle: "مكتبة المعرفة",
                 catNuclear: "البرنامج النووي وحالة JCPOA",
                 catMissiles: "قدرات الصواريخ والطائرات المسيرة",
                 catProxies: "شبكات الوكلاء الإقليميين",
                 catSanctions: "العقوبات والضغط الاقتصادي",
                 catPolitics: "الديناميات السياسية الداخلية",
-                relatedOnePager: "📑 ورقة معلومات ذات صلة:",
-                hizballahFinancingLink: "شبكات تمويل حزب الله"
+                govtTitle: "🏛️ حالة الحكومة"
             },
             fa: {
                 pageTitle: "🇮🇷 پیگیری اعتراضات ایران",
@@ -2071,27 +1975,26 @@
                 productionStatusTitle: "وضعیت تولید نفت ایران",
                 productionSource: "منبع",
                 viewNews: "مشاهده اخبار مرتبط",
-                
                 knowledgeLibraryTitle: "کتابخانه دانش",
                 catNuclear: "برنامه هسته‌ای و وضعیت JCPOA",
                 catMissiles: "قابلیت‌های موشکی و پهپادی",
                 catProxies: "شبکه‌های نیروهای نیابتی منطقه‌ای",
                 catSanctions: "تحریم‌ها و فشار اقتصادی",
                 catPolitics: "پویایی‌های سیاسی داخلی",
-                relatedOnePager: "📑 صفحه اطلاعاتی مرتبط:",
-                hizballahFinancingLink: "شبکه‌های تأمین مالی حزب‌الله"
+                govtTitle: "🏛️ وضعیت حکومت"
             }
         };
 
         let currentLang = 'en';
         let protestData = null;
 
+        // ============================================
+        // LANGUAGE SWITCHING
+        // ============================================
         function switchLanguage(lang) {
             currentLang = lang;
             
-            document.querySelectorAll('.lang-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
             const isRTL = lang === 'he' || lang === 'ar' || lang === 'fa';
@@ -2102,7 +2005,6 @@
 
         function updateUIText() {
             const t = translations[currentLang];
-            
             document.querySelectorAll('[data-i18n]').forEach(element => {
                 const key = element.getAttribute('data-i18n');
                 if (t[key]) {
@@ -2115,6 +2017,9 @@
             });
         }
 
+        // ============================================
+        // MAIN DATA FETCH (single endpoint — all data)
+        // ============================================
         async function fetchProtestData() {
             try {
                 const response = await fetch('https://asifah-backend.onrender.com/scan-iran-protests?days=7');
@@ -2122,6 +2027,8 @@
                 protestData = data;
                 
                 updateMetrics(data);
+                updateOilData(data);
+                updateGovernmentCard(data);
                 updateTabCounts(data);
                 showArticles('hrana');
                 updateLastUpdated();
@@ -2131,20 +2038,24 @@
                 console.error('Error fetching protest data:', error);
                 document.getElementById('articles-container').innerHTML = 
                     '<div class="error">Error loading data. Please refresh the page.</div>';
-                
                 document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
                 document.getElementById('loadingError').style.display = 'block';
             }
         }
 
+        // ============================================
+        // UPDATE METRICS (stability, casualties, cities)
+        // ============================================
         function updateMetrics(data) {
+            // --- Protest Intensity ---
             const intensity = data.intensity || 0;
             document.getElementById('protest-intensity').textContent = intensity + '%';
             document.getElementById('protest-intensity').className = 'metric-value ' + getIntensityClass(intensity);
             document.getElementById('intensity-level').textContent = getIntensityLabel(intensity);
             
+            // --- Casualties ---
             const casualties = data.casualties || {};
-            const casualties_enhanced = data.casualties_enhanced || {};
+            const ce = data.casualties_enhanced || {};
             
             function formatTrend(value) {
                 if (!value || value === 0) return '<span class="trend-neutral">—</span>';
@@ -2153,44 +2064,42 @@
                 return `<span class="${colorClass}">${arrow} ${Math.abs(value).toFixed(1)}%*</span>`;
             }
             
-            if (casualties_enhanced.recent_7d) {
-                document.getElementById('arrests-7d').textContent = casualties_enhanced.recent_7d.arrests || 0;
-                document.getElementById('arrests-30d').textContent = `~${casualties_enhanced.recent_30d?.arrests || 0}`;
-                document.getElementById('arrests-trend').innerHTML = formatTrend(casualties_enhanced.trends?.arrests);
-                document.getElementById('arrests-cumulative').textContent = (casualties_enhanced.cumulative?.arrests && casualties_enhanced.cumulative.arrests !== 'Data unavailable') ? casualties_enhanced.cumulative.arrests : '53,166+';
-                document.getElementById('arrests-avg').textContent = casualties_enhanced.averages?.arrests_per_week || '--';
+            if (ce.recent_7d) {
+                document.getElementById('deaths-7d').textContent = ce.recent_7d.deaths || 0;
+                document.getElementById('deaths-30d').textContent = `~${ce.recent_30d?.deaths || 0}`;
+                document.getElementById('deaths-trend').innerHTML = formatTrend(ce.trends?.deaths);
+                document.getElementById('deaths-cumulative').textContent = (ce.cumulative?.deaths && ce.cumulative.deaths !== 'Data unavailable') ? ce.cumulative.deaths : '1,500+';
+                document.getElementById('deaths-avg').textContent = ce.averages?.deaths_per_week || '--';
                 
-                document.getElementById('deaths-7d').textContent = casualties_enhanced.recent_7d.deaths || 0;
-                document.getElementById('deaths-30d').textContent = `~${casualties_enhanced.recent_30d?.deaths || 0}`;
-                document.getElementById('deaths-trend').innerHTML = formatTrend(casualties_enhanced.trends?.deaths);
-                document.getElementById('deaths-cumulative').textContent = (casualties_enhanced.cumulative?.deaths && casualties_enhanced.cumulative.deaths !== 'Data unavailable') ? casualties_enhanced.cumulative.deaths : '6,506+';
-                document.getElementById('deaths-avg').textContent = casualties_enhanced.averages?.deaths_per_week || '--';
+                document.getElementById('injuries-7d').textContent = ce.recent_7d.injuries || 0;
+                document.getElementById('injuries-30d').textContent = `~${ce.recent_30d?.injuries || 0}`;
+                document.getElementById('injuries-trend').innerHTML = formatTrend(ce.trends?.injuries);
+                document.getElementById('injuries-cumulative').textContent = (ce.cumulative?.injuries && ce.cumulative.injuries !== 'Data unavailable') ? ce.cumulative.injuries : 'Unknown';
+                document.getElementById('injuries-avg').textContent = ce.averages?.injuries_per_week || '--';
                 
-                document.getElementById('injuries-7d').textContent = casualties_enhanced.recent_7d.injuries || 0;
-                document.getElementById('injuries-30d').textContent = `~${casualties_enhanced.recent_30d?.injuries || 0}`;
-                document.getElementById('injuries-trend').innerHTML = formatTrend(casualties_enhanced.trends?.injuries);
-                document.getElementById('injuries-cumulative').textContent = (casualties_enhanced.cumulative?.injuries && casualties_enhanced.cumulative.injuries !== 'Data unavailable') ? casualties_enhanced.cumulative.injuries : '25,845+';
-                document.getElementById('injuries-avg').textContent = casualties_enhanced.averages?.injuries_per_week || '--';
+                document.getElementById('arrests-7d').textContent = ce.recent_7d.arrests || 0;
+                document.getElementById('arrests-30d').textContent = `~${ce.recent_30d?.arrests || 0}`;
+                document.getElementById('arrests-trend').innerHTML = formatTrend(ce.trends?.arrests);
+                document.getElementById('arrests-cumulative').textContent = (ce.cumulative?.arrests && ce.cumulative.arrests !== 'Data unavailable') ? ce.cumulative.arrests : '30,000+';
+                document.getElementById('arrests-avg').textContent = ce.averages?.arrests_per_week || '--';
             }
             
-            const isVerified = casualties_enhanced.hrana_verified || casualties.hrana_verified || false;
+            const isVerified = ce.hrana_verified || casualties.hrana_verified || false;
             document.querySelectorAll('.verified-badge').forEach(badge => {
                 badge.style.display = isVerified ? 'block' : 'none';
             });
             
-            const regimeStability = data.regime_stability || {};
-            const stabilityScore = regimeStability.stability_score || 0;
-            const riskLevel = regimeStability.risk_level || 'Unknown';
-            const trend = regimeStability.trend || 'stable';
-            const exchangeRate = data.exchange_rate || {};
+            // --- Regime Stability Index ---
+            const rs = data.regime_stability || {};
+            const stabilityScore = rs.stability_score || 0;
+            const riskLevel = rs.risk_level || 'Unknown';
+            const trend = rs.trend || 'stable';
             
             document.getElementById('regime-stability').textContent = stabilityScore;
             document.getElementById('regime-stability').className = 'metric-value ' + getStabilityClass(stabilityScore);
             
             const progressFill = document.getElementById('stability-progress-fill');
-            if (progressFill) {
-                progressFill.style.width = stabilityScore + '%';
-            }
+            if (progressFill) progressFill.style.width = stabilityScore + '%';
             
             document.getElementById('stability-level').textContent = riskLevel;
             document.getElementById('stability-level').className = 'metric-subtitle ' + getStabilityClass(stabilityScore);
@@ -2199,6 +2108,16 @@
             const trendText = trend.charAt(0).toUpperCase() + trend.slice(1);
             document.getElementById('stability-trend').textContent = `Trend: ${trendArrow} ${trendText} (7-day)`;
             
+            // --- 5 Sub-Components ---
+            const components = rs.components || {};
+            updateComponent('comp-protest-score', components.protest_activity);
+            updateComponent('comp-economic-score', components.economic_pressure);
+            updateComponent('comp-security-score', components.security_response);
+            updateComponent('comp-geopolitical-score', components.geopolitical_tension);
+            updateComponent('comp-cohesion-score', components.internal_cohesion);
+            
+            // --- USD/IRR ---
+            const exchangeRate = data.exchange_rate || {};
             if (exchangeRate.usd_to_irr) {
                 const baselineRate = 42000;
                 const currentRate = exchangeRate.usd_to_irr;
@@ -2225,19 +2144,12 @@
                 `;
             }
             
-            const protestIntensityMini = document.getElementById('protest-intensity-mini');
-            if (protestIntensityMini) {
-                const intensityLabel = intensity >= 60 ? 'High' : intensity >= 30 ? 'Medium' : 'Low';
-                const intensityColor = intensity >= 60 ? 'var(--iran-accent)' : intensity >= 30 ? '#ff8c42' : '#ffd43b';
-                protestIntensityMini.innerHTML = `<span style="color: ${intensityColor};">${intensityLabel}</span> (${intensity}%)`;
-            }
-            
+            // --- Cities ---
             const numCities = data.num_cities_affected || 0;
             document.getElementById('total-cities').textContent = numCities;
             
             const citiesContainer = document.getElementById('cities-list');
             const subtitleElement = document.getElementById('geography-subtitle');
-            
             citiesContainer.innerHTML = '';
             
             if (numCities === 0) {
@@ -2255,7 +2167,6 @@
                         pill.className = 'city-pill';
                         pill.style.display = 'inline-block';
                         pill.textContent = `${cityObj.name} (${cityObj.count})`;
-                        
                         cityWrapper.appendChild(pill);
                         
                         if (cityObj.sources && cityObj.sources.length > 0) {
@@ -2265,12 +2176,8 @@
                             sourcesDiv.style.marginLeft = '8px';
                             
                             cityObj.sources.forEach((source, idx) => {
-                                if (idx > 0) {
-                                    sourcesDiv.appendChild(document.createTextNode(' • '));
-                                }
-                                
+                                if (idx > 0) sourcesDiv.appendChild(document.createTextNode(' • '));
                                 const link = document.createElement('a');
-                                
                                 if (typeof source === 'string') {
                                     link.href = source;
                                     link.textContent = `Source ${idx + 1}`;
@@ -2278,84 +2185,152 @@
                                     link.href = source.url || '#';
                                     link.textContent = source.name || `Source ${idx + 1}`;
                                 }
-                                
                                 link.target = '_blank';
                                 link.rel = 'noopener noreferrer';
                                 link.style.color = 'var(--iran-accent)';
                                 link.style.textDecoration = 'none';
                                 link.onmouseover = function() { this.style.textDecoration = 'underline'; };
                                 link.onmouseout = function() { this.style.textDecoration = 'none'; };
-                                
                                 sourcesDiv.appendChild(link);
                             });
-                            
                             cityWrapper.appendChild(sourcesDiv);
                         }
-                        
                         citiesContainer.appendChild(cityWrapper);
                     });
                 }
             }
         }
 
-        // Iran Oil Data Functions
-        async function fetchIranOilData() {
-            try {
-                const response = await fetch('https://asifah-backend.onrender.com/api/iran-oil-data');
-                const data = await response.json();
-                
-                if (data.success && data.oil_price) {
-                    const oilPrice = data.oil_price;
-                    const arrow = oilPrice.arrow || '→';
-                    const changeColor = oilPrice.trend === 'up' ? '#4ade80' : oilPrice.trend === 'down' ? 'var(--iran-accent)' : '#a0aec0';
-                    const changeSign = oilPrice.percent_change >= 0 ? '+' : '';
-                    
-                    document.getElementById('oil-price-value').innerHTML = 
-                        `$${oilPrice.current_price}/bbl ${arrow} <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${oilPrice.percent_change}%)</span>`;
-                    
-                    if (data.sparkline && data.sparkline.data) {
-                        drawOilSparkline(data.sparkline.data);
-                    }
-                    
-                    if (data.reserves) {
-                        const reserves = data.reserves;
-                        document.getElementById('oil-reserves-value').textContent = 
-                            `${reserves.oil_reserves.amount} ${reserves.oil_reserves.unit}`;
-                        document.getElementById('gas-reserves-value').textContent = 
-                            `${reserves.gas_reserves.amount} ${reserves.gas_reserves.unit}`;
-                        document.getElementById('opec-date').textContent = reserves.source.date;
-                    }
-                    
-                    if (data.production_status) {
-                        const ps = data.production_status;
-                        
-                        document.getElementById('production-status-emoji').textContent = ps.emoji;
-                        document.getElementById('production-status-text').textContent = ps.status_text;
-                        document.getElementById('production-status-detail').textContent = ps.status_detail;
-                        
-                        document.getElementById('production-source-name').textContent = ps.production_source || 'OPEC';
-                        document.getElementById('production-source-link').href = ps.production_source_url || '#';
-                        
-                        if (ps.production_date) {
-                            const date = new Date(ps.production_date);
-                            const formatted = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-                            document.getElementById('production-date').textContent = formatted;
-                        }
-                        
-                        const newsLinkDiv = document.getElementById('production-news-link');
-                        if (ps.news_link) {
-                            newsLinkDiv.style.display = 'block';
-                            newsLinkDiv.querySelector('a').href = ps.news_link;
-                        } else {
-                            newsLinkDiv.style.display = 'none';
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching Iran oil data:', error);
+        // ============================================
+        // UPDATE COMPONENT SCORES (color-coded)
+        // ============================================
+        function updateComponent(elementId, score) {
+            const el = document.getElementById(elementId);
+            if (!el || score === undefined) return;
+            
+            const rounded = Math.round(score);
+            el.textContent = rounded + '/100';
+            
+            if (rounded >= 70) {
+                el.style.color = '#4ade80';
+            } else if (rounded >= 50) {
+                el.style.color = '#ffd43b';
+            } else if (rounded >= 30) {
+                el.style.color = '#ff8c42';
+            } else {
+                el.style.color = 'var(--iran-accent)';
             }
         }
-        
+
+        // ============================================
+        // UPDATE OIL DATA (from embedded data.oil_data)
+        // ============================================
+        function updateOilData(data) {
+            const oilData = data.oil_data || {};
+            const oilPrice = oilData.oil_price || {};
+            const reserves = oilData.reserves || {};
+            const sparkline = oilData.sparkline || {};
+            const ps = oilData.production_status || {};
+            
+            // Oil price
+            if (oilPrice.current_price) {
+                const arrow = oilPrice.arrow || '→';
+                const changeColor = oilPrice.trend === 'up' ? '#4ade80' : oilPrice.trend === 'down' ? 'var(--iran-accent)' : '#a0aec0';
+                const changeSign = oilPrice.percent_change >= 0 ? '+' : '';
+                
+                document.getElementById('oil-price-value').innerHTML = 
+                    `$${oilPrice.current_price}/bbl ${arrow} <span style="color: ${changeColor}; font-size: 12px;">(${changeSign}${oilPrice.percent_change}%)</span>`;
+            }
+            
+            // Sparkline
+            if (sparkline.data && sparkline.data.length > 0) {
+                drawOilSparkline(sparkline.data);
+            } else if (oilPrice.sparkline && oilPrice.sparkline.length > 0) {
+                drawOilSparkline(oilPrice.sparkline);
+            }
+            
+            // Reserves
+            if (reserves.oil_reserves) {
+                document.getElementById('oil-reserves-value').textContent = 
+                    `${reserves.oil_reserves.amount} ${reserves.oil_reserves.unit}`;
+                document.getElementById('gas-reserves-value').textContent = 
+                    `${reserves.gas_reserves.amount} ${reserves.gas_reserves.unit}`;
+                if (reserves.source) {
+                    document.getElementById('opec-date').textContent = reserves.source.date;
+                }
+            }
+            
+            // Production status
+            if (ps.status_text) {
+                document.getElementById('production-status-emoji').textContent = ps.emoji || '⚪';
+                document.getElementById('production-status-text').textContent = ps.status_text;
+                document.getElementById('production-status-detail').textContent = ps.status_detail || '';
+                document.getElementById('production-source-name').textContent = ps.production_source || 'OPEC';
+                document.getElementById('production-source-link').href = ps.production_source_url || '#';
+                
+                if (ps.production_date) {
+                    const date = new Date(ps.production_date);
+                    document.getElementById('production-date').textContent = 
+                        date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                }
+                
+                const newsLinkDiv = document.getElementById('production-news-link');
+                if (ps.news_link) {
+                    newsLinkDiv.style.display = 'block';
+                    newsLinkDiv.querySelector('a').href = ps.news_link;
+                } else {
+                    newsLinkDiv.style.display = 'none';
+                }
+            }
+        }
+
+        // ============================================
+        // GOVERNMENT STATUS CARD
+        // ============================================
+        function updateGovernmentCard(data) {
+            const govt = data.government || {};
+            
+            if (govt.supreme_leader) {
+                const sl = govt.supreme_leader;
+                document.getElementById('govt-sl-name').textContent = sl.name;
+                document.getElementById('govt-sl-since').textContent = `Since ${sl.since} • Age ${sl.age}`;
+                document.getElementById('govt-sl-note').textContent = sl.note;
+            }
+            
+            if (govt.president) {
+                const p = govt.president;
+                document.getElementById('govt-pres-name').textContent = p.name;
+                const daysInOffice = govt.days_pezeshkian_in_office || '';
+                document.getElementById('govt-pres-since').textContent = 
+                    `Since ${p.since} • ${p.faction}` + (daysInOffice ? ` • ${daysInOffice} days in office` : '');
+                document.getElementById('govt-pres-note').textContent = p.note;
+            }
+            
+            if (govt.speaker_of_parliament) {
+                const sp = govt.speaker_of_parliament;
+                document.getElementById('govt-speaker-name').textContent = sp.name;
+                document.getElementById('govt-speaker-since').textContent = `Since ${sp.since}`;
+                document.getElementById('govt-speaker-note').textContent = sp.note;
+            }
+            
+            if (govt.irgc_commander) {
+                const ic = govt.irgc_commander;
+                document.getElementById('govt-irgc-name').textContent = ic.name;
+                document.getElementById('govt-irgc-since').textContent = `Since ${ic.since}`;
+                document.getElementById('govt-irgc-note').textContent = ic.note;
+            }
+            
+            if (govt.quds_force_commander) {
+                const qc = govt.quds_force_commander;
+                document.getElementById('govt-quds-name').textContent = qc.name;
+                document.getElementById('govt-quds-since').textContent = `Since ${qc.since}`;
+                document.getElementById('govt-quds-note').textContent = qc.note;
+            }
+        }
+
+        // ============================================
+        // OIL SPARKLINE
+        // ============================================
         function drawOilSparkline(data) {
             const canvas = document.getElementById('oil-sparkline');
             if (!canvas || !data || data.length === 0) return;
@@ -2369,7 +2344,7 @@
             const prices = data.map(d => d.price);
             const minPrice = Math.min(...prices);
             const maxPrice = Math.max(...prices);
-            const priceRange = maxPrice - minPrice;
+            const priceRange = maxPrice - minPrice || 1;
             
             const stepX = width / (prices.length - 1);
             const points = prices.map((price, i) => ({
@@ -2380,7 +2355,7 @@
             ctx.beginPath();
             ctx.moveTo(points[0].x, points[0].y);
             points.forEach(point => ctx.lineTo(point.x, point.y));
-            ctx.strokeStyle = 'var(--iran-accent)';
+            ctx.strokeStyle = '#6495ED';
             ctx.lineWidth = 2;
             ctx.stroke();
             
@@ -2394,6 +2369,9 @@
             ctx.fill();
         }
 
+        // ============================================
+        // HELPERS
+        // ============================================
         function getIntensityClass(value) {
             if (value >= 80) return 'intensity-critical';
             if (value >= 60) return 'intensity-high';
@@ -2415,6 +2393,9 @@
             return 'Low activity';
         }
 
+        // ============================================
+        // ARTICLES
+        // ============================================
         function updateTabCounts(data) {
             const t = translations[currentLang];
             document.getElementById('tab-hrana').textContent = `${t.tabHRANA} (${(data.articles_hrana || []).length})`;
@@ -2429,9 +2410,7 @@
         function showArticles(lang) {
             if (!protestData) return;
             
-            document.querySelectorAll('.language-tabs button').forEach(btn => {
-                btn.classList.remove('active');
-            });
+            document.querySelectorAll('.language-tabs button').forEach(btn => btn.classList.remove('active'));
             
             if (window.event && window.event.target) {
                 window.event.target.classList.add('active');
@@ -2443,14 +2422,17 @@
             const container = document.getElementById('articles-container');
             container.innerHTML = '';
             
-            let articles = [];
-            if (lang === 'hrana') articles = protestData.articles_hrana || [];
-            else if (lang === 'iranwire') articles = protestData.articles_iranwire || [];
-            else if (lang === 'en') articles = protestData.articles_en || [];
-            else if (lang === 'he') articles = protestData.articles_he || [];
-            else if (lang === 'ar') articles = protestData.articles_ar || [];
-            else if (lang === 'fa') articles = protestData.articles_fa || [];
-            else if (lang === 'reddit') articles = protestData.articles_reddit || [];
+            const articleMap = {
+                hrana: 'articles_hrana',
+                iranwire: 'articles_iranwire',
+                en: 'articles_en',
+                he: 'articles_he',
+                ar: 'articles_ar',
+                fa: 'articles_fa',
+                reddit: 'articles_reddit'
+            };
+            
+            const articles = protestData[articleMap[lang]] || [];
             
             if (articles.length === 0) {
                 container.innerHTML = '<div class="loading">No articles available in this category.</div>';
@@ -2496,12 +2478,14 @@
                 `${t.lastUpdated} ${now.toLocaleString()}`;
         }
 
+        // ============================================
+        // INIT
+        // ============================================
         window.addEventListener('DOMContentLoaded', () => {
             startLoadingProgress();
             fetchProtestData();
-            fetchIranOilData();
+            // Single endpoint — refresh every 30 minutes
             setInterval(fetchProtestData, 30 * 60 * 1000);
-            setInterval(fetchIranOilData, 15 * 60 * 1000);
         });
     </script>
 </body>
