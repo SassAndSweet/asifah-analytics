@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.3.0 - Feb 22, 2026 -->
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.4.0 - Feb 25, 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<!-- v2.4.0: LiveUAMap tabbed conflict maps per theatre -->
 <html lang="en" dir="ltr">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -201,12 +202,43 @@
         .loading-text { font-size: 0.85rem; color: var(--text-secondary); margin-top: 16px; letter-spacing: 2px; }
         .error-banner { background: var(--alert-red-bg); border: 1px solid var(--alert-red-border); border-radius: 8px; padding: 16px 20px; text-align: center; color: var(--accent-red); display: none; }
         .updated-bar { font-size: 0.65rem; color: var(--text-muted); text-align: center; padding: 8px; letter-spacing: 1px; }
+
+        /* ====== v2.4.0: LIVE CONFLICT MAP PANEL ====== */
+        .livemap-panel { margin-bottom: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
+        [data-theme="dark"] .livemap-panel { border-color: var(--cyber-border); box-shadow: 0 0 15px rgba(0,212,255,0.04); }
+        .livemap-tab-bar { display: flex; align-items: center; gap: 0; background: var(--bg-signal); border-bottom: 1px solid var(--border-color); overflow-x: auto; scrollbar-width: thin; }
+        [data-theme="dark"] .livemap-tab-bar { border-bottom-color: var(--cyber-border); }
+        .livemap-tab-label { padding: 10px 16px; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; border-right: 1px solid var(--border-color); user-select: none; }
+        [data-theme="dark"] .livemap-tab-label { border-right-color: var(--cyber-border); }
+        .livemap-tab { padding: 10px 18px; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.25s; user-select: none; letter-spacing: 0.5px; }
+        .livemap-tab:hover { color: var(--text-primary); background: rgba(0,212,255,0.04); }
+        .livemap-tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); background: rgba(0,212,255,0.06); }
+        [data-theme="light"] .livemap-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: rgba(49,130,206,0.06); }
+        .livemap-viewport { position: relative; width: 100%; height: 420px; background: #0d1117; }
+        .livemap-viewport iframe { width: 100%; height: 100%; border: none; display: block; }
+        .livemap-placeholder { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); gap: 8px; }
+        .livemap-placeholder .map-icon { font-size: 2.5rem; opacity: 0.4; }
+        .livemap-placeholder .map-hint { font-size: 0.75rem; letter-spacing: 1px; }
+        .livemap-source-note { padding: 6px 16px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; text-align: right; border-top: 1px solid var(--border-color); }
+        [data-theme="dark"] .livemap-source-note { border-top-color: var(--cyber-border); }
+        .livemap-source-note a { color: var(--accent-blue); text-decoration: none; }
+        .livemap-source-note a:hover { text-decoration: underline; }
+        .livemap-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 2; }
+        .livemap-loading .loading-spinner { width: 32px; height: 32px; }
+        .livemap-loading-text { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px; }
+        @media (max-width: 768px) {
+            .livemap-viewport { height: 320px; }
+            .livemap-tab { padding: 8px 12px; font-size: 0.65rem; }
+            .livemap-tab-label { padding: 8px 10px; font-size: 0.6rem; }
+        }
+
         [dir="rtl"] .actor-top-signal { border-left: none; border-right: 3px solid var(--accent-blue); }
         [dir="rtl"] .signal-item.evac-signal { border-left: none; border-right: 3px solid var(--accent-red); }
         [dir="rtl"] .status-card.alert-elevated { border-left: none; border-right: 4px solid var(--accent-yellow); }
         [dir="rtl"] .status-card.alert-high { border-left: none; border-right: 4px solid var(--accent-orange); }
         [dir="rtl"] .status-card.alert-surge { border-left: none; border-right: 4px solid var(--accent-red); }
         [dir="rtl"] .header-row-3 { justify-content: flex-start; }
+        [dir="rtl"] .livemap-source-note { text-align: left; }
         @media (max-width: 768px) { .header-row-1 { flex-direction: column; gap: 10px; align-items: flex-start; } .header-right-controls { flex-wrap: wrap; } .header-title { font-size: 1.3rem; letter-spacing: 2px; } .status-strip { grid-template-columns: repeat(2, 1fr); } .actor-grid, .target-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -262,7 +294,7 @@
     <div class="source-footer" id="sourceFooter"></div>
     <div class="updated-bar" id="updatedBar"></div>
     <div class="page-footer">
-        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.3.0</div>
+        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.4.0</div>
         <a href="index.html" class="back-link" data-i18n="backToMain">&larr; Back to Main Dashboard</a>
     </div>
 </div>
@@ -279,19 +311,164 @@ var TRANSLATIONS = {
 
 var currentLang = 'en';
 var TIER_LABELS = { 1:'TIER 1 \u2014 STRIKE', 2:'TIER 2 \u2014 ADVERSARY', 3:'TIER 3 \u2014 REGIONAL', 4:'TIER 4 \u2014 ALLIANCE' };
-
-/* ====== ASSET ICONS — v2.3.0: added drone_incursion ====== */
 var ASSET_ICONS = { carrier_strike_group:'\uD83D\uDEA2', submarine:'\uD83D\uDD31', bomber_deployment:'\u2708\uFE0F', amphibious_group:'\u2693', fighter_surge:'\uD83D\uDEE9\uFE0F', air_defense:'\uD83D\uDEE1\uFE0F', isr_assets:'\uD83D\uDC41\uFE0F', ground_forces:'\uD83E\uDE96', logistics:'\uD83D\uDCE6', missile_test:'\uD83D\uDE80', naval_exercise:'\u2693', base_evacuation:'\uD83D\uDEA8', military_posturing:'\u26A0\uFE0F', drone_incursion:'\uD83D\uDEF8', unspecified:'\u26A0\uFE0F' };
-
-/* ====== ASSET LABELS — v2.3.0: added drone_incursion ====== */
 var ASSET_LABELS = { carrier_strike_group:'Carrier Strike Groups', submarine:'Submarines', bomber_deployment:'Strategic Bombers', amphibious_group:'Amphibious Groups', fighter_surge:'Fighter Surges', air_defense:'Air Defense', isr_assets:'ISR Assets', ground_forces:'Ground Forces', logistics:'Logistics', missile_test:'Missile Tests', naval_exercise:'Naval Exercises', base_evacuation:'Base Evacuations', military_posturing:'Posturing/Threats', drone_incursion:'Drone Incursions', unspecified:'General Activity' };
 
-/* ====== THEATRE ordering — v2.3.0: added greenland + poland to Europe ====== */
 var THEATRE_ORDER = [
     { id:'asia_pacific', label:'Asia & The Pacific Theatre', icon:'\uD83C\uDF0F', actors:['china'] },
     { id:'europe', label:'European Theatre', icon:'\uD83C\uDF0D', actors:['nato','russia','turkey','ukraine','greenland','poland'] },
     { id:'middle_east', label:'Middle East & North Africa', icon:'\uD83D\uDD4C', actors:['us','israel','iran','egypt','jordan','kuwait','qatar','saudi_arabia','uae'] }
 ];
+
+/* ====== v2.4.0: LIVE CONFLICT MAPS PER THEATRE ====== */
+var THEATRE_MAPS = {
+    middle_east: [
+        { id:'isrpal', label:'\uD83C\uDDEE\uD83C\uDDF1 Israel \u00B7 Palestine', url:'https://israelpalestine.liveuamap.com/', desc:'Gaza, West Bank, Lebanon border \u2014 Live conflict events' },
+        { id:'syria', label:'\uD83C\uDDF8\uD83C\uDDFE Syria', url:'https://syria.liveuamap.com/', desc:'SDF/HTS, ISIS pockets, Israeli strikes' },
+        { id:'isis', label:'\u2620\uFE0F ISIS / Iraq', url:'https://isis.liveuamap.com/', desc:'ISIS activity tracker \u2014 Iraq & Syria' },
+        { id:'mena', label:'\uD83C\uDF0D Middle East Overview', url:'https://middleeast.liveuamap.com/', desc:'Iran, Yemen, Gulf \u2014 Regional posture' },
+        { id:'yemen', label:'\uD83C\uDDFE\uD83C\uDDEA Yemen', url:'https://yemen.liveuamap.com/', desc:'Houthi activity, Red Sea, Saudi border' }
+    ],
+    europe: [
+        { id:'ukraine', label:'\uD83C\uDDFA\uD83C\uDDE6 Ukraine', url:'https://liveuamap.com/', desc:'Russia-Ukraine frontline \u2014 Live conflict events' },
+        { id:'eu_nato', label:'\uD83C\uDDEA\uD83C\uDDFA NATO / Europe', url:'https://nato.liveuamap.com/', desc:'NATO exercises, Baltic, Nordic posture' }
+    ],
+    asia_pacific: [
+        { id:'indo_pacific', label:'\uD83C\uDF0F Indo-Pacific', url:'https://southchinasea.liveuamap.com/', desc:'South China Sea, Taiwan Strait, PLAN activity' }
+    ]
+};
+
+/* Track which iframes have been loaded (lazy-load on first click) */
+var loadedMaps = {};
+
+function switchMapTab(theatreId, mapId) {
+    var maps = THEATRE_MAPS[theatreId] || [];
+    var mapDef = maps.find(function(m) { return m.id === mapId; });
+    if (!mapDef) return;
+
+    /* Update active tab styling */
+    var tabBar = document.getElementById('mapTabs-' + theatreId);
+    if (tabBar) {
+        var tabs = tabBar.querySelectorAll('.livemap-tab');
+        for (var i = 0; i < tabs.length; i++) {
+            tabs[i].classList.toggle('active', tabs[i].getAttribute('data-map-id') === mapId);
+        }
+    }
+
+    /* Show/hide iframes with lazy-loading */
+    var viewport = document.getElementById('mapViewport-' + theatreId);
+    if (!viewport) return;
+
+    /* Hide all iframes and placeholders in this viewport */
+    var children = viewport.children;
+    for (var j = 0; j < children.length; j++) {
+        children[j].style.display = 'none';
+    }
+
+    var iframeId = 'mapFrame-' + theatreId + '-' + mapId;
+    var existing = document.getElementById(iframeId);
+
+    if (existing) {
+        existing.style.display = 'block';
+    } else {
+        /* Create loading indicator */
+        var loader = document.createElement('div');
+        loader.className = 'livemap-loading';
+        loader.id = 'mapLoader-' + theatreId + '-' + mapId;
+        loader.innerHTML = '<div class="loading-spinner"></div><div class="livemap-loading-text">LOADING ' + mapDef.label.replace(/[\uD800-\uDFFF]/g, '').trim().toUpperCase() + '...</div>';
+        viewport.appendChild(loader);
+        loader.style.display = 'flex';
+
+        /* Create iframe (lazy load) */
+        var iframe = document.createElement('iframe');
+        iframe.id = iframeId;
+        iframe.src = mapDef.url;
+        iframe.title = mapDef.desc;
+        iframe.setAttribute('loading', 'lazy');
+        iframe.setAttribute('referrerpolicy', 'no-referrer');
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
+        iframe.style.display = 'none';
+        iframe.onload = function() {
+            iframe.style.display = 'block';
+            var ldr = document.getElementById('mapLoader-' + theatreId + '-' + mapId);
+            if (ldr) ldr.style.display = 'none';
+        };
+        iframe.onerror = function() {
+            var ldr = document.getElementById('mapLoader-' + theatreId + '-' + mapId);
+            if (ldr) ldr.innerHTML = '<div class="livemap-loading-text" style="color:var(--accent-red)">\u26A0 Map failed to load. <a href="' + mapDef.url + '" target="_blank" style="color:var(--accent-cyan)">Open directly \u2192</a></div>';
+        };
+        viewport.appendChild(iframe);
+        loadedMaps[iframeId] = true;
+    }
+}
+
+function buildMapPanel(theatreId) {
+    var maps = THEATRE_MAPS[theatreId];
+    if (!maps || maps.length === 0) return null;
+
+    var panel = document.createElement('div');
+    panel.className = 'livemap-panel';
+
+    /* Tab bar */
+    var tabBar = document.createElement('div');
+    tabBar.className = 'livemap-tab-bar';
+    tabBar.id = 'mapTabs-' + theatreId;
+
+    var label = document.createElement('div');
+    label.className = 'livemap-tab-label';
+    label.textContent = '\uD83D\uDDFA\uFE0F LIVE MAP';
+    tabBar.appendChild(label);
+
+    for (var i = 0; i < maps.length; i++) {
+        var tab = document.createElement('div');
+        tab.className = 'livemap-tab' + (i === 0 ? ' active' : '');
+        tab.setAttribute('data-map-id', maps[i].id);
+        tab.textContent = maps[i].label;
+        tab.onclick = (function(tid, mid) { return function() { switchMapTab(tid, mid); }; })(theatreId, maps[i].id);
+        tabBar.appendChild(tab);
+    }
+
+    panel.appendChild(tabBar);
+
+    /* Viewport */
+    var viewport = document.createElement('div');
+    viewport.className = 'livemap-viewport';
+    viewport.id = 'mapViewport-' + theatreId;
+
+    /* Auto-load first map */
+    var firstMap = maps[0];
+    var loader = document.createElement('div');
+    loader.className = 'livemap-loading';
+    loader.id = 'mapLoader-' + theatreId + '-' + firstMap.id;
+    loader.innerHTML = '<div class="loading-spinner"></div><div class="livemap-loading-text">LOADING ' + firstMap.label.replace(/[\uD800-\uDFFF]/g, '').trim().toUpperCase() + '...</div>';
+    viewport.appendChild(loader);
+
+    var iframe = document.createElement('iframe');
+    iframe.id = 'mapFrame-' + theatreId + '-' + firstMap.id;
+    iframe.src = firstMap.url;
+    iframe.title = firstMap.desc;
+    iframe.setAttribute('loading', 'lazy');
+    iframe.setAttribute('referrerpolicy', 'no-referrer');
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
+    iframe.style.display = 'none';
+    iframe.onload = function() {
+        iframe.style.display = 'block';
+        var ldr = document.getElementById('mapLoader-' + theatreId + '-' + firstMap.id);
+        if (ldr) ldr.style.display = 'none';
+    };
+    viewport.appendChild(iframe);
+    loadedMaps['mapFrame-' + theatreId + '-' + firstMap.id] = true;
+
+    panel.appendChild(viewport);
+
+    /* Source attribution */
+    var note = document.createElement('div');
+    note.className = 'livemap-source-note';
+    note.innerHTML = 'Source: <a href="https://liveuamap.com" target="_blank" rel="noopener">LiveUAMap.com</a> \u2014 Open-data conflict mapping platform \u00B7 Updates in real-time';
+    panel.appendChild(note);
+
+    return panel;
+}
 
 function setLanguage(lang) {
     currentLang = lang;
@@ -382,7 +559,7 @@ function renderAll(data) {
     renderSources(data.source_breakdown || {}, t);
 
     var dt = data.last_updated ? new Date(data.last_updated) : new Date();
-    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.3.0');
+    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.4.0');
 }
 
 function renderEvacBanner(alerts) {
@@ -403,6 +580,17 @@ function renderEvacBanner(alerts) {
 
 function renderTheatres(actors, theatreGroupings, t) {
     var container = document.getElementById('theatreContainer');
+
+    /* Preserve existing map panels to avoid reloading iframes */
+    var existingMaps = {};
+    for (var theatreKey in THEATRE_MAPS) {
+        var existingPanel = document.getElementById('mapPanel-' + theatreKey);
+        if (existingPanel) {
+            existingMaps[theatreKey] = existingPanel;
+            existingPanel.parentNode.removeChild(existingPanel);
+        }
+    }
+
     container.innerHTML = '';
 
     for (var ti = 0; ti < THEATRE_ORDER.length; ti++) {
@@ -442,6 +630,17 @@ function renderTheatres(actors, theatreGroupings, t) {
 
         var body = document.createElement('div');
         body.className = 'theatre-body';
+
+        /* ====== v2.4.0: INSERT LIVE MAP PANEL BEFORE ACTOR GRID ====== */
+        if (existingMaps[theatre.id]) {
+            body.appendChild(existingMaps[theatre.id]);
+        } else if (THEATRE_MAPS[theatre.id]) {
+            var mapPanel = buildMapPanel(theatre.id);
+            if (mapPanel) {
+                mapPanel.id = 'mapPanel-' + theatre.id;
+                body.appendChild(mapPanel);
+            }
+        }
 
         var grid = document.createElement('div');
         grid.className = 'actor-grid';
@@ -493,8 +692,6 @@ function renderTargets(targets, t) {
         var name = sorted[i][0], p = sorted[i][1];
         var card = document.createElement('div');
         card.className = 'target-card ' + (p.alert_level||'normal');
-
-        // Extract driver tags from top_signals
         var driversHtml = '';
         var signals = p.top_signals || [];
         if (signals.length > 0) {
@@ -502,39 +699,24 @@ function renderTargets(targets, t) {
             var seenLabels = {};
             for (var j = 0; j < Math.min(signals.length, 5); j++) {
                 var sig = signals[j];
-                // Add asset type tag (e.g., "Carrier Strike Groups", "Strategic Bombers")
                 var assetLabel = sig.asset_label || sig.asset || '';
-                if (assetLabel && !seenLabels[assetLabel]) {
-                    seenLabels[assetLabel] = true;
-                    driverTags.push(assetLabel);
-                }
-                // Add actor tag (e.g., "🇺🇸 US CENTCOM", "🇮🇷 Iran")
+                if (assetLabel && !seenLabels[assetLabel]) { seenLabels[assetLabel] = true; driverTags.push(assetLabel); }
                 var actorTag = (sig.actor_flag || '') + ' ' + (sig.actor_name || '');
                 actorTag = actorTag.trim();
-                if (actorTag && !seenLabels[actorTag]) {
-                    seenLabels[actorTag] = true;
-                    driverTags.push(actorTag);
-                }
+                if (actorTag && !seenLabels[actorTag]) { seenLabels[actorTag] = true; driverTags.push(actorTag); }
             }
-            // Build tag HTML (max 6 tags to keep it compact)
             if (driverTags.length > 0) {
                 var tagsStr = '';
-                for (var k = 0; k < Math.min(driverTags.length, 6); k++) {
-                    tagsStr += '<span class="driver-tag">' + driverTags[k] + '</span>';
-                }
-                // Add top headline as a one-liner
+                for (var k = 0; k < Math.min(driverTags.length, 6); k++) { tagsStr += '<span class="driver-tag">' + driverTags[k] + '</span>'; }
                 var topHeadline = signals[0].article_title || '';
                 if (topHeadline.length > 80) topHeadline = topHeadline.substring(0, 77) + '...';
                 var headlineHtml = topHeadline ? '<div style="margin-top:4px;font-size:0.65rem;color:var(--text-muted);font-style:italic;">\u201C' + topHeadline + '\u201D</div>' : '';
-
                 driversHtml = '<div class="target-drivers"><div class="target-drivers-label">Key Drivers</div><div class="target-drivers-text">' + tagsStr + '</div>' + headlineHtml + '</div>';
             }
         }
-
         var displayName = name.replace(/_/g,' ');
         if (displayName.toLowerCase() === 'hezbollah') displayName = 'HIZBALLAH';
         else displayName = displayName.toUpperCase();
-
         card.innerHTML = '<div class="target-name">' + (p.alert_icon||'\uD83D\uDFE2') + ' ' + displayName + '</div><div style="display:flex;align-items:baseline;gap:10px"><div class="target-score" style="color:' + (colorMap[p.alert_level]||'var(--text-primary)') + '">' + (p.score ? p.score.toFixed(1) : '0') + '</div><span class="alert-badge ' + (p.alert_level||'normal') + '">' + (p.alert_label||'Normal').toUpperCase() + '</span></div><div class="target-score-label">' + t.score + ' \u00B7 ' + (p.tension_multiplier||1.0) + 'x multiplier</div>' + driversHtml;
         grid.appendChild(card);
     }
