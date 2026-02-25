@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.4.0 - Feb 25, 2026 -->
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.4.1 - Feb 25, 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
 <!-- v2.4.0: LiveUAMap tabbed conflict maps per theatre -->
 <html lang="en" dir="ltr">
@@ -294,7 +294,7 @@
     <div class="source-footer" id="sourceFooter"></div>
     <div class="updated-bar" id="updatedBar"></div>
     <div class="page-footer">
-        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.4.0</div>
+        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.4.1</div>
         <a href="index.html" class="back-link" data-i18n="backToMain">&larr; Back to Main Dashboard</a>
     </div>
 </div>
@@ -503,7 +503,28 @@ function loadTheme() {
 
 function toggleTheatre(theatreId) {
     var section = document.getElementById('theatre-' + theatreId);
-    if (section) section.classList.toggle('collapsed');
+    if (!section) return;
+    var wasCollapsed = section.classList.contains('collapsed');
+    section.classList.toggle('collapsed');
+
+    /* v2.4.1: Lazy-load map panel on FIRST expand only */
+    if (wasCollapsed && THEATRE_MAPS[theatreId]) {
+        var existingPanel = document.getElementById('mapPanel-' + theatreId);
+        if (!existingPanel) {
+            var mapPanel = buildMapPanel(theatreId);
+            if (mapPanel) {
+                mapPanel.id = 'mapPanel-' + theatreId;
+                /* Insert before the actor-grid */
+                var body = section.querySelector('.theatre-body');
+                var grid = body ? body.querySelector('.actor-grid') : null;
+                if (body && grid) {
+                    body.insertBefore(mapPanel, grid);
+                } else if (body) {
+                    body.insertBefore(mapPanel, body.firstChild);
+                }
+            }
+        }
+    }
 }
 
 async function fetchData(forceRefresh) {
@@ -559,7 +580,7 @@ function renderAll(data) {
     renderSources(data.source_breakdown || {}, t);
 
     var dt = data.last_updated ? new Date(data.last_updated) : new Date();
-    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.4.0');
+    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.4.1');
 }
 
 function renderEvacBanner(alerts) {
@@ -581,13 +602,20 @@ function renderEvacBanner(alerts) {
 function renderTheatres(actors, theatreGroupings, t) {
     var container = document.getElementById('theatreContainer');
 
-    /* Preserve existing map panels to avoid reloading iframes */
-    var existingMaps = {};
-    for (var theatreKey in THEATRE_MAPS) {
-        var existingPanel = document.getElementById('mapPanel-' + theatreKey);
-        if (existingPanel) {
-            existingMaps[theatreKey] = existingPanel;
-            existingPanel.parentNode.removeChild(existingPanel);
+    /* v2.4.1: Map panels preserved — only rebuild actor cards on refresh */
+    /* Save collapse state and existing map panels */
+    var collapseState = {};
+    var existingPanels = {};
+    for (var ci = 0; ci < THEATRE_ORDER.length; ci++) {
+        var tid = THEATRE_ORDER[ci].id;
+        var existSection = document.getElementById('theatre-' + tid);
+        if (existSection) {
+            collapseState[tid] = !existSection.classList.contains('collapsed');
+            var ep = document.getElementById('mapPanel-' + tid);
+            if (ep) {
+                existingPanels[tid] = ep;
+                ep.parentNode.removeChild(ep);
+            }
         }
     }
 
@@ -596,7 +624,9 @@ function renderTheatres(actors, theatreGroupings, t) {
     for (var ti = 0; ti < THEATRE_ORDER.length; ti++) {
         var theatre = THEATRE_ORDER[ti];
         var section = document.createElement('div');
-        section.className = 'theatre-section';
+        /* Start collapsed unless user had previously opened it */
+        var isOpen = collapseState[theatre.id] || false;
+        section.className = 'theatre-section' + (isOpen ? '' : ' collapsed');
         section.id = 'theatre-' + theatre.id;
 
         var theatreActors = [];
@@ -631,15 +661,10 @@ function renderTheatres(actors, theatreGroupings, t) {
         var body = document.createElement('div');
         body.className = 'theatre-body';
 
-        /* ====== v2.4.0: INSERT LIVE MAP PANEL BEFORE ACTOR GRID ====== */
-        if (existingMaps[theatre.id]) {
-            body.appendChild(existingMaps[theatre.id]);
-        } else if (THEATRE_MAPS[theatre.id]) {
-            var mapPanel = buildMapPanel(theatre.id);
-            if (mapPanel) {
-                mapPanel.id = 'mapPanel-' + theatre.id;
-                body.appendChild(mapPanel);
-            }
+        /* v2.4.1: Map panels are lazy-loaded on first theatre expand (see toggleTheatre) */
+        /* Re-attach preserved map panel if it existed before refresh */
+        if (existingPanels[theatre.id]) {
+            body.appendChild(existingPanels[theatre.id]);
         }
 
         var grid = document.createElement('div');
