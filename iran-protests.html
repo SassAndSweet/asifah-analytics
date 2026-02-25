@@ -20,6 +20,8 @@
     
     <!-- Favicon using Asifah Analytics logo -->
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <style>
         * {
@@ -1226,6 +1228,19 @@
         @media (max-width: 480px) {
             .stability-components-grid { grid-template-columns: repeat(2, 1fr); }
         }
+
+        /* Leaflet city tooltip */
+        .city-tooltip {
+            background: var(--card-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--iran-accent);
+            border-radius: 4px;
+            padding: 2px 8px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -1470,19 +1485,8 @@
                 
                 <div class="cities-container" id="cities-list"></div>
                 
-                <!-- Iran Map -->
-                <div style="margin-top: 20px; width: 100%; height: 300px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                    <iframe 
-                        src="https://www.openstreetmap.org/export/embed.html?bbox=44.03%2C25.06%2C63.33%2C39.78&layer=mapnik&marker=32.42%2C53.68"
-                        width="100%"
-                        height="100%"
-                        frameborder="0"
-                        scrolling="no"
-                        style="border: none;">
-                    </iframe>
-                </div>
-            </div>
-        </div>
+                <!-- Iran Map (Dynamic Leaflet) -->
+                <div id="iran-protest-map" style="margin-top: 20px; width: 100%; height: 400px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden; z-index: 1;"></div>
 
         <!-- ========== CASUALTIES GRID ========== -->
         <div class="casualties-grid">
@@ -2204,6 +2208,9 @@
                     });
                 }
             }
+            
+            // Update map markers dynamically
+            updateMapMarkers(data.cities || []);
         }
 
         // ============================================
@@ -2481,6 +2488,137 @@
             const t = translations[currentLang];
             document.getElementById('last-updated').textContent = 
                 `${t.lastUpdated} ${now.toLocaleString()}`;
+        }
+
+       // ============================================
+        // DYNAMIC IRAN PROTEST MAP (Leaflet)
+        // ============================================
+        const CITY_COORDS = {
+            'Tehran': [35.6892, 51.3890],
+            'Isfahan': [32.6546, 51.6680],
+            'Shiraz': [29.5918, 52.5837],
+            'Tabriz': [38.0800, 46.2919],
+            'Mashhad': [36.2605, 59.6168],
+            'Ahvaz': [31.3183, 48.6706],
+            'Kerman': [30.2839, 57.0834],
+            'Rasht': [37.2808, 49.5832],
+            'Hamadan': [34.7988, 48.5146],
+            'Yazd': [31.8974, 54.3569],
+            'Sanandaj': [35.3219, 46.9862],
+            'Zahedan': [29.4963, 60.8629],
+            'Bandar Abbas': [27.1865, 56.2808],
+            'Qom': [34.6401, 50.8764],
+            'Arak': [34.0917, 49.6892],
+            'Zanjan': [36.6736, 48.4787],
+            'Gorgan': [36.8427, 54.4439],
+            'Birjand': [32.8663, 59.2211],
+            'Bushehr': [28.9234, 50.8203],
+            'Karaj': [35.8400, 50.9391],
+            'Urmia': [37.5527, 45.0761],
+            'Ardabil': [38.2498, 48.2933],
+            'Ilam': [33.6374, 46.4227],
+            'Khorramabad': [33.4878, 48.3558],
+            'Bojnurd': [37.4747, 57.3290],
+            'Semnan': [35.5729, 53.3971],
+            'Sari': [36.5633, 53.0601],
+            'Yasuj': [30.6685, 51.5880],
+            'Shahr-E Kord': [32.3256, 50.8644],
+            'Mahabad': [36.7631, 45.7222],
+            'Marivan': [35.5276, 46.1761],
+            'Piranshahr': [36.6970, 45.1413],
+            'Bukan': [36.5211, 46.2089],
+            'Saqqez': [36.2499, 46.2735],
+            'Javanrud': [34.7922, 46.4922],
+            'Oshnavieh': [37.0397, 45.0986],
+            'Divandarreh': [35.9148, 47.0236],
+            'Abadan': [30.3392, 48.3043],
+            'Qazvin': [36.2688, 50.0041],
+            'Babol': [36.5515, 52.6796],
+            'Kish': [26.5579, 53.9801],
+            'Chabahar': [25.2919, 60.6430]
+        };
+
+        let iranMap = null;
+        let mapMarkers = [];
+
+        function initIranMap() {
+            if (iranMap) return;
+            
+            const mapContainer = document.getElementById('iran-protest-map');
+            if (!mapContainer) return;
+            
+            iranMap = L.map('iran-protest-map', {
+                center: [32.5, 53.5],
+                zoom: 5,
+                scrollWheelZoom: false,
+                zoomControl: true
+            });
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 12
+            }).addTo(iranMap);
+        }
+
+        function updateMapMarkers(cities) {
+            if (!iranMap) initIranMap();
+            if (!iranMap) return;
+            
+            // Clear old markers
+            mapMarkers.forEach(m => iranMap.removeLayer(m));
+            mapMarkers = [];
+            
+            if (!cities || cities.length === 0) return;
+            
+            const bounds = [];
+            
+            cities.forEach(cityObj => {
+                const name = cityObj.name;
+                const count = cityObj.count || 1;
+                const coords = CITY_COORDS[name];
+                
+                if (!coords) {
+                    console.log(`[Map] No coordinates for: ${name}`);
+                    return;
+                }
+                
+                // Scale radius by mention count (min 6, max 25)
+                const radius = Math.min(25, Math.max(6, 4 + count * 2.5));
+                
+                const marker = L.circleMarker(coords, {
+                    radius: radius,
+                    fillColor: '#6495ED',
+                    color: '#1e3a5f',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.7
+                }).addTo(iranMap);
+                
+                marker.bindPopup(
+                    `<strong>${name}</strong><br>` +
+                    `${count} mention${count !== 1 ? 's' : ''} (7d)` +
+                    (cityObj.sources ? `<br><em>${cityObj.sources.length} source${cityObj.sources.length !== 1 ? 's' : ''}</em>` : '')
+                );
+                
+                marker.bindTooltip(name, {
+                    permanent: count >= 5,
+                    direction: 'top',
+                    offset: [0, -radius],
+                    className: 'city-tooltip'
+                });
+                
+                mapMarkers.push(marker);
+                bounds.push(coords);
+            });
+            
+            // Fit map to show all markers (with padding)
+            if (bounds.length > 0) {
+                if (bounds.length === 1) {
+                    iranMap.setView(bounds[0], 7);
+                } else {
+                    iranMap.fitBounds(bounds, { padding: [40, 40], maxZoom: 8 });
+                }
+            }
         }
 
         // ============================================
