@@ -1289,6 +1289,54 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Rhetoric Tracker (v1.1.0) -->
+                <div class="metric-card" id="rhetoricCard">
+                    <div class="metric-title" data-i18n="rhetoricTracker">RHETORIC TRACKER</div>
+                    <div style="display: flex; align-items: baseline; gap: 10px;">
+                        <div class="metric-value" id="rhetoricScore">--</div>
+                        <span id="rhetoricTheatreLabel" style="font-size: 14px; font-weight: bold; padding: 3px 10px; border-radius: 4px; background: #6b7280; color: white;">--</span>
+                    </div>
+                    <div class="metric-subtitle" data-i18n="rhetoricSubtitle">Theatre escalation level</div>
+                    
+                    <!-- Actor Escalation Grid -->
+                    <div id="rhetoricActors" style="margin-top: 12px;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
+                            🎯 <span data-i18n="actorStatus">ACTOR STATUS</span>
+                        </div>
+                        <div id="rhetoricActorList" style="font-size: 12px;">
+                            <span style="color: var(--text-secondary); font-style: italic;">Loading...</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Alerts Banner -->
+                    <div id="rhetoricAlerts" style="margin-top: 12px; display: none;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
+                            🚨 <span data-i18n="activeAlerts">ACTIVE ALERTS</span>
+                        </div>
+                        <div id="rhetoricAlertList"></div>
+                    </div>
+                    
+                    <!-- Spokespersons Detected -->
+                    <div id="rhetoricSpokespeople" style="margin-top: 12px; display: none;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
+                            🎤 <span data-i18n="voicesDetected">VOICES DETECTED</span>
+                        </div>
+                        <div id="rhetoricSpokesList" style="font-size: 11px; color: var(--text-secondary);"></div>
+                    </div>
+                    
+                    <!-- Link to full analysis -->
+                    <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border); text-align: center;">
+                        <a href="rhetoric.html" style="color: #6495ED; text-decoration: none; font-size: 12px; font-weight: 600;" data-i18n="viewFullAnalysis">
+                            View Full Rhetoric Analysis →
+                        </a>
+                    </div>
+                    
+                    <!-- Scan info -->
+                    <div id="rhetoricScanInfo" style="margin-top: 8px; font-size: 10px; color: var(--text-muted); text-align: center;">
+                        --
+                    </div>
+                </div>
             </div>
 
             <!-- Lebanon Map -->
@@ -1781,6 +1829,7 @@
                 displayData(data);
                 await loadTrendData();
                 loadElectionNews();
+                loadRhetoricData();
                 hideLoadingOverlay();
                 setTimeout(() => { initLebanonMap(); }, 300);
                 
@@ -2027,7 +2076,13 @@
                 catEconomic: "Economic & Financial Collapse",
                 catGovernance: "Governance & Political Stability",
                 catRegional: "Regional & External Influence",
-                catStructural: "Structural Risk Indicators"
+                catStructural: "Structural Risk Indicators",
+                rhetoricTracker: "RHETORIC TRACKER",
+                rhetoricSubtitle: "Theatre escalation level",
+                actorStatus: "ACTOR STATUS",
+                activeAlerts: "ACTIVE ALERTS",
+                voicesDetected: "VOICES DETECTED",
+                viewFullAnalysis: "View Full Rhetoric Analysis →"
             },
             he: {
                 pageTitle: "🇱🇧 מדד יציבות לבנון",
@@ -2055,7 +2110,13 @@
                 catEconomic: "קריסה כלכלית ופיננסית",
                 catGovernance: "ממשל ויציבות פוליטית",
                 catRegional: "השפעה אזורית וחיצונית",
-                catStructural: "מדדי סיכון מבניים"
+                catStructural: "מדדי סיכון מבניים",
+                rhetoricTracker: "מעקב רטוריקה",
+                rhetoricSubtitle: "רמת הסלמה בזירה",
+                actorStatus: "סטטוס שחקנים",
+                activeAlerts: "התראות פעילות",
+                voicesDetected: "קולות שזוהו",
+                viewFullAnalysis: "→ ניתוח רטוריקה מלא"
             },
             ar: {
                 pageTitle: "🇱🇧 مؤشر استقرار لبنان",
@@ -2083,7 +2144,13 @@
                 catEconomic: "الانهيار الاقتصادي والمالي",
                 catGovernance: "الحوكمة والاستقرار السياسي",
                 catRegional: "النفوذ الإقليمي والخارجي",
-                catStructural: "مؤشرات المخاطر الهيكلية"
+                catStructural: "مؤشرات المخاطر الهيكلية",
+                rhetoricTracker: "متتبع الخطاب",
+                rhetoricSubtitle: "مستوى التصعيد في المسرح",
+                actorStatus: "حالة الجهات الفاعلة",
+                activeAlerts: "التنبيهات النشطة",
+                voicesDetected: "الأصوات المكتشفة",
+                viewFullAnalysis: "← عرض التحليل الكامل للخطاب"
             },
             fa: {
                 pageTitle: "🇱🇧 شاخص ثبات لبنان",
@@ -2111,7 +2178,13 @@
                 catEconomic: "فروپاشی اقتصادی و مالی",
                 catGovernance: "حکومت و ثبات سیاسی",
                 catRegional: "نفوذ منطقه‌ای و خارجی",
-                catStructural: "شاخص‌های ریسک ساختاری"
+                catStructural: "شاخص‌های ریسک ساختاری",
+                rhetoricTracker: "ردیاب گفتمان",
+                rhetoricSubtitle: "سطح تشدید در صحنه",
+                actorStatus: "وضعیت بازیگران",
+                activeAlerts: "هشدارهای فعال",
+                voicesDetected: "صداهای شناسایی‌شده",
+                viewFullAnalysis: "← مشاهده تحلیل کامل گفتمان"
             }
         };
 
@@ -2219,6 +2292,107 @@
                     .addTo(map)
                     .bindPopup(`<strong>${m.name}</strong><br>${m.desc}`);
             });
+        }
+
+        // Rhetoric Tracker Integration
+        async function loadRhetoricData() {
+            try {
+                const response = await fetch('https://asifah-analytics-backend.onrender.com/api/rhetoric/lebanon/summary');
+                const data = await response.json();
+                
+                if (data.awaiting_scan) {
+                    document.getElementById('rhetoricScore').textContent = '...';
+                    document.getElementById('rhetoricScanInfo').textContent = 'Initial scan in progress';
+                    return;
+                }
+                
+                // Score and theatre label
+                document.getElementById('rhetoricScore').textContent = `${data.rhetoric_score}/100`;
+                
+                const label = document.getElementById('rhetoricTheatreLabel');
+                label.textContent = data.theatre_label || '--';
+                label.style.background = data.theatre_color || '#6b7280';
+                
+                // Scan time
+                if (data.scanned_at) {
+                    const scanDate = new Date(data.scanned_at);
+                    const ago = Math.round((Date.now() - scanDate.getTime()) / 60000);
+                    const agoText = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+                    document.getElementById('rhetoricScanInfo').textContent = `Last scan: ${agoText}`;
+                }
+                
+                // Now fetch full data for actor breakdown
+                const fullResponse = await fetch('https://asifah-analytics-backend.onrender.com/api/rhetoric/lebanon');
+                const fullData = await fullResponse.json();
+                
+                if (fullData.actors) {
+                    const actorList = document.getElementById('rhetoricActorList');
+                    actorList.innerHTML = '';
+                    
+                    const actorOrder = ['hezbollah_political', 'hezbollah_military', 'iran_lebanon', 'israel_lebanon', 'lebanese_government', 'unifil'];
+                    
+                    actorOrder.forEach(actorId => {
+                        const actor = fullData.actors[actorId];
+                        if (!actor) return;
+                        
+                        const silenceIcon = actor.silence_alert ? ' 🔇' : '';
+                        const countText = actor.statement_count > 0 ? `${actor.statement_count} articles` : 'No articles';
+                        
+                        actorList.innerHTML += `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--card-border);">
+                                <span>${actor.flag} ${actor.icon} ${actor.name}${silenceIcon}</span>
+                                <span style="display: flex; align-items: center; gap: 6px;">
+                                    <span style="font-size: 10px; color: var(--text-muted);">${countText}</span>
+                                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: ${actor.escalation_color};"></span>
+                                    <span style="font-size: 10px; font-weight: 600; color: ${actor.escalation_color};">${actor.escalation_label}</span>
+                                </span>
+                            </div>
+                        `;
+                    });
+                }
+                
+                // Alerts
+                if (fullData.alerts && fullData.alerts.length > 0) {
+                    const alertsContainer = document.getElementById('rhetoricAlerts');
+                    const alertList = document.getElementById('rhetoricAlertList');
+                    alertsContainer.style.display = 'block';
+                    
+                    alertList.innerHTML = fullData.alerts.slice(0, 3).map(alert => {
+                        const bgColor = alert.severity === 'critical' ? 'rgba(248,113,113,0.15)' :
+                                        alert.severity === 'high' ? 'rgba(251,146,60,0.15)' :
+                                        'rgba(250,204,21,0.1)';
+                        const borderColor = alert.severity === 'critical' ? '#f87171' :
+                                           alert.severity === 'high' ? '#fb923c' : '#facc15';
+                        return `
+                            <div style="padding: 6px 8px; margin-bottom: 4px; background: ${bgColor}; border-left: 3px solid ${borderColor}; border-radius: 4px; font-size: 11px; color: var(--text-primary);">
+                                ${alert.message}
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+                // Spokespersons
+                const allSpokes = [];
+                if (fullData.actors) {
+                    Object.values(fullData.actors).forEach(actor => {
+                        if (actor.spokespersons && actor.spokespersons.length > 0) {
+                            actor.spokespersons.forEach(s => {
+                                allSpokes.push(`${actor.icon} ${s}`);
+                            });
+                        }
+                    });
+                }
+                
+                if (allSpokes.length > 0) {
+                    document.getElementById('rhetoricSpokespeople').style.display = 'block';
+                    document.getElementById('rhetoricSpokesList').textContent = allSpokes.slice(0, 6).join(' • ');
+                }
+                
+            } catch (error) {
+                console.error('Error loading rhetoric data:', error);
+                document.getElementById('rhetoricScore').textContent = 'N/A';
+                document.getElementById('rhetoricScanInfo').textContent = 'Data unavailable';
+            }
         }
 
         // Load data on page load
