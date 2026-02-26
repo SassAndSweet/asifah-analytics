@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.4.1 - Feb 25, 2026 -->
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.4.2 - Feb 25, 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
-<!-- v2.4.0: LiveUAMap tabbed conflict maps per theatre -->
+<!-- v2.4.2: LiveUAMap link cards (replaces blocked iframes) -->
 <html lang="en" dir="ltr">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -203,33 +203,34 @@
         .error-banner { background: var(--alert-red-bg); border: 1px solid var(--alert-red-border); border-radius: 8px; padding: 16px 20px; text-align: center; color: var(--accent-red); display: none; }
         .updated-bar { font-size: 0.65rem; color: var(--text-muted); text-align: center; padding: 8px; letter-spacing: 1px; }
 
-        /* ====== v2.4.0: LIVE CONFLICT MAP PANEL ====== */
+        /* ====== v2.4.2: LIVE MAP LINK CARDS (replaces blocked iframes) ====== */
         .livemap-panel { margin-bottom: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
         [data-theme="dark"] .livemap-panel { border-color: var(--cyber-border); box-shadow: 0 0 15px rgba(0,212,255,0.04); }
-        .livemap-tab-bar { display: flex; align-items: center; gap: 0; background: var(--bg-signal); border-bottom: 1px solid var(--border-color); overflow-x: auto; scrollbar-width: thin; }
-        [data-theme="dark"] .livemap-tab-bar { border-bottom-color: var(--cyber-border); }
-        .livemap-tab-label { padding: 10px 16px; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; border-right: 1px solid var(--border-color); user-select: none; }
-        [data-theme="dark"] .livemap-tab-label { border-right-color: var(--cyber-border); }
-        .livemap-tab { padding: 10px 18px; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.25s; user-select: none; letter-spacing: 0.5px; }
-        .livemap-tab:hover { color: var(--text-primary); background: rgba(0,212,255,0.04); }
-        .livemap-tab.active { color: var(--accent-cyan); border-bottom-color: var(--accent-cyan); background: rgba(0,212,255,0.06); }
-        [data-theme="light"] .livemap-tab.active { color: var(--accent-blue); border-bottom-color: var(--accent-blue); background: rgba(49,130,206,0.06); }
-        .livemap-viewport { position: relative; width: 100%; height: 420px; background: #0d1117; }
-        .livemap-viewport iframe { width: 100%; height: 100%; border: none; display: block; }
-        .livemap-placeholder { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--text-muted); gap: 8px; }
-        .livemap-placeholder .map-icon { font-size: 2.5rem; opacity: 0.4; }
-        .livemap-placeholder .map-hint { font-size: 0.75rem; letter-spacing: 1px; }
+        .livemap-panel-header { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--bg-signal); border-bottom: 1px solid var(--border-color); }
+        [data-theme="dark"] .livemap-panel-header { border-bottom-color: var(--cyber-border); }
+        .livemap-panel-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+        .livemap-panel-badge { font-size: 0.55rem; padding: 2px 8px; border-radius: 3px; background: rgba(0,212,255,0.1); color: var(--accent-cyan); border: 1px solid rgba(0,212,255,0.2); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+        [data-theme="light"] .livemap-panel-badge { background: rgba(49,130,206,0.1); color: var(--accent-blue); border-color: rgba(49,130,206,0.2); }
+        .livemap-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; padding: 14px; }
+        .livemap-card { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg-signal); border: 1px solid var(--border-color); border-radius: 8px; text-decoration: none; color: var(--text-primary); transition: all 0.25s ease; cursor: pointer; position: relative; overflow: hidden; }
+        .livemap-card:hover { border-color: var(--accent-cyan); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+        [data-theme="light"] .livemap-card:hover { border-color: var(--accent-blue); }
+        [data-theme="dark"] .livemap-card { border-color: var(--cyber-border); }
+        [data-theme="dark"] .livemap-card:hover { border-color: var(--accent-cyan); box-shadow: 0 0 16px rgba(0,212,255,0.1); }
+        .livemap-card-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+        .livemap-card-body { flex: 1; min-width: 0; }
+        .livemap-card-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .livemap-card-desc { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.5px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .livemap-card-arrow { font-size: 0.85rem; color: var(--text-muted); flex-shrink: 0; transition: transform 0.25s, color 0.25s; }
+        .livemap-card:hover .livemap-card-arrow { transform: translateX(3px); color: var(--accent-cyan); }
+        [data-theme="light"] .livemap-card:hover .livemap-card-arrow { color: var(--accent-blue); }
         .livemap-source-note { padding: 6px 16px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; text-align: right; border-top: 1px solid var(--border-color); }
         [data-theme="dark"] .livemap-source-note { border-top-color: var(--cyber-border); }
         .livemap-source-note a { color: var(--accent-blue); text-decoration: none; }
         .livemap-source-note a:hover { text-decoration: underline; }
-        .livemap-loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 2; }
-        .livemap-loading .loading-spinner { width: 32px; height: 32px; }
-        .livemap-loading-text { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px; }
         @media (max-width: 768px) {
-            .livemap-viewport { height: 320px; }
-            .livemap-tab { padding: 8px 12px; font-size: 0.65rem; }
-            .livemap-tab-label { padding: 8px 10px; font-size: 0.6rem; }
+            .livemap-card-grid { grid-template-columns: 1fr; padding: 10px; }
+            .livemap-card { padding: 10px 14px; }
         }
 
         [dir="rtl"] .actor-top-signal { border-left: none; border-right: 3px solid var(--accent-blue); }
@@ -239,6 +240,8 @@
         [dir="rtl"] .status-card.alert-surge { border-left: none; border-right: 4px solid var(--accent-red); }
         [dir="rtl"] .header-row-3 { justify-content: flex-start; }
         [dir="rtl"] .livemap-source-note { text-align: left; }
+        [dir="rtl"] .livemap-card-arrow { transform: scaleX(-1); }
+        [dir="rtl"] .livemap-card:hover .livemap-card-arrow { transform: scaleX(-1) translateX(3px); }
         @media (max-width: 768px) { .header-row-1 { flex-direction: column; gap: 10px; align-items: flex-start; } .header-right-controls { flex-wrap: wrap; } .header-title { font-size: 1.3rem; letter-spacing: 2px; } .status-strip { grid-template-columns: repeat(2, 1fr); } .actor-grid, .target-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
@@ -294,7 +297,7 @@
     <div class="source-footer" id="sourceFooter"></div>
     <div class="updated-bar" id="updatedBar"></div>
     <div class="page-footer">
-        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.4.1</div>
+        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.4.2</div>
         <a href="index.html" class="back-link" data-i18n="backToMain">&larr; Back to Main Dashboard</a>
     </div>
 </div>
@@ -320,87 +323,23 @@ var THEATRE_ORDER = [
     { id:'middle_east', label:'Middle East & North Africa', icon:'\uD83D\uDD4C', actors:['us','israel','iran','iraq','egypt','jordan','kuwait','qatar','saudi_arabia','uae'] }
 ];
 
-/* ====== v2.4.0: LIVE CONFLICT MAPS PER THEATRE ====== */
+/* ====== v2.4.2: LIVE MAP LINK CARDS — replaces blocked iframe embeds ====== */
 var THEATRE_MAPS = {
     middle_east: [
-        { id:'isrpal', label:'\uD83C\uDDEE\uD83C\uDDF1 Israel \u00B7 Palestine', url:'https://israelpalestine.liveuamap.com/', desc:'Gaza, West Bank, Lebanon border \u2014 Live conflict events' },
-        { id:'syria', label:'\uD83C\uDDF8\uD83C\uDDFE Syria', url:'https://syria.liveuamap.com/', desc:'SDF/HTS, ISIS pockets, Israeli strikes' },
-        { id:'isis', label:'\u2620\uFE0F ISIS / Iraq', url:'https://isis.liveuamap.com/', desc:'ISIS activity tracker \u2014 Iraq & Syria' },
-        { id:'mena', label:'\uD83C\uDF0D Middle East Overview', url:'https://middleeast.liveuamap.com/', desc:'Iran, Yemen, Gulf \u2014 Regional posture' },
-        { id:'yemen', label:'\uD83C\uDDFE\uD83C\uDDEA Yemen', url:'https://yemen.liveuamap.com/', desc:'Houthi activity, Red Sea, Saudi border' }
+        { id:'isrpal', icon:'\uD83C\uDDEE\uD83C\uDDF1', label:'Israel \u00B7 Palestine', url:'https://israelpalestine.liveuamap.com/', desc:'Gaza, West Bank, Lebanon border — Live conflict events' },
+        { id:'syria', icon:'\uD83C\uDDF8\uD83C\uDDFE', label:'Syria', url:'https://syria.liveuamap.com/', desc:'SDF/HTS, ISIS pockets, Israeli strikes' },
+        { id:'isis', icon:'\u2620\uFE0F', label:'ISIS / Iraq', url:'https://isis.liveuamap.com/', desc:'ISIS activity tracker — Iraq & Syria' },
+        { id:'mena', icon:'\uD83C\uDF0D', label:'Middle East Overview', url:'https://middleeast.liveuamap.com/', desc:'Iran, Yemen, Gulf — Regional posture' },
+        { id:'yemen', icon:'\uD83C\uDDFE\uD83C\uDDEA', label:'Yemen', url:'https://yemen.liveuamap.com/', desc:'Houthi activity, Red Sea, Saudi border' }
     ],
     europe: [
-        { id:'ukraine', label:'\uD83C\uDDFA\uD83C\uDDE6 Ukraine', url:'https://liveuamap.com/', desc:'Russia-Ukraine frontline \u2014 Live conflict events' },
-        { id:'eu_nato', label:'\uD83C\uDDEA\uD83C\uDDFA NATO / Europe', url:'https://nato.liveuamap.com/', desc:'NATO exercises, Baltic, Nordic posture' }
+        { id:'ukraine', icon:'\uD83C\uDDFA\uD83C\uDDE6', label:'Ukraine', url:'https://liveuamap.com/', desc:'Russia-Ukraine frontline — Live conflict events' },
+        { id:'eu_nato', icon:'\uD83C\uDDEA\uD83C\uDDFA', label:'NATO / Europe', url:'https://nato.liveuamap.com/', desc:'NATO exercises, Baltic, Nordic posture' }
     ],
     asia_pacific: [
-        { id:'indo_pacific', label:'\uD83C\uDF0F Indo-Pacific', url:'https://southchinasea.liveuamap.com/', desc:'South China Sea, Taiwan Strait, PLAN activity' }
+        { id:'indo_pacific', icon:'\uD83C\uDF0F', label:'Indo-Pacific', url:'https://southchinasea.liveuamap.com/', desc:'South China Sea, Taiwan Strait, PLAN activity' }
     ]
 };
-
-/* Track which iframes have been loaded (lazy-load on first click) */
-var loadedMaps = {};
-
-function switchMapTab(theatreId, mapId) {
-    var maps = THEATRE_MAPS[theatreId] || [];
-    var mapDef = maps.find(function(m) { return m.id === mapId; });
-    if (!mapDef) return;
-
-    /* Update active tab styling */
-    var tabBar = document.getElementById('mapTabs-' + theatreId);
-    if (tabBar) {
-        var tabs = tabBar.querySelectorAll('.livemap-tab');
-        for (var i = 0; i < tabs.length; i++) {
-            tabs[i].classList.toggle('active', tabs[i].getAttribute('data-map-id') === mapId);
-        }
-    }
-
-    /* Show/hide iframes with lazy-loading */
-    var viewport = document.getElementById('mapViewport-' + theatreId);
-    if (!viewport) return;
-
-    /* Hide all iframes and placeholders in this viewport */
-    var children = viewport.children;
-    for (var j = 0; j < children.length; j++) {
-        children[j].style.display = 'none';
-    }
-
-    var iframeId = 'mapFrame-' + theatreId + '-' + mapId;
-    var existing = document.getElementById(iframeId);
-
-    if (existing) {
-        existing.style.display = 'block';
-    } else {
-        /* Create loading indicator */
-        var loader = document.createElement('div');
-        loader.className = 'livemap-loading';
-        loader.id = 'mapLoader-' + theatreId + '-' + mapId;
-        loader.innerHTML = '<div class="loading-spinner"></div><div class="livemap-loading-text">LOADING ' + mapDef.label.replace(/[\uD800-\uDFFF]/g, '').trim().toUpperCase() + '...</div>';
-        viewport.appendChild(loader);
-        loader.style.display = 'flex';
-
-        /* Create iframe (lazy load) */
-        var iframe = document.createElement('iframe');
-        iframe.id = iframeId;
-        iframe.src = mapDef.url;
-        iframe.title = mapDef.desc;
-        iframe.setAttribute('loading', 'lazy');
-        iframe.setAttribute('referrerpolicy', 'no-referrer');
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
-        iframe.style.display = 'none';
-        iframe.onload = function() {
-            iframe.style.display = 'block';
-            var ldr = document.getElementById('mapLoader-' + theatreId + '-' + mapId);
-            if (ldr) ldr.style.display = 'none';
-        };
-        iframe.onerror = function() {
-            var ldr = document.getElementById('mapLoader-' + theatreId + '-' + mapId);
-            if (ldr) ldr.innerHTML = '<div class="livemap-loading-text" style="color:var(--accent-red)">\u26A0 Map failed to load. <a href="' + mapDef.url + '" target="_blank" style="color:var(--accent-cyan)">Open directly \u2192</a></div>';
-        };
-        viewport.appendChild(iframe);
-        loadedMaps[iframeId] = true;
-    }
-}
 
 function buildMapPanel(theatreId) {
     var maps = THEATRE_MAPS[theatreId];
@@ -409,57 +348,35 @@ function buildMapPanel(theatreId) {
     var panel = document.createElement('div');
     panel.className = 'livemap-panel';
 
-    /* Tab bar */
-    var tabBar = document.createElement('div');
-    tabBar.className = 'livemap-tab-bar';
-    tabBar.id = 'mapTabs-' + theatreId;
+    /* Panel header */
+    var header = document.createElement('div');
+    header.className = 'livemap-panel-header';
+    header.innerHTML = '<span>\uD83D\uDDFA\uFE0F</span><span class="livemap-panel-title">LIVE CONFLICT MAPS</span><span class="livemap-panel-badge">OPENS IN NEW TAB</span>';
+    panel.appendChild(header);
 
-    var label = document.createElement('div');
-    label.className = 'livemap-tab-label';
-    label.textContent = '\uD83D\uDDFA\uFE0F LIVE MAP';
-    tabBar.appendChild(label);
+    /* Card grid */
+    var grid = document.createElement('div');
+    grid.className = 'livemap-card-grid';
 
     for (var i = 0; i < maps.length; i++) {
-        var tab = document.createElement('div');
-        tab.className = 'livemap-tab' + (i === 0 ? ' active' : '');
-        tab.setAttribute('data-map-id', maps[i].id);
-        tab.textContent = maps[i].label;
-        tab.onclick = (function(tid, mid) { return function() { switchMapTab(tid, mid); }; })(theatreId, maps[i].id);
-        tabBar.appendChild(tab);
+        var m = maps[i];
+        var card = document.createElement('a');
+        card.className = 'livemap-card';
+        card.href = m.url;
+        card.target = '_blank';
+        card.rel = 'noopener';
+        card.title = m.desc;
+        card.innerHTML =
+            '<span class="livemap-card-icon">' + m.icon + '</span>' +
+            '<div class="livemap-card-body">' +
+                '<div class="livemap-card-name">' + m.label + '</div>' +
+                '<div class="livemap-card-desc">' + m.desc + '</div>' +
+            '</div>' +
+            '<span class="livemap-card-arrow">\u2197</span>';
+        grid.appendChild(card);
     }
 
-    panel.appendChild(tabBar);
-
-    /* Viewport */
-    var viewport = document.createElement('div');
-    viewport.className = 'livemap-viewport';
-    viewport.id = 'mapViewport-' + theatreId;
-
-    /* Auto-load first map */
-    var firstMap = maps[0];
-    var loader = document.createElement('div');
-    loader.className = 'livemap-loading';
-    loader.id = 'mapLoader-' + theatreId + '-' + firstMap.id;
-    loader.innerHTML = '<div class="loading-spinner"></div><div class="livemap-loading-text">LOADING ' + firstMap.label.replace(/[\uD800-\uDFFF]/g, '').trim().toUpperCase() + '...</div>';
-    viewport.appendChild(loader);
-
-    var iframe = document.createElement('iframe');
-    iframe.id = 'mapFrame-' + theatreId + '-' + firstMap.id;
-    iframe.src = firstMap.url;
-    iframe.title = firstMap.desc;
-    iframe.setAttribute('loading', 'lazy');
-    iframe.setAttribute('referrerpolicy', 'no-referrer');
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups');
-    iframe.style.display = 'none';
-    iframe.onload = function() {
-        iframe.style.display = 'block';
-        var ldr = document.getElementById('mapLoader-' + theatreId + '-' + firstMap.id);
-        if (ldr) ldr.style.display = 'none';
-    };
-    viewport.appendChild(iframe);
-    loadedMaps['mapFrame-' + theatreId + '-' + firstMap.id] = true;
-
-    panel.appendChild(viewport);
+    panel.appendChild(grid);
 
     /* Source attribution */
     var note = document.createElement('div');
@@ -504,27 +421,7 @@ function loadTheme() {
 function toggleTheatre(theatreId) {
     var section = document.getElementById('theatre-' + theatreId);
     if (!section) return;
-    var wasCollapsed = section.classList.contains('collapsed');
     section.classList.toggle('collapsed');
-
-    /* v2.4.1: Lazy-load map panel on FIRST expand only */
-    if (wasCollapsed && THEATRE_MAPS[theatreId]) {
-        var existingPanel = document.getElementById('mapPanel-' + theatreId);
-        if (!existingPanel) {
-            var mapPanel = buildMapPanel(theatreId);
-            if (mapPanel) {
-                mapPanel.id = 'mapPanel-' + theatreId;
-                /* Insert before the actor-grid */
-                var body = section.querySelector('.theatre-body');
-                var grid = body ? body.querySelector('.actor-grid') : null;
-                if (body && grid) {
-                    body.insertBefore(mapPanel, grid);
-                } else if (body) {
-                    body.insertBefore(mapPanel, body.firstChild);
-                }
-            }
-        }
-    }
 }
 
 async function fetchData(forceRefresh) {
@@ -580,7 +477,7 @@ function renderAll(data) {
     renderSources(data.source_breakdown || {}, t);
 
     var dt = data.last_updated ? new Date(data.last_updated) : new Date();
-    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.4.1');
+    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.4.2');
 }
 
 function renderEvacBanner(alerts) {
@@ -602,20 +499,13 @@ function renderEvacBanner(alerts) {
 function renderTheatres(actors, theatreGroupings, t) {
     var container = document.getElementById('theatreContainer');
 
-    /* v2.4.1: Map panels preserved — only rebuild actor cards on refresh */
-    /* Save collapse state and existing map panels */
+    /* Save collapse state on refresh */
     var collapseState = {};
-    var existingPanels = {};
     for (var ci = 0; ci < THEATRE_ORDER.length; ci++) {
         var tid = THEATRE_ORDER[ci].id;
         var existSection = document.getElementById('theatre-' + tid);
         if (existSection) {
             collapseState[tid] = !existSection.classList.contains('collapsed');
-            var ep = document.getElementById('mapPanel-' + tid);
-            if (ep) {
-                existingPanels[tid] = ep;
-                ep.parentNode.removeChild(ep);
-            }
         }
     }
 
@@ -624,7 +514,6 @@ function renderTheatres(actors, theatreGroupings, t) {
     for (var ti = 0; ti < THEATRE_ORDER.length; ti++) {
         var theatre = THEATRE_ORDER[ti];
         var section = document.createElement('div');
-        /* Start collapsed unless user had previously opened it */
         var isOpen = collapseState[theatre.id] || false;
         section.className = 'theatre-section' + (isOpen ? '' : ' collapsed');
         section.id = 'theatre-' + theatre.id;
@@ -661,10 +550,13 @@ function renderTheatres(actors, theatreGroupings, t) {
         var body = document.createElement('div');
         body.className = 'theatre-body';
 
-        /* v2.4.1: Map panels are lazy-loaded on first theatre expand (see toggleTheatre) */
-        /* Re-attach preserved map panel if it existed before refresh */
-        if (existingPanels[theatre.id]) {
-            body.appendChild(existingPanels[theatre.id]);
+        /* v2.4.2: Build map link cards directly (no lazy-load needed — they're just links) */
+        if (THEATRE_MAPS[theatre.id]) {
+            var mapPanel = buildMapPanel(theatre.id);
+            if (mapPanel) {
+                mapPanel.id = 'mapPanel-' + theatre.id;
+                body.appendChild(mapPanel);
+            }
         }
 
         var grid = document.createElement('div');
