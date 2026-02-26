@@ -3179,6 +3179,222 @@
     </div>
 </div>
 
+<!-- IRAQ CARD -->
+<div class="target-card collapsed" id="iraq-card" data-target="iraq">
+    
+    <!-- COLLAPSED VIEW -->
+    <div class="card-collapsed-view">
+        <div class="collapsed-header">
+            <div class="collapsed-title">🇮🇶 IRAQ</div>
+            <button class="collapse-toggle-btn" onclick="toggleCard('iraq-card')">
+                Expand ▼
+            </button>
+        </div>
+        
+        <div class="collapsed-metric">
+            <div class="collapsed-metric-label">Threat Exposure</div>
+            <div class="collapsed-metric-value">
+                <div class="collapsed-percentage" id="iraqCollapsedScore">--</div>
+                <div class="collapsed-bar">
+                    <div class="collapsed-bar-fill" id="iraqCollapsedBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="collapsed-timestamp" id="iraqCollapsedTimestamp">
+            Loading...
+        </div>
+
+        <div class="travel-advisory-container" id="iraq-travel-advisory-collapsed"><div class="ta-loading">🏛️ Loading State Dept travel advisory...</div></div>
+        
+        <div class="expand-instructions">
+            Click "Expand" to update data and view full analysis
+        </div>
+    </div>
+    
+    <!-- EXPANDED VIEW -->
+    <div class="card-expanded-view">
+        <h3><span class="target-flag">🇮🇶</span> IRAQ</h3>
+        
+        <button class="collapse-toggle-btn" onclick="toggleCard('iraq-card')" style="margin-bottom: 15px; width: 100%;">
+            Collapse ▲
+        </button>
+        
+        <a href="#" class="protest-analytics-btn" style="opacity: 0.5; pointer-events: none;">🇮🇶 Iraq Stability Index — Coming Soon</a>
+
+        <div class="travel-advisory-container" id="iraq-travel-advisory"><div class="ta-loading">🏛️ Loading State Dept travel advisory...</div></div>
+        
+        <div class="card-scan-controls">
+            <div class="card-time-window">
+                <label><input type="radio" name="iraq-timeWindow" value="1"> <span data-i18n="hours24">24 Hours</span></label>
+                <label><input type="radio" name="iraq-timeWindow" value="2"> <span data-i18n="hours48">48 Hours</span></label>
+                <label><input type="radio" name="iraq-timeWindow" value="7" checked> <span data-i18n="days7">7 Days</span></label>
+                <label><input type="radio" name="iraq-timeWindow" value="30"> <span data-i18n="days30">30 Days</span></label>
+            </div>
+            <button class="card-scan-button" onclick="scanSingleTarget('iraq')">
+                <span data-i18n="scanButtonIndividual">Scan OSINT - Update Forecast</span>
+            </button>
+            <div class="loading" id="iraq-loading">
+                <div class="loading-spinner"></div>
+                <span data-i18n="loadingText">Scanning...</span>
+            </div>
+        </div>
+
+        <div class="probability-display">
+            <div class="probability-label">Threat Exposure Index</div>
+            <div class="gauge-container">
+                <svg class="gauge-svg" width="200" height="200" viewBox="0 0 200 200">
+                    <circle class="gauge-background" cx="100" cy="100" r="85"></circle>
+                    <circle class="gauge-progress medium" id="iraq-gauge" cx="100" cy="100" r="85"
+                        stroke-dasharray="0 534" stroke-dashoffset="0"></circle>
+                </svg>
+                <div class="gauge-text medium" id="iraq-prob">--</div>
+            </div>
+        </div>
+
+        <!-- WEATHER WIDGET -->
+        <div class="weather-section" id="iraq-weather">
+            <div class="weather-title">🌤️ 7-Day Forecast — Baghdad</div>
+            <div class="weather-forecast" id="iraq-weather-forecast">
+                <div class="weather-loading">Loading weather data...</div>
+            </div>
+        </div>
+        
+        <div class="timeline-display">
+            <div class="timeline-label" data-i18n="projectedTimeline">Projected Timeline</div>
+            <div class="timeline-value" id="iraq-timeline" data-i18n="awaitingScan">Awaiting scan...</div>
+            <div class="timeline-bar" id="iraq-bar">
+                <div class="timeline-segment"><span data-i18n="days030">0-30d</span></div>
+                <div class="timeline-segment"><span data-i18n="days3190">31-90d</span></div>
+                <div class="timeline-segment"><span data-i18n="days91180">91-180d</span></div>
+                <div class="timeline-segment"><span data-i18n="days180plus">180+d</span></div>
+            </div>
+        </div>
+
+        <div class="threat-matrix-section">
+            <button class="expand-matrix-button" onclick="toggleIraqThreatMatrix()">
+                <span class="expand-matrix-text" id="iraq-matrix-btn-text">
+                    📊 View Multi-Actor Threat Matrix ▼
+                </span>
+            </button>
+            
+            <div class="threat-matrix-details" id="iraq-matrix-details">
+                
+                <!-- INCOMING THREATS -->
+                <div class="threat-section">
+                    <div class="section-title">INCOMING THREATS</div>
+                    
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇺🇸</span>
+                            <span>US Strike</span>
+                            <span class="tooltip-icon" data-tooltip="US military action against Iraqi militia targets (Kataib Hezbollah, Asaib Ahl al-Haq)">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="iraq-us-strike-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="iraq-us-strike-bar" style="width: 0%; background: #6495ED;"></div>
+                            </div>
+                            <span class="risk-badge" id="iraq-us-strike-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇮🇱</span>
+                            <span>Israel Strike</span>
+                            <span class="tooltip-icon" data-tooltip="Israeli strikes on Iran-linked targets in Iraq">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="iraq-israel-strike-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="iraq-israel-strike-bar" style="width: 0%; background: #ff6b6b;"></div>
+                            </div>
+                            <span class="risk-badge" id="iraq-israel-strike-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>☠️</span>
+                            <span>ISIS Attack</span>
+                            <span class="tooltip-icon" data-tooltip="ISIS/Daesh remnant attacks in Anbar, Kirkuk, Diyala">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="iraq-isis-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="iraq-isis-bar" style="width: 0%; background: #1e1e1e;"></div>
+                            </div>
+                            <span class="risk-badge" id="iraq-isis-risk">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OUTGOING THREATS -->
+                <div class="threat-section">
+                    <div class="section-title">OUTGOING THREATS</div>
+                    
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇮🇶 → 🇺🇸</span>
+                            <span>Iraq Militia → US Interests</span>
+                            <div style="font-size: 9px; color: #94a3b8; margin-top: 2px;">Incl. military installations, embassies, consulates, and forward-deployed assets</div>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="iraq-militia-us-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="iraq-militia-us-bar" style="width: 0%; background: #ff8c42;"></div>
+                            </div>
+                            <span class="risk-badge" id="iraq-militia-us-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇮🇶 → 🏔️</span>
+                            <span>Iraq → Kurdistan</span>
+                            <span class="tooltip-icon" data-tooltip="Federal-KRG tensions, PKK operations, Kirkuk disputes">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="iraq-kurdistan-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="iraq-kurdistan-bar" style="width: 0%; background: #ffd93d;"></div>
+                            </div>
+                            <span class="risk-badge" id="iraq-kurdistan-risk">--</span>
+                        </div>
+                    </div>
+
+                    <div class="threat-item">
+                        <div class="threat-actor">
+                            <span>🇮🇷 → 🌊</span>
+                            <span>Iran Proxy → Gulf States</span>
+                            <span class="tooltip-icon" data-tooltip="PMF/militia threats to Gulf shipping and Saudi border">?</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span class="threat-probability" id="iraq-gulf-prob">--</span>
+                            <div class="threat-mini-bar">
+                                <div class="threat-mini-fill" id="iraq-gulf-bar" style="width: 0%; background: #6bcf7f;"></div>
+                            </div>
+                            <span class="risk-badge" id="iraq-gulf-risk">--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MILITARY POSTURE BANNER -->
+        <div class="mil-posture-awaiting" id="iraq-mil-posture">
+            🎖️ <span>Military Posture — <em>Scan OSINT to load</em></span>
+            <a href="military.html" class="mil-page-btn" style="margin-left: auto;">MIL TRACKER →</a>
+        </div>
+
+        <div class="headlines-section" id="iraq-headlines">
+            <h4 data-i18n="recentHeadlines">Recent Headlines:</h4>
+            <p style="color: #7f8c8d; font-style: italic;" data-i18n="clickToScan">Click scan to load latest intelligence</p>
+        </div>
+    </div>
+</div>
+
         <!-- ISRAEL CARD -->
 <div class="target-card collapsed" id="israel-card" data-target="israel">
     
@@ -5073,6 +5289,7 @@ async function scanTarget(targetName, days) {
     'houthis': '/api/houthis-threat',
     'syria': '/api/syria-conflict',
     'israel': '/api/israel-threat',
+    'iraq': '/scan-iraq',
     'jordan': '/api/jordan-threat'
 };
     
@@ -5942,6 +6159,17 @@ async function loadCollapsedData() {
         console.warn('Jordan collapsed data failed:', e);
     }
 
+    // Iraq
+    try {
+        const response = await fetch(`${BACKEND_URL}/scan-iraq`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('iraq', data.probability, data.timestamp);
+        }
+    } catch (e) {
+        console.warn('Iraq collapsed data failed:', e);
+    }
+
     // Israel
 try {
     const response = await fetch(`${BACKEND_URL}/api/israel-threat`);
@@ -6102,6 +6330,76 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+    // ========================================
+        // IRAQ-SPECIFIC THREAT MATRIX
+        // ========================================
+
+        function toggleIraqThreatMatrix() {
+            const details = document.getElementById('iraq-matrix-details');
+            const btnText = document.getElementById('iraq-matrix-btn-text');
+            if (details.classList.contains('show')) {
+                details.classList.remove('show');
+                btnText.innerHTML = '📊 View Multi-Actor Threat Matrix ▼';
+            } else {
+                details.classList.add('show');
+                btnText.innerHTML = '📊 Hide Multi-Actor Threat Matrix ▲';
+                loadIraqThreatMatrix();
+            }
+        }
+
+        async function loadIraqThreatMatrix() {
+            try {
+                const days = parseInt(document.querySelector('input[name="iraq-timeWindow"]:checked').value);
+                const response = await fetch(`${BACKEND_URL}/scan-iraq?days=${days}`);
+                const data = await response.json();
+                if (!data.success || !data.threat_matrix) return;
+
+                const tm = data.threat_matrix;
+
+                // Incoming threats
+                const inMap = [
+                    { key: 'US Strike', probId: 'iraq-us-strike-prob', barId: 'iraq-us-strike-bar', riskId: 'iraq-us-strike-risk' },
+                    { key: 'Israel Strike', probId: 'iraq-israel-strike-prob', barId: 'iraq-israel-strike-bar', riskId: 'iraq-israel-strike-risk' },
+                    { key: 'ISIS Attack', probId: 'iraq-isis-prob', barId: 'iraq-isis-bar', riskId: 'iraq-isis-risk' }
+                ];
+
+                (tm.incoming_threats || []).forEach(threat => {
+                    const match = inMap.find(m => m.key === threat.label);
+                    if (!match) return;
+                    const prob = threat.probability || 0;
+                    const level = threat.level || 'LOW';
+                    document.getElementById(match.probId).textContent = prob.toFixed(1) + '%';
+                    document.getElementById(match.barId).style.width = Math.min(prob, 100) + '%';
+                    const riskEl = document.getElementById(match.riskId);
+                    riskEl.textContent = level;
+                    riskEl.className = 'risk-badge ' + (level === 'HIGH' ? 'risk-high' : level === 'MODERATE' ? 'risk-moderate' : 'risk-low');
+                });
+
+                // Outgoing threats
+                const outMap = [
+                    { label: 'Iraq Militia → US Interests', probId: 'iraq-militia-us-prob', barId: 'iraq-militia-us-bar', riskId: 'iraq-militia-us-risk' },
+                    { label: 'Iraq → Kurdistan', probId: 'iraq-kurdistan-prob', barId: 'iraq-kurdistan-bar', riskId: 'iraq-kurdistan-risk' },
+                    { label: 'Iran Proxy → Gulf States', probId: 'iraq-gulf-prob', barId: 'iraq-gulf-bar', riskId: 'iraq-gulf-risk' }
+                ];
+
+                (tm.outgoing_threats || []).forEach(threat => {
+                    const match = outMap.find(m => m.label === threat.label);
+                    if (!match) return;
+                    const prob = threat.probability || 0;
+                    const level = threat.level || 'LOW';
+                    document.getElementById(match.probId).textContent = prob.toFixed(1) + '%';
+                    document.getElementById(match.barId).style.width = Math.min(prob, 100) + '%';
+                    const riskEl = document.getElementById(match.riskId);
+                    riskEl.textContent = level;
+                    riskEl.className = 'risk-badge ' + (level === 'HIGH' ? 'risk-high' : level === 'MODERATE' ? 'risk-moderate' : 'risk-low');
+                });
+
+                console.log('[Iraq Matrix] ✅ Loaded');
+            } catch (error) {
+                console.error('[Iraq Matrix] Error:', error);
+            }
+        }
+    
     function toggleIsraelThreatMatrix() {
     const details = document.getElementById('israel-matrix-details');
     const btnText = document.getElementById('israel-matrix-btn-text');
@@ -6224,6 +6522,7 @@ async function loadIsraelThreatMatrix() {
             houthis:   { name: 'Sanaa',    lat: 15.3547, lon: 44.2066 },
             syria:     { name: 'Damascus', lat: 33.5138, lon: 36.2765 },
             jordan:    { name: 'Amman',    lat: 31.9454, lon: 35.9284 },
+            iraq:      { name: 'Baghdad',  lat: 33.3152, lon: 44.3661 },
             israel:    { name: 'Tel Aviv', lat: 32.0853, lon: 34.7818 },
         };
 
@@ -6341,7 +6640,7 @@ async function loadIsraelThreatMatrix() {
             }
         } catch (err) {
             console.warn('[Travel Advisories] Load error:', err);
-            ['hezbollah', 'iran', 'houthis', 'israel', 'syria', 'jordan'].forEach(t => {
+            ['hezbollah', 'iran', 'iraq', 'houthis', 'israel', 'syria', 'jordan'].forEach(t => {
                 const c1 = document.getElementById(`${t}-travel-advisory`);
                 const c2 = document.getElementById(`${t}-travel-advisory-collapsed`);
                 if (c1) c1.innerHTML = '<div class="ta-loading">🏛️ Travel advisory unavailable</div>';
