@@ -1607,8 +1607,7 @@
             
             loadingTimeout = setTimeout(() => {
                 document.getElementById('loadingError').style.display = 'block';
-            }, 60000);
-        }
+            }, 120000);
 
         function hideLoadingOverlay() {
             if (loadingInterval) clearInterval(loadingInterval);
@@ -1807,7 +1806,7 @@
         async function loadLebanonData() {
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 60000);
+                const timeoutId = setTimeout(() => controller.abort(), 120000);
                 
                 const response = await fetch(`${LEBANON_BACKEND_URL}/scan-lebanon-stability`, {
                     signal: controller.signal
@@ -1838,7 +1837,7 @@
                 
                 let errorMessage = error.message;
                 if (error.name === 'AbortError') {
-                    errorMessage = 'Request timeout (30 seconds) - backend may be slow';
+                    errorMessage = 'Request timeout (120 seconds) - please refresh the page';
                 }
                 
                 document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
