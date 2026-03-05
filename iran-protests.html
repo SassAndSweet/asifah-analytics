@@ -1381,6 +1381,21 @@
             </div>
         </header>
 
+        <!-- IRAN TRAVEL ADVISORY BANNER -->
+        <div style="
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
+            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        ">
+            <div style="font-size: 24px; flex-shrink: 0;">🚨</div>
+            <div style="flex: 1;">
+                <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;">⚠️ U.S. State Department — Worldwide Caution</div>
+                <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate. Iran: Level 4 — Do Not Travel.</div>
+            </div>
+            <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY →</a>
+        </div>
+
         <div class="last-updated" id="last-updated">
             <span data-i18n="loading">Loading data...</span>
         </div>
@@ -1437,13 +1452,62 @@
 
                 <!-- Economic Indicators Row: USD/IRR + Oil -->
                 <div class="stability-econ-grid">
-                    <div class="stability-metric-item">
-                        <span class="stability-icon">💱</span>
-                        <div class="stability-metric-content">
-                            <div class="stability-metric-label">USD/IRR (Black Market)</div>
-                            <div class="stability-metric-value" id="usd-irr-value">--</div>
-                            <div id="irr-trend" style="margin-top:8px; font-size:0.85em;"></div>
+                    <div class="stability-metric-item" style="flex-direction: column; align-items: stretch;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <span class="stability-icon">🚢</span>
+                            <div>
+                                <div class="stability-metric-label">STRAIT OF HORMUZ</div>
+                                <div class="stability-metric-value" id="hormuz-status-text" style="font-size: 14px;">Loading...</div>
+                            </div>
+                            <span id="hormuz-emoji" style="font-size: 24px; margin-left: auto;">⚪</span>
                         </div>
+
+                        <!-- Traffic level bar -->
+                        <div style="margin-bottom: 10px;">
+                            <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; font-weight: 600;">Traffic Level</div>
+                            <div style="height: 12px; background: var(--card-border); border-radius: 6px; overflow: hidden;">
+                                <div id="hormuz-traffic-bar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #ef4444, #f97316, #22c55e); border-radius: 6px; transition: width 1s ease;"></div>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); margin-top: 2px;">
+                                <span>0%</span>
+                                <span id="hormuz-traffic-pct">--</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+
+                        <!-- Detail text -->
+                        <div id="hormuz-detail" style="font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 8px;">Scanning...</div>
+
+                        <!-- Insurance status -->
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 8px;">
+                            <span style="font-size: 14px;">🛡️</span>
+                            <div style="font-size: 10px; color: var(--text-muted);">Insurance: <strong id="hormuz-insurance" style="color: var(--text-secondary);">--</strong></div>
+                        </div>
+
+                        <!-- Suspended carriers -->
+                        <div id="hormuz-carriers" style="font-size: 10px; color: var(--text-muted); line-height: 1.5;"></div>
+
+                        <!-- Key facts -->
+                        <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--card-border); font-size: 10px; color: var(--text-muted); line-height: 1.6;">
+                            <div>🛢️ <strong>20%</strong> of world daily oil supply</div>
+                            <div>🚢 Normal: ~60-80 tankers/day</div>
+                            <div id="hormuz-current-est">⚡ Current: Scanning...</div>
+                        </div>
+
+                        <!-- USD/IRR compact (moved here) -->
+                        <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--card-border);">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 16px;">💱</span>
+                                <div>
+                                    <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">USD/IRR (Black Market)</div>
+                                    <div class="stability-metric-value" id="usd-irr-value" style="font-size: 14px;">--</div>
+                                </div>
+                            </div>
+                            <div id="irr-trend" style="margin-top: 4px; font-size: 0.8em;"></div>
+                        </div>
+
+                        <!-- Live tracker link -->
+                        <a id="hormuz-tracker-link" href="https://www.marinetraffic.com/en/ais/home/centerx:56.3/centery:26.5/zoom:9" target="_blank" rel="noopener" style="display: block; margin-top: 10px; font-size: 11px; color: var(--iran-accent); text-decoration: none; font-weight: 600; text-align: center;">🗺️ Live AIS Vessel Tracker →</a>
                     </div>
                     
                     <div class="stability-metric-item">
@@ -2316,6 +2380,50 @@
             const reserves = oilData.reserves || {};
             const sparkline = oilData.sparkline || {};
             const ps = oilData.production_status || {};
+            const hormuz = oilData.hormuz_status || {};
+
+            // --- Strait of Hormuz ---
+            if (hormuz.status_text) {
+                const statusEl = document.getElementById('hormuz-status-text');
+                const emojiEl = document.getElementById('hormuz-emoji');
+                const trafficBar = document.getElementById('hormuz-traffic-bar');
+                const trafficPct = document.getElementById('hormuz-traffic-pct');
+                const detailEl = document.getElementById('hormuz-detail');
+                const insuranceEl = document.getElementById('hormuz-insurance');
+                const carriersEl = document.getElementById('hormuz-carriers');
+                const currentEst = document.getElementById('hormuz-current-est');
+
+                if (statusEl) statusEl.textContent = hormuz.status_text;
+                if (emojiEl) emojiEl.textContent = hormuz.emoji || '⚪';
+
+                const traffic = hormuz.traffic_level_pct || 0;
+                if (trafficBar) trafficBar.style.width = traffic + '%';
+                if (trafficPct) trafficPct.textContent = traffic + '% of normal';
+
+                // Color the status text
+                if (statusEl) {
+                    if (traffic <= 15) statusEl.style.color = '#ef4444';
+                    else if (traffic <= 40) statusEl.style.color = '#f97316';
+                    else if (traffic <= 70) statusEl.style.color = '#eab308';
+                    else statusEl.style.color = '#22c55e';
+                }
+
+                if (detailEl) detailEl.textContent = hormuz.status_detail || '';
+                if (insuranceEl) insuranceEl.textContent = hormuz.insurance_status || '--';
+
+                if (carriersEl && hormuz.suspended_carriers && hormuz.suspended_carriers.length > 0) {
+                    carriersEl.innerHTML = '🚫 <strong>Suspended:</strong> ' + hormuz.suspended_carriers.join(', ');
+                }
+
+                if (currentEst && hormuz.key_facts) {
+                    currentEst.textContent = '⚡ Current: ' + (hormuz.key_facts.current_estimate || 'Unknown');
+                }
+
+                if (hormuz.live_tracker_url) {
+                    const link = document.getElementById('hormuz-tracker-link');
+                    if (link) link.href = hormuz.live_tracker_url;
+                }
+            }
             
             // Oil price
             if (oilPrice.current_price) {
