@@ -1642,6 +1642,73 @@
                 
                 <!-- Iran Map (Dynamic Leaflet) -->
                 <div id="iran-protest-map" style="margin-top: 20px; margin-bottom: 30px; width: 100%; height: 400px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden; z-index: 1;"></div>
+        <!-- ========== WAR CASUALTIES (v3.2.0) ========== -->
+        <div style="margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <span style="font-size: 22px;">💥</span>
+                <div>
+                    <div class="metric-title" style="margin-bottom: 2px;">CONFLICT CASUALTIES — US-ISRAEL STRIKES</div>
+                    <div style="font-size: 11px; color: var(--text-muted);" id="war-operation-name">Operation Epic Fury / Operation Roaring Lion • Since Feb 28, 2026</div>
+                </div>
+            </div>
+
+            <div class="casualties-grid">
+                <div class="casualty-card deaths">
+                    <div class="casualty-icon">💀</div>
+                    <div class="casualty-label">WAR DEAD</div>
+                    <div class="casualty-number" id="war-deaths" style="color: #ef4444;">--</div>
+                    <div class="casualty-section">
+                        <div class="casualty-section-title">PRELIMINARY FIGURES:</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;" id="war-deaths-detail">Scanning OSINT sources...</div>
+                    </div>
+                    <div class="casualty-footnote">
+                        * Figures from multiple sources; independent verification ongoing
+                    </div>
+                </div>
+
+                <div class="casualty-card injuries">
+                    <div class="casualty-icon">🏥</div>
+                    <div class="casualty-label">WAR INJURED</div>
+                    <div class="casualty-number" id="war-injuries" style="color: #f97316;">--</div>
+                    <div class="casualty-section">
+                        <div class="casualty-section-title">REPORTED:</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;" id="war-injuries-detail">Scanning OSINT sources...</div>
+                    </div>
+                    <div class="casualty-footnote">
+                        * Medical infrastructure severely degraded; true figures likely higher
+                    </div>
+                </div>
+
+                <div class="casualty-card" style="border-color: #ef4444;">
+                    <div class="casualty-icon">🏗️</div>
+                    <div class="casualty-label">INFRASTRUCTURE STRUCK</div>
+                    <div class="casualty-number" id="war-sites-struck" style="color: #ef4444;">--</div>
+                    <div class="casualty-section">
+                        <div class="casualty-section-title">SCOPE:</div>
+                        <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.5;">
+                            <div id="war-munitions">Munitions: Scanning...</div>
+                            <div id="war-provinces">Provinces: Scanning...</div>
+                        </div>
+                    </div>
+                    <div class="casualty-section" id="war-strike-list" style="max-height: 150px; overflow-y: auto;">
+                        <div class="casualty-section-title">KEY TARGETS:</div>
+                        <div style="font-size: 11px; color: var(--text-muted);">Loading...</div>
+                    </div>
+                    <div class="casualty-footnote">
+                        * Per CENTCOM, ISW, and open source reporting
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== HISTORICAL: PROTEST CASUALTIES ========== -->
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <span style="font-size: 18px;">📊</span>
+            <div>
+                <div class="metric-title" style="margin-bottom: 2px;">HISTORICAL: PROTEST CASUALTIES</div>
+                <div style="font-size: 11px; color: var(--text-muted);">Mahsa Amini movement • Since September 2022 • Source: HRANA</div>
+            </div>
+        </div>
 
         <!-- ========== CASUALTIES GRID ========== -->
         <div class="casualties-grid">
@@ -2192,6 +2259,7 @@
                 
                 updateMetrics(data);
                 updateOilData(data);
+                updateWarCasualties(data);
                 updateGovernmentCard(data);
                 updateTabCounts(data);
                 showArticles('hrana');
@@ -2495,6 +2563,149 @@
             }
         }
 
+        // ============================================
+        // UPDATE WAR CASUALTIES + STRIKE MAP (v3.2.0)
+        // ============================================
+        function updateWarCasualties(data) {
+            const wc = data.war_casualties || {};
+
+            // Deaths
+            const deathsEl = document.getElementById('war-deaths');
+            if (deathsEl) {
+                deathsEl.textContent = wc.deaths > 0 ? wc.deaths.toLocaleString() : 'Pending';
+            }
+            const deathsDetail = document.getElementById('war-deaths-detail');
+            if (deathsDetail) {
+                if (wc.deaths > 0) {
+                    deathsDetail.textContent = `${wc.deaths.toLocaleString()} reported killed in US-Israel strikes since ${wc.start_date || 'Feb 28'}`;
+                } else {
+                    deathsDetail.textContent = 'Preliminary: ~1,045 dead per early reports (Al Jazeera/Reuters). Independent verification ongoing.';
+                }
+            }
+
+            // Injuries
+            const injuriesEl = document.getElementById('war-injuries');
+            if (injuriesEl) {
+                injuriesEl.textContent = wc.injuries > 0 ? wc.injuries.toLocaleString() : 'Unknown';
+            }
+            const injuriesDetail = document.getElementById('war-injuries-detail');
+            if (injuriesDetail && wc.injuries > 0) {
+                injuriesDetail.textContent = `${wc.injuries.toLocaleString()} reported injured in strikes`;
+            }
+
+            // Infrastructure
+            const sitesEl = document.getElementById('war-sites-struck');
+            if (sitesEl) {
+                sitesEl.textContent = wc.total_sites_struck || '--';
+            }
+            const munitionsEl = document.getElementById('war-munitions');
+            if (munitionsEl) {
+                munitionsEl.textContent = '💣 Munitions: ' + (wc.total_munitions || 'Unknown');
+            }
+            const provincesEl = document.getElementById('war-provinces');
+            if (provincesEl) {
+                provincesEl.textContent = '🗺️ Provinces: ' + (wc.provinces_struck || 'Unknown');
+            }
+            const opNameEl = document.getElementById('war-operation-name');
+            if (opNameEl && wc.operation_name) {
+                opNameEl.textContent = wc.operation_name + ' • Since ' + (wc.start_date || 'Feb 28, 2026');
+            }
+
+            // Strike list
+            const strikeList = document.getElementById('war-strike-list');
+            if (strikeList && wc.strike_locations && wc.strike_locations.length > 0) {
+                let html = '<div class="casualty-section-title">KEY TARGETS:</div>';
+                wc.strike_locations.forEach(loc => {
+                    loc.targets.forEach(t => {
+                        const statusColor = t.status.includes('DESTROYED') ? '#ef4444' :
+                                           t.status.includes('STRUCK') ? '#f97316' : '#eab308';
+                        html += `<div style="font-size: 10px; margin-bottom: 4px; line-height: 1.4;">` +
+                            `<strong style="color: var(--text-primary);">${loc.name}:</strong> ` +
+                            `${t.name} ` +
+                            `<span style="color: ${statusColor}; font-weight: 700; font-size: 9px;">[${t.status}]</span>` +
+                            `</div>`;
+                    });
+                });
+                strikeList.innerHTML = html;
+            }
+
+            // Add strike markers to map
+            updateStrikeMarkers(wc.strike_locations || []);
+        }
+
+        // ============================================
+        // STRIKE LOCATION MAP MARKERS (red/orange)
+        // ============================================
+        let strikeMarkers = [];
+
+        function updateStrikeMarkers(locations) {
+            if (!iranMap) initIranMap();
+            if (!iranMap) return;
+
+            // Clear old strike markers
+            strikeMarkers.forEach(m => iranMap.removeLayer(m));
+            strikeMarkers = [];
+
+            if (!locations || locations.length === 0) return;
+
+            locations.forEach(loc => {
+                if (!loc.coords) return;
+
+                const targetCount = loc.target_count || loc.targets.length;
+                const radius = Math.min(20, Math.max(8, 6 + targetCount * 3));
+                const hasDestroyed = loc.targets.some(t => t.status.includes('DESTROYED'));
+                const fillColor = hasDestroyed ? '#ef4444' : '#f97316';
+
+                const marker = L.circleMarker(loc.coords, {
+                    radius: radius,
+                    fillColor: fillColor,
+                    color: '#7f1d1d',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.7
+                }).addTo(iranMap);
+
+                let popupHtml = `<strong style="font-size:13px;">${loc.name}</strong><br>` +
+                    `<span style="font-size:11px; color:#666;">${targetCount} target${targetCount !== 1 ? 's' : ''} struck</span><br><hr style="margin:4px 0;">`;
+
+                loc.targets.forEach(t => {
+                    const statusColor = t.status.includes('DESTROYED') ? '#ef4444' :
+                                       t.status.includes('STRUCK') ? '#f97316' : '#eab308';
+                    popupHtml += `<div style="font-size:10px; margin:2px 0;">` +
+                        `<span style="color:${statusColor}; font-weight:bold;">●</span> ${t.name}` +
+                        `<br><span style="color:${statusColor}; font-size:9px; font-weight:600;">${t.status}</span></div>`;
+                });
+
+                marker.bindPopup(popupHtml, { maxWidth: 280 });
+
+                marker.bindTooltip(`💥 ${loc.name} (${targetCount})`, {
+                    permanent: targetCount >= 3,
+                    direction: 'top',
+                    offset: [0, -radius],
+                    className: 'city-tooltip'
+                });
+
+                strikeMarkers.push(marker);
+            });
+
+            // Add map legend if not already present
+            if (!document.getElementById('map-legend')) {
+                const legend = L.control({ position: 'bottomright' });
+                legend.onAdd = function() {
+                    const div = L.DomUtil.create('div', 'map-legend');
+                    div.id = 'map-legend';
+                    div.style.cssText = 'background: var(--card-bg, #2d2d2d); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--card-border, #404040); font-size: 11px; line-height: 1.6;';
+                    div.innerHTML =
+                        '<div style="font-weight:700; margin-bottom:4px; font-size:10px; text-transform:uppercase; letter-spacing:0.5px;">Map Legend</div>' +
+                        '<div><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#ef4444; margin-right:6px;"></span>Strike — Destroyed</div>' +
+                        '<div><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#f97316; margin-right:6px;"></span>Strike — Struck</div>' +
+                        '<div><span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:#6495ED; margin-right:6px;"></span>Protest Activity</div>';
+                    return div;
+                };
+                legend.addTo(iranMap);
+            }
+        }
+        
         // ============================================
         // GOVERNMENT STATUS CARD
         // ============================================
