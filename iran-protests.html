@@ -2767,6 +2767,29 @@
                                            t.status.includes('STRUCK') ? '#f97316' : '#eab308';
                         if (cityLink) {
                             html += `<a href="${cityLink}" target="_blank" rel="noopener" style="display: block; font-size: 10px; margin-bottom: 4px; line-height: 1.4; text-decoration: none; color: var(--text-secondary);">` +
+                                `<strong style="color: var(--text-primary);">${loc.name}:</strong> ` +
+                                `${t.name} ` +
+                                `<span style="color: ${statusColor}; font-weight: 700; font-size: 9px;">[${t.status}]</span>` +
+                                `</a>`;
+                        } else {
+                            html += `<div style="font-size: 10px; margin-bottom: 4px; line-height: 1.4;">` +
+                                `<strong style="color: var(--text-primary);">${loc.name}:</strong> ` +
+                                `${t.name} ` +
+                                `<span style="color: ${statusColor}; font-weight: 700; font-size: 9px;">[${t.status}]</span>` +
+                                `</div>`;
+                        }
+                    });
+                });
+                strikeList.innerHTML = html;
+            }
+
+            // Add strike markers to map
+            updateStrikeMarkers(wc.strike_locations || []);
+        }
+
+        // ============================================
+        // STRIKE LOCATION MAP MARKERS (red/orange)
+        // ============================================
         let strikeMarkers = [];
 
         function updateStrikeMarkers(locations) {
