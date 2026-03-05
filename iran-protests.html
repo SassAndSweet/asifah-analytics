@@ -2394,6 +2394,57 @@
                 if (strikeLocations > 0) parts.push(`${strikeLocations} strike zones`);
                 if (protestCities > 0) parts.push(`${protestCities} protest cities`);
                 subtitleElement.textContent = parts.join(' + ') + ' (last 7 days)';
+
+                // Add strike location pills (red)
+                if (data.war_casualties && data.war_casualties.strike_locations) {
+                    data.war_casualties.strike_locations.forEach(loc => {
+                        const pillWrapper = document.createElement('div');
+                        pillWrapper.style.marginBottom = '4px';
+                        pillWrapper.style.display = 'inline-block';
+                        pillWrapper.style.marginRight = '6px';
+
+                        const hasDestroyed = loc.targets.some(t => t.status.includes('DESTROYED'));
+                        const pillColor = hasDestroyed ? '#ef4444' : '#f97316';
+                        const borderColor = hasDestroyed ? 'rgba(239,68,68,0.4)' : 'rgba(249,115,22,0.4)';
+
+                        // Find article link for this city
+                        const allArts = [
+                            ...(data.articles_hrana || []),
+                            ...(data.articles_en || []),
+                            ...(data.articles_iranwire || []),
+                        ];
+                        const cityArticle = allArts.find(a =>
+                            ((a.title || '') + ' ' + (a.description || '')).toLowerCase().includes(loc.name.toLowerCase())
+                        );
+
+                        const pill = document.createElement(cityArticle ? 'a' : 'div');
+                        pill.className = 'city-pill';
+                        pill.style.display = 'inline-block';
+                        pill.style.borderColor = borderColor;
+                        pill.style.color = pillColor;
+                        pill.style.fontWeight = '700';
+                        pill.style.fontSize = '12px';
+                        pill.textContent = `💥 ${loc.name} (${loc.target_count})`;
+
+                        if (cityArticle) {
+                            pill.href = cityArticle.url;
+                            pill.target = '_blank';
+                            pill.rel = 'noopener noreferrer';
+                            pill.style.textDecoration = 'none';
+                            pill.style.cursor = 'pointer';
+                        }
+
+                        pillWrapper.appendChild(pill);
+                        citiesContainer.appendChild(pillWrapper);
+                    });
+
+                    // Add a small separator before protest cities
+                    if (data.cities && data.cities.length > 0) {
+                        const sep = document.createElement('div');
+                        sep.style.cssText = 'width:100%; height:1px; background:var(--card-border); margin: 8px 0;';
+                        citiesContainer.appendChild(sep);
+                    }
+                }
                 
                 if (data.cities && data.cities.length > 0) {
                     data.cities.forEach(cityObj => {
@@ -2573,6 +2624,12 @@
         // ============================================
         function updateWarCasualties(data) {
             const wc = data.war_casualties || {};
+            const allArticles = [
+                ...(data.articles_hrana || []),
+                ...(data.articles_en || []),
+                ...(data.articles_iranwire || []),
+                ...(data.articles_reddit || []),
+            ];
 
             // Deaths
             const deathsEl = document.getElementById('war-deaths');
@@ -2581,11 +2638,43 @@
             }
             const deathsDetail = document.getElementById('war-deaths-detail');
             if (deathsDetail) {
+                let deathsHtml = '';
                 if (wc.deaths > 0) {
-                    deathsDetail.textContent = `${wc.deaths.toLocaleString()} reported killed in US-Israel strikes since ${wc.start_date || 'Feb 28'}`;
+                    deathsHtml = `${wc.deaths.toLocaleString()} reported killed in US-Israel strikes since ${wc.start_date || 'Feb 28'}`;
                 } else {
-                    deathsDetail.textContent = 'Preliminary: ~1,045 dead per early reports (Al Jazeera/Reuters). Independent verification ongoing.';
+                    deathsHtml = 'Preliminary: ~1,045 dead per early reports. Independent verification ongoing.';
                 }
+
+                // Add source links from war casualty details
+                if (wc.details && wc.details.length > 0) {
+                    const deathDetails = wc.details.filter(d => d.type === 'deaths');
+                    if (deathDetails.length > 0) {
+                        deathsHtml += '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--card-border);">';
+                        deathsHtml += '<div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">Sources:</div>';
+                        deathDetails.forEach(d => {
+                            deathsHtml += `<a href="${d.url}" target="_blank" rel="noopener" style="display: block; font-size: 10px; color: var(--iran-accent); text-decoration: none; margin-bottom: 3px; line-height: 1.3;">📰 ${d.source}: ${d.count} reported</a>`;
+                        });
+                        deathsHtml += '</div>';
+                    }
+                }
+
+                // Add HRANA war report links
+                const hranaWarArticles = (data.articles_hrana || []).filter(a =>
+                    (a.title || '').toLowerCase().includes('war on iran') ||
+                    (a.title || '').toLowerCase().includes('military strikes') ||
+                    (a.title || '').toLowerCase().includes('casualties') ||
+                    (a.title || '').toLowerCase().includes('day ') && (a.title || '').toLowerCase().includes('iran')
+                );
+                if (hranaWarArticles.length > 0) {
+                    deathsHtml += '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--card-border);">';
+                    deathsHtml += '<div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">HRANA War Reports:</div>';
+                    hranaWarArticles.slice(0, 5).forEach(a => {
+                        deathsHtml += `<a href="${a.url}" target="_blank" rel="noopener" style="display: block; font-size: 10px; color: var(--iran-accent); text-decoration: none; margin-bottom: 3px; line-height: 1.3;">📊 ${a.title}</a>`;
+                    });
+                    deathsHtml += '</div>';
+                }
+
+                deathsDetail.innerHTML = deathsHtml;
             }
 
             // Injuries
@@ -2594,49 +2683,38 @@
                 injuriesEl.textContent = wc.injuries > 0 ? wc.injuries.toLocaleString() : 'Unknown';
             }
             const injuriesDetail = document.getElementById('war-injuries-detail');
-            if (injuriesDetail && wc.injuries > 0) {
-                injuriesDetail.textContent = `${wc.injuries.toLocaleString()} reported injured in strikes`;
-            }
+            if (injuriesDetail) {
+                let injuriesHtml = '';
+                if (wc.injuries > 0) {
+                    injuriesHtml = `${wc.injuries.toLocaleString()} reported injured in strikes`;
+                } else {
+                    injuriesHtml = 'Exact figures unavailable. Medical infrastructure severely degraded.';
+                }
 
-            // Infrastructure
-            const sitesEl = document.getElementById('war-sites-struck');
-            if (sitesEl) {
-                sitesEl.textContent = wc.total_sites_struck || '--';
-            }
-            const munitionsEl = document.getElementById('war-munitions');
-            if (munitionsEl) {
-                munitionsEl.textContent = '💣 Munitions: ' + (wc.total_munitions || 'Unknown');
-            }
-            const provincesEl = document.getElementById('war-provinces');
-            if (provincesEl) {
-                provincesEl.textContent = '🗺️ Provinces: ' + (wc.provinces_struck || 'Unknown');
-            }
-            const opNameEl = document.getElementById('war-operation-name');
-            if (opNameEl && wc.operation_name) {
-                opNameEl.textContent = wc.operation_name + ' • Since ' + (wc.start_date || 'Feb 28, 2026');
-            }
+                // Add injury source links
+                if (wc.details && wc.details.length > 0) {
+                    const injuryDetails = wc.details.filter(d => d.type === 'injuries');
+                    if (injuryDetails.length > 0) {
+                        injuriesHtml += '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--card-border);">';
+                        injuriesHtml += '<div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">Sources:</div>';
+                        injuryDetails.forEach(d => {
+                            injuriesHtml += `<a href="${d.url}" target="_blank" rel="noopener" style="display: block; font-size: 10px; color: var(--iran-accent); text-decoration: none; margin-bottom: 3px; line-height: 1.3;">📰 ${d.source}: ${d.count} reported</a>`;
+                        });
+                        injuriesHtml += '</div>';
+                    }
+                }
 
-            // Strike list
-            const strikeList = document.getElementById('war-strike-list');
-            if (strikeList && wc.strike_locations && wc.strike_locations.length > 0) {
-                let html = '<div class="casualty-section-title">KEY TARGETS:</div>';
-                wc.strike_locations.forEach(loc => {
-                    loc.targets.forEach(t => {
-                        const statusColor = t.status.includes('DESTROYED') ? '#ef4444' :
-                                           t.status.includes('STRUCK') ? '#f97316' : '#eab308';
-                        html += `<div style="font-size: 10px; margin-bottom: 4px; line-height: 1.4;">` +
-                            `<strong style="color: var(--text-primary);">${loc.name}:</strong> ` +
-                            `${t.name} ` +
-                            `<span style="color: ${statusColor}; font-weight: 700; font-size: 9px;">[${t.status}]</span>` +
-                            `</div>`;
-                    });
-                });
-                strikeList.innerHTML = html;
-            }
-
-            // Add strike markers to map
-            updateStrikeMarkers(wc.strike_locations || []);
-        }
+                // Scan all articles for qualitative injury signals
+                const injurySignalKeywords = [
+                    'hospitals overwhelmed', 'hospital overwhelmed', 'hospitals overflowing',
+                    'medical infrastructure', 'mass casualties', 'countless wounded',
+                    'civilian casualties', 'many wounded', 'many injured',
+                    'dozens killed', 'dozens wounded', 'hundreds wounded',
+                    'students killed', 'children killed', 'school struck',
+                ];
+                const injurySignalArticles = allArticles.filter(a => {
+                    const text = ((a.title || '') + ' ' + (a.description || '')).toLowerCase();
+                    return injurySignalKeywords.some(kw => text.includes(kw))
 
         // ============================================
         // STRIKE LOCATION MAP MARKERS (red/orange)
