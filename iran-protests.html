@@ -2714,11 +2714,59 @@
                 ];
                 const injurySignalArticles = allArticles.filter(a => {
                     const text = ((a.title || '') + ' ' + (a.description || '')).toLowerCase();
-                    return injurySignalKeywords.some(kw => text.includes(kw))
+                    return injurySignalKeywords.some(kw => text.includes(kw));
+                });
 
-        // ============================================
-        // STRIKE LOCATION MAP MARKERS (red/orange)
-        // ============================================
+                if (injurySignalArticles.length > 0) {
+                    injuriesHtml += '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--card-border);">';
+                    injuriesHtml += '<div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 4px; font-weight: 600;">Related Reports:</div>';
+                    const seen = new Set();
+                    injurySignalArticles.slice(0, 5).forEach(a => {
+                        const title = a.title || 'Related article';
+                        if (!seen.has(title)) {
+                            seen.add(title);
+                            injuriesHtml += `<a href="${a.url}" target="_blank" rel="noopener" style="display: block; font-size: 10px; color: #f97316; text-decoration: none; margin-bottom: 3px; line-height: 1.3;">🏥 ${title}</a>`;
+                        }
+                    });
+                    injuriesHtml += '</div>';
+                }
+
+                injuriesDetail.innerHTML = injuriesHtml;
+            }
+
+            // Infrastructure
+            const sitesEl = document.getElementById('war-sites-struck');
+            if (sitesEl) {
+                sitesEl.textContent = wc.total_sites_struck || '--';
+            }
+            const munitionsEl = document.getElementById('war-munitions');
+            if (munitionsEl) {
+                munitionsEl.textContent = '💣 Munitions: ' + (wc.total_munitions || 'Unknown');
+            }
+            const provincesEl = document.getElementById('war-provinces');
+            if (provincesEl) {
+                provincesEl.textContent = '🗺️ Provinces: ' + (wc.provinces_struck || 'Unknown');
+            }
+            const opNameEl = document.getElementById('war-operation-name');
+            if (opNameEl && wc.operation_name) {
+                opNameEl.textContent = wc.operation_name + ' • Since ' + (wc.start_date || 'Feb 28, 2026');
+            }
+
+            // Strike list with links
+            const strikeList = document.getElementById('war-strike-list');
+            if (strikeList && wc.strike_locations && wc.strike_locations.length > 0) {
+                let html = '<div class="casualty-section-title">KEY TARGETS:</div>';
+                wc.strike_locations.forEach(loc => {
+                    const cityArticles = allArticles.filter(a =>
+                        ((a.title || '') + ' ' + (a.description || '')).toLowerCase().includes(loc.name.toLowerCase())
+                    );
+                    const cityLink = cityArticles.length > 0 ? cityArticles[0].url : null;
+
+                    loc.targets.forEach(t => {
+                        const statusColor = t.status.includes('DESTROYED') ? '#ef4444' :
+                                           t.status.includes('STRUCK') ? '#f97316' : '#eab308';
+                        if (cityLink) {
+                            html += `<a href="${cityLink}" target="_blank" rel="noopener" style="display: block; font-size: 10px; margin-bottom: 4px; line-height: 1.4; text-decoration: none; color: var(--text-secondary);">` +
         let strikeMarkers = [];
 
         function updateStrikeMarkers(locations) {
