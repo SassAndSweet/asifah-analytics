@@ -1831,7 +1831,11 @@
                     throw new Error(data.error || 'Unknown error');
                 }
                 
-                displayData(data);
+                try {
+                    displayData(data);
+                } catch(displayErr) {
+                    console.error('displayData error:', displayErr);
+                }
                 await loadTrendData();
                 loadElectionNews();
                 loadRhetoricData();
@@ -1942,11 +1946,13 @@
 
             // Bonds (v2.9.1 enhanced)
             const bonds = data.bonds || {};
-            if (bonds.yield) {
-                document.getElementById('bondYield').textContent = `${bonds.yield.toFixed(1)}%`;
-            } else {
-                document.getElementById('bondYield').textContent = 'N/A';
-            }
+            try {
+                if (bonds.yield) {
+                    document.getElementById('bondYield').textContent = `${bonds.yield.toFixed(1)}%`;
+                } else {
+                    document.getElementById('bondYield').textContent = 'N/A';
+                }
+            } catch(e) { document.getElementById('bondYield').textContent = 'N/A'; }
             
             // Yield trend arrow
             if (bonds.yield_arrow) {
@@ -1968,7 +1974,7 @@
             }
             
             // Bond price
-            if (bonds.eurobond_price_cents) {
+            if (bonds && bonds.eurobond_price_cents) {
                 document.getElementById('bondPriceCents').textContent = `${bonds.eurobond_price_cents}¢`;
                 document.getElementById('impliedRecovery').textContent = bonds.implied_recovery_pct;
                 document.getElementById('bondCompLebanon').textContent = bonds.eurobond_price_cents;
@@ -1979,7 +1985,7 @@
             }
             
             // Restructuring status
-            if (bonds.restructuring) {
+            if (bonds && bonds.restructuring) {
                 const r = bonds.restructuring;
                 document.getElementById('restructuringStatus').textContent = r.status || 'Unknown';
                 document.getElementById('restructuringIcon').textContent = r.icon || '⚪';
