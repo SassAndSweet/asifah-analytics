@@ -1081,7 +1081,7 @@
         }
 
         .country-travel-banner {
-            background: linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%);
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
             border: 2px solid #ef4444;
             border-radius: 12px;
             padding: 20px 25px;
@@ -1171,6 +1171,66 @@
                 width: 100%;
                 text-align: center;
             }
+        }
+
+        /* ========================================= */
+        /* SECURITY SITUATION BLOCK (Iran-style)     */
+        /* ========================================= */
+        .security-situation-block {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            color: #e2e8f0;
+        }
+        .security-situation-block .ss-title {
+            font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px;
+            color: #94a3b8; margin-bottom: 20px; text-align: center; padding-bottom: 12px;
+            border-bottom: 1px solid #334155;
+        }
+        .security-cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px; margin-bottom: 20px;
+        }
+        .security-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 2px solid #334155; border-radius: 10px; padding: 18px;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .security-card:hover { border-color: #475569; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .security-card .sc-header { font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; font-weight: bold; margin-bottom: 10px; }
+        .security-card .sc-status-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 12px;
+            font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .security-card .sc-description { font-size: 12px; color: #94a3b8; line-height: 1.5; margin-bottom: 8px; }
+        .security-card .sc-note { font-size: 11px; color: #64748b; font-style: italic; }
+        .security-card .sc-indicator { font-size: 11px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #334155; }
+        .security-card .sc-indicator a { color: #60a5fa; text-decoration: none; font-size: 11px; }
+        .security-card .sc-indicator a:hover { text-decoration: underline; }
+        .leadership-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px; margin-top: 15px;
+        }
+        .leader-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 2px solid #334155; border-radius: 10px; padding: 15px;
+            text-align: center; transition: all 0.3s ease;
+        }
+        .leader-card:hover { border-color: #475569; }
+        .leader-card .lc-title-role { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #64748b; font-weight: bold; margin-bottom: 6px; }
+        .leader-card .lc-name { font-size: 16px; font-weight: bold; color: #e2e8f0; margin-bottom: 8px; }
+        .leader-card .lc-badge {
+            display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 11px;
+            font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .leader-card .lc-note { font-size: 10px; color: #64748b; font-style: italic; line-height: 1.4; }
+        .leader-card .lc-since { font-size: 10px; color: #475569; margin-top: 4px; }
+
+        @media (max-width: 768px) {
+            .security-cards-grid { grid-template-columns: 1fr; }
+            .leadership-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -1262,6 +1322,46 @@
         </div>
 
         <div id="content" style="display:none;">
+            <!-- Security Situation Block -->
+            <div class="security-situation-block" id="securitySituationBlock">
+                <div class="ss-title">⚔️ Security Situation</div>
+                <div class="security-cards-grid">
+                    <!-- Israeli Military Presence -->
+                    <div class="security-card" id="israelPresenceCard">
+                        <div class="sc-header">🇮🇱 Israeli Military Presence</div>
+                        <div class="sc-status-badge" id="israelPresenceBadge" style="background: #6b7280; color: white;">Loading...</div>
+                        <div class="sc-description" id="israelPresenceDesc">Scanning news sources...</div>
+                        <div class="sc-indicator" id="israelPresenceIndicator"></div>
+                    </div>
+
+                    <!-- Ceasefire Status -->
+                    <div class="security-card" id="ceasefireCard">
+                        <div class="sc-header">🕊️ Ceasefire Status</div>
+                        <div class="sc-status-badge" id="ceasefireBadge" style="background: #6b7280; color: white;">Loading...</div>
+                        <div class="sc-description" id="ceasefireDesc">Scanning news sources...</div>
+                        <div class="sc-note" id="ceasefireNote">Original ceasefire: Nov 27, 2024</div>
+                        <div class="sc-indicator" id="ceasefireIndicator"></div>
+                    </div>
+
+                    <!-- UNIFIL Status -->
+                    <div class="security-card" id="unifilCard">
+                        <div class="sc-header">🇺🇳 UNIFIL Status</div>
+                        <div class="sc-status-badge" id="unifilBadge" style="background: #6b7280; color: white;">Loading...</div>
+                        <div class="sc-description" id="unifilDesc">Scanning news sources...</div>
+                        <div class="sc-note" id="unifilNote">Mandate renewal pending; drawdown by end of 2027</div>
+                        <div class="sc-indicator" id="unifilIndicator"></div>
+                    </div>
+                </div>
+
+                <!-- Hezbollah Leadership -->
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155;">
+                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; font-weight: bold; margin-bottom: 12px; text-align: center;">⚔️ Hezbollah Leadership Status</div>
+                    <div class="leadership-grid" id="leadershipGrid">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
             <!-- Overall Stability Index -->
             <div class="stability-index-card">
                 <div class="stability-title" data-i18n="stabilityTitle">LEBANON STABILITY INDEX</div>
@@ -2034,6 +2134,70 @@
 
         function displayData(data) {
             document.getElementById('content').style.display = 'block';
+
+            // ── Security Situation (v3.0.0) ──
+            const sec = data.security_situation;
+            if (sec) {
+                // Israeli Presence
+                const ip = sec.israeli_presence || {};
+                document.getElementById('israelPresenceBadge').textContent = ip.label || 'Unknown';
+                document.getElementById('israelPresenceBadge').style.background = ip.badge_color || ip.color || '#6b7280';
+                document.getElementById('israelPresenceBadge').style.color = 'white';
+                document.getElementById('israelPresenceDesc').textContent = ip.description || '';
+                if (ip.indicators && ip.indicators.length > 0) {
+                    document.getElementById('israelPresenceIndicator').innerHTML = ip.indicators.map(i =>
+                        `<a href="${i.url}" target="_blank">→ ${i.title}</a>`
+                    ).join('<br>');
+                }
+
+                // Ceasefire
+                const cf = sec.ceasefire || {};
+                document.getElementById('ceasefireBadge').textContent = `${cf.icon || ''} ${cf.label || 'Unknown'}`;
+                document.getElementById('ceasefireBadge').style.background = cf.color || '#6b7280';
+                document.getElementById('ceasefireBadge').style.color = 'white';
+                const cfScores = cf.scores || {};
+                document.getElementById('ceasefireDesc').textContent =
+                    `Collapsed: ${cfScores.collapsed || 0} | Deteriorating: ${cfScores.deteriorating || 0} | Holding: ${cfScores.holding || 0}`;
+                if (cf.indicators && cf.indicators.length > 0) {
+                    document.getElementById('ceasefireIndicator').innerHTML = cf.indicators.map(i =>
+                        `<a href="${i.url}" target="_blank">→ ${i.title}</a>`
+                    ).join('<br>');
+                }
+
+                // UNIFIL
+                const un = sec.unifil || {};
+                document.getElementById('unifilBadge').textContent = `${un.icon || ''} ${un.label || 'Unknown'}`;
+                document.getElementById('unifilBadge').style.background = un.color || '#6b7280';
+                document.getElementById('unifilBadge').style.color = 'white';
+                document.getElementById('unifilDesc').textContent = un.mandate_note || '';
+                if (un.indicators && un.indicators.length > 0) {
+                    document.getElementById('unifilIndicator').innerHTML = un.indicators.map(i =>
+                        `<a href="${i.url}" target="_blank">→ ${i.title}</a>`
+                    ).join('<br>');
+                }
+
+                // Hezbollah Leadership
+                const leaders = sec.hezbollah_leadership || {};
+                const grid = document.getElementById('leadershipGrid');
+                let leaderHtml = '';
+                for (const [key, leader] of Object.entries(leaders)) {
+                    const badgeBg = leader.status === 'alive' ? '#065f46' :
+                                    leader.status === 'killed' ? '#991b1b' : '#374151';
+                    const badgeColor = leader.status === 'alive' ? '#d1fae5' :
+                                       leader.status === 'killed' ? '#fecaca' : '#9ca3af';
+                    leaderHtml += `
+                        <div class="leader-card">
+                            <div class="lc-title-role">${leader.title}</div>
+                            <div class="lc-name">${leader.name}</div>
+                            <div class="lc-badge" style="background: ${badgeBg}; color: ${badgeColor};">${leader.status_label}</div>
+                            <div class="lc-note">${leader.note || ''}</div>
+                            ${leader.since ? `<div class="lc-since">Since ${leader.since}</div>` : ''}
+                            ${leader.indicator ? `<div style="margin-top: 6px; font-size: 10px;"><a href="${leader.indicator.url}" target="_blank" style="color: #60a5fa; text-decoration: none;">→ ${leader.indicator.title}</a></div>` : ''}
+                        </div>
+                    `;
+                }
+                grid.innerHTML = leaderHtml;
+            }
             
             document.getElementById('lastUpdated').textContent = 
                 `Last updated: ${new Date().toLocaleString('en-US', { 
