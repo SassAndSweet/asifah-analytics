@@ -1406,8 +1406,11 @@
                             <span class="status-label" data-i18n="daysUntilElections">Days Until Elections:</span>
                             <span class="status-value" id="daysUntilElection">--</span>
                         </div>
+                        <div id="electionDelayBanner" style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(251, 146, 60, 0.15); border: 1px solid #fb923c; border-radius: 6px; font-size: 11px; color: #fb923c; font-weight: 600; text-align: center;">
+                            ⚠️ <span id="electionDelayText">POSSIBLE DELAY — Vote pending parliamentary decision</span>
+                        </div>
                         <div class="government-status-item" style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-                            <span style="font-weight: 600;">May 10, 2026</span> (Decree No. 2438) 
+                            <span style="font-weight: 600;">May 10, 2026</span> (Decree No. 2438)
                             <a href="https://today.lorientlejour.com/article/1493221/hajjar-sets-vote-for-may-3-diaspora-to-vote-1-week-earlier.html" 
                                target="_blank" 
                                style="color: #6495ED; text-decoration: none; margin-left: 4px;"
@@ -2227,6 +2230,21 @@
             const today = new Date();
             const daysUntil = Math.ceil((electionDate - today) / (1000 * 60 * 60 * 24));
             document.getElementById('daysUntilElection').textContent = govt.days_until_election || daysUntil;
+
+            // Election delay detection — scan election news for delay signals
+            try {
+                const electionArticles = document.getElementById('electionNewsContainer');
+                if (electionArticles) {
+                    const observer = new MutationObserver(() => {
+                        const text = electionArticles.innerText.toLowerCase();
+                        if (text.includes('delay') || text.includes('postpone') || text.includes('pushed back') || text.includes('defer')) {
+                            document.getElementById('electionDelayBanner').style.display = 'block';
+                            document.getElementById('electionDelayText').textContent = 'POSSIBLE DELAY — Reports indicate elections may be postponed';
+                        }
+                    });
+                    observer.observe(electionArticles, { childList: true, subtree: true });
+                }
+            } catch(e) { console.error('Election delay detection error:', e); }
             
             // Currency
             const currency = data.currency || {};
