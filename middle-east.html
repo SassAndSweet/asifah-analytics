@@ -7486,24 +7486,28 @@ async function updateFlightCancellations() {
             
             // Generate NOTAM cards
             let html = '';
-            notams.forEach(notam => {
-                const colorClass = getColorClass(notam.color);
+           notams.forEach(notam => {
+                const colorClass = getColorClass(notam.type_color || notam.color);
+                const fir = notam.icao_location || notam.fir || '';
+                const typeIcon = notam.type_color === 'red' ? '🔴' : notam.type_color === 'orange' ? '🟠' : notam.type_color === 'yellow' ? '🟡' : '🔵';
+                const validRange = notam.valid_range || (notam.valid_from && notam.valid_to ? `${notam.valid_from} — ${notam.valid_to}` : 'undefined');
+                const effectiveDate = notam.effective_date || notam.valid_from || 'Immediately';
                 
                 html += `
                     <div class="notam-card ${colorClass}">
                         <div class="notam-header">
-                            <div class="notam-country">${notam.flag} ${notam.country} (${notam.fir})</div>
+                            <div class="notam-country">${notam.flag || ''} ${notam.country || 'Unknown'} (${fir})</div>
                         </div>
                         <div class="notam-type-badge ${colorClass}">
-                            ${notam.icon} ${notam.type}
+                            ${typeIcon} ${notam.type || 'NOTAM'}
                         </div>
-                        <div class="notam-summary">${notam.summary}</div>
+                        <div class="notam-summary">${notam.summary || notam.raw_text || ''}</div>
                         <div class="notam-details">
                             <div class="notam-detail-row">
-                                <strong>📅 Valid:</strong> ${notam.valid_range}
+                                <strong>📅 Valid:</strong> ${validRange}
                             </div>
                             <div class="notam-detail-row">
-                                <strong>🕐 Effective:</strong> ${notam.effective_date || 'Immediately'}
+                                <strong>🕐 Effective:</strong> ${effectiveDate}
                             </div>
                             ${notam.source_url ? `
                                 <a href="${notam.source_url}" target="_blank" rel="noopener noreferrer" class="notam-link">
