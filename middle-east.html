@@ -6032,10 +6032,17 @@ const translations = {
                 targetHouthis: "YEMEN (HOUTHIS)",
                 targetSyria: "SYRIA",
                 targetJordan: "JORDAN",
-targetIsrael: "ISRAEL",
+                targetIsrael: "ISRAEL",
+                targetBahrain: "BAHRAIN",
+                targetKuwait: "KUWAIT",
+                targetSaudiArabia: "SAUDI ARABIA",
+                targetUAE: "UNITED ARAB EMIRATES",
+                targetOman: "OMAN",
+                targetQatar: "QATAR",
+                targetEgypt: "EGYPT",
 
 // Israel Card
-threatExposure: "Threat Exposure Index",
+threatExposure: "Threat Exposure",
 israelStabilityLink: "🇮🇱 Israel Stability Index",
 israelViewThreat: "View Threat Assessment (6×6 Matrix)",
 israelHideThreat: "Hide Threat Assessment",
@@ -6072,7 +6079,7 @@ israelVsHouthis: "vs Houthis",
                 loadingText: "Scanning...",
                 
                 // Probability Display
-                strikeProbability: "Strike Probability",
+                strikeProbability: "Threat Exposure",
                 projectedTimeline: "Projected Timeline",
                 awaitingScan: "Awaiting scan...",
                 
@@ -6151,9 +6158,16 @@ israelVsHouthis: "vs Houthis",
                 targetSyria: "סוריה",
                 targetJordan: "ירדן",
                 targetIsrael: "ישראל",
+                targetBahrain: "בחריין",
+                targetKuwait: "כווית",
+                targetSaudiArabia: "ערב הסעודית",
+                targetUAE: "איחוד האמירויות",
+                targetOman: "עומאן",
+                targetQatar: "קטאר",
+                targetEgypt: "מצרים",
 
 // Israel Card
-threatExposure: "מדד חשיפה לאיומים",
+threatExposure: "חשיפה לאיומים",
 israelStabilityLink: "🇮🇱 מדד יציבות ישראל",
 israelViewThreat: "הצג הערכת איומים (מטריצה 6×6)",
 israelHideThreat: "הסתר הערכת איומים",
@@ -6190,7 +6204,7 @@ israelOutgoingOps: "מבצעים יוצאים",
                 loadingText: "סורק...",
                 
                 // Probability Display
-                strikeProbability: "הסתברות תקיפה",
+                strikeProbability: "חשיפה לאיומים",
                 projectedTimeline: "ציר זמן צפוי",
                 awaitingScan: "ממתין לסריקה...",
                 
@@ -6269,9 +6283,16 @@ israelOutgoingOps: "מבצעים יוצאים",
                 targetSyria: "سوريا",
                 targetJordan: "الأردن",
                 targetIsrael: "إسرائيل",
+                targetBahrain: "البحرين",
+                targetKuwait: "الكويت",
+                targetSaudiArabia: "المملكة العربية السعودية",
+                targetUAE: "الإمارات العربية المتحدة",
+                targetOman: "عُمان",
+                targetQatar: "قطر",
+                targetEgypt: "مصر",
 
 // Israel Card
-threatExposure: "مؤشر التعرض للتهديد",
+threatExposure: "التعرض للتهديد",
 israelStabilityLink: "🇮🇱 مؤشر استقرار إسرائيل",
 israelViewThreat: "عرض تقييم التهديد (مصفوفة 6×6)",
 israelHideThreat: "إخفاء تقييم التهديد",
@@ -6308,7 +6329,7 @@ israelVsHouthis: "ضد الحوثيين",
                 loadingText: "جارٍ المسح...",
                 
                 // Probability Display
-                strikeProbability: "احتمالية الضربة",
+                strikeProbability: "التعرض للتهديد",
                 projectedTimeline: "الجدول الزمني المتوقع",
                 awaitingScan: "في انتظار المسح...",
                 
@@ -6387,9 +6408,16 @@ israelVsHouthis: "ضد الحوثيين",
                 targetSyria: "سوریه",
                 targetJordan: "اردن",
                 targetIsrael: "اسرائیل",
+                targetBahrain: "بحرین",
+                targetKuwait: "کویت",
+                targetSaudiArabia: "عربستان سعودی",
+                targetUAE: "امارات متحده عربی",
+                targetOman: "عمان",
+                targetQatar: "قطر",
+                targetEgypt: "مصر",
 
 // Israel Card
-threatExposure: "شاخص مواجهه با تهدید",
+threatExposure: "مواجهه با تهدید",
 israelStabilityLink: "🇮🇱 شاخص ثبات اسرائیل",
 israelViewThreat: "نمایش ارزیابی تهدید (ماتریس ۶×۶)",
 israelHideThreat: "پنهان کردن ارزیابی تهدید",
@@ -6426,7 +6454,7 @@ israelVsHouthis: "علیه حوثی‌ها",
                 loadingText: "در حال اسکن...",
                 
                 // Probability Display
-                strikeProbability: "احتمال حمله",
+                strikeProbability: "مواجهه با تهدید",
                 projectedTimeline: "جدول زمانی پیش‌بینی شده",
                 awaitingScan: "در انتظار اسکن...",
                 
@@ -7440,7 +7468,7 @@ async function updateFlightCancellations() {
             }
         }
         
-// ===========================================
+        // ===========================================
         // COLLAPSIBLE CARD SYSTEM
         // ===========================================
         // Track which cards are expanded
@@ -7778,6 +7806,24 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        // ========================================
+        // GENERIC THREAT MATRIX TOGGLE
+        // (Used by Bahrain, Egypt, Kuwait, Oman, Qatar, Saudi Arabia, UAE)
+        // ========================================
+        function toggleGenericThreatMatrix(target) {
+            const details = document.getElementById(`${target}-matrix-details`);
+            const btnText = document.getElementById(`${target}-matrix-btn-text`);
+            if (!details || !btnText) return;
+            
+            if (details.classList.contains('show')) {
+                details.classList.remove('show');
+                btnText.innerHTML = '📊 View Threat Assessment ▼';
+            } else {
+                details.classList.add('show');
+                btnText.innerHTML = '📊 Hide Threat Assessment ▲';
+            }
+        }
+        
     // ========================================
         // IRAQ-SPECIFIC THREAT MATRIX
         // ========================================
