@@ -5288,7 +5288,14 @@ async function scanTarget(targetName, days) {
     'syria': '/api/syria-conflict',
     'israel': '/api/israel-threat',
     'iraq': '/scan-iraq',
-    'jordan': '/api/jordan-threat'
+    'jordan': '/api/jordan-threat',
+    'bahrain': '/api/threat/bahrain',
+    'kuwait': '/api/threat/kuwait',
+    'saudi_arabia': '/api/threat/saudi_arabia',
+    'uae': '/api/threat/uae',
+    'oman': '/api/threat/oman',
+    'qatar': '/api/threat/qatar',
+    'egypt': '/api/threat/egypt'
 };
     
     const endpoint = endpointMap[targetName];
@@ -6178,6 +6185,69 @@ try {
 } catch (e) {
     console.warn('Israel collapsed data failed:', e);
 }
+
+    // Bahrain
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/bahrain`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('bahrain', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('Bahrain collapsed data failed:', e); }
+
+    // Egypt
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/egypt`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('egypt', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('Egypt collapsed data failed:', e); }
+
+    // Kuwait
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/kuwait`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('kuwait', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('Kuwait collapsed data failed:', e); }
+
+    // Oman
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/oman`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('oman', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('Oman collapsed data failed:', e); }
+
+    // Qatar
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/qatar`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('qatar', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('Qatar collapsed data failed:', e); }
+
+    // Saudi Arabia
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/saudi_arabia`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('saudi_arabia', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('Saudi Arabia collapsed data failed:', e); }
+
+    // UAE
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/threat/uae`);
+        if (response.ok) {
+            const data = await response.json();
+            updateCollapsedView('uae', data.probability, data.last_updated);
+        }
+    } catch (e) { console.warn('UAE collapsed data failed:', e); }
 }
 
         // Update collapsed view with data
@@ -6515,13 +6585,20 @@ async function loadIsraelThreatMatrix() {
         // ========================================
 
         const WEATHER_CAPITALS = {
-            iran:      { name: 'Tehran',   lat: 35.6892, lon: 51.3890 },
-            hezbollah: { name: 'Beirut',   lat: 33.8938, lon: 35.5018 },
-            houthis:   { name: 'Sanaa',    lat: 15.3547, lon: 44.2066 },
-            syria:     { name: 'Damascus', lat: 33.5138, lon: 36.2765 },
-            jordan:    { name: 'Amman',    lat: 31.9454, lon: 35.9284 },
-            iraq:      { name: 'Baghdad',  lat: 33.3152, lon: 44.3661 },
-            israel:    { name: 'Tel Aviv', lat: 32.0853, lon: 34.7818 },
+            iran:         { name: 'Tehran',    lat: 35.6892, lon: 51.3890 },
+            hezbollah:    { name: 'Beirut',    lat: 33.8938, lon: 35.5018 },
+            houthis:      { name: 'Sanaa',     lat: 15.3547, lon: 44.2066 },
+            syria:        { name: 'Damascus',  lat: 33.5138, lon: 36.2765 },
+            jordan:       { name: 'Amman',     lat: 31.9454, lon: 35.9284 },
+            iraq:         { name: 'Baghdad',   lat: 33.3152, lon: 44.3661 },
+            israel:       { name: 'Tel Aviv',  lat: 32.0853, lon: 34.7818 },
+            bahrain:      { name: 'Manama',    lat: 26.2285, lon: 50.5860 },
+            kuwait:       { name: 'Kuwait City', lat: 29.3759, lon: 47.9774 },
+            saudi_arabia: { name: 'Riyadh',    lat: 24.7136, lon: 46.6753 },
+            uae:          { name: 'Abu Dhabi', lat: 24.4539, lon: 54.3773 },
+            oman:         { name: 'Muscat',    lat: 23.5880, lon: 58.3829 },
+            qatar:        { name: 'Doha',      lat: 25.2854, lon: 51.5310 },
+            egypt:        { name: 'Cairo',     lat: 30.0444, lon: 31.2357 },
         };
 
         function weatherCodeToEmoji(code) {
@@ -6638,7 +6715,7 @@ async function loadIsraelThreatMatrix() {
             }
         } catch (err) {
             console.warn('[Travel Advisories] Load error:', err);
-            ['hezbollah', 'iran', 'iraq', 'houthis', 'israel', 'syria', 'jordan'].forEach(t => {
+            ['hezbollah', 'iran', 'iraq', 'houthis', 'israel', 'syria', 'jordan', 'bahrain', 'kuwait', 'saudi_arabia', 'uae', 'oman', 'qatar', 'egypt'].forEach(t => {
                 const c1 = document.getElementById(`${t}-travel-advisory`);
                 const c2 = document.getElementById(`${t}-travel-advisory-collapsed`);
                 if (c1) c1.innerHTML = '<div class="ta-loading">🏛️ Travel advisory unavailable</div>';
