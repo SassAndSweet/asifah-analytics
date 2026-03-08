@@ -1608,20 +1608,24 @@
         const allNotams = [...notams, ...notams];
         allNotams.forEach(notam => {
             const typeColor = getNotamTypeColor(notam.classification || notam.type || '');
+            const displayCountry = notam.country || (notam.region ? notam.region.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Unknown');
+            const fir = notam.icao_location || notam.fir || '';
+            const effective = notam.effective || notam.valid_from || 'Immediately';
             html += `
             <div class="notam-card type-${typeColor}">
                 <div class="notam-header">
-                    <div class="notam-country">${notam.region || notam.country || 'Unknown'}</div>
+                    <div class="notam-country">${notam.flag || ''} ${displayCountry}${fir ? ' (' + fir + ')' : ''}</div>
                     <span class="notam-type-badge type-${typeColor}">${notam.classification || notam.type || 'NOTICE'}</span>
                 </div>
                 <div class="notam-summary">${notam.summary || notam.description || 'No details available'}</div>
                 <div class="notam-details">
-                    ${notam.fir ? `<div><strong>FIR:</strong> ${notam.fir}</div>` : ''}
-                    ${notam.effective ? `<div><strong>Effective:</strong> ${notam.effective}</div>` : ''}
+                    ${fir ? `<div><strong>FIR:</strong> ${fir}</div>` : ''}
+                    <div><strong>Effective:</strong> ${effective}</div>
                     ${notam.source_url ? `<a class="notam-link" href="${notam.source_url}" target="_blank">View Source →</a>` : ''}
                 </div>
             </div>`;
         });
+        
         wrapper.innerHTML = html;
     }
 
