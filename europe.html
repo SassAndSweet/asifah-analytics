@@ -556,17 +556,26 @@
                     <span class="step-icon">⏳</span> Connecting to OSINT backend...
                 </div>
                 <div class="loading-step" id="loadStep2">
-                    <span class="step-icon">⏳</span> Loading cached threat scores...
+                    <span class="step-icon">⏳</span> Waking up server (cold starts take ~30s)...
                 </div>
                 <div class="loading-step" id="loadStep3">
-                    <span class="step-icon">⏳</span> Fetching NOTAM & flight data...
+                    <span class="step-icon">⏳</span> Loading cached threat scores for 8 countries...
                 </div>
                 <div class="loading-step" id="loadStep4">
+                    <span class="step-icon">⏳</span> Fetching NOTAMs & flight disruptions...
+                </div>
+                <div class="loading-step" id="loadStep5">
+                    <span class="step-icon">⏳</span> Loading travel advisories & weather...
+                </div>
+                <div class="loading-step" id="loadStep6">
                     <span class="step-icon">⏳</span> Rendering dashboard...
                 </div>
             </div>
-            <div class="loading-error" id="loadingError">
-                ⚠️ Backend may be warming up. Dashboard will load momentarily — or <a href="" onclick="location.reload()" style="color:#67e8f9;">refresh the page</a>.
+            <div class="loading-error" id="loadingInfo" style="display:none; background: rgba(0, 180, 255, 0.08); border: 1px solid rgba(0, 180, 255, 0.25); color: #67e8f9;">
+                ℹ️ First visit builds your intelligence cache — this takes about 1-2 minutes. Subsequent visits load instantly!
+            </div>
+            <div class="loading-error" id="loadingError" style="background: rgba(0, 180, 255, 0.08); border: 1px solid rgba(0, 180, 255, 0.25); color: #67e8f9;">
+                ⏳ Still loading — scanning 8 countries across multiple intelligence sources. This is normal for a first visit. Almost there!
             </div>
         </div>
     </div>
@@ -1243,8 +1252,9 @@
     // ===== LOADING OVERLAY =====
     let loadingInterval;
     let loadingTimeout;
-    const loadingSteps = ['loadStep1', 'loadStep2', 'loadStep3', 'loadStep4'];
+    const loadingSteps = ['loadStep1', 'loadStep2', 'loadStep3', 'loadStep4', 'loadStep5', 'loadStep6'];
     let currentLoadingStep = 0;
+    let loadingInfoTimeout;
 
     function advanceLoadingStep() {
         if (currentLoadingStep < loadingSteps.length) {
@@ -1265,6 +1275,7 @@
     function hideLoadingOverlay() {
         if (loadingInterval) clearInterval(loadingInterval);
         if (loadingTimeout) clearTimeout(loadingTimeout);
+        if (loadingInfoTimeout) clearTimeout(loadingInfoTimeout);
         // Mark all steps complete
         loadingSteps.forEach(id => {
             const step = document.getElementById(id);
@@ -1281,14 +1292,22 @@
     }
 
     function startLoadingProgress() {
-        loadingInterval = setInterval(() => {
-            advanceLoadingStep();
-            if (currentLoadingStep >= loadingSteps.length) clearInterval(loadingInterval);
-        }, 3000);
-        // Show error hint after 45 seconds
+        // Stagger steps at realistic intervals (not every 3s)
+        const stepTimings = [4000, 10000, 18000, 28000, 38000];
+        stepTimings.forEach((ms, i) => {
+            setTimeout(() => {
+                if (currentLoadingStep <= i) advanceLoadingStep();
+            }, ms);
+        });
+        // Show friendly blue info after 15 seconds
+        loadingInfoTimeout = setTimeout(() => {
+            const info = document.getElementById('loadingInfo');
+            if (info) info.style.display = 'block';
+        }, 15000);
+        // Show "still working" after 75 seconds (still blue, still friendly)
         loadingTimeout = setTimeout(() => {
             document.getElementById('loadingError').style.display = 'block';
-        }, 45000);
+        }, 75000);
     }
 
     // ===== TRANSLATIONS =====
