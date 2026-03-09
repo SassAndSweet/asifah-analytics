@@ -1353,6 +1353,118 @@
                     </div>
                 </div>
 
+                <!-- HUMANITARIAN CRISIS DASHBOARD -->
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #334155;">
+                    <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; font-weight: bold; margin-bottom: 12px; text-align: center;">🏥 Humanitarian Crisis Dashboard</div>
+                    <div id="humanitarianLoading" style="text-align: center; font-size: 12px; color: #64748b; padding: 15px;">Loading humanitarian data...</div>
+                    <div class="security-cards-grid" id="humanitarianGrid" style="display: none;">
+
+                        <!-- Casualties Card -->
+                        <div class="security-card" id="casualtiesCard">
+                            <div class="sc-header">💀 Casualties (Since March 2, 2026)</div>
+                            <div style="display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 80px; text-align: center; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 10px;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #ef4444;" id="humKilled">--</div>
+                                    <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Killed</div>
+                                </div>
+                                <div style="flex: 1; min-width: 80px; text-align: center; background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.3); border-radius: 8px; padding: 10px;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #fb923c;" id="humInjured">--</div>
+                                    <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Injured</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 11px; color: #94a3b8; line-height: 1.6;" id="casualtyDetails"></div>
+                            <div class="sc-note" id="casualtySource"></div>
+                        </div>
+
+                        <!-- Displacement Card -->
+                        <div class="security-card" id="displacementCard">
+                            <div class="sc-header">🏃 Displacement</div>
+                            <div style="text-align: center; background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+                                <div style="font-size: 28px; font-weight: bold; color: #f59e0b;" id="humDisplaced">--</div>
+                                <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Total Displaced</div>
+                            </div>
+                            <div style="display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 90px; text-align: center; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); border-radius: 6px; padding: 8px;">
+                                    <div style="font-size: 16px; font-weight: bold; color: #818cf8;" id="humInShelters">--</div>
+                                    <div style="font-size: 9px; color: #94a3b8;">In Shelters</div>
+                                </div>
+                                <div style="flex: 1; min-width: 90px; text-align: center; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); border-radius: 6px; padding: 8px;">
+                                    <div style="font-size: 16px; font-weight: bold; color: #818cf8;" id="humCrossBorder">--</div>
+                                    <div style="font-size: 9px; color: #94a3b8;">Crossed to Syria</div>
+                                </div>
+                            </div>
+                            <div class="sc-note" id="displacementSource"></div>
+                        </div>
+
+                        <!-- Shelters Card -->
+                        <div class="security-card" id="sheltersCard">
+                            <div class="sc-header">🏫 Shelter Status</div>
+                            <div style="display: flex; gap: 12px; margin-bottom: 10px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 80px; text-align: center; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); border-radius: 8px; padding: 10px;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #10b981;" id="humSheltersOpen">--</div>
+                                    <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">Shelters Open</div>
+                                </div>
+                                <div style="flex: 1; min-width: 80px; text-align: center; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 10px;">
+                                    <div style="font-size: 24px; font-weight: bold; color: #ef4444;" id="humSheltersFull">--</div>
+                                    <div style="font-size: 10px; color: #94a3b8; text-transform: uppercase;">At Capacity</div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 8px;">
+                                <div style="font-size: 10px; color: #64748b; margin-bottom: 4px;">Capacity: <span id="humCapacityPct" style="color: #ef4444; font-weight: bold;">--</span></div>
+                                <div style="background: #1e293b; border-radius: 4px; height: 8px; overflow: hidden;">
+                                    <div id="humCapacityBar" style="height: 100%; background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444); width: 0%; transition: width 1s ease; border-radius: 4px;"></div>
+                                </div>
+                            </div>
+                            <div style="font-size: 11px; color: #94a3b8;" id="shelterDetails"></div>
+                            <div class="sc-note" id="shelterSource"></div>
+                        </div>
+
+                        <!-- Evacuation Orders Card -->
+                        <div class="security-card" id="evacuationCard">
+                            <div class="sc-header">⚠️ Evacuation Orders</div>
+                            <div id="evacuationStatus" style="margin-bottom: 8px;">
+                                <div class="sc-status-badge" style="background: #ef4444; color: white;">ACTIVE</div>
+                            </div>
+                            <div style="font-size: 11px; color: #94a3b8; line-height: 1.8;" id="evacuationAreas"></div>
+                            <div style="margin-top: 8px; background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 8px; text-align: center;">
+                                <div style="font-size: 18px; font-weight: bold; color: #ef4444;" id="humHostileIncidents">--</div>
+                                <div style="font-size: 9px; color: #94a3b8;">Hostile Incidents (DRM)</div>
+                            </div>
+                            <div class="sc-note" id="evacuationSource"></div>
+                        </div>
+
+                        <!-- Healthcare Card -->
+                        <div class="security-card" id="healthcareCard">
+                            <div class="sc-header">🏥 Healthcare Under Attack</div>
+                            <div style="display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 70px; text-align: center; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 8px;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #ef4444;" id="humFacilitiesAttacked">--</div>
+                                    <div style="font-size: 9px; color: #94a3b8;">Facilities Hit</div>
+                                </div>
+                                <div style="flex: 1; min-width: 70px; text-align: center; background: rgba(239,68,68,0.15); border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; padding: 8px;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #ef4444;" id="humHealthKilled">--</div>
+                                    <div style="font-size: 9px; color: #94a3b8;">Workers Killed</div>
+                                </div>
+                                <div style="flex: 1; min-width: 70px; text-align: center; background: rgba(251,146,60,0.15); border: 1px solid rgba(251,146,60,0.3); border-radius: 8px; padding: 8px;">
+                                    <div style="font-size: 20px; font-weight: bold; color: #fb923c;" id="humHealthInjured">--</div>
+                                    <div style="font-size: 9px; color: #94a3b8;">Workers Injured</div>
+                                </div>
+                            </div>
+                            <div class="sc-note" id="healthcareSource"></div>
+                        </div>
+
+                        <!-- Sources Card -->
+                        <div class="security-card" id="sourcesCard">
+                            <div class="sc-header">📊 Data Sources & Latest Reports</div>
+                            <div id="humanitarianSourceLinks" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;"></div>
+                            <div id="reliefwebReports" style="font-size: 11px; color: #94a3b8; line-height: 1.8;"></div>
+                            <div class="sc-note" style="margin-top: 8px;">
+                                Data: IOM DTM API, OCHA, UNRWA, WHO, ReliefWeb, Lebanese MoPH
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Hezbollah Leadership -->
                 <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #334155;">
                     <div style="font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; font-weight: bold; margin-bottom: 12px; text-align: center;">⚔️ Hezbollah Leadership Status</div>
@@ -1846,6 +1958,91 @@
 
     <script>
         const LEBANON_BACKEND_URL = 'https://lebanon-stability-backend.onrender.com';
+
+        // ===== HUMANITARIAN CRISIS DATA =====
+        async function loadHumanitarianData() {
+            try {
+                const response = await fetch(`${LEBANON_BACKEND_URL}/api/lebanon/humanitarian`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                if (data.success) renderHumanitarianCards(data);
+                else throw new Error(data.error || 'Unknown error');
+            } catch (err) {
+                console.warn('[Humanitarian] Load error:', err.message);
+                document.getElementById('humanitarianLoading').textContent = '⚠️ Humanitarian data unavailable — try refreshing';
+            }
+        }
+
+        function renderHumanitarianCards(data) {
+            document.getElementById('humanitarianLoading').style.display = 'none';
+            document.getElementById('humanitarianGrid').style.display = 'grid';
+
+            // Casualties
+            const cas = data.casualties || {};
+            document.getElementById('humKilled').textContent = (cas.killed || 0).toLocaleString();
+            document.getElementById('humInjured').textContent = (cas.injured || 0).toLocaleString();
+            const casDetails = [];
+            if (cas.children_killed) casDetails.push(`👶 ${cas.children_killed} children killed`);
+            if (cas.women_killed) casDetails.push(`👩 ${cas.women_killed} women killed`);
+            if (cas.rescue_workers_killed) casDetails.push(`🚑 ${cas.rescue_workers_killed} rescue workers killed`);
+            document.getElementById('casualtyDetails').innerHTML = casDetails.join('<br>');
+            document.getElementById('casualtySource').innerHTML = `Source: ${cas.source || 'MoPH via OCHA'} • As of ${cas.as_of || 'Unknown'}`;
+
+            // Displacement
+            const disp = data.displacement || {};
+            const totalDisp = disp.dtm_api_idps || disp.total_displaced_registered || 0;
+            document.getElementById('humDisplaced').textContent = totalDisp.toLocaleString();
+            document.getElementById('humInShelters').textContent = (disp.in_government_shelters || 0).toLocaleString();
+            document.getElementById('humCrossBorder').textContent = (disp.cross_border_to_syria || 0).toLocaleString();
+            const dispSource = disp.dtm_api_idps ? `Source: IOM DTM API (live) • Round ${disp.dtm_round || '?'}` : `Source: ${disp.source || 'IOM DTM'} • As of ${disp.as_of || 'Unknown'}`;
+            document.getElementById('displacementSource').innerHTML = dispSource;
+
+            // Shelters
+            const sh = data.shelters || {};
+            document.getElementById('humSheltersOpen').textContent = (sh.total_shelters || 0).toLocaleString();
+            document.getElementById('humSheltersFull').textContent = (sh.at_full_capacity || 0).toLocaleString();
+            const capPct = sh.capacity_percentage || 0;
+            document.getElementById('humCapacityPct').textContent = `${capPct}%`;
+            document.getElementById('humCapacityBar').style.width = `${capPct}%`;
+            const shelterDetails = [];
+            if (sh.unrwa_shelters) shelterDetails.push(`UNRWA: ${sh.unrwa_shelters} shelters (${(sh.unrwa_registered || 0).toLocaleString()} people)`);
+            if (sh.unrwa_locations) shelterDetails.push(sh.unrwa_locations.join(', '));
+            document.getElementById('shelterDetails').innerHTML = shelterDetails.join('<br>');
+            document.getElementById('shelterSource').innerHTML = `Source: ${sh.source || 'DRM / UNRWA'} • As of ${sh.as_of || 'Unknown'}`;
+
+            // Evacuation Orders
+            const evac = data.evacuation_orders || {};
+            const areasList = evac.areas || [];
+            document.getElementById('evacuationAreas').innerHTML = areasList.map(a => `• ${a}`).join('<br>');
+            document.getElementById('humHostileIncidents').textContent = (evac.hostile_incidents_drm || 0).toLocaleString();
+            document.getElementById('evacuationSource').innerHTML = `Source: ${evac.source || 'OCHA'} • As of ${evac.as_of || 'Unknown'}`;
+
+            // Healthcare
+            const hc = data.healthcare || {};
+            document.getElementById('humFacilitiesAttacked').textContent = (hc.facilities_attacked_since_oct_2023 || 0).toLocaleString();
+            document.getElementById('humHealthKilled').textContent = (hc.health_workers_killed_since_oct_2023 || 0).toLocaleString();
+            document.getElementById('humHealthInjured').textContent = (hc.health_workers_injured_since_oct_2023 || 0).toLocaleString();
+            document.getElementById('healthcareSource').innerHTML = `Source: ${hc.source || 'WHO'} • ${hc.note || ''} • As of ${hc.as_of || 'Unknown'}`;
+
+            // Source Links
+            const srcContainer = document.getElementById('humanitarianSourceLinks');
+            const sources = data.source_links || {};
+            let srcHtml = '';
+            for (const [key, src] of Object.entries(sources)) {
+                srcHtml += `<a href="${src.url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.2);border-radius:5px;color:#60a5fa;text-decoration:none;font-size:10px;font-weight:bold;transition:all 0.2s;">${src.icon} ${src.label}</a>`;
+            }
+            srcContainer.innerHTML = srcHtml;
+
+            // ReliefWeb Reports
+            const reports = data.reliefweb_reports || [];
+            if (reports.length > 0) {
+                const reportHtml = reports.map(r => {
+                    const date = r.date ? new Date(r.date).toLocaleDateString('en-US', {month:'short', day:'numeric'}) : '';
+                    return `→ <a href="${r.url}" target="_blank" style="color:#60a5fa;text-decoration:none;">${r.title}</a> <span style="color:#475569;">${r.source} • ${date}</span>`;
+                }).join('<br>');
+                document.getElementById('reliefwebReports').innerHTML = '<div style="margin-top:8px;font-size:10px;color:#64748b;font-weight:bold;margin-bottom:4px;">📰 Latest OCHA Reports:</div>' + reportHtml;
+            }
+        }
 
         // Theme Management
         function initTheme() {
@@ -2766,6 +2963,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             startLoadingProgress();
             loadLebanonData();
+            loadHumanitarianData();
         });
     </script>
 </body>
