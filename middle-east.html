@@ -2995,17 +2995,23 @@
         <!-- Loading steps -->
         <div id="loadingSteps" style="display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 30px;">
             <div id="loadStep1" style="color: rgba(100, 220, 255, 0.9); transition: all 0.3s ease;">🔄 Connecting to backend...</div>
-            <div id="loadStep2" style="transition: all 0.3s ease;">⏳ Loading cached threat scores...</div>
-            <div id="loadStep3" style="transition: all 0.3s ease;">⏳ Fetching NOTAMs & flight data...</div>
-            <div id="loadStep4" style="transition: all 0.3s ease;">⏳ Rendering dashboard...</div>
+            <div id="loadStep2" style="transition: all 0.3s ease;">⏳ Waking up server (cold starts take ~30s)...</div>
+            <div id="loadStep3" style="transition: all 0.3s ease;">⏳ Loading cached threat scores for 14 countries...</div>
+            <div id="loadStep4" style="transition: all 0.3s ease;">⏳ Fetching NOTAMs & flight disruptions...</div>
+            <div id="loadStep5" style="transition: all 0.3s ease;">⏳ Loading travel advisories & weather...</div>
+            <div id="loadStep6" style="transition: all 0.3s ease;">⏳ Rendering dashboard...</div>
         </div>
         <!-- Animated bar -->
-        <div style="width: 280px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin: 0 auto 40px;">
+        <div style="width: 280px; height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; margin: 0 auto 20px;">
             <div id="loadingBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, #0891b2, #00d2ff); border-radius: 2px; transition: width 0.4s ease; box-shadow: 0 0 10px rgba(0,210,255,0.8);"></div>
         </div>
-        <!-- Error hint (appears after 45s) -->
-        <div id="loadingError" style="display: none; margin: 0 auto 20px; max-width: 320px; padding: 10px 16px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 8px; color: #fca5a5; font-size: 12px;">
-            ⚠️ The backend is still warming up — this can take up to a full minute on the first visit. Hang tight!
+        <!-- First visit info (appears after 15s) — friendly blue, not scary red -->
+        <div id="loadingInfo" style="display: none; margin: 0 auto 10px; max-width: 360px; padding: 10px 16px; background: rgba(0, 180, 255, 0.08); border: 1px solid rgba(0, 180, 255, 0.25); border-radius: 8px; color: #67e8f9; font-size: 12px; line-height: 1.5;">
+            ℹ️ First visit builds your intelligence cache — this takes about 1-2 minutes. Subsequent visits load instantly!
+        </div>
+        <!-- Still working hint (appears after 60s) -->
+        <div id="loadingError" style="display: none; margin: 0 auto 10px; max-width: 360px; padding: 10px 16px; background: rgba(0, 180, 255, 0.08); border: 1px solid rgba(0, 180, 255, 0.25); border-radius: 8px; color: #67e8f9; font-size: 12px; line-height: 1.5;">
+            ⏳ Still loading — scanning 14 countries across multiple intelligence sources. This is normal for a first visit. Almost there!
         </div>
         <div style="font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 2px;">
             FOR RESEARCH PURPOSES ONLY · NOT OFFICIAL U.S. GOVERNMENT
@@ -3026,7 +3032,8 @@
 // ========================================
 (function() {
     let loadTimeout = null;
-    const steps = ['loadStep1', 'loadStep2', 'loadStep3', 'loadStep4'];
+    let infoTimeout = null;
+    const steps = ['loadStep1', 'loadStep2', 'loadStep3', 'loadStep4', 'loadStep5', 'loadStep6'];
     const bar = document.getElementById('loadingBar');
     
     function advanceStep(index) {
@@ -3041,20 +3048,29 @@
         if (bar) bar.style.width = ((index + 1) / steps.length * 100) + '%';
     }
     
-    // Auto-advance steps on timers
+    // Auto-advance steps on staggered timers (more granular = feels more alive)
     setTimeout(() => advanceStep(1), 3000);
-    setTimeout(() => advanceStep(2), 6000);
-    setTimeout(() => advanceStep(3), 9000);
+    setTimeout(() => advanceStep(2), 8000);
+    setTimeout(() => advanceStep(3), 15000);
+    setTimeout(() => advanceStep(4), 25000);
+    setTimeout(() => advanceStep(5), 35000);
     
-    // Show error hint after 60 seconds
+    // Show friendly info after 15 seconds (blue, not red)
+    infoTimeout = setTimeout(() => {
+        const info = document.getElementById('loadingInfo');
+        if (info) info.style.display = 'block';
+    }, 15000);
+    
+    // Show "still working" after 75 seconds (still blue, still friendly)
     loadTimeout = setTimeout(() => {
         const err = document.getElementById('loadingError');
         if (err) err.style.display = 'block';
-    }, 60000);
+    }, 75000);
     
     // Expose hide function globally
     window.hidePageLoadScreen = function() {
         if (loadTimeout) clearTimeout(loadTimeout);
+        if (infoTimeout) clearTimeout(infoTimeout);
         // Mark all steps complete
         steps.forEach(id => {
             const el = document.getElementById(id);
