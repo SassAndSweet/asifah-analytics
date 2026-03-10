@@ -968,15 +968,155 @@
             </div>
         </div>
 
-        <!-- MAP -->
+        <!-- INTERACTIVE MAP (Leaflet.js) -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
         <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
             <h2 style="font-size: 20px; margin-bottom: 8px;">&#x1F5FA;&#xFE0F; Syria — Strategic Overview</h2>
-            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic;">Interactive map centered on Syria. Governorate boundaries, IDP camp locations, and conflict zones coming soon.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=35.5%2C32.3%2C42.4%2C37.3&layer=mapnik&marker=34.80%2C38.99"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;"></iframe>
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; font-style: italic;">Interactive map showing IDP camps, foreign military bases, key cities, and conflict zones. Click markers for details.</div>
+            <!-- Legend -->
+            <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; font-size: 11px; color: var(--text-secondary);">
+                <span>🔴 IDP Camp</span>
+                <span>🔵 Foreign Military Base</span>
+                <span>⚫ Key City</span>
+                <span style="color: #ef4444;">▨ Active Conflict Zone</span>
+                <span style="color: #f59e0b;">▨ Turkish-Controlled Area</span>
             </div>
+            <div id="syriaMap" style="width: 100%; height: 500px; border: 2px solid var(--card-border); border-radius: 8px; z-index: 1;"></div>
         </div>
+        <script>
+        (function() {
+            const map = L.map('syriaMap', {
+                center: [35.0, 38.5],
+                zoom: 7,
+                scrollWheelZoom: true,
+                zoomControl: true
+            });
+
+            // Dark/light tile layer based on theme
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            L.tileLayer(isDark
+                ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors' + (isDark ? ' &copy; CARTO' : ''),
+                maxZoom: 18
+            }).addTo(map);
+
+            // ===== CUSTOM MARKER ICONS =====
+            function circleIcon(color, size) {
+                return L.divIcon({
+                    className: '',
+                    html: `<div style="width:${size}px;height:${size}px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 2px 6px rgba(0,0,0,0.4);"></div>`,
+                    iconSize: [size, size],
+                    iconAnchor: [size/2, size/2],
+                    popupAnchor: [0, -size/2]
+                });
+            }
+
+            // ===== IDP CAMPS =====
+            const camps = [
+                {name: 'Al-Hol Camp', lat: 36.25, lng: 41.17, status: 'CLOSED (Feb 22, 2026)', pop: '~41,000 (final)', note: 'Officially evacuated and closed. Previously held ISIS-affiliated families. Peak population 73,000 in 2019.', color: '#10b981'},
+                {name: 'Roj Camp', lat: 36.83, lng: 41.83, status: 'ACTIVE', pop: '~12,000', note: 'Holds ISIS-affiliated families. Located in NE Syria near Iraqi border. SDF-controlled.', color: '#ef4444'},
+                {name: 'Rukban Camp', lat: 33.31, lng: 38.77, status: 'CRITICAL', pop: '~8,000', note: 'Near Al-Tanf base on Jordan border. Extremely limited humanitarian access. Conditions dire.', color: '#ef4444'},
+                {name: 'Azraq Camp (Jordan)', lat: 31.83, lng: 36.83, status: 'ACTIVE', pop: '~40,000', note: 'UNHCR-managed in Jordan. Syrian refugees since 2014.', color: '#f59e0b'},
+                {name: 'Zaatari Camp (Jordan)', lat: 32.29, lng: 36.32, status: 'ACTIVE', pop: '~80,000', note: 'Largest Syrian refugee camp. UNHCR-managed in Jordan.', color: '#f59e0b'},
+                {name: 'Atmeh/Deir Ballut Camps', lat: 36.32, lng: 36.58, status: 'ACTIVE', pop: '~100,000+', note: 'Cluster of IDP camps in Idlib governorate near Turkish border. Overcrowded conditions.', color: '#ef4444'},
+            ];
+
+            camps.forEach(c => {
+                const badgeColor = c.status.includes('CLOSED') ? '#10b981' : c.status === 'CRITICAL' ? '#ef4444' : '#f59e0b';
+                L.marker([c.lat, c.lng], {icon: circleIcon(c.color, 14)})
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family:'Times New Roman',serif; min-width:220px;">
+                            <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">🏚️ ${c.name}</div>
+                            <div style="display:inline-block; padding:2px 8px; border-radius:4px; font-size:10px; font-weight:bold; color:white; background:${badgeColor}; margin-bottom:6px;">${c.status}</div>
+                            <div style="font-size:12px; margin-bottom:4px;"><strong>Population:</strong> ${c.pop}</div>
+                            <div style="font-size:11px; color:#666; line-height:1.4;">${c.note}</div>
+                        </div>
+                    `);
+            });
+
+            // ===== FOREIGN MILITARY BASES =====
+            const bases = [
+                {name: 'Al-Tanf (US)', lat: 33.52, lng: 38.67, force: '🇺🇸 US Coalition', note: 'US garrison + opposition fighters. 55km deconfliction zone. Monitors Iran-Iraq-Syria corridor.'},
+                {name: 'NE Syria (US ~900 troops)', lat: 36.50, lng: 40.75, force: '🇺🇸 US Coalition', note: '~900 US troops partnered with SDF. Counter-ISIS operations. Control key oil fields.'},
+                {name: 'Hmeimim Air Base', lat: 35.41, lng: 35.95, force: '🇷🇺 Russia', note: 'Russian Air Force base since 2015. Su-35s, Su-34s. Reduced footprint post-Assad but still operational.'},
+                {name: 'Tartus Naval Facility', lat: 34.89, lng: 35.87, force: '🇷🇺 Russia', note: 'Russia\'s only Mediterranean naval base. Logistics hub. Status uncertain under new government.'},
+                {name: 'Turkish OB Points (Idlib)', lat: 35.85, lng: 36.65, force: '🇹🇷 Turkey', note: 'Multiple observation posts in Idlib. Turkey maintains military presence to protect buffer zone.'},
+                {name: 'Turkish Forces (N. Aleppo)', lat: 36.65, lng: 37.15, force: '🇹🇷 Turkey + SNA', note: 'Turkish military + Syrian National Army proxies. Control Afrin, Al-Bab, Jarabulus corridor.'},
+                {name: 'Golan Heights (Israel)', lat: 33.15, lng: 35.82, force: '🇮🇱 Israel', note: 'Israeli-occupied since 1967. Buffer zone expanded post-Assad. Periodic airstrikes on Iranian targets.'},
+            ];
+
+            bases.forEach(b => {
+                L.marker([b.lat, b.lng], {icon: circleIcon('#3b82f6', 12)})
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family:'Times New Roman',serif; min-width:220px;">
+                            <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">🏗️ ${b.name}</div>
+                            <div style="font-size:12px; font-weight:bold; color:#3b82f6; margin-bottom:4px;">${b.force}</div>
+                            <div style="font-size:11px; color:#666; line-height:1.4;">${b.note}</div>
+                        </div>
+                    `);
+            });
+
+            // ===== KEY CITIES =====
+            const cities = [
+                {name: 'Damascus', lat: 33.51, lng: 36.29, note: 'Capital. Seat of HTS-led transitional government since Dec 2024.'},
+                {name: 'Aleppo', lat: 36.20, lng: 37.16, note: 'Largest city. Jan 2026 clashes in Sheikh Maqsoud/Ashrafiyah. SDF withdrew.'},
+                {name: 'Idlib', lat: 35.93, lng: 36.63, note: 'Former HTS stronghold. Major IDP concentration. ~100K+ in surrounding camps.'},
+                {name: 'Raqqa', lat: 35.95, lng: 39.01, note: 'Former ISIS capital. Heavily destroyed. SDF-controlled, transitioning to government.'},
+                {name: 'Deir ez-Zor', lat: 35.34, lng: 40.14, note: 'Strategic Euphrates city. Oil-rich region. SDF/tribal tensions. ISIS sleeper cells active.'},
+                {name: 'Al-Hasakah', lat: 36.50, lng: 40.74, note: 'NE Syria hub. SDF/Government power-sharing. Jan 30 ceasefire + integration agreement.'},
+                {name: 'Qamishli', lat: 37.05, lng: 41.22, note: 'Kurdish cultural capital. Shared SDF/government control. Interior Ministry deploying.'},
+                {name: 'Suwayda', lat: 32.71, lng: 36.57, note: 'Druze-majority. Tense standoff since Jul 2025 violence (1,400+ killed). Armed resistance to Damascus.'},
+                {name: 'Homs', lat: 34.73, lng: 36.72, note: 'Central Syria. Strategic crossroads. Recovering from wartime destruction.'},
+                {name: 'Latakia', lat: 35.52, lng: 35.79, note: 'Coastal city. Alawite heartland. Near Russian bases. Major return destination.'},
+                {name: 'Daraa', lat: 32.62, lng: 36.10, note: 'Birthplace of 2011 uprising. Southern Syria. Reconciliation agreements in place.'},
+            ];
+
+            cities.forEach(c => {
+                L.marker([c.lat, c.lng], {icon: circleIcon('#1e293b', 10)})
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="font-family:'Times New Roman',serif; min-width:200px;">
+                            <div style="font-weight:bold; font-size:14px; margin-bottom:4px;">📍 ${c.name}</div>
+                            <div style="font-size:11px; color:#666; line-height:1.4;">${c.note}</div>
+                        </div>
+                    `);
+            });
+
+            // ===== CONFLICT ZONES (shaded areas) =====
+            // Aleppo NES Emergency Zone
+            L.polygon([
+                [36.35, 36.95], [36.35, 37.35], [36.05, 37.35], [36.05, 36.95]
+            ], {color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.15, weight: 2, dashArray: '5,5'})
+                .addTo(map)
+                .bindPopup('<div style="font-family:\'Times New Roman\',serif;"><strong>⚠️ Aleppo Emergency Zone</strong><br>Jan 2026 clashes. Sheikh Maqsoud/Ashrafiyah. 148K displaced at peak. 70% returned. Ceasefire holding.</div>');
+
+            // Suwayda Standoff
+            L.polygon([
+                [32.95, 36.25], [32.95, 36.85], [32.45, 36.85], [32.45, 36.25]
+            ], {color: '#ef4444', fillColor: '#ef4444', fillOpacity: 0.12, weight: 2, dashArray: '5,5'})
+                .addTo(map)
+                .bindPopup('<div style="font-family:\'Times New Roman\',serif;"><strong>⚠️ Suwayda Standoff Zone</strong><br>Druze resistance to Damascus. Jul 2025 violence killed 1,400+. Armed standoff continues. Hikmat al-Hijri coordinates with SDF.</div>');
+
+            // Turkish-controlled North
+            L.polygon([
+                [36.90, 36.20], [36.90, 37.50], [36.55, 37.50], [36.55, 36.70], [36.40, 36.20]
+            ], {color: '#f59e0b', fillColor: '#f59e0b', fillOpacity: 0.10, weight: 2, dashArray: '8,4'})
+                .addTo(map)
+                .bindPopup('<div style="font-family:\'Times New Roman\',serif;"><strong>🇹🇷 Turkish-Controlled Zone</strong><br>Turkey + SNA forces. Afrin, Al-Bab, Jarabulus corridor. Buffer zone against Kurdish autonomy.</div>');
+
+            // NE Syria (SDF/AANES integration area)
+            L.polygon([
+                [37.20, 40.00], [37.20, 42.00], [36.00, 42.00], [35.50, 41.00], [35.50, 40.00], [36.00, 39.50]
+            ], {color: '#8b5cf6', fillColor: '#8b5cf6', fillOpacity: 0.08, weight: 1, dashArray: '10,5'})
+                .addTo(map)
+                .bindPopup('<div style="font-family:\'Times New Roman\',serif;"><strong>🟣 NE Syria (SDF/AANES)</strong><br>Kurdish-led autonomous region. Jan 30 ceasefire + integration agreement with Damascus. 80% territory ceded. US troops present (~900).</div>');
+
+        })();
+        </script>
 
         <!-- Knowledge Library Section -->
         <div class="knowledge-library">
