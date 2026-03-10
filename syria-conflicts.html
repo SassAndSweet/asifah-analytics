@@ -885,7 +885,7 @@
         <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
             <div style="font-size: 16px; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; color: var(--text-secondary); margin-bottom: 20px; text-align: center; padding-bottom: 12px; border-bottom: 1px solid var(--card-border);" data-i18n="humanitarianTitle">🏥 Humanitarian Crisis Dashboard</div>
             <div id="humanitarianLoading" style="text-align: center; font-size: 12px; color: var(--text-muted); padding: 15px;">Loading humanitarian data...</div>
-            <div id="humanitarianGrid" style="display: none; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+            <div id="humanitarianGrid" style="display: none;">
 
                 <!-- Displacement Card -->
                 <div style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; padding: 18px;">
@@ -1446,7 +1446,10 @@
 
         function renderHumanitarianCards(data) {
             document.getElementById('humanitarianLoading').style.display = 'none';
-            document.getElementById('humanitarianGrid').style.display = 'grid';
+            const grid = document.getElementById('humanitarianGrid');
+            grid.style.display = 'grid';
+            grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
+            grid.style.gap = '15px';
 
             // Displacement
             const disp = data.displacement || {};
