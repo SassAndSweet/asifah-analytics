@@ -731,6 +731,11 @@
             text-align: right;
         }
 
+        /* Prevent Leaflet from overflowing container */
+        .leaflet-container {
+            max-width: 100%;
+        }
+        
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -767,7 +772,14 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Prevent Leaflet from overflowing container */
+        .leaflet-container {
+            max-width: 100%;
+        }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -973,9 +985,7 @@
         </div>
 
         <!-- INTERACTIVE MAP (Leaflet.js) -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-        <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+            <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
             <h2 style="font-size: 20px; margin-bottom: 8px;" data-i18n="mapTitle">&#x1F5FA;&#xFE0F; Syria — Strategic Overview</h2>
             <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px; font-style: italic;">Interactive map showing IDP camps, foreign military bases, key cities, and conflict zones. Click markers for details.</div>
             <!-- Legend -->
@@ -986,7 +996,7 @@
                 <span style="color: #ef4444;">▨ Active Conflict Zone</span>
                 <span style="color: #f59e0b;">▨ Turkish-Controlled Area</span>
             </div>
-            <div id="syriaMap" style="width: 100%; height: 500px; border: 2px solid var(--card-border); border-radius: 8px; z-index: 1;"></div>
+            <div id="syriaMap" style="width: 100%; height: 500px; border: 2px solid var(--card-border); border-radius: 8px; z-index: 1; overflow: hidden;"></div>
         </div>
         <script>
         (function() {
