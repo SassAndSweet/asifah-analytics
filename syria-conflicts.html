@@ -731,6 +731,23 @@
             text-align: right;
         }
 
+        /* Humanitarian Dashboard Grid */
+        #humanitarianGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+        }
+
+        #humanitarianGrid > div {
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+
+        /* Prevent Leaflet from overflowing container */
+        .leaflet-container {
+            max-width: 100%;
+        }
+        
         /* Prevent Leaflet from overflowing container */
         .leaflet-container {
             max-width: 100%;
@@ -1446,10 +1463,7 @@
 
         function renderHumanitarianCards(data) {
             document.getElementById('humanitarianLoading').style.display = 'none';
-            const grid = document.getElementById('humanitarianGrid');
-            grid.style.display = 'grid';
-            grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
-            grid.style.gap = '15px';
+            document.getElementById('humanitarianGrid').style.display = 'grid';
 
             // Displacement
             const disp = data.displacement || {};
