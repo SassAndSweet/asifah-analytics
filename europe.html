@@ -1526,39 +1526,6 @@ async function loadCachedScoresFallback() {
         }
     }));
 }
-                if (!response.ok) continue;
-                const data = await response.json();
-                const prob = data.probability || 0;
-                const probRounded = Math.round(prob);
-                const level = prob >= 60 ? 'high' : prob >= 35 ? 'medium' : 'low';
-
-                // Update collapsed card
-                const collapsedScore = document.getElementById(`${target}CollapsedScore`);
-                const collapsedBar = document.getElementById(`${target}CollapsedBar`);
-                const collapsedTimestamp = document.getElementById(`${target}CollapsedTimestamp`);
-                const card = document.getElementById(`${target}-card`);
-
-                if (collapsedScore) collapsedScore.textContent = `${probRounded}%`;
-                if (collapsedBar) {
-                    collapsedBar.style.width = `${probRounded}%`;
-                    collapsedBar.style.background = level === 'high' ? '#ef4444' : level === 'medium' ? '#f59e0b' : '#10b981';
-                }
-                if (collapsedTimestamp) {
-                    const ts = data.cached_at || data.timestamp || null;
-                    collapsedTimestamp.textContent = ts ? `As of ${new Date(ts).toLocaleString()}` : new Date().toLocaleString();
-                }
-                if (card) {
-                    card.classList.remove('low-threat', 'medium-threat', 'high-threat');
-                    card.classList.add(`${level}-threat`);
-                }
-            } catch (err) {
-                console.warn(`[Cache] Could not preload ${target}:`, err.message);
-                // Leave as "--" — that's fine for first-time/cold-start
-                const ts = document.getElementById(`${target}CollapsedTimestamp`);
-                if (ts) ts.textContent = 'Awaiting first scan...';
-            }
-        }
-    }
 
     // ===== SCAN TARGET =====
     async function scanSingleTarget(target) {
