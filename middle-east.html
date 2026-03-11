@@ -7664,147 +7664,73 @@ function refreshCardData(cardId) {
     return;
 }
 
-// Load collapsed view data on page load
+// Load collapsed view data on page load — single bundle fetch (v2.1.0)
 async function loadCollapsedData() {
-    // Iran
     try {
-        const response = await fetch(`${BACKEND_URL}/api/iran-strike-probability`);  // FIXED: Added (
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('iran', data.probability, data.last_updated);
-        }
-    } catch (e) {
-        console.warn('Iran collapsed data failed:', e);
-    }
-    
-    // Hezbollah
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/hezbollah-activity`);  // FIXED: Added (
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('hezbollah', data.probability, data.last_updated);
-        }
-    } catch (e) {
-        console.warn('Hezbollah collapsed data failed:', e);
-    }
-    
-    // Houthis
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/houthis-threat`);  // FIXED: Added (
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('houthis', data.probability, data.last_updated);
-        }
-    } catch (e) {
-        console.warn('Houthis collapsed data failed:', e);
-    }
-    
-    // Syria
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/syria-conflict`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('syria', data.probability, data.last_updated);
-        }
-    } catch (e) {
-        console.warn('Syria collapsed data failed:', e);
-    }
-    
-    // Jordan
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/jordan-threat`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('jordan', data.probability, data.last_updated);
-        }
-    } catch (e) {
-        console.warn('Jordan collapsed data failed:', e);
-    }
+        const response = await fetch(`${BACKEND_URL}/api/dashboard`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const bundle = await response.json();
+        const countries = bundle.countries || {};
 
-    // Iraq
-    try {
-        const response = await fetch(`${BACKEND_URL}/scan-iraq`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('iraq', data.probability, data.timestamp);
-        }
-    } catch (e) {
-        console.warn('Iraq collapsed data failed:', e);
-    }
+        const keyMap = {
+            'iran': 'iran',
+            'hezbollah': 'hezbollah',
+            'houthis': 'houthis',
+            'syria': 'syria',
+            'israel': 'israel',
+            'iraq': 'iraq',
+            'jordan': 'jordan',
+            'bahrain': 'bahrain',
+            'kuwait': 'kuwait',
+            'saudi_arabia': 'saudi_arabia',
+            'uae': 'uae',
+            'oman': 'oman',
+            'qatar': 'qatar',
+            'egypt': 'egypt'
+        };
 
-    // Israel
-try {
-    const response = await fetch(`${BACKEND_URL}/api/israel-threat`);
-    if (response.ok) {
-        const data = await response.json();
-        updateCollapsedView('israel', data.probability, data.last_updated);
+        for (const [cardId, bundleKey] of Object.entries(keyMap)) {
+            const data = countries[bundleKey];
+            if (data) {
+                const ts = data.last_updated || data.timestamp || null;
+                updateCollapsedView(cardId, data.probability || 0, ts);
+            }
+        }
+
+    } catch (e) {
+        console.warn('Dashboard bundle fetch failed, falling back to individual fetches:', e);
+        await loadCollapsedDataFallback();
     }
-} catch (e) {
-    console.warn('Israel collapsed data failed:', e);
 }
 
-    // Bahrain
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/bahrain`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('bahrain', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('Bahrain collapsed data failed:', e); }
+// Fallback: individual fetches if /api/dashboard is unavailable
+async function loadCollapsedDataFallback() {
+    const fetches = [
+        { id: 'iran',         url: `${BACKEND_URL}/api/iran-strike-probability` },
+        { id: 'hezbollah',    url: `${BACKEND_URL}/api/hezbollah-activity` },
+        { id: 'houthis',      url: `${BACKEND_URL}/api/houthis-threat` },
+        { id: 'syria',        url: `${BACKEND_URL}/api/syria-conflict` },
+        { id: 'israel',       url: `${BACKEND_URL}/api/israel-threat` },
+        { id: 'iraq',         url: `${BACKEND_URL}/scan-iraq` },
+        { id: 'jordan',       url: `${BACKEND_URL}/api/jordan-threat` },
+        { id: 'bahrain',      url: `${BACKEND_URL}/api/threat/bahrain` },
+        { id: 'egypt',        url: `${BACKEND_URL}/api/threat/egypt` },
+        { id: 'kuwait',       url: `${BACKEND_URL}/api/threat/kuwait` },
+        { id: 'oman',         url: `${BACKEND_URL}/api/threat/oman` },
+        { id: 'qatar',        url: `${BACKEND_URL}/api/threat/qatar` },
+        { id: 'saudi_arabia', url: `${BACKEND_URL}/api/threat/saudi_arabia` },
+        { id: 'uae',          url: `${BACKEND_URL}/api/threat/uae` },
+    ];
 
-    // Egypt
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/egypt`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('egypt', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('Egypt collapsed data failed:', e); }
-
-    // Kuwait
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/kuwait`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('kuwait', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('Kuwait collapsed data failed:', e); }
-
-    // Oman
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/oman`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('oman', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('Oman collapsed data failed:', e); }
-
-    // Qatar
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/qatar`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('qatar', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('Qatar collapsed data failed:', e); }
-
-    // Saudi Arabia
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/saudi_arabia`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('saudi_arabia', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('Saudi Arabia collapsed data failed:', e); }
-
-    // UAE
-    try {
-        const response = await fetch(`${BACKEND_URL}/api/threat/uae`);
-        if (response.ok) {
-            const data = await response.json();
-            updateCollapsedView('uae', data.probability, data.last_updated);
-        }
-    } catch (e) { console.warn('UAE collapsed data failed:', e); }
+    await Promise.all(fetches.map(async ({ id, url }) => {
+        try {
+            const r = await fetch(url);
+            if (r.ok) {
+                const data = await r.json();
+                updateCollapsedView(id, data.probability || 0, data.last_updated || data.timestamp);
+            }
+        } catch (e) { console.warn(`${id} fallback fetch failed:`, e); }
+    }));
 }
 
         // Update collapsed view with data
