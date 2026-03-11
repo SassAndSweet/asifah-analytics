@@ -544,7 +544,10 @@ function renderEvacBanner(alerts) {
         var subtypeLabel = (a.subtype || 'alert').replace(/_/g, ' ').toUpperCase();
         var div = document.createElement('div');
         div.className = 'evac-banner-item';
-        div.innerHTML = '<span class="evac-subtype">[' + subtypeLabel + ']</span> <a href="' + (a.url || '#') + '" target="_blank" rel="noopener">' + (a.title || 'Evacuation signal detected') + '</a> <span style="font-size:0.65rem;color:var(--text-muted)">(' + (a.source || '') + ')</span>';
+        var subtypeIcon = { 'MILITARY EVACUATION':'🪖', 'NEO OPERATION':'🚁', 'ORDERED DEPARTURE':'🚨', 'VOLUNTARY DEPARTURE':'🧳', 'UNSPECIFIED':'🚨' };
+var titleLower = (a.title || '').toLowerCase();
+var icon = titleLower.includes('airport') || titleLower.includes('flights cancelled') || titleLower.includes('airspace closed') ? '✈️🚫' : (subtypeIcon[subtypeLabel] || '🚨');
+div.innerHTML = icon + ' <a href="' + (a.url || '#') + '" target="_blank" rel="noopener">' + (a.title || 'Evacuation signal detected') + '</a> <span style="font-size:0.65rem;color:var(--text-muted)">(' + (a.source || '') + ')</span>';
         items.appendChild(div);
     }
 }
