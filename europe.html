@@ -1446,10 +1446,86 @@
     // ===== CACHE/PRELOAD SYSTEM =====
     // Loads cached scores from the backend on page load so collapsed cards show last-known %
     async function loadCachedScores() {
+    // Single bundle fetch — one round trip for all 8 countries (v1.2.0)
+    try {
+        const response = await fetch(`${API_BASE}/api/europe/dashboard`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const bundle = await response.json();
+        const countries = bundle.countries || {};
+
         for (const target of TARGETS) {
+            const data = countries[target];
+            if (!data) continue;
             try {
-                // Try to fetch cached data (uses backend's server-side cache — no new API calls burned)
-                const response = await fetch(`${API_BASE}/api/europe/threat/${target}?days=7`);
+                const prob = data.probability || 0;
+                const probRounded = Math.round(prob);
+                const level = prob >= 60 ? 'high' : prob >= 35 ? 'medium' : 'low';
+
+                const collapsedScore = document.getElementById(`${target}CollapsedScore`);
+                const collapsedBar = document.getElementById(`${target}CollapsedBar`);
+                const collapsedTimestamp = document.getElementById(`${target}CollapsedTimestamp`);
+                const card = document.getElementById(`${target}-card`);
+
+                if (collapsedScore) collapsedScore.textContent = `${probRounded}%`;
+                if (collapsedBar) {
+                    collapsedBar.style.width = `${probRounded}%`;
+                    collapsedBar.style.background = level === 'high' ? '#ef4444' : level === 'medium' ? '#f59e0b' : '#10b981';
+                }
+                if (collapsedTimestamp) {
+                    const ts = data.cached_at || data.timestamp || null;
+                    collapsedTimestamp.textContent = ts ? `As of ${new Date(ts).toLocaleString()}` : new Date().toLocaleString();
+                }
+                if (card) {
+                    card.classList.remove('low-threat', 'medium-threat', 'high-threat');
+                    card.classList.add(`${level}-threat`);
+                }
+            } catch (err) {
+                console.warn(`[Cache] Could not render ${target}:`, err.message);
+            }
+        }
+
+    } catch (err) {
+        console.warn('[Cache] Bundle fetch failed, falling back to individual fetches:', err.message);
+        await loadCachedScoresFallback();
+    }
+}
+
+// Fallback: parallel individual fetches if /api/europe/dashboard is unavailable
+async function loadCachedScoresFallback() {
+    await Promise.all(TARGETS.map(async (target) => {
+        try {
+            const response = await fetch(`${API_BASE}/api/europe/threat/${target}?days=7`);
+            if (!response.ok) return;
+            const data = await response.json();
+            const prob = data.probability || 0;
+            const probRounded = Math.round(prob);
+            const level = prob >= 60 ? 'high' : prob >= 35 ? 'medium' : 'low';
+
+            const collapsedScore = document.getElementById(`${target}CollapsedScore`);
+            const collapsedBar = document.getElementById(`${target}CollapsedBar`);
+            const collapsedTimestamp = document.getElementById(`${target}CollapsedTimestamp`);
+            const card = document.getElementById(`${target}-card`);
+
+            if (collapsedScore) collapsedScore.textContent = `${probRounded}%`;
+            if (collapsedBar) {
+                collapsedBar.style.width = `${probRounded}%`;
+                collapsedBar.style.background = level === 'high' ? '#ef4444' : level === 'medium' ? '#f59e0b' : '#10b981';
+            }
+            if (collapsedTimestamp) {
+                const ts = data.cached_at || data.timestamp || null;
+                collapsedTimestamp.textContent = ts ? `As of ${new Date(ts).toLocaleString()}` : new Date().toLocaleString();
+            }
+            if (card) {
+                card.classList.remove('low-threat', 'medium-threat', 'high-threat');
+                card.classList.add(`${level}-threat`);
+            }
+        } catch (err) {
+            console.warn(`[Cache] Could not preload ${target}:`, err.message);
+            const ts = document.getElementById(`${target}CollapsedTimestamp`);
+            if (ts) ts.textContent = 'Awaiting first scan...';
+        }
+    }));
+}
                 if (!response.ok) continue;
                 const data = await response.json();
                 const prob = data.probability || 0;
