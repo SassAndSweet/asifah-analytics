@@ -1723,7 +1723,7 @@
                     
                     <!-- Link to full analysis -->
                     <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border); text-align: center;">
-                        <a href="rhetoric.html" style="color: #6495ED; text-decoration: none; font-size: 12px; font-weight: 600;" data-i18n="viewFullAnalysis">
+                        <a href="rhetoric-lebanon.html" style="color: #6495ED; text-decoration: none; font-size: 12px; font-weight: 600;" data-i18n="viewFullAnalysis">
                             View Full Rhetoric Analysis →
                         </a>
                     </div>
@@ -2866,7 +2866,25 @@
                 
                 if (data.awaiting_scan) {
                     document.getElementById('rhetoricScore').textContent = '...';
-                    document.getElementById('rhetoricScanInfo').textContent = 'Initial scan in progress';
+                    document.getElementById('rhetoricScanInfo').textContent = 'Initial scan in progress — retrying...';
+                    // Retry every 30s up to 8 times (~4 min) to catch post-cold-start data
+                    let retries = 0;
+                    const retryInterval = setInterval(async () => {
+                        retries++;
+                        try {
+                            const retryResp = await fetch('https://lebanon-stability-backend.onrender.com/api/rhetoric/lebanon/summary');
+                            const retryData = await retryResp.json();
+                            if (!retryData.awaiting_scan) {
+                                clearInterval(retryInterval);
+                                loadRhetoricData();
+                            } else {
+                                document.getElementById('rhetoricScanInfo').textContent = `Scan in progress — retry ${retries}/8...`;
+                                if (retries >= 8) clearInterval(retryInterval);
+                            }
+                        } catch (e) {
+                            if (retries >= 8) clearInterval(retryInterval);
+                        }
+                    }, 30000);
                     return;
                 }
                 
