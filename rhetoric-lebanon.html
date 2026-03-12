@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Lebanon Rhetoric Tracker v1.2.0 - Last updated: Mar 12, 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Lebanon Rhetoric Tracker | Asifah Analytics v1.2.0</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --watermark-opacity: 0.50;
+            --card-glow: none;
+            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0e1a;
+            --container-bg: #111827;
+            --card-bg: #111827;
+            --card-border: #1e3a5f;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --header-gradient-start: #0f1a2e;
+            --header-gradient-end: #1e3a5f;
+            --header-text: #ffffff;
+            --article-bg: #1a2332;
+            --article-hover: #243447;
+            --watermark-opacity: 0.85;
+            --card-glow: 0 0 1px rgba(100,149,237,0.1);
+            --card-hover-glow: 0 0 20px rgba(100,149,237,0.2), 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vmin; height: 90vmin;
+            min-width: 600px; min-height: 600px;
+            max-width: 1000px; max-height: 1000px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        [data-theme="dark"] body::before {
+            filter: brightness(0.3) sepia(1) hue-rotate(180deg) saturate(3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        [data-theme="dark"] header {
+            border: 1px solid rgba(100,149,237,0.2);
+            box-shadow: 0 6px 30px rgba(0,0,0,0.4), 0 0 15px rgba(100,149,237,0.05);
+        }
+
+        .header-logo {
+            width: 80px; height: 80px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            margin-top: 48px;
+        }
+
+        .header-content { flex: 1; text-align: center; }
+
+        h1 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+
+        .header-controls {
+            position: absolute;
+            top: 35px; right: 35px;
+            display: flex; flex-direction: column; gap: 10px;
+            z-index: 1000;
+        }
+
+        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+
+        .language-switcher {
+            display: flex; gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 14px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px; font-weight: bold;
+            border-radius: 6px; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 12px; border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle-label { font-size: 11px; color: rgba(255,255,255,0.9); margin-right: 8px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+
+        .theme-toggle-switch {
+            position: relative; width: 50px; height: 26px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 13px; cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px;
+            width: 18px; height: 18px;
+            background: white; border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px;
+        }
+
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(24px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+
+        .back-link {
+            display: inline-block;
+            position: absolute; top: 20px; left: 20px;
+            margin: 0; padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white; text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+            font-size: 14px; font-weight: bold;
+        }
+
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        [dir="rtl"] .back-link { left: auto; right: 20px; }
+
+        /* ── THEATRE BANNER ── */
+        .theatre-banner {
+            border-radius: 12px;
+            padding: 28px 35px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border: 2px solid var(--card-border);
+            background: var(--container-bg);
+            box-shadow: var(--card-glow);
+            transition: all 0.3s ease;
+        }
+
+        .theatre-left { display: flex; align-items: baseline; gap: 16px; }
+
+        .theatre-score {
+            font-size: 80px;
+            font-weight: bold;
+            line-height: 1;
+            transition: color 0.3s ease;
+        }
+
+        .theatre-label-badge {
+            font-size: 16px;
+            font-weight: bold;
+            padding: 6px 16px;
+            border-radius: 6px;
+            color: white;
+            letter-spacing: 1px;
+        }
+
+        .theatre-meta { text-align: right; }
+        [dir="rtl"] .theatre-meta { text-align: left; }
+
+        .theatre-meta-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        [data-theme="dark"] .theatre-meta-title { color: #6495ED; }
+
+        .theatre-meta-sub { font-size: 12px; color: var(--text-secondary); margin-top: 6px; }
+        .theatre-scan-info { font-size: 11px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+
+        /* ── ESCALATION LADDER ── */
+        .ladder-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .ladder-step {
+            flex: 1;
+            padding: 10px 6px;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.35;
+        }
+
+        .ladder-step.active {
+            opacity: 1;
+            border-color: currentColor;
+            box-shadow: 0 0 12px rgba(0,0,0,0.15);
+        }
+
+        [data-theme="dark"] .ladder-step.active {
+            box-shadow: 0 0 16px rgba(100,149,237,0.2);
+        }
+
+        .ladder-step-num { font-size: 22px; font-weight: bold; }
+        .ladder-step-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 3px; font-weight: 600; }
+
+        /* ── ACTOR GRID ── */
+        .section-card {
+            background: var(--container-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 2px solid var(--card-border);
+            box-shadow: var(--card-glow);
+            transition: all 0.3s ease;
+        }
+
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        [data-theme="dark"] .section-title { color: #6495ED; }
+
+        .actors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .actor-card {
+            background: var(--article-bg);
+            border-radius: 10px;
+            padding: 16px;
+            border: 2px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .actor-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-hover-glow);
+        }
+
+        [data-theme="dark"] .actor-card:hover { border-color: rgba(100,149,237,0.4); }
+
+        .actor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .actor-name { font-size: 13px; font-weight: bold; color: var(--text-primary); }
+        .actor-flag-icon { font-size: 18px; }
+
+        .actor-escalation-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .actor-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .actor-level-label { font-size: 11px; font-weight: 700; }
+
+        .actor-phrase {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: rgba(100,149,237,0.06);
+            border-left: 3px solid #6495ED;
+            border-radius: 4px;
+            line-height: 1.4;
+        }
+
+        [dir="rtl"] .actor-phrase { border-left: none; border-right: 3px solid #6495ED; }
+
+        .actor-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .actor-stat {
+            font-size: 10px;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .actor-spokespeople {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Silence alert */
+        .silence-badge {
+            font-size: 10px;
+            background: rgba(251,191,36,0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(251,191,36,0.3);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* ── ALERTS SECTION ── */
+        .alert-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            border-left: 4px solid;
+            line-height: 1.5;
+        }
+
+        [dir="rtl"] .alert-item { border-left: none; border-right: 4px solid; }
+
+        .alert-critical { background: rgba(248,113,113,0.1); border-color: #f87171; }
+        .alert-high { background: rgba(251,146,60,0.1); border-color: #fb923c; }
+        .alert-medium { background: rgba(250,204,21,0.1); border-color: #facc15; }
+        .alert-low { background: rgba(100,149,237,0.08); border-color: #6495ED; }
+
+        /* ── TOP ARTICLES ── */
+        .article-item {
+            background: var(--article-bg);
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #1e3a5f;
+            transition: all 0.2s ease;
+        }
+
+        [data-theme="dark"] .article-item { border-left-color: #6495ED; }
+        [dir="rtl"] .article-item { border-left: none; border-right: 4px solid #6495ED; }
+
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        [dir="rtl"] .article-item:hover { transform: translateX(-4px); }
+
+        .article-title { font-size: 13px; font-weight: 500; color: var(--text-primary); margin-bottom: 5px; }
+        .article-meta { font-size: 11px; color: var(--text-secondary); display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+
+        .article-escalation-badge {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .article-link { color: #6495ED; text-decoration: none; font-size: 12px; }
+        .article-link:hover { text-decoration: underline; }
+        [data-theme="dark"] .article-link { color: #7dabf8; }
+
+        /* ── SPARKLINE ── */
+        .sparkline-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .sparkline-label { font-size: 11px; color: var(--text-secondary); white-space: nowrap; }
+
+        /* ── COORDINATION ALERTS ── */
+        .coord-alert {
+            background: rgba(239,68,68,0.08);
+            border: 1px solid rgba(239,68,68,0.3);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+
+        /* ── SCAN BUTTON ── */
+        .scan-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 22px;
+            background: #6495ED;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .scan-btn:hover { background: #4a7dd4; transform: translateY(-1px); }
+        .scan-btn:disabled { background: #94a3b8; cursor: not-allowed; transform: none; }
+
+        .scan-btn.scanning { animation: pulse 1.5s ease-in-out infinite; }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        /* ── LOADING STATE ── */
+        .loading-placeholder {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        .loading-dot { display: inline-block; animation: blink 1.4s ease-in-out infinite; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--container-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--card-glow);
+            border: 2px solid var(--card-border);
+            font-size: 12px;
+            text-align: center;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .actors-grid { grid-template-columns: 1fr; }
+            .theatre-banner { flex-direction: column; align-items: flex-start; }
+            .theatre-meta { text-align: left; }
+            .ladder-row { flex-wrap: wrap; }
+            .ladder-step { min-width: 80px; }
+            h1 { font-size: 20px; }
+            .theatre-score { font-size: 56px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <a href="lebanon-stability.html" class="back-link" data-i18n="backLink">← Back to Lebanon</a>
+
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+             alt="Asifah Analytics Logo" class="header-logo">
+
+        <div class="header-content">
+            <h1 data-i18n="pageTitle">🇱🇧 LEBANON RHETORIC TRACKER</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Multi-Actor Escalation Ladder · Real-Time Signal Analysis</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+        </div>
+
+        <div class="header-controls">
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
+            </div>
+            <div class="theme-toggle">
+                <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()">
+                    <div class="theme-toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- THEATRE BANNER -->
+    <div class="theatre-banner" id="theatreBanner">
+        <div class="theatre-left">
+            <div class="theatre-score" id="theatreScore" style="color:#6b7280;">--</div>
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:6px;" data-i18n="theatreScoreLabel">RHETORIC SCORE / 100</div>
+                <span class="theatre-label-badge" id="theatreLabelBadge" style="background:#6b7280;">--</span>
+            </div>
+        </div>
+        <div class="theatre-meta">
+            <div class="theatre-meta-title" data-i18n="theatreEscalation">THEATRE ESCALATION LEVEL</div>
+            <div style="font-size:28px;font-weight:bold;color:var(--text-primary);" id="theatreLevel">--</div>
+            <div class="theatre-meta-sub" id="theatreLevelDesc">--</div>
+            <div class="theatre-scan-info" id="theatreScanInfo">--</div>
+        </div>
+    </div>
+
+    <!-- ESCALATION LADDER VISUALIZATION -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="escalationLadder">🪜 ESCALATION LADDER</div>
+        <div class="ladder-row" id="ladderRow">
+            <!-- Populated by JS -->
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+            <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassified">Articles classified: --</div>
+            <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
+                🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 30-DAY SPARKLINE -->
+    <div class="section-card" id="trendCard" style="display:none;">
+        <div class="section-title" data-i18n="trendTitle">📈 30-DAY RHETORIC TREND</div>
+        <div class="sparkline-wrapper">
+            <span class="sparkline-label" data-i18n="trendLabel">Rhetoric Score:</span>
+            <canvas id="rhetoricSparkline" style="flex-grow:1;max-height:60px;"></canvas>
+        </div>
+    </div>
+
+    <!-- ACTIVE ALERTS -->
+    <div class="section-card" id="alertsCard" style="display:none;">
+        <div class="section-title" data-i18n="activeAlerts">🚨 ACTIVE ALERTS</div>
+        <div id="alertsList"></div>
+    </div>
+
+    <!-- COORDINATION ALERTS -->
+    <div class="section-card" id="coordCard" style="display:none;">
+        <div class="section-title" data-i18n="coordAlerts">⚡ COORDINATION SIGNALS</div>
+        <div id="coordList"></div>
+    </div>
+
+    <!-- ACTOR STATUS GRID -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="actorStatus">🎯 ACTOR STATUS</div>
+        <div class="actors-grid" id="actorsGrid">
+            <div class="loading-placeholder">
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <div style="margin-top:10px;" data-i18n="loadingActors">Loading actor data...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP ARTICLES BY ACTOR -->
+    <div class="section-card" id="articlesSection">
+        <div class="section-title" data-i18n="topArticles">📰 TOP ARTICLES BY ACTOR</div>
+        <div id="articlesList">
+            <div class="loading-placeholder" data-i18n="loadingArticles">Loading articles...</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div data-i18n="footerSources">Data Sources: RSS (Al-Manar, Times of Israel, Jerusalem Post, i24NEWS, MEMRI, IranWire), GDELT, NewsAPI, Telegram</div>
+        <div style="margin-top:15px; font-size:0.85em;" data-i18n="footerOsint">
+            Multi-language analysis: English, Hebrew, Arabic, Farsi. Escalation scoring updated every 12 hours.
+        </div>
+
+        <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+            <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v1.2.0</div>
+            <div style="font-size:0.8em;" data-i18n="footerUpdate">Updated every 12 hours | Not for operational use</div>
+        </div>
+
+        <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
+            <span style="font-size:0.9em;">
+                If you find Asifah Analytics useful and want to support ongoing development, you can
+                <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#6495ED;">☕ buy me a coffee</a>
+            </span>
+        </div>
+
+        <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
+            © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+            Unauthorized use, reproduction, or distribution prohibited.
+        </div>
+    </footer>
+
+</div><!-- /container -->
+
+<script>
+    const API_BASE = 'https://lebanon-stability-backend.onrender.com';
+
+    const ESCALATION_LEVELS = {
+        0: { label: 'Silent',      color: '#6b7280', desc: 'No statements detected' },
+        1: { label: 'Routine',     color: '#10b981', desc: 'Standard diplomatic language' },
+        2: { label: 'Cautionary',  color: '#f59e0b', desc: 'Warnings, expressions of concern' },
+        3: { label: 'Threatening', color: '#f97316', desc: 'Explicit threats, red lines invoked' },
+        4: { label: 'Operational', color: '#ef4444', desc: 'Military language, action imminent' },
+        5: { label: 'Active',      color: '#991b1b', desc: 'Claims of ongoing operations or strikes' },
+    };
+
+    const ACTOR_ORDER = ['hezbollah_military','hezbollah_political','israel_lebanon','iran_lebanon','lebanese_government','unifil'];
+
+    // ── TRANSLATIONS ──
+    const translations = {
+        en: {
+            pageTitle: "🇱🇧 LEBANON RHETORIC TRACKER",
+            pageSubtitle: "Multi-Actor Escalation Ladder · Real-Time Signal Analysis",
+            lastUpdated: "Last updated: ",
+            backLink: "← Back to Lebanon",
+            themeToggle: "Theme",
+            theatreScoreLabel: "RHETORIC SCORE / 100",
+            theatreEscalation: "THEATRE ESCALATION LEVEL",
+            escalationLadder: "🪜 ESCALATION LADDER",
+            articlesClassified: "Articles classified: --",
+            refreshScan: "Refresh Scan",
+            trendTitle: "📈 30-DAY RHETORIC TREND",
+            trendLabel: "Rhetoric Score:",
+            activeAlerts: "🚨 ACTIVE ALERTS",
+            coordAlerts: "⚡ COORDINATION SIGNALS",
+            actorStatus: "🎯 ACTOR STATUS",
+            topArticles: "📰 TOP ARTICLES BY ACTOR",
+            loadingActors: "Loading actor data...",
+            loadingArticles: "Loading articles...",
+            footerSources: "Data Sources: RSS (Al-Manar, Times of Israel, Jerusalem Post, i24NEWS, MEMRI, IranWire), GDELT, NewsAPI, Telegram",
+            footerOsint: "Multi-language analysis: English, Hebrew, Arabic, Farsi. Escalation scoring updated every 12 hours.",
+            footerUpdate: "Updated every 12 hours | Not for operational use",
+            silenceAlert: "🔇 SILENCE ALERT",
+            voicesDetected: "Voices detected",
+            noAlerts: "No active alerts",
+            scanInProgress: "Scan in progress — retrying...",
+            retry: "Retry",
+            articles: "articles",
+            maxEscalation: "Max escalation"
+        },
+        he: {
+            pageTitle: "🇱🇧 מעקב רטוריקה לבנון",
+            pageSubtitle: "סולם הסלמה רב-שחקנים · ניתוח אותות בזמן אמת",
+            lastUpdated: "עודכן לאחרונה: ",
+            backLink: "→ חזרה ללבנון",
+            themeToggle: "ערכת נושא",
+            theatreScoreLabel: "ציון רטוריקה / 100",
+            theatreEscalation: "רמת הסלמה בזירה",
+            escalationLadder: "🪜 סולם ההסלמה",
+            articlesClassified: "כתבות מסווגות: --",
+            refreshScan: "רענן סריקה",
+            trendTitle: "📈 מגמת רטוריקה 30 יום",
+            trendLabel: "ציון רטוריקה:",
+            activeAlerts: "🚨 התראות פעילות",
+            coordAlerts: "⚡ אותות תיאום",
+            actorStatus: "🎯 סטטוס שחקנים",
+            topArticles: "📰 כתבות מובילות לפי שחקן",
+            loadingActors: "טוען נתוני שחקנים...",
+            loadingArticles: "טוען כתבות...",
+            footerSources: "מקורות: RSS (אל-מנאר, טיימס אוף ישראל, ג'רוזלם פוסט, i24NEWS, מֶמרי, IranWire), GDELT, NewsAPI, Telegram",
+            footerOsint: "ניתוח רב-לשוני: אנגלית, עברית, ערבית, פרסית. ציון הסלמה מתעדכן כל 12 שעות.",
+            footerUpdate: "מתעדכן כל 12 שעות | לא לשימוש מבצעי",
+            silenceAlert: "🔇 התראת שתיקה",
+            voicesDetected: "קולות שזוהו",
+            noAlerts: "אין התראות פעילות",
+            scanInProgress: "סריקה בתהליך — מנסה שוב...",
+            articles: "כתבות",
+            maxEscalation: "הסלמה מקסימלית"
+        },
+        ar: {
+            pageTitle: "🇱🇧 متتبع خطاب لبنان",
+            pageSubtitle: "سلّم تصعيد متعدد الأطراف · تحليل الإشارات في الوقت الفعلي",
+            lastUpdated: "آخر تحديث: ",
+            backLink: "→ العودة إلى لبنان",
+            themeToggle: "السمة",
+            theatreScoreLabel: "نقاط الخطاب / 100",
+            theatreEscalation: "مستوى التصعيد في المسرح",
+            escalationLadder: "🪜 سلّم التصعيد",
+            articlesClassified: "المقالات المصنّفة: --",
+            refreshScan: "تحديث المسح",
+            trendTitle: "📈 اتجاه الخطاب خلال 30 يومًا",
+            trendLabel: "نقاط الخطاب:",
+            activeAlerts: "🚨 التنبيهات النشطة",
+            coordAlerts: "⚡ إشارات التنسيق",
+            actorStatus: "🎯 حالة الجهات الفاعلة",
+            topArticles: "📰 أبرز المقالات حسب الجهة",
+            loadingActors: "جارٍ تحميل بيانات الجهات...",
+            loadingArticles: "جارٍ تحميل المقالات...",
+            footerSources: "المصادر: RSS (المنار، تايمز أوف إسرائيل، جيروزاليم بوست، i24NEWS، MEMRI، IranWire)، GDELT، NewsAPI، Telegram",
+            footerOsint: "تحليل متعدد اللغات: الإنجليزية والعبرية والعربية والفارسية. يتم تحديث نقاط التصعيد كل 12 ساعة.",
+            footerUpdate: "يتم التحديث كل 12 ساعة | ليس للاستخدام العملياتي",
+            silenceAlert: "🔇 تنبيه الصمت",
+            voicesDetected: "الأصوات المكتشفة",
+            noAlerts: "لا توجد تنبيهات نشطة",
+            scanInProgress: "المسح جارٍ — إعادة المحاولة...",
+            articles: "مقالات",
+            maxEscalation: "أقصى تصعيد"
+        },
+        fa: {
+            pageTitle: "🇱🇧 ردیاب گفتمان لبنان",
+            pageSubtitle: "نردبان تشدید چندجانبه · تحلیل سیگنال‌ها در زمان واقعی",
+            lastUpdated: "آخرین به‌روزرسانی: ",
+            backLink: "→ بازگشت به لبنان",
+            themeToggle: "پوسته",
+            theatreScoreLabel: "امتیاز گفتمان / 100",
+            theatreEscalation: "سطح تشدید در صحنه",
+            escalationLadder: "🪜 نردبان تشدید",
+            articlesClassified: "مقالات طبقه‌بندی‌شده: --",
+            refreshScan: "به‌روزرسانی اسکن",
+            trendTitle: "📈 روند گفتمان ۳۰ روزه",
+            trendLabel: "امتیاز گفتمان:",
+            activeAlerts: "🚨 هشدارهای فعال",
+            coordAlerts: "⚡ سیگنال‌های هماهنگی",
+            actorStatus: "🎯 وضعیت بازیگران",
+            topArticles: "📰 مقالات برتر بر اساس بازیگر",
+            loadingActors: "در حال بارگذاری داده‌های بازیگران...",
+            loadingArticles: "در حال بارگذاری مقالات...",
+            footerSources: "منابع: RSS (المنار، تایمز آو ایزریل، جروزالم پست، i24NEWS، MEMRI، IranWire)، GDELT، NewsAPI، Telegram",
+            footerOsint: "تحلیل چندزبانه: انگلیسی، عبری، عربی، فارسی. به‌روزرسانی امتیاز تشدید هر ۱۲ ساعت.",
+            footerUpdate: "هر ۱۲ ساعت به‌روز می‌شود | برای استفاده عملیاتی نیست",
+            silenceAlert: "🔇 هشدار سکوت",
+            voicesDetected: "صداهای شناسایی‌شده",
+            noAlerts: "هیچ هشداری فعال نیست",
+            scanInProgress: "اسکن در حال انجام — تلاش مجدد...",
+            articles: "مقاله",
+            maxEscalation: "حداکثر تشدید"
+        }
+    };
+
+    let currentLang = 'en';
+    let sparklineChart = null;
+    let retryInterval = null;
+    let retryCount = 0;
+
+    // ── THEME ──
+    function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('asifah-theme', isDark ? 'light' : 'dark');
+    }
+
+    (function initTheme() {
+        const saved = localStorage.getItem('asifah-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    // ── LANGUAGE ──
+    function switchLanguage(lang, btn) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const isRTL = ['he','ar','fa'].includes(lang);
+        document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) {
+                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
+                    const current = el.textContent;
+                    const ts = current.includes(':') ? current.split(': ').slice(1).join(': ') : 'Loading...';
+                    el.textContent = translations[lang][key] + ts;
+                } else {
+                    el.textContent = translations[lang][key];
+                }
+            }
+        });
+    }
+
+    // ── ESCALATION LADDER ──
+    function renderLadder(activeLevel) {
+        const row = document.getElementById('ladderRow');
+        row.innerHTML = '';
+        for (let i = 0; i <= 5; i++) {
+            const lv = ESCALATION_LEVELS[i];
+            const div = document.createElement('div');
+            div.className = 'ladder-step' + (i === activeLevel ? ' active' : '');
+            div.style.color = lv.color;
+            div.style.background = i === activeLevel ? lv.color + '22' : 'transparent';
+            div.innerHTML = `<div class="ladder-step-num" style="color:${lv.color}">${i}</div><div class="ladder-step-label" style="color:${lv.color}">${lv.label}</div>`;
+            row.appendChild(div);
+        }
+    }
+
+    // ── THEATRE BANNER ──
+    function renderTheatre(data) {
+        const score = data.rhetoric_score || 0;
+        const level = data.theatre_escalation_level || 0;
+        const lv = ESCALATION_LEVELS[level];
+
+        document.getElementById('theatreScore').textContent = score;
+        document.getElementById('theatreScore').style.color = lv.color;
+        document.getElementById('theatreLabelBadge').textContent = data.theatre_escalation_label || lv.label;
+        document.getElementById('theatreLabelBadge').style.background = lv.color;
+        document.getElementById('theatreLevel').textContent = `Level ${level} — ${lv.label}`;
+        document.getElementById('theatreLevel').style.color = lv.color;
+        document.getElementById('theatreLevelDesc').textContent = lv.desc;
+
+        if (data.scanned_at) {
+            const scanDate = new Date(data.scanned_at);
+            const ago = Math.round((Date.now() - scanDate.getTime()) / 60000);
+            const agoText = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+            document.getElementById('theatreScanInfo').textContent = `Last scan: ${agoText}`;
+        }
+
+        // Last updated header
+        const ts = data.scanned_at ? new Date(data.scanned_at).toLocaleString() : new Date().toLocaleString();
+        const t = translations[currentLang];
+        document.getElementById('lastUpdated').textContent = (t.lastUpdated || 'Last updated: ') + ts;
+
+        renderLadder(level);
+
+        const classified = data.articles_classified || 0;
+        const total = data.total_articles || 0;
+        document.getElementById('articlesClassified').textContent = `Articles classified: ${classified} / ${total}`;
+    }
+
+    // ── ALERTS ──
+    function renderAlerts(alerts) {
+        const card = document.getElementById('alertsCard');
+        const list = document.getElementById('alertsList');
+        if (!alerts || alerts.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+        list.innerHTML = alerts.map(a => {
+            const cls = a.severity === 'critical' ? 'alert-critical' : a.severity === 'high' ? 'alert-high' : a.severity === 'medium' ? 'alert-medium' : 'alert-low';
+            return `<div class="alert-item ${cls}">${a.message || a}</div>`;
+        }).join('');
+    }
+
+    // ── COORDINATION ──
+    function renderCoordination(alerts) {
+        const card = document.getElementById('coordCard');
+        const list = document.getElementById('coordList');
+        if (!alerts || alerts.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+        list.innerHTML = alerts.map(a =>
+            `<div class="coord-alert">⚡ ${a.description || a}</div>`
+        ).join('');
+    }
+
+    // ── ACTORS ──
+    function renderActors(actors) {
+        const grid = document.getElementById('actorsGrid');
+        grid.innerHTML = '';
+        ACTOR_ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a) return;
+            const lv = ESCALATION_LEVELS[a.escalation_level] || ESCALATION_LEVELS[0];
+            const silenceBadge = a.silence_alert ? `<span class="silence-badge">🔇 Silence</span>` : '';
+            const phraseBlock = a.escalation_phrase
+                ? `<div class="actor-phrase">"${a.escalation_phrase}"</div>` : '';
+            const spokesBlock = a.spokespersons && a.spokespersons.length > 0
+                ? `<div class="actor-spokespeople">🎤 ${a.spokespersons.slice(0,3).join(' · ')}</div>` : '';
+
+            const div = document.createElement('div');
+            div.className = 'actor-card';
+            div.innerHTML = `
+                <div class="actor-header">
+                    <div>
+                        <span class="actor-flag-icon">${a.flag} ${a.icon}</span>
+                        <span class="actor-name"> ${a.name}</span>
+                        ${silenceBadge}
+                    </div>
+                    <div class="actor-escalation-badge">
+                        <div class="actor-dot" style="background:${lv.color}"></div>
+                        <span class="actor-level-label" style="color:${lv.color}">${lv.label}</span>
+                    </div>
+                </div>
+                <div class="actor-stats">
+                    <span class="actor-stat">📄 ${a.statement_count || 0} articles</span>
+                    <span class="actor-stat">⬆️ Level ${a.escalation_level}</span>
+                </div>
+                ${phraseBlock}
+                ${spokesBlock}
+            `;
+            grid.appendChild(div);
+        });
+    }
+
+    // ── TOP ARTICLES ──
+    function renderArticles(actors) {
+        const list = document.getElementById('articlesList');
+        const allArticles = [];
+        ACTOR_ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a || !a.top_articles) return;
+            a.top_articles.slice(0,2).forEach(art => {
+                allArticles.push({ ...art, actorName: a.name, actorIcon: a.icon, actorFlag: a.flag });
+            });
+        });
+
+        if (allArticles.length === 0) {
+            list.innerHTML = '<div class="loading-placeholder">No articles available yet.</div>';
+            return;
+        }
+
+        list.innerHTML = allArticles.map(art => {
+            const lv = ESCALATION_LEVELS[art.escalation_level] || ESCALATION_LEVELS[1];
+            const date = art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : '';
+            return `
+                <div class="article-item">
+                    <div class="article-title">
+                        <a href="${art.url || '#'}" target="_blank" rel="noopener" class="article-link">${art.title || 'Untitled'}</a>
+                    </div>
+                    <div class="article-meta">
+                        <span>${art.actorFlag} ${art.actorIcon} ${art.actorName}</span>
+                        <span class="article-escalation-badge" style="background:${lv.color}">${lv.label}</span>
+                        <span>${art.source || ''}</span>
+                        <span>${date}</span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ── SPARKLINE ──
+    function renderSparkline(trends) {
+        if (!trends || !trends.rhetoric_score || trends.rhetoric_score.length < 2) return;
+        document.getElementById('trendCard').style.display = 'block';
+        const ctx = document.getElementById('rhetoricSparkline').getContext('2d');
+        if (sparklineChart) sparklineChart.destroy();
+        const scores = trends.rhetoric_score;
+        sparklineChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: scores.map((_, i) => i),
+                datasets: [{
+                    data: scores,
+                    borderColor: '#6495ED',
+                    backgroundColor: 'rgba(100,149,237,0.1)',
+                    borderWidth: 2,
+                    pointRadius: 0,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false, min: 0, max: 100 } }
+            }
+        });
+    }
+
+    // ── MAIN LOAD ──
+    async function loadRhetoricData(forceRefresh = false) {
+        try {
+            const url = API_BASE + '/api/rhetoric/lebanon' + (forceRefresh ? '?refresh=true' : '');
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+
+            if (data.awaiting_scan) {
+                document.getElementById('theatreScore').textContent = '...';
+                document.getElementById('theatreScanInfo').textContent = translations[currentLang].scanInProgress;
+                renderLadder(0);
+                // Retry every 30s up to 8 times
+                if (!retryInterval) {
+                    retryInterval = setInterval(async () => {
+                        retryCount++;
+                        try {
+                            const r = await fetch(API_BASE + '/api/rhetoric/lebanon');
+                            const d = await r.json();
+                            if (!d.awaiting_scan) {
+                                clearInterval(retryInterval);
+                                retryInterval = null;
+                                retryCount = 0;
+                                loadRhetoricData();
+                            } else {
+                                document.getElementById('theatreScanInfo').textContent = `Scan in progress — retry ${retryCount}/8...`;
+                                if (retryCount >= 8) { clearInterval(retryInterval); retryInterval = null; }
+                            }
+                        } catch (e) {
+                            if (retryCount >= 8) { clearInterval(retryInterval); retryInterval = null; }
+                        }
+                    }, 30000);
+                }
+                return;
+            }
+
+            renderTheatre(data);
+            renderAlerts(data.alerts);
+            renderCoordination(data.coordination_alerts);
+            if (data.actors) {
+                renderActors(data.actors);
+                renderArticles(data.actors);
+            }
+
+            // Load sparkline trend separately
+            try {
+                const trendResp = await fetch(API_BASE + '/api/rhetoric/lebanon/trends?days=30');
+                if (trendResp.ok) {
+                    const trendData = await trendResp.json();
+                    renderSparkline(trendData);
+                }
+            } catch (e) { /* sparkline optional */ }
+
+        } catch (err) {
+            console.error('[Rhetoric] Load error:', err);
+            document.getElementById('theatreScore').textContent = 'N/A';
+            document.getElementById('theatreScanInfo').textContent = 'Data unavailable — backend may be warming up';
+        }
+    }
+
+    // ── SCAN BUTTON ──
+    async function triggerScan() {
+        const btn = document.getElementById('scanBtn');
+        btn.disabled = true;
+        btn.classList.add('scanning');
+        btn.querySelector('span').textContent = 'Scanning...';
+        await loadRhetoricData(true);
+        // Give backend 30s to complete scan then reload
+        setTimeout(async () => {
+            await loadRhetoricData(false);
+            btn.disabled = false;
+            btn.classList.remove('scanning');
+            btn.querySelector('span').setAttribute('data-i18n', 'refreshScan');
+            btn.querySelector('span').textContent = translations[currentLang].refreshScan || 'Refresh Scan';
+        }, 30000);
+    }
+
+    // ── INIT ──
+    renderLadder(0);
+    loadRhetoricData();
+</script>
+</body>
+</html>
