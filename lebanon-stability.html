@@ -669,32 +669,42 @@
             transform: translateX(-4px);
         }
 
-        .article-title {
+.article-title {
             color: var(--text-primary);
             font-size: 14px;
             margin-bottom: 5px;
             font-weight: 500;
         }
-
         .article-meta {
             font-size: 12px;
             color: var(--text-secondary);
         }
-
         .article-link {
             color: #6495ED;
             text-decoration: none;
             font-size: 13px;
         }
-
         .article-link:hover {
             text-decoration: underline;
         }
-
         /* Dark mode: brighter link color */
         [data-theme="dark"] .article-link {
             color: #7dabf8;
         }
+        .news-tab-btn {
+            background: var(--article-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: all 0.2s;
+        }
+        .news-tab-btn:hover { border-color: #6495ED; color: #6495ED; }
+        .news-tab-btn.active { background: #6495ED; border-color: #6495ED; color: white; }
 
         /* Footer */
         footer {
@@ -1923,10 +1933,16 @@
                 </div>
             </div>
 
-            <!-- Recent Hezbollah-Related Articles -->
+            <!-- Tabbed News Section -->
             <div class="articles-section">
-                <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 30 Days)</div>
-                <div id="articlesContainer"></div>
+                <div class="section-title">📰 Lebanon & Security News (Last 30 Days)</div>
+                <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+                    <button class="news-tab-btn active" onclick="switchNewsTab('english')" id="tab-english">🇺🇸 English</button>
+                    <button class="news-tab-btn" onclick="switchNewsTab('arabic')" id="tab-arabic">🇱🇧 Arabic</button>
+                    <button class="news-tab-btn" onclick="switchNewsTab('hebrew')" id="tab-hebrew">🇮🇱 Hebrew</button>
+                    <button class="news-tab-btn" onclick="switchNewsTab('reddit')" id="tab-reddit">💬 Reddit</button>
+                </div>
+                <div id="newsTabContent"></div>
             </div>
         </div>
 
@@ -2592,22 +2608,12 @@
                 `).join('');
             }
             
-            // Articles section
-            const articlesContainer = document.getElementById('articlesContainer');
-            
-            if (articles.length === 0) {
-                articlesContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px;">No recent articles found</div>';
-            } else {
-                articlesContainer.innerHTML = articles.map(article => `
-                    <div class="article-item">
-                        <div class="article-title">${article.title || 'Untitled'}</div>
-                        <div class="article-meta">
-                            ${article.keyword || ''} • ${article.published ? new Date(article.published).toLocaleDateString() : 'Recent'}
-                        </div>
-                        ${article.url ? `<a href="${article.url}" target="_blank" class="article-link">Read article →</a>` : ''}
-                    </div>
-                `).join('');
-            }
+            // Tabbed news section
+            window._newsByTab = hezbollah.articles_by_tab || { english: articles };
+            window._newsByTab.english = window._newsByTab.english?.length 
+                ? window._newsByTab.english 
+                : articles;
+            switchNewsTab('english');
         }
 
         // Translation system
@@ -2981,6 +2987,30 @@
             loadLebanonData();
             loadHumanitarianData();
         });
+
+        function switchNewsTab(tab) {
+            document.querySelectorAll('.news-tab-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById('tab-' + tab);
+            if (btn) btn.classList.add('active');
+
+            const articles = (window._newsByTab || {})[tab] || [];
+            const container = document.getElementById('newsTabContent');
+            if (!container) return;
+
+            if (articles.length === 0) {
+                container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px; font-style:italic;">No recent articles in this feed</div>';
+                return;
+            }
+            container.innerHTML = articles.map(a => `
+                <div class="article-item">
+                    <div class="article-title">${a.title || 'Untitled'}</div>
+                    <div class="article-meta">
+                        ${a.keyword || ''} • ${a.published ? new Date(a.published).toLocaleDateString() : 'Recent'}
+                    </div>
+                    ${a.url ? `<a href="${a.url}" target="_blank" class="article-link">Read article →</a>` : ''}
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html>
