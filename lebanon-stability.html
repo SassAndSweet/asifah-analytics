@@ -1519,10 +1519,10 @@
                             <span class="status-value" id="daysUntilElection">--</span>
                         </div>
                         <div id="electionDelayBanner" style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(251, 146, 60, 0.15); border: 1px solid #fb923c; border-radius: 6px; font-size: 11px; color: #fb923c; font-weight: 600; text-align: center;">
-                            ⚠️ <span id="electionDelayText">POSSIBLE DELAY — Vote pending parliamentary decision</span>
+                            📅 <span id="electionDelayText">DELAYED TWO YEARS — Parliament extended its own mandate</span>
                         </div>
                         <div class="government-status-item" style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-                            <span style="font-weight: 600;">May 10, 2026</span> (Decree No. 2438)
+                            <span style="font-weight: 600;">May 10, 2028</span> (tentative, pending new decree)
                             <a href="https://today.lorientlejour.com/article/1493221/hajjar-sets-vote-for-may-3-diaspora-to-vote-1-week-earlier.html" 
                                target="_blank" 
                                style="color: #6495ED; text-decoration: none; margin-left: 4px;"
@@ -2421,25 +2421,13 @@
                 document.getElementById('daysWithPresident').textContent = govt.days_with_president || '0';
             }
             
-            const electionDate = new Date('2026-05-10T00:00:00');
+            const electionDate = new Date('2028-05-10T00:00:00');
             const today = new Date();
             const daysUntil = Math.ceil((electionDate - today) / (1000 * 60 * 60 * 24));
             document.getElementById('daysUntilElection').textContent = govt.days_until_election || daysUntil;
 
-            // Election delay detection — scan election news for delay signals
-            try {
-                const electionArticles = document.getElementById('electionNewsContainer');
-                if (electionArticles) {
-                    const observer = new MutationObserver(() => {
-                        const text = electionArticles.innerText.toLowerCase();
-                        if (text.includes('delay') || text.includes('postpone') || text.includes('pushed back') || text.includes('defer')) {
-                            document.getElementById('electionDelayBanner').style.display = 'block';
-                            document.getElementById('electionDelayText').textContent = 'POSSIBLE DELAY — Reports indicate elections may be postponed';
-                        }
-                    });
-                    observer.observe(electionArticles, { childList: true, subtree: true });
-                }
-            } catch(e) { console.error('Election delay detection error:', e); }
+            // Election delay — confirmed, parliament extended mandate two years
+            document.getElementById('electionDelayBanner').style.display = 'block';
             
             // Currency
             const currency = data.currency || {};
@@ -2559,6 +2547,16 @@
             const hezbollah = data.hezbollah || {};
             const activityScore = hezbollah.activity_score || 0;
             document.getElementById('hezbollahScore').textContent = `${activityScore}/100`;
+            const hezEl = document.getElementById('hezbollahScore');
+            if (activityScore >= 80) {
+                hezEl.style.color = '#ef4444';      // red
+            } else if (activityScore >= 60) {
+                hezEl.style.color = '#f97316';      // orange
+            } else if (activityScore >= 35) {
+                hezEl.style.color = '#eab308';      // yellow
+            } else {
+                hezEl.style.color = '#4ade80';      // green
+            }
             document.getElementById('rearmamentCount').textContent = hezbollah.rearmament_mentions || 0;
             document.getElementById('strikeCount').textContent = hezbollah.strike_mentions || 0;
             
