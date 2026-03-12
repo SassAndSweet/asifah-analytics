@@ -1353,6 +1353,29 @@
         } else if (headlinesEl) {
             headlinesEl.innerHTML = `<h4>Recent Headlines:</h4><p style="color:#7f8c8d;font-style:italic;">No articles returned — backend may be using cached data or API limits reached.</p>`;
         }
+
+        // Military posture bar
+        const milPostureEl = document.getElementById(`${target}-mil-posture`);
+        if (milPostureEl) {
+            const mil = data.military_posture || {};
+            const alertLevel = mil.alert_level || 'normal';
+            const alertLabel = mil.alert_label || 'Normal';
+            const bonus = data.military_bonus || 0;
+            const topSignals = mil.top_signals || [];
+            const topSig = topSignals[0];
+            const alertColors = { normal: '#10b981', elevated: '#f59e0b', high: '#f97316', surge: '#ef4444' };
+            const alertIcons = { normal: '🟢', elevated: '🟡', high: '🟠', surge: '🔴' };
+            const color = alertColors[alertLevel] || '#10b981';
+            const icon = alertIcons[alertLevel] || '🟢';
+            let sigText = topSig ? `— ${topSig.article_title?.slice(0, 60) || 'Signal detected'}…` : '';
+            let bonusText = bonus > 0 ? `<span style="color:${color};font-weight:600;margin-left:6px;">+${bonus}% bonus applied</span>` : '';
+            milPostureEl.innerHTML = `
+                <span style="color:${color};font-weight:600;">${icon} ${alertLabel.toUpperCase()}</span>
+                <span style="color:#94a3b8;font-size:0.82rem;margin-left:6px;">${sigText}</span>
+                ${bonusText}
+                <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>`;
+        }
+
         fetchRateLimits();
     }
 
