@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Taiwan Stability Index v1.0.0 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Taiwan Stability Index | Asifah Analytics v1.0.0</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #ffffff;
+            --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --watermark-opacity: 0.03;
+            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
+            --accent: #6495ED;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end: #2c5282;
+            --header-text: #ffffff;
+            --metric-bg: #2d2d2d;
+            --metric-hover-shadow: rgba(255,255,255,0.1);
+            --article-bg: #353535;
+            --article-hover: #404040;
+            --watermark-opacity: 0.02;
+            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
+            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .loading-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--loading-overlay-bg);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+        .loading-spinner {
+            width: 60px; height: 60px;
+            border: 5px solid var(--loading-spinner-bg);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 30px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
+        .loading-steps { margin-top: 20px; }
+        .loading-step {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease;
+        }
+        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.complete { color: #4ade80; }
+        .step-icon { font-size: 18px; min-width: 20px; }
+        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
+        .loading-error {
+            color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px;
+            background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 8px;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 35px; border-radius: 12px; margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            position: relative; display: flex; align-items: center; gap: 30px;
+        }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+        .header-content { flex: 1; text-align: center; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+
+        .header-controls {
+            position: absolute; top: 35px; right: 35px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 1000;
+        }
+        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+
+        .language-switcher {
+            display: flex; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            background: rgba(255,255,255,0.15); padding: 8px 12px;
+            border-radius: 8px; backdrop-filter: blur(10px);
+        }
+        .theme-toggle-label {
+            font-size: 11px; color: rgba(255,255,255,0.9); margin-right: 8px;
+            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
+        }
+        .theme-toggle-switch {
+            position: relative; width: 50px; height: 26px;
+            background: rgba(255,255,255,0.2); border-radius: 13px; cursor: pointer;
+            transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+            background: white; border-radius: 50%; transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center; font-size: 10px;
+        }
+        .theme-toggle-slider::before { content: '\2600\FE0F'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(24px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '\1F319'; }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
+            color: white; padding: 6px 14px; font-family: 'Times New Roman', Times, serif;
+            font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+
+        .back-link {
+            display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0;
+            padding: 12px 24px; background: rgba(255,255,255,0.2); color: white;
+            text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease; font-size: 14px; font-weight: bold;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+
+        .map-section {
+            background: var(--container-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
+        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+
+        .knowledge-library {
+            background: var(--container-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .library-icon { font-size: 28px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
+        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
+        .knowledge-header {
+            background: linear-gradient(135deg, rgba(100, 149, 237, 0.1) 0%, rgba(30, 82, 130, 0.1) 100%);
+            padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between;
+            align-items: center; transition: background 0.3s ease;
+        }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 82, 130, 0.15) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 22px; }
+        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content { padding: 20px; max-height: 500px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
+        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content strong { color: var(--text-primary); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 16px; background: var(--accent); color: white;
+            text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .report-link:hover { background: #4169E1; transform: translateX(3px); box-shadow: 0 4px 12px rgba(100, 149, 237, 0.3); }
+        [dir="rtl"] .report-link:hover { transform: translateX(-3px); }
+        .knowledge-content::-webkit-scrollbar { width: 8px; }
+        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+        .knowledge-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        .articles-section {
+            background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item {
+            background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px;
+            transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #1e3a5f;
+        }
+        [dir="rtl"] .article-item { border-left: none; border-right: 4px solid #1e3a5f; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
+        [dir="rtl"] .article-item:hover { transform: translateX(-4px); }
+        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
+        .article-meta { font-size: 12px; color: var(--text-secondary); }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .article-link:hover { text-decoration: underline; }
+
+        footer {
+            background: var(--container-bg); padding: 25px; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
+            font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary);
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
+            .header-logo { width: 60px; height: 60px; }
+            .header-content { text-align: center; }
+            .header-controls { position: static; align-items: center; }
+            h1 { font-size: 24px; }
+            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-status">
+            <div class="loading-title">Loading Taiwan Stability Data</div>
+            <div class="loading-steps" id="loadingSteps">
+                <div class="loading-step active" id="step1">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Fetching OSINT articles on Taiwan...</span>
+                </div>
+                <div class="loading-step" id="step2">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Scanning PLA exercise and posture signals...</span>
+                </div>
+                <div class="loading-step" id="step3">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Analyzing Taiwan Strait median line activity...</span>
+                </div>
+                <div class="loading-step" id="step4">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Compiling U.S. arms sales and commitment data...</span>
+                </div>
+                <div class="loading-step" id="step5">
+                    <span class="step-icon">&#x23F3;</span>
+                    <span>Rendering dashboard...</span>
+                </div>
+            </div>
+            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
+            <div class="loading-error" id="loadingError" style="display: none;"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <a href="asia.html" class="back-link" data-i18n="backLink">&#8592; Back to Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
+            <div class="header-content">
+                <h1 data-i18n="pageTitle">🇹🇼 TAIWAN STABILITY INDEX</h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: PRC Military Pressure, Taiwan Strait Tensions, U.S. Commitment &amp; Cross-Strait Dynamics</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+            </div>
+            <div class="header-controls">
+                <div class="language-switcher">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('zh', this)">中文</button>
+                    <button class="lang-btn" onclick="switchLanguage('ja', this)">日本語</button>
+                    <button class="lang-btn" onclick="switchLanguage('ko', this)">한국어</button>
+                </div>
+                <div class="theme-toggle">
+                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- U.S. STATE DEPARTMENT — WORLDWIDE CAUTION -->
+        <div style="
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        ">
+            <div style="font-size: 24px; flex-shrink: 0;">🚨</div>
+            <div style="flex: 1;">
+                <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;">⚠️ U.S. State Department — Worldwide Caution</div>
+                <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
+            </div>
+            <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW CAUTION →</a>
+        </div>
+
+        <!-- TAIWAN TRAVEL ADVISORY — Level 2 -->
+        <div style="
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+            border: 2px solid #f59e0b; border-radius: 10px; padding: 14px 20px;
+            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        ">
+            <div style="font-size: 24px; flex-shrink: 0;">🇹🇼</div>
+            <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+                    <span style="font-size: 11px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px;">U.S. State Department — Taiwan Travel Advisory</span>
+                    <span style="background: #f59e0b; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px;">LEVEL 2</span>
+                </div>
+                <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;"><strong style='color: #f59e0b;'>Exercise Increased Caution regarding Taiwan</strong> due to the potential for military conflict with the People's Republic of China. Monitor PLA military exercises around Taiwan. Review emergency preparedness and departure options.</div>
+            </div>
+            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/taiwan-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY →</a>
+        </div>
+
+        <!-- MAP SECTION -->
+        <div class="map-section">
+            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Taiwan &#8212; Strait Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Taipei. Taiwan Strait and median line are key monitoring zones.</div>
+            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
+                <iframe
+                    src="https://www.openstreetmap.org/export/embed.html?bbox=119.8%2C21.8%2C122.1%2C25.3&layer=mapnik&marker=25.04%2C121.56"
+                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
+                </iframe>
+            </div>
+        </div>
+
+        <!-- KNOWLEDGE LIBRARY -->
+        <div class="knowledge-library">
+            <h2>
+                <span class="library-icon">&#x1F4DA;</span>
+                <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
+            </h2>
+            <p class="open-source-disclaimer">
+                Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
+            </p>
+
+            <div class="knowledge-categories">
+
+                <!-- PLA Military Threat &amp; Exercises -->
+                <div class="knowledge-card collapsed" id="card-pla_threat">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('pla_threat')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">⚔️</span>
+                            <span>PLA Military Threat &amp; Exercises</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>The People's Liberation Army</strong> conducts regular large-scale exercises around Taiwan designed to rehearse blockade, missile strike, and amphibious invasion scenarios.</p>
+                        <p><strong>Exercise Pattern:</strong></p>
+                        <ul>
+                            <li><strong>Joint Sword 2023:</strong> Conducted following Tsai Ing-wen's meeting with U.S. House Speaker McCarthy; simulated blockade with warships, aircraft, and coast guard</li>
+                            <li><strong>Joint Sword 2024:</strong> Conducted following Lai Ching-te's inauguration; largest exercises yet with record numbers of PLA aircraft and vessels</li>
+                            <li><strong>ADIZ Violations:</strong> PLA aircraft cross Taiwan's median line with increasing regularity; Taiwan scrambles fighters in response</li>
+                            <li><strong>Amphibious Capability:</strong> PLA amphibious assault capacity growing; PLAN now operates multiple amphibious assault ships; but analysts assess Taiwan Strait crossing remains a major challenge</li>
+                            <li><strong>Missile Arsenal:</strong> Hundreds of DF-11, DF-15, DF-16 ballistic missiles and CJ-10 cruise missiles targeted at Taiwan</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
+                        <div class="report-links-grid">
+                            <a href="https://amti.csis.org/" target="_blank" class="report-link">&#x1F4D1; CSIS AMTI</a>
+<a href="https://www.rand.org/topics/taiwan.html" target="_blank" class="report-link">&#x1F4D1; RAND - Taiwan</a>
+<a href="https://www.tasmc.org.tw/" target="_blank" class="report-link">&#x1F4D1; Taiwan Military News</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- U.S. Commitment &amp; Taiwan Relations Act -->
+                <div class="knowledge-card collapsed" id="card-us_commitment">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('us_commitment')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🤝</span>
+                            <span>U.S. Commitment &amp; Taiwan Relations Act</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>U.S. policy toward Taiwan</strong> is defined by strategic ambiguity — maintaining unofficial relations under the Taiwan Relations Act (1979) while not explicitly committing to military defense.</p>
+                        <p><strong>Policy Framework:</strong></p>
+                        <ul>
+                            <li><strong>Taiwan Relations Act:</strong> Obligates U.S. to provide Taiwan with defensive arms and maintain capability to resist coercion; does not guarantee military defense</li>
+                            <li><strong>Strategic Ambiguity:</strong> Deliberate U.S. policy of neither confirming nor denying military defense; multiple presidents have made apparent commitments that were later walked back</li>
+                            <li><strong>Arms Sales:</strong> Major arms packages approved in recent years including F-16 upgrades, Abrams tanks, Patriot missiles, Harpoon coastal defense systems</li>
+                            <li><strong>Congressional Hawkishness:</strong> Congress increasingly supportive of Taiwan; Taiwan Policy Act, NDAA provisions; bipartisan consensus on Taiwan defense</li>
+                            <li><strong>AIT:</strong> American Institute in Taiwan functions as de facto embassy; senior official visits increasing</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.ait.org.tw/our-relationship/policy-history/key-u-s-taiwan-documents/taiwan-relations-act/" target="_blank" class="report-link">&#x1F4D1; Taiwan Relations Act</a>
+<a href="https://www.csis.org/programs/international-security-program/asia-division/taiwan" target="_blank" class="report-link">&#x1F4D1; CSIS - Taiwan</a>
+<a href="https://foreignaffairs.com/" target="_blank" class="report-link">&#x1F4D1; Foreign Affairs - Taiwan</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cross-Strait Political Dynamics -->
+                <div class="knowledge-card collapsed" id="card-cross_strait">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('cross_strait')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🌊</span>
+                            <span>Cross-Strait Political Dynamics</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Cross-strait relations</strong> reached a new low following the election of President Lai Ching-te (William Lai) in January 2024, whom Beijing labels a "separatist."</p>
+                        <p><strong>Current Dynamics:</strong></p>
+                        <ul>
+                            <li><strong>President Lai:</strong> DPP leader elected January 2024; Beijing cut off formal contacts; viewed by PRC as the most independence-leaning president yet</li>
+                            <li><strong>Public Opinion:</strong> Taiwanese identity has strengthened dramatically over decades; 2/3+ of Taiwanese favor maintaining status quo; support for formal independence is minority but growing</li>
+                            <li><strong>KMT Opposition:</strong> Kuomintang favors engagement with Beijing; cross-strait business ties remain significant despite tensions</li>
+                            <li><strong>One China Policy:</strong> China insists Taiwan must accept "1992 Consensus" as basis for talks; Taiwan's government rejects this framing</li>
+                            <li><strong>Economic Interdependence:</strong> China is Taiwan's largest trading partner; economic ties complicate political tensions</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.roc-taiwan.org/" target="_blank" class="report-link">&#x1F4D1; Taiwan Government</a>
+<a href="https://thediplomat.com/tag/taiwan/" target="_blank" class="report-link">&#x1F4D1; The Diplomat - Taiwan</a>
+<a href="https://carnegieendowment.org/" target="_blank" class="report-link">&#x1F4D1; Carnegie - Taiwan</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Semiconductors &amp; Global Stakes -->
+                <div class="knowledge-card collapsed" id="card-semiconductors">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('semiconductors')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">💾</span>
+                            <span>Semiconductors &amp; Global Stakes</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Taiwan's semiconductor dominance</strong> makes any conflict scenario globally catastrophic. TSMC alone produces ~90% of the world's most advanced chips (below 7nm).</p>
+                        <p><strong>Strategic Importance:</strong></p>
+                        <ul>
+                            <li><strong>TSMC:</strong> Taiwan Semiconductor Manufacturing Company produces chips for Apple, NVIDIA, AMD, Qualcomm, and virtually every major tech company; irreplaceable in the short term</li>
+                            <li><strong>Silicon Shield:</strong> Some analysts argue Taiwan's semiconductor dominance serves as a deterrent — the world has incentive to prevent its capture or destruction</li>
+                            <li><strong>CHIPS Act:</strong> U.S. investing $52 billion to build domestic semiconductor capacity (TSMC Arizona fabs); but years from reducing Taiwan dependence</li>
+                            <li><strong>Scorched Earth:</strong> Taiwan has reportedly prepared contingency plans to disable TSMC facilities rather than let them fall to China — a deterrent of last resort</li>
+                            <li><strong>Global Supply Chain:</strong> A Taiwan conflict would halt production of virtually all advanced electronics globally; estimated GDP losses in trillions</li>
+                        </ul>
+                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.tsmc.com/" target="_blank" class="report-link">&#x1F4D1; TSMC</a>
+<a href="https://www.semiconductors.org/" target="_blank" class="report-link">&#x1F4D1; SIA - Semiconductors</a>
+<a href="https://www.csis.org/" target="_blank" class="report-link">&#x1F4D1; CSIS - Tech & Geopolitics</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RECENT ARTICLES -->
+        <div class="articles-section">
+            <div class="section-title" data-i18n="recentArticles">&#x1F4F0; Recent Taiwan, Strait &amp; PRC Pressure Articles (Last 7 Days)</div>
+            <div id="articlesContainer">
+                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
+            </div>
+        </div>
+
+        <footer>
+            <div>Data Sources: NewsAPI, GDELT, AMTI, RAND, AIT, and OSINT sources</div>
+            <div style="margin-top:15px; font-size:0.85em;">
+                Mandarin Chinese feeds via GDELT. Reddit intelligence from r/taiwan, r/geopolitics, r/CredibleDefense.
+            </div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+
+            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
+                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v1.0.0</div>
+                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
+            </div>
+
+            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
+                <span style="font-size:0.9em;">
+                    If you find Asifah Analytics useful and want to support ongoing development, you can
+                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
+                </span>
+            </div>
+
+            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
+                &copy; 2026 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+                Unauthorized use, reproduction, or distribution prohibited.
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://asifah-asia-backend.onrender.com';
+        const RTL_LANGS = [];
+
+        // Theme
+        function initTheme() {
+            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+        function toggleTheme() {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('asifah-theme', next);
+        }
+        initTheme();
+
+        // Knowledge Library Toggle
+        function toggleKnowledgeCard(cardId) {
+            const card = document.getElementById('card-' + cardId);
+            if (card) card.classList.toggle('collapsed');
+        }
+
+        // Loading Overlay
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+        const STEP_COUNT = 5;
+
+        function startLoadingProgress() {
+            const steps = Array.from({length: STEP_COUNT}, (_, i) => 'step' + (i + 1));
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    const cur = document.getElementById(steps[loadingStepIndex]);
+                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '\u2713'; }
+                    loadingStepIndex++;
+                    const next = document.getElementById(steps[loadingStepIndex]);
+                    if (next) next.classList.add('active');
+                }
+            }, 5000);
+            loadingTimeout = setTimeout(() => {
+                document.getElementById('loadingError').style.display = 'block';
+                document.getElementById('loadingError').textContent = '\u26A0\uFE0F Loading is taking longer than expected. Please wait or refresh.';
+            }, 60000);
+        }
+
+        function hideLoadingOverlay() {
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '\u2713';
+            });
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) overlay.classList.add('hidden');
+            }, 500);
+        }
+
+        // Fetch articles from backend
+        async function loadArticles() {
+            try {
+                const response = await fetch(BACKEND_URL + '/scan-taiwan');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                if (data.success && data.articles && data.articles.length > 0) {
+                    displayArticles(data.articles);
+                } else {
+                    await loadArticlesFallback();
+                }
+            } catch (error) {
+                console.warn('Primary endpoint failed:', error.message);
+                await loadArticlesFallback();
+            }
+        }
+
+        async function loadArticlesFallback() {
+            try {
+                const q = encodeURIComponent('Taiwan');
+                const response = await fetch(BACKEND_URL + '/scan-osint?q=' + q);
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                if (data.articles && data.articles.length > 0) {
+                    displayArticles(data.articles);
+                } else {
+                    displayArticlesFallbackStatic();
+                }
+            } catch (error) {
+                console.warn('Fallback also failed:', error.message);
+                displayArticlesFallbackStatic();
+            }
+        }
+
+        function displayArticles(articles) {
+            const container = document.getElementById('articlesContainer');
+            if (!articles || articles.length === 0) { displayArticlesFallbackStatic(); return; }
+            container.innerHTML = articles.slice(0, 20).map(article => {
+                const title = article.title || 'Untitled';
+                const source = article.source || article.source_name || '';
+                const published = article.published || article.publishedAt || article.date || '';
+                const url = article.url || article.link || '#';
+                const description = article.description || '';
+                let dateStr = 'Recent';
+                if (published) {
+                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+                    catch(e) { dateStr = published; }
+                }
+                return '<div class="article-item">' +
+                    '<div class="article-title">' + title + '</div>' +
+                    (description ? '<div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; line-height:1.5;">' + description.substring(0, 200) + (description.length > 200 ? '...' : '') + '</div>' : '') +
+                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
+                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
+                    '</div>';
+            }).join('');
+        }
+
+        function displayArticlesFallbackStatic() {
+            const container = document.getElementById('articlesContainer');
+            container.innerHTML =
+                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
+                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading for Taiwan.</p>' +
+                '<p style="font-size:13px; margin-bottom:20px;">Check these curated OSINT sources:</p>' +
+                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
+                '<a href="https://www.reuters.com/world/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - World</a>' +
+                '<a href="https://www.aljazeera.com/asia-pacific/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Asia</a>' +
+                '<a href="https://thediplomat.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">The Diplomat</a>' +
+                '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
+                '</div>' +
+                '</div>';
+        }
+
+        // Translation system
+        const translations = {
+            en: {"pageTitle": "🇹🇼 TAIWAN STABILITY INDEX", "pageSubtitle": "Multi-Factor Analysis: PRC Military Pressure, Taiwan Strait Tensions, U.S. Commitment & Cross-Strait Dynamics", "backLink": "← Back to Dashboard", "themeToggle": "Theme", "lastUpdated": "Last updated: ", "mapTitle": "Taiwan — Strait Overview", "mapSubtitle": "Interactive map centered on Taipei. Taiwan Strait and median line are key monitoring zones.", "knowledgeLibraryTitle": "Knowledge Library", "recentArticles": "📰 Recent Taiwan, Strait & PRC Pressure Articles (Last 7 Days)"},
+            zh: {"pageTitle": "🇹🇼 台灣穩定指數", "pageSubtitle": "多因素分析：中共軍事壓力、台灣海峽緊張、美國承諾與兩岸動態", "backLink": "← 返回儀表板", "themeToggle": "主題", "lastUpdated": "最後更新：", "mapTitle": "台灣 — 海峽概覽", "mapSubtitle": "以台北為中心的互動地圖。", "knowledgeLibraryTitle": "知識庫", "recentArticles": "📰 最新台灣與台海報道"},
+            ja: {"pageTitle": "🇹🇼 台湾安定指数", "pageSubtitle": "多要因分析：中国軍事圧力、台湾海峡緊張、米国のコミットメント", "backLink": "← ダッシュボードに戻る", "themeToggle": "テーマ", "lastUpdated": "最終更新：", "mapTitle": "台湾 — 海峡概観", "mapSubtitle": "台北を中心としたインタラクティブマップ。", "knowledgeLibraryTitle": "ナレッジライブラリ", "recentArticles": "📰 最新の台湾・台湾海峡記事"},
+            ko: {"pageTitle": "🇹🇼 대만 안정 지수", "pageSubtitle": "다요인 분석: 중국 군사 압력, 대만해협 긴장, 미국 공약과 양안 역학", "backLink": "← 대시보드로 돌아가기", "themeToggle": "테마", "lastUpdated": "마지막 업데이트: ", "mapTitle": "대만 — 해협 개요", "mapSubtitle": "타이베이 중심 인터랙티브 지도.", "knowledgeLibraryTitle": "지식 라이브러리", "recentArticles": "📰 최신 대만·대만해협 기사"}
+        };
+
+        function switchLanguage(lang, button) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            if (RTL_LANGS.includes(lang)) {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
+                        const currentText = element.textContent;
+                        if (currentText.includes(':')) {
+                            const timestamp = currentText.split(': ').slice(1).join(': ');
+                            element.textContent = translations[lang][key] + timestamp;
+                        } else {
+                            element.textContent = translations[lang][key] + 'Loading...';
+                        }
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            startLoadingProgress();
+            document.getElementById('lastUpdated').textContent =
+                'Last updated: ' + new Date().toLocaleString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric',
+                    hour: 'numeric', minute: '2-digit', hour12: true
+                });
+            loadArticles().then(() => {
+                hideLoadingOverlay();
+            }).catch(err => {
+                console.error('Error loading Taiwan data:', err);
+                hideLoadingOverlay();
+            });
+        });
+    </script>
+</body>
+</html>
