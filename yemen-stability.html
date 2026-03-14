@@ -222,6 +222,21 @@
         .stability-score-num { font-size: 72px; font-weight: 900; line-height: 1; }
         .stability-score-meta { flex: 1; }
         .stability-risk-badge { display: inline-block; padding: 5px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; color: white; margin-bottom: 6px; }
+        /* Rhetoric badge */
+        .rhetoric-badge-row {
+            display: flex; align-items: center; gap: 8px; margin-top: 10px; flex-wrap: wrap;
+        }
+        .rhetoric-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: bold; color: white;
+            text-decoration: none; transition: opacity 0.2s ease;
+        }
+        .rhetoric-badge:hover { opacity: 0.85; }
+        .rhetoric-badge-label {
+            font-size: 10px; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
 
         /* Map Section */
         .map-section {
@@ -423,6 +438,12 @@
             <div class="stability-score-meta">
                 <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;" data-i18n="stabilityRiskLabel">RISK LEVEL</div>
                 <span class="stability-risk-badge" id="stabilityRiskBadge" style="background:#6b7280;">Scanning...</span>
+                <div class="rhetoric-badge-row">
+                    <span class="rhetoric-badge-label" data-i18n="rhetoricBadgeLabel">RHETORIC</span>
+                    <a href="rhetoric-yemen.html" class="rhetoric-badge" id="rhetoricBadge" style="background:#6b7280;">
+                        📡 <span id="rhetoricBadgeText">--</span>
+                    </a>
+                </div>
                 <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;" id="stabilityComponents"></div>
                 <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stabilityTimestamp"></div>
             </div>
@@ -942,6 +963,35 @@
         }
 
         // ── MAIN LOAD ──
+        async function loadYemenRhetoricBadge() {
+            const RHETORIC_LEVELS = {
+                0: { label: 'Monitoring',      color: '#6b7280' },
+                1: { label: 'Rhetoric',        color: '#3b82f6' },
+                2: { label: 'Warning',         color: '#f59e0b' },
+                3: { label: 'Direct Threat',   color: '#f97316' },
+                4: { label: 'Attack Declared', color: '#ef4444' },
+                5: { label: 'Active Strike',   color: '#7c3aed' },
+            };
+            try {
+                const resp = await fetch(BACKEND_URL + '/api/rhetoric/yemen/summary');
+                if (!resp.ok) return;
+                const data = await resp.json();
+                if (!data.success) return;
+                const maxLevel = Math.max(
+                    data.maritime_level || 0,
+                    data.direct_strike_level || 0,
+                    data.somaliland_level || 0
+                );
+                const lv = RHETORIC_LEVELS[maxLevel] || RHETORIC_LEVELS[0];
+                const badge = document.getElementById('rhetoricBadge');
+                const badgeText = document.getElementById('rhetoricBadgeText');
+                if (badge && badgeText) {
+                    badge.style.background = lv.color;
+                    badgeText.textContent = `Level ${maxLevel} — ${lv.label}`;
+                }
+            } catch(e) { console.warn('[Yemen] Rhetoric badge fetch failed:', e); }
+        }
+
         async function loadYemenData() {
             startLoadingProgress();
             try {
@@ -970,6 +1020,7 @@
                 document.getElementById('lastUpdated').textContent =
                     (translations[currentLang]?.lastUpdated || 'Last updated: ') + ts;
 
+                loadYemenRhetoricBadge();
                 hideLoadingOverlay();
 
             } catch(err) {
@@ -993,6 +1044,7 @@
                     ksa_envoy: { name: 'Saudi Arabia', title: 'Coalition Leader', status: 'REDUCED ENGAGEMENT', status_color: 'orange', status_detail: 'Back-channel talks with Houthis ongoing. Airstrike tempo reduced.' },
                 });
                 displayArticlesFallback();
+                loadYemenRhetoricBadge();
                 hideLoadingOverlay();
             }
         }
@@ -1054,6 +1106,7 @@
                 rhetoricTrackerTitle: "Houthi Rhetoric & Escalation Tracker",
                 rhetoricTrackerDesc: "Maritime threat · Direct strike vector · Horn of Africa watch · Real-time signal analysis",
                 rhetoricTrackerBtn: "🎯 Open Tracker →",
+                rhetoricBadgeLabel: "RHETORIC",
                 stabilityScoreLabel: "STABILITY SCORE / 100",
                 stabilityRiskLabel: "RISK LEVEL",
                 securitySituationTitle: "⚔️ SECURITY SITUATION",
@@ -1081,7 +1134,7 @@
                 catPolitical: "פיצול פוליטי ותהליך שלום", catRegional: "הקואליציה הסעודית ודינמיקה אזורית",
                 recentArticles: "📰 כתבות אחרונות על תימן וחות'ים",
                 rhetoricTrackerTitle: "מעקב רטוריקה חות'ים", rhetoricTrackerDesc: "איום ימי · תקיפה ישירה · מעקב קרן אפריקה",
-                rhetoricTrackerBtn: "🎯 פתח מעקב →", stabilityScoreLabel: "ציון יציבות / 100", stabilityRiskLabel: "רמת סיכון",
+                rhetoricTrackerBtn: "🎯 פתח מעקב →", rhetoricBadgeLabel: "רטוריקה", stabilityScoreLabel: "ציון יציבות / 100", stabilityRiskLabel: "רמת סיכון",
                 securitySituationTitle: "⚔️ מצב ביטחוני", houthiControlHeader: "מדד שליטת החות'ים",
                 redSeaHeader: "ים סוף / באב אל-מנדב", somalilandWatchTitle: "מעקב קרן אפריקה",
                 somalilandBaseline: "מעקב נוכחות ישראלית/אמריקאית בסומלילנד, סוקוטרה, פרים",
@@ -1103,7 +1156,7 @@
                 catPolitical: "التشرذم السياسي وعملية السلام", catRegional: "التحالف السعودي والديناميات الإقليمية",
                 recentArticles: "📰 أحدث المقالات عن اليمن والحوثيين",
                 rhetoricTrackerTitle: "متتبع خطاب الحوثيين والتصعيد", rhetoricTrackerDesc: "التهديد البحري · الضربات المباشرة · مراقبة القرن الأفريقي",
-                rhetoricTrackerBtn: "🎯 فتح المتتبع →", stabilityScoreLabel: "نقاط الاستقرار / 100", stabilityRiskLabel: "مستوى الخطر",
+                rhetoricTrackerBtn: "🎯 فتح المتتبع →", rhetoricBadgeLabel: "الخطاب", stabilityScoreLabel: "نقاط الاستقرار / 100", stabilityRiskLabel: "مستوى الخطر",
                 securitySituationTitle: "⚔️ الوضع الأمني", houthiControlHeader: "مؤشر سيطرة الحوثيين",
                 redSeaHeader: "البحر الأحمر / باب المندب", somalilandWatchTitle: "مراقبة القرن الأفريقي",
                 somalilandBaseline: "رصد الوجود الإسرائيلي/الأمريكي في أرض الصومال وسقطرى وجزيرة بريم",
@@ -1125,7 +1178,7 @@
                 catPolitical: "تکه‌تکه شدن سیاسی و روند صلح", catRegional: "ائتلاف سعودی و پویایی‌های منطقه‌ای",
                 recentArticles: "📰 جدیدترین مقالات درباره یمن و حوثی‌ها",
                 rhetoricTrackerTitle: "ردیاب گفتمان حوثی‌ها", rhetoricTrackerDesc: "تهدید دریایی · ضربه مستقیم · پایش شاخ آفریقا",
-                rhetoricTrackerBtn: "🎯 باز کردن ردیاب →", stabilityScoreLabel: "امتیاز ثبات / 100", stabilityRiskLabel: "سطح ریسک",
+                rhetoricTrackerBtn: "🎯 باز کردن ردیاب →", rhetoricBadgeLabel: "گفتمان", stabilityScoreLabel: "امتیاز ثبات / 100", stabilityRiskLabel: "سطح ریسک",
                 securitySituationTitle: "⚔️ وضعیت امنیتی", houthiControlHeader: "شاخص کنترل حوثی",
                 redSeaHeader: "دریای سرخ / باب‌المندب", somalilandWatchTitle: "پایش شاخ آفریقا",
                 somalilandBaseline: "پایش حضور اسرائیل/آمریکا در سومالی‌لند، سقطری، جزیره پریم",
