@@ -469,6 +469,23 @@
             font-style: italic;
         }
 
+        /* Rhetoric badge */
+        .rhetoric-badge-row {
+            display: flex; align-items: center; justify-content: center;
+            gap: 8px; margin-top: 10px; flex-wrap: wrap;
+        }
+        .rhetoric-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: bold; color: white;
+            text-decoration: none; transition: opacity 0.2s ease;
+        }
+        .rhetoric-badge:hover { opacity: 0.85; }
+        .rhetoric-badge-label {
+            font-size: 10px; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
         /* Sparkline styles */
         .sparkline-container {
             margin-top: 15px;
@@ -669,42 +686,32 @@
             transform: translateX(-4px);
         }
 
-.article-title {
+        .article-title {
             color: var(--text-primary);
             font-size: 14px;
             margin-bottom: 5px;
             font-weight: 500;
         }
+
         .article-meta {
             font-size: 12px;
             color: var(--text-secondary);
         }
+
         .article-link {
             color: #6495ED;
             text-decoration: none;
             font-size: 13px;
         }
+
         .article-link:hover {
             text-decoration: underline;
         }
+
         /* Dark mode: brighter link color */
         [data-theme="dark"] .article-link {
             color: #7dabf8;
         }
-        .news-tab-btn {
-            background: var(--article-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            letter-spacing: 0.5px;
-            transition: all 0.2s;
-        }
-        .news-tab-btn:hover { border-color: #6495ED; color: #6495ED; }
-        .news-tab-btn.active { background: #6495ED; border-color: #6495ED; color: white; }
 
         /* Footer */
         footer {
@@ -982,26 +989,9 @@
 
         #lebanon-map {
             width: 100%;
-            height: 500px;
+            height: 450px;
             border-radius: 8px;
             border: 1px solid var(--card-border);
-        }
-
-        .map-legend {
-            display: flex; flex-wrap: wrap; gap: 10px;
-            margin-top: 12px; font-size: 12px;
-        }
-        .map-legend-item {
-            display: flex; align-items: center; gap: 6px;
-            padding: 4px 10px; border-radius: 4px;
-            background: var(--article-bg); color: var(--text-secondary);
-        }
-        .map-legend-dot {
-            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
-        }
-        .map-event-count {
-            font-size: 12px; color: var(--text-muted);
-            margin-top: 8px; font-style: italic;
         }
 
         /* ============================================
@@ -1510,6 +1500,12 @@
                     <div class="stability-fill" id="stabilityFill"></div>
                 </div>
                 <div class="stability-legend" data-i18n="stabilityLegend">100 = Stable Regime | 0 = Imminent Collapse</div>
+                <div class="rhetoric-badge-row">
+                    <span class="rhetoric-badge-label" data-i18n="rhetoricBadgeLabel">RHETORIC</span>
+                    <a href="rhetoric-lebanon.html" class="rhetoric-badge" id="rhetoricBadge" style="background:#6b7280;">
+                        📡 <span id="rhetoricBadgeText">--</span>
+                    </a>
+                </div>
                 <div class="sparkline-container" id="stabilitySparklineContainer">
                     <span class="sparkline-label">30-Day Trend:</span>
                     <canvas id="stabilitySparkline" class="sparkline-canvas"></canvas>
@@ -1546,10 +1542,10 @@
                             <span class="status-value" id="daysUntilElection">--</span>
                         </div>
                         <div id="electionDelayBanner" style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(251, 146, 60, 0.15); border: 1px solid #fb923c; border-radius: 6px; font-size: 11px; color: #fb923c; font-weight: 600; text-align: center;">
-                            📅 <span id="electionDelayText">DELAYED TWO YEARS — Parliament extended its own mandate</span>
+                            ⚠️ <span id="electionDelayText">POSSIBLE DELAY — Vote pending parliamentary decision</span>
                         </div>
                         <div class="government-status-item" style="font-size: 11px; color: var(--text-muted); margin-top: 8px;">
-                            <span style="font-weight: 600;">May 10, 2028</span> (tentative, pending new decree)
+                            <span style="font-weight: 600;">May 10, 2026</span> (Decree No. 2438)
                             <a href="https://today.lorientlejour.com/article/1493221/hajjar-sets-vote-for-may-3-diaspora-to-vote-1-week-earlier.html" 
                                target="_blank" 
                                style="color: #6495ED; text-decoration: none; margin-left: 4px;"
@@ -1764,17 +1760,8 @@
 
             <!-- Lebanon Map -->
             <div class="lebanon-map-section">
-                <h2>🗺️ Lebanon — Live Conflict Event Map</h2>
+                <h2>🗺️ Map of Lebanon</h2>
                 <div id="lebanon-map"></div>
-                <div class="map-legend">
-                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#991b1b;"></div> Military Force</div>
-                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#dc2626;"></div> Armed Conflict</div>
-                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#ef4444;"></div> Assault</div>
-                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#f97316;"></div> Coercion/Threat</div>
-                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#facc15;"></div> Protest</div>
-                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#3b82f6;"></div> City Marker</div>
-                </div>
-                <div class="map-event-count" id="mapEventCount">Loading conflict events...</div>
             </div>
 
             <!-- Knowledge Library Section -->
@@ -1959,16 +1946,10 @@
                 </div>
             </div>
 
-            <!-- Tabbed News Section -->
+            <!-- Recent Hezbollah-Related Articles -->
             <div class="articles-section">
-                <div class="section-title">📰 Lebanon & Security News (Last 30 Days)</div>
-                <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-                    <button class="news-tab-btn active" onclick="switchNewsTab('english')" id="tab-english">🇺🇸 English</button>
-                    <button class="news-tab-btn" onclick="switchNewsTab('arabic')" id="tab-arabic">🇱🇧 Arabic</button>
-                    <button class="news-tab-btn" onclick="switchNewsTab('hebrew')" id="tab-hebrew">🇮🇱 Hebrew</button>
-                    <button class="news-tab-btn" onclick="switchNewsTab('reddit')" id="tab-reddit">💬 Reddit</button>
-                </div>
-                <div id="newsTabContent"></div>
+                <div class="section-title" data-i18n="recentArticles">📰 Recent Hezbollah & Security Articles (Last 30 Days)</div>
+                <div id="articlesContainer"></div>
             </div>
         </div>
 
@@ -1977,7 +1958,7 @@
             <div style="margin-top:15px; font-size:0.85em;">
                 NewsAPI for aggregating news sources, GDELT for Arabic, Hebrew, and Farsi content. Reddit for community intelligence, plus other OSINT sources.
             </div>
-            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:#6495ED;">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="/cdn-cgi/l/email-protection#6e0f1d07080f060f000f02171a070d1d2e09030f0702400d0103" style="color:#6495ED;"><span class="__cf_email__" data-cfemail="99f8eaf0fff8f1f8f7f8f5e0edf0faead9fef4f8f0f5b7faf6f4">[email&#160;protected]</span></a></div>
             
             <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
                 <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v2.9.0</div>
@@ -1998,7 +1979,7 @@
         </footer>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const LEBANON_BACKEND_URL = 'https://lebanon-stability-backend.onrender.com';
 
         // ===== HUMANITARIAN CRISIS DATA =====
@@ -2404,7 +2385,7 @@
                     ).join('<br>');
                 }
 
-                // UN 🕊️ UNIFIL
+                // UNIFIL
                 const un = sec.unifil || {};
                 document.getElementById('unifilBadge').textContent = `${un.icon || ''} ${un.label || 'Unknown'}`;
                 document.getElementById('unifilBadge').style.background = un.color || '#6b7280';
@@ -2463,13 +2444,25 @@
                 document.getElementById('daysWithPresident').textContent = govt.days_with_president || '0';
             }
             
-            const electionDate = new Date('2028-05-10T00:00:00');
+            const electionDate = new Date('2026-05-10T00:00:00');
             const today = new Date();
             const daysUntil = Math.ceil((electionDate - today) / (1000 * 60 * 60 * 24));
             document.getElementById('daysUntilElection').textContent = govt.days_until_election || daysUntil;
 
-            // Election delay — confirmed, parliament extended mandate two years
-            document.getElementById('electionDelayBanner').style.display = 'block';
+            // Election delay detection — scan election news for delay signals
+            try {
+                const electionArticles = document.getElementById('electionNewsContainer');
+                if (electionArticles) {
+                    const observer = new MutationObserver(() => {
+                        const text = electionArticles.innerText.toLowerCase();
+                        if (text.includes('delay') || text.includes('postpone') || text.includes('pushed back') || text.includes('defer')) {
+                            document.getElementById('electionDelayBanner').style.display = 'block';
+                            document.getElementById('electionDelayText').textContent = 'POSSIBLE DELAY — Reports indicate elections may be postponed';
+                        }
+                    });
+                    observer.observe(electionArticles, { childList: true, subtree: true });
+                }
+            } catch(e) { console.error('Election delay detection error:', e); }
             
             // Currency
             const currency = data.currency || {};
@@ -2589,16 +2582,6 @@
             const hezbollah = data.hezbollah || {};
             const activityScore = hezbollah.activity_score || 0;
             document.getElementById('hezbollahScore').textContent = `${activityScore}/100`;
-            const hezEl = document.getElementById('hezbollahScore');
-            if (activityScore >= 80) {
-                hezEl.style.color = '#ef4444';      // red
-            } else if (activityScore >= 60) {
-                hezEl.style.color = '#f97316';      // orange
-            } else if (activityScore >= 35) {
-                hezEl.style.color = '#eab308';      // yellow
-            } else {
-                hezEl.style.color = '#4ade80';      // green
-            }
             document.getElementById('rearmamentCount').textContent = hezbollah.rearmament_mentions || 0;
             document.getElementById('strikeCount').textContent = hezbollah.strike_mentions || 0;
             
@@ -2634,12 +2617,22 @@
                 `).join('');
             }
             
-            // Tabbed news section
-            window._newsByTab = hezbollah.articles_by_tab || { english: articles };
-            window._newsByTab.english = window._newsByTab.english?.length 
-                ? window._newsByTab.english 
-                : articles;
-            switchNewsTab('english');
+            // Articles section
+            const articlesContainer = document.getElementById('articlesContainer');
+            
+            if (articles.length === 0) {
+                articlesContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px;">No recent articles found</div>';
+            } else {
+                articlesContainer.innerHTML = articles.map(article => `
+                    <div class="article-item">
+                        <div class="article-title">${article.title || 'Untitled'}</div>
+                        <div class="article-meta">
+                            ${article.keyword || ''} • ${article.published ? new Date(article.published).toLocaleDateString() : 'Recent'}
+                        </div>
+                        ${article.url ? `<a href="${article.url}" target="_blank" class="article-link">Read article →</a>` : ''}
+                    </div>
+                `).join('');
+            }
         }
 
         // Translation system
@@ -2652,6 +2645,7 @@
                 themeToggle: "Theme",
                 stabilityTitle: "LEBANON STABILITY INDEX",
                 stabilityLegend: "100 = Stable Regime | 0 = Imminent Collapse",
+                rhetoricBadgeLabel: "RHETORIC",
                 govStatus: "GOVERNMENT STATUS",
                 president: "President: Joseph Aoun",
                 daysInOffice: "Days in Office:",
@@ -2686,6 +2680,7 @@
                 themeToggle: "ערכת נושא",
                 stabilityTitle: "מדד יציבות לבנון",
                 stabilityLegend: "100 = משטר יציב | 0 = קריסה קרובה",
+                rhetoricBadgeLabel: "רטוריקה",
                 govStatus: "סטטוס הממשלה",
                 president: "נשיא: ג'וזף עון",
                 daysInOffice: "ימים בתפקיד:",
@@ -2720,6 +2715,7 @@
                 themeToggle: "السمة",
                 stabilityTitle: "مؤشر استقرار لبنان",
                 stabilityLegend: "100 = نظام مستقر | 0 = انهيار وشيك",
+                rhetoricBadgeLabel: "الخطاب",
                 govStatus: "حالة الحكومة",
                 president: "الرئيس: جوزيف عون",
                 daysInOffice: "أيام في المنصب:",
@@ -2754,6 +2750,7 @@
                 themeToggle: "پوسته",
                 stabilityTitle: "شاخص ثبات لبنان",
                 stabilityLegend: "100 = رژیم پایدار | 0 = فروپاشی قریب‌الوقوع",
+                rhetoricBadgeLabel: "گفتمان",
                 govStatus: "وضعیت دولت",
                 president: "رئیس‌جمهور: ژوزف عون",
                 daysInOffice: "روزهای در مقام:",
@@ -2859,123 +2856,33 @@
             }
         }
 
-        // Initialize Lebanon Map with GDELT conflict events
-        async function initLebanonMap() {
+        // Initialize Lebanon Map (Leaflet/OpenStreetMap)
+        function initLebanonMap() {
             const map = L.map('lebanon-map', {
-                center: [33.68, 35.60],
+                center: [33.88, 35.50],
                 zoom: 8,
                 scrollWheelZoom: false
             });
-
+            
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 maxZoom: 18
             }).addTo(map);
-
-            // Static city markers — base layer
-            const cities = [
+            
+            const markers = [
                 { lat: 33.8938, lng: 35.5018, name: 'Beirut', desc: 'Capital' },
                 { lat: 33.8547, lng: 35.8623, name: 'Baalbek', desc: 'Bekaa Valley' },
                 { lat: 33.2705, lng: 35.2038, name: 'Tyre (Sour)', desc: 'South Lebanon' },
                 { lat: 34.4367, lng: 35.8497, name: 'Tripoli', desc: 'North Lebanon' },
                 { lat: 33.3789, lng: 35.4840, name: 'Sidon (Saida)', desc: 'South Lebanon' },
-                { lat: 33.8114, lng: 35.4882, name: 'BEY Airport', desc: 'Rafic Hariri Intl' },
-                { lat: 33.5606, lng: 35.3714, name: 'Khiam', desc: 'South Lebanon — active conflict zone' },
-                { lat: 33.4500, lng: 35.5700, name: 'Marjayoun', desc: 'South Lebanon' },
+                { lat: 33.8114, lng: 35.4882, name: 'BEY Airport', desc: 'Rafic Hariri Intl' }
             ];
-
-            const cityIcon = L.divIcon({
-                className: '',
-                html: '<div style="width:10px;height:10px;border-radius:50%;background:#3b82f6;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>',
-                iconSize: [10, 10],
-                iconAnchor: [5, 5]
-            });
-
-            cities.forEach(c => {
-                L.marker([c.lat, c.lng], { icon: cityIcon })
+            
+            markers.forEach(m => {
+                L.marker([m.lat, m.lng])
                     .addTo(map)
-                    .bindPopup(`<strong>${c.name}</strong><br><span style="font-size:11px;color:#666;">${c.desc}</span>`);
+                    .bindPopup(`<strong>${m.name}</strong><br>${m.desc}`);
             });
-
-            // Fetch GDELT conflict events
-            try {
-                document.getElementById('mapEventCount').textContent = 'Loading conflict events from GDELT...';
-                const resp = await fetch('https://lebanon-stability-backend.onrender.com/api/lebanon/events?days=7');
-                const data = await resp.json();
-
-                if (data.success && data.events && data.events.length > 0) {
-                    let eventCount = 0;
-
-                    data.events.forEach(evt => {
-                        if (!evt.lat || !evt.lng) return;
-
-                        // Size marker by number of mentions (more coverage = bigger dot)
-                        const radius = Math.min(4 + (evt.mentions || 1) * 0.3, 12);
-
-                        const circle = L.circleMarker([evt.lat, evt.lng], {
-                            radius: radius,
-                            fillColor: evt.color || '#ef4444',
-                            color: '#fff',
-                            weight: 1,
-                            opacity: 0.9,
-                            fillOpacity: 0.75
-                        }).addTo(map);
-
-                        // Rich popup
-                        const goldsteinDisplay = evt.goldstein !== null
-                            ? `${evt.goldstein > 0 ? '+' : ''}${evt.goldstein}`
-                            : 'N/A';
-                        const goldsteinColor = (evt.goldstein || 0) < 0 ? '#ef4444' : '#22c55e';
-                        const dateDisplay = evt.date || 'Recent';
-                        const actor1 = evt.actor1 !== 'Unknown' ? evt.actor1 : '';
-                        const actor2 = evt.actor2 !== 'Unknown' ? evt.actor2 : '';
-                        const actorText = [actor1, actor2].filter(Boolean).join(' → ');
-
-                        circle.bindPopup(`
-                            <div style="font-family: sans-serif; min-width: 200px;">
-                                <div style="font-weight:bold; font-size:13px; margin-bottom:4px;">
-                                    ${evt.icon} ${evt.event_type}
-                                </div>
-                                <div style="font-size:11px; color:#555; margin-bottom:4px;">
-                                    📍 ${evt.location || 'Lebanon'}
-                                </div>
-                                ${actorText ? `<div style="font-size:11px; margin-bottom:4px;">👤 ${actorText}</div>` : ''}
-                                <div style="font-size:11px; margin-bottom:4px;">
-                                    📅 ${dateDisplay}
-                                    &nbsp;|&nbsp;
-                                    <span style="color:${goldsteinColor}; font-weight:bold;">
-                                        Goldstein: ${goldsteinDisplay}
-                                    </span>
-                                </div>
-                                <div style="font-size:11px; color:#777;">
-                                    📰 ${evt.sources || 0} sources · ${evt.mentions || 0} mentions
-                                </div>
-                                ${evt.url ? `<div style="margin-top:6px;"><a href="${evt.url}" target="_blank" style="font-size:11px; color:#6495ED;">Read source →</a></div>` : ''}
-                            </div>
-                        `);
-
-                        eventCount++;
-                    });
-
-                    // Update event count display
-                    const typeSummary = Object.entries(data.event_type_counts || {})
-                        .sort((a, b) => b[1] - a[1])
-                        .map(([type, count]) => `${type}: ${count}`)
-                        .join(' · ');
-
-                    document.getElementById('mapEventCount').textContent =
-                        `${eventCount} conflict events (last 7 days) · ${typeSummary} · Source: GDELT Event API`;
-
-                } else {
-                    document.getElementById('mapEventCount').textContent =
-                        'No recent conflict events found in GDELT data · Static city markers shown';
-                }
-
-            } catch (err) {
-                console.warn('[Lebanon Map] GDELT events fetch failed:', err.message);
-                document.getElementById('mapEventCount').textContent =
-                    'Live event data temporarily unavailable · Static city markers shown';
-            }
         }
 
         // Rhetoric Tracker Integration
@@ -3010,6 +2917,24 @@
                 
                 // Score and theatre label
                 document.getElementById('rhetoricScore').textContent = `${data.rhetoric_score}/100`;
+
+                // ── Rhetoric badge on stability card ──
+                const RHETORIC_LEVELS = {
+                    0: { label: 'Silent',      color: '#6b7280' },
+                    1: { label: 'Routine',     color: '#10b981' },
+                    2: { label: 'Cautionary',  color: '#f59e0b' },
+                    3: { label: 'Threatening', color: '#f97316' },
+                    4: { label: 'Operational', color: '#ef4444' },
+                    5: { label: 'Active',      color: '#991b1b' },
+                };
+                const level = data.theatre_escalation_level || 0;
+                const lv = RHETORIC_LEVELS[level] || RHETORIC_LEVELS[0];
+                const badge = document.getElementById('rhetoricBadge');
+                const badgeText = document.getElementById('rhetoricBadgeText');
+                if (badge && badgeText) {
+                    badge.style.background = lv.color;
+                    badgeText.textContent = `Level ${level} — ${lv.label}`;
+                }
                 
                 const label = document.getElementById('rhetoricTheatreLabel');
                 label.textContent = data.theatre_label || '--';
@@ -3094,39 +3019,3 @@
                 console.error('Error loading rhetoric data:', error);
                 document.getElementById('rhetoricScore').textContent = 'N/A';
                 document.getElementById('rhetoricScanInfo').textContent = 'Data unavailable';
-            }
-        }
-
-        // Load data on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            startLoadingProgress();
-            loadLebanonData();
-            loadHumanitarianData();
-        });
-
-        function switchNewsTab(tab) {
-            document.querySelectorAll('.news-tab-btn').forEach(b => b.classList.remove('active'));
-            const btn = document.getElementById('tab-' + tab);
-            if (btn) btn.classList.add('active');
-
-            const articles = (window._newsByTab || {})[tab] || [];
-            const container = document.getElementById('newsTabContent');
-            if (!container) return;
-
-            if (articles.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px; font-style:italic;">No recent articles in this feed</div>';
-                return;
-            }
-            container.innerHTML = articles.map(a => `
-                <div class="article-item">
-                    <div class="article-title">${a.title || 'Untitled'}</div>
-                    <div class="article-meta">
-                        ${a.keyword || ''} • ${a.published ? new Date(a.published).toLocaleDateString() : 'Recent'}
-                    </div>
-                    ${a.url ? `<a href="${a.url}" target="_blank" class="article-link">Read article →</a>` : ''}
-                </div>
-            `).join('');
-        }
-    </script>
-</body>
-</html>
