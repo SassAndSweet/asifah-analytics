@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Yemen Stability Index v2.9.0 - Last updated: Feb 16, 2026 -->
+<!-- Asifah Analytics - Yemen Stability Index v3.0.0 - Last updated: Mar 14, 2026 -->
 <html lang="en">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -14,7 +14,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>Yemen Stability Index | Asifah Analytics v2.9.0</title>
+    <title>Yemen Stability Index | Asifah Analytics v3.0.0</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -190,6 +190,38 @@
             transition: all 0.2s ease; font-size: 14px; font-weight: bold;
         }
         .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+
+        /* ── LIVE STABILITY DASHBOARD ── */
+        .stability-dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stability-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 18px 20px; transition: all 0.2s ease; }
+        .stability-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); }
+        .sc-header { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: bold; margin-bottom: 8px; }
+        .sc-badge { display: inline-block; padding: 5px 14px; border-radius: 6px; font-size: 13px; font-weight: bold; color: white; margin-bottom: 8px; }
+        .sc-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+        .sc-indicator a { display: block; font-size: 11px; color: var(--accent); text-decoration: none; padding: 2px 0; margin-top: 6px; }
+        .sc-indicator a:hover { text-decoration: underline; }
+        .sc-note { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+        .sc-sub { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25); border-radius: 6px; padding: 8px 12px; margin-top: 10px; }
+        .sc-sub-title { font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #dc2626; margin-bottom: 5px; }
+        .sc-sub-item { font-size: 11px; color: var(--text-secondary); padding: 2px 0; }
+        .rhetoric-link-banner { background: linear-gradient(135deg, #1a2f1a, #2d4a2d); border: 2px solid rgba(22,163,74,0.4); border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap; }
+        .rhetoric-link-banner a { padding: 8px 18px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 12px; font-weight: bold; white-space: nowrap; }
+        .rhetoric-link-banner a:hover { background: rgba(255,255,255,0.25); }
+        .humanitarian-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 12px; }
+        .hum-card { background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px; }
+        .hum-value { font-size: 22px; font-weight: 900; color: var(--accent); }
+        .hum-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 2px; }
+        .hum-note { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+        .govt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; margin-top: 12px; }
+        .govt-card { background: var(--article-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 12px 14px; }
+        .govt-name { font-size: 13px; font-weight: bold; margin-bottom: 2px; }
+        .govt-title { font-size: 11px; color: var(--text-muted); margin-bottom: 6px; }
+        .govt-badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
+        .govt-note { font-size: 11px; color: var(--text-secondary); margin-top: 5px; }
+        .stability-score-banner { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 20px 25px; margin-bottom: 20px; display: flex; align-items: center; gap: 25px; flex-wrap: wrap; }
+        .stability-score-num { font-size: 72px; font-weight: 900; line-height: 1; }
+        .stability-score-meta { flex: 1; }
+        .stability-risk-badge { display: inline-block; padding: 5px 16px; border-radius: 6px; font-size: 14px; font-weight: bold; color: white; margin-bottom: 6px; }
 
         /* Map Section */
         .map-section {
@@ -371,6 +403,81 @@
                 <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;"><strong style="color: #ef4444;">Do Not Travel to Yemen</strong> due to terrorism, civil unrest, health risks, kidnapping, armed conflict, and landmines. U.S. citizens in Yemen who wish to depart should do so when they are able to using commercial or other privately available transportation options.</div>
             </div>
             <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/yemen-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY →</a>
+        </div>
+
+        <!-- RHETORIC TRACKER LINK -->
+        <div class="rhetoric-link-banner">
+            <div>
+                <div style="font-size:13px;font-weight:bold;color:white;">📡 <span data-i18n="rhetoricTrackerTitle">Houthi Rhetoric & Escalation Tracker</span></div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px;" data-i18n="rhetoricTrackerDesc">Maritime threat · Direct strike vector · Horn of Africa watch · Real-time signal analysis</div>
+            </div>
+            <a href="rhetoric-yemen.html" data-i18n="rhetoricTrackerBtn">🎯 Open Tracker →</a>
+        </div>
+
+        <!-- STABILITY SCORE -->
+        <div class="stability-score-banner" id="stabilityScoreBanner">
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);font-weight:bold;margin-bottom:6px;" data-i18n="stabilityScoreLabel">STABILITY SCORE / 100</div>
+                <div class="stability-score-num" id="stabilityScore" style="color:#6b7280;">--</div>
+            </div>
+            <div class="stability-score-meta">
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;" data-i18n="stabilityRiskLabel">RISK LEVEL</div>
+                <span class="stability-risk-badge" id="stabilityRiskBadge" style="background:#6b7280;">Scanning...</span>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:8px;" id="stabilityComponents"></div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="stabilityTimestamp"></div>
+            </div>
+        </div>
+
+        <!-- LIVE SECURITY SITUATION -->
+        <div style="background:var(--card-bg);border:2px solid var(--card-border);border-radius:12px;padding:20px 25px;margin-bottom:20px;">
+            <div style="font-size:14px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px;" data-i18n="securitySituationTitle">⚔️ SECURITY SITUATION</div>
+            <div class="stability-dashboard">
+                <!-- Houthi Control -->
+                <div class="stability-card" id="houthiCard">
+                    <div class="sc-header">🟢 <span data-i18n="houthiControlHeader">HOUTHI CONTROL INDEX</span></div>
+                    <div class="sc-badge" id="houthiBadge" style="background:#6b7280;" data-i18n="scanning">Scanning...</div>
+                    <div class="sc-desc" id="houthiDesc" data-i18n="houthiDescDefault">Territory: Sana'a, Hodeidah, Sa'dah — ~70% of population</div>
+                    <div class="sc-indicator" id="houthiIndicator"></div>
+                </div>
+                <!-- Red Sea Status -->
+                <div class="stability-card" id="redSeaCard">
+                    <div class="sc-header">🚢 <span data-i18n="redSeaHeader">RED SEA / BAB EL-MANDEB</span></div>
+                    <div class="sc-badge" id="redSeaBadge" style="background:#6b7280;" data-i18n="scanning">Scanning...</div>
+                    <div class="sc-desc" id="redSeaDesc" data-i18n="redSeaDescDefault">~10% of global trade transits Bab el-Mandeb</div>
+                    <div class="sc-indicator" id="redSeaIndicator"></div>
+                    <!-- Somaliland watch sub-card -->
+                    <div class="sc-sub" id="somalilandSubCard">
+                        <div class="sc-sub-title">🌍 <span data-i18n="somalilandWatchTitle">Horn of Africa Watch</span></div>
+                        <div class="sc-sub-item" id="somalilandAlert" data-i18n="somalilandBaseline">Monitoring Israeli/US presence in Somaliland, Socotra, Perim Island</div>
+                    </div>
+                </div>
+                <!-- Coalition Activity -->
+                <div class="stability-card" id="coalitionCard">
+                    <div class="sc-header">🤝 <span data-i18n="coalitionHeader">COALITION ACTIVITY (KSA/UAE/US)</span></div>
+                    <div class="sc-badge" id="coalitionBadge" style="background:#6b7280;" data-i18n="scanning">Scanning...</div>
+                    <div class="sc-desc" id="coalitionDesc" data-i18n="coalitionDescDefault">KSA: back-channel talks · UAE: STC support · US: CENTCOM strikes</div>
+                    <div class="sc-indicator" id="coalitionIndicator"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOVERNMENT STATUS -->
+        <div style="background:var(--card-bg);border:2px solid var(--card-border);border-radius:12px;padding:20px 25px;margin-bottom:20px;">
+            <div style="font-size:14px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;" data-i18n="governmentTitle">🏛️ GOVERNMENT STATUS</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;" data-i18n="governmentSubtitle">No unified government — fragmented authority between Houthis, PLC, STC</div>
+            <div class="govt-grid" id="govtGrid">
+                <div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;" data-i18n="loading">Loading...</div>
+            </div>
+        </div>
+
+        <!-- HUMANITARIAN DASHBOARD -->
+        <div style="background:var(--card-bg);border:2px solid var(--card-border);border-radius:12px;padding:20px 25px;margin-bottom:20px;">
+            <div style="font-size:14px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;" data-i18n="humanitarianTitle">🏥 HUMANITARIAN CRISIS DASHBOARD</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;font-style:italic;" data-i18n="humanitarianSubtitle">World's worst humanitarian crisis · Source: UN OCHA, UNHCR, WFP</div>
+            <div class="humanitarian-grid" id="humanitarianGrid">
+                <div style="text-align:center;padding:20px;color:var(--text-muted);font-style:italic;" data-i18n="loading">Loading...</div>
+            </div>
+            <div style="margin-top:14px;" id="refugeeSection"></div>
         </div>
 
         <!-- MAP SECTION -->
@@ -585,7 +692,7 @@
             <div style="margin-top:15px; font-size:0.85em;">
                 Multilingual content from Arabic, Hebrew, and Farsi feeds via GDELT. Reddit community intelligence from r/Yemen, r/geopolitics, and related communities.
             </div>
-            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:15px;">For inquiries, contact: <a href="/cdn-cgi/l/email-protection#ee8f9d87888f868f808f82979a878d9dae89838f8782c08d8183" style="color:var(--accent);"><span class="__cf_email__" data-cfemail="e382908a85828b828d828f9a978a8090a3848e828a8fcd808c8e">[email&#160;protected]</span></a></div>
             
             <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
                 <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v2.9.0</div>
@@ -606,12 +713,12 @@
         </footer>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
 
-        // Theme
+        // ── THEME ──
         function initTheme() {
-            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
+            const savedTheme = localStorage.getItem('asifah-theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
         function toggleTheme() {
@@ -622,10 +729,272 @@
         }
         initTheme();
 
-        // Knowledge Library Toggle
+        // ── KNOWLEDGE LIBRARY ──
         function toggleKnowledgeCard(cardId) {
             const card = document.getElementById('card-' + cardId);
             if (card) card.classList.toggle('collapsed');
+        }
+
+        // ── LOADING OVERLAY ──
+        let loadingStepIndex = 0;
+        let loadingInterval = null;
+        let loadingTimeout = null;
+
+        function startLoadingProgress() {
+            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+            loadingInterval = setInterval(() => {
+                if (loadingStepIndex < steps.length - 1) {
+                    const cur = document.getElementById(steps[loadingStepIndex]);
+                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '✓'; }
+                    loadingStepIndex++;
+                    const next = document.getElementById(steps[loadingStepIndex]);
+                    if (next) next.classList.add('active');
+                }
+            }, 4000);
+            loadingTimeout = setTimeout(() => {
+                const el = document.getElementById('loadingError');
+                if (el) { el.style.display = 'block'; el.textContent = '⚠️ Loading is taking longer than expected. Please refresh.'; }
+            }, 90000);
+        }
+
+        function hideLoadingOverlay() {
+            if (loadingInterval) clearInterval(loadingInterval);
+            if (loadingTimeout) clearTimeout(loadingTimeout);
+            document.querySelectorAll('.loading-step').forEach(step => {
+                step.classList.remove('active');
+                step.classList.add('complete');
+                step.querySelector('.step-icon').textContent = '✓';
+            });
+            setTimeout(() => {
+                const overlay = document.getElementById('loadingOverlay');
+                if (overlay) overlay.classList.add('hidden');
+            }, 500);
+        }
+
+        // ── STABILITY SCORE ──
+        function renderStabilityScore(data) {
+            const stability = data.stability || {};
+            const score = stability.score || 0;
+            const risk = stability.risk_level || 'Unknown';
+            const color = stability.risk_color === 'red' ? '#dc2626' :
+                          stability.risk_color === 'orange' ? '#f97316' :
+                          stability.risk_color === 'yellow' ? '#f59e0b' : '#10b981';
+
+            document.getElementById('stabilityScore').textContent = score;
+            document.getElementById('stabilityScore').style.color = color;
+            const badge = document.getElementById('stabilityRiskBadge');
+            badge.textContent = risk;
+            badge.style.background = color;
+
+            // Components
+            const comp = stability.components || {};
+            const parts = [];
+            if (comp.houthi_escalation) parts.push(`Houthi escalation: -${comp.houthi_escalation}`);
+            if (comp.red_sea_status) parts.push(`Red Sea: -${comp.red_sea_status}`);
+            if (comp.humanitarian_drag) parts.push(`Humanitarian: -${comp.humanitarian_drag}`);
+            document.getElementById('stabilityComponents').textContent = parts.join(' · ');
+
+            if (data.timestamp) {
+                const ago = Math.round((Date.now() - new Date(data.timestamp).getTime()) / 60000);
+                document.getElementById('stabilityTimestamp').textContent =
+                    `Last scan: ${ago < 60 ? ago + 'm ago' : Math.round(ago/60) + 'h ago'} · ${data.total_articles || 0} articles analyzed`;
+            }
+        }
+
+        // ── SECURITY CARDS ──
+        function renderSecurityCards(data) {
+            const houthi = data.houthi_activity || {};
+            const redSea = data.red_sea || {};
+
+            // Houthi card
+            const hLevel = houthi.escalation_score || 0;
+            const hColor = hLevel >= 70 ? '#dc2626' : hLevel >= 45 ? '#f97316' : hLevel >= 20 ? '#f59e0b' : '#10b981';
+            document.getElementById('houthiBadge').textContent = `${hLevel}/100 — ${houthi.level || 'Unknown'}`;
+            document.getElementById('houthiBadge').style.background = hColor;
+            document.getElementById('houthiDesc').textContent =
+                `Escalation signals: ${houthi.escalation_signals || 0} | De-escalation signals: ${houthi.deescalation_signals || 0}`;
+            const hInd = document.getElementById('houthiIndicator');
+            if (houthi.recent_articles?.length) {
+                hInd.innerHTML = houthi.recent_articles.slice(0,2).map(a =>
+                    `<a href="${a.url||'#'}" target="_blank">→ ${(a.title||'').substring(0,80)}</a>`
+                ).join('');
+            }
+
+            // Red Sea card
+            const rsColor = redSea.color === 'red' ? '#dc2626' :
+                            redSea.color === 'orange' ? '#f97316' :
+                            redSea.color === 'yellow' ? '#f59e0b' : '#10b981';
+            document.getElementById('redSeaBadge').textContent = `${redSea.emoji || ''} ${redSea.status_text || 'Unknown'}`;
+            document.getElementById('redSeaBadge').style.background = rsColor;
+            document.getElementById('redSeaDesc').textContent =
+                `Attack signals: ${redSea.attack_signals || 0} | Closure signals: ${redSea.closure_signals || 0}`;
+            const rsInd = document.getElementById('redSeaIndicator');
+            const kf = redSea.key_facts || {};
+            if (kf.suez_link) rsInd.innerHTML = `<span style="font-size:11px;color:var(--text-muted);">${kf.suez_link}</span>`;
+
+            // Somaliland sub-card
+            const sl = redSea.somaliland_watch || {};
+            const slColor = sl.color === 'red' ? '#dc2626' : sl.color === 'orange' ? '#f97316' : '#10b981';
+            document.getElementById('somalilandAlert').innerHTML =
+                `<span style="font-weight:bold;color:${slColor};">Alert: ${sl.alert_level || 'BASELINE'}</span> — ${sl.signals || 0} signals detected. ${sl.note || ''}`;
+
+            // Coalition card
+            const coal = redSea.coalition_activity || {};
+            const coalColor = coal.color === 'red' ? '#dc2626' : coal.color === 'orange' ? '#f97316' : '#10b981';
+            document.getElementById('coalitionBadge').textContent = `KSA/UAE/US: ${coal.status || 'Unknown'}`;
+            document.getElementById('coalitionBadge').style.background = coalColor;
+            document.getElementById('coalitionDesc').innerHTML =
+                `<div style="font-size:11px;margin-top:4px;">🇸🇦 ${coal.ksa_posture||'--'}</div>
+                 <div style="font-size:11px;margin-top:2px;">🇦🇪 ${coal.uae_posture||'--'}</div>
+                 <div style="font-size:11px;margin-top:2px;">🇺🇸 ${coal.us_posture||'--'}</div>`;
+        }
+
+        // ── GOVERNMENT GRID ──
+        function renderGovernment(govt) {
+            const grid = document.getElementById('govtGrid');
+            const entries = [
+                { key: 'houthi_ansar_allah', label: '🟢' },
+                { key: 'plc_chair', label: '🏛️' },
+                { key: 'stc_leader', label: '🔵' },
+                { key: 'ksa_envoy', label: '🇸🇦' },
+            ];
+            const colorMap = { 'ACTIVE': '#dc2626', 'REDUCED ENGAGEMENT': '#f97316', 'STATUS UNKNOWN': '#6b7280' };
+            grid.innerHTML = entries.map(e => {
+                const g = govt[e.key];
+                if (!g) return '';
+                const color = colorMap[g.status] || (g.status_color === 'red' ? '#dc2626' : g.status_color === 'orange' ? '#f97316' : g.status_color === 'yellow' ? '#f59e0b' : '#10b981');
+                return `<div class="govt-card">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+                        <div>
+                            <div class="govt-name">${e.label} ${g.name}</div>
+                            <div class="govt-title">${g.title}</div>
+                        </div>
+                        <span class="govt-badge" style="background:${color};">${g.status}</span>
+                    </div>
+                    <div class="govt-note">${g.status_detail || g.note || ''}</div>
+                    ${g.territory ? `<div style="font-size:10px;color:var(--text-muted);margin-top:4px;">📍 ${g.territory}</div>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        // ── HUMANITARIAN GRID ──
+        function renderHumanitarian(hum) {
+            const grid = document.getElementById('humanitarianGrid');
+            const cards = [
+                { value: hum.population_in_need?.display || '21.6M', label: 'People in Need', note: hum.population_in_need?.pct_of_population + '% of population' },
+                { value: hum.food_insecurity?.display || '17.4M', label: 'Food Insecure', note: hum.food_insecurity?.phase || 'IPC Phase 3+' },
+                { value: hum.idps?.display || '4.5M', label: 'Displaced (IDPs)', note: 'Since 2015' },
+                { value: hum.cholera_cases?.display || '800K+', label: 'Cholera Cases', note: 'Cumulative since 2016' },
+                { value: hum.funding_gap?.received_pct + '%' || '43%', label: 'UN Plan Funded', note: 'Of $' + hum.funding_gap?.required_usd_billions + 'B required' },
+            ];
+            grid.innerHTML = cards.map(c => `
+                <div class="hum-card">
+                    <div class="hum-value">${c.value}</div>
+                    <div class="hum-label">${c.label}</div>
+                    <div class="hum-note">${c.note}</div>
+                </div>`).join('');
+
+            // Refugee flows
+            const rf = hum.refugee_flows || {};
+            const refSection = document.getElementById('refugeeSection');
+            if (rf.in_ksa || rf.in_oman) {
+                refSection.innerHTML = `
+                    <div style="font-size:12px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;">🌍 YEMENI REFUGEE FLOWS</div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        ${rf.in_ksa ? `<div class="hum-card"><div class="hum-value">🇸🇦 ~${(rf.in_ksa.estimate/1000).toFixed(0)}K</div><div class="hum-label">In Saudi Arabia</div><div class="hum-note">${rf.in_ksa.note}</div></div>` : ''}
+                        ${rf.in_oman ? `<div class="hum-card"><div class="hum-value">🇴🇲 ~${(rf.in_oman.estimate/1000).toFixed(0)}K</div><div class="hum-label">In Oman</div><div class="hum-note">${rf.in_oman.note}</div></div>` : ''}
+                        ${rf.in_djibouti ? `<div class="hum-card"><div class="hum-value">🇩🇯 ~${(rf.in_djibouti.estimate/1000).toFixed(0)}K</div><div class="hum-label">In Djibouti</div><div class="hum-note">${rf.in_djibouti.note}</div></div>` : ''}
+                        ${rf.in_somalia ? `<div class="hum-card"><div class="hum-value">🇸🇴 ~${(rf.in_somalia.estimate/1000).toFixed(0)}K</div><div class="hum-label">In Somalia</div><div class="hum-note">${rf.in_somalia.note}</div></div>` : ''}
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);margin-top:6px;">Source: <a href="${rf.source_url||'#'}" target="_blank" style="color:var(--accent);">${rf.source||'UNHCR'}</a></div>`;
+            }
+        }
+
+        // ── ARTICLES ──
+        function displayArticles(articles) {
+            const container = document.getElementById('articlesContainer');
+            if (!articles?.length) { displayArticlesFallback(); return; }
+            container.innerHTML = articles.slice(0, 20).map(article => {
+                const title = article.title || 'Untitled';
+                const source = article.source || '';
+                const published = article.published || article.publishedAt || '';
+                const url = article.url || '#';
+                let dateStr = 'Recent';
+                try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch(e) {}
+                return `<div class="article-item">
+                    <div class="article-title"><a href="${url}" target="_blank" rel="noopener" style="color:var(--text-primary);text-decoration:none;">${title}</a></div>
+                    <div class="article-meta">${source} &bull; ${dateStr}</div>
+                    ${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        function displayArticlesFallback() {
+            document.getElementById('articlesContainer').innerHTML =
+                '<div style="text-align:center;padding:30px;color:var(--text-secondary);">' +
+                '<p style="font-size:14px;margin-bottom:15px;">📡 Live feed loading — check these curated sources:</p>' +
+                '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;">' +
+                '<a href="https://www.aljazeera.com/tag/yemen/" target="_blank" style="padding:8px 16px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;">Al Jazeera</a>' +
+                '<a href="https://sanaacenter.org/" target="_blank" style="padding:8px 16px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;">Sana\'a Center</a>' +
+                '<a href="https://ukmto.org/" target="_blank" style="padding:8px 16px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;">UKMTO</a>' +
+                '<a href="https://www.centcom.mil/" target="_blank" style="padding:8px 16px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;">CENTCOM</a>' +
+                '</div></div>';
+        }
+
+        // ── MAIN LOAD ──
+        async function loadYemenData() {
+            startLoadingProgress();
+            try {
+                const resp = await fetch(BACKEND_URL + '/api/yemen/stability');
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+
+                if (data.scan_in_progress) {
+                    // Backend warming — show static data, retry articles
+                    if (data.government) renderGovernment(data.government);
+                    if (data.humanitarian) renderHumanitarian(data.humanitarian);
+                    hideLoadingOverlay();
+                    setTimeout(() => loadYemenData(), 90000);
+                    return;
+                }
+
+                renderStabilityScore(data);
+                if (data.houthi_activity || data.red_sea) renderSecurityCards(data);
+                if (data.government) renderGovernment(data.government);
+                if (data.humanitarian) renderHumanitarian(data.humanitarian);
+
+                const articles = [...(data.articles_en || []), ...(data.articles_ar || [])];
+                displayArticles(articles);
+
+                const ts = data.timestamp ? new Date(data.timestamp).toLocaleString() : new Date().toLocaleString();
+                document.getElementById('lastUpdated').textContent =
+                    (translations[currentLang]?.lastUpdated || 'Last updated: ') + ts;
+
+                hideLoadingOverlay();
+
+            } catch(err) {
+                console.error('[Yemen] Load error:', err);
+                // Show static humanitarian data as fallback
+                renderHumanitarian({
+                    population_in_need: { display: '21.6M', pct_of_population: 67 },
+                    food_insecurity: { display: '17.4M', phase: 'IPC Phase 3+' },
+                    idps: { display: '4.5M' }, cholera_cases: { display: '800K+' },
+                    funding_gap: { received_pct: 43, required_usd_billions: 4.3 },
+                    refugee_flows: {
+                        in_ksa: { estimate: 500000, note: 'Many undocumented' },
+                        in_oman: { estimate: 90000, note: 'Significant in Dhofar' },
+                        source: 'UNHCR Yemen 2026', source_url: 'https://www.unhcr.org/yemen.html'
+                    }
+                });
+                renderGovernment({
+                    houthi_ansar_allah: { name: 'Abdul-Malik al-Houthi', title: 'Supreme Leader, Ansar Allah', status: 'ACTIVE', status_color: 'red', status_detail: 'Declared escalation phase. Active missile/drone operations against Israel and Red Sea shipping.', territory: "Sana'a, Hodeidah, Sa'dah, ~70% of population" },
+                    plc_chair: { name: 'Rashad al-Alimi', title: 'PLC Chair (Internationally Recognized)', status: 'ACTIVE', status_color: 'yellow', status_detail: 'Based in Aden. Dependent on KSA financial support.', territory: 'Aden, Hadramawt, Marib (contested)' },
+                    stc_leader: { name: 'Aidarous al-Zubaidi', title: 'STC President', status: 'ACTIVE', status_color: 'orange', status_detail: 'UAE-backed. Controls Aden and southern coast. Seeks independent South Yemen.' },
+                    ksa_envoy: { name: 'Saudi Arabia', title: 'Coalition Leader', status: 'REDUCED ENGAGEMENT', status_color: 'orange', status_detail: 'Back-channel talks with Houthis ongoing. Airstrike tempo reduced.' },
+                });
+                displayArticlesFallback();
+                hideLoadingOverlay();
+            }
         }
 
         // Loading Overlay
@@ -664,97 +1033,16 @@
             }, 500);
         }
 
-        // Fetch Yemen articles from backend
-        async function loadYemenArticles() {
-            try {
-                const response = await fetch(BACKEND_URL + '/scan-yemen');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                
-                if (data.success && data.articles && data.articles.length > 0) {
-                    displayArticles(data.articles);
-                } else {
-                    // Fallback: try NewsAPI-style endpoint
-                    await loadYemenArticlesFallback();
-                }
-            } catch (error) {
-                console.warn('Primary Yemen endpoint failed:', error.message);
-                await loadYemenArticlesFallback();
-            }
-        }
-
-        async function loadYemenArticlesFallback() {
-            try {
-                // Try the general OSINT scan with Yemen keywords
-                const response = await fetch(BACKEND_URL + '/scan-osint?q=Yemen+Houthi+Red+Sea');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                
-                if (data.articles && data.articles.length > 0) {
-                    displayArticles(data.articles);
-                } else {
-                    displayArticlesFallbackStatic();
-                }
-            } catch (error) {
-                console.warn('Fallback also failed:', error.message);
-                displayArticlesFallbackStatic();
-            }
-        }
-
-        function displayArticles(articles) {
-            const container = document.getElementById('articlesContainer');
-            if (!articles || articles.length === 0) {
-                displayArticlesFallbackStatic();
-                return;
-            }
-
-            container.innerHTML = articles.slice(0, 20).map(article => {
-                const title = article.title || 'Untitled';
-                const source = article.source || article.source_name || '';
-                const published = article.published || article.publishedAt || article.date || '';
-                const url = article.url || article.link || '#';
-                const description = article.description || '';
-                
-                let dateStr = 'Recent';
-                if (published) {
-                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } 
-                    catch(e) { dateStr = published; }
-                }
-
-                return '<div class="article-item">' +
-                    '<div class="article-title">' + title + '</div>' +
-                    (description ? '<div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; line-height:1.5;">' + description.substring(0, 200) + (description.length > 200 ? '...' : '') + '</div>' : '') +
-                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
-                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        function displayArticlesFallbackStatic() {
-            const container = document.getElementById('articlesContainer');
-            container.innerHTML = 
-                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
-                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed is being configured for Yemen.</p>' +
-                '<p style="font-size:13px; margin-bottom:20px;">In the meantime, check these curated OSINT sources:</p>' +
-                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
-                '<a href="https://www.aljazeera.com/tag/yemen/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Yemen</a>' +
-                '<a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - Middle East</a>' +
-                '<a href="https://sanaacenter.org/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Sana\'a Center</a>' +
-                '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
-                '<a href="https://www.centcom.mil/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">U.S. CENTCOM</a>' +
-                '</div>' +
-                '</div>';
-        }
-
-        // Translation system
+        // ── TRANSLATIONS ──
+        let currentLang = 'en';
         const translations = {
             en: {
-                pageTitle: "\uD83C\uDDFE\uD83C\uDDEA YEMEN STABILITY INDEX",
+                pageTitle: "🇾🇪 YEMEN STABILITY INDEX",
                 pageSubtitle: "Multi-Factor Analysis: Houthi Control, Red Sea Security, Humanitarian Crisis & Political Fragmentation",
-                backLink: "\u2190 Back to Dashboard",
+                backLink: "← Back to Dashboard",
                 themeToggle: "Theme",
                 lastUpdated: "Last updated: ",
-                mapTitle: "Yemen \u2014 Territorial Overview",
+                mapTitle: "Yemen — Territorial Overview",
                 mapSubtitle: "Interactive map centered on Yemen. Territorial control overlays and incident markers coming soon.",
                 knowledgeLibraryTitle: "Knowledge Library",
                 catHouthis: "Houthi Movement & Military Capabilities",
@@ -762,55 +1050,92 @@
                 catHumanitarian: "Humanitarian Crisis",
                 catPolitical: "Political Fragmentation & Peace Process",
                 catRegional: "Saudi Coalition & Regional Dynamics",
-                recentArticles: "\uD83D\uDCF0 Recent Yemen, Houthi & Red Sea Articles (Last 7 Days)"
+                recentArticles: "📰 Recent Yemen, Houthi & Red Sea Articles (Last 7 Days)",
+                rhetoricTrackerTitle: "Houthi Rhetoric & Escalation Tracker",
+                rhetoricTrackerDesc: "Maritime threat · Direct strike vector · Horn of Africa watch · Real-time signal analysis",
+                rhetoricTrackerBtn: "🎯 Open Tracker →",
+                stabilityScoreLabel: "STABILITY SCORE / 100",
+                stabilityRiskLabel: "RISK LEVEL",
+                securitySituationTitle: "⚔️ SECURITY SITUATION",
+                houthiControlHeader: "HOUTHI CONTROL INDEX",
+                redSeaHeader: "RED SEA / BAB EL-MANDEB",
+                somalilandWatchTitle: "Horn of Africa Watch",
+                somalilandBaseline: "Monitoring Israeli/US presence in Somaliland, Socotra, Perim Island",
+                coalitionHeader: "COALITION ACTIVITY (KSA/UAE/US)",
+                governmentTitle: "🏛️ GOVERNMENT STATUS",
+                governmentSubtitle: "No unified government — fragmented authority between Houthis, PLC, STC",
+                humanitarianTitle: "🏥 HUMANITARIAN CRISIS DASHBOARD",
+                humanitarianSubtitle: "World's worst humanitarian crisis · Source: UN OCHA, UNHCR, WFP",
+                scanning: "Scanning...", loading: "Loading...",
+                houthiDescDefault: "Territory: Sana'a, Hodeidah, Sa'dah — ~70% of population",
+                redSeaDescDefault: "~10% of global trade transits Bab el-Mandeb",
+                coalitionDescDefault: "KSA: back-channel talks · UAE: STC support · US: CENTCOM strikes",
             },
             he: {
-                pageTitle: "\uD83C\uDDFE\uD83C\uDDEA \u05DE\u05D3\u05D3 \u05D9\u05E6\u05D9\u05D1\u05D5\u05EA \u05EA\u05D9\u05DE\u05DF",
-                pageSubtitle: "\u05E0\u05D9\u05EA\u05D5\u05D7 \u05E8\u05D1-\u05D2\u05D5\u05E8\u05DE\u05D9: \u05E9\u05DC\u05D9\u05D8\u05EA \u05D4\u05D7\u05D5\u05EA\u05F4\u05D9\u05DD, \u05D1\u05D9\u05D8\u05D7\u05D5\u05DF \u05D9\u05DD \u05E1\u05D5\u05E3, \u05DE\u05E9\u05D1\u05E8 \u05D4\u05D5\u05DE\u05E0\u05D9\u05D8\u05E8\u05D9 \u05D5\u05E4\u05D9\u05E6\u05D5\u05DC \u05E4\u05D5\u05DC\u05D9\u05D8\u05D9",
-                backLink: "\u2192 \u05D7\u05D6\u05E8\u05D4 \u05DC\u05DC\u05D5\u05D7 \u05D4\u05D1\u05E7\u05E8\u05D4",
-                themeToggle: "\u05E2\u05E8\u05DB\u05EA \u05E0\u05D5\u05E9\u05D0",
-                lastUpdated: "\u05E2\u05D5\u05D3\u05DB\u05DF \u05DC\u05D0\u05D7\u05E8\u05D5\u05E0\u05D4: ",
-                mapTitle: "\u05EA\u05D9\u05DE\u05DF \u2014 \u05E1\u05E7\u05D9\u05E8\u05D4 \u05D8\u05E8\u05D9\u05D8\u05D5\u05E8\u05D9\u05D0\u05DC\u05D9\u05EA",
-                mapSubtitle: "\u05DE\u05E4\u05D4 \u05D0\u05D9\u05E0\u05D8\u05E8\u05D0\u05E7\u05D8\u05D9\u05D1\u05D9\u05EA. \u05E9\u05DB\u05D1\u05D5\u05EA \u05E9\u05DC\u05D9\u05D8\u05D4 \u05D1\u05E7\u05E8\u05D5\u05D1.",
-                knowledgeLibraryTitle: "\u05E1\u05E4\u05E8\u05D9\u05D9\u05EA \u05D9\u05D3\u05E2",
-                catHouthis: "\u05EA\u05E0\u05D5\u05E2\u05EA \u05D4\u05D7\u05D5\u05EA\u05F4\u05D9\u05DD \u05D5\u05D9\u05DB\u05D5\u05DC\u05D5\u05EA \u05E6\u05D1\u05D0\u05D9\u05D5\u05EA",
-                catRedSea: "\u05D1\u05D9\u05D8\u05D7\u05D5\u05DF \u05D9\u05DD \u05E1\u05D5\u05E3 \u05D5\u05D9\u05DE\u05D9",
-                catHumanitarian: "\u05DE\u05E9\u05D1\u05E8 \u05D4\u05D5\u05DE\u05E0\u05D9\u05D8\u05E8\u05D9",
-                catPolitical: "\u05E4\u05D9\u05E6\u05D5\u05DC \u05E4\u05D5\u05DC\u05D9\u05D8\u05D9 \u05D5\u05EA\u05D4\u05DC\u05D9\u05DA \u05E9\u05DC\u05D5\u05DD",
-                catRegional: "\u05D4\u05E7\u05D5\u05D0\u05DC\u05D9\u05E6\u05D9\u05D4 \u05D4\u05E1\u05E2\u05D5\u05D3\u05D9\u05EA \u05D5\u05D3\u05D9\u05E0\u05DE\u05D9\u05E7\u05D4 \u05D0\u05D6\u05D5\u05E8\u05D9\u05EA",
-                recentArticles: "\uD83D\uDCF0 \u05DB\u05EA\u05D1\u05D5\u05EA \u05D0\u05D7\u05E8\u05D5\u05E0\u05D5\u05EA \u05E2\u05DC \u05EA\u05D9\u05DE\u05DF \u05D5\u05D4\u05D7\u05D5\u05EA\u05F4\u05D9\u05DD"
+                pageTitle: "🇾🇪 מדד יציבות תימן",
+                pageSubtitle: "ניתוח רב-גורמי: שליטת החות'ים, ביטחון ים סוף, משבר הומניטרי ופיצול פוליטי",
+                backLink: "→ חזרה ללוח הבקרה", themeToggle: "ערכת נושא", lastUpdated: "עודכן לאחרונה: ",
+                mapTitle: "תימן — סקירה טריטוריאלית", mapSubtitle: "מפה אינטראקטיבית. שכבות שליטה בקרוב.",
+                knowledgeLibraryTitle: "ספריית ידע", catHouthis: "תנועת החות'ים ויכולות צבאיות",
+                catRedSea: "ביטחון ים סוף וימי", catHumanitarian: "משבר הומניטרי",
+                catPolitical: "פיצול פוליטי ותהליך שלום", catRegional: "הקואליציה הסעודית ודינמיקה אזורית",
+                recentArticles: "📰 כתבות אחרונות על תימן וחות'ים",
+                rhetoricTrackerTitle: "מעקב רטוריקה חות'ים", rhetoricTrackerDesc: "איום ימי · תקיפה ישירה · מעקב קרן אפריקה",
+                rhetoricTrackerBtn: "🎯 פתח מעקב →", stabilityScoreLabel: "ציון יציבות / 100", stabilityRiskLabel: "רמת סיכון",
+                securitySituationTitle: "⚔️ מצב ביטחוני", houthiControlHeader: "מדד שליטת החות'ים",
+                redSeaHeader: "ים סוף / באב אל-מנדב", somalilandWatchTitle: "מעקב קרן אפריקה",
+                somalilandBaseline: "מעקב נוכחות ישראלית/אמריקאית בסומלילנד, סוקוטרה, פרים",
+                coalitionHeader: "פעילות קואליציה (סעודיה/איחוד/ארה\"ב)", governmentTitle: "🏛️ סטטוס ממשלה",
+                governmentSubtitle: "אין ממשלה מאוחדת — סמכות מפוצלת בין חות'ים, PLC ו-STC",
+                humanitarianTitle: "🏥 לוח בקרה הומניטרי", humanitarianSubtitle: "המשבר ההומניטרי הגרוע בעולם · מקור: OCHA, UNHCR, WFP",
+                scanning: "סורק...", loading: "טוען...",
+                houthiDescDefault: "שטח: סנעא, חוד'ידה, צעדה — כ-70% מהאוכלוסייה",
+                redSeaDescDefault: "כ-10% מהסחר העולמי עובר דרך באב אל-מנדב",
+                coalitionDescDefault: "סעודיה: שיחות מאחורי הקלעים · איחוד: תמיכה ב-STC · ארה\"ב: מתקפות CENTCOM",
             },
             ar: {
-                pageTitle: "\uD83C\uDDFE\uD83C\uDDEA \u0645\u0624\u0634\u0631 \u0627\u0633\u062A\u0642\u0631\u0627\u0631 \u0627\u0644\u064A\u0645\u0646",
-                pageSubtitle: "\u062A\u062D\u0644\u064A\u0644 \u0645\u062A\u0639\u062F\u062F \u0627\u0644\u0639\u0648\u0627\u0645\u0644: \u0633\u064A\u0637\u0631\u0629 \u0627\u0644\u062D\u0648\u062B\u064A\u064A\u0646\u060C \u0623\u0645\u0646 \u0627\u0644\u0628\u062D\u0631 \u0627\u0644\u0623\u062D\u0645\u0631\u060C \u0627\u0644\u0623\u0632\u0645\u0629 \u0627\u0644\u0625\u0646\u0633\u0627\u0646\u064A\u0629 \u0648\u0627\u0644\u062A\u0634\u0631\u0630\u0645 \u0627\u0644\u0633\u064A\u0627\u0633\u064A",
-                backLink: "\u2192 \u0627\u0644\u0639\u0648\u062F\u0629 \u0625\u0644\u0649 \u0644\u0648\u062D\u0629 \u0627\u0644\u062A\u062D\u0643\u0645",
-                themeToggle: "\u0627\u0644\u0633\u0645\u0629",
-                lastUpdated: "\u0622\u062E\u0631 \u062A\u062D\u062F\u064A\u062B: ",
-                mapTitle: "\u0627\u0644\u064A\u0645\u0646 \u2014 \u0646\u0638\u0631\u0629 \u0639\u0627\u0645\u0629 \u0639\u0644\u0649 \u0627\u0644\u0623\u0631\u0627\u0636\u064A",
-                mapSubtitle: "\u062E\u0631\u064A\u0637\u0629 \u062A\u0641\u0627\u0639\u0644\u064A\u0629. \u0637\u0628\u0642\u0627\u062A \u0627\u0644\u0633\u064A\u0637\u0631\u0629 \u0642\u0631\u064A\u0628\u0627\u064B.",
-                knowledgeLibraryTitle: "\u0645\u0643\u062A\u0628\u0629 \u0627\u0644\u0645\u0639\u0631\u0641\u0629",
-                catHouthis: "\u062D\u0631\u0643\u0629 \u0627\u0644\u062D\u0648\u062B\u064A\u064A\u0646 \u0648\u0627\u0644\u0642\u062F\u0631\u0627\u062A \u0627\u0644\u0639\u0633\u0643\u0631\u064A\u0629",
-                catRedSea: "\u0623\u0645\u0646 \u0627\u0644\u0628\u062D\u0631 \u0627\u0644\u0623\u062D\u0645\u0631 \u0648\u0627\u0644\u0628\u062D\u0631\u064A",
-                catHumanitarian: "\u0627\u0644\u0623\u0632\u0645\u0629 \u0627\u0644\u0625\u0646\u0633\u0627\u0646\u064A\u0629",
-                catPolitical: "\u0627\u0644\u062A\u0634\u0631\u0630\u0645 \u0627\u0644\u0633\u064A\u0627\u0633\u064A \u0648\u0639\u0645\u0644\u064A\u0629 \u0627\u0644\u0633\u0644\u0627\u0645",
-                catRegional: "\u0627\u0644\u062A\u062D\u0627\u0644\u0641 \u0627\u0644\u0633\u0639\u0648\u062F\u064A \u0648\u0627\u0644\u062F\u064A\u0646\u0627\u0645\u064A\u0627\u062A \u0627\u0644\u0625\u0642\u0644\u064A\u0645\u064A\u0629",
-                recentArticles: "\uD83D\uDCF0 \u0623\u062D\u062F\u062B \u0627\u0644\u0645\u0642\u0627\u0644\u0627\u062A \u0639\u0646 \u0627\u0644\u064A\u0645\u0646 \u0648\u0627\u0644\u062D\u0648\u062B\u064A\u064A\u0646"
+                pageTitle: "🇾🇪 مؤشر استقرار اليمن",
+                pageSubtitle: "تحليل متعدد العوامل: سيطرة الحوثيين، أمن البحر الأحمر، الأزمة الإنسانية والتشرذم السياسي",
+                backLink: "→ العودة إلى لوحة التحكم", themeToggle: "السمة", lastUpdated: "آخر تحديث: ",
+                mapTitle: "اليمن — نظرة عامة على الأراضي", mapSubtitle: "خريطة تفاعلية. طبقات السيطرة قريباً.",
+                knowledgeLibraryTitle: "مكتبة المعرفة", catHouthis: "حركة الحوثيين والقدرات العسكرية",
+                catRedSea: "أمن البحر الأحمر والبحري", catHumanitarian: "الأزمة الإنسانية",
+                catPolitical: "التشرذم السياسي وعملية السلام", catRegional: "التحالف السعودي والديناميات الإقليمية",
+                recentArticles: "📰 أحدث المقالات عن اليمن والحوثيين",
+                rhetoricTrackerTitle: "متتبع خطاب الحوثيين والتصعيد", rhetoricTrackerDesc: "التهديد البحري · الضربات المباشرة · مراقبة القرن الأفريقي",
+                rhetoricTrackerBtn: "🎯 فتح المتتبع →", stabilityScoreLabel: "نقاط الاستقرار / 100", stabilityRiskLabel: "مستوى الخطر",
+                securitySituationTitle: "⚔️ الوضع الأمني", houthiControlHeader: "مؤشر سيطرة الحوثيين",
+                redSeaHeader: "البحر الأحمر / باب المندب", somalilandWatchTitle: "مراقبة القرن الأفريقي",
+                somalilandBaseline: "رصد الوجود الإسرائيلي/الأمريكي في أرض الصومال وسقطرى وجزيرة بريم",
+                coalitionHeader: "نشاط التحالف (KSA/UAE/US)", governmentTitle: "🏛️ حالة الحكومة",
+                governmentSubtitle: "لا حكومة موحدة — سلطة مجزأة بين الحوثيين و PLC و STC",
+                humanitarianTitle: "🏥 لوحة الأزمة الإنسانية", humanitarianSubtitle: "أسوأ أزمة إنسانية في العالم · المصدر: OCHA، UNHCR، WFP",
+                scanning: "جارٍ المسح...", loading: "جارٍ التحميل...",
+                houthiDescDefault: "الأراضي: صنعاء، الحديدة، صعدة — ~70% من السكان",
+                redSeaDescDefault: "~10% من التجارة العالمية تعبر باب المندب",
+                coalitionDescDefault: "السعودية: محادثات خلف الكواليس · الإمارات: دعم المجلس الانتقالي · أمريكا: ضربات CENTCOM",
             },
             fa: {
-                pageTitle: "\uD83C\uDDFE\uD83C\uDDEA \u0634\u0627\u062E\u0635 \u062B\u0628\u0627\u062A \u06CC\u0645\u0646",
-                pageSubtitle: "\u062A\u062D\u0644\u06CC\u0644 \u0686\u0646\u062F\u0639\u0627\u0645\u0644\u06CC: \u06A9\u0646\u062A\u0631\u0644 \u062D\u0648\u062B\u06CC\u200C\u0647\u0627\u060C \u0627\u0645\u0646\u06CC\u062A \u062F\u0631\u06CC\u0627\u06CC \u0633\u0631\u062E\u060C \u0628\u062D\u0631\u0627\u0646 \u0627\u0646\u0633\u0627\u0646\u06CC \u0648 \u062A\u06A9\u0647\u200C\u062A\u06A9\u0647 \u0634\u062F\u0646 \u0633\u06CC\u0627\u0633\u06CC",
-                backLink: "\u2192 \u0628\u0627\u0632\u06AF\u0634\u062A \u0628\u0647 \u062F\u0627\u0634\u0628\u0648\u0631\u062F",
-                themeToggle: "\u067E\u0648\u0633\u062A\u0647",
-                lastUpdated: "\u0622\u062E\u0631\u06CC\u0646 \u0628\u0647\u200C\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06CC: ",
-                mapTitle: "\u06CC\u0645\u0646 \u2014 \u0646\u0645\u0627\u06CC \u0633\u0631\u0632\u0645\u06CC\u0646\u06CC",
-                mapSubtitle: "\u0646\u0642\u0634\u0647 \u062A\u0639\u0627\u0645\u0644\u06CC. \u0644\u0627\u06CC\u0647\u200C\u0647\u0627\u06CC \u06A9\u0646\u062A\u0631\u0644 \u0628\u0647 \u0632\u0648\u062F\u06CC.",
-                knowledgeLibraryTitle: "\u06A9\u062A\u0627\u0628\u062E\u0627\u0646\u0647 \u062F\u0627\u0646\u0634",
-                catHouthis: "\u062C\u0646\u0628\u0634 \u062D\u0648\u062B\u06CC\u200C\u0647\u0627 \u0648 \u062A\u0648\u0627\u0646\u0627\u06CC\u06CC\u200C\u0647\u0627\u06CC \u0646\u0638\u0627\u0645\u06CC",
-                catRedSea: "\u0627\u0645\u0646\u06CC\u062A \u062F\u0631\u06CC\u0627\u06CC \u0633\u0631\u062E \u0648 \u062F\u0631\u06CC\u0627\u06CC\u06CC",
-                catHumanitarian: "\u0628\u062D\u0631\u0627\u0646 \u0627\u0646\u0633\u0627\u0646\u06CC",
-                catPolitical: "\u062A\u06A9\u0647\u200C\u062A\u06A9\u0647 \u0634\u062F\u0646 \u0633\u06CC\u0627\u0633\u06CC \u0648 \u0631\u0648\u0646\u062F \u0635\u0644\u062D",
-                catRegional: "\u0627\u0626\u062A\u0644\u0627\u0641 \u0633\u0639\u0648\u062F\u06CC \u0648 \u067E\u0648\u06CC\u0627\u06CC\u06CC\u200C\u0647\u0627\u06CC \u0645\u0646\u0637\u0642\u0647\u200C\u0627\u06CC",
-                recentArticles: "\uD83D\uDCF0 \u062C\u062F\u06CC\u062F\u062A\u0631\u06CC\u0646 \u0645\u0642\u0627\u0644\u0627\u062A \u062F\u0631\u0628\u0627\u0631\u0647 \u06CC\u0645\u0646 \u0648 \u062D\u0648\u062B\u06CC\u200C\u0647\u0627"
+                pageTitle: "🇾🇪 شاخص ثبات یمن",
+                pageSubtitle: "تحلیل چندعاملی: کنترل حوثی‌ها، امنیت دریای سرخ، بحران انسانی و تکه‌تکه شدن سیاسی",
+                backLink: "→ بازگشت به داشبورد", themeToggle: "پوسته", lastUpdated: "آخرین به‌روزرسانی: ",
+                mapTitle: "یمن — نمای سرزمینی", mapSubtitle: "نقشه تعاملی. لایه‌های کنترل به زودی.",
+                knowledgeLibraryTitle: "کتابخانه دانش", catHouthis: "جنبش حوثی‌ها و توانایی‌های نظامی",
+                catRedSea: "امنیت دریای سرخ و دریایی", catHumanitarian: "بحران انسانی",
+                catPolitical: "تکه‌تکه شدن سیاسی و روند صلح", catRegional: "ائتلاف سعودی و پویایی‌های منطقه‌ای",
+                recentArticles: "📰 جدیدترین مقالات درباره یمن و حوثی‌ها",
+                rhetoricTrackerTitle: "ردیاب گفتمان حوثی‌ها", rhetoricTrackerDesc: "تهدید دریایی · ضربه مستقیم · پایش شاخ آفریقا",
+                rhetoricTrackerBtn: "🎯 باز کردن ردیاب →", stabilityScoreLabel: "امتیاز ثبات / 100", stabilityRiskLabel: "سطح ریسک",
+                securitySituationTitle: "⚔️ وضعیت امنیتی", houthiControlHeader: "شاخص کنترل حوثی",
+                redSeaHeader: "دریای سرخ / باب‌المندب", somalilandWatchTitle: "پایش شاخ آفریقا",
+                somalilandBaseline: "پایش حضور اسرائیل/آمریکا در سومالی‌لند، سقطری، جزیره پریم",
+                coalitionHeader: "فعالیت ائتلاف (KSA/UAE/US)", governmentTitle: "🏛️ وضعیت دولت",
+                governmentSubtitle: "بدون دولت متحد — اقتدار تقسیم‌شده بین حوثی‌ها، PLC و STC",
+                humanitarianTitle: "🏥 داشبورد بحران انسانی", humanitarianSubtitle: "بدترین بحران انسانی جهان · منبع: OCHA، UNHCR، WFP",
+                scanning: "در حال اسکن...", loading: "در حال بارگذاری...",
+                houthiDescDefault: "سرزمین: صنعا، حدیده، صعده — ~۷۰٪ از جمعیت",
+                redSeaDescDefault: "~۱۰٪ از تجارت جهانی از باب‌المندب عبور می‌کند",
+                coalitionDescDefault: "عربستان: مذاکرات پشت پرده · امارات: حمایت از STC · آمریکا: حملات CENTCOM",
             }
         };
 
@@ -853,13 +1178,7 @@
                     hour: 'numeric', minute: '2-digit', hour12: true 
                 });
             
-            // Load articles
-            loadYemenArticles().then(() => {
-                hideLoadingOverlay();
-            }).catch(err => {
-                console.error('Error loading Yemen data:', err);
-                hideLoadingOverlay();
-            });
+            loadYemenData();
         });
     </script>
 </body>
