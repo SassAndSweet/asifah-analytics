@@ -1050,42 +1050,6 @@
         }
 
         // Loading Overlay
-        let loadingStepIndex = 0;
-        let loadingInterval = null;
-        let loadingTimeout = null;
-
-        function startLoadingProgress() {
-            const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
-            loadingInterval = setInterval(() => {
-                if (loadingStepIndex < steps.length - 1) {
-                    const cur = document.getElementById(steps[loadingStepIndex]);
-                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '\u2713'; }
-                    loadingStepIndex++;
-                    const next = document.getElementById(steps[loadingStepIndex]);
-                    if (next) next.classList.add('active');
-                }
-            }, 5000);
-            loadingTimeout = setTimeout(() => {
-                document.getElementById('loadingError').style.display = 'block';
-                document.getElementById('loadingError').textContent = '\u26A0\uFE0F Loading is taking longer than expected. Please wait or refresh.';
-            }, 60000);
-        }
-
-        function hideLoadingOverlay() {
-            if (loadingInterval) clearInterval(loadingInterval);
-            if (loadingTimeout) clearTimeout(loadingTimeout);
-            document.querySelectorAll('.loading-step').forEach(step => {
-                step.classList.remove('active');
-                step.classList.add('complete');
-                step.querySelector('.step-icon').textContent = '\u2713';
-            });
-            setTimeout(() => {
-                const overlay = document.getElementById('loadingOverlay');
-                if (overlay) overlay.classList.add('hidden');
-            }, 500);
-        }
-
-        // ── TRANSLATIONS ──
         let currentLang = 'en';
         const translations = {
             en: {
