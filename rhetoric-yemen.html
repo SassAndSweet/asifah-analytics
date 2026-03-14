@@ -24,7 +24,8 @@
             --header-text: #ffffff;
             --article-bg: #f8f9fa;
             --article-hover: #e8f4e8;
-            --watermark-opacity: 0.50;
+            --watermark-opacity: 0.08;
+            --watermark-filter: none;
             --card-glow: none;
             --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
             --accent: #16a34a;
@@ -36,17 +37,20 @@
             --container-bg: #0f1a0f;
             --card-bg: #0f1a0f;
             --card-border: #1a3a1a;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-primary: #7dd3fc;
+            --text-secondary: #38bdf8;
+            --text-muted: #0ea5e9;
             --header-gradient-start: #080d08;
             --header-gradient-end: #1a2f1a;
-            --header-text: #ffffff;
-            --article-bg: #121f12;
-            --article-hover: #1a2f1a;
-            --watermark-opacity: 0.85;
-            --card-glow: 0 0 1px rgba(22,163,74,0.1);
-            --card-hover-glow: 0 0 20px rgba(22,163,74,0.2), 0 8px 25px rgba(0,0,0,0.3);
+            --header-text: #7dd3fc;
+            --article-bg: #0a1628;
+            --article-hover: #0f2040;
+            --watermark-opacity: 0.12;
+            --watermark-filter: invert(1) sepia(1) saturate(3) hue-rotate(175deg) brightness(0.6);
+            --card-glow: 0 0 1px rgba(56,189,248,0.15);
+            --card-hover-glow: 0 0 20px rgba(56,189,248,0.25), 0 8px 25px rgba(0,0,0,0.4);
+            --accent: #38bdf8;
+            --accent-2: #f87171;
         }
 
         body {
@@ -66,14 +70,15 @@
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90vmin; height: 90vmin;
-            min-width: 600px; min-height: 600px;
-            max-width: 1000px; max-height: 1000px;
+            width: 95vmin; height: 95vmin;
+            min-width: 700px; min-height: 700px;
+            max-width: 1200px; max-height: 1200px;
             background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             opacity: var(--watermark-opacity);
+            filter: var(--watermark-filter);
             z-index: 0;
             pointer-events: none;
         }
@@ -83,23 +88,57 @@
         /* ── HEADER ── */
         header {
             background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
-            border-radius: 12px; padding: 25px 30px;
+            border-radius: 12px; padding: 20px 20px 20px 20px;
             margin-bottom: 20px; color: var(--header-text);
-            display: flex; align-items: center; gap: 20px;
-            position: relative; min-height: 100px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-rows: auto;
+            grid-template-areas: "logo title controls";
+            align-items: center;
+            gap: 16px;
+            position: relative; min-height: 110px;
             border: 1px solid rgba(22,163,74,0.3);
         }
 
-        .header-logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+        /* Logo area — back link stacked above logo */
+        .header-logo-wrap {
+            grid-area: logo;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 8px;
+        }
+        .header-logo { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 
-        .header-content { flex: 1; }
-        h1 { font-size: 26px; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px; }
-        .subtitle { font-size: 13px; opacity: 0.85; font-style: italic; margin-bottom: 4px; }
-        .last-updated { font-size: 11px; opacity: 0.7; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            color: var(--header-text); text-decoration: none;
+            border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
+            font-size: 12px; font-weight: bold;
+            transition: all 0.2s ease; white-space: nowrap;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.25); }
 
+        /* Title — always centered in grid */
+        .header-content {
+            grid-area: title;
+            text-align: center;
+        }
+        h1 {
+            font-size: 26px; font-weight: bold; letter-spacing: 1px;
+            margin-bottom: 5px; color: var(--header-text);
+        }
+        .subtitle {
+            font-size: 13px; opacity: 0.85; font-style: italic;
+            margin-bottom: 4px; color: var(--header-text);
+        }
+        .last-updated { font-size: 11px; opacity: 0.7; color: var(--header-text); }
+
+        /* Controls — lang switcher + theme toggle stacked on right */
         .header-controls {
-            position: absolute; top: 20px; right: 20px;
-            display: flex; flex-direction: column; gap: 10px; z-index: 10;
+            grid-area: controls;
+            display: flex; flex-direction: column;
+            align-items: flex-end; gap: 10px;
         }
 
         .language-switcher { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
@@ -140,18 +179,32 @@
         [data-theme="dark"] .theme-toggle-slider { transform: translateX(20px); }
         [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
 
-        .back-link {
-            display: inline-flex; align-items: center; gap: 6px;
-            position: absolute; top: 20px; left: 20px;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.15);
-            color: white; text-decoration: none;
-            border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
-            font-size: 13px; font-weight: bold;
-            transition: all 0.2s ease; z-index: 10;
+        /* RTL — flip grid column order, keep title centered */
+        [dir="rtl"] header {
+            grid-template-areas: "controls title logo";
         }
-        .back-link:hover { background: rgba(255,255,255,0.25); }
-        [dir="rtl"] .back-link { left: auto; right: 20px; }
+        [dir="rtl"] .header-controls { align-items: flex-start; }
+        [dir="rtl"] .language-switcher { justify-content: flex-start; }
+        [dir="rtl"] h1 { font-size: 28px; letter-spacing: 0; }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            header {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "title"
+                    "logo"
+                    "controls";
+                text-align: center;
+                gap: 12px;
+                padding: 20px;
+                min-height: unset;
+            }
+            .header-logo-wrap { flex-direction: row; justify-content: center; }
+            .header-controls { align-items: center; width: 100%; }
+            .language-switcher { justify-content: center; flex-wrap: wrap; }
+            [dir="rtl"] header { grid-template-areas: "title" "logo" "controls"; }
+        }
 
         /* ── VECTOR TABS ── */
         .vector-tabs {
@@ -300,19 +353,6 @@
             border-top: 1px solid var(--card-border); margin-top: 30px;
         }
 
-        /* ── MOBILE ── */
-        @media (max-width: 768px) {
-            .actors-grid { grid-template-columns: 1fr; }
-            .theatre-banner { flex-direction: column; }
-            .ladder-row { flex-wrap: wrap; }
-            .ladder-step { min-width: 70px; }
-            h1 { font-size: 18px; }
-            .theatre-score { font-size: 48px; }
-            header { flex-direction: column; align-items: center; padding: 20px; gap: 15px; min-height: unset; }
-            .back-link { position: static; width: fit-content; margin: 0 auto; }
-            .header-controls { position: static; align-items: center; width: 100%; }
-            .language-switcher { flex-wrap: wrap; justify-content: center; }
-        }
     </style>
 </head>
 <body>
@@ -320,17 +360,21 @@
 
     <!-- HEADER -->
     <header>
-        <a href="yemen-stability.html" class="back-link" data-i18n="backLink">← Back to Yemen</a>
+        <!-- Left: back link stacked above logo -->
+        <div class="header-logo-wrap">
+            <a href="yemen-stability.html" class="back-link" data-i18n="backLink">← Back to Yemen</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics Logo" class="header-logo">
+        </div>
 
-        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
-             alt="Asifah Analytics Logo" class="header-logo">
-
+        <!-- Center: title -->
         <div class="header-content">
             <h1 data-i18n="pageTitle">🇾🇪 HOUTHI RHETORIC TRACKER</h1>
             <div class="subtitle" data-i18n="pageSubtitle">Ansar Allah · Red Sea · Bab el-Mandeb · Horn of Africa Watch</div>
             <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
         </div>
 
+        <!-- Right: language + theme -->
         <div class="header-controls">
             <div class="language-switcher">
                 <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
