@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Yemen/Houthi Rhetoric Tracker v1.0.0 - Mar 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>Houthi Rhetoric Tracker | Asifah Analytics v1.0.0</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1a2f1a;
+            --header-gradient-end: #2d4a2d;
+            --header-text: #ffffff;
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4e8;
+            --watermark-opacity: 0.50;
+            --card-glow: none;
+            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
+            --accent: #16a34a;
+            --accent-2: #dc2626;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #080d08;
+            --container-bg: #0f1a0f;
+            --card-bg: #0f1a0f;
+            --card-border: #1a3a1a;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --header-gradient-start: #080d08;
+            --header-gradient-end: #1a2f1a;
+            --header-text: #ffffff;
+            --article-bg: #121f12;
+            --article-hover: #1a2f1a;
+            --watermark-opacity: 0.85;
+            --card-glow: 0 0 1px rgba(22,163,74,0.1);
+            --card-hover-glow: 0 0 20px rgba(22,163,74,0.2), 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vmin; height: 90vmin;
+            min-width: 600px; min-height: 600px;
+            max-width: 1000px; max-height: 1000px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+            border-radius: 12px; padding: 25px 30px;
+            margin-bottom: 20px; color: var(--header-text);
+            display: flex; align-items: center; gap: 20px;
+            position: relative; min-height: 100px;
+            border: 1px solid rgba(22,163,74,0.3);
+        }
+
+        .header-logo { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+
+        .header-content { flex: 1; }
+        h1 { font-size: 26px; font-weight: bold; letter-spacing: 1px; margin-bottom: 4px; }
+        .subtitle { font-size: 13px; opacity: 0.85; font-style: italic; margin-bottom: 4px; }
+        .last-updated { font-size: 11px; opacity: 0.7; }
+
+        .header-controls {
+            position: absolute; top: 20px; right: 20px;
+            display: flex; flex-direction: column; gap: 10px; z-index: 10;
+        }
+
+        .language-switcher { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.15);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white; padding: 5px 12px;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px; font-weight: bold;
+            border-radius: 6px; cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); }
+        .lang-btn.active { background: white; color: #1a2f1a; border-color: white; }
+
+        .theme-toggle {
+            display: flex; align-items: center; justify-content: flex-end; gap: 8px;
+            background: rgba(255,255,255,0.1); padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .theme-toggle-label { font-size: 11px; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .theme-toggle-switch {
+            position: relative; width: 44px; height: 24px;
+            background: rgba(255,255,255,0.2); border-radius: 12px;
+            cursor: pointer; transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px;
+            width: 16px; height: 16px;
+            background: white; border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px;
+        }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(20px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            position: absolute; top: 20px; left: 20px;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.15);
+            color: white; text-decoration: none;
+            border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
+            font-size: 13px; font-weight: bold;
+            transition: all 0.2s ease; z-index: 10;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.25); }
+        [dir="rtl"] .back-link { left: auto; right: 20px; }
+
+        /* ── VECTOR TABS ── */
+        .vector-tabs {
+            display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+
+        .vector-tab {
+            flex: 1; min-width: 180px;
+            background: var(--card-bg); border: 2px solid var(--card-border);
+            border-radius: 10px; padding: 15px 18px;
+            cursor: pointer; transition: all 0.2s ease;
+            text-align: center;
+        }
+        .vector-tab:hover { box-shadow: var(--card-hover-glow); }
+        .vector-tab.active { border-color: var(--accent); }
+        .vector-tab-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+        .vector-tab-value { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+        .vector-tab-badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
+
+        /* ── THEATRE BANNER ── */
+        .theatre-banner {
+            background: var(--card-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 20px 25px; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 25px; flex-wrap: wrap;
+            box-shadow: var(--card-glow);
+        }
+
+        .theatre-left { display: flex; align-items: center; gap: 18px; }
+        .theatre-score { font-size: 72px; font-weight: 900; font-family: 'Times New Roman', serif; line-height: 1; }
+        .theatre-label-badge { display: inline-block; padding: 4px 14px; border-radius: 6px; font-size: 13px; font-weight: bold; color: white; margin-top: 6px; }
+
+        .theatre-meta { flex: 1; }
+        .theatre-meta-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 6px; }
+        .theatre-meta-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+        .theatre-scan-info { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+
+        /* ── SECTION CARD ── */
+        .section-card {
+            background: var(--card-bg); border: 2px solid var(--card-border);
+            border-radius: 12px; padding: 20px 25px; margin-bottom: 20px;
+            box-shadow: var(--card-glow); transition: box-shadow 0.2s ease;
+        }
+        .section-card:hover { box-shadow: var(--card-hover-glow); }
+        .section-title { font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; color: var(--text-primary); }
+
+        /* ── ESCALATION LADDER ── */
+        .ladder-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .ladder-step {
+            flex: 1; min-width: 80px; text-align: center;
+            padding: 10px 6px; border-radius: 8px;
+            border: 2px solid transparent; transition: all 0.2s ease;
+        }
+        .ladder-step.active { border-color: currentColor; background: currentColor; }
+        .ladder-step.active .ladder-step-num,
+        .ladder-step.active .ladder-step-label { color: white !important; }
+        .ladder-step-num { font-size: 20px; font-weight: 900; display: block; }
+        .ladder-step-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-top: 3px; }
+
+        /* ── SOMALILAND WATCH CARD ── */
+        .somaliland-card {
+            background: linear-gradient(135deg, rgba(220,38,38,0.1), rgba(220,38,38,0.05));
+            border: 2px solid rgba(220,38,38,0.3);
+            border-radius: 10px; padding: 15px 18px; margin-top: 15px;
+        }
+        .somaliland-title { font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; color: #dc2626; margin-bottom: 8px; }
+        .somaliland-indicators { list-style: none; padding: 0; }
+        .somaliland-indicators li { font-size: 12px; color: var(--text-secondary); padding: 3px 0; border-bottom: 1px solid var(--card-border); }
+        .somaliland-indicators li:last-child { border-bottom: none; }
+        .somaliland-indicators li::before { content: '📍 '; }
+
+        /* ── ACTORS GRID ── */
+        .actors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+
+        .actor-card {
+            background: var(--article-bg); border: 2px solid var(--card-border);
+            border-radius: 10px; padding: 14px 16px;
+            transition: all 0.2s ease;
+        }
+        .actor-card:hover { background: var(--article-hover); box-shadow: var(--card-hover-glow); }
+
+        .actor-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .actor-name { font-size: 13px; font-weight: bold; }
+        .actor-flag { font-size: 18px; }
+        .actor-role { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+        .actor-escalation-badge { display: flex; align-items: center; gap: 5px; }
+        .actor-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+        .actor-level-label { font-size: 11px; font-weight: bold; }
+
+        .actor-vectors { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .vector-pill {
+            font-size: 10px; padding: 2px 8px; border-radius: 4px;
+            font-weight: bold; color: white;
+        }
+
+        .actor-stats { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+        .actor-stat { font-size: 11px; color: var(--text-muted); }
+
+        /* ── ARTICLES ── */
+        .article-item {
+            padding: 10px 0; border-bottom: 1px solid var(--card-border);
+        }
+        .article-item:last-child { border-bottom: none; }
+        .article-link { color: var(--text-primary); text-decoration: none; font-size: 13px; font-weight: 500; }
+        .article-link:hover { color: var(--accent); text-decoration: underline; }
+        .article-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; font-size: 11px; color: var(--text-muted); align-items: center; }
+        .article-escalation-badge { padding: 1px 7px; border-radius: 3px; font-size: 10px; font-weight: bold; color: white; }
+
+        /* ── SCAN BUTTON ── */
+        .scan-btn {
+            background: var(--accent); color: white;
+            border: none; border-radius: 6px; padding: 8px 18px;
+            font-family: 'Times New Roman', serif; font-size: 13px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        .scan-btn:hover { opacity: 0.85; }
+        .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .scan-btn.scanning { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        /* ── COORD ALERT ── */
+        .coord-alert {
+            background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.3);
+            border-radius: 6px; padding: 8px 12px; margin-bottom: 8px;
+            font-size: 12px; color: var(--text-primary);
+        }
+
+        /* ── SPARKLINE ── */
+        .sparkline-wrapper { display: flex; align-items: center; gap: 12px; height: 60px; }
+        .sparkline-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+
+        /* ── LOADING ── */
+        .loading-placeholder {
+            text-align: center; padding: 30px; color: var(--text-muted);
+            font-style: italic;
+        }
+        .loading-dot { animation: blink 1.4s infinite both; font-size: 20px; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center; padding: 30px 20px;
+            color: var(--text-muted); font-size: 12px; line-height: 1.8;
+            border-top: 1px solid var(--card-border); margin-top: 30px;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            .actors-grid { grid-template-columns: 1fr; }
+            .theatre-banner { flex-direction: column; }
+            .ladder-row { flex-wrap: wrap; }
+            .ladder-step { min-width: 70px; }
+            h1 { font-size: 18px; }
+            .theatre-score { font-size: 48px; }
+            header { flex-direction: column; align-items: center; padding: 20px; gap: 15px; min-height: unset; }
+            .back-link { position: static; width: fit-content; margin: 0 auto; }
+            .header-controls { position: static; align-items: center; width: 100%; }
+            .language-switcher { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <a href="yemen-stability.html" class="back-link" data-i18n="backLink">← Back to Yemen</a>
+
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+             alt="Asifah Analytics Logo" class="header-logo">
+
+        <div class="header-content">
+            <h1 data-i18n="pageTitle">🇾🇪 HOUTHI RHETORIC TRACKER</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Ansar Allah · Red Sea · Bab el-Mandeb · Horn of Africa Watch</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+        </div>
+
+        <div class="header-controls">
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
+            </div>
+            <div class="theme-toggle">
+                <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()">
+                    <div class="theme-toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- VECTOR TABS -->
+    <div class="vector-tabs">
+        <div class="vector-tab" id="tab-maritime">
+            <div class="vector-tab-label" data-i18n="vectorMaritime">🚢 Maritime Threat</div>
+            <div class="vector-tab-value" id="maritimeLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="maritimeBadge" style="background:#6b7280;">Scanning</span></div>
+        </div>
+        <div class="vector-tab" id="tab-strike">
+            <div class="vector-tab-label" data-i18n="vectorStrike">🎯 Direct Strike Threat</div>
+            <div class="vector-tab-value" id="strikeLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="strikeBadge" style="background:#6b7280;">Scanning</span></div>
+        </div>
+        <div class="vector-tab" id="tab-somaliland">
+            <div class="vector-tab-label" data-i18n="vectorSomaliland">🌍 Horn of Africa Watch</div>
+            <div class="vector-tab-value" id="somalilandLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="somalilandBadge" style="background:#6b7280;">Baseline</span></div>
+        </div>
+        <div class="vector-tab" id="tab-ceasefire">
+            <div class="vector-tab-label" data-i18n="vectorCeasefire">🕊️ Ceasefire Signals</div>
+            <div class="vector-tab-value" id="ceasefireLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="ceasefireBadge" style="background:#6b7280;">None</span></div>
+        </div>
+    </div>
+
+    <!-- THEATRE BANNER -->
+    <div class="theatre-banner" id="theatreBanner">
+        <div class="theatre-left">
+            <div class="theatre-score" id="theatreScore" style="color:#6b7280;">--</div>
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:6px;" data-i18n="theatreScoreLabel">RHETORIC SCORE / 100</div>
+                <span class="theatre-label-badge" id="theatreLabelBadge" style="background:#6b7280;">--</span>
+            </div>
+        </div>
+        <div class="theatre-meta">
+            <div class="theatre-meta-title" data-i18n="theatreEscalation">THEATRE ESCALATION LEVEL</div>
+            <div style="font-size:26px;font-weight:bold;color:var(--text-primary);" id="theatreLevel">--</div>
+            <div class="theatre-meta-sub" id="theatreLevelDesc">--</div>
+            <div class="theatre-scan-info" id="theatreScanInfo">--</div>
+        </div>
+    </div>
+
+    <!-- ESCALATION LADDER -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="escalationLadder">🪜 ESCALATION LADDER</div>
+        <div class="ladder-row" id="ladderRow"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;flex-wrap:wrap;gap:10px;">
+            <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassified">Articles classified: --</div>
+            <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
+                🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- SOMALILAND WATCH -->
+    <div class="section-card" id="somalilandCard">
+        <div class="section-title" data-i18n="somalilandWatch">🌍 HORN OF AFRICA / SOMALILAND WATCH</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;" data-i18n="somalilandDesc">
+            Monitoring Israeli/US presence signals in Somaliland, Socotra Island, and Perim Island as potential ground operation precursors.
+        </div>
+        <div class="somaliland-card">
+            <div class="somaliland-title">🔍 KEY INDICATORS TO WATCH</div>
+            <ul class="somaliland-indicators">
+                <li data-i18n="somalilandInd1">Israeli recognition of Somaliland (Jan 2026) — Berbera port basing rights implied</li>
+                <li data-i18n="somalilandInd2">Berbera Port (Somaliland) — strategic Red Sea access point</li>
+                <li data-i18n="somalilandInd3">Socotra Island — Yemeni territory, UAE-administered since 2018</li>
+                <li data-i18n="somalilandInd4">Perim Island — controls Bab el-Mandeb narrows (12.5km wide)</li>
+                <li data-i18n="somalilandInd5">Camp Lemonnier (Djibouti) — primary US Horn of Africa base</li>
+            </ul>
+        </div>
+        <div id="somalilandArticles" style="margin-top:12px;"></div>
+    </div>
+
+    <!-- COORDINATION SIGNALS -->
+    <div class="section-card" id="coordCard" style="display:none;">
+        <div class="section-title" data-i18n="coordAlerts">⚡ IRAN-HOUTHI COORDINATION SIGNALS</div>
+        <div id="coordList"></div>
+    </div>
+
+    <!-- ACTOR STATUS GRID -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="actorStatus">🎯 ACTOR STATUS</div>
+        <div class="actors-grid" id="actorsGrid">
+            <div class="loading-placeholder">
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <div style="margin-top:10px;" data-i18n="loadingActors">Loading actor data...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP ARTICLES -->
+    <div class="section-card" id="articlesSection">
+        <div class="section-title" data-i18n="topArticles">📰 TOP ARTICLES BY ACTOR</div>
+        <div id="articlesList">
+            <div class="loading-placeholder" data-i18n="loadingArticles">Loading articles...</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div data-i18n="footerSources">Data Sources: Google News RSS (EN/AR), GDELT, Telegram (OSINTdefender, WarMonitors, ClashReport, C_Military1)</div>
+        <div style="margin-top:8px;font-size:0.85em;" data-i18n="footerOsint">
+            Dual-vector analysis: Maritime Threat + Direct Strike Threat. Somaliland/Horn of Africa ground op watch. Updated every 12 hours.
+        </div>
+        <div style="margin-top:15px;padding:15px;background:var(--article-bg);border-radius:8px;">
+            <div style="font-size:0.9em;margin-bottom:8px;">Asifah Analytics v1.0.0</div>
+            <div style="font-size:0.8em;" data-i18n="footerUpdate">Updated every 12 hours | Not for operational use</div>
+        </div>
+        <div style="margin-top:20px;padding:15px;background:rgba(22,163,74,0.1);border-radius:8px;">
+            <span style="font-size:0.9em;">
+                If you find Asifah Analytics useful,
+                <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#16a34a;">☕ buy me a coffee</a>
+            </span>
+        </div>
+        <div style="margin-top:25px;font-size:0.75em;color:var(--text-muted);">
+            © 2025 RCGG. All Rights Reserved. Proprietary and Confidential.
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    const API_BASE = 'https://asifah-backend.onrender.com';
+
+    const ESCALATION_LEVELS = {
+        0: { label: 'Monitoring',      color: '#6b7280', desc: 'No signals detected' },
+        1: { label: 'Rhetoric',        color: '#3b82f6', desc: 'Standard statements, no active threat' },
+        2: { label: 'Warning',         color: '#f59e0b', desc: 'Heightened language, concern raised' },
+        3: { label: 'Direct Threat',   color: '#f97316', desc: 'Explicit threats issued' },
+        4: { label: 'Attack Declared', color: '#ef4444', desc: 'Attack announced or ongoing' },
+        5: { label: 'Active Strike',   color: '#7c3aed', desc: 'Confirmed active military operation' },
+    };
+
+    const ACTOR_ORDER = ['houthis', 'usa', 'israel', 'ksa', 'uae', 'iran'];
+
+    const translations = {
+        en: {
+            pageTitle: "🇾🇪 HOUTHI RHETORIC TRACKER",
+            pageSubtitle: "Ansar Allah · Red Sea · Bab el-Mandeb · Horn of Africa Watch",
+            lastUpdated: "Last updated: ",
+            backLink: "← Back to Yemen",
+            themeToggle: "Theme",
+            theatreScoreLabel: "RHETORIC SCORE / 100",
+            theatreEscalation: "THEATRE ESCALATION LEVEL",
+            escalationLadder: "🪜 ESCALATION LADDER",
+            articlesClassified: "Articles classified: --",
+            refreshScan: "Refresh Scan",
+            coordAlerts: "⚡ IRAN-HOUTHI COORDINATION SIGNALS",
+            actorStatus: "🎯 ACTOR STATUS",
+            topArticles: "📰 TOP ARTICLES BY ACTOR",
+            loadingActors: "Loading actor data...",
+            loadingArticles: "Loading articles...",
+            vectorMaritime: "🚢 Maritime Threat",
+            vectorStrike: "🎯 Direct Strike Threat",
+            vectorSomaliland: "🌍 Horn of Africa Watch",
+            vectorCeasefire: "🕊️ Ceasefire Signals",
+            somalilandWatch: "🌍 HORN OF AFRICA / SOMALILAND WATCH",
+            somalilandDesc: "Monitoring Israeli/US presence signals in Somaliland, Socotra Island, and Perim Island as potential ground operation precursors.",
+            somalilandInd1: "Israeli recognition of Somaliland (Jan 2026) — Berbera port basing rights implied",
+            somalilandInd2: "Berbera Port (Somaliland) — strategic Red Sea access point",
+            somalilandInd3: "Socotra Island — Yemeni territory, UAE-administered since 2018",
+            somalilandInd4: "Perim Island — controls Bab el-Mandeb narrows (12.5km wide)",
+            somalilandInd5: "Camp Lemonnier (Djibouti) — primary US Horn of Africa base",
+            footerSources: "Data Sources: Google News RSS (EN/AR), GDELT, Telegram (OSINTdefender, WarMonitors, ClashReport, C_Military1)",
+            footerOsint: "Dual-vector analysis: Maritime Threat + Direct Strike Threat. Somaliland/Horn of Africa ground op watch. Updated every 12 hours.",
+            footerUpdate: "Updated every 12 hours | Not for operational use",
+            scanInProgress: "Scan in progress — retrying...",
+            articles: "articles",
+        },
+        he: {
+            pageTitle: "🇾🇪 מעקב רטוריקה חות'ים",
+            pageSubtitle: "אנסאר אללה · ים סוף · באב אל-מנדב · מעקב קרן אפריקה",
+            lastUpdated: "עודכן לאחרונה: ",
+            backLink: "→ חזרה לתימן",
+            themeToggle: "ערכת נושא",
+            theatreScoreLabel: "ציון רטוריקה / 100",
+            theatreEscalation: "רמת הסלמה בזירה",
+            escalationLadder: "🪜 סולם ההסלמה",
+            articlesClassified: "כתבות מסווגות: --",
+            refreshScan: "רענן סריקה",
+            coordAlerts: "⚡ אותות תיאום איראן-חות'ים",
+            actorStatus: "🎯 סטטוס שחקנים",
+            topArticles: "📰 כתבות מובילות לפי שחקן",
+            loadingActors: "טוען נתוני שחקנים...",
+            loadingArticles: "טוען כתבות...",
+            vectorMaritime: "🚢 איום ימי",
+            vectorStrike: "🎯 איום תקיפה ישירה",
+            vectorSomaliland: "🌍 מעקב קרן אפריקה",
+            vectorCeasefire: "🕊️ אותות הפסקת אש",
+            somalilandWatch: "🌍 מעקב קרן אפריקה / סומלילנד",
+            somalilandDesc: "מעקב אחר אותות נוכחות ישראלית/אמריקאית בסומלילנד, האי סוקוטרה ואי פרים כמבשרי מבצע קרקעי אפשרי.",
+            somalilandInd1: "הכרה ישראלית בסומלילנד (ינואר 2026) — זכויות בסיס בנמל ברברה משתמעות",
+            somalilandInd2: "נמל ברברה (סומלילנד) — נקודת גישה אסטרטגית לים סוף",
+            somalilandInd3: "האי סוקוטרה — טריטוריה תימנית, בניהול אמירתי מ-2018",
+            somalilandInd4: "האי פרים — שולט במיצר באב אל-מנדב (רוחב 12.5 ק\"מ)",
+            somalilandInd5: "קמפ למוניה (ג'יבוטי) — בסיס אמריקאי ראשי בקרן אפריקה",
+            footerSources: "מקורות: Google News RSS (אנגלית/ערבית), GDELT, Telegram",
+            footerOsint: "ניתוח דו-וקטורי: איום ימי + איום תקיפה ישירה. מעקב מבצע קרקעי. מתעדכן כל 12 שעות.",
+            footerUpdate: "מתעדכן כל 12 שעות | לא לשימוש מבצעי",
+            scanInProgress: "סריקה בתהליך — מנסה שוב...",
+            articles: "כתבות",
+        },
+        ar: {
+            pageTitle: "🇾🇪 متتبع خطاب الحوثيين",
+            pageSubtitle: "أنصار الله · البحر الأحمر · باب المندب · مراقبة القرن الأفريقي",
+            lastUpdated: "آخر تحديث: ",
+            backLink: "→ العودة إلى اليمن",
+            themeToggle: "السمة",
+            theatreScoreLabel: "نقاط الخطاب / 100",
+            theatreEscalation: "مستوى التصعيد في المسرح",
+            escalationLadder: "🪜 سلّم التصعيد",
+            articlesClassified: "المقالات المصنّفة: --",
+            refreshScan: "تحديث المسح",
+            coordAlerts: "⚡ إشارات التنسيق بين إيران والحوثيين",
+            actorStatus: "🎯 حالة الجهات الفاعلة",
+            topArticles: "📰 أبرز المقالات حسب الجهة",
+            loadingActors: "جارٍ تحميل بيانات الجهات...",
+            loadingArticles: "جارٍ تحميل المقالات...",
+            vectorMaritime: "🚢 التهديد البحري",
+            vectorStrike: "🎯 تهديد الضربات المباشرة",
+            vectorSomaliland: "🌍 مراقبة القرن الأفريقي",
+            vectorCeasefire: "🕊️ إشارات وقف إطلاق النار",
+            somalilandWatch: "🌍 مراقبة القرن الأفريقي / أرض الصومال",
+            somalilandDesc: "رصد إشارات الوجود الإسرائيلي/الأمريكي في أرض الصومال وجزيرة سقطرى وجزيرة بريم كمقدمات لعملية برية محتملة.",
+            somalilandInd1: "الاعتراف الإسرائيلي بأرض الصومال (يناير 2026) — حقوق قواعد عسكرية في ميناء بربرة مُضمَنة",
+            somalilandInd2: "ميناء بربرة (أرض الصومال) — نقطة وصول استراتيجية للبحر الأحمر",
+            somalilandInd3: "جزيرة سقطرى — أراضٍ يمنية تحت الإدارة الإماراتية منذ 2018",
+            somalilandInd4: "جزيرة بريم — تتحكم في مضيق باب المندب (عرض 12.5 كم)",
+            somalilandInd5: "معسكر ليمونييه (جيبوتي) — القاعدة الأمريكية الرئيسية في القرن الأفريقي",
+            footerSources: "المصادر: RSS لأخبار غوغل (إنجليزي/عربي)، GDELT، Telegram",
+            footerOsint: "تحليل ثنائي المتجه: التهديد البحري + تهديد الضربات المباشرة. مراقبة عمليات برية. يتم التحديث كل 12 ساعة.",
+            footerUpdate: "يتم التحديث كل 12 ساعة | ليس للاستخدام العملياتي",
+            scanInProgress: "المسح جارٍ — إعادة المحاولة...",
+            articles: "مقالات",
+        },
+        fa: {
+            pageTitle: "🇾🇪 ردیاب گفتمان حوثی‌ها",
+            pageSubtitle: "انصارالله · دریای سرخ · باب‌المندب · پایش شاخ آفریقا",
+            lastUpdated: "آخرین به‌روزرسانی: ",
+            backLink: "→ بازگشت به یمن",
+            themeToggle: "پوسته",
+            theatreScoreLabel: "امتیاز گفتمان / 100",
+            theatreEscalation: "سطح تشدید در صحنه",
+            escalationLadder: "🪜 نردبان تشدید",
+            articlesClassified: "مقالات طبقه‌بندی‌شده: --",
+            refreshScan: "به‌روزرسانی اسکن",
+            coordAlerts: "⚡ سیگنال‌های هماهنگی ایران-حوثی",
+            actorStatus: "🎯 وضعیت بازیگران",
+            topArticles: "📰 مقالات برتر بر اساس بازیگر",
+            loadingActors: "در حال بارگذاری داده‌های بازیگران...",
+            loadingArticles: "در حال بارگذاری مقالات...",
+            vectorMaritime: "🚢 تهدید دریایی",
+            vectorStrike: "🎯 تهدید ضربه مستقیم",
+            vectorSomaliland: "🌍 پایش شاخ آفریقا",
+            vectorCeasefire: "🕊️ سیگنال‌های آتش‌بس",
+            somalilandWatch: "🌍 پایش شاخ آفریقا / سومالی‌لند",
+            somalilandDesc: "پایش سیگنال‌های حضور اسرائیل/آمریکا در سومالی‌لند، جزیره سقطری و جزیره پریم به‌عنوان پیش‌نشانه‌های احتمالی عملیات زمینی.",
+            somalilandInd1: "شناسایی سومالی‌لند توسط اسرائیل (ژانویه ۲۰۲۶) — حقوق پایگاه در بندر برباره ضمنی است",
+            somalilandInd2: "بندر برباره (سومالی‌لند) — نقطه دسترسی استراتژیک به دریای سرخ",
+            somalilandInd3: "جزیره سقطری — سرزمین یمن، تحت اداره امارات از ۲۰۱۸",
+            somalilandInd4: "جزیره پریم — کنترل تنگه باب‌المندب (عرض ۱۲.۵ کیلومتر)",
+            somalilandInd5: "کمپ لمونیه (جیبوتی) — پایگاه اصلی آمریکا در شاخ آفریقا",
+            footerSources: "منابع: RSS اخبار گوگل (انگلیسی/عربی)، GDELT، Telegram",
+            footerOsint: "تحلیل دو‌وجهی: تهدید دریایی + تهدید ضربه مستقیم. پایش عملیات زمینی. هر ۱۲ ساعت به‌روز می‌شود.",
+            footerUpdate: "هر ۱۲ ساعت به‌روز می‌شود | برای استفاده عملیاتی نیست",
+            scanInProgress: "اسکن در حال انجام — تلاش مجدد...",
+            articles: "مقاله",
+        }
+    };
+
+    let currentLang = 'en';
+    let sparklineChart = null;
+    let retryInterval = null;
+    let retryCount = 0;
+
+    // ── THEME ──
+    function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('asifah-theme', isDark ? 'light' : 'dark');
+    }
+    (function initTheme() {
+        const saved = localStorage.getItem('asifah-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    // ── LANGUAGE ──
+    function switchLanguage(lang, btn) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const isRTL = ['he','ar','fa'].includes(lang);
+        document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang]?.[key]) {
+                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
+                    const current = el.textContent;
+                    const ts = current.includes(': ') ? current.split(': ').slice(1).join(': ') : 'Loading...';
+                    el.textContent = translations[lang][key] + ts;
+                } else {
+                    el.textContent = translations[lang][key];
+                }
+            }
+        });
+    }
+
+    // ── ESCALATION LADDER ──
+    function renderLadder(activeLevel) {
+        const row = document.getElementById('ladderRow');
+        row.innerHTML = '';
+        for (let i = 0; i <= 5; i++) {
+            const lv = ESCALATION_LEVELS[i];
+            const div = document.createElement('div');
+            div.className = 'ladder-step' + (i === activeLevel ? ' active' : '');
+            div.style.color = lv.color;
+            div.innerHTML = `<div class="ladder-step-num" style="color:${lv.color}">${i}</div><div class="ladder-step-label" style="color:${lv.color}">${lv.label}</div>`;
+            row.appendChild(div);
+        }
+    }
+
+    // ── VECTOR TABS ──
+    function renderVectorTabs(data) {
+        const vectors = [
+            { id: 'maritime', level: data.maritime_level || 0, label: data.maritime_label || 'Monitoring' },
+            { id: 'strike',   level: data.direct_strike_level || 0, label: data.direct_strike_label || 'Monitoring' },
+            { id: 'somaliland', level: data.somaliland_level || 0, label: data.somaliland_label || 'Baseline' },
+            { id: 'ceasefire', level: data.ceasefire_level || 0, label: data.ceasefire_label || 'None' },
+        ];
+        vectors.forEach(v => {
+            const lv = ESCALATION_LEVELS[v.level] || ESCALATION_LEVELS[0];
+            const levelEl  = document.getElementById(`${v.id}Level`);
+            const badgeEl  = document.getElementById(`${v.id}Badge`);
+            const tabEl    = document.getElementById(`tab-${v.id}`);
+            if (levelEl) { levelEl.textContent = v.level; levelEl.style.color = lv.color; }
+            if (badgeEl) { badgeEl.textContent = v.label; badgeEl.style.background = lv.color; }
+            if (tabEl && v.level >= 3) tabEl.style.borderColor = lv.color;
+        });
+    }
+
+    // ── THEATRE BANNER ──
+    function renderTheatre(data) {
+        const score = data.theatre_score || 0;
+        const level = Math.round(score / 20);
+        const lv = ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0];
+
+        document.getElementById('theatreScore').textContent = score;
+        document.getElementById('theatreScore').style.color = data.theatre_color || lv.color;
+        document.getElementById('theatreLabelBadge').textContent = data.theatre_level || lv.label;
+        document.getElementById('theatreLabelBadge').style.background = data.theatre_color || lv.color;
+        document.getElementById('theatreLevel').textContent = `${data.theatre_level || lv.label}`;
+        document.getElementById('theatreLevel').style.color = data.theatre_color || lv.color;
+        document.getElementById('theatreLevelDesc').textContent = lv.desc;
+
+        if (data.timestamp) {
+            const ago = Math.round((Date.now() - new Date(data.timestamp).getTime()) / 60000);
+            const agoText = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+            document.getElementById('theatreScanInfo').textContent = `Last scan: ${agoText} | ${data.total_articles || 0} articles analyzed`;
+        }
+
+        const ts = data.timestamp ? new Date(data.timestamp).toLocaleString() : new Date().toLocaleString();
+        const t = translations[currentLang];
+        document.getElementById('lastUpdated').textContent = (t.lastUpdated || 'Last updated: ') + ts;
+
+        renderLadder(Math.min(level, 5));
+        document.getElementById('articlesClassified').textContent = `Articles classified: ${data.total_articles || 0}`;
+    }
+
+    // ── COORDINATION ──
+    function renderCoordination(signals) {
+        const card = document.getElementById('coordCard');
+        const list = document.getElementById('coordList');
+        if (!signals || signals.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+        list.innerHTML = signals.map(s =>
+            `<div class="coord-alert">⚡ ${s.message || 'Iran-Houthi coordination signal detected'}<br>
+            <span style="font-size:11px;color:var(--text-muted);">${s.article || ''}</span></div>`
+        ).join('');
+    }
+
+    // ── SOMALILAND ARTICLES ──
+    function renderSomalilandArticles(articles) {
+        const el = document.getElementById('somalilandArticles');
+        if (!articles || articles.length === 0) { el.innerHTML = ''; return; }
+        el.innerHTML = '<div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#dc2626;margin-bottom:8px;font-weight:bold;">📡 RECENT SIGNALS</div>' +
+            articles.map(a =>
+                `<div class="article-item">
+                    <a href="${a.url||'#'}" target="_blank" class="article-link">${a.title||'Untitled'}</a>
+                    <div class="article-meta"><span>${a.published ? new Date(a.published).toLocaleDateString() : ''}</span></div>
+                </div>`
+            ).join('');
+    }
+
+    // ── ACTORS ──
+    function renderActors(actors) {
+        const grid = document.getElementById('actorsGrid');
+        grid.innerHTML = '';
+        ACTOR_ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a) return;
+
+            const maxLevel = Math.max(
+                a.maritime_score || 0,
+                a.direct_strike_score || 0,
+                a.somaliland_score || 0
+            );
+            const lv = ESCALATION_LEVELS[maxLevel] || ESCALATION_LEVELS[0];
+
+            const div = document.createElement('div');
+            div.className = 'actor-card';
+            div.innerHTML = `
+                <div class="actor-header">
+                    <div>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <span style="font-size:20px;">${a.flag || ''}</span>
+                            <div>
+                                <div class="actor-name">${a.name}</div>
+                                <div class="actor-role">${a.role || ''}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actor-escalation-badge">
+                        <div class="actor-dot" style="background:${lv.color}"></div>
+                        <span class="actor-level-label" style="color:${lv.color}">${lv.label}</span>
+                    </div>
+                </div>
+                <div class="actor-vectors">
+                    ${a.maritime_score > 0 ? `<span class="vector-pill" style="background:${ESCALATION_LEVELS[a.maritime_score]?.color||'#6b7280'}">🚢 L${a.maritime_score}</span>` : ''}
+                    ${a.direct_strike_score > 0 ? `<span class="vector-pill" style="background:${ESCALATION_LEVELS[a.direct_strike_score]?.color||'#6b7280'}">🎯 L${a.direct_strike_score}</span>` : ''}
+                    ${a.somaliland_score > 0 ? `<span class="vector-pill" style="background:#dc2626">🌍 L${a.somaliland_score}</span>` : ''}
+                    ${a.ceasefire_score > 0 ? `<span class="vector-pill" style="background:#10b981">🕊️ L${a.ceasefire_score}</span>` : ''}
+                </div>
+                <div class="actor-stats">
+                    <span class="actor-stat">📄 ${a.statement_count || 0} ${translations[currentLang]?.articles || 'articles'}</span>
+                    <span class="actor-stat">⬆️ Max Level ${maxLevel}</span>
+                </div>
+            `;
+            grid.appendChild(div);
+        });
+    }
+
+    // ── ARTICLES ──
+    function renderArticles(actors) {
+        const list = document.getElementById('articlesList');
+        const allArticles = [];
+        ACTOR_ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a?.top_articles) return;
+            a.top_articles.slice(0,2).forEach(art => {
+                allArticles.push({ ...art, actorName: a.name, actorFlag: a.flag });
+            });
+        });
+
+        if (allArticles.length === 0) {
+            list.innerHTML = '<div class="loading-placeholder">No articles available yet.</div>';
+            return;
+        }
+
+        list.innerHTML = allArticles.map(art => {
+            const maxLevel = Math.max(art.maritime_level || 0, art.direct_strike_level || 0);
+            const lv = ESCALATION_LEVELS[maxLevel] || ESCALATION_LEVELS[1];
+            const date = art.published ? new Date(art.published).toLocaleDateString() : '';
+            return `
+                <div class="article-item">
+                    <div><a href="${art.url||'#'}" target="_blank" class="article-link">${art.title||'Untitled'}</a></div>
+                    <div class="article-meta">
+                        <span>${art.actorFlag} ${art.actorName}</span>
+                        <span class="article-escalation-badge" style="background:${lv.color}">${lv.label}</span>
+                        <span>${art.source||''}</span>
+                        <span>${date}</span>
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    // ── MAIN LOAD ──
+    async function loadRhetoricData(forceRefresh = false) {
+        try {
+            const url = API_BASE + '/api/rhetoric/yemen' + (forceRefresh ? '?force=true' : '');
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+
+            if (data.scan_in_progress) {
+                document.getElementById('theatreScore').textContent = '...';
+                document.getElementById('theatreScanInfo').textContent = translations[currentLang].scanInProgress;
+                renderLadder(0);
+                if (!retryInterval) {
+                    retryInterval = setInterval(async () => {
+                        retryCount++;
+                        try {
+                            const r = await fetch(API_BASE + '/api/rhetoric/yemen');
+                            const d = await r.json();
+                            if (!d.scan_in_progress) {
+                                clearInterval(retryInterval); retryInterval = null; retryCount = 0;
+                                loadRhetoricData();
+                            } else if (retryCount >= 8) { clearInterval(retryInterval); retryInterval = null; }
+                        } catch(e) { if (retryCount >= 8) { clearInterval(retryInterval); retryInterval = null; } }
+                    }, 30000);
+                }
+                return;
+            }
+
+            renderTheatre(data);
+            renderVectorTabs(data);
+            renderCoordination(data.coordination_signals);
+
+            // Somaliland watch articles — pull from Houthi actor if available
+            const somalilandArticles = data.actors?.houthis?.top_articles?.filter(a =>
+                a.title?.toLowerCase().includes('somaliland') ||
+                a.title?.toLowerCase().includes('socotra') ||
+                a.title?.toLowerCase().includes('berbera')
+            ) || [];
+            renderSomalilandArticles(somalilandArticles);
+
+            if (data.actors) {
+                renderActors(data.actors);
+                renderArticles(data.actors);
+            }
+
+        } catch(err) {
+            console.error('[Yemen Rhetoric] Load error:', err);
+            document.getElementById('theatreScore').textContent = 'N/A';
+            document.getElementById('theatreScanInfo').textContent = 'Data unavailable — backend may be warming up';
+        }
+    }
+
+    // ── SCAN BUTTON ──
+    async function triggerScan() {
+        const btn = document.getElementById('scanBtn');
+        btn.disabled = true;
+        btn.classList.add('scanning');
+        btn.querySelector('span').textContent = 'Scanning...';
+        await loadRhetoricData(true);
+        setTimeout(async () => {
+            await loadRhetoricData(false);
+            btn.disabled = false;
+            btn.classList.remove('scanning');
+            btn.querySelector('span').textContent = translations[currentLang].refreshScan || 'Refresh Scan';
+        }, 30000);
+    }
+
+    // ── INIT ──
+    renderLadder(0);
+    loadRhetoricData();
+</script>
+</body>
+</html>
