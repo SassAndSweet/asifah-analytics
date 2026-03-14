@@ -982,9 +982,26 @@
 
         #lebanon-map {
             width: 100%;
-            height: 450px;
+            height: 500px;
             border-radius: 8px;
             border: 1px solid var(--card-border);
+        }
+
+        .map-legend {
+            display: flex; flex-wrap: wrap; gap: 10px;
+            margin-top: 12px; font-size: 12px;
+        }
+        .map-legend-item {
+            display: flex; align-items: center; gap: 6px;
+            padding: 4px 10px; border-radius: 4px;
+            background: var(--article-bg); color: var(--text-secondary);
+        }
+        .map-legend-dot {
+            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+        }
+        .map-event-count {
+            font-size: 12px; color: var(--text-muted);
+            margin-top: 8px; font-style: italic;
         }
 
         /* ============================================
@@ -1747,8 +1764,17 @@
 
             <!-- Lebanon Map -->
             <div class="lebanon-map-section">
-                <h2>🗺️ Map of Lebanon</h2>
+                <h2>🗺️ Lebanon — Live Conflict Event Map</h2>
                 <div id="lebanon-map"></div>
+                <div class="map-legend">
+                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#991b1b;"></div> Military Force</div>
+                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#dc2626;"></div> Armed Conflict</div>
+                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#ef4444;"></div> Assault</div>
+                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#f97316;"></div> Coercion/Threat</div>
+                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#facc15;"></div> Protest</div>
+                    <div class="map-legend-item"><div class="map-legend-dot" style="background:#3b82f6;"></div> City Marker</div>
+                </div>
+                <div class="map-event-count" id="mapEventCount">Loading conflict events...</div>
             </div>
 
             <!-- Knowledge Library Section -->
@@ -2833,33 +2859,123 @@
             }
         }
 
-        // Initialize Lebanon Map (Leaflet/OpenStreetMap)
-        function initLebanonMap() {
+        // Initialize Lebanon Map with GDELT conflict events
+        async function initLebanonMap() {
             const map = L.map('lebanon-map', {
-                center: [33.88, 35.50],
+                center: [33.68, 35.60],
                 zoom: 8,
                 scrollWheelZoom: false
             });
-            
+
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
                 maxZoom: 18
             }).addTo(map);
-            
-            const markers = [
+
+            // Static city markers — base layer
+            const cities = [
                 { lat: 33.8938, lng: 35.5018, name: 'Beirut', desc: 'Capital' },
                 { lat: 33.8547, lng: 35.8623, name: 'Baalbek', desc: 'Bekaa Valley' },
                 { lat: 33.2705, lng: 35.2038, name: 'Tyre (Sour)', desc: 'South Lebanon' },
                 { lat: 34.4367, lng: 35.8497, name: 'Tripoli', desc: 'North Lebanon' },
                 { lat: 33.3789, lng: 35.4840, name: 'Sidon (Saida)', desc: 'South Lebanon' },
-                { lat: 33.8114, lng: 35.4882, name: 'BEY Airport', desc: 'Rafic Hariri Intl' }
+                { lat: 33.8114, lng: 35.4882, name: 'BEY Airport', desc: 'Rafic Hariri Intl' },
+                { lat: 33.5606, lng: 35.3714, name: 'Khiam', desc: 'South Lebanon — active conflict zone' },
+                { lat: 33.4500, lng: 35.5700, name: 'Marjayoun', desc: 'South Lebanon' },
             ];
-            
-            markers.forEach(m => {
-                L.marker([m.lat, m.lng])
-                    .addTo(map)
-                    .bindPopup(`<strong>${m.name}</strong><br>${m.desc}`);
+
+            const cityIcon = L.divIcon({
+                className: '',
+                html: '<div style="width:10px;height:10px;border-radius:50%;background:#3b82f6;border:2px solid white;box-shadow:0 0 4px rgba(0,0,0,0.5);"></div>',
+                iconSize: [10, 10],
+                iconAnchor: [5, 5]
             });
+
+            cities.forEach(c => {
+                L.marker([c.lat, c.lng], { icon: cityIcon })
+                    .addTo(map)
+                    .bindPopup(`<strong>${c.name}</strong><br><span style="font-size:11px;color:#666;">${c.desc}</span>`);
+            });
+
+            // Fetch GDELT conflict events
+            try {
+                document.getElementById('mapEventCount').textContent = 'Loading conflict events from GDELT...';
+                const resp = await fetch('https://lebanon-stability-backend.onrender.com/api/lebanon/events?days=7');
+                const data = await resp.json();
+
+                if (data.success && data.events && data.events.length > 0) {
+                    let eventCount = 0;
+
+                    data.events.forEach(evt => {
+                        if (!evt.lat || !evt.lng) return;
+
+                        // Size marker by number of mentions (more coverage = bigger dot)
+                        const radius = Math.min(4 + (evt.mentions || 1) * 0.3, 12);
+
+                        const circle = L.circleMarker([evt.lat, evt.lng], {
+                            radius: radius,
+                            fillColor: evt.color || '#ef4444',
+                            color: '#fff',
+                            weight: 1,
+                            opacity: 0.9,
+                            fillOpacity: 0.75
+                        }).addTo(map);
+
+                        // Rich popup
+                        const goldsteinDisplay = evt.goldstein !== null
+                            ? `${evt.goldstein > 0 ? '+' : ''}${evt.goldstein}`
+                            : 'N/A';
+                        const goldsteinColor = (evt.goldstein || 0) < 0 ? '#ef4444' : '#22c55e';
+                        const dateDisplay = evt.date || 'Recent';
+                        const actor1 = evt.actor1 !== 'Unknown' ? evt.actor1 : '';
+                        const actor2 = evt.actor2 !== 'Unknown' ? evt.actor2 : '';
+                        const actorText = [actor1, actor2].filter(Boolean).join(' → ');
+
+                        circle.bindPopup(`
+                            <div style="font-family: sans-serif; min-width: 200px;">
+                                <div style="font-weight:bold; font-size:13px; margin-bottom:4px;">
+                                    ${evt.icon} ${evt.event_type}
+                                </div>
+                                <div style="font-size:11px; color:#555; margin-bottom:4px;">
+                                    📍 ${evt.location || 'Lebanon'}
+                                </div>
+                                ${actorText ? `<div style="font-size:11px; margin-bottom:4px;">👤 ${actorText}</div>` : ''}
+                                <div style="font-size:11px; margin-bottom:4px;">
+                                    📅 ${dateDisplay}
+                                    &nbsp;|&nbsp;
+                                    <span style="color:${goldsteinColor}; font-weight:bold;">
+                                        Goldstein: ${goldsteinDisplay}
+                                    </span>
+                                </div>
+                                <div style="font-size:11px; color:#777;">
+                                    📰 ${evt.sources || 0} sources · ${evt.mentions || 0} mentions
+                                </div>
+                                ${evt.url ? `<div style="margin-top:6px;"><a href="${evt.url}" target="_blank" style="font-size:11px; color:#6495ED;">Read source →</a></div>` : ''}
+                            </div>
+                        `);
+
+                        eventCount++;
+                    });
+
+                    // Update event count display
+                    const typeSummary = Object.entries(data.event_type_counts || {})
+                        .sort((a, b) => b[1] - a[1])
+                        .map(([type, count]) => `${type}: ${count}`)
+                        .join(' · ');
+
+                    document.getElementById('mapEventCount').textContent =
+                        `${eventCount} conflict events (last 7 days) · ${typeSummary} · Source: GDELT Event API`;
+
+                } else {
+                    document.getElementById('mapEventCount').textContent =
+                        'No recent conflict events found in GDELT data · Static city markers shown';
+                }
+
+            } catch (err) {
+                console.warn('[Lebanon Map] GDELT events fetch failed:', err.message);
+                document.getElementById('mapEventCount').textContent =
+                    'Live event data temporarily unavailable · Static city markers shown';
+            }
         }
 
         // Rhetoric Tracker Integration
