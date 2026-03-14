@@ -27,7 +27,8 @@
             --header-text: #ffffff;
             --article-bg: #f8f9fa;
             --article-hover: #e8f4f8;
-            --watermark-opacity: 0.50;
+            --watermark-opacity: 0.08;
+            --watermark-filter: none;
             --card-glow: none;
             --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
         }
@@ -37,17 +38,18 @@
             --container-bg: #111827;
             --card-bg: #111827;
             --card-border: #1e3a5f;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            --text-primary: #7dd3fc;
+            --text-secondary: #38bdf8;
+            --text-muted: #0ea5e9;
             --header-gradient-start: #0f1a2e;
             --header-gradient-end: #1e3a5f;
-            --header-text: #ffffff;
-            --article-bg: #1a2332;
-            --article-hover: #243447;
-            --watermark-opacity: 0.85;
-            --card-glow: 0 0 1px rgba(100,149,237,0.1);
-            --card-hover-glow: 0 0 20px rgba(100,149,237,0.2), 0 8px 25px rgba(0,0,0,0.3);
+            --header-text: #7dd3fc;
+            --article-bg: #0a1628;
+            --article-hover: #0f2040;
+            --watermark-opacity: 0.12;
+            --watermark-filter: invert(1) sepia(1) saturate(3) hue-rotate(175deg) brightness(0.6);
+            --card-glow: 0 0 1px rgba(56,189,248,0.15);
+            --card-hover-glow: 0 0 20px rgba(56,189,248,0.25), 0 8px 25px rgba(0,0,0,0.4);
         }
 
         body {
@@ -67,21 +69,22 @@
             position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            width: 90vmin; height: 90vmin;
-            min-width: 600px; min-height: 600px;
-            max-width: 1000px; max-height: 1000px;
+            width: 95vmin; height: 95vmin;
+            min-width: 700px; min-height: 700px;
+            max-width: 1200px; max-height: 1200px;
             background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
             opacity: var(--watermark-opacity);
+            filter: var(--watermark-filter);
             z-index: 0;
             pointer-events: none;
             user-select: none;
         }
 
         [data-theme="dark"] body::before {
-            filter: brightness(0.3) sepia(1) hue-rotate(180deg) saturate(3);
+            filter: var(--watermark-filter);
         }
 
         .container {
@@ -95,63 +98,72 @@
         header {
             background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
             color: var(--header-text);
-            padding: 35px;
+            padding: 20px;
             border-radius: 12px;
             margin-bottom: 30px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            position: relative;
-            display: flex;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "logo title controls";
             align-items: center;
-            gap: 30px;
+            gap: 16px;
+            min-height: 110px;
         }
 
         [data-theme="dark"] header {
-            border: 1px solid rgba(100,149,237,0.2);
-            box-shadow: 0 6px 30px rgba(0,0,0,0.4), 0 0 15px rgba(100,149,237,0.05);
+            border: 1px solid rgba(56,189,248,0.2);
+            box-shadow: 0 6px 30px rgba(0,0,0,0.4), 0 0 15px rgba(56,189,248,0.05);
+        }
+
+        /* Logo area — back link stacked above logo */
+        .header-logo-wrap {
+            grid-area: logo;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 8px;
         }
 
         .header-logo {
-            width: 80px; height: 80px;
-            flex-shrink: 0;
-            border-radius: 50%;
-            margin-top: 48px;
+            width: 70px; height: 70px;
+            flex-shrink: 0; border-radius: 50%;
         }
 
-        .header-content { flex: 1; text-align: center; }
+        /* Title — always centered */
+        .header-content { grid-area: title; text-align: center; }
 
         h1 {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            letter-spacing: 2px;
+            font-size: 28px; font-weight: bold;
+            margin-bottom: 8px; letter-spacing: 2px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            color: var(--header-text);
         }
 
-        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
-        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+        .subtitle { font-size: 15px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; color: var(--header-text); }
+        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 8px; color: var(--header-text); }
 
+        /* Controls — right column */
         .header-controls {
-            position: absolute;
-            top: 35px; right: 35px;
-            display: flex; flex-direction: column; gap: 10px;
-            z-index: 1000;
+            grid-area: controls;
+            display: flex; flex-direction: column;
+            align-items: flex-end; gap: 10px;
         }
 
-        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+        /* RTL — flip grid */
+        [dir="rtl"] header { grid-template-areas: "controls title logo"; }
+        [dir="rtl"] .header-controls { align-items: flex-start; }
+        [dir="rtl"] .language-switcher { justify-content: flex-start; }
+        [dir="rtl"] h1 { font-size: 30px; letter-spacing: 0; }
 
         .language-switcher {
             display: flex; gap: 8px;
             background: rgba(255,255,255,0.15);
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 8px 12px; border-radius: 8px;
             backdrop-filter: blur(10px);
         }
 
         .lang-btn {
             background: rgba(255,255,255,0.2);
             border: 2px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 6px 14px;
+            color: white; padding: 6px 14px;
             font-family: 'Times New Roman', Times, serif;
             font-size: 14px; font-weight: bold;
             border-radius: 6px; cursor: pointer;
@@ -194,19 +206,37 @@
         [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
 
         .back-link {
-            display: inline-block;
-            position: absolute; top: 20px; left: 20px;
-            margin: 0; padding: 12px 24px;
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 7px 14px;
             background: rgba(255,255,255,0.2);
             color: white; text-decoration: none;
-            border-radius: 8px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
             transition: all 0.2s ease;
-            font-size: 14px; font-weight: bold;
+            font-size: 13px; font-weight: bold; white-space: nowrap;
         }
 
         .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        [dir="rtl"] .back-link { left: auto; right: 20px; }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            header {
+                grid-template-columns: 1fr;
+                grid-template-areas: "title" "logo" "controls";
+                text-align: center;
+                gap: 12px; padding: 20px; min-height: unset;
+            }
+            .header-logo-wrap { flex-direction: row; justify-content: center; }
+            .header-controls { align-items: center; width: 100%; }
+            .language-switcher { justify-content: center; flex-wrap: wrap; }
+            [dir="rtl"] header { grid-template-areas: "title" "logo" "controls"; }
+            h1 { font-size: 20px; }
+            .theatre-score { font-size: 56px; }
+            .actors-grid { grid-template-columns: 1fr; }
+            .theatre-banner { flex-direction: column; align-items: flex-start; }
+            .theatre-meta { text-align: left; }
+            .ladder-row { flex-wrap: wrap; }
+            .ladder-step { min-width: 80px; }
+        }
 
         /* ── THEATRE BANNER ── */
         .theatre-banner {
@@ -526,38 +556,23 @@
             transition: background 0.3s ease, border-color 0.3s ease;
         }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 768px) {
-            .actors-grid { grid-template-columns: 1fr; }
-            .theatre-banner { flex-direction: column; align-items: flex-start; }
-            .theatre-meta { text-align: left; }
-            .ladder-row { flex-wrap: wrap; }
-            .ladder-step { min-width: 80px; }
-            h1 { font-size: 20px; }
-            .theatre-score { font-size: 56px; }
-            header { flex-direction: column; align-items: center; padding: 20px; gap: 15px; min-height: unset; }
-            .back-link { position: static; width: fit-content; margin: 0 auto; }
-            .header-controls { position: static; align-items: center; width: 100%; }
-            .language-switcher { flex-wrap: wrap; justify-content: center; }
-        }
-    </style>
-</head>
-<body>
-<div class="container">
-
     <!-- HEADER -->
     <header>
-        <a href="lebanon-stability.html" class="back-link" data-i18n="backLink">← Back to Lebanon</a>
+        <!-- Left: back link stacked above logo -->
+        <div class="header-logo-wrap">
+            <a href="lebanon-stability.html" class="back-link" data-i18n="backLink">← Back to Lebanon</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics Logo" class="header-logo">
+        </div>
 
-        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
-             alt="Asifah Analytics Logo" class="header-logo">
-
+        <!-- Center: title -->
         <div class="header-content">
             <h1 data-i18n="pageTitle">🇱🇧 LEBANON RHETORIC TRACKER</h1>
             <div class="subtitle" data-i18n="pageSubtitle">Multi-Actor Escalation Ladder · Real-Time Signal Analysis</div>
             <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
         </div>
 
+        <!-- Right: language + theme -->
         <div class="header-controls">
             <div class="language-switcher">
                 <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
