@@ -743,10 +743,8 @@
             transform: rotate(-90deg);
         }
 
-        .gauge-background {
-            fill: none;
-            stroke: #ecf0f1;
-            stroke-width: 18;
+        [data-theme="dark"] .gauge-background {
+            stroke: #1e293b;
         }
 
         .gauge-progress {
@@ -1188,34 +1186,6 @@
 
         .article-scoring-details span {
             white-space: nowrap;
-        }
-
-        .polymarket-section {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 2px solid #7c3aed;
-            overflow: hidden;
-        }
-
-        .polymarket-disclaimer {
-            background-color: #fef3c7;
-            border: 2px solid #f59e0b;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 12px;
-            color: #92400e;
-            text-align: center;
-        }
-
-        .polymarket-disclaimer strong {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 13px;
-            color: #78350f;
         }
 
         .ticker-wrapper {
@@ -6260,10 +6230,6 @@ israelVsHouthis: "vs Houthis",
                 riskHigh: "High",
                 riskVeryHigh: "Very High",
                 
-                // Polymarket Section
-                polymarketDisclaimerTitle: "⚠️ MARKET PREDICTIONS DISCLAIMER",
-                polymarketDisclaimerText: "Polymarket data represents betting market probabilities (crowd-sourced predictions). This is supplementary data only and does not constitute intelligence assessment or analytical tradecraft.",
-                
                 // Flight Widget
                 flightWidgetTitle: "Flight Disruptions Monitor",
                 flightStatusNormal: "All Routes Normal",
@@ -6756,44 +6722,6 @@ israelVsHouthis: "علیه حوثی‌ها",
             } catch (error) {
                 console.error('Failed to fetch rate limit:', error);
             }
-        }
-
-        async function fetchPolymarketData() {
-            const ticker = document.getElementById('polymarketTicker');
-            if (!ticker) return;
-            try {
-                const response = await fetch(`${BACKEND_URL}/api/polymarket`);
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const data = await response.json();
-                if (!data.success || !data.markets || data.markets.length === 0) {
-                    displayPolymarketFallback();
-                    return;
-                }
-                displayPolymarketTicker(data.markets);
-            } catch (error) {
-                console.error('[Polymarket] Error:', error);
-                displayPolymarketFallback();
-            }
-        }
-
-        function displayPolymarketTicker(markets) {
-            const ticker = document.getElementById('polymarketTicker');
-            if (!ticker || !markets || markets.length === 0) {
-                displayPolymarketFallback();
-                return;
-            }
-            let html = '';
-            markets.forEach(market => {
-                const pct = Math.round((market.probability || 0) * 100);
-                html += `<div class="ticker-item"><strong>${market.question}</strong><span class="ticker-probability">${pct}%</span><a href="${market.url}" target="_blank" rel="noopener noreferrer">View</a></div>`;
-            });
-            ticker.innerHTML = html + html;
-        }
-
-        function displayPolymarketFallback() {
-            const ticker = document.getElementById('polymarketTicker');
-            if (!ticker) return;
-            ticker.innerHTML = '<div class="ticker-item"><strong>⚠️ Polymarket data temporarily unavailable</strong><a href="https://polymarket.com/" target="_blank" rel="noopener noreferrer">Visit Polymarket</a></div>';
         }
 
         async function scanSingleTarget(targetName) {
@@ -7776,12 +7704,7 @@ window.addEventListener('DOMContentLoaded', () => {
             
             // Load weather for all capitals on page load
             loadAllWeather();
-            
-            try {
-                fetchPolymarketData();
-                setInterval(fetchPolymarketData, 30 * 60 * 1000);
-            } catch (e) {
-                console.warn('Polymarket init failed:', e);
+
             }
             try {
                 if (!window.__disableFlightCancellations) {
