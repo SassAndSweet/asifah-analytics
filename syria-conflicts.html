@@ -896,6 +896,21 @@
             <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/syria-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY &rarr;</a>
         </div>
 
+        <!-- RHETORIC BADGE -->
+        <div style="background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%); border: 1px solid #4a5568; border-radius: 10px; padding: 14px 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:20px;">📡</span>
+                <div>
+                    <div style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1.5px; color:#9ca3af; margin-bottom:4px;">HOUTHI RHETORIC & ESCALATION TRACKER</div>
+                    <div style="font-size:12px; color:#d1d5db;">Factional conflict · Israeli strike activity · ISIS resurgence · Real-time signal analysis</div>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                <span id="rhetoricBadge" style="background:#6b7280; color:white; font-size:12px; font-weight:700; padding:5px 14px; border-radius:6px; letter-spacing:0.5px;">📡 -- </span>
+                <a href="rhetoric-syria.html" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">Open Tracker →</a>
+            </div>
+        </div>
+
         <div class="error-banner" id="errorBanner"></div>
 
         <!-- HUMANITARIAN CRISIS DASHBOARD -->
@@ -1547,6 +1562,7 @@
 
         // Load humanitarian data on page init
         loadHumanitarianData();
+        loadRhetoricData();
 
         // Theme Management
         function initTheme() {
@@ -1758,6 +1774,30 @@
             const card = document.getElementById(`card-${cardId}`);
             if (card) {
                 card.classList.toggle('collapsed');
+            }
+        }
+
+        async function loadRhetoricData() {
+            try {
+                const resp = await fetch(`${BACKEND_URL}/api/rhetoric/syria/summary`);
+                if (!resp.ok) return;
+                const data = await resp.json();
+                if (!data.success) return;
+
+                const level = data.theatre_escalation_level || 0;
+                const label = data.theatre_escalation_label || 'Scanning...';
+                const colors = {
+                    0: '#6b7280', 1: '#10b981', 2: '#f59e0b',
+                    3: '#f97316', 4: '#ef4444', 5: '#991b1b'
+                };
+                const color = colors[level] || '#6b7280';
+                const badge = document.getElementById('rhetoricBadge');
+                if (badge) {
+                    badge.textContent = `📡 Level ${level} — ${label}`;
+                    badge.style.background = color;
+                }
+            } catch(e) {
+                console.error('[Syria] Rhetoric badge error:', e);
             }
         }
 
