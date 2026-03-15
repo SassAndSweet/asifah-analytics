@@ -328,6 +328,8 @@
             .knowledge-categories { grid-template-columns: 1fr; }
         }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
     <!-- Loading Overlay -->
@@ -503,13 +505,17 @@
 
         <!-- MAP SECTION -->
         <div class="map-section">
-            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Yemen &#8212; Territorial Overview</span></h2>
-            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Yemen. Territorial control overlays and incident markers coming soon.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe 
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=41.5%2C12.0%2C54.5%2C19.5&layer=mapnik&marker=15.55%2C48.52"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
-                </iframe>
+            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Yemen &#8212; Red Sea & Territorial Overview</span></h2>
+            <div class="map-subtitle">Key locations, shipping lanes, and Houthi attack zone · Bab el-Mandeb chokepoint</div>
+            <div id="yemenMap" style="width: 100%; height: 480px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden; z-index: 1;"></div>
+            <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center; font-size: 12px; color: var(--text-secondary);">
+                <span><span style="display:inline-block;width:24px;height:3px;background:#3b82f6;vertical-align:middle;margin-right:4px;"></span>Normal shipping route</span>
+                <span><span style="display:inline-block;width:24px;height:3px;background:#f97316;vertical-align:middle;margin-right:4px;border-top:2px dashed #f97316;"></span>Cape of Good Hope reroute</span>
+                <span><span style="display:inline-block;width:10px;height:10px;background:rgba(239,68,68,0.4);border:2px solid #ef4444;border-radius:50%;vertical-align:middle;margin-right:4px;"></span>Houthi attack zone</span>
+                <a href="https://www.marinetraffic.com/en/ais/home/centerx:43.5/centery:13.0/zoom:7" target="_blank" rel="noopener"
+                   style="margin-left:auto; color:#60a5fa; font-weight:600; text-decoration:none; font-size:12px;">
+                    🗺️ Live AIS Vessel Tracker →
+                </a>
             </div>
         </div>
 
@@ -1010,6 +1016,7 @@
 
                 renderStabilityScore(data);
                 if (data.houthi_activity || data.red_sea) renderSecurityCards(data);
+                setTimeout(() => { initYemenMap(data.red_sea?.attack_signals || 0); }, 300);
                 if (data.government) renderGovernment(data.government);
                 if (data.humanitarian) renderHumanitarian(data.humanitarian);
 
@@ -1185,8 +1192,94 @@
         }
 
         // Initialize
+        let yemenMap = null;
+
+        function initYemenMap(attackSignals) {
+            if (yemenMap) return;
+            const container = document.getElementById('yemenMap');
+            if (!container) return;
+
+            yemenMap = L.map('yemenMap', {
+                center: [13.5, 46.0],
+                zoom: 5,
+                scrollWheelZoom: false,
+                zoomControl: true
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors',
+                maxZoom: 12
+            }).addTo(yemenMap);
+
+            // ── Normal shipping route (Suez → Bab el-Mandeb → Gulf of Aden) ──
+            L.polyline([
+                [31.0, 32.5],   // Suez Canal exit
+                [27.0, 34.5],   // Red Sea north
+                [21.0, 38.5],   // Red Sea mid
+                [15.0, 41.5],   // Bab el-Mandeb approach
+                [12.6, 43.4],   // Through strait
+                [11.5, 45.0],   // Gulf of Aden
+                [11.0, 50.0],   // Gulf of Aden east
+                [10.5, 55.0],   // Arabian Sea entry
+            ], { color: '#3b82f6', weight: 2.5, opacity: 0.8 }).addTo(yemenMap)
+              .bindPopup('Normal shipping route via Bab el-Mandeb<br><em>~12–15% of global trade</em>');
+
+            // ── Cape of Good Hope reroute ──
+            L.polyline([
+                [31.0, 32.5],   // Suez Canal
+                [25.0, 30.0],   // Egypt/Sudan coast
+                [10.0, 25.0],   // East Africa
+                [-5.0, 20.0],   // Equatorial Africa
+                [-20.0, 15.0],  // Southern Africa
+                [-34.5, 18.4],  // Cape of Good Hope
+                [-20.0, 35.0],  // Rounding cape
+                [-10.0, 45.0],  // Mozambique channel
+                [0.0, 55.0],    // Indian Ocean
+                [10.5, 55.0],   // Rejoin Arabian Sea
+            ], { color: '#f97316', weight: 2, opacity: 0.7, dashArray: '8, 6' }).addTo(yemenMap)
+              .bindPopup('Cape of Good Hope reroute<br><em>+10–14 days · +$1M/voyage</em>');
+
+            // ── Houthi attack zone (Bab el-Mandeb) ──
+            const attackCount = attackSignals || 0;
+            const attackRadius = Math.min(120000, Math.max(60000, 60000 + attackCount * 2000));
+            L.circle([12.6, 43.4], {
+                radius: attackRadius,
+                color: '#ef4444',
+                fillColor: 'rgba(239,68,68,0.15)',
+                fillOpacity: 0.4,
+                weight: 2,
+                dashArray: '6, 4'
+            }).addTo(yemenMap)
+              .bindPopup(`⚔️ Houthi attack zone<br><strong>${attackCount} active attack signals</strong><br>Bab el-Mandeb strait`);
+
+            // ── Key location markers ──
+            const locations = [
+                { coords: [15.35, 44.20], label: "Sana'a", note: "Houthi-controlled capital", color: '#ef4444' },
+                { coords: [14.79, 42.95], label: "Hodeidah", note: "Key Houthi port — weapons entry point", color: '#ef4444' },
+                { coords: [12.78, 45.03], label: "Aden", note: "STC-controlled — nominal govt seat", color: '#f97316' },
+                { coords: [12.66, 43.43], label: "Bab el-Mandeb", note: "Critical chokepoint — 12–15% global trade", color: '#facc15' },
+                { coords: [12.50, 43.15], label: "Perim Island", note: "Yemeni territory — controls 12.5km narrows", color: '#a78bfa' },
+                { coords: [12.34, 54.00], label: "Socotra", note: "UAE-administered since 2018", color: '#a78bfa' },
+                { coords: [11.59, 43.15], label: "Djibouti / Camp Lemonnier", note: "Primary US Horn of Africa base", color: '#60a5fa' },
+                { coords: [10.43, 45.02], label: "Berbera (Somaliland)", note: "Israeli recognition Jan 2026 — potential basing", color: '#34d399' },
+            ];
+
+            locations.forEach(loc => {
+                const marker = L.circleMarker(loc.coords, {
+                    radius: 7,
+                    fillColor: loc.color,
+                    color: '#1e293b',
+                    weight: 1.5,
+                    opacity: 1,
+                    fillOpacity: 0.85
+                }).addTo(yemenMap);
+                marker.bindTooltip(loc.label, { permanent: true, direction: 'top', offset: [0, -8], className: 'city-tooltip' });
+                marker.bindPopup(`<strong>${loc.label}</strong><br>${loc.note}`);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            startLoadingProgress();
+            startLoadingProgress();;
             
             // Update timestamp
             document.getElementById('lastUpdated').textContent = 
