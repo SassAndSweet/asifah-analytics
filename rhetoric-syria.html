@@ -3,7 +3,985 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><!DOCTYPE html>
+<!-- Asifah Analytics - Syria Rhetoric Tracker v1.0.0 - Last updated: Mar 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>Syria Rhetoric Tracker | Asifah Analytics v1.0.0</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f4f1eb;
+            --container-bg: #faf8f4;
+            --card-bg: #ffffff;
+            --card-border: #d4c9a8;
+            --text-primary: #2c2416;
+            --text-secondary: #5c4a2a;
+            --text-muted: #8c7a5a;
+            --article-bg: #f0ebe0;
+            --header-gradient-start: #3d2b1f;
+            --header-gradient-end: #5c3d2e;
+            --header-text: #f5e6c8;
+            --accent: #c17f3a;
+            --accent-glow: rgba(193,127,58,0.3);
+            --card-glow: none;
+            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.12);
+            --watermark-opacity: 0.07;
+            --watermark-filter: none;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0d0b08;
+            --container-bg: #0d0b08;
+            --card-bg: #111209;
+            --card-border: #00c8d4;
+            --text-primary: #e8d5a3;
+            --text-secondary: #c4a96d;
+            --text-muted: #8a7048;
+            --article-bg: #0c0f0a;
+            --header-gradient-start: #0a0f0d;
+            --header-gradient-end: #111a14;
+            --header-text: #e8d5a3;
+            --accent: #d4943f;
+            --accent-glow: rgba(212,148,63,0.25);
+            --cyber-cyan: #00c8d4;
+            --cyber-cyan-glow: rgba(0,200,212,0.18);
+            --card-glow: 0 0 6px rgba(0,200,212,0.12), 0 0 1px rgba(0,200,212,0.25);
+            --card-hover-glow: 0 0 22px rgba(0,200,212,0.28), 0 8px 25px rgba(0,0,0,0.5);
+            --watermark-opacity: 0.22;
+            --watermark-filter: saturate(5) brightness(0.9) hue-rotate(170deg);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            min-width: 800px; min-height: 800px;
+            max-width: 1400px; max-height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            filter: var(--watermark-filter) saturate(5) brightness(0.9);
+            z-index: 0;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+            color: var(--header-text);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "logo title controls";
+            align-items: center;
+            gap: 20px;
+        }
+
+        [data-theme="dark"] header { box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px var(--accent-glow), 0 0 60px rgba(0,200,212,0.08); border-bottom: 1px solid rgba(0,200,212,0.25); }
+        [data-theme="dark"] .theatre-card { box-shadow: var(--card-glow); }
+        [data-theme="dark"] .vector-card { box-shadow: var(--card-glow); }
+        [data-theme="dark"] .actor-card { box-shadow: var(--card-glow); }
+        [data-theme="dark"] .druze-card { box-shadow: var(--card-glow); }
+        [data-theme="dark"] .coord-card { box-shadow: var(--card-glow); }
+        [data-theme="dark"] .score-section { box-shadow: var(--card-glow); border: 1px solid rgba(0,200,212,0.4); }
+        [dir="rtl"] header { grid-template-areas: "controls title logo"; }
+        [dir="rtl"] .header-controls { align-items: flex-start; }
+
+        .header-logo-wrap { grid-area: logo; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); }
+        .back-link {
+            font-size: 11px; color: rgba(255,255,255,0.8); text-decoration: none;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 4px 10px; border-radius: 5px; white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.2); color: white; }
+
+        .header-content { grid-area: title; text-align: center; }
+        .header-content h1 { font-size: 26px; font-weight: 800; letter-spacing: 2px; color: var(--header-text); margin-bottom: 6px; }
+        .subtitle { font-size: 13px; font-weight: normal; opacity: 0.9; letter-spacing: 0.5px; color: var(--header-text); }
+        .last-updated { font-size: 12px; opacity: 0.75; margin-top: 6px; color: var(--header-text); }
+
+        .header-controls { grid-area: controls; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+        .language-switcher { display: flex; gap: 4px; }
+        .lang-btn {
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            color: var(--header-text); padding: 5px 10px; border-radius: 5px;
+            cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.3); }
+        .lang-btn.active { background: white; color: #3d2b1f; border-color: white; }
+
+        .theme-toggle { display: flex; align-items: center; gap: 8px; }
+        .theme-toggle-label { font-size: 11px; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 1px; }
+        .theme-toggle-switch {
+            width: 44px; height: 22px; background: rgba(255,255,255,0.2);
+            border-radius: 11px; cursor: pointer; position: relative; transition: background 0.3s;
+        }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+            background: white; border-radius: 50%; transition: transform 0.3s; font-size: 10px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        [data-theme="dark"] .theme-toggle-switch { background: rgba(212,148,63,0.4); }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(22px); }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+
+        /* ── SECTION CARDS ── */
+        .section-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: var(--card-glow);
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+        .section-card:hover { box-shadow: var(--card-hover-glow); }
+
+        .section-title {
+            font-size: 12px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 2px; color: var(--accent);
+            margin-bottom: 16px; padding-bottom: 10px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        [data-theme="dark"] .section-title { color: var(--accent); }
+
+        /* ── THEATRE BANNER ── */
+        .theatre-banner {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px 28px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--card-glow);
+        }
+        .theatre-score {
+            font-size: 72px; font-weight: 900; line-height: 1;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .theatre-left { display: flex; align-items: center; gap: 20px; }
+        .theatre-label-badge {
+            display: inline-block; padding: 5px 16px; border-radius: 6px;
+            font-size: 13px; font-weight: 700; color: white; letter-spacing: 1px;
+        }
+        .theatre-meta { text-align: right; }
+        [dir="rtl"] .theatre-meta { text-align: left; }
+        .theatre-meta-title {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--text-muted); font-weight: 600; margin-bottom: 6px;
+        }
+        [data-theme="dark"] .theatre-meta-title { color: var(--accent); }
+        .theatre-meta-sub { font-size: 13px; color: var(--text-secondary); margin-top: 4px; }
+        .theatre-scan-info { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+
+        /* ── VECTOR SUMMARY BAR ── */
+        .vector-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+        .vector-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+            box-shadow: var(--card-glow);
+        }
+        .vector-label {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); font-weight: 600; margin-bottom: 8px;
+        }
+        .vector-level {
+            font-size: 22px; font-weight: 800;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .vector-badge {
+            display: inline-block; margin-top: 6px; padding: 3px 10px;
+            border-radius: 5px; font-size: 11px; font-weight: 700;
+            color: white; letter-spacing: 0.5px;
+        }
+
+        /* ── ESCALATION LADDER ── */
+        .ladder-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .ladder-step {
+            border-radius: 8px; padding: 12px 8px; text-align: center;
+            border: 2px solid transparent; cursor: default;
+            transition: all 0.3s;
+        }
+        .ladder-step.active {
+            border-color: currentColor;
+            box-shadow: 0 0 12px currentColor;
+            transform: translateY(-2px);
+        }
+        .ladder-step-num { font-size: 20px; font-weight: 900; font-family: 'Times New Roman', Times, serif; }
+        .ladder-step-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; font-weight: 600; }
+
+        /* ── DRUZE SIGNAL CARD ── */
+        .druze-card {
+            background: linear-gradient(135deg, rgba(139,90,43,0.15) 0%, rgba(193,127,58,0.1) 100%);
+            border: 1px solid rgba(193,127,58,0.4);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+        }
+        .druze-title {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--accent); margin-bottom: 10px;
+        }
+
+        /* ── ACTOR GRID ── */
+        .actors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+        .actor-card {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            transition: all 0.2s;
+        }
+        .actor-card:hover { box-shadow: var(--card-hover-glow); }
+        .actor-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; margin-bottom: 8px;
+        }
+        .actor-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+        .actor-role { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 2px; }
+        .actor-badge {
+            font-size: 10px; font-weight: 700; padding: 3px 8px;
+            border-radius: 4px; color: white; white-space: nowrap;
+        }
+        .actor-stats {
+            display: flex; gap: 12px; margin-top: 8px;
+            font-size: 11px; color: var(--text-secondary);
+        }
+        .actor-silence {
+            margin-top: 8px; padding: 5px 8px;
+            background: rgba(251,146,60,0.15); border-left: 3px solid #fb923c;
+            border-radius: 4px; font-size: 11px; color: #fb923c; font-weight: 600;
+        }
+        .vector-pills { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+        .vector-pill {
+            font-size: 10px; padding: 2px 8px; border-radius: 4px;
+            font-weight: 600; color: white;
+        }
+
+        /* ── ALERTS ── */
+        .alert-item {
+            padding: 10px 12px; margin-bottom: 8px;
+            border-radius: 6px; font-size: 12px;
+            border-left: 3px solid;
+        }
+        .alert-critical { background: rgba(239,68,68,0.1); border-color: #ef4444; color: var(--text-primary); }
+        .alert-high { background: rgba(249,115,22,0.1); border-color: #f97316; color: var(--text-primary); }
+        .alert-coordination { background: rgba(212,148,63,0.12); border-color: var(--accent); color: var(--text-primary); }
+        .alert-silence { background: rgba(251,146,60,0.1); border-color: #fb923c; color: var(--text-primary); }
+        .alert-druze { background: rgba(139,90,43,0.12); border-color: #8b5a2b; color: var(--text-primary); }
+        [dir="rtl"] .alert-item { border-left: none; border-right: 3px solid; }
+
+        /* ── ARTICLES ── */
+        .article-item {
+            padding: 10px 14px; margin-bottom: 8px;
+            background: var(--article-bg);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.2s;
+        }
+        .article-item:hover { box-shadow: var(--card-hover-glow); }
+        [dir="rtl"] .article-item { border-left: none; border-right: 3px solid var(--accent); }
+        .article-title { font-size: 13px; color: var(--text-primary); margin-bottom: 4px; line-height: 1.4; }
+        .article-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; flex-wrap: wrap; }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 12px; font-weight: 600; }
+        .article-link:hover { text-decoration: underline; }
+        .article-actor-header {
+            font-size: 13px; font-weight: 700; color: var(--text-primary);
+            margin: 16px 0 8px; padding-bottom: 6px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        /* ── SCAN BUTTON ── */
+        .scan-btn {
+            background: var(--accent); color: white;
+            border: none; padding: 8px 18px; border-radius: 7px;
+            font-size: 12px; font-weight: 700; cursor: pointer;
+            transition: all 0.2s; letter-spacing: 0.5px;
+        }
+        .scan-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .scan-btn.scanning { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+
+        /* ── LOADING ── */
+        .loading-placeholder {
+            text-align: center; padding: 30px;
+            color: var(--text-muted); font-size: 13px;
+        }
+        .loading-dot { display: inline-block; animation: blink 1.4s ease-in-out infinite; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%,80%,100% { opacity:0; } 40% { opacity:1; } }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            header { grid-template-columns: 1fr; grid-template-areas: "title" "logo" "controls"; }
+            .header-logo-wrap { flex-direction: row; justify-content: center; }
+            .header-controls { align-items: center; width: 100%; }
+            [dir="rtl"] header { grid-template-areas: "title" "logo" "controls"; }
+            .theatre-banner { flex-direction: column; gap: 16px; text-align: center; }
+            .theatre-meta { text-align: center; }
+            .vector-bar { grid-template-columns: 1fr; }
+            .ladder-row { grid-template-columns: repeat(3, 1fr); }
+            .actors-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-logo-wrap">
+            <a href="syria-conflicts.html" class="back-link" data-i18n="backLink">← Back to Syria</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics Logo" class="header-logo">
+        </div>
+
+        <div class="header-content">
+            <h1 data-i18n="pageTitle">🇸🇾 SYRIA RHETORIC TRACKER</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">HTS · SDF · SNA · Israel · ISIS · Iran Proxies · Turkey · Druze Watch</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+        </div>
+
+        <div class="header-controls">
+            <div class="language-switcher">
+                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
+            </div>
+            <div class="theme-toggle">
+                <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()">
+                    <div class="theme-toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- THEATRE BANNER -->
+    <div class="theatre-banner" id="theatreBanner">
+        <div class="theatre-left">
+            <div class="theatre-score" id="theatreScore" style="color:#6b7280;">--</div>
+            <div>
+                <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:6px;" data-i18n="theatreScoreLabel">RHETORIC SCORE / 100</div>
+                <span class="theatre-label-badge" id="theatreLabelBadge" style="background:#6b7280;">--</span>
+            </div>
+        </div>
+        <div class="theatre-meta">
+            <div class="theatre-meta-title" data-i18n="theatreEscalation">THEATRE ESCALATION LEVEL</div>
+            <div style="font-size:28px;font-weight:bold;color:var(--text-primary);" id="theatreLevel">--</div>
+            <div class="theatre-meta-sub" id="theatreLevelDesc">--</div>
+            <div class="theatre-scan-info" id="theatreScanInfo">Scan in progress — retrying...</div>
+        </div>
+    </div>
+
+    <!-- VECTOR SUMMARY BAR -->
+    <div class="vector-bar">
+        <div class="vector-card">
+            <div class="vector-label">⚔️ <span data-i18n="vectorFactional">Factional Conflict</span></div>
+            <div class="vector-level" id="factionalLevel" style="color:#6b7280;">0</div>
+            <div><span class="vector-badge" id="factionalBadge" style="background:#6b7280;">Baseline</span></div>
+        </div>
+        <div class="vector-card">
+            <div class="vector-label">🔷 <span data-i18n="vectorIsrael">Israeli Strike Activity</span></div>
+            <div class="vector-level" id="israelLevel" style="color:#6b7280;">0</div>
+            <div><span class="vector-badge" id="israelBadge" style="background:#6b7280;">Baseline</span></div>
+        </div>
+        <div class="vector-card">
+            <div class="vector-label">⚫ <span data-i18n="vectorIsis">ISIS Resurgence</span></div>
+            <div class="vector-level" id="isisLevel" style="color:#6b7280;">0</div>
+            <div><span class="vector-badge" id="isisBadge" style="background:#6b7280;">Baseline</span></div>
+        </div>
+    </div>
+
+    <!-- ESCALATION LADDER -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="escalationLadder">🪜 ESCALATION LADDER</div>
+        <div class="ladder-row" id="ladderRow"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+            <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassified">📰 Corresponding articles in Top Articles by Actor below</div>
+            <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
+                🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- DRUZE / SUWAYDA WATCH -->
+    <div class="druze-card" id="druzeCard" style="display:none;">
+        <div class="druze-title">🏔️ DRUZE / SUWAYDA WATCH</div>
+        <div id="druzeSignalList"></div>
+    </div>
+
+    <!-- COORDINATION SIGNALS -->
+    <div class="section-card" id="coordCard" style="display:none;">
+        <div class="section-title" data-i18n="coordAlerts">⚡ COORDINATION SIGNALS</div>
+        <div id="coordList"></div>
+    </div>
+
+    <!-- ACTIVE ALERTS -->
+    <div class="section-card" id="alertsCard" style="display:none;">
+        <div class="section-title" data-i18n="activeAlerts">🚨 ACTIVE ALERTS</div>
+        <div id="alertsList"></div>
+    </div>
+
+    <!-- ACTOR STATUS GRID -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="actorStatus">🎯 ACTOR STATUS</div>
+        <div class="actors-grid" id="actorsGrid">
+            <div class="loading-placeholder">
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <div style="margin-top:10px;" data-i18n="loadingActors">Loading actor data...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP ARTICLES BY ACTOR -->
+    <div class="section-card" id="articlesSection">
+        <div class="section-title" data-i18n="topArticles">📰 TOP ARTICLES BY ACTOR</div>
+        <div id="articlesList">
+            <div class="loading-placeholder" data-i18n="loadingArticles">Loading articles...</div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div data-i18n="footerSources">Data Sources: Google News RSS (EN/AR/HE), Telegram (Syria OSINT, Kurdish media, IDF channels), Reddit (r/syriancivilwar, r/CredibleDefense)</div>
+        <div style="margin-top:10px;font-size:0.85em;" data-i18n="footerOsint">
+            Multi-language analysis: English, Hebrew, Arabic, Farsi. Escalation scoring updated every 12 hours.
+        </div>
+        <div style="margin-top:20px;padding:12px;background:var(--article-bg);border-radius:8px;">
+            <div style="font-size:0.9em;margin-bottom:4px;">Asifah Analytics v1.0.0 — Syria Rhetoric Tracker</div>
+            <div style="font-size:0.8em;" data-i18n="footerUpdate">Updated every 12 hours | Not for operational use</div>
+        </div>
+        <div style="margin-top:20px;padding:12px;background:rgba(139,90,43,0.15);border-radius:8px;">
+            <span style="font-size:0.9em;">
+                If you find Asifah Analytics useful,
+                <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a>
+            </span>
+        </div>
+        <div style="margin-top:20px;font-size:0.75em;color:var(--text-muted);">
+            © 2026 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
+            Unauthorized use, reproduction, or distribution prohibited.
+        </div>
+    </footer>
+
+</div><!-- /container -->
+
+<script>
+    const API_BASE = 'https://asifah-backend.onrender.com';
+
+    // ── ESCALATION LEVELS ──
+    const ESCALATION_LEVELS = {
+        0: { label: 'Baseline',       color: '#6b7280', description: 'No significant signals' },
+        1: { label: 'Rhetoric',       color: '#10b981', description: 'Standard factional statements' },
+        2: { label: 'Tension',        color: '#f59e0b', description: 'Warnings, territorial disputes' },
+        3: { label: 'Confrontation',  color: '#f97316', description: 'Direct threats, troop movements' },
+        4: { label: 'Incident',       color: '#ef4444', description: 'Clashes confirmed, strikes reported' },
+        5: { label: 'Active Conflict','color': '#991b1b', description: 'Ongoing operations, multiple fronts' },
+    };
+
+    // ── TRANSLATIONS ──
+    const translations = {
+        en: {
+            pageTitle: '🇸🇾 SYRIA RHETORIC TRACKER',
+            pageSubtitle: 'HTS · SDF · SNA · Israel · ISIS · Iran Proxies · Turkey · Druze Watch',
+            lastUpdated: 'Last updated: Loading...',
+            backLink: '← Back to Syria',
+            themeToggle: 'Theme',
+            theatreScoreLabel: 'RHETORIC SCORE / 100',
+            theatreEscalation: 'THEATRE ESCALATION LEVEL',
+            vectorFactional: 'Factional Conflict',
+            vectorIsrael: 'Israeli Strike Activity',
+            vectorIsis: 'ISIS Resurgence',
+            escalationLadder: '🪜 ESCALATION LADDER',
+            articlesClassified: '📰 Corresponding articles in Top Articles by Actor below',
+            refreshScan: 'Refresh Scan',
+            coordAlerts: '⚡ COORDINATION SIGNALS',
+            activeAlerts: '🚨 ACTIVE ALERTS',
+            actorStatus: '🎯 ACTOR STATUS',
+            loadingActors: 'Loading actor data...',
+            topArticles: '📰 TOP ARTICLES BY ACTOR',
+            loadingArticles: 'Loading articles...',
+            footerSources: 'Data Sources: Google News RSS (EN/AR/HE), Telegram (Syria OSINT, Kurdish media, IDF channels), Reddit',
+            footerOsint: 'Multi-language analysis: English, Hebrew, Arabic, Farsi. Escalation scoring updated every 12 hours.',
+            footerUpdate: 'Updated every 12 hours | Not for operational use',
+            silence: '⚠️ UNUSUAL SILENCE — below baseline activity',
+            druzeWatch: '🏔️ DRUZE / SUWAYDA WATCH',
+            readArticle: '→ Read article',
+        },
+        he: {
+            pageTitle: '🇸🇾 עוקב רטוריקה סוריה',
+            pageSubtitle: 'HTS · כוחות קורדים · צבא לאומי סורי · ישראל · דאעש · פרוקסי איראן · טורקיה',
+            lastUpdated: 'עודכן לאחרונה: טוען...',
+            backLink: '← חזרה לסוריה',
+            themeToggle: 'ערכת נושא',
+            theatreScoreLabel: 'ציון רטוריקה / 100',
+            theatreEscalation: 'רמת הסלמה בתיאטרון',
+            vectorFactional: 'עימות פנים-סורי',
+            vectorIsrael: 'פעילות תקיפה ישראלית',
+            vectorIsis: 'תחיית דאעש',
+            escalationLadder: '🪜 סולם הסלמה',
+            articlesClassified: '📰 מאמרים מתאימים בחלק המאמרים למטה',
+            refreshScan: 'רענן סריקה',
+            coordAlerts: '⚡ אותות תיאום',
+            activeAlerts: '🚨 התראות פעילות',
+            actorStatus: '🎯 סטטוס שחקנים',
+            loadingActors: 'טוען נתוני שחקנים...',
+            topArticles: '📰 מאמרים מובילים לפי שחקן',
+            loadingArticles: 'טוען מאמרים...',
+            footerSources: 'מקורות: Google News RSS, טלגרם, Reddit',
+            footerOsint: 'ניתוח רב-לשוני: אנגלית, עברית, ערבית, פרסית. עדכון כל 12 שעות.',
+            footerUpdate: 'עדכון כל 12 שעות | לא לשימוש מבצעי',
+            silence: '⚠️ שתיקה חריגה — מתחת לבסיס הפעילות',
+            druzeWatch: '🏔️ מעקב דרוזי / סווידא',
+            readArticle: '→ קרא מאמר',
+        },
+        ar: {
+            pageTitle: '🇸🇾 متتبع الخطاب السوري',
+            pageSubtitle: 'هيئة تحرير الشام · قسد · الجيش الوطني · إسرائيل · داعش · وكلاء إيران · تركيا',
+            lastUpdated: 'آخر تحديث: جارٍ التحميل...',
+            backLink: '← العودة إلى سوريا',
+            themeToggle: 'المظهر',
+            theatreScoreLabel: 'درجة الخطاب / 100',
+            theatreEscalation: 'مستوى التصعيد في المسرح',
+            vectorFactional: 'الصراع الفصائلي',
+            vectorIsrael: 'نشاط الضربات الإسرائيلية',
+            vectorIsis: 'عودة داعش',
+            escalationLadder: '🪜 سلم التصعيد',
+            articlesClassified: '📰 المقالات المقابلة في قسم المقالات أدناه',
+            refreshScan: 'تحديث المسح',
+            coordAlerts: '⚡ إشارات التنسيق',
+            activeAlerts: '🚨 تنبيهات نشطة',
+            actorStatus: '🎯 حالة الجهات الفاعلة',
+            loadingActors: 'جارٍ تحميل بيانات الجهات...',
+            topArticles: '📰 أبرز المقالات حسب الجهة',
+            loadingArticles: 'جارٍ تحميل المقالات...',
+            footerSources: 'المصادر: Google News RSS، تيليغرام، Reddit',
+            footerOsint: 'تحليل متعدد اللغات: الإنجليزية والعبرية والعربية والفارسية. تحديث كل 12 ساعة.',
+            footerUpdate: 'تحديث كل 12 ساعة | ليس للاستخدام العملياتي',
+            silence: '⚠️ صمت غير معتاد — دون مستوى النشاط الأساسي',
+            druzeWatch: '🏔️ مراقبة الدروز / السويداء',
+            readArticle: '→ اقرأ المقال',
+        },
+        fa: {
+            pageTitle: '🇸🇾 ردیاب گفتمان سوریه',
+            pageSubtitle: 'HTS · نیروهای دموکراتیک سوریه · ارتش ملی سوریه · اسرائیل · داعش · نیابتی‌های ایران · ترکیه',
+            lastUpdated: 'آخرین به‌روزرسانی: در حال بارگذاری...',
+            backLink: '← بازگشت به سوریه',
+            themeToggle: 'پوسته',
+            theatreScoreLabel: 'امتیاز گفتمان / 100',
+            theatreEscalation: 'سطح تشدید در صحنه',
+            vectorFactional: 'درگیری فصیلی',
+            vectorIsrael: 'فعالیت حملات اسرائیل',
+            vectorIsis: 'بازگشت داعش',
+            escalationLadder: '🪜 نردبان تشدید',
+            articlesClassified: '📰 مقالات مرتبط در بخش مقالات زیر',
+            refreshScan: 'به‌روزرسانی اسکن',
+            coordAlerts: '⚡ سیگنال‌های هماهنگی',
+            activeAlerts: '🚨 هشدارهای فعال',
+            actorStatus: '🎯 وضعیت بازیگران',
+            loadingActors: 'در حال بارگذاری داده‌های بازیگران...',
+            topArticles: '📰 مقالات برتر بر اساس بازیگر',
+            loadingArticles: 'در حال بارگذاری مقالات...',
+            footerSources: 'منابع: Google News RSS، تلگرام، Reddit',
+            footerOsint: 'تحلیل چندزبانه: انگلیسی، عبری، عربی، فارسی. به‌روزرسانی هر ۱۲ ساعت.',
+            footerUpdate: 'به‌روزرسانی هر ۱۲ ساعت | برای استفاده عملیاتی نیست',
+            silence: '⚠️ سکوت غیرمعمول — زیر سطح فعالیت پایه',
+            druzeWatch: '🏔️ پایش دروزی‌ها / سویدا',
+            readArticle: '→ خواندن مقاله',
+        },
+    };
+
+    let currentLang = 'en';
+
+    function switchLanguage(lang, button) {
+        currentLang = lang;
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        if (button) button.classList.add('active');
+        document.documentElement.setAttribute('dir', ['he','ar','fa'].includes(lang) ? 'rtl' : 'ltr');
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+        });
+    }
+
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        document.documentElement.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        localStorage.setItem('asifah-theme', current === 'dark' ? 'light' : 'dark');
+    }
+
+    function initTheme() {
+        const saved = localStorage.getItem('asifah-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    }
+
+    // ── ESCALATION LADDER ──
+    function renderLadder(activeLevel) {
+        const row = document.getElementById('ladderRow');
+        row.innerHTML = '';
+        for (let i = 0; i <= 5; i++) {
+            const lv = ESCALATION_LEVELS[i];
+            const isActive = i === activeLevel;
+            const div = document.createElement('div');
+            div.className = 'ladder-step' + (isActive ? ' active' : '');
+            div.style.background = isActive ? lv.color + '22' : 'var(--article-bg)';
+            div.style.color = isActive ? lv.color : 'var(--text-muted)';
+            div.style.borderColor = isActive ? lv.color : 'transparent';
+            div.innerHTML = `
+                <div class="ladder-step-num">${i}</div>
+                <div class="ladder-step-label">${lv.label}</div>
+            `;
+            row.appendChild(div);
+        }
+    }
+
+    // ── VECTOR BAR ──
+    function renderVectors(data) {
+        const vectors = [
+            { id: 'factional', levelKey: 'factional_level', labelKey: 'factional_label' },
+            { id: 'israel',    levelKey: 'israeli_strike_level', labelKey: 'israeli_strike_label' },
+            { id: 'isis',      levelKey: 'isis_level', labelKey: 'isis_label' },
+        ];
+        vectors.forEach(v => {
+            const level = data[v.levelKey] || 0;
+            const label = data[v.labelKey] || 'Baseline';
+            const color = ESCALATION_LEVELS[level]?.color || '#6b7280';
+            document.getElementById(`${v.id}Level`).textContent = level;
+            document.getElementById(`${v.id}Level`).style.color = color;
+            document.getElementById(`${v.id}Badge`).textContent = label;
+            document.getElementById(`${v.id}Badge`).style.background = color;
+        });
+    }
+
+    // ── DRUZE SIGNALS ──
+    function renderDruzeSignals(signals) {
+        if (!signals || signals.length === 0) return;
+        const card = document.getElementById('druzeCard');
+        const list = document.getElementById('druzeSignalList');
+        card.style.display = 'block';
+        list.innerHTML = signals.map(s => `
+            <div class="alert-item alert-druze">
+                🏔️ ${s.message}
+                ${s.article ? `<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${s.article}</div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    // ── COORDINATION SIGNALS ──
+    function renderCoordination(signals, actors) {
+        const card = document.getElementById('coordCard');
+        const list = document.getElementById('coordList');
+        const items = [];
+
+        // Explicit coordination signals from backend
+        if (signals && signals.length > 0) {
+            signals.forEach(s => {
+                const cls = s.type === 'silence' ? 'alert-silence' :
+                            s.type === 'warning' ? 'alert-high' : 'alert-coordination';
+                const icon = s.type === 'silence' ? '🔇' : s.type === 'warning' ? '⚠️' : '⚡';
+                items.push(`
+                    <div class="alert-item ${cls}">
+                        ${icon} <strong>${s.message}</strong>
+                        ${s.article ? `<div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${s.article}</div>` : ''}
+                    </div>
+                `);
+            });
+        }
+
+        // Silence alerts from actors — surface here as coordination-relevant
+        if (actors) {
+            Object.values(actors).forEach(a => {
+                if (a.silence_alert) {
+                    items.push(`
+                        <div class="alert-item alert-silence">
+                            🔇 <strong>${a.name}: Unusual silence detected</strong>
+                            <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">0 statements in 3-day window — below baseline activity. May indicate operational preparation or comms blackout.</div>
+                        </div>
+                    `);
+                }
+            });
+        }
+
+        // Israel strike + HTS silence = tacit acceptance signal
+        if (actors && actors.israel && actors.hts) {
+            const israelLevel = actors.israel.israeli_strike_score || 0;
+            const htsCount = actors.hts.statement_count || 0;
+            if (israelLevel >= 3 && htsCount === 0) {
+                items.push(`
+                    <div class="alert-item alert-coordination">
+                        🤫 <strong>Israel strike activity with HTS silence</strong>
+                        <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">Israeli strike level ${israelLevel} with zero HTS statements — possible tacit acceptance signal.</div>
+                    </div>
+                `);
+            }
+        }
+
+        if (items.length === 0) {
+            items.push(`<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">No coordination signals detected in current scan window.</div>`);
+        }
+
+        card.style.display = 'block'; // Always show
+        list.innerHTML = items.join('');
+    }
+
+    // ── ACTORS ──
+    function renderActors(actors) {
+        const grid = document.getElementById('actorsGrid');
+        if (!actors || Object.keys(actors).length === 0) {
+            grid.innerHTML = '<div class="loading-placeholder">No actor data available</div>';
+            return;
+        }
+
+        const ORDER = ['hts','sdf','sna','israel','isis','iran_proxies','turkey'];
+        grid.innerHTML = ORDER.map(id => {
+            const a = actors[id];
+            if (!a) return '';
+            const maxLevel = Math.max(a.factional_score || 0, a.israeli_strike_score || 0, a.isis_score || 0);
+            const lv = ESCALATION_LEVELS[maxLevel] || ESCALATION_LEVELS[0];
+            const pills = [];
+            if (a.factional_score > 0) pills.push({ label: `F:${a.factional_score}`, color: ESCALATION_LEVELS[a.factional_score]?.color });
+            if (a.israeli_strike_score > 0) pills.push({ label: `S:${a.israeli_strike_score}`, color: ESCALATION_LEVELS[a.israeli_strike_score]?.color });
+            if (a.isis_score > 0) pills.push({ label: `I:${a.isis_score}`, color: ESCALATION_LEVELS[a.isis_score]?.color });
+
+            return `
+                <div class="actor-card">
+                    <div class="actor-header">
+                        <div>
+                            <div class="actor-name">${a.flag || ''} ${a.icon || ''} ${a.name}</div>
+                            <div class="actor-role">${a.role || ''}</div>
+                        </div>
+                        <span class="actor-badge" style="background:${lv.color};">${lv.label}</span>
+                    </div>
+                    <div class="actor-stats">
+                        <span>📰 ${a.statement_count || 0} articles</span>
+                        <span>📊 Max Level ${maxLevel}</span>
+                    </div>
+                    ${pills.length > 0 ? `
+                        <div class="vector-pills">
+                            ${pills.map(p => `<span class="vector-pill" style="background:${p.color};">${p.label}</span>`).join('')}
+                        </div>
+                        <div style="font-size:9px;color:var(--text-muted);margin-top:4px;">F=Factional · S=Strike · I=ISIS</div>
+                    ` : ''}
+                    ${a.silence_alert ? `<div class="actor-silence">⚠️ ${translations[currentLang]?.silence || 'Unusual silence detected'}</div>` : ''}
+                    ${a.spokespersons && a.spokespersons.length > 0 ? `
+                        <div style="margin-top:8px;font-size:11px;color:var(--text-muted);">
+                            🎙️ ${a.spokespersons.slice(0,3).join(' · ')}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }).join('');
+    }
+
+    // ── ARTICLES ──
+    function renderArticles(actors) {
+        const container = document.getElementById('articlesList');
+        if (!actors) { container.innerHTML = '<div class="loading-placeholder">No articles</div>'; return; }
+
+        const ORDER = ['israel','hts','sdf','sna','isis','iran_proxies','turkey'];
+        let html = '';
+
+        ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a || !a.top_articles || a.top_articles.length === 0) return;
+            const maxLevel = Math.max(a.factional_score || 0, a.israeli_strike_score || 0, a.isis_score || 0);
+            const lv = ESCALATION_LEVELS[maxLevel] || ESCALATION_LEVELS[0];
+
+            html += `<div class="article-actor-header">
+                ${a.flag || ''} ${a.icon || ''} ${a.name}
+                <span style="font-size:11px;font-weight:600;color:${lv.color};margin-left:8px;">${lv.label}</span>
+            </div>`;
+
+            a.top_articles.slice(0, 4).forEach(art => {
+                const pub = art.published ? new Date(art.published).toLocaleDateString() : '';
+                html += `
+                    <div class="article-item">
+                        <div class="article-title">${art.title || 'Untitled'}</div>
+                        <div class="article-meta">
+                            <span>${art.source || ''}</span>
+                            ${pub ? `<span>${pub}</span>` : ''}
+                            ${art.url ? `<a href="${art.url}" target="_blank" rel="noopener" class="article-link">${translations[currentLang]?.readArticle || '→ Read article'}</a>` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+        });
+
+        container.innerHTML = html || '<div class="loading-placeholder">No articles classified yet</div>';
+    }
+
+    // ── MAIN DATA LOAD ──
+    let retryCount = 0;
+
+    async function loadRhetoricData(forceRefresh = false) {
+        try {
+            const url = `${API_BASE}/api/rhetoric/syria${forceRefresh ? '?force=true' : ''}`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+
+            if (!data.success || data.scan_in_progress) {
+                // Still scanning — retry
+                retryCount++;
+                document.getElementById('theatreScanInfo').textContent = `Scan in progress — retry ${retryCount}/8...`;
+                if (retryCount <= 8) {
+                    setTimeout(() => loadRhetoricData(false), 15000);
+                } else {
+                    document.getElementById('theatreScanInfo').textContent = 'Scan taking longer than expected — data will appear when ready';
+                }
+                return;
+            }
+
+            retryCount = 0;
+
+            // ── Theatre banner ──
+            const level = data.theatre_escalation_level || 0;
+            const lv = ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0];
+            document.getElementById('theatreScore').textContent = data.theatre_score || 0;
+            document.getElementById('theatreScore').style.color = lv.color;
+            document.getElementById('theatreLabelBadge').textContent = data.theatre_escalation_label || lv.label;
+            document.getElementById('theatreLabelBadge').style.background = lv.color;
+            document.getElementById('theatreLevel').textContent = `Level ${level} — ${data.theatre_escalation_label || lv.label}`;
+            document.getElementById('theatreLevel').style.color = lv.color;
+            document.getElementById('theatreLevelDesc').textContent = data.theatre_escalation_description || lv.description;
+
+            // Timestamp
+            if (data.timestamp) {
+                const ago = Math.round((Date.now() - new Date(data.timestamp).getTime()) / 60000);
+                const agoText = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+                document.getElementById('theatreScanInfo').textContent = `Last scan: ${agoText} · ${data.total_articles || 0} articles analyzed`;
+            }
+            document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true })}`;
+
+            // ── Sections ──
+            renderLadder(level);
+            renderVectors(data);
+            renderDruzeSignals(data.druze_signals);
+            renderCoordination(data.coordination_signals, data.actors);
+            renderActors(data.actors);
+            renderArticles(data.actors);
+
+            // Articles classified count
+            document.getElementById('articlesClassified').textContent =
+                `📰 Corresponding articles in Top Articles by Actor below`;
+
+            // Alerts card — high-level escalation warnings only
+            const alerts = [];
+            const maxLevel = data.theatre_escalation_level || 0;
+            if (maxLevel >= 4) alerts.push({ message: `Theatre at Level ${maxLevel} — ${data.theatre_escalation_label}. Multiple vectors elevated.`, cls: 'alert-critical' });
+            if (data.factional_level >= 3) alerts.push({ message: `Factional conflict at Level ${data.factional_level} — direct threats or troop movements detected.`, cls: 'alert-high' });
+            if (data.israeli_strike_level >= 4) alerts.push({ message: `Israeli strike activity at Level ${data.israeli_strike_level} — confirmed strikes in Syrian territory.`, cls: 'alert-high' });
+            if (data.isis_level >= 3) alerts.push({ message: `ISIS resurgence at Level ${data.isis_level} — attack claims or significant incidents detected.`, cls: 'alert-high' });
+            if (data.druze_signals && data.druze_signals.length >= 3) alerts.push({ message: `Elevated Druze/Suwayda signaling — ${data.druze_signals.length} signals in scan window.`, cls: 'alert-coordination' });
+
+            if (alerts.length > 0) {
+                document.getElementById('alertsCard').style.display = 'block';
+                document.getElementById('alertsList').innerHTML = alerts.map(al =>
+                    `<div class="alert-item ${al.cls}">🚨 ${al.message}</div>`
+                ).join('');
+            }
+
+        } catch (error) {
+            console.error('[Syria Rhetoric] Load error:', error);
+            document.getElementById('theatreScanInfo').textContent = 'Data unavailable — backend may be warming up';
+        }
+    }
+
+    // ── SCAN BUTTON ──
+    async function triggerScan() {
+        const btn = document.getElementById('scanBtn');
+        btn.disabled = true;
+        btn.classList.add('scanning');
+        btn.querySelector('span').textContent = 'Scanning...';
+        await loadRhetoricData(true);
+        setTimeout(async () => {
+            await loadRhetoricData(false);
+            btn.disabled = false;
+            btn.classList.remove('scanning');
+            btn.querySelector('span').textContent = translations[currentLang]?.refreshScan || 'Refresh Scan';
+        }, 30000);
+    }
+
+    // ── INIT ──
+    initTheme();
+    renderLadder(0);
+    loadRhetoricData();
+</script>
+</body>
+</html>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
