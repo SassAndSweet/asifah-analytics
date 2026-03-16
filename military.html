@@ -324,7 +324,35 @@
         0%, 100% { box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
         50% { box-shadow: 0 4px 25px rgba(239, 68, 68, 0.5); }
     }
+
+    /* ── NAVAL MOVEMENT MAP ── */
+    .naval-map-section { margin-bottom: 16px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    [data-theme="dark"] .naval-map-section { border-color: var(--cyber-border); box-shadow: 0 0 15px rgba(0,212,255,0.06); }
+    .naval-map-header { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: var(--bg-signal); border-bottom: 1px solid var(--border-color); }
+    [data-theme="dark"] .naval-map-header { border-bottom-color: var(--cyber-border); }
+    .naval-map-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); flex: 1; }
+    .naval-map-badge { font-size: 0.55rem; padding: 2px 8px; border-radius: 3px; background: rgba(0,212,255,0.1); color: var(--accent-cyan); border: 1px solid rgba(0,212,255,0.2); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    [data-theme="light"] .naval-map-badge { background: rgba(49,130,206,0.1); color: var(--accent-blue); border-color: rgba(49,130,206,0.2); }
+    #navalMapContainer { height: 420px; width: 100%; background: #0a0f1a; position: relative; }
+    .naval-map-legend { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 10px 18px; border-top: 1px solid var(--border-color); }
+    [data-theme="dark"] .naval-map-legend { border-top-color: var(--cyber-border); }
+    .naval-legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; }
+    .naval-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+    .naval-map-note { padding: 6px 18px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; border-top: 1px solid var(--border-color); }
+    [data-theme="dark"] .naval-map-note { border-top-color: var(--cyber-border); }
+    .naval-map-note a { color: var(--accent-blue); text-decoration: none; }
+    /* Leaflet overrides for dark theme */
+    [data-theme="dark"] .leaflet-container { background: #060d1a; }
+    .leaflet-popup-content-wrapper { background: #0d1b2e; border: 1px solid rgba(0,212,255,0.3); color: #e0e8f0; border-radius: 6px; }
+    .leaflet-popup-tip { background: #0d1b2e; }
+    .leaflet-popup-content { margin: 10px 14px; font-size: 0.75rem; line-height: 1.5; }
+    .naval-popup-title { font-weight: 700; font-size: 0.8rem; margin-bottom: 4px; color: #00d4ff; }
+    .naval-popup-meta { color: #8899aa; font-size: 0.65rem; }
+    .naval-popup-signal { margin-top: 6px; font-size: 0.7rem; border-top: 1px solid rgba(0,212,255,0.15); padding-top: 6px; color: #cdd6e0; }
+    @media (max-width: 600px) { #navalMapContainer { height: 280px; } }
 </style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <div class="container">
     <div class="error-banner" id="errorBanner"></div>
 <div class="container">
@@ -345,6 +373,26 @@
     <div class="target-grid" id="targetGrid"></div>
     <div class="section-header"><span class="icon">&#9881;</span> <span data-i18n="sectionAssets">Asset Distribution</span></div>
     <div class="asset-bar-container" id="assetBar"></div>
+
+    <!-- NAVAL MOVEMENT MAP -->
+    <div class="section-header"><span class="icon">🌐</span> <span>Naval Asset Tracker</span></div>
+    <div class="naval-map-section">
+        <div class="naval-map-header">
+            <span>🚢</span>
+            <span class="naval-map-title">US Naval Asset Deployment Map</span>
+            <span class="naval-map-badge" id="navalMapBadge">LOADING…</span>
+        </div>
+        <div id="navalMapContainer"></div>
+        <div class="naval-map-legend">
+            <div class="naval-legend-item"><div class="naval-legend-dot" style="background:#ef4444;"></div> Carrier Strike Group</div>
+            <div class="naval-legend-item"><div class="naval-legend-dot" style="background:#f97316;"></div> Submarine</div>
+            <div class="naval-legend-item"><div class="naval-legend-dot" style="background:#3b82f6;"></div> Naval Redeployment</div>
+            <div class="naval-legend-item"><div class="naval-legend-dot" style="background:#a855f7;"></div> Amphibious Group</div>
+            <div class="naval-legend-item"><div class="naval-legend-dot" style="background:#22c55e;"></div> Air Defense / Other</div>
+            <div class="naval-legend-item"><div class="naval-legend-dot" style="background:#6b7280; opacity:0.6;"></div> Circle size = signal weight</div>
+        </div>
+        <div class="naval-map-note">📡 Signals derived from USNI News, The War Zone, Naval News, Defense RSS feeds · <a href="https://www.marinetraffic.com/en/ais/home/centerx:43.5/centery:20/zoom:4" target="_blank" rel="noopener">Live AIS Shipping →</a></div>
+    </div>
     <div class="section-header"><span class="icon">&#128225;</span> <span data-i18n="sectionSignals">Signal Feed (Weighted by Impact)</span></div>
     <div class="signal-feed" id="signalFeed"></div>
     <div class="source-footer" id="sourceFooter"></div>
@@ -529,6 +577,7 @@ function renderAll(data) {
     renderTheatres(data.actor_summaries || {}, data.theatre_groupings || null, t);
     renderTargets(data.target_postures || {}, t);
     renderAssets(data.asset_distribution || {});
+    initNavalMap(data.top_signals || [], data.actor_summaries || {});
     renderSignals(data.top_signals || [], t);
     renderSources(data.source_breakdown || {}, t);
 
@@ -746,6 +795,241 @@ function renderSources(breakdown, t) {
         var item = document.createElement('div');
         item.innerHTML = '<div class="source-count">' + ((breakdown[sources[i].key] || 0).toLocaleString()) + '</div><div class="source-label">' + sources[i].label + '</div>';
         footer.appendChild(item);
+    }
+}
+
+/* ═══════════════════════════════════════════════════
+   NAVAL MOVEMENT MAP  (v2.8.0)
+   Plots signals with hotspot_location onto a world map.
+   Circle color = asset type, size = signal weight.
+   ═══════════════════════════════════════════════════ */
+
+// Coordinate lookup for known hotspot location strings
+var HOTSPOT_COORDS = {
+    // Persian Gulf / CENTCOM
+    'al udeid':           [25.12, 51.32],
+    'fifth fleet':        [26.22, 50.58],
+    '5th fleet':          [26.22, 50.58],
+    'juffair':            [26.22, 50.58],
+    'nsa bahrain':        [26.22, 50.58],
+    'bahrain naval base': [26.22, 50.58],
+    'persian gulf':       [26.5,  51.5],
+    'gulf of oman':       [23.5,  58.5],
+    'strait of hormuz':   [26.5,  56.5],
+    'abu dhabi':          [24.45, 54.38],
+    'dubai':              [25.2,  55.27],
+    'fujairah':           [25.13, 56.33],
+    'prince sultan air base': [24.9, 46.7],
+    'king abdulaziz air base': [26.26, 50.15],
+    'riyadh':             [24.7,  46.7],
+    'aramco':             [26.32, 50.12],
+    'camp arifjan':       [29.13, 47.93],
+    'ali al salem':       [29.34, 47.69],
+    'kuwait city':        [29.37, 47.98],
+    'muwaffaq salti':     [31.82, 37.18],
+    'tower 22':           [31.82, 37.18],
+    'al asad':            [33.79, 42.44],
+    'ain al-asad':        [33.79, 42.44],
+    'ain al asad':        [33.79, 42.44],
+    'erbil':              [36.19, 44.01],
+    'baghdad green zone': [33.32, 44.39],
+    'taji':               [33.52, 44.24],
+    'iraqi airspace':     [33.0,  44.0],
+    'iraq airspace':      [33.0,  44.0],
+    'kirkuk':             [35.47, 44.39],
+    'doha':               [25.28, 51.53],
+    'muscat':             [23.61, 58.59],
+    'duqm':               [19.67, 57.71],
+    // Red Sea / Bab el-Mandeb
+    'red sea':            [20.0,  38.0],
+    'bab el-mandeb':      [12.6,  43.4],
+    // Eastern Med
+    'eastern mediterranean': [35.0, 33.0],
+    'akrotiri':           [34.58, 32.98],
+    'tel aviv':           [32.08, 34.78],
+    'iron dome':          [32.08, 34.78],
+    'haifa':              [32.82, 34.99],
+    'jerusalem':          [31.78, 35.22],
+    'ben gurion':         [32.01, 34.88],
+    // Europe / Black Sea
+    'incirlik':           [37.0,  35.43],
+    'ankara':             [39.93, 32.87],
+    'istanbul':           [41.01, 28.98],
+    'black sea':          [43.0,  34.0],
+    // Indo-Pacific
+    'seventh fleet':      [35.45, 139.65],
+    '7th fleet':          [35.45, 139.65],
+    'yokosuka':           [35.29, 139.67],
+    'naval base guam':    [13.44, 144.65],
+    'indopacom':          [21.31, 157.86],
+    // Arctic / Europe
+    'arctic':             [75.0,  15.0],
+    'greenland':          [72.0, -42.0],
+    // Default fallbacks
+    'sixth fleet':        [38.0,  15.0],
+    '6th fleet':          [38.0,  15.0],
+    'navcent':            [26.22, 50.58],
+};
+
+var ASSET_COLORS = {
+    'carrier_strike_group': '#ef4444',
+    'submarine':            '#f97316',
+    'bomber_deployment':    '#f59e0b',
+    'naval_movement':       '#3b82f6',
+    'amphibious_group':     '#a855f7',
+    'fighter_surge':        '#f59e0b',
+    'air_defense':          '#22c55e',
+    'missile_test':         '#ef4444',
+    'base_evacuation':      '#ef4444',
+    'ground_forces':        '#22c55e',
+    'drone_incursion':      '#06b6d4',
+    'military_posturing':   '#6b7280',
+    'isr_assets':           '#06b6d4',
+    'logistics':            '#6b7280',
+    'unspecified':          '#4b5563',
+};
+
+var _navalMap = null;
+
+function initNavalMap(signals, actorSummaries) {
+    var container = document.getElementById('navalMapContainer');
+    var badge = document.getElementById('navalMapBadge');
+    if (!container) return;
+
+    // Destroy existing map instance if re-initializing
+    if (_navalMap) {
+        _navalMap.remove();
+        _navalMap = null;
+    }
+
+    // Build map — dark Carto tiles
+    var isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+    var tileUrl = isDark
+        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+        : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+
+    _navalMap = L.map('navalMapContainer', {
+        center: [24.0, 45.0],
+        zoom: 3,
+        minZoom: 2,
+        maxZoom: 8,
+        zoomControl: true,
+        attributionControl: false
+    });
+
+    L.tileLayer(tileUrl, {
+        subdomains: 'abcd',
+        maxZoom: 8
+    }).addTo(_navalMap);
+
+    // Aggregate signals by hotspot_location
+    var locationBuckets = {};
+
+    for (var i = 0; i < signals.length; i++) {
+        var sig = signals[i];
+        var loc = sig.hotspot_location ? sig.hotspot_location.toLowerCase() : null;
+        if (!loc) continue;
+
+        var coords = HOTSPOT_COORDS[loc];
+        if (!coords) continue;
+
+        var key = loc;
+        if (!locationBuckets[key]) {
+            locationBuckets[key] = {
+                coords: coords,
+                location: sig.hotspot_location,
+                totalWeight: 0,
+                count: 0,
+                assets: {},
+                topSig: null,
+                topWeight: 0
+            };
+        }
+
+        var b = locationBuckets[key];
+        b.totalWeight += sig.weight || 0;
+        b.count++;
+
+        var asset = sig.asset || 'unspecified';
+        b.assets[asset] = (b.assets[asset] || 0) + 1;
+
+        if ((sig.weight || 0) > b.topWeight) {
+            b.topWeight = sig.weight || 0;
+            b.topSig = sig;
+        }
+    }
+
+    var plotCount = 0;
+
+    for (var locKey in locationBuckets) {
+        var bucket = locationBuckets[locKey];
+
+        // Dominant asset type
+        var dominantAsset = 'unspecified';
+        var maxCount = 0;
+        for (var a in bucket.assets) {
+            if (bucket.assets[a] > maxCount) {
+                maxCount = bucket.assets[a];
+                dominantAsset = a;
+            }
+        }
+
+        var color = ASSET_COLORS[dominantAsset] || '#6b7280';
+
+        // Radius: logarithmic scale of weight, 8–40px
+        var radius = Math.max(8, Math.min(40, 8 + Math.log(bucket.totalWeight + 1) * 5));
+
+        // Pulsing effect for high-weight signals
+        var pulseStyle = bucket.totalWeight > 20
+            ? 'animation: pulse-ring 2s ease-in-out infinite;'
+            : '';
+
+        var circle = L.circleMarker(bucket.coords, {
+            radius: radius,
+            fillColor: color,
+            color: color,
+            weight: 2,
+            opacity: 0.9,
+            fillOpacity: 0.35,
+            className: 'naval-marker'
+        }).addTo(_navalMap);
+
+        // Popup content
+        var topSig = bucket.topSig;
+        var assetLabel = topSig ? (topSig.asset_label || topSig.asset || '') : dominantAsset;
+        var assetIcon = topSig ? (topSig.asset_icon || '⚠️') : '⚠️';
+        var actorFlag = topSig ? (topSig.actor_flag || '') : '';
+        var title = bucket.location.replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+
+        var popupHtml =
+            '<div class="naval-popup-title">' + assetIcon + ' ' + title + '</div>' +
+            '<div class="naval-popup-meta">' +
+                actorFlag + ' ' + (topSig ? topSig.actor_name : '') + ' · ' + assetLabel +
+            '</div>' +
+            '<div class="naval-popup-signal">' +
+                '<strong>' + bucket.count + ' signal' + (bucket.count !== 1 ? 's' : '') + '</strong>' +
+                ' · Weight: ' + bucket.totalWeight.toFixed(1) +
+                (topSig && topSig.article_title
+                    ? '<br><span style="color:#8899aa;">' + topSig.article_title.substring(0, 80) + '…</span>'
+                    : '') +
+                (topSig && topSig.article_url
+                    ? '<br><a href="' + topSig.article_url + '" target="_blank" rel="noopener" style="color:#00d4ff;">Read →</a>'
+                    : '') +
+            '</div>';
+
+        circle.bindPopup(popupHtml, { maxWidth: 280 });
+        plotCount++;
+    }
+
+    // Update badge
+    if (badge) {
+        badge.textContent = plotCount + ' LOCATION' + (plotCount !== 1 ? 'S' : '') + ' PLOTTED';
+        badge.style.background = plotCount > 0 ? 'rgba(0,212,255,0.15)' : 'rgba(100,100,100,0.1)';
+    }
+
+    // If no signals plotted, show placeholder text
+    if (plotCount === 0) {
+        container.innerHTML += '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#4b5563;font-size:0.75rem;letter-spacing:1px;text-align:center;z-index:999;">NO HOTSPOT DATA YET<br><span style="font-size:0.6rem;">Cache populating — refresh in a few minutes</span></div>';
     }
 }
 
