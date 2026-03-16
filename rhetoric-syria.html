@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Syria Rhetoric Tracker v1.0.0 - Last updated: Mar 2026 -->
+<!-- Asifah Analytics - Syria Rhetoric Tracker v1.0.0 - Last updated: Mar 16, 2026 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"><!DOCTYPE html>
-<!-- Asifah Analytics - Syria Rhetoric Tracker v1.0.0 - Last updated: Mar 2026 -->
+<!-- Asifah Analytics - Syria Rhetoric Tracker v1.0.0 - Last updated: Mar 16, 2026 -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -161,6 +161,21 @@
         .theme-toggle-slider::before { content: '☀️'; }
         [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
 
+
+        /* ── HISTORY CHART ── */
+        .history-chart-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; }
+        .history-chart-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+        .history-chart-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+        .history-toggle-group { display: flex; gap: 4px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 3px; }
+        .history-toggle-btn { font-family: 'Times New Roman', Times, serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background: transparent; color: var(--text-muted); transition: all 0.2s; }
+        .history-toggle-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+        .history-toggle-btn:hover:not(.active) { border-color: var(--card-border); color: var(--text-primary); }
+        [data-theme="dark"] .history-toggle-btn.compare.active { background: #00c8d4; border-color: #00c8d4; }
+        .history-chart-wrap { position: relative; height: 180px; }
+        .history-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; }
+        .history-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+        .history-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .history-legend-dot { width: 10px; height: 3px; border-radius: 2px; }
         /* ── SECTION CARDS ── */
         .section-card {
             background: var(--card-bg);
@@ -476,6 +491,26 @@
         </div>
     </div>
 
+
+    <!-- RHETORIC HISTORY CHART -->
+    <div class="history-chart-card" id="historyCard">
+        <div class="history-chart-header">
+            <span class="history-chart-title">📈 RHETORIC TREND</span>
+            <div class="history-toggle-group">
+                <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')">7 DAY</button>
+                <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')">30 DAY</button>
+                <button class="history-toggle-btn compare" id="btnCompare" onclick="setHistoryView('compare')">COMPARE</button>
+            </div>
+        </div>
+        <div class="history-chart-wrap">
+            <canvas id="historyChart"></canvas>
+            <div class="history-empty" id="historyEmpty" style="display:none;">📡 Collecting data — first snapshot saves on next scan cycle</div>
+        </div>
+        <div class="history-legend" id="historyLegend">
+            <div class="history-legend-item"><div class="history-legend-dot" style="background:#d4943f;"></div> Syria</div>
+        </div>
+    </div>
+
     <!-- DRUZE / SUWAYDA WATCH -->
     <div class="druze-card" id="druzeCard" style="display:none;">
         <div class="druze-title">🏔️ DRUZE / SUWAYDA WATCH</div>
@@ -541,6 +576,239 @@
 
 <script>
     const API_BASE = 'https://asifah-backend.onrender.com';
+
+    // ══════════════════════════════════════════════════════════════
+    // RHETORIC HISTORY CHART — Gold Standard v1.0
+    // Shared pattern across Syria, Lebanon, Yemen (and future Iraq)
+    // ══════════════════════════════════════════════════════════════
+
+    let _historyChart = null;
+    let _historyView = '7d';
+
+    // Theatre config — override per-page
+    const HISTORY_CONFIG = {
+        theatre: 'Syria',
+        historyUrl: API_BASE + '/api/rhetoric/syria/history',
+        color: '#d4943f',       // Syria: amber/gold
+        compareTheatres: [
+            { label: 'Syria',   url: API_BASE + '/api/rhetoric/syria/history',   color: '#d4943f' },
+            { label: 'Lebanon', url: 'https://lebanon-stability-backend.onrender.com/api/rhetoric/lebanon/history', color: '#6495ed' },
+            { label: 'Yemen',   url: API_BASE + '/api/rhetoric/yemen/history',   color: '#f97316' },
+        ]
+    };
+
+    // Level zone background bands (painted behind the line)
+    const LEVEL_ZONES = [
+        { yMin: 0,  yMax: 20,  color: 'rgba(107,114,128,0.08)' },  // 0 Baseline — grey
+        { yMin: 20, yMax: 40,  color: 'rgba(59,130,246,0.08)'  },  // 1 Rhetoric — blue
+        { yMin: 40, yMax: 60,  color: 'rgba(245,158,11,0.10)'  },  // 2 Tension  — amber
+        { yMin: 60, yMax: 80,  color: 'rgba(249,115,22,0.12)'  },  // 3 Confrontation — orange
+        { yMin: 80, yMax: 100, color: 'rgba(239,68,68,0.14)'   },  // 4+ Active Conflict — red
+    ];
+
+    // Custom Chart.js plugin to draw level zone bands
+    const zoneBandPlugin = {
+        id: 'zoneBands',
+        beforeDraw(chart) {
+            const { ctx, chartArea: { left, right, top, bottom }, scales: { y } } = chart;
+            LEVEL_ZONES.forEach(zone => {
+                const yTop    = y.getPixelForValue(zone.yMax);
+                const yBottom = y.getPixelForValue(zone.yMin);
+                ctx.save();
+                ctx.fillStyle = zone.color;
+                ctx.fillRect(left, Math.min(yTop, yBottom), right - left, Math.abs(yBottom - yTop));
+                ctx.restore();
+            });
+        }
+    };
+
+    function _sliceEntries(entries, view) {
+        if (!entries || entries.length === 0) return [];
+        if (view === '7d') {
+            // ~28 entries at 4 scans/day — take last 28
+            return entries.slice(-28);
+        }
+        // 30d — take all (capped at 120 by backend)
+        return entries;
+    }
+
+    function _formatLabel(ts) {
+        try {
+            const d = new Date(ts);
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        } catch { return ts; }
+    }
+
+    function renderHistoryChart(datasets, labels) {
+        const canvas = document.getElementById('historyChart');
+        const emptyEl = document.getElementById('historyEmpty');
+        if (!canvas) return;
+
+        if (!datasets || datasets.length === 0 || (datasets[0].data && datasets[0].data.length === 0)) {
+            canvas.style.display = 'none';
+            if (emptyEl) emptyEl.style.display = 'block';
+            return;
+        }
+        canvas.style.display = 'block';
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        if (_historyChart) { _historyChart.destroy(); _historyChart = null; }
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.06)';
+        const tickColor = isDark ? '#8a7048' : '#8c7a5a';
+        const fontFam   = "'Times New Roman', Times, serif";
+
+        _historyChart = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            plugins: [zoneBandPlugin],
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: 400 },
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: {
+                        display: datasets.length > 1,
+                        labels: {
+                            color: tickColor,
+                            font: { family: fontFam, size: 10 },
+                            boxWidth: 20, boxHeight: 2,
+                            usePointStyle: true, pointStyle: 'line'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: isDark ? '#0d1b2e' : '#fff',
+                        borderColor: isDark ? 'rgba(0,200,212,0.3)' : 'rgba(0,0,0,0.1)',
+                        borderWidth: 1,
+                        titleColor: isDark ? '#e8d5a3' : '#2c2416',
+                        bodyColor: isDark ? '#c4a96d' : '#5c4a2a',
+                        titleFont: { family: fontFam, size: 11, weight: 'bold' },
+                        bodyFont: { family: fontFam, size: 10 },
+                        callbacks: {
+                            label(ctx) {
+                                const score = ctx.parsed.y;
+                                const level = Math.floor(score / 20);
+                                const labels = ['Baseline','Rhetoric','Tension','Confrontation','Incident','Active Conflict'];
+                                return ` ${ctx.dataset.label || 'Score'}: ${score} — ${labels[Math.min(level,5)]}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { color: gridColor },
+                        ticks: {
+                            color: tickColor,
+                            font: { family: fontFam, size: 9 },
+                            maxTicksLimit: 8,
+                            maxRotation: 0
+                        }
+                    },
+                    y: {
+                        min: 0, max: 100,
+                        grid: { color: gridColor },
+                        ticks: {
+                            color: tickColor,
+                            font: { family: fontFam, size: 9 },
+                            stepSize: 20,
+                            callback: v => ['BL','RH','TN','CF','IC','AC'][v/20] || v
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    async function loadHistoryData() {
+        try {
+            const resp = await fetch(HISTORY_CONFIG.historyUrl + '?limit=120');
+            if (!resp.ok) return;
+            const data = await resp.json();
+            const entries = _sliceEntries(data.entries || [], _historyView);
+            const labels  = entries.map(e => _formatLabel(e.ts));
+            const scores  = entries.map(e => e.score ?? 0);
+
+            // Update legend to single theatre
+            const legendEl = document.getElementById('historyLegend');
+            if (legendEl) legendEl.innerHTML =
+                `<div class="history-legend-item"><div class="history-legend-dot" style="background:${HISTORY_CONFIG.color};"></div> ${HISTORY_CONFIG.theatre}</div>`;
+
+            renderHistoryChart([{
+                label: HISTORY_CONFIG.theatre,
+                data: scores,
+                borderColor: HISTORY_CONFIG.color,
+                backgroundColor: HISTORY_CONFIG.color.replace(')', ',0.08)').replace('rgb', 'rgba'),
+                borderWidth: 2,
+                pointRadius: entries.length < 15 ? 3 : 0,
+                pointHoverRadius: 4,
+                fill: true,
+                tension: 0.35,
+            }], labels);
+        } catch(e) {
+            console.warn('[HistoryChart] Load error:', e);
+        }
+    }
+
+    async function loadCompareData() {
+        try {
+            const results = await Promise.allSettled(
+                HISTORY_CONFIG.compareTheatres.map(t =>
+                    fetch(t.url + '?limit=120').then(r => r.ok ? r.json() : null)
+                )
+            );
+
+            // Build unified label set from longest dataset
+            let maxEntries = [];
+            results.forEach((r, i) => {
+                const entries = r.status === 'fulfilled' && r.value?.entries
+                    ? _sliceEntries(r.value.entries, _historyView) : [];
+                if (entries.length > maxEntries.length) maxEntries = entries;
+            });
+            const labels = maxEntries.map(e => _formatLabel(e.ts));
+
+            const datasets = [];
+            results.forEach((r, i) => {
+                const t = HISTORY_CONFIG.compareTheatres[i];
+                const entries = r.status === 'fulfilled' && r.value?.entries
+                    ? _sliceEntries(r.value.entries, _historyView) : [];
+                datasets.push({
+                    label: t.label,
+                    data: entries.map(e => e.score ?? 0),
+                    borderColor: t.color,
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    pointRadius: entries.length < 15 ? 3 : 0,
+                    pointHoverRadius: 4,
+                    fill: false,
+                    tension: 0.35,
+                });
+            });
+
+            // Update legend
+            const legendEl = document.getElementById('historyLegend');
+            if (legendEl) legendEl.innerHTML = HISTORY_CONFIG.compareTheatres.map(t =>
+                `<div class="history-legend-item"><div class="history-legend-dot" style="background:${t.color};"></div> ${t.label}</div>`
+            ).join('');
+
+            renderHistoryChart(datasets, labels);
+        } catch(e) {
+            console.warn('[HistoryChart] Compare error:', e);
+        }
+    }
+
+    function setHistoryView(mode) {
+        _historyView = mode;
+        // Update button states
+        ['7d','30d','compare'].forEach(m => {
+            const btn = document.getElementById('btn' + m.replace('d','') + (m === 'compare' ? 'Compare' : 'd'));
+            if (btn) btn.classList.toggle('active', m === mode);
+        });
+        if (mode === 'compare') loadCompareData();
+        else loadHistoryData();
+    }
+
 
     // ── ESCALATION LEVELS ──
     const ESCALATION_LEVELS = {
@@ -933,6 +1201,9 @@
             renderCoordination(data.coordination_signals, data.actors);
             renderActors(data.actors);
             renderArticles(data.actors);
+
+            // Load history chart (non-blocking)
+            loadHistoryData();
 
             // Articles classified count
             document.getElementById('articlesClassified').textContent =
