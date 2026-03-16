@@ -8,6 +8,20 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'G-Z9114D1Z5C');
+      // Early theme functions — must be defined before header HTML renders
+      function initTheme() {
+          const saved = localStorage.getItem('asifah-theme') || 'dark';
+          document.documentElement.setAttribute('data-theme', saved);
+          const cb = document.getElementById('themeCheckbox');
+          if (cb) cb.checked = saved === 'light';
+      }
+      function toggleTheme() {
+          const current = document.documentElement.getAttribute('data-theme') || 'dark';
+          const next = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', next);
+          localStorage.setItem('asifah-theme', next);
+      }
+      initTheme();
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -572,22 +586,22 @@
             he: {
                 // Page
                 pageTitle:               '🇮🇶 מדד יציבות עיראק',
-                pageSubtitle:            'ניתוח רב-גורמי: מיליציות בחסות איראן, נוכחות צבאית אמריקאית, שרידי דאע"ש ופירוק פוליטי',
+                pageSubtitle:            'ניתוח רב-גורמי: מיליציות בחסות איראן, נוכחות צבאית אמריקאית, שרידי דאעש ופירוק פוליטי',
                 lastUpdated:             'עודכן לאחרונה: ',
                 backLink:                '→ חזרה למרכז הבקרה',
                 themeToggle:             'ערכת נושא',
                 // Rhetoric banner
                 rhetoricTrackerTitle:    'עוקב רטוריקה והסלמה בעיראק',
-                rhetoricTrackerSubtitle: "PMF · כתאיב · סאדר · KRG · מתקפות ישירות איראן · CENTCOM · מעקב דאע"ש",
+                rhetoricTrackerSubtitle: 'PMF · כתאיב · סאדר · KRG · מתקפות ישירות איראן · CENTCOM · מעקב דאעש',
                 openTracker:             '← פתח עוקב',
                 // Humanitarian
                 humanitarianTitle:       '🏥 לוח משבר הומניטרי',
                 cardIDPTitle:            '🏃 עקורים פנימיים',
-                totalIDPs:               'סה"כ עקורים',
+                totalIDPs:               'סהכ עקורים',
                 warDisp2026:             'עקירות מלחמה 2026',
-                postISISReturns:         'חזרות אחרי דאע"ש',
+                postISISReturns:         'חזרות אחרי דאעש',
                 emergencyTitle:          '🚨 חירום מרץ 2026',
-                sinjarTitle:             '🏔️ משבר סינג'ר / יזידים',
+                sinjarTitle:             '🏔️ משבר סינגגר / יזידים',
                 ochaReportsTitle:        '📰 דוחות OCHA / האו"ם אחרונים',
                 humanitarianDataSource:  'נתונים: IOM DTM · OCHA · UNHCR · WFP עיראק',
                 humanitarianLoading:     'טוען נתונים הומניטריים…',
