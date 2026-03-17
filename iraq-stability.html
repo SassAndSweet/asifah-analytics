@@ -12,9 +12,16 @@
       function initTheme() {
           const saved = localStorage.getItem('asifah-theme') || 'dark';
           document.documentElement.setAttribute('data-theme', saved);
+          // Checkbox may not exist yet at head-parse time — sync on DOM ready too
           const cb = document.getElementById('themeCheckbox');
           if (cb) cb.checked = saved === 'light';
       }
+      // Re-sync checkbox once DOM is ready
+      document.addEventListener('DOMContentLoaded', () => {
+          const saved = localStorage.getItem('asifah-theme') || 'dark';
+          const cb = document.getElementById('themeCheckbox');
+          if (cb) cb.checked = saved === 'light';
+      });
       function toggleTheme() {
           const current = document.documentElement.getAttribute('data-theme') || 'dark';
           const next = current === 'dark' ? 'light' : 'dark';
