@@ -36,35 +36,96 @@
             --text-muted: #95a5a6; --header-gradient-start: #1e3a5f; --header-gradient-end: #2c5282;
             --header-text: #ffffff; --metric-bg: #ffffff; --article-bg: #f8f9fa;
             --article-hover: #e8f4f8; --accent: #6495ED;
+            --cyan-glow: rgba(125,211,252,0.0); --watermark-opacity: 0.50;
         }
         [data-theme="dark"] {
-            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
-            --card-border: #404040; --text-primary: #e0e0e0; --text-secondary: #b0b0b0;
-            --text-muted: #808080; --header-gradient-start: #1e3a5f; --header-gradient-end: #2c5282;
-            --header-text: #ffffff; --metric-bg: #2d2d2d; --article-bg: #333333;
-            --article-hover: #3a3a3a; --accent: #6495ED;
+            --bg-color: #0a0f1a; --container-bg: #0f1923; --card-bg: #111827;
+            --card-border: #1e3a5f; --text-primary: #e2e8f0; --text-secondary: #94a3b8;
+            --text-muted: #64748b; --header-gradient-start: #1e3a5f; --header-gradient-end: #2c5282;
+            --header-text: #ffffff; --metric-bg: #111827; --article-bg: #0f1923;
+            --article-hover: #1a2744; --accent: #7dd3fc;
+            --cyan-glow: rgba(125,211,252,0.12); --watermark-opacity: 0.85;
+        }
+        /* Watermark */
+        body::before {
+            content: ''; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            min-width: 800px; max-width: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            opacity: var(--watermark-opacity); z-index: 0; pointer-events: none; user-select: none;
+        }
+        [data-theme="dark"] body::before {
+            filter: saturate(5) brightness(0.9);
+            opacity: 0.22;
         }
 body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-color); color: var(--text-primary); line-height: 1.6; }
         .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        /* Gold standard card — used for all new stability cards */
+        .iq-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 20px; margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        [data-theme="dark"] .iq-card {
+            border-color: #1e4a7a;
+            box-shadow: 0 0 0 1px rgba(125,211,252,0.08), 0 4px 20px rgba(0,0,0,0.4);
+        }
+        [data-theme="dark"] .iq-card:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 0 0 1px rgba(56,189,248,0.2), 0 4px 24px rgba(56,189,248,0.08);
+        }
+        .iq-card-title {
+            font-size: 10px; font-weight: bold; text-transform: uppercase;
+            letter-spacing: 2px; color: var(--text-muted);
+            margin-bottom: 14px; padding-bottom: 8px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        [data-theme="dark"] .iq-card-title { color: #7dd3fc; border-color: #1e4a7a; }
+        /* Side-by-side card grid */
+        .iq-cards-row { display: grid; gap: 16px; margin-bottom: 20px; }
+        .iq-cards-row-2 { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+        .iq-cards-row-3 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+        .iq-cards-row-4 { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
         header {
             background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
             color: var(--header-text); padding: 30px; border-radius: 12px; margin-bottom: 10px;
             text-align: center; position: relative;
         }
-        header h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 2px; }
+        header h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 2px; font-family: 'Times New Roman', Times, serif; }
         .subtitle { font-size: 16px; opacity: 0.95; }
         .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
-        .header-controls { position: absolute; top: 15px; right: 20px; display: flex; gap: 8px; align-items: center; }
-        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
-        .lang-btn:hover { background: rgba(255,255,255,0.3); }
+        /* Left side — logo + back button stacked */
+        .header-left { position: absolute; top: 15px; left: 20px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+        .header-logo { width: 48px; height: 48px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3); flex-shrink: 0; }
+        .home-btn { display: inline-block; padding: 6px 14px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 12px; font-weight: bold; font-family: 'Times New Roman', Times, serif; white-space: nowrap; }
+        .home-btn:hover { background: rgba(255,255,255,0.25); }
+        /* Right side — lang buttons, mil tracker, theme toggle — all stacked */
+        .header-controls { position: absolute; top: 15px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .lang-group { display: flex; gap: 5px; }
+        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; font-family: 'Times New Roman', Times, serif; }
+        .lang-btn:hover { background: rgba(255,255,255,0.25); }
         .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
-        .home-btn { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; position: absolute; top: 15px; left: 20px; }
-        .home-btn:hover { background: rgba(255,255,255,0.3); }
-        .theme-toggle { display: flex; align-items: center; gap: 6px; color: white; font-size: 12px; cursor: pointer; }
-        .theme-toggle input { width: 36px; height: 20px; appearance: none; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; cursor: pointer; }
+        .mil-tracker-btn { display: inline-block; padding: 5px 12px; background: rgba(125,211,252,0.15); border: 1px solid rgba(125,211,252,0.4); border-radius: 5px; color: #7dd3fc; text-decoration: none; font-size: 11px; font-weight: bold; font-family: 'Times New Roman', Times, serif; white-space: nowrap; }
+        .mil-tracker-btn:hover { background: rgba(125,211,252,0.3); }
+        /* Theme toggle with sun/moon */
+        .theme-row { display: flex; align-items: center; gap: 6px; }
+        .theme-icon { font-size: 13px; }
+        .theme-toggle { display: flex; align-items: center; cursor: pointer; }
+        .theme-toggle input { width: 36px; height: 20px; appearance: none; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; cursor: pointer; transition: background 0.3s; }
+        .theme-toggle input:checked { background: rgba(125,211,252,0.4); }
         .theme-toggle input::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
         .theme-toggle input:checked::after { left: 18px; }
-        .map-section, .knowledge-library, .articles-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+        @media (max-width: 768px) {
+            header h1 { font-size: 20px; }
+            .header-left, .header-controls { position: static; align-items: center; }
+            header { padding: 15px; }
+        }
+        [data-theme="dark"] .map-section, [data-theme="dark"] .knowledge-library, [data-theme="dark"] .articles-section {
+            border-color: #1e4a7a;
+            box-shadow: 0 0 0 1px rgba(125,211,252,0.08), 0 4px 20px rgba(0,0,0,0.4);
+        }
         .map-section h2, .knowledge-library h2 { font-size: 20px; margin-bottom: 15px; color: var(--text-primary); }
         .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
         .knowledge-categories { display: grid; gap: 12px; }
@@ -101,20 +162,32 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
 <body>
     <div class="container">
         <header>
-            <a href="middle-east.html" class="home-btn">&larr; Back to Dashboard</a>
-            <div class="header-controls">
-                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
-                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
-                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
-                <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
-                <label class="theme-toggle">
-                    <span>Theme</span>
-                    <input type="checkbox" onchange="toggleTheme()">
-                </label>
+            <!-- Left: logo + back button stacked -->
+            <div class="header-left">
+                <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                     class="header-logo" alt="Asifah Analytics"/>
+                <a href="middle-east.html" class="home-btn" data-i18n="backLink">&larr; Back to Dashboard</a>
             </div>
-            <h1>🇮🇶 IRAQ STABILITY INDEX</h1>
-            <div class="subtitle">Multi-Factor Analysis: Iran-Backed Militias, U.S. Military Presence, ISIS Remnants & Political Fragmentation</div>
-            <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
+            <!-- Right: lang + mil tracker + sun/moon theme toggle -->
+            <div class="header-controls">
+                <div class="lang-group">
+                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+                    <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
+                    <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
+                    <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
+                </div>
+                <a href="military.html" class="mil-tracker-btn">🛡️ Military Tracker →</a>
+                <div class="theme-row">
+                    <span class="theme-icon">🌙</span>
+                    <label class="theme-toggle">
+                        <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()">
+                    </label>
+                    <span class="theme-icon">☀️</span>
+                </div>
+            </div>
+            <h1 data-i18n="pageTitle">🇮🇶 IRAQ STABILITY INDEX</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Iran-Backed Militias, U.S. Military Presence, ISIS Remnants &amp; Political Fragmentation</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
         </header>
 
         <!-- U.S. STATE DEPARTMENT — WORLDWIDE CAUTION -->
@@ -159,6 +232,135 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
                 <span id="rhetoricLevelBadge" style="background:#6b7280;color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px;">📡 Loading…</span>
                 <a href="rhetoric-iraq.html" style="padding:8px 18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;white-space:nowrap;" data-i18n="openTracker">Open Tracker →</a>
+            </div>
+        </div>
+
+        <!-- STABILITY SCORE + ECONOMIC ROW -->
+        <div class="iq-cards-row iq-cards-row-2" id="stabilityTopRow">
+
+            <!-- STABILITY SCORE CARD -->
+            <div class="iq-card" id="stabilityScoreCard">
+                <div class="iq-card-title" data-i18n="stabilityIndexTitle">📊 IRAQ STABILITY INDEX</div>
+                <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;">
+                    <div style="font-size:52px;font-weight:bold;font-family:'Courier New',monospace;color:var(--text-primary);" id="iqStabilityScore">--</div>
+                    <div style="font-size:14px;color:var(--text-muted);">/100</div>
+                    <span id="iqRiskBadge" style="font-size:12px;font-weight:700;padding:4px 12px;border-radius:6px;background:#6b7280;color:white;margin-left:6px;">Loading</span>
+                </div>
+                <!-- Progress bar -->
+                <div style="height:8px;border-radius:4px;background:var(--article-bg);margin-bottom:10px;overflow:hidden;">
+                    <div id="iqStabilityBar" style="height:100%;width:0%;border-radius:4px;background:linear-gradient(90deg,#dc2626,#f59e0b,#22c55e);transition:width 1s ease;"></div>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;">
+                    100 = Stable | 0 = Collapse Risk &nbsp;·&nbsp;
+                    <span id="iqStabilityTrend" style="font-weight:600;"></span>
+                </div>
+                <!-- Score components -->
+                <div id="iqScoreComponents" style="font-size:10px;line-height:2;"></div>
+                <div style="margin-top:10px;font-size:9px;color:var(--text-muted);" id="iqStabilitySource">Source: Asifah Analytics composite score</div>
+            </div>
+
+            <!-- OIL & ECONOMY CARD -->
+            <div class="iq-card" id="oilEconomyCard">
+                <div class="iq-card-title" data-i18n="oilEconomyTitle">🛢️ OIL &amp; ECONOMY</div>
+
+                <!-- Brent price -->
+                <div style="margin-bottom:14px;">
+                    <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;" data-i18n="brentCrude">BRENT CRUDE</div>
+                    <div style="display:flex;align-items:baseline;gap:8px;">
+                        <span style="font-size:32px;font-weight:bold;color:var(--text-primary);font-family:'Courier New',monospace;" id="iqOilPrice">--</span>
+                        <span style="font-size:13px;color:var(--text-muted);">/bbl</span>
+                        <span id="iqOilArrow" style="font-size:14px;font-weight:bold;color:#6b7280;"></span>
+                        <span id="iqOilChange" style="font-size:12px;color:#6b7280;"></span>
+                    </div>
+                    <div style="font-size:9px;color:var(--text-muted);margin-top:2px;" data-i18n="oilNote">Iraq break-even ~$70/bbl · 90% of govt revenue</div>
+                </div>
+
+                <!-- IQD rate -->
+                <div style="padding-top:10px;border-top:1px solid var(--card-border);margin-bottom:14px;">
+                    <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;" data-i18n="iqdRate">IQD / USD</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                        <div style="text-align:center;background:var(--article-bg);border:1px solid var(--card-border);border-radius:6px;padding:8px;">
+                            <div style="font-size:16px;font-weight:bold;color:var(--text-primary);" id="iqOfficialRate">--</div>
+                            <div style="font-size:9px;color:var(--text-muted);" data-i18n="officialRate">Official (CBI)</div>
+                        </div>
+                        <div style="text-align:center;background:var(--article-bg);border:1px solid var(--card-border);border-radius:6px;padding:8px;">
+                            <div style="font-size:16px;font-weight:bold;color:#f59e0b;" id="iqParallelRate">--</div>
+                            <div style="font-size:9px;color:var(--text-muted);" data-i18n="parallelRate">Parallel Market</div>
+                        </div>
+                    </div>
+                    <div style="margin-top:6px;text-align:center;">
+                        <span id="iqGapBadge" style="font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);">Gap: --</span>
+                    </div>
+                </div>
+
+                <!-- Iraq oil production -->
+                <div style="padding-top:10px;border-top:1px solid var(--card-border);">
+                    <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:6px;" data-i18n="productionTitle">IRAQ OIL PRODUCTION</div>
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                        <span id="iqBasraEmoji" style="font-size:16px;">🟢</span>
+                        <span style="font-size:12px;font-weight:bold;" id="iqBasraStatus">Loading…</span>
+                    </div>
+                    <div style="font-size:10px;color:var(--text-muted);" id="iqProductionDetail"></div>
+                    <div style="margin-top:6px;">
+                        <span id="iqKrgStatus" style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.25);">🔴 KRG Pipeline: Suspended</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GOVERNANCE ROW -->
+        <div class="iq-cards-row iq-cards-row-3" id="governanceRow">
+
+            <!-- PM STATUS -->
+            <div class="iq-card">
+                <div class="iq-card-title" data-i18n="govStatusTitle">🏛️ GOVERNMENT STATUS</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+                    <span style="font-size:20px;">🟢</span>
+                    <div>
+                        <div style="font-weight:bold;font-size:13px;" id="iqPMName">Mohammed Shia' al-Sudani</div>
+                        <div style="font-size:10px;color:var(--text-muted);" id="iqPMParty">State of Law / Coordination Framework</div>
+                    </div>
+                </div>
+                <div style="font-size:11px;color:var(--text-secondary);line-height:1.6;margin-bottom:8px;" id="iqGovNote">Dependent on Iran-aligned PMF political blocs. Walking tightrope between US and Iran pressure.</div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                    <div style="text-align:center;background:var(--article-bg);border:1px solid var(--card-border);border-radius:6px;padding:6px 10px;">
+                        <div style="font-size:16px;font-weight:bold;color:var(--text-primary);" id="iqDaysInOffice">--</div>
+                        <div style="font-size:9px;color:var(--text-muted);" data-i18n="daysInOffice">Days in Office</div>
+                    </div>
+                    <div style="text-align:center;background:var(--article-bg);border:1px solid var(--card-border);border-radius:6px;padding:6px 10px;flex:1;">
+                        <div style="font-size:11px;font-weight:bold;color:var(--text-primary);" id="iqNextElection">Oct 2025</div>
+                        <div style="font-size:9px;color:var(--text-muted);" data-i18n="nextElection">Next Election</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PMF STATUS -->
+            <div class="iq-card">
+                <div class="iq-card-title" data-i18n="pmfStatusTitle">⚔️ PMF / MILITIA STATUS</div>
+                <div style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);margin-bottom:10px;" id="iqPMFStatusBadge">DOMINANT — PARALLEL STATE</div>
+                <div style="font-size:11px;color:var(--text-secondary);line-height:1.6;" id="iqPMFNote">PMF/Hashd al-Shaabi operates parallel to Iraqi state. Kata'ib Hezbollah and Asa'ib Ahl al-Haq conducting active attacks on US forces.</div>
+                <div style="margin-top:10px;">
+                    <div style="font-size:10px;font-weight:bold;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;" data-i18n="keyGroups">KEY GROUPS</div>
+                    <div style="font-size:10px;color:var(--text-secondary);line-height:1.8;">
+                        ⚔️ Kata'ib Hezbollah (KH)<br>
+                        ⚔️ Asa'ib Ahl al-Haq (AAH)<br>
+                        ⚔️ Harakat al-Nujaba<br>
+                        🎯 Islamic Resistance in Iraq (umbrella)
+                    </div>
+                </div>
+            </div>
+
+            <!-- KRG STATUS -->
+            <div class="iq-card">
+                <div class="iq-card-title" data-i18n="krgStatusTitle">🏔️ KRG / KURDISH STATUS</div>
+                <div style="display:inline-block;padding:3px 12px;border-radius:4px;font-size:11px;font-weight:700;background:rgba(245,158,11,0.15);color:#f59e0b;border:1px solid rgba(245,158,11,0.3);margin-bottom:10px;">DISPUTE ACTIVE</div>
+                <div style="font-size:11px;color:var(--text-secondary);line-height:1.6;margin-bottom:10px;">Baghdad-Erbil relations structurally dysfunctional. Iran-US war may accelerate US-KRG realignment.</div>
+                <div style="font-size:10px;color:var(--text-secondary);line-height:1.8;">
+                    🔴 Kirkuk–Ceyhan pipeline suspended (2023)<br>
+                    🟠 KRG budget share withheld<br>
+                    🟠 Peshmerga integration stalled<br>
+                    🟠 Sinjar / Kirkuk authority unresolved
+                </div>
             </div>
         </div>
 
@@ -624,18 +826,6 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             }
         }
 
-        function initTheme() {
-            const saved = localStorage.getItem('asifah-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', saved);
-        }
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('asifah-theme', next);
-        }
-        initTheme();
-
         function toggleKnowledgeCard(cardId) {
             const card = document.getElementById('card-' + cardId);
             if (card) card.classList.toggle('collapsed');
@@ -692,7 +882,127 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 "'</div>';";
         }
 
-        const TRANSLATIONS = {
+        // ── STABILITY DATA ───────────────────────────────────────
+        const RISK_COLORS = {
+            'Stable':        '#22c55e',
+            'Moderate Risk': '#f59e0b',
+            'High Risk':     '#f97316',
+            'Critical':      '#ef4444',
+            'Collapse Risk': '#dc2626',
+        };
+        const COMPONENT_LABELS = {
+            oil_price:       '🛢️ Oil Price',
+            basra_terminals: '⚓ Basra Terminals',
+            krg_pipeline:    '🏔️ KRG Pipeline',
+            iqd_parallel_gap:'💱 IQD Parallel Gap',
+            governance_pmf:  '⚔️ Governance / PMF',
+            humanitarian:    '🏥 Humanitarian',
+            rhetoric:        '📡 Rhetoric',
+        };
+
+        async function loadStabilityData() {
+            try {
+                const resp = await fetch(BACKEND_URL + '/api/iraq/stability');
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const d = await resp.json();
+
+                // ── Score card ──
+                const score = d.score ?? 0;
+                const risk  = d.risk_level || 'Unknown';
+                const color = RISK_COLORS[risk] || '#6b7280';
+
+                document.getElementById('iqStabilityScore').textContent = score;
+                document.getElementById('iqStabilityBar').style.width = score + '%';
+
+                const badge = document.getElementById('iqRiskBadge');
+                badge.textContent = risk;
+                badge.style.background = color;
+
+                const trendEl = document.getElementById('iqStabilityTrend');
+                const trendMap = { worsening: '↓ Decreasing', improving: '↑ Improving', stable: '→ Stable' };
+                trendEl.textContent = trendMap[d.trend] || '';
+                trendEl.style.color = d.trend === 'worsening' ? '#ef4444' : d.trend === 'improving' ? '#22c55e' : '#94a3b8';
+
+                // Component breakdown
+                const comps = d.stability?.component_labels || {};
+                const compEl = document.getElementById('iqScoreComponents');
+                if (compEl && Object.keys(comps).length) {
+                    const rows = Object.entries(COMPONENT_LABELS).map(([k, label]) => {
+                        const val = comps[k];
+                        if (val === undefined) return '';
+                        const color = val > 0 ? '#22c55e' : val < 0 ? '#ef4444' : '#64748b';
+                        const sign  = val > 0 ? '+' : '';
+                        return `<div style="display:flex;justify-content:space-between;padding:1px 0;">
+                            <span style="color:var(--text-muted);">${label}</span>
+                            <span style="font-weight:bold;color:${color};">${sign}${val}</span>
+                        </div>`;
+                    }).join('');
+                    compEl.innerHTML = rows;
+                }
+
+                if (d.from_cache) {
+                    document.getElementById('iqStabilitySource').textContent =
+                        `Asifah Analytics composite · cached ${d.cache_age_hours || '?'}h ago`;
+                }
+
+                // ── Oil & Economy card ──
+                const oil = d.oil_price || {};
+                if (oil.current_price) {
+                    document.getElementById('iqOilPrice').textContent = '$' + oil.current_price.toFixed(2);
+                    const arrowEl = document.getElementById('iqOilArrow');
+                    const changeEl = document.getElementById('iqOilChange');
+                    arrowEl.textContent = oil.arrow || '→';
+                    arrowEl.style.color = oil.trend === 'up' ? '#22c55e' : oil.trend === 'down' ? '#ef4444' : '#94a3b8';
+                    changeEl.textContent = (oil.percent_change >= 0 ? '+' : '') + (oil.percent_change || 0).toFixed(2) + '%';
+                    changeEl.style.color = arrowEl.style.color;
+                }
+
+                // IQD rates
+                const iqd = d.iqd_rate || {};
+                if (iqd.official_rate) {
+                    document.getElementById('iqOfficialRate').textContent = iqd.official_rate.toLocaleString();
+                    document.getElementById('iqParallelRate').textContent = iqd.parallel_rate.toLocaleString();
+                    const gapEl = document.getElementById('iqGapBadge');
+                    gapEl.textContent = `Gap: ${iqd.gap_pct}% — ${iqd.gap_label}`;
+                    const gapColors = {
+                        critical: {bg:'rgba(239,68,68,0.15)', color:'#ef4444', border:'rgba(239,68,68,0.3)'},
+                        elevated: {bg:'rgba(249,115,22,0.15)', color:'#f97316', border:'rgba(249,115,22,0.3)'},
+                        moderate: {bg:'rgba(245,158,11,0.15)', color:'#f59e0b', border:'rgba(245,158,11,0.3)'},
+                        normal:   {bg:'rgba(34,197,94,0.15)',  color:'#22c55e', border:'rgba(34,197,94,0.3)'},
+                    };
+                    const gc = gapColors[iqd.gap_status] || gapColors.normal;
+                    gapEl.style.cssText = `font-size:10px;font-weight:700;padding:2px 10px;border-radius:4px;background:${gc.bg};color:${gc.color};border:1px solid ${gc.border};`;
+                }
+
+                // Basra / production
+                const prod = d.oil_production || {};
+                const basra = prod.basra_terminals || {};
+                document.getElementById('iqBasraEmoji').textContent = basra.status_emoji || '🟢';
+                document.getElementById('iqBasraStatus').textContent = 'Basra: ' + (basra.status_text || 'OPERATIONAL');
+                if (prod.production_mbpd) {
+                    document.getElementById('iqProductionDetail').textContent =
+                        `${prod.production_mbpd}M bpd production · ${prod.government_revenue_oil_pct || 90}% of govt revenue`;
+                }
+
+                // ── Governance card ──
+                const gov = d.governance || {};
+                const pm  = gov.prime_minister || {};
+                if (pm.name) {
+                    document.getElementById('iqPMName').textContent    = pm.name;
+                    document.getElementById('iqPMParty').textContent   = pm.party || '';
+                    document.getElementById('iqDaysInOffice').textContent = pm.days_in_office || '--';
+                    document.getElementById('iqNextElection').textContent = pm.next_election || 'Oct 2025';
+                    if (pm.note) document.getElementById('iqGovNote').textContent = pm.note;
+                }
+
+            } catch(e) {
+                console.warn('[Iraq Stability]', e);
+                document.getElementById('iqStabilityScore').textContent = 'N/A';
+                document.getElementById('iqRiskBadge').textContent = 'Unavailable';
+            }
+        }
+
+                const TRANSLATIONS = {
             en: {
                 // Page
                 pageTitle:               '🇮🇶 IRAQ STABILITY INDEX',
@@ -721,6 +1031,22 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 activeAlertsCard:        'ACTIVE ALERTS',
                 voicesDetectedCard:      'VOICES DETECTED',
                 viewFullAnalysisCard:    'View Full Rhetoric Analysis →',
+                // Stability cards
+                stabilityIndexTitle: '📊 IRAQ STABILITY INDEX',
+                oilEconomyTitle:     '🛢️ OIL & ECONOMY',
+                brentCrude:          'BRENT CRUDE',
+                oilNote:             'Iraq break-even ~$70/bbl · 90% of govt revenue',
+                iqdRate:             'IQD / USD',
+                officialRate:        'Official (CBI)',
+                parallelRate:        'Parallel Market',
+                productionTitle:     'IRAQ OIL PRODUCTION',
+                govStatusTitle:      '🏛️ GOVERNMENT STATUS',
+                daysInOffice:        'Days in Office',
+                nextElection:        'Next Election',
+                pmfStatusTitle:      '⚔️ PMF / MILITIA STATUS',
+                keyGroups:           'KEY GROUPS',
+                krgStatusTitle:      '🏔️ KRG / KURDISH STATUS',
+                milTracker:          '🛡️ Military Tracker →',
             },
             ar: {
                 // Page
@@ -750,6 +1076,22 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 activeAlertsCard:        'التنبيهات النشطة',
                 voicesDetectedCard:      'الأصوات المكتشفة',
                 viewFullAnalysisCard:    '← عرض التحليل الكامل للخطاب',
+                // Stability cards
+                stabilityIndexTitle: '📊 مؤشر استقرار العراق',
+                oilEconomyTitle:     '🛢️ النفط والاقتصاد',
+                brentCrude:          'برنت الخام',
+                oilNote:             'نقطة التعادل ~70$/برميل · 90% من إيرادات الحكومة',
+                iqdRate:             'دينار عراقي / دولار',
+                officialRate:        'الرسمي (البنك المركزي)',
+                parallelRate:        'السوق الموازية',
+                productionTitle:     'إنتاج النفط العراقي',
+                govStatusTitle:      '🏛️ حالة الحكومة',
+                daysInOffice:        'أيام في المنصب',
+                nextElection:        'الانتخابات القادمة',
+                pmfStatusTitle:      '⚔️ الحشد الشعبي / الميليشيات',
+                keyGroups:           'المجموعات الرئيسية',
+                krgStatusTitle:      '🏔️ إقليم كردستان',
+                milTracker:          '→ متتبع الشؤون العسكرية',
             },
             he: {
                 // Page
@@ -779,6 +1121,22 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 activeAlertsCard:        'התראות פעילות',
                 voicesDetectedCard:      'קולות שזוהו',
                 viewFullAnalysisCard:    '← ניתוח רטוריקה מלא',
+                // Stability cards
+                stabilityIndexTitle: '📊 מדד יציבות עיראק',
+                oilEconomyTitle:     '🛢️ נפט וכלכלה',
+                brentCrude:          'נפט גולמי ברנט',
+                oilNote:             'נקודת איזון ~70$/חבית · 90% מהכנסות ממשלתיות',
+                iqdRate:             'דינר עיראקי / דולר',
+                officialRate:        'רשמי (הבנק המרכזי)',
+                parallelRate:        'שוק מקביל',
+                productionTitle:     'ייצור נפט עיראקי',
+                govStatusTitle:      '🏛️ מצב הממשלה',
+                daysInOffice:        'ימים בתפקיד',
+                nextElection:        'בחירות הבאות',
+                pmfStatusTitle:      '⚔️ PMF / מיליציות',
+                keyGroups:           'קבוצות מפתח',
+                krgStatusTitle:      '🏔️ מצב KRG / כורדים',
+                milTracker:          '← עוקב צבאי',
             },
             fa: {
                 // Page
@@ -808,6 +1166,22 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 activeAlertsCard:        'هشدارهای فعال',
                 voicesDetectedCard:      'صداهای شناسایی‌شده',
                 viewFullAnalysisCard:    '← مشاهده تحلیل کامل گفتمان',
+                // Stability cards
+                stabilityIndexTitle: '📊 شاخص ثبات عراق',
+                oilEconomyTitle:     '🛢️ نفت و اقتصاد',
+                brentCrude:          'نفت خام برنت',
+                oilNote:             'نقطه سربه‌سر ~۷۰$/بشکه · ۹۰٪ درآمد دولت',
+                iqdRate:             'دینار عراقی / دلار',
+                officialRate:        'رسمی (بانک مرکزی)',
+                parallelRate:        'بازار موازی',
+                productionTitle:     'تولید نفت عراق',
+                govStatusTitle:      '🏛️ وضعیت دولت',
+                daysInOffice:        'روزهای در مقام',
+                nextElection:        'انتخابات بعدی',
+                pmfStatusTitle:      '⚔️ حشد شعبی / شبه‌نظامیان',
+                keyGroups:           'گروه‌های کلیدی',
+                krgStatusTitle:      '🏔️ وضعیت کردستان',
+                milTracker:          '← ردیاب نظامی',
             }
         };
 
@@ -850,6 +1224,7 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 hour: '2-digit', minute: '2-digit'
             });
             // Load rhetoric banner and humanitarian data
+            loadStabilityData();
             loadIraqRhetoricCard();
             loadHumanitarianData();
         });
