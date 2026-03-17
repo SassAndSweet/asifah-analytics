@@ -44,7 +44,7 @@
             --header-text: #ffffff; --metric-bg: #2d2d2d; --article-bg: #333333;
             --article-hover: #3a3a3a; --accent: #6495ED;
         }
-        body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-color); color: var(--text-primary); line-height: 1.6; }
+body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-color); color: var(--text-primary); line-height: 1.6; }
         .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
         header {
             background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
@@ -162,8 +162,11 @@
             </div>
         </div>
 
+        <!-- HUMANITARIAN + RHETORIC GRID -->
+        <div style="display:flex;flex-direction:column;gap:20px;margin-bottom:20px;">
+
         <!-- HUMANITARIAN CRISIS DASHBOARD -->
-        <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px;">
+        <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px;">
             <div style="font-size:14px;font-weight:bold;text-transform:uppercase;letter-spacing:2px;color:var(--text-primary);margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--card-border);" data-i18n="humanitarianTitle">🏥 Humanitarian Crisis Dashboard</div>
             <div id="humanitarianLoading" style="text-align:center;font-size:12px;color:var(--text-muted);padding:15px;">Loading humanitarian data…</div>
             <div id="humanitarianGrid" style="display:none;">
@@ -217,6 +220,56 @@
                 <div style="font-size:9px;color:var(--text-muted);margin-top:8px;text-align:right;" data-i18n="humanitarianDataSource">Data: IOM DTM API v3 · ReliefWeb OCHA · UNHCR · WFP Iraq</div>
             </div>
         </div>
+
+        </div><!-- end humanitarian -->
+
+        <!-- RHETORIC TRACKER CARD -->
+        <div style="background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px;">
+            <div style="font-size:10px;font-weight:bold;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-muted);margin-bottom:12px;" data-i18n="rhetoricTrackerCardTitle">📡 RHETORIC TRACKER</div>
+
+            <!-- Score + Level badge -->
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px;">
+                <div style="font-size:36px;font-weight:bold;color:var(--text-primary);font-family:'Courier New',monospace;" id="iqRhetoricScore">--</div>
+                <span id="iqRhetoricTheatreLabel" style="font-size:13px;font-weight:bold;padding:3px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
+            </div>
+            <div style="font-size:12px;color:var(--text-secondary);margin-bottom:14px;" data-i18n="rhetoricSubtitleCard">Theatre escalation level</div>
+
+            <!-- Actor Status -->
+            <div id="iqRhetoricActors" style="margin-bottom:12px;">
+                <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;font-weight:600;">
+                    🎯 <span data-i18n="actorStatusCard">ACTOR STATUS</span>
+                </div>
+                <div id="iqRhetoricActorList" style="font-size:11px;">
+                    <span style="color:var(--text-secondary);font-style:italic;">Loading…</span>
+                </div>
+            </div>
+
+            <!-- Active Alerts -->
+            <div id="iqRhetoricAlerts" style="margin-bottom:12px;display:none;">
+                <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-weight:600;">
+                    🚨 <span data-i18n="activeAlertsCard">ACTIVE ALERTS</span>
+                </div>
+                <div id="iqRhetoricAlertList"></div>
+            </div>
+
+            <!-- Voices Detected -->
+            <div id="iqRhetoricSpokespeople" style="margin-bottom:12px;display:none;">
+                <div style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;font-weight:600;">
+                    🎤 <span data-i18n="voicesDetectedCard">VOICES DETECTED</span>
+                </div>
+                <div id="iqRhetoricSpokesList" style="font-size:10px;color:var(--text-secondary);line-height:1.6;"></div>
+            </div>
+
+            <!-- Link + scan info -->
+            <div style="padding-top:12px;border-top:1px solid var(--card-border);text-align:center;">
+                <a href="rhetoric-iraq.html" style="color:#7dd3fc;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="viewFullAnalysisCard">
+                    View Full Rhetoric Analysis →
+                </a>
+            </div>
+            <div id="iqRhetoricScanInfo" style="margin-top:6px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
+        </div><!-- end rhetoric card -->
+
+        </div><!-- end humanitarian+rhetoric grid -->
 
         <!-- MAP SECTION -->
         <div class="map-section">
@@ -363,6 +416,111 @@
             4: { label: 'Incident',       color: '#ef4444' },
             5: { label: 'Active Conflict',color: '#dc2626' },
         };
+
+        // ── IRAQ RHETORIC CARD ─────────────────────────────────
+        const IQ_RHETORIC_LEVELS = {
+            0: { label: 'Baseline',        color: '#6b7280' },
+            1: { label: 'Rhetoric',        color: '#3b82f6' },
+            2: { label: 'Tension',         color: '#f59e0b' },
+            3: { label: 'Confrontation',   color: '#f97316' },
+            4: { label: 'Incident',        color: '#ef4444' },
+            5: { label: 'Active Conflict', color: '#dc2626' },
+        };
+
+        async function loadIraqRhetoricCard() {
+            try {
+                // Summary — score + level
+                const sumResp = await fetch(BACKEND_URL + '/api/rhetoric/iraq/summary');
+                if (!sumResp.ok) throw new Error('summary unavailable');
+                const sum = await sumResp.json();
+
+                if (sum.awaiting_scan) {
+                    document.getElementById('iqRhetoricScore').textContent = '…';
+                    document.getElementById('iqRhetoricScanInfo').textContent = 'Scan in progress — check back shortly';
+                    return;
+                }
+
+                const level = sum.theatre_escalation_level || 0;
+                const lv = IQ_RHETORIC_LEVELS[level] || IQ_RHETORIC_LEVELS[0];
+                document.getElementById('iqRhetoricScore').textContent = (sum.rhetoric_score ?? '--') + '/100';
+                const theatreEl = document.getElementById('iqRhetoricTheatreLabel');
+                theatreEl.textContent = `⚡ Level ${level} — ${lv.label}`;
+                theatreEl.style.background = lv.color;
+
+                // Also update the banner badge
+                const badge = document.getElementById('rhetoricLevelBadge');
+                if (badge) {
+                    badge.style.background = lv.color;
+                    badge.textContent = `⚡ Level ${level} — ${lv.label}`;
+                }
+
+                // Scan time
+                if (sum.scanned_at) {
+                    const ago = Math.round((Date.now() - new Date(sum.scanned_at).getTime()) / 60000);
+                    document.getElementById('iqRhetoricScanInfo').textContent =
+                        ago < 60 ? `Last scan: ${ago}m ago` : `Last scan: ${Math.round(ago/60)}h ago`;
+                }
+
+                // Full data — actors, alerts, spokespersons
+                const fullResp = await fetch(BACKEND_URL + '/api/rhetoric/iraq');
+                if (!fullResp.ok) return;
+                const full = await fullResp.json();
+
+                // Actor list
+                if (full.actors) {
+                    const actorList = document.getElementById('iqRhetoricActorList');
+                    actorList.innerHTML = '';
+                    const actorOrder = ['pmf_hashd', 'kataib', 'sadr', 'krg', 'iran_iraq', 'us_centcom', 'isis_iraq', 'iraqi_govt'];
+                    actorOrder.forEach(actorId => {
+                        const actor = full.actors[actorId];
+                        if (!actor) return;
+                        const silenceIcon = actor.silence_alert ? ' 🔇' : '';
+                        const countText = actor.statement_count > 0 ? `${actor.statement_count} articles` : 'No articles';
+                        actorList.innerHTML += `
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--card-border);">
+                                <span style="font-size:11px;">${actor.flag || ''} ${actor.icon || ''} ${actor.name}${silenceIcon}</span>
+                                <span style="display:flex;align-items:center;gap:5px;">
+                                    <span style="font-size:9px;color:var(--text-muted);">${countText}</span>
+                                    <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${actor.escalation_color || '#6b7280'};"></span>
+                                    <span style="font-size:10px;font-weight:600;color:${actor.escalation_color || '#6b7280'};">${actor.escalation_label || '--'}</span>
+                                </span>
+                            </div>`;
+                    });
+                }
+
+                // Alerts
+                if (full.alerts && full.alerts.length > 0) {
+                    document.getElementById('iqRhetoricAlerts').style.display = 'block';
+                    document.getElementById('iqRhetoricAlertList').innerHTML = full.alerts.slice(0, 3).map(alert => {
+                        const bg = alert.severity === 'critical' ? 'rgba(248,113,113,0.15)' :
+                                   alert.severity === 'high'     ? 'rgba(251,146,60,0.15)'  :
+                                                                    'rgba(250,204,21,0.1)';
+                        const bd = alert.severity === 'critical' ? '#f87171' :
+                                   alert.severity === 'high'     ? '#fb923c' : '#facc15';
+                        return `<div style="padding:5px 8px;margin-bottom:4px;background:${bg};border-left:3px solid ${bd};border-radius:4px;font-size:11px;color:var(--text-primary);">${alert.message}</div>`;
+                    }).join('');
+                }
+
+                // Spokespersons
+                const spokes = [];
+                if (full.actors) {
+                    Object.values(full.actors).forEach(actor => {
+                        if (actor.spokespersons?.length) {
+                            actor.spokespersons.forEach(s => spokes.push(`${actor.icon || ''} ${s}`));
+                        }
+                    });
+                }
+                if (spokes.length > 0) {
+                    document.getElementById('iqRhetoricSpokespeople').style.display = 'block';
+                    document.getElementById('iqRhetoricSpokesList').textContent = spokes.slice(0, 6).join(' • ');
+                }
+
+            } catch(e) {
+                console.warn('[Iraq Rhetoric Card]', e);
+                document.getElementById('iqRhetoricScore').textContent = 'N/A';
+                document.getElementById('iqRhetoricScanInfo').textContent = 'Data unavailable';
+            }
+        }
 
         async function loadRhetoricBanner() {
             try {
@@ -559,6 +717,12 @@
                 ochaReportsTitle:        '📰 Latest OCHA / UN Reports',
                 humanitarianDataSource:  'Data: IOM DTM API v3 · ReliefWeb OCHA · UNHCR · WFP Iraq',
                 humanitarianLoading:     'Loading humanitarian data…',
+                rhetoricTrackerCardTitle: '📡 RHETORIC TRACKER',
+                rhetoricSubtitleCard:    'Theatre escalation level',
+                actorStatusCard:         'ACTOR STATUS',
+                activeAlertsCard:        'ACTIVE ALERTS',
+                voicesDetectedCard:      'VOICES DETECTED',
+                viewFullAnalysisCard:    'View Full Rhetoric Analysis →',
             },
             ar: {
                 // Page
@@ -582,6 +746,12 @@
                 ochaReportsTitle:        '📰 أحدث تقارير أوتشا / الأمم المتحدة',
                 humanitarianDataSource:  'البيانات: IOM DTM · أوتشا · مفوضية اللاجئين · برنامج الأغذية',
                 humanitarianLoading:     'جارٍ تحميل البيانات الإنسانية…',
+                rhetoricTrackerCardTitle: '📡 متتبع الخطاب',
+                rhetoricSubtitleCard:    'مستوى التصعيد في المسرح',
+                actorStatusCard:         'حالة الجهات الفاعلة',
+                activeAlertsCard:        'التنبيهات النشطة',
+                voicesDetectedCard:      'الأصوات المكتشفة',
+                viewFullAnalysisCard:    '← عرض التحليل الكامل للخطاب',
             },
             he: {
                 // Page
@@ -605,6 +775,12 @@
                 ochaReportsTitle:        '📰 דוחות OCHA / האו"ם אחרונים',
                 humanitarianDataSource:  'נתונים: IOM DTM · OCHA · UNHCR · WFP עיראק',
                 humanitarianLoading:     'טוען נתונים הומניטריים…',
+                rhetoricTrackerCardTitle: '📡 עוקב רטוריקה',
+                rhetoricSubtitleCard:    'רמת הסלמה בזירה',
+                actorStatusCard:         'סטטוס שחקנים',
+                activeAlertsCard:        'התראות פעילות',
+                voicesDetectedCard:      'קולות שזוהו',
+                viewFullAnalysisCard:    '← ניתוח רטוריקה מלא',
             },
             fa: {
                 // Page
@@ -628,6 +804,12 @@
                 ochaReportsTitle:        '📰 آخرین گزارش‌های اوچا / سازمان ملل',
                 humanitarianDataSource:  'داده‌ها: IOM DTM · اوچا · کمیساریای پناهندگان · WFP عراق',
                 humanitarianLoading:     'در حال بارگذاری داده‌های انسانی…',
+                rhetoricTrackerCardTitle: '📡 ردیاب گفتمان',
+                rhetoricSubtitleCard:    'سطح تشدید در صحنه',
+                actorStatusCard:         'وضعیت بازیگران',
+                activeAlertsCard:        'هشدارهای فعال',
+                voicesDetectedCard:      'صداهای شناسایی‌شده',
+                viewFullAnalysisCard:    '← مشاهده تحلیل کامل گفتمان',
             }
         };
 
@@ -670,7 +852,7 @@
                 hour: '2-digit', minute: '2-digit'
             });
             // Load rhetoric banner and humanitarian data
-            loadRhetoricBanner();
+            loadIraqRhetoricCard();
             loadHumanitarianData();
         });
     </script>
