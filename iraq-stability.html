@@ -27,6 +27,8 @@
           const next = current === 'dark' ? 'light' : 'dark';
           document.documentElement.setAttribute('data-theme', next);
           localStorage.setItem('asifah-theme', next);
+          const cb = document.getElementById('themeCheckbox');
+          if (cb) cb.checked = next === 'light';
       }
       initTheme();
     </script>
@@ -35,6 +37,8 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <title>Iraq Stability Index | Asifah Analytics v1.0.0</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -481,12 +485,15 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
         <!-- MAP SECTION -->
         <div class="map-section">
             <h2>&#x1F5FA;&#xFE0F; Iraq — Strategic Overview</h2>
-            <div class="map-subtitle">Interactive map centered on Iraq. Militia zones, U.S. base locations, and conflict areas coming soon.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe 
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=38.8%2C29.0%2C48.6%2C37.4&layer=mapnik&marker=33.31%2C44.37"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
-                </iframe>
+            <div class="map-subtitle">Key installations, conflict zones, and strategic sites. Click markers for details.</div>
+            <div id="iraq-map" style="width: 100%; height: 480px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden; z-index: 1;"></div>
+            <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px; font-size: 11px; color: var(--text-muted);">
+                <span>🔴 US Military Base</span>
+                <span>🟠 Active Conflict Zone</span>
+                <span>🔵 Government/Embassy</span>
+                <span>🟡 Kurdish / KRG</span>
+                <span>🛢️ Oil Infrastructure</span>
+                <span>⚠️ Displacement / Crisis</span>
             </div>
         </div>
 
@@ -649,7 +656,7 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
 
                 const level = sum.theatre_escalation_level || 0;
                 const lv = IQ_RHETORIC_LEVELS[level] || IQ_RHETORIC_LEVELS[0];
-                document.getElementById('iqRhetoricScore').textContent = (sum.rhetoric_score ?? '--') + '/100';
+                document.getElementById('iqRhetoricScore').textContent = (sum.theatre_score ?? sum.rhetoric_score ?? '--') + '/100';
                 const theatreEl = document.getElementById('iqRhetoricTheatreLabel');
                 theatreEl.textContent = `⚡ Level ${level} — ${lv.label}`;
                 theatreEl.style.background = lv.color;
@@ -1009,7 +1016,83 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             }
         }
 
-                const TRANSLATIONS = {
+        
+        // ── IRAQ MAP (Leaflet) ────────────────────────────────────
+        function initIraqMap() {
+            if (!document.getElementById('iraq-map')) return;
+
+            const map = L.map('iraq-map', {
+                center: [33.3, 44.4],
+                zoom: 6,
+                scrollWheelZoom: false
+            });
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                maxZoom: 18
+            }).addTo(map);
+
+            // Custom colored circle markers
+            function circleMarker(color, fillColor) {
+                return L.divIcon({
+                    className: '',
+                    html: `<div style="width:14px;height:14px;border-radius:50%;background:${fillColor};border:2px solid ${color};box-shadow:0 0 6px ${color}88;"></div>`,
+                    iconSize: [14, 14],
+                    iconAnchor: [7, 7],
+                    popupAnchor: [0, -10]
+                });
+            }
+
+            const US_BASE    = circleMarker('#ef4444', '#dc2626');   // red
+            const CONFLICT   = circleMarker('#f97316', '#ea580c');   // orange
+            const GOVT       = circleMarker('#3b82f6', '#2563eb');   // blue
+            const KURDISH    = circleMarker('#eab308', '#ca8a04');   // yellow
+            const OIL        = circleMarker('#14b8a6', '#0d9488');   // teal
+            const CRISIS     = circleMarker('#a855f7', '#9333ea');   // purple
+
+            const markers = [
+                // US Military Bases
+                { lat: 33.3834, lng: 42.4397, icon: US_BASE,  name: '🔴 Al Asad Air Base', desc: 'Major US/coalition air base, Anbar. Repeatedly targeted by PMF rocket attacks.' },
+                { lat: 36.1921, lng: 44.0106, icon: US_BASE,  name: '🔴 Erbil Air Base', desc: 'US forces + Kurdish Peshmerga HQ, KRG. Targeted by Iranian ballistic missiles Jan 2024.' },
+                { lat: 33.3058, lng: 44.4094, icon: US_BASE,  name: '🔴 Camp Victory / BIAP', desc: 'US Embassy annex + Baghdad Intl Airport compound. Active PMF threat zone.' },
+                { lat: 34.6073, lng: 43.6782, icon: US_BASE,  name: '🔴 Balad Air Base', desc: 'Coalition air base, Salah al-Din. Frequent rocket attacks from PMF.' },
+
+                // Government / Embassy
+                { lat: 33.3088, lng: 44.4013, icon: GOVT,     name: '🔵 US Embassy Baghdad', desc: 'Green Zone. Largest US embassy in the world. Under active PMF attack threat.' },
+                { lat: 33.3406, lng: 44.4009, icon: GOVT,     name: '🔵 Baghdad Green Zone', desc: 'Iraqi government district + international presence. Fortified perimeter.' },
+                { lat: 36.1901, lng: 44.0094, icon: GOVT,     name: '🔵 Erbil (KRG Capital)', desc: 'Kurdish Regional Government capital. US Consulate General located here.' },
+                { lat: 30.5085, lng: 47.7834, icon: GOVT,     name: '🔵 Basra (Political Hub)', desc: 'Iraq's second city. Oil-rich south, PMF stronghold. Political rival to Baghdad.' },
+
+                // Conflict / PMF Zones
+                { lat: 33.0111, lng: 43.5264, icon: CONFLICT, name: '🟠 Jurf al-Sakhr', desc: 'Kata'ib Hezbollah stronghold, Babylon. Key PMF logistics hub south of Baghdad.' },
+                { lat: 33.7722, lng: 42.7742, icon: CONFLICT, name: '🟠 Al-Qaim (Anbar)', desc: 'Syria-Iraq border crossing. PMF corridor for Iranian weapons + fighters. US airstrike target.' },
+                { lat: 32.5442, lng: 44.4117, icon: CONFLICT, name: '🟠 Najaf', desc: 'Shia holy city. Muqtada al-Sadr political base. Sadr City militias operate here.' },
+                { lat: 32.0090, lng: 44.9286, icon: CONFLICT, name: '🟠 Karbala', desc: 'Shia holy city. PMF political mobilization center.' },
+
+                // Kurdish / KRG
+                { lat: 36.3421, lng: 43.1333, icon: KURDISH,  name: '🟡 Mosul', desc: 'Largest city in northern Iraq. Site of ISIS caliphate capital (2014-17). ISIS remnants active in surrounding areas.' },
+                { lat: 35.4682, lng: 44.3922, icon: KURDISH,  name: '🟡 Kirkuk', desc: 'Disputed city, Baghdad-KRG flashpoint. Major oil fields. Kurdish-Arab-Turkmen tension.' },
+                { lat: 37.9295, lng: 41.5546, icon: CRISIS,   name: '⚠️ Sinjar', desc: 'Yazidi homeland. 2014 genocide site. ~200K still displaced. PKK/PMF/KRG competing authority.' },
+                { lat: 36.1900, lng: 44.0100, icon: KURDISH,  name: '🟡 Duhok (KRG)', desc: 'Northern KRG governorate bordering Turkey and Syria. Turkish military operations nearby.' },
+
+                // Oil Infrastructure
+                { lat: 29.6833, lng: 48.7833, icon: OIL,      name: '🛢️ Basra Oil Terminal', desc: '~3.5 mbpd export capacity. Handles 95% of Iraqi oil exports. Strategic single point of failure.' },
+                { lat: 30.4500, lng: 47.8190, icon: OIL,      name: '🛢️ Rumaila Oil Field', desc: 'Largest oil field in Iraq. ~1.5 mbpd. BP/PetroChina operated.' },
+                { lat: 35.4600, lng: 44.4900, icon: OIL,      name: '🛢️ Kirkuk-Ceyhan Pipeline', desc: 'Suspended since March 2023 ICC ruling. ~450K bpd offline. KRG-Baghdad dispute.' },
+
+                // Displacement / Crisis
+                { lat: 36.5000, lng: 43.9000, icon: CRISIS,   name: '⚠️ Debaga IDP Camp', desc: 'Major IDP camp near Erbil. Legacy ISIS-era displacement. ~50K residents.' },
+                { lat: 32.9000, lng: 44.3400, icon: CRISIS,   name: '⚠️ Diyala Province', desc: 'Active ISIS insurgency zone. IED attacks, assassinations ongoing.' },
+            ];
+
+            markers.forEach(m => {
+                L.marker([m.lat, m.lng], { icon: m.icon })
+                    .addTo(map)
+                    .bindPopup(`<strong style="font-size:13px;">${m.name}</strong><br><span style="font-size:11px;color:#555;">${m.desc}</span>`, { maxWidth: 260 });
+            });
+        }
+
+        const TRANSLATIONS = {
             en: {
                 // Page
                 pageTitle:               '🇮🇶 IRAQ STABILITY INDEX',
@@ -1234,6 +1317,7 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             loadStabilityData();
             loadIraqRhetoricCard();
             loadHumanitarianData();
+            initIraqMap();
         });
     </script>
 </body>
