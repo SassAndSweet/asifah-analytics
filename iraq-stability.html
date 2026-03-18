@@ -12,23 +12,12 @@
       function initTheme() {
           const saved = localStorage.getItem('asifah-theme') || 'dark';
           document.documentElement.setAttribute('data-theme', saved);
-          // Checkbox may not exist yet at head-parse time — sync on DOM ready too
-          const cb = document.getElementById('themeCheckbox');
-          if (cb) cb.checked = saved === 'light';
       }
-      // Re-sync checkbox once DOM is ready
-      document.addEventListener('DOMContentLoaded', () => {
-          const saved = localStorage.getItem('asifah-theme') || 'dark';
-          const cb = document.getElementById('themeCheckbox');
-          if (cb) cb.checked = saved === 'light';
-      });
       function toggleTheme() {
           const current = document.documentElement.getAttribute('data-theme') || 'dark';
           const next = current === 'dark' ? 'light' : 'dark';
           document.documentElement.setAttribute('data-theme', next);
           localStorage.setItem('asifah-theme', next);
-          const cb = document.getElementById('themeCheckbox');
-          if (cb) cb.checked = next === 'light';
       }
       initTheme();
     </script>
@@ -120,14 +109,25 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
         .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
         .mil-tracker-btn { display: inline-block; padding: 5px 12px; background: rgba(125,211,252,0.15); border: 1px solid rgba(125,211,252,0.4); border-radius: 5px; color: #7dd3fc; text-decoration: none; font-size: 11px; font-weight: bold; font-family: 'Times New Roman', Times, serif; white-space: nowrap; }
         .mil-tracker-btn:hover { background: rgba(125,211,252,0.3); }
-        /* Theme toggle with sun/moon */
+        /* Theme toggle — CSS-driven div (Lebanon pattern) */
         .theme-row { display: flex; align-items: center; gap: 6px; }
-        .theme-icon { font-size: 13px; }
-        .theme-toggle { display: flex; align-items: center; cursor: pointer; }
-        .theme-toggle input { width: 36px; height: 20px; appearance: none; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; cursor: pointer; transition: background 0.3s; }
-        .theme-toggle input:checked { background: rgba(125,211,252,0.4); }
-        .theme-toggle input::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .theme-toggle input:checked::after { left: 18px; }
+        .theme-toggle-switch {
+            position: relative; width: 46px; height: 24px;
+            background: rgba(255,255,255,0.2); border-radius: 12px;
+            cursor: pointer; transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px;
+            width: 16px; height: 16px; background: white;
+            border-radius: 50%; transition: transform 0.3s ease;
+            font-size: 9px;
+        }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-switch { background: rgba(125,211,252,0.3); border-color: rgba(125,211,252,0.5); }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(22px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
         @media (max-width: 768px) {
             header h1 { font-size: 20px; }
             .header-left, .header-controls { position: static; align-items: center; }
@@ -139,7 +139,7 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
         }
         .map-section h2, .knowledge-library h2 { font-size: 20px; margin-bottom: 15px; color: var(--text-primary); }
         .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
-        .knowledge-categories { display: grid; gap: 12px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
         .knowledge-card { border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
         .knowledge-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; background: var(--article-bg); }
         .knowledge-header:hover { background: var(--article-hover); }
@@ -189,11 +189,9 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                 </div>
                 <a href="military.html" class="mil-tracker-btn">🛡️ Military Tracker →</a>
                 <div class="theme-row">
-                    <span class="theme-icon">🌙</span>
-                    <label class="theme-toggle">
-                        <input type="checkbox" id="themeCheckbox" onchange="toggleTheme()">
-                    </label>
-                    <span class="theme-icon">☀️</span>
+                    <div class="theme-toggle-switch" onclick="toggleTheme()">
+                        <div class="theme-toggle-slider"></div>
+                    </div>
                 </div>
             </div>
             <h1 data-i18n="pageTitle">🇮🇶 IRAQ STABILITY INDEX</h1>
