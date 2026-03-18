@@ -162,6 +162,14 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
         .article-title { font-weight: bold; margin-bottom: 5px; }
         .article-meta { font-size: 12px; color: var(--text-muted); }
         .article-link { display: inline-block; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 13px; }
+        .map-section, .knowledge-library, .articles-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+        .article-tab-btn { background: var(--article-bg); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: 'Times New Roman', Times, serif; transition: all 0.2s; }
+        .article-tab-btn:hover { background: var(--article-hover); color: var(--text-primary); }
+        .article-tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); font-weight: bold; }
+        [data-theme="dark"] .article-tab-btn.active { background: #0ea5e9; border-color: #0ea5e9; }
+        .article-tab-content { display: block; }
+        .article-tab-loading { text-align: center; color: var(--text-muted); padding: 30px; font-style: italic; font-size: 13px; }
+        .article-tab-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 13px; }
         footer { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; margin-top: 30px; margin-bottom: 30px; text-align: center; font-size: 13px; color: var(--text-secondary); }
         @media (max-width: 768px) {
             header h1 { font-size: 20px; }
@@ -495,14 +503,14 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             </div>
         </div>
 
-        <!-- KNOWLEDGE LIBRARY -->
+<!-- KNOWLEDGE LIBRARY -->
         <div class="knowledge-library">
             <h2>
-                <span class="library-icon">&#x1F4DA;</span>
+                <span class="library-icon">📚</span>
                 Knowledge Library
             </h2>
             <p class="open-source-disclaimer">
-                Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
+                Background information compiled from open-source research, think tank analysis, and government publications. Updated for current Iran-US war context.
             </p>
             <div class="knowledge-categories">
 
@@ -516,68 +524,152 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                         <span class="collapse-icon">&#x25BC;</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Iraq hosts powerful Iran-aligned militia groups</strong> operating under the Popular Mobilization Forces (PMF/Hashd al-Shaabi) umbrella. Key groups include Kata'ib Hezbollah, Asa'ib Ahl al-Haq, and Harakat al-Nujaba. These groups have repeatedly attacked U.S. forces at Al Asad, Erbil, and other bases.</p><p><strong>Islamic Resistance in Iraq:</strong> This umbrella brand coordinates attacks on U.S. targets, using drones, rockets, and ballistic missiles. Operations have escalated dramatically during the current Iran conflict.</p>
+                        <p><strong>The Popular Mobilization Forces (PMF / Hashd al-Shaabi)</strong> are a state-sanctioned but Iran-aligned paramilitary network formally incorporated into Iraq's security forces in 2016. In practice, the most powerful factions — Kata'ib Hezbollah (KH), Asa'ib Ahl al-Haq (AAH), and Harakat al-Nujaba — operate as an Iranian proxy force, taking orders from the IRGC-Quds Force rather than Baghdad.</p>
+                        <p><strong>Current Status (March 2026):</strong> Since the outbreak of the Iran-US war, PMF factions operating under the brand "Islamic Resistance in Iraq" have dramatically escalated attacks on US forces. Drone and rocket strikes on Al Asad, Erbil, Balad, and the Baghdad Embassy compound are occurring on near-daily basis. Abu Ali al-Askari (Kata'ib Hezbollah's spokesperson) has issued explicit threats promising further escalation in response to US strikes on Iran.</p>
+                        <p><strong>Key distinction:</strong> PM al-Sudani's government has publicly called for restraint, but has limited ability to enforce it on KH and AAH, which operate as a parallel state within Iraq.</p>
+                        <ul>
+                            <li><strong>Kata'ib Hezbollah (KH)</strong> — Most aggressive faction. Directly commanded by IRGC. Responsible for majority of US base attacks. US designated as FTO.</li>
+                            <li><strong>Asa'ib Ahl al-Haq (AAH)</strong> — Political + military wing. Holds seats in parliament. Active attacks on US forces.</li>
+                            <li><strong>Harakat al-Nujaba</strong> — Has called for US forces to leave Iraq entirely. Volunteer forces sent to Syria and Yemen.</li>
+                            <li><strong>Islamic Resistance in Iraq</strong> — Umbrella brand for coordinated attacks, used to maintain deniability for Iraq's government.</li>
+                        </ul>
                         <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
                         <div class="report-links-grid">
-                            <a href="https://www.washingtoninstitute.org/" target="_blank" class="report-link">📑 Washington Institute</a>
+                            <a href="https://www.washingtoninstitute.org/policy-analysis/keywords/popular-mobilization-forces" target="_blank" class="report-link">📑 Washington Institute — PMF</a>
                             <a href="https://www.centcom.mil/" target="_blank" class="report-link">📑 U.S. CENTCOM</a>
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/gulf-and-arabian-peninsula/iraq" target="_blank" class="report-link">📑 Crisis Group — Iraq</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- U.S. Military Presence -->
+                <!-- U.S. Military Presence & Embassy -->
                 <div class="knowledge-card collapsed" id="card-us_presence">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('us_presence')">
                         <div class="knowledge-header-title">
                             <span class="category-icon">🎖️</span>
-                            <span>U.S. Military Presence</span>
+                            <span>U.S. Military Presence & Embassy</span>
                         </div>
                         <span class="collapse-icon">&#x25BC;</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Approximately 2,500 U.S. troops remain in Iraq</strong> as part of the anti-ISIS coalition. Key installations include Al Asad Air Base (Anbar), Erbil (Kurdistan), and the Baghdad Embassy compound. These bases face frequent rocket and drone attacks from Iran-backed groups.</p>
+                        <p><strong>Approximately 2,500 U.S. troops remain in Iraq</strong> as part of Operation Inherent Resolve (OIR), the anti-ISIS coalition mission. Key installations: Al Asad Air Base (Anbar), Erbil Air Base (KRG), Balad Air Base (Salah al-Din), and the Baghdad Embassy compound in the Green Zone.</p>
+                        <p><strong>Current Threat Status (March 2026):</strong> All four installations are under active PMF rocket and drone attack. The US Embassy Baghdad — the largest US embassy in the world — has been targeted multiple times since the Iran-US war began. Authorized departure has been issued for non-emergency Embassy staff. CENTCOM has conducted retaliatory airstrikes on PMF positions across western Iraq and the Syria-Iraq border zone.</p>
+                        <p><strong>Iraqi government position:</strong> PM al-Sudani has publicly demanded a timeline for US troop withdrawal, while simultaneously requesting US air defense support for Baghdad. This reflects Iraq's structural dilemma — unable to protect itself from Iran without US support, yet politically unable to openly support the US against Iran.</p>
+                        <ul>
+                            <li><strong>Al Asad Air Base</strong> (Anbar) — Largest US base. Struck by Iranian ballistic missiles in Jan 2020 and repeatedly by PMF drones 2024-2026.</li>
+                            <li><strong>Erbil Air Base</strong> (KRG) — Hit by Iranian ballistic missiles Jan 2024 (IRGC claimed responsibility). US Consulate General co-located.</li>
+                            <li><strong>Baghdad Embassy / Green Zone</strong> — Under near-daily rocket/drone attack since March 2026. Authorized departure in effect.</li>
+                            <li><strong>Balad Air Base</strong> (Salah al-Din) — Coalition air support hub. Frequent rocket attacks from Badr Organization-linked groups.</li>
+                        </ul>
                         <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
                         <div class="report-links-grid">
-                            <a href="https://www.defense.gov/" target="_blank" class="report-link">📑 U.S. Department of Defense</a>
-                            <a href="https://www.crisisgroup.org/middle-east-north-africa/gulf-and-arabian-peninsula/iraq" target="_blank" class="report-link">📑 Crisis Group - Iraq</a>
+                            <a href="https://www.defense.gov/News/Releases/" target="_blank" class="report-link">📑 U.S. DoD Press Releases</a>
+                            <a href="https://www.centcom.mil/MEDIA/PRESS-RELEASES/" target="_blank" class="report-link">📑 CENTCOM Press</a>
+                            <a href="https://iq.usembassy.gov/" target="_blank" class="report-link">📑 US Embassy Baghdad</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- ISIS Remnants -->
+                <!-- ISIS Remnants & Insurgency -->
                 <div class="knowledge-card collapsed" id="card-isis">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('isis')">
                         <div class="knowledge-header-title">
                             <span class="category-icon">☠️</span>
-                            <span>ISIS Remnants</span>
+                            <span>ISIS Remnants & Insurgency</span>
                         </div>
                         <span class="collapse-icon">&#x25BC;</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>ISIS maintains a low-level insurgency</strong> in rural areas of central and northern Iraq, conducting assassinations, ambushes, and IED attacks. The group exploits governance vacuums and sectarian grievances. Kurdish Peshmerga and Iraqi Security Forces conduct ongoing counter-ISIS operations.</p>
+                        <p><strong>ISIS was territorially defeated in Iraq in December 2017</strong>, but the group maintains a persistent low-level insurgency in rural and semi-urban areas of Diyala, Kirkuk, Salah al-Din, Anbar, and Nineveh provinces. Monthly attack tempo has remained at 10-30 incidents across these governorates.</p>
+                        <p><strong>Current threat assessment (March 2026):</strong> The Iran-US war has created conditions favorable to ISIS resurgence. Iraqi Security Forces are increasingly focused on PMF-US dynamics rather than counter-ISIS operations. US airstrikes on PMF positions have caused friction that ISIS exploits for recruitment narratives. Diyala Province in particular is seeing elevated IED and assassination activity.</p>
+                        <p><strong>ISIS in Syria connection:</strong> With the Assad regime's collapse (Dec 2024) and ongoing Syrian transition instability, the Iraq-Syria border zone (particularly the Euphrates River Valley and Sinjar Mountains) provides ISIS with operational depth and smuggling routes.</p>
+                        <ul>
+                            <li><strong>Diyala Province</strong> — Highest-tempo ISIS zone. Rural areas between Baquba and Khanaqin. Exploits Sunni-Kurdish-Shia fault lines.</li>
+                            <li><strong>Kirkuk / Salah al-Din</strong> — IED belts on supply routes. Assassinations of local officials and security forces.</li>
+                            <li><strong>Sinjar Mountains</strong> — Cross-border movement between Iraq and Syria. Yazidi population particularly vulnerable.</li>
+                            <li><strong>Anbar Province</strong> — Al-Qaim border crossing area. ISIS exploitation of PMF-US conflict zone.</li>
+                        </ul>
                         <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
                         <div class="report-links-grid">
-                            <a href="https://www.wilsoncenter.org/" target="_blank" class="report-link">📑 Wilson Center</a>
-                            <a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" class="report-link">📑 ACLED Dashboard</a>
+                            <a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" class="report-link">📑 ACLED Iraq Dashboard</a>
+                            <a href="https://www.wilsoncenter.org/topics/isis" target="_blank" class="report-link">📑 Wilson Center — ISIS</a>
+                            <a href="https://news.usni.org/" target="_blank" class="report-link">📑 USNI News</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Political Landscape -->
+                <!-- Political Landscape & KRG -->
                 <div class="knowledge-card collapsed" id="card-political">
                     <div class="knowledge-header" onclick="toggleKnowledgeCard('political')">
                         <div class="knowledge-header-title">
                             <span class="category-icon">🏛️</span>
-                            <span>Political Landscape</span>
+                            <span>Political Landscape & KRG</span>
                         </div>
                         <span class="collapse-icon">&#x25BC;</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Iraq's political system</strong> is characterized by sectarian power-sharing, Kurdish autonomy tensions, and significant Iranian influence. Prime Minister Mohammed Shia al-Sudani leads a government backed by the Iran-aligned Coordination Framework. Baghdad-Erbil relations over oil revenue sharing remain contentious.</p>
+                        <p><strong>Iraq's political system</strong> operates on a sectarian muhasasa (apportionment) model: the PM is Shia, President is Kurdish, Speaker of Parliament is Sunni. PM Mohammed Shia' al-Sudani (since Oct 2022) leads a government dependent on the Iran-aligned Coordination Framework for its parliamentary majority — giving PMF factions significant political leverage over Baghdad.</p>
+                        <p><strong>Iran-US war impact on Iraqi politics (March 2026):</strong> Al-Sudani faces an impossible position — Iran demands Iraq deny US use of its territory, while the US demands Iraq stop PMF attacks on US forces. Al-Sudani has issued pro forma condemnations of PMF attacks while privately being unable or unwilling to stop them. The Iraqi parliament has passed a non-binding resolution demanding US withdrawal.</p>
+                        <p><strong>Kurdistan Regional Government (KRG):</strong> The KRG (capital: Erbil) maintains de facto autonomy. Key disputes with Baghdad remain unresolved: the Kirkuk-Ceyhan pipeline suspension (since March 2023 ICC arbitration), KRG budget share withheld, and Peshmerga force integration stalled. The Iran-US war may accelerate US-KRG security realignment as an alternative to Baghdad-based cooperation.</p>
+                        <ul>
+                            <li><strong>Al-Sudani government</strong> — Functional but Iran-dependent. Tightrope between US and Iran. Political survival requires not openly siding with either.</li>
+                            <li><strong>Muqtada al-Sadr</strong> — Withdrew from politics (Aug 2022) but retains street-level mobilization capability. Wild card if US-PMF conflict escalates.</li>
+                            <li><strong>KRG-Baghdad pipeline dispute</strong> — ~450K bpd offline since 2023. KRG budget crisis. Erbil increasingly looking to direct US partnership.</li>
+                            <li><strong>Sunni political bloc</strong> — Weakened since 2003. Tribal leaders in Anbar navigating between Baghdad, KH, and US forces.</li>
+                        </ul>
                         <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
                         <div class="report-links-grid">
-                            <a href="https://www.crisisgroup.org/middle-east-north-africa/gulf-and-arabian-peninsula/iraq" target="_blank" class="report-link">📑 Crisis Group - Iraq</a>
-                            <a href="https://www.chathamhouse.org/" target="_blank" class="report-link">📑 Chatham House</a>
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/gulf-and-arabian-peninsula/iraq" target="_blank" class="report-link">📑 Crisis Group — Iraq</a>
+                            <a href="https://www.chathamhouse.org/regions/middle-east-and-north-africa/iraq" target="_blank" class="report-link">📑 Chatham House</a>
+                            <a href="https://www.rudaw.net/english" target="_blank" class="report-link">📑 Rudaw (KRG)</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Oil, Economy & Basra -->
+                <div class="knowledge-card collapsed" id="card-economy">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('economy')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🛢️</span>
+                            <span>Oil, Economy & Basra</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Iraq's economy is overwhelmingly oil-dependent</strong> — approximately 90% of government revenue comes from oil exports. The country produces ~4.2 million barrels per day (slightly above its OPEC quota of 4.0 mbpd). Iraq's fiscal break-even price is approximately $70/bbl; at current Brent prices (~$103/bbl) the government has meaningful fiscal cushion.</p>
+                        <p><strong>Basra Oil Terminal</strong> (coordinates: 29.68°N, 48.78°E) handles approximately 95% of Iraqi oil exports — roughly 3.5 mbpd. It is Iraq's single most critical economic chokepoint. A sustained attack or sabotage of Basra terminals would exhaust Iraq's foreign exchange reserves within 60 days. During the Iran-US war, PMF/IRGC capability to threaten Basra has increased as a potential escalation tool.</p>
+                        <p><strong>IQD/USD exchange rate:</strong> The Central Bank of Iraq (CBI) maintains an official peg of ~1,300 IQD/USD. However, the parallel (bazaar) market trades at ~1,470 IQD/USD — a 13% gap reflecting US sanctions pressure on Iraq's dollar access (imposed when Iraq was found to be facilitating Iran sanctions evasion through the dollar auction system). The gap is a leading indicator of economic stress.</p>
+                        <p><strong>KRG fiscal crisis:</strong> The suspension of the Kirkuk-Ceyhan pipeline (March 2023 ICC arbitration ruling) has halted ~450K bpd of northern Kurdish oil exports. With Baghdad also withholding the KRG's constitutionally-mandated 17% budget share, the KRG is in a serious fiscal squeeze.</p>
+                        <div class="open-source-disclaimer">* Based on open-source intelligence, OPEC/EIA reports, and financial data</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.opec.org/opec_web/en/publications/338.htm" target="_blank" class="report-link">📑 OPEC Monthly Report</a>
+                            <a href="https://www.eia.gov/international/analysis/country/IRQ" target="_blank" class="report-link">📑 EIA — Iraq</a>
+                            <a href="https://irakoilreport.com/" target="_blank" class="report-link">📑 Iraq Oil Report</a>
+                            <a href="https://cbi.iq/" target="_blank" class="report-link">📑 Central Bank of Iraq</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Regional Dynamics & Iran -->
+                <div class="knowledge-card collapsed" id="card-regional">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('regional')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🌍</span>
+                            <span>Regional Dynamics & Iran</span>
+                        </div>
+                        <span class="collapse-icon">&#x25BC;</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <p><strong>Iraq is the primary battleground for Iran-US proxy conflict.</strong> Iran has spent two decades building political and military influence in Iraq — through the PMF, political parties in the Coordination Framework, economic ties, and religious networks centered on Najaf. Iraq is simultaneously the most important country for Iranian strategic depth and the country most exposed to Iranian coercion.</p>
+                        <p><strong>Current Iran-US war dynamics (March 2026):</strong> US strikes on Iranian nuclear and military facilities have triggered a PMF escalation campaign against US forces in Iraq. Iran is using Iraqi territory and PMF proxies to impose costs on the US without directly engaging US forces from Iranian soil — exactly the escalation management strategy IRGC-Quds Force has refined since 2019. Key signals to watch: whether Iran orders PMF to strike Basra terminals (economic warfare against US partners) or escalates to ballistic missile attacks on US positions from Iraqi soil.</p>
+                        <p><strong>Turkey's role:</strong> Turkey conducts regular cross-border military operations in northern Iraq (Operation Claw series) targeting PKK positions in the Qandil Mountains and Sinjar. These operations are conducted without Baghdad's consent and occasionally cause civilian casualties, adding another layer of Iraqi sovereignty tension.</p>
+                        <p><strong>Saudi Arabia and Gulf states</strong> have re-engaged Iraq diplomatically since 2020, opening the Arar border crossing and investing in reconstruction. This represents a counter-Iran strategy to pull Iraq toward Arab normalcy — but has limited traction given the PMF's structural dominance.</p>
+                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.mei.edu/regions/iraq" target="_blank" class="report-link">📑 Middle East Institute</a>
+                            <a href="https://www.rand.org/topics/iraq.html" target="_blank" class="report-link">📑 RAND — Iraq</a>
+                            <a href="https://www.bbc.com/news/topics/c302m85q5xnt" target="_blank" class="report-link">📑 BBC Iraq</a>
+                            <a href="https://www.niqash.org/" target="_blank" class="report-link">📑 Niqash (Iraqi journalism)</a>
                         </div>
                     </div>
                 </div>
@@ -587,9 +679,38 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
 
         <!-- RECENT ARTICLES -->
         <div class="articles-section">
-            <div class="section-title">&#x1F4F0; Recent Iraq, PMF & U.S. Forces Articles (Last 7 Days)</div>
-            <div id="articlesContainer">
-                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
+            <!-- Tab bar -->
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;border-bottom:2px solid var(--card-border);padding-bottom:12px;">
+                <div style="font-size:16px;font-weight:bold;color:var(--text-primary);flex:1;min-width:200px;align-self:center;">
+                    📰 Recent Iraq Intelligence (Last 7 Days)
+                </div>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;" id="articleTabs">
+                    <button class="article-tab-btn active" onclick="switchArticleTab('en', this)">🇺🇸 English</button>
+                    <button class="article-tab-btn" onclick="switchArticleTab('ar', this)">🇮🇶 Arabic</button>
+                    <button class="article-tab-btn" onclick="switchArticleTab('he', this)">🇮🇱 Hebrew</button>
+                    <button class="article-tab-btn" onclick="switchArticleTab('fa', this)">🇮🇷 Farsi</button>
+                    <button class="article-tab-btn" onclick="switchArticleTab('reddit', this)">💬 Reddit</button>
+                    <button class="article-tab-btn" onclick="switchArticleTab('kurdish', this)">🏔️ Kurdish</button>
+                </div>
+            </div>
+            <!-- Article containers — one per tab -->
+            <div id="articles-en" class="article-tab-content">
+                <div class="article-tab-loading">Loading English articles…</div>
+            </div>
+            <div id="articles-ar" class="article-tab-content" style="display:none;">
+                <div class="article-tab-loading">Loading Arabic articles…</div>
+            </div>
+            <div id="articles-he" class="article-tab-content" style="display:none;">
+                <div class="article-tab-loading">Loading Hebrew articles…</div>
+            </div>
+            <div id="articles-fa" class="article-tab-content" style="display:none;">
+                <div class="article-tab-loading">Loading Farsi articles…</div>
+            </div>
+            <div id="articles-reddit" class="article-tab-content" style="display:none;">
+                <div class="article-tab-loading">Loading Reddit posts…</div>
+            </div>
+            <div id="articles-kurdish" class="article-tab-content" style="display:none;">
+                <div class="article-tab-loading">Loading Kurdish news sources…</div>
             </div>
         </div>
 
@@ -843,55 +964,181 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             if (card) card.classList.toggle('collapsed');
         }
 
-        // Load articles
-        async function loadArticles() {
-            try {
-                const response = await fetch(BACKEND_URL + '/api/threat/iraq?days=7');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                const articles = data.top_scoring_articles || data.articles || data.recent_headlines || [];
-                if (articles.length > 0) {
-                    displayArticles(articles);
-                } else {
-                    displayFallback();
-                }
-            } catch (error) {
-                console.warn('Article load failed:', error.message);
-                displayFallback();
+        // ── ARTICLE TABS ─────────────────────────────────────────
+        // Stores fetched articles by language to avoid re-fetching
+        const ARTICLE_CACHE = {};
+        let articlesLoaded = false;
+
+        // Kurdish RSS sources (Rudaw + Kurdistan24 via GDELT proxy)
+        const KURDISH_SOURCES = [
+            { name: 'Rudaw', url: 'https://www.rudaw.net/english/feed' },
+            { name: 'Kurdistan24', url: 'https://www.kurdistan24.net/en/rss' },
+        ];
+
+        function switchArticleTab(lang, btn) {
+            // Update active tab button
+            document.querySelectorAll('.article-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            // Hide all containers, show selected
+            document.querySelectorAll('.article-tab-content').forEach(c => c.style.display = 'none');
+            document.getElementById('articles-' + lang).style.display = 'block';
+            // Load if not yet loaded
+            if (!ARTICLE_CACHE[lang]) {
+                loadArticleTab(lang);
             }
         }
 
-        function displayArticles(articles) {
-            const container = document.getElementById('articlesContainer');
+        function renderArticles(articles, containerId, emptyMsg) {
+            const container = document.getElementById(containerId);
+            if (!articles || articles.length === 0) {
+                container.innerHTML = `<div class="article-tab-empty">${emptyMsg}</div>`;
+                return;
+            }
             container.innerHTML = articles.slice(0, 20).map(a => {
-                const title = a.title || a.article_title || 'Untitled';
-                const source = a.source || a.source_name || '';
+                const title     = a.title || a.article_title || 'Untitled';
+                const source    = typeof a.source === 'object' ? (a.source.name || '') : (a.source || '');
                 const published = a.published || a.publishedAt || '';
-                const url = a.url || '#';
-                let dateStr = 'Recent';
-                if (published) { try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch(e) {} }
-                return '<div class="article-item">' +
-                    '<div class="article-title">' + title + '</div>' +
-                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
-                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
-                    '</div>';
+                const url       = a.url || '#';
+                let dateStr = '';
+                if (published) {
+                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+                    catch(e) { dateStr = published.substring(0, 10); }
+                }
+                return `<div class="article-item">
+                    <div class="article-title">${title}</div>
+                    <div class="article-meta">${source}${source && dateStr ? ' &bull; ' : ''}${dateStr}</div>
+                    ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" class="article-link">Read article &rarr;</a>` : ''}
+                </div>`;
             }).join('');
         }
 
-        function displayFallback() {
-            const container = document.getElementById('articlesContainer');
-            container.innerHTML = 
-                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
-                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading...</p>' +
-                '<p style="font-size:13px; margin-bottom:20px;">Check these curated OSINT sources:</p>' +
-                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
-                '<a href="https://www.aljazeera.com/tag/iraq/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Iraq</a>' +
-                '<a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - Middle East</a>' +
-                '<a href="https://www.rudaw.net/english" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Rudaw English</a>' +
-                '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
-                '<a href="https://www.centcom.mil/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">U.S. CENTCOM</a>' +
-                "'</div>' +" +
-                "'</div>';";
+        async function loadArticleTab(lang) {
+            const containerId = 'articles-' + lang;
+            const container = document.getElementById(containerId);
+
+            try {
+                if (lang === 'kurdish') {
+                    // Kurdish: fetch from GDELT with Kurdish/Iraq query
+                    const gdeltUrl = `https://api.gdeltproject.org/api/v2/doc/doc?query=iraq+OR+kurdistan+OR+erbil+OR+peshmerga&mode=artlist&maxrecords=20&timespan=7d&format=json&sourcelang=eng&sourcecountry=IQ`;
+                    const resp = await fetch(gdeltUrl);
+                    if (!resp.ok) throw new Error('GDELT error');
+                    const data = await resp.json();
+                    const articles = (data.articles || [])
+                        .filter(a => {
+                            const domain = a.domain || '';
+                            return domain.includes('rudaw') || domain.includes('kurdistan24') ||
+                                   domain.includes('kurd') || domain.includes('erbil');
+                        })
+                        .map(a => ({
+                            title: a.title,
+                            url: a.url,
+                            source: { name: a.domain || 'Kurdish News' },
+                            published: a.seendate || '',
+                        }));
+
+                    // If GDELT filter gives too few, fall back to all Iraq-sourced articles
+                    const toShow = articles.length >= 3 ? articles :
+                        (data.articles || []).slice(0, 15).map(a => ({
+                            title: a.title, url: a.url,
+                            source: { name: a.domain }, published: a.seendate,
+                        }));
+
+                    ARTICLE_CACHE[lang] = toShow;
+                    renderArticles(toShow, containerId,
+                        '📡 Kurdish news sources temporarily unavailable — <a href="https://www.rudaw.net/english" target="_blank" style="color:var(--accent)">Rudaw</a> | <a href="https://www.kurdistan24.net/en" target="_blank" style="color:var(--accent)">Kurdistan24</a>');
+                    return;
+                }
+
+                // All other tabs: pull from /api/threat/iraq and filter by language
+                // Only fetch once, then filter from cache
+                if (!ARTICLE_CACHE['_all']) {
+                    const resp = await fetch(BACKEND_URL + '/api/threat/iraq?days=7');
+                    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                    const data = await resp.json();
+                    // Store all articles
+                    ARTICLE_CACHE['_all'] = data;
+
+                    // Also parse top_scoring_articles / recent_headlines
+                    const allArts = data.articles || data.top_scoring_articles || data.recent_headlines || [];
+                    ARTICLE_CACHE['_articles'] = allArts;
+                }
+
+                const allArts = ARTICLE_CACHE['_articles'] || [];
+
+                // Language filter map
+                const langMap = { en: 'en', ar: 'ar', he: 'he', fa: 'fa', reddit: 'reddit' };
+                let filtered = [];
+
+                if (lang === 'reddit') {
+                    filtered = allArts.filter(a => {
+                        const src = typeof a.source === 'object' ? (a.source.name || '') : (a.source || '');
+                        return src.toLowerCase().includes('reddit') || src.toLowerCase().startsWith('r/');
+                    });
+                    if (filtered.length === 0) {
+                        // Try fetching Reddit directly
+                        const subs = ['iraq', 'Baghdad', 'geopolitics', 'CredibleDefense', 'worldnews'];
+                        const posts = [];
+                        for (const sub of subs.slice(0, 3)) {
+                            try {
+                                const r = await fetch(`https://www.reddit.com/r/${sub}/search.json?q=iraq+militia+PMF+attack&sort=new&t=week&limit=8`, {
+                                    headers: { 'User-Agent': 'AsifahAnalytics/1.0' }
+                                });
+                                if (r.ok) {
+                                    const d = await r.json();
+                                    (d.data?.children || []).forEach(p => {
+                                        posts.push({
+                                            title: p.data.title,
+                                            url: 'https://reddit.com' + p.data.permalink,
+                                            source: { name: 'r/' + sub },
+                                            published: new Date(p.data.created_utc * 1000).toISOString(),
+                                        });
+                                    });
+                                }
+                            } catch(e) {}
+                        }
+                        filtered = posts;
+                    }
+                } else if (lang === 'en') {
+                    // English: everything that isn't clearly Arabic/Hebrew/Farsi
+                    filtered = allArts.filter(a => {
+                        const l = a.language || '';
+                        const src = typeof a.source === 'object' ? (a.source.name || '') : (a.source || '');
+                        return !l || l === 'en' || (!l && !src.toLowerCase().includes('reddit'));
+                    });
+                    // If too few, show all
+                    if (filtered.length < 5) filtered = allArts.filter(a => {
+                        const src = typeof a.source === 'object' ? (a.source.name || '') : (a.source || '');
+                        return !src.toLowerCase().startsWith('r/');
+                    });
+                } else {
+                    // Arabic, Hebrew, Farsi
+                    filtered = allArts.filter(a => {
+                        const l = a.language || '';
+                        return l === langMap[lang];
+                    });
+                }
+
+                ARTICLE_CACHE[lang] = filtered;
+
+                const emptyMessages = {
+                    en: '📡 English articles loading — backend scan in progress.',
+                    ar: '📡 لا توجد مقالات عربية حالياً — جارٍ المسح.',
+                    he: '📡 אין מאמרים בעברית כרגע — הסריקה בעיצומה.',
+                    fa: '📡 مقاله‌ای به فارسی یافت نشد — در حال پردازش.',
+                    reddit: '📡 No Reddit posts found — try r/Iraq, r/geopolitics, or r/CredibleDefense.',
+                };
+
+                renderArticles(filtered, containerId, emptyMessages[lang] || 'No articles found.');
+
+            } catch(e) {
+                console.warn('[Iraq Articles Tab]', lang, e);
+                container.innerHTML = `<div class="article-tab-empty">⚠️ Articles temporarily unavailable. <a href="https://www.rudaw.net/english" target="_blank" style="color:var(--accent)">Rudaw</a> | <a href="https://www.aljazeera.com/tag/iraq/" target="_blank" style="color:var(--accent)">Al Jazeera Iraq</a></div>`;
+            }
+        }
+
+        // Load English tab on page load
+        function loadArticles() {
+            loadArticleTab('en');
         }
 
         // ── STABILITY DATA ───────────────────────────────────────
@@ -1316,6 +1563,7 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
             loadIraqRhetoricCard();
             loadHumanitarianData();
             initIraqMap();
+            loadArticles();
         });
     </script>
 </body>
