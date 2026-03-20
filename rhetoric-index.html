@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Middle East Rhetoric Monitor Index v1.0.1 - Mar 2026 -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <title>ME Rhetoric Monitor | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --header-gradient-start: #1a2f1a;
+            --header-gradient-end: #2d4a2d;
+            --header-text: #ffffff;
+            --article-bg: #f8f9fa;
+            --watermark-opacity: 0.08;
+            --watermark-filter: none;
+            --card-glow: none;
+            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
+            --accent: #16a34a;
+            --cyber-cyan: #16a34a;
+            --cyber-cyan-glow: rgba(22,163,74,0.15);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #0a0f1a;
+            --card-bg: #111827;
+            --card-border: #1e3a5f;
+            --text-primary: #e8d5a3;
+            --text-secondary: #c4a96d;
+            --text-muted: #8a7048;
+            --header-gradient-start: #080d08;
+            --header-gradient-end: #1a2f1a;
+            --header-text: #7dd3fc;
+            --article-bg: #0f1923;
+            --watermark-opacity: 0.22;
+            --watermark-filter: saturate(5) brightness(0.9);
+            --accent: #f97316;
+            --cyber-cyan: #00c8d4;
+            --cyber-cyan-glow: rgba(0,200,212,0.15);
+            --card-glow: 0 0 6px rgba(0,200,212,0.12), 0 0 1px rgba(0,200,212,0.25);
+            --card-hover-glow: 0 0 22px rgba(0,200,212,0.28), 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            min-width: 800px; min-height: 800px;
+            max-width: 1400px; max-height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            filter: var(--watermark-filter);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .container { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+            border-radius: 12px; padding: 20px;
+            margin-bottom: 24px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            grid-template-areas: "logo title controls";
+            align-items: center;
+            gap: 16px;
+            border: 1px solid rgba(22,163,74,0.3);
+            min-height: 110px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] header {
+            border-color: rgba(0,200,212,0.3);
+        }
+
+        [data-theme="dark"] header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
+            opacity: 0.5;
+        }
+
+        .header-logo-wrap {
+            grid-area: logo;
+            display: flex; flex-direction: column;
+            align-items: center; gap: 8px;
+        }
+        .header-logo { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            color: var(--header-text); text-decoration: none;
+            border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
+            font-size: 12px; font-weight: bold;
+            transition: all 0.2s ease; white-space: nowrap;
+        }
+        .back-link:hover { background: rgba(255,255,255,0.25); }
+
+        .header-content { grid-area: title; text-align: center; }
+
+        h1 {
+            font-size: 26px; font-weight: bold; letter-spacing: 1px;
+            margin-bottom: 5px; color: var(--header-text);
+        }
+        [data-theme="dark"] h1 {
+            color: var(--cyber-cyan);
+            text-shadow: 0 0 20px rgba(0,200,212,0.25);
+        }
+
+        .subtitle { font-size: 13px; opacity: 0.85; font-style: italic; color: var(--header-text); }
+        .last-updated { font-size: 11px; opacity: 0.7; color: var(--header-text); margin-top: 4px; }
+
+        .header-controls {
+            grid-area: controls;
+            display: flex; flex-direction: column;
+            align-items: flex-end; gap: 10px;
+        }
+
+        .theme-toggle {
+            display: flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.1); padding: 6px 10px;
+            border-radius: 8px;
+        }
+        .theme-toggle-label { font-size: 11px; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.5px; }
+        .theme-toggle-switch {
+            position: relative; width: 44px; height: 24px;
+            background: rgba(255,255,255,0.2); border-radius: 12px;
+            cursor: pointer; transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        .theme-toggle-slider {
+            position: absolute; top: 2px; left: 2px;
+            width: 16px; height: 16px;
+            background: white; border-radius: 50%;
+            transition: transform 0.3s ease;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px;
+        }
+        .theme-toggle-slider::before { content: '☀️'; }
+        [data-theme="dark"] .theme-toggle-slider { transform: translateX(20px); }
+        [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+
+        /* ── REGIONAL POSTURE BANNER ── */
+        .posture-banner {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: var(--card-glow);
+        }
+
+        [data-theme="dark"] .posture-banner {
+            border-color: var(--cyber-cyan);
+            box-shadow: 0 0 14px rgba(0,200,212,0.12), var(--card-glow);
+        }
+
+        .posture-left { display: flex; flex-direction: column; gap: 4px; }
+        .posture-label {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--cyber-cyan); font-weight: bold;
+        }
+        .posture-value { font-size: 20px; font-weight: 900; }
+        .posture-right { display: flex; gap: 24px; flex-wrap: wrap; }
+        .posture-stat { text-align: center; }
+        .posture-stat-num { font-size: 22px; font-weight: bold; }
+        .posture-stat-label {
+            font-size: 10px; color: var(--text-muted);
+            text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        /* ── SECTION TITLE ── */
+        .section-title {
+            font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+            color: var(--cyber-cyan); font-weight: bold;
+            margin-bottom: 12px; padding-bottom: 6px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        /* ── TRACKER BANNERS ── */
+        .trackers-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+
+        .tracker-banner {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 22px;
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--card-glow);
+            transition: box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+        .tracker-banner:hover { box-shadow: var(--card-hover-glow); }
+        [data-theme="dark"] .tracker-banner:hover { border-color: var(--cyber-cyan); }
+
+        .tracker-name {
+            font-size: 14px; font-weight: bold;
+            display: flex; align-items: center; gap: 8px;
+            margin-bottom: 4px;
+        }
+        [data-theme="dark"] .tracker-name { color: #7dd3fc; }
+
+        .tracker-actors { font-size: 11px; color: var(--text-muted); }
+
+        .tracker-middle { display: flex; flex-direction: column; gap: 6px; }
+
+        .tracker-vectors { display: flex; gap: 6px; flex-wrap: wrap; }
+        .vector-pill {
+            font-size: 10px; padding: 2px 8px; border-radius: 4px;
+            font-weight: bold; white-space: nowrap;
+            background: rgba(22,163,74,0.1);
+            color: #15803d;
+            border: 1px solid rgba(22,163,74,0.25);
+        }
+        [data-theme="dark"] .vector-pill {
+            background: rgba(0,200,212,0.08);
+            color: var(--cyber-cyan);
+            border: 1px solid rgba(0,200,212,0.2);
+        }
+
+        .tracker-delta { font-size: 11px; font-weight: bold; }
+        .delta-rising  { color: #ef4444; }
+        .delta-falling { color: #22c55e; }
+        .delta-stable  { color: #9ca3af; }
+        [data-theme="dark"] .delta-stable { color: #8a7048; }
+
+        .tracker-right {
+            display: flex; flex-direction: column;
+            align-items: flex-end; gap: 8px;
+        }
+
+        .level-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 6px;
+            font-size: 13px; font-weight: bold; color: white;
+            white-space: nowrap;
+        }
+
+        .open-btn {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 5px 12px;
+            background: transparent;
+            border: 2px solid var(--card-border);
+            color: var(--text-secondary);
+            border-radius: 6px; font-size: 11px; font-weight: bold;
+            cursor: pointer; transition: all 0.2s ease;
+            text-decoration: none; white-space: nowrap;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        .open-btn:hover {
+            border-color: var(--cyber-cyan);
+            color: var(--cyber-cyan);
+        }
+
+        /* ── COMING SOON ── */
+        .coming-soon-banner {
+            background: var(--card-bg);
+            border: 2px dashed var(--card-border);
+            border-radius: 12px;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            opacity: 0.45;
+        }
+        .coming-soon-name {
+            font-size: 14px; font-weight: bold;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .coming-soon-badge {
+            font-size: 10px; padding: 3px 10px; border-radius: 4px;
+            background: var(--article-bg); color: var(--text-muted);
+            border: 1px solid var(--card-border); font-weight: bold;
+            letter-spacing: 0.5px; text-transform: uppercase;
+        }
+
+        /* ── LOADING ── */
+        .loading-dot { animation: blink 1.4s infinite both; }
+        .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes blink { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
+
+        /* ── FOOTER ── */
+        footer {
+            text-align: center; padding: 30px 20px;
+            color: var(--text-muted); font-size: 12px; line-height: 1.8;
+            border-top: 1px solid var(--card-border); margin-top: 30px;
+        }
+
+        /* ── MOBILE ── */
+        @media (max-width: 768px) {
+            header {
+                grid-template-columns: 1fr;
+                grid-template-areas: "title" "logo" "controls";
+                text-align: center;
+            }
+            .header-controls { align-items: center; }
+            .tracker-banner { grid-template-columns: 1fr; }
+            .tracker-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-logo-wrap">
+            <a href="index.html" class="back-link">← Back to ME Dashboard</a>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics Logo" class="header-logo">
+        </div>
+        <div class="header-content">
+            <h1>🕌 MIDDLE EAST RHETORIC MONITOR</h1>
+            <div class="subtitle">Real-time escalation tracking across active theatres · Iran-proxy coordination signals</div>
+            <div class="last-updated" id="lastUpdated">Connecting to trackers...</div>
+        </div>
+        <div class="header-controls">
+            <div class="theme-toggle">
+                <span class="theme-toggle-label">Theme</span>
+                <div class="theme-toggle-switch" onclick="toggleTheme()">
+                    <div class="theme-toggle-slider"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- REGIONAL POSTURE BANNER -->
+    <div class="posture-banner">
+        <div class="posture-left">
+            <div class="posture-label">🌐 Regional Posture</div>
+            <div class="posture-value" id="postureValue" style="color:var(--text-muted);">
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+                <span class="loading-dot">●</span>
+            </div>
+        </div>
+        <div class="posture-right" id="postureStats"></div>
+    </div>
+
+    <!-- ACTIVE TRACKERS -->
+    <div class="section-title">📡 Active Rhetoric Trackers — Alphabetical</div>
+    <div class="trackers-list" id="trackersList"></div>
+
+    <!-- COMING SOON — ME only -->
+    <div class="section-title" style="margin-top:24px;">🔜 Middle East — In Development</div>
+    <div class="trackers-list">
+        <div class="coming-soon-banner">
+            <div class="coming-soon-name">🇮🇷 Iran Dedicated Rhetoric Tracker</div>
+            <span class="coming-soon-badge">Build Queued — #3 Priority</span>
+        </div>
+        <div class="coming-soon-banner">
+            <div class="coming-soon-name">🇮🇱 Israel / Palestine Rhetoric Tracker</div>
+            <span class="coming-soon-badge">Planned</span>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div>Data Sources: Google News RSS (EN/AR/HE/FA), GDELT, Telegram OSINT channels, Reddit</div>
+        <div style="margin-top:6px;font-size:0.85em;">
+            Escalation levels: 0 Monitoring · 1 Rhetoric · 2 Warning · 3 Direct Threat · 4 Incident · 5 Active Conflict
+        </div>
+        <div style="margin-top:15px;padding:15px;background:var(--article-bg);border-radius:8px;">
+            <div style="font-size:0.9em;margin-bottom:4px;">Asifah Analytics v3.x — ME Rhetoric Monitor v1.0.1</div>
+            <div style="font-size:0.8em;">Updated every 12 hours | Not for operational use</div>
+        </div>
+        <div style="margin-top:20px;padding:15px;background:rgba(22,163,74,0.1);border-radius:8px;">
+            <span style="font-size:0.9em;">
+                If you find Asifah Analytics useful,
+                <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#16a34a;">☕ buy me a coffee</a>
+            </span>
+        </div>
+        <div style="margin-top:25px;font-size:0.75em;color:var(--text-muted);">
+            © 2026 RCGG. All Rights Reserved. Proprietary and Confidential. Not for operational use.
+        </div>
+    </footer>
+
+</div>
+
+<script>
+    const ESCALATION_LEVELS = {
+        0: { label: 'Monitoring',      color: '#6b7280' },
+        1: { label: 'Rhetoric',        color: '#3b82f6' },
+        2: { label: 'Warning',         color: '#f59e0b' },
+        3: { label: 'Direct Threat',   color: '#f97316' },
+        4: { label: 'Incident',        color: '#ef4444' },
+        5: { label: 'Active Conflict', color: '#dc2626' },
+    };
+
+    const TRACKERS = [
+        {
+            id: 'iraq',
+            name: 'Iraq Rhetoric & Escalation Tracker',
+            flag: '🇮🇶',
+            actors: "PMF · Kata'ib · Sadr · KRG · Iran Direct Strikes · US CENTCOM · ISIS Watch",
+            url: 'https://www.asifahanalytics.com/rhetoric-iraq.html',
+            summaryUrl: 'https://asifah-backend.onrender.com/api/rhetoric/iraq/summary',
+            vectors: ['PMF', 'US Bases', 'ISIS'],
+        },
+        {
+            id: 'lebanon',
+            name: 'Lebanon / Hezbollah Rhetoric Tracker',
+            flag: '🇱🇧',
+            actors: 'Hezbollah · IDF · LAF · Amal · Palestinian factions · UNIFIL',
+            url: 'https://www.asifahanalytics.com/rhetoric-lebanon.html',
+            summaryUrl: 'https://lebanon-stability-backend.onrender.com/api/rhetoric/lebanon/summary',
+            vectors: ['Ground Ops', 'Rockets', 'Ceasefire'],
+        },
+        {
+            id: 'syria',
+            name: 'Syria Rhetoric Tracker',
+            flag: '🇸🇾',
+            actors: 'HTS · SDF · SAA remnants · Turkey/SNA · Israeli strikes · ISIS resurgence',
+            url: 'https://www.asifahanalytics.com/rhetoric-syria.html',
+            summaryUrl: 'https://asifah-backend.onrender.com/api/rhetoric/syria/summary',
+            vectors: ['HTS', 'Kurdish', 'ISIS'],
+        },
+        {
+            id: 'yemen',
+            name: 'Houthi Rhetoric & Escalation Tracker',
+            flag: '🇾🇪',
+            actors: 'Ansar Allah · KSA · UAE · US CENTCOM · Iran · Red Sea OSINT',
+            url: 'https://www.asifahanalytics.com/rhetoric-yemen.html',
+            summaryUrl: 'https://asifah-backend.onrender.com/api/rhetoric/yemen/summary',
+            vectors: ['Maritime', 'Direct Strike', 'Horn of Africa'],
+        },
+    ];
+
+    // ── THEME ──
+    function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        localStorage.setItem('asifah-theme', isDark ? 'light' : 'dark');
+    }
+    (function initTheme() {
+        const saved = localStorage.getItem('asifah-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+    })();
+
+    // ── RENDER TRACKER BANNER ──
+    function renderTrackerBanner(tracker, data) {
+        const level = data ? Math.round((data.theatre_score || 0) / 20) : null;
+        const lv = level !== null ? (ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0]) : null;
+        const color = data?.theatre_color || lv?.color || '#6b7280';
+        const label = data?.theatre_level || lv?.label || '---';
+
+        // Delta
+        let deltaHtml = '';
+        if (data?.delta && data.delta.direction !== 'insufficient_data') {
+            const arrows = { rising: '▲', falling: '▼', stable: '→' };
+            const cls = { rising: 'delta-rising', falling: 'delta-falling', stable: 'delta-stable' };
+            const sc = data.delta.score_change > 0 ? `+${data.delta.score_change}` : data.delta.score_change;
+            deltaHtml = `<span class="tracker-delta ${cls[data.delta.direction] || 'delta-stable'}">
+                ${arrows[data.delta.direction] || '→'} ${sc} pts vs ${data.delta.vs_period || 'prior scans'}
+            </span>`;
+        }
+
+        const vectorPills = tracker.vectors.map(v =>
+            `<span class="vector-pill">${v}</span>`
+        ).join('');
+
+        const metaLine = data
+            ? `<span style="font-size:10px;color:var(--text-muted);">Specificity: ${data.specificity_score ?? '--'}/10 &nbsp;·&nbsp; ${data.total_articles ?? '--'} articles analyzed</span>`
+            : '';
+
+        const div = document.createElement('div');
+        div.className = 'tracker-banner';
+        div.innerHTML = `
+            <div class="tracker-left">
+                <div class="tracker-name">
+                    <span style="font-size:22px;">${tracker.flag}</span>
+                    ${tracker.name}
+                </div>
+                <div class="tracker-actors">${tracker.actors}</div>
+            </div>
+            <div class="tracker-middle">
+                <div class="tracker-vectors">${vectorPills}</div>
+                ${deltaHtml}
+                ${metaLine}
+            </div>
+            <div class="tracker-right">
+                ${data
+                    ? `<div class="level-badge" style="background:${color};">⚡ Level ${level} — ${label}</div>`
+                    : `<div class="level-badge" style="background:#374151;min-width:120px;justify-content:center;"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>`
+                }
+                <a href="${tracker.url}" class="open-btn" target="_blank">🔍 Open Tracker →</a>
+            </div>
+        `;
+        return div;
+    }
+
+    // ── REGIONAL POSTURE ──
+    function updatePosture(resolved) {
+        const loaded = resolved.filter(r => r.data);
+        if (loaded.length === 0) return;
+
+        const scores = loaded.map(r => Math.round((r.data.theatre_score || 0) / 20));
+        const maxLevel = Math.max(...scores);
+        const avgScore = Math.round(loaded.reduce((s, r) => s + (r.data.theatre_score || 0), 0) / loaded.length);
+        const elevated = scores.filter(s => s >= 3).length;
+
+        let postureLabel, postureColor;
+        if (maxLevel >= 4)      { postureLabel = 'ELEVATED — INCIDENT LEVEL';  postureColor = '#ef4444'; }
+        else if (maxLevel >= 3) { postureLabel = 'ELEVATED — DIRECT THREAT';   postureColor = '#f97316'; }
+        else if (maxLevel >= 2) { postureLabel = 'GUARDED';                     postureColor = '#f59e0b'; }
+        else                    { postureLabel = 'BASELINE';                    postureColor = '#6b7280'; }
+
+        document.getElementById('postureValue').innerHTML =
+            `<span style="color:${postureColor};">${postureLabel}</span>`;
+
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        const cyanColor = isDark ? '#00c8d4' : '#16a34a';
+
+        document.getElementById('postureStats').innerHTML = `
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${ESCALATION_LEVELS[Math.min(maxLevel,5)].color};">${maxLevel}</div>
+                <div class="posture-stat-label">Peak Level</div>
+            </div>
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${postureColor};">${avgScore}</div>
+                <div class="posture-stat-label">Avg Score</div>
+            </div>
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${elevated > 0 ? '#ef4444' : cyanColor};">${elevated}</div>
+                <div class="posture-stat-label">Theaters L3+</div>
+            </div>
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${cyanColor};">${loaded.length}/${resolved.length}</div>
+                <div class="posture-stat-label">Trackers Live</div>
+            </div>
+        `;
+
+        document.getElementById('lastUpdated').textContent =
+            `Last updated: ${new Date().toLocaleString()} · ${loaded.length} of ${resolved.length} trackers live`;
+    }
+
+    // ── MAIN LOAD ──
+    async function loadAll() {
+        const list = document.getElementById('trackersList');
+        list.innerHTML = '';
+
+        // Pre-render loading state
+        TRACKERS.forEach(tracker => {
+            const el = renderTrackerBanner(tracker, null);
+            el.id = `banner-${tracker.id}`;
+            list.appendChild(el);
+        });
+
+        // Fetch all in parallel
+        const settled = await Promise.allSettled(
+            TRACKERS.map(async tracker => {
+                try {
+                    const resp = await fetch(tracker.summaryUrl, { cache: 'no-store' });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    return { tracker, data };
+                } catch(e) {
+                    console.warn(`[${tracker.id}] fetch error:`, e);
+                    return { tracker, data: null };
+                }
+            })
+        );
+
+        const resolved = settled.map(r =>
+            r.status === 'fulfilled' ? r.value : { tracker: null, data: null }
+        );
+
+        // Update each banner
+        resolved.forEach(({ tracker, data }) => {
+            if (!tracker) return;
+            const newEl = renderTrackerBanner(tracker, data);
+            newEl.id = `banner-${tracker.id}`;
+            const old = document.getElementById(`banner-${tracker.id}`);
+            if (old) old.replaceWith(newEl);
+        });
+
+        updatePosture(resolved);
+    }
+
+    loadAll();
+</script>
+</body>
+</html>
