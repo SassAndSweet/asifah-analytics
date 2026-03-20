@@ -358,6 +358,61 @@
         .sparkline-wrapper { display: flex; align-items: center; gap: 12px; height: 60px; }
         .sparkline-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
 
+        /* ── DELTA BADGE ── */
+        .delta-badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 12px; font-weight: bold;
+            margin-left: 12px; vertical-align: middle;
+        }
+        .delta-rising  { background: rgba(239,68,68,0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.3); }
+        .delta-falling { background: rgba(34,197,94,0.15);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+        .delta-stable  { background: rgba(107,114,128,0.15); color: #9ca3af; border: 1px solid rgba(107,114,128,0.3); }
+
+        /* ── SPECIFICITY BAR ── */
+        .specificity-wrap {
+            margin-top: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+        }
+        .specificity-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); white-space: nowrap; }
+        .specificity-track {
+            flex: 1; min-width: 80px; height: 5px;
+            background: rgba(107,114,128,0.2); border-radius: 3px; overflow: hidden;
+        }
+        .specificity-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+        .specificity-value { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+        /* ── SILENCE ANOMALY PILL ── */
+        .silence-pill {
+            display: inline-flex; align-items: center; gap: 4px;
+            background: rgba(245,158,11,0.15); color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.35);
+            border-radius: 4px; padding: 2px 8px;
+            font-size: 10px; font-weight: bold;
+            margin-top: 6px;
+        }
+
+        /* ── CROSS-THEATER CARD ── */
+        .crosstheater-finding {
+            background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25);
+            border-radius: 6px; padding: 10px 14px; margin-bottom: 8px;
+        }
+        .crosstheater-finding-title { font-size: 12px; font-weight: bold; color: #a78bfa; margin-bottom: 4px; }
+        .crosstheater-finding-signal { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+        .crosstheater-confidence {
+            display: inline-block; font-size: 10px; font-weight: bold;
+            padding: 1px 6px; border-radius: 3px; margin-left: 8px;
+            background: rgba(124,58,237,0.2); color: #a78bfa;
+        }
+        .crosstheater-missing { font-size: 10px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+
+        /* ── CONDITIONAL THREATS ── */
+        .conditional-threat-item {
+            background: rgba(249,115,22,0.07); border-left: 3px solid #f97316;
+            border-radius: 0 6px 6px 0; padding: 8px 12px; margin-bottom: 6px;
+            font-size: 12px;
+        }
+        .conditional-threat-phrase { font-weight: bold; color: #f97316; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
         /* ── LOADING ── */
         .loading-placeholder {
             text-align: center; padding: 30px; color: var(--text-muted);
@@ -448,8 +503,18 @@
         </div>
         <div class="theatre-meta">
             <div class="theatre-meta-title" data-i18n="theatreEscalation">THEATRE ESCALATION LEVEL</div>
-            <div style="font-size:26px;font-weight:bold;color:var(--text-primary);" id="theatreLevel">--</div>
+            <div style="display:flex;align-items:center;flex-wrap:wrap;gap:6px;">
+                <div style="font-size:26px;font-weight:bold;color:var(--text-primary);" id="theatreLevel">--</div>
+                <span id="deltaBadge" style="display:none;"></span>
+            </div>
             <div class="theatre-meta-sub" id="theatreLevelDesc">--</div>
+            <div class="specificity-wrap" id="specificityWrap" style="display:none;">
+                <span class="specificity-label">Signal Specificity</span>
+                <div class="specificity-track">
+                    <div class="specificity-fill" id="specificityFill" style="width:0%;background:#f97316;"></div>
+                </div>
+                <span class="specificity-value" id="specificityValue">0/10</span>
+            </div>
             <div class="theatre-scan-info" id="theatreScanInfo">--</div>
         </div>
     </div>
@@ -509,6 +574,25 @@
     <div class="section-card" id="coordCard" style="display:none;">
         <div class="section-title" data-i18n="coordAlerts">⚡ IRAN-HOUTHI COORDINATION SIGNALS</div>
         <div id="coordList"></div>
+    </div>
+
+    <!-- CROSS-THEATER COORDINATION -->
+    <div class="section-card" id="crosstheaterCard" style="display:none;">
+        <div class="section-title">🌐 CROSS-THEATER COORDINATION SIGNALS</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
+            Comparing rhetoric fingerprints across active theaters. Simultaneous elevation across Iran-aligned proxies may indicate coordinated signaling.
+            <span id="crosstheaterMissing" style="display:inline;"></span>
+        </div>
+        <div id="crosstheaterList"></div>
+    </div>
+
+    <!-- CONDITIONAL THREATS -->
+    <div class="section-card" id="conditionalCard" style="display:none;">
+        <div class="section-title">⚠️ CONDITIONAL THREAT TRIPWIRES</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
+            "If/then" language detected — these phrases define conditions under which Houthi escalation has been declared likely.
+        </div>
+        <div id="conditionalList"></div>
     </div>
 
     <!-- ACTOR STATUS GRID -->
@@ -957,6 +1041,120 @@
         ).join('');
     }
 
+    // ── DELTA BADGE ──
+    function renderDelta(delta) {
+        const badge = document.getElementById('deltaBadge');
+        if (!delta || delta.direction === 'insufficient_data') { badge.style.display = 'none'; return; }
+        const arrows = { rising: '▲', falling: '▼', stable: '→' };
+        const classes = { rising: 'delta-rising', falling: 'delta-falling', stable: 'delta-stable' };
+        const arrow = arrows[delta.direction] || '→';
+        const cls = classes[delta.direction] || 'delta-stable';
+        const scoreChange = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+        badge.className = `delta-badge ${cls}`;
+        badge.textContent = `${arrow} ${scoreChange} pts vs ${delta.vs_period || 'prior scans'}`;
+        badge.style.display = 'inline-flex';
+    }
+
+    // ── SPECIFICITY BAR ──
+    function renderSpecificity(score) {
+        const wrap = document.getElementById('specificityWrap');
+        const fill = document.getElementById('specificityFill');
+        const val  = document.getElementById('specificityValue');
+        if (score === undefined || score === null) { wrap.style.display = 'none'; return; }
+        wrap.style.display = 'flex';
+        const pct = Math.min(score * 10, 100);
+        // Color: green (low) → orange → red (high)
+        const color = score <= 3 ? '#22c55e' : score <= 6 ? '#f97316' : '#ef4444';
+        fill.style.width = pct + '%';
+        fill.style.background = color;
+        val.textContent = `${score}/10`;
+        val.style.color = color;
+    }
+
+    // ── SILENCE ANOMALIES ──
+    function renderSilenceAnomalies(anomalies) {
+        if (!anomalies || anomalies.length === 0) return;
+        // Inject silence pills into already-rendered actor cards
+        anomalies.forEach(a => {
+            const grid = document.getElementById('actorsGrid');
+            if (!grid) return;
+            const cards = grid.querySelectorAll('.actor-card');
+            cards.forEach(card => {
+                const nameEl = card.querySelector('.actor-name');
+                if (nameEl && nameEl.textContent.includes(a.actor_name.split(' ')[0])) {
+                    const existing = card.querySelector('.silence-pill');
+                    if (!existing) {
+                        const pill = document.createElement('div');
+                        pill.className = 'silence-pill';
+                        pill.innerHTML = `🔇 Unusual Quiet — ${a.deviation}`;
+                        pill.title = a.signal;
+                        card.appendChild(pill);
+                    }
+                }
+            });
+        });
+    }
+
+    // ── CROSS-THEATER COORDINATION ──
+    function renderCrosstheater(findings) {
+        const card = document.getElementById('crosstheaterCard');
+        const list = document.getElementById('crosstheaterList');
+        const missingEl = document.getElementById('crosstheaterMissing');
+        if (!findings || findings.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+
+        // Show missing theaters note
+        const missing = findings[0]?.missing_theaters || [];
+        if (missing.length > 0 && missingEl) {
+            missingEl.textContent = ` (${missing.join(', ')} tracker${missing.length > 1 ? 's' : ''} not yet active — data will populate when built)`;
+        }
+
+        list.innerHTML = findings.map(f => {
+            let detail = '';
+            if (f.type === 'simultaneous_elevation') {
+                detail = `Theaters: ${(f.theaters || []).join(', ')} | Avg level: ${f.avg_level}`;
+            } else if (f.type === 'target_convergence') {
+                const targets = Object.keys(f.shared_targets || {}).slice(0, 4).join(', ');
+                detail = `Shared targets: ${targets}`;
+            } else if (f.type === 'phrase_synchronization') {
+                detail = `Shared phrases: ${(f.shared_phrases || []).slice(0, 3).join(' · ')}`;
+            }
+            return `<div class="crosstheater-finding">
+                <div class="crosstheater-finding-title">
+                    ${f.message || ''}
+                    <span class="crosstheater-confidence">${f.confidence || 0}% confidence</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);">${detail}</div>
+                <div class="crosstheater-finding-signal">⚡ ${f.signal || ''}</div>
+            </div>`;
+        }).join('');
+    }
+
+    // ── CONDITIONAL THREATS ──
+    function renderConditionalThreats(threats) {
+        const card = document.getElementById('conditionalCard');
+        const list = document.getElementById('conditionalList');
+        if (!threats || threats.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+
+        // Deduplicate by phrase
+        const seen = new Set();
+        const unique = threats.filter(t => {
+            if (seen.has(t.phrase)) return false;
+            seen.add(t.phrase); return true;
+        });
+
+        list.innerHTML = unique.map(t => {
+            const lv = ESCALATION_LEVELS[t.level] || ESCALATION_LEVELS[1];
+            const date = t.published ? new Date(t.published).toLocaleDateString() : '';
+            return `<div class="conditional-threat-item">
+                <div class="conditional-threat-phrase">L${t.level} tripwire — "${t.phrase}"</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">${t.article || ''}</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${date}${t.specificity > 0 ? ` · Specificity: ${t.specificity}/10` : ''}</div>
+            </div>`;
+        }).join('');
+    }
+
     // ── SOMALILAND ARTICLES ──
     function renderSomalilandArticles(articles) {
         const el = document.getElementById('somalilandArticles');
@@ -1092,9 +1290,17 @@
             ) || [];
             renderSomalilandArticles(somalilandArticles);
 
+            // ── New enriched fields ──
+            renderDelta(data.delta);
+            renderSpecificity(data.specificity_score);
+            renderCrosstheater(data.crosstheater_coordination);
+            renderConditionalThreats(data.conditional_threats);
+
             if (data.actors) {
                 renderActors(data.actors);
                 renderArticles(data.actors);
+                // Silence anomalies inject into actor cards after they render
+                if (data.silence_anomalies) renderSilenceAnomalies(data.silence_anomalies);
             }
 
         } catch(err) {
