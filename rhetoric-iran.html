@@ -1,0 +1,1133 @@
+<!-- Asifah Analytics — Iran Rhetoric & Command Node Tracker v1.0.0 — March 2026 -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>Iran Command Node Tracker — Asifah Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+    /* ── THEME VARIABLES ── */
+    :root {
+        --bg-color: #f5f0ee;
+        --container-bg: #ffffff;
+        --card-bg: #ffffff;
+        --card-border: #e0d5d0;
+        --text-primary: #1a1015;
+        --text-secondary: #4a3535;
+        --text-muted: #7a6060;
+        --article-bg: #f8f3f0;
+        --accent: #c0392b;
+        --accent-glow: rgba(192,57,43,0.3);
+        --card-glow: none;
+        --card-hover-glow: 0 8px 20px rgba(0,0,0,0.12);
+        --watermark-opacity: 0.07;
+        --watermark-filter: none;
+        --command-color: #dc2626;
+        --proxy-color: #7c3aed;
+    }
+    [data-theme="dark"] {
+        --bg-color: #0a0808;
+        --container-bg: #120c0c;
+        --card-bg: #120c0c;
+        --card-border: #8b1a1a;
+        --text-primary: #f0d5c8;
+        --text-secondary: #c4907a;
+        --text-muted: #8a6050;
+        --article-bg: #0f0909;
+        --accent: #ef4444;
+        --accent-glow: rgba(239,68,68,0.25);
+        --cyber-cyan: #00c8d4;
+        --cyber-cyan-glow: rgba(0,200,212,0.18);
+        --card-glow: 0 0 6px rgba(139,26,26,0.3), 0 0 1px rgba(239,68,68,0.2);
+        --card-hover-glow: 0 0 22px rgba(239,68,68,0.25), 0 8px 25px rgba(0,0,0,0.5);
+        --watermark-opacity: 0.22;
+        --watermark-filter: saturate(5) brightness(0.9) hue-rotate(330deg);
+        --command-color: #dc2626;
+        --proxy-color: #a78bfa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        min-height: 100vh;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body::before {
+        content: '';
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 110vmin; height: 110vmin;
+        min-width: 800px; min-height: 800px;
+        max-width: 1400px; max-height: 1400px;
+        background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+        background-size: contain; background-repeat: no-repeat; background-position: center;
+        opacity: var(--watermark-opacity); filter: var(--watermark-filter);
+        z-index: 0; pointer-events: none; user-select: none;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    header {
+        background: linear-gradient(135deg, #1a0808, #200c0c);
+        border: 1px solid var(--card-border);
+        border-radius: 12px; padding: 20px 25px; margin-bottom: 20px;
+        display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.15);
+        border-bottom: 1px solid rgba(220,38,38,0.3);
+    }
+    [data-theme="dark"] header { background: linear-gradient(135deg, #100505, #180808); }
+    .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(220,38,38,0.4); flex-shrink: 0; }
+    .header-left { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .back-link {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(220,38,38,0.3);
+        color: #ef4444; font-size: 0.7rem; font-weight: 700;
+        letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: all 0.2s;
+    }
+    .back-link:hover { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+    .header-center { flex: 1; text-align: center; }
+    .header-flag { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; color: #ef4444; text-transform: uppercase; }
+    .header-title { font-family: 'Times New Roman', Times, serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #f0d5c8; margin: 4px 0; }
+    .header-subtitle { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; }
+    .header-timestamp { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.5px; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .command-node-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 12px; border-radius: 6px;
+        background: rgba(220,38,38,0.15); border: 1px solid rgba(220,38,38,0.4);
+        font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; color: #ef4444;
+        text-transform: uppercase; animation: pulse-red 2s ease-in-out infinite;
+    }
+    @keyframes pulse-red { 0%,100%{opacity:0.7;} 50%{opacity:1;} }
+
+    /* ── LANG + THEME ── */
+    .lang-group { display: flex; gap: 4px; }
+    .lang-btn {
+        font-family: 'Times New Roman', Times, serif;
+        padding: 4px 10px; border-radius: 6px; border: 1px solid var(--card-border);
+        background: transparent; color: var(--text-muted);
+        font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .lang-btn.active { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .theme-row { display: flex; align-items: center; gap: 8px; }
+    .theme-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+    .theme-toggle { position: relative; width: 48px; height: 24px; cursor: pointer; }
+    .theme-toggle input { opacity: 0; width: 0; height: 0; }
+    .theme-toggle-slider { position: absolute; inset: 0; border-radius: 12px; background: #ccc; transition: 0.3s; display: flex; align-items: center; padding: 2px; }
+    [data-theme="dark"] .theme-toggle-slider { background: #dc2626; }
+    .theme-toggle-slider::before { content: '☀️'; width: 20px; height: 20px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.3s; }
+    [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; margin-left: 24px; }
+
+    /* ── NAV SIDEBAR ── */
+    .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
+    .nav-sidebar { width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+    .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(220,38,38,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+    .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(0,200,255,0.2); background: linear-gradient(135deg, rgba(0,180,255,0.06) 0%, rgba(0,120,200,0.04) 100%); color: rgba(255,255,255,0.7); }
+    .nav-btn .nav-btn-label { position: relative; z-index: 2; font-size: 12px; line-height: 1.3; }
+    .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #64dcff; }
+    .nav-btn.active-nav { background: linear-gradient(135deg, rgba(0,180,255,0.15) 0%, rgba(0,120,200,0.10) 100%); border-color: rgba(0,200,255,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(0,180,255,0.15); }
+    .nav-btn.current-page { background: linear-gradient(135deg, rgba(220,38,38,0.2) 0%, rgba(185,28,28,0.15) 100%); border-color: rgba(239,68,68,0.7); color: #ffffff; box-shadow: 0 0 18px rgba(220,38,38,0.25); }
+    .nav-btn.current-page .nav-btn-status { color: #ef4444; }
+    .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
+    .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
+    .nav-divider { height: 1px; background: rgba(220,38,38,0.15); margin: 4px 0; }
+    .nav-btn.rhetoric-btn { border-color: rgba(249,115,22,0.35); background: linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(220,38,38,0.05) 100%); }
+    .nav-btn.rhetoric-btn:hover { border-color: rgba(249,115,22,0.7); box-shadow: 0 0 18px rgba(249,115,22,0.2); transform: translateY(-2px); }
+    .nav-btn.rhetoric-btn .nav-btn-status { color: #f97316; }
+    .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+    .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+    @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+    /* ── HISTORY CHART ── */
+    .history-chart-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: var(--card-glow); }
+    .history-chart-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .history-chart-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; }
+    .history-toggle-group { display: flex; gap: 4px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 3px; }
+    .history-toggle-btn { font-family: 'Times New Roman', Times, serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background: transparent; color: var(--text-muted); transition: all 0.2s; }
+    .history-toggle-btn.active { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .history-toggle-btn.compare.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
+    .history-chart-wrap { position: relative; height: 180px; }
+    .history-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; }
+    .history-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
+    .history-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .history-legend-dot { width: 10px; height: 3px; border-radius: 2px; }
+
+    /* ── SECTION CARDS ── */
+    .section-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: var(--card-glow); transition: background 0.3s, border-color 0.3s, box-shadow 0.3s; }
+    .section-card:hover { box-shadow: var(--card-hover-glow); }
+    .section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
+
+    /* ── THEATRE BANNER ── */
+    .theatre-banner { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px 28px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--card-glow); }
+    .theatre-score-big { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; line-height: 1; color: #ef4444; }
+    .theatre-score-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
+    .theatre-badge { display: inline-block; padding: 5px 16px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: white; margin-top: 8px; }
+    .theatre-right { text-align: right; }
+    .theatre-escalation-label-text { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
+    .theatre-level-display { font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 700; margin: 4px 0; }
+    .theatre-level-desc { font-size: 0.7rem; color: var(--text-muted); }
+    .theatre-scan-info { font-size: 0.6rem; color: var(--text-muted); font-style: italic; margin-top: 4px; }
+
+    /* ── PROXY ACTIVATION INDEX — Iran-specific ── */
+    .proxy-activation-card {
+        background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(109,40,217,0.04));
+        border: 1px solid rgba(124,58,237,0.35);
+        border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    }
+    .proxy-activation-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #a78bfa; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(124,58,237,0.2); }
+    .proxy-activation-level { font-size: 2.5rem; font-weight: 900; color: #a78bfa; line-height: 1; }
+    .proxy-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 14px; }
+    .proxy-theater-card { background: rgba(124,58,237,0.06); border: 1px solid rgba(124,58,237,0.2); border-radius: 8px; padding: 10px; text-align: center; }
+    .proxy-theater-name { font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .proxy-theater-level { font-size: 1.1rem; font-weight: 900; }
+    .proxy-theater-label { font-size: 0.55rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── OPERATION TRUE PROMISE CARD ── */
+    .otp-card { background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(185,28,28,0.04)); border: 1px solid rgba(220,38,38,0.35); border-radius: 12px; padding: 20px; margin-bottom: 18px; }
+    .otp-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(220,38,38,0.2); }
+    .otp-count { font-size: 2.5rem; font-weight: 900; color: #ef4444; line-height: 1; }
+    .otp-item { background: rgba(220,38,38,0.06); border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0; padding: 8px 12px; margin-bottom: 6px; font-size: 0.7rem; }
+
+    /* ── VECTOR TABS ── */
+    .vector-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .vector-tab { background: var(--article-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 10px 16px; cursor: pointer; transition: all 0.2s; flex: 1; min-width: 130px; text-align: center; }
+    .vector-tab:hover { box-shadow: var(--card-hover-glow); }
+    .vector-tab.active { border-color: #dc2626; background: rgba(220,38,38,0.08); }
+    .vector-tab-icon { font-size: 1.2rem; margin-bottom: 4px; }
+    .vector-tab-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+    .vector-tab-level { font-size: 0.75rem; font-weight: 700; margin-top: 2px; }
+
+    /* ── ESCALATION LADDER ── */
+    .ladder-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
+    .ladder-step { flex: 1; min-width: 70px; text-align: center; padding: 12px 6px; border-radius: 8px; border: 2px solid var(--card-border); background: var(--article-bg); transition: all 0.3s; }
+    .ladder-step.active { background: rgba(220,38,38,0.1); box-shadow: 0 0 16px rgba(220,38,38,0.4); }
+    .ladder-step-num { font-size: 1.2rem; font-weight: 900; }
+    .ladder-step-label { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 2px; }
+
+    /* ── ACTORS GRID ── */
+    .actors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+    .actor-card { background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px; transition: all 0.3s; }
+    .actor-card:hover { box-shadow: var(--card-hover-glow); transform: translateY(-2px); }
+    .actor-card.proxy-actor { border-color: rgba(124,58,237,0.3); }
+    .actor-card.command-actor { border-color: rgba(220,38,38,0.4); }
+    .actor-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .actor-flag { font-size: 1.4rem; flex-shrink: 0; }
+    .actor-name { font-size: 0.85rem; font-weight: 700; letter-spacing: 0.5px; }
+    .actor-role { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.5px; text-transform: uppercase; margin-top: 1px; }
+    .actor-level-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: white; margin-left: auto; flex-shrink: 0; }
+    .actor-stats { display: flex; gap: 12px; font-size: 0.65rem; color: var(--text-muted); margin-bottom: 8px; }
+    .actor-silence-alert { background: rgba(245,158,11,0.12); border: 1px solid rgba(245,158,11,0.35); border-radius: 6px; padding: 6px 10px; font-size: 0.65rem; color: #f59e0b; margin-top: 8px; }
+    .silence-pill { display: inline-flex; align-items: center; gap: 3px; background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); border-radius: 3px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-left: 4px; }
+    .vector-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 8px; }
+    .vector-pill { font-size: 0.55rem; font-weight: 700; padding: 2px 8px; border-radius: 3px; color: white; letter-spacing: 0.5px; }
+    .proxy-tag { display: inline-flex; align-items: center; gap: 3px; background: rgba(124,58,237,0.12); color: #a78bfa; border: 1px solid rgba(124,58,237,0.3); border-radius: 3px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-top: 4px; }
+
+    /* ── CROSS-THEATER / COORDINATION ── */
+    .coord-item { background: var(--article-bg); border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0; padding: 10px 14px; margin-bottom: 10px; font-size: 0.75rem; }
+    .coord-item.command-node { border-left-color: #7c3aed; background: rgba(124,58,237,0.06); }
+    .coord-confidence { display: inline-block; font-size: 0.6rem; font-weight: 700; padding: 1px 6px; border-radius: 3px; margin-left: 8px; background: rgba(124,58,237,0.2); color: #a78bfa; }
+
+    /* ── v2.0 DELTA / SPECIFICITY ── */
+    .delta-badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: bold; margin-left: 10px; vertical-align: middle; }
+    .delta-rising  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+    .delta-falling { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+    .delta-stable  { background: rgba(107,114,128,0.12); color: #9ca3af; border: 1px solid rgba(107,114,128,0.25); }
+    .specificity-wrap { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .specificity-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); white-space: nowrap; }
+    .specificity-track { flex: 1; height: 4px; background: rgba(107,114,128,0.2); border-radius: 2px; overflow: hidden; }
+    .specificity-fill  { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+    .specificity-value { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+    /* ── ARTICLES ── */
+    .article-item { padding: 10px 0; border-bottom: 1px solid var(--card-border); font-size: 0.75rem; }
+    .article-item:last-child { border-bottom: none; }
+    .article-link { color: #ef4444; text-decoration: none; font-weight: 600; }
+    .article-link:hover { text-decoration: underline; }
+    .article-meta { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── FOOTER ── */
+    .page-footer { text-align: center; padding: 20px 0 30px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+        header { flex-direction: column; align-items: center; text-align: center; }
+        .header-right { align-items: center; }
+        .theatre-banner { flex-direction: column; text-align: center; }
+        .theatre-right { text-align: center; }
+        .vector-tabs { flex-direction: column; }
+        .actors-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── RTL ── */
+    [dir="rtl"] .back-link { flex-direction: row-reverse; }
+    [dir="rtl"] .coord-item { border-left: none; border-right: 3px solid #dc2626; }
+    [dir="rtl"] .coord-item.command-node { border-right-color: #7c3aed; }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-left">
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+            <a href="iran-stability.html" class="back-link" data-i18n="backLink">← Back to Iran</a>
+        </div>
+        <div class="header-center">
+            <div class="header-flag">🇮🇷 <span data-i18n="pageFlag">IRAN</span></div>
+            <div class="header-title" data-i18n="pageTitle">IRAN COMMAND NODE TRACKER</div>
+            <div class="header-subtitle" data-i18n="pageSubtitle">IRGC · Khamenei · Proxy Network · Nuclear · Hormuz · Domestic Signals</div>
+            <div class="header-timestamp">Last updated: <span id="lastUpdated" data-i18n="loading">Loading...</span></div>
+        </div>
+        <div class="header-right">
+            <div class="command-node-badge">⚡ <span data-i18n="commandNodeLabel">COMMAND NODE</span></div>
+            <div class="lang-group">
+                <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                <button class="lang-btn" onclick="setLanguage('ar')">ع</button>
+                <button class="lang-btn" onclick="setLanguage('he')">עב</button>
+                <button class="lang-btn" onclick="setLanguage('fa')">ف</button>
+            </div>
+            <div class="theme-row">
+                <span class="theme-label" data-i18n="themeLabel">THEME</span>
+                <label class="theme-toggle">
+                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
+                    <span class="theme-toggle-slider"></span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- PAGE WITH SIDEBAR -->
+    <div class="page-with-sidebar">
+
+    <!-- LEFT NAV SIDEBAR -->
+    <nav class="nav-sidebar">
+        <div class="nav-sidebar-label">Dashboards</div>
+        <div class="nav-btn inactive-nav">
+            <span class="nav-btn-label">🌍 Africa</span>
+            <span class="nav-btn-status">🔒 Future</span>
+        </div>
+        <a href="asia.html" class="nav-btn active-nav">
+            <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+            <span class="nav-btn-status">● Live</span>
+        </a>
+        <a href="europe.html" class="nav-btn active-nav">
+            <span class="nav-btn-label">🌍 Europe</span>
+            <span class="nav-btn-status">● Live</span>
+        </a>
+        <a href="middle-east.html" class="nav-btn active-nav">
+            <span class="nav-btn-label">🕌 Middle East</span>
+            <span class="nav-btn-status">● Live</span>
+        </a>
+        <div class="nav-btn inactive-nav">
+            <span class="nav-btn-label">🌎 W. Hemisphere</span>
+            <span class="nav-btn-status">🔒 In Dev</span>
+        </div>
+        <div class="nav-divider"></div>
+        <a href="military.html" class="nav-btn military-btn">
+            <span class="nav-btn-label">🎖️ Military Tracker</span>
+            <span class="nav-btn-status">● Live</span>
+        </a>
+        <a href="rhetoric-index.html" class="nav-btn rhetoric-btn current-page">
+            <span class="nav-btn-label">📡 ME Rhetoric Monitor</span>
+            <span class="nav-btn-status">◉ You are here</span>
+        </a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div style="flex:1;min-width:0;">
+
+    <!-- THEATRE BANNER -->
+    <div class="theatre-banner" id="theatreBanner">
+        <div>
+            <div class="theatre-score-big" id="theatreScore">--</div>
+            <div class="theatre-score-label" data-i18n="scoreLabel">RHETORIC SCORE / 100</div>
+            <div class="theatre-badge" id="theatreBadge" style="background:#6b7280;">--</div>
+        </div>
+        <div class="theatre-right">
+            <div class="theatre-escalation-label-text" data-i18n="escalationLabel">THEATRE ESCALATION LEVEL</div>
+            <div class="theatre-level-display" id="theatreLevelDisplay">--</div>
+            <div class="theatre-level-desc" id="theatreLevelDesc">--</div>
+            <div class="theatre-scan-info" id="theatreScanInfo" data-i18n="loading">Loading...</div>
+        </div>
+    </div>
+
+    <!-- PROXY ACTIVATION INDEX — Iran-specific card -->
+    <div class="proxy-activation-card" id="proxyActivationCard">
+        <div class="proxy-activation-title">🔗 <span data-i18n="proxyTitle">PROXY NETWORK ACTIVATION INDEX</span></div>
+        <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+            <div>
+                <div class="proxy-activation-level" id="proxyActivationLevel">--</div>
+                <div style="font-size:0.65rem;color:#a78bfa;letter-spacing:1px;margin-top:4px;" id="proxyActivationLabel">--</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px;" data-i18n="proxySubtitle">Reads live cross-theater Redis data</div>
+            </div>
+            <div style="flex:1;">
+                <div id="proxySyncSignal" style="display:none;padding:8px 12px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:6px;font-size:0.65rem;color:#a78bfa;margin-bottom:8px;"></div>
+                <div class="proxy-grid" id="proxyGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- OPERATION TRUE PROMISE CARD -->
+    <div class="otp-card" id="otpCard" style="display:none;">
+        <div class="otp-title">🚀 <span data-i18n="otpTitle">OPERATION TRUE PROMISE — ACTIVE SIGNALS</span></div>
+        <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;">
+            <div>
+                <div class="otp-count" id="otpCount">0</div>
+                <div style="font-size:0.65rem;color:#ef4444;letter-spacing:1px;margin-top:4px;" data-i18n="otpSubtitle">Signals in current scan window</div>
+            </div>
+            <div style="flex:1;" id="otpList"></div>
+        </div>
+    </div>
+
+    <!-- VECTOR TABS -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="vectorTitle">⚡ THREAT VECTORS</div>
+        <div class="vector-tabs" id="vectorTabs">
+            <div class="vector-tab active" data-vector="irgc" onclick="setVector('irgc')">
+                <div class="vector-tab-icon">⚔️</div>
+                <div class="vector-tab-label" data-i18n="vecIRGC">IRGC Direct</div>
+                <div class="vector-tab-level" id="vecLevelIRGC">--</div>
+            </div>
+            <div class="vector-tab" data-vector="proxy" onclick="setVector('proxy')">
+                <div class="vector-tab-icon">🔗</div>
+                <div class="vector-tab-label" data-i18n="vecProxy">Proxy Activation</div>
+                <div class="vector-tab-level" id="vecLevelProxy">--</div>
+            </div>
+            <div class="vector-tab" data-vector="nuclear" onclick="setVector('nuclear')">
+                <div class="vector-tab-icon">☢️</div>
+                <div class="vector-tab-label" data-i18n="vecNuclear">Nuclear Escalation</div>
+                <div class="vector-tab-level" id="vecLevelNuclear">--</div>
+            </div>
+            <div class="vector-tab" data-vector="domestic" onclick="setVector('domestic')">
+                <div class="vector-tab-icon">✊</div>
+                <div class="vector-tab-label" data-i18n="vecDomestic">Domestic Pressure</div>
+                <div class="vector-tab-level" id="vecLevelDomestic">--</div>
+            </div>
+            <div class="vector-tab" data-vector="regional" onclick="setVector('regional')">
+                <div class="vector-tab-icon">🛢️</div>
+                <div class="vector-tab-label" data-i18n="vecRegional">Regional Retaliation</div>
+                <div class="vector-tab-level" id="vecLevelRegional">--</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ESCALATION LADDER -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="ladderTitle">🪜 ESCALATION LADDER</div>
+        <div class="ladder-row" id="ladderRow"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;flex-wrap:wrap;gap:10px;">
+            <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassified">📰 Corresponding articles in Top Articles by Actor below</div>
+            <button onclick="triggerScan()" id="scanBtn" style="background:#dc2626;color:white;border:none;padding:8px 20px;border-radius:8px;cursor:pointer;font-family:'Times New Roman',Times,serif;font-size:0.7rem;font-weight:700;letter-spacing:1px;display:flex;align-items:center;gap:6px;transition:opacity 0.2s;">
+                🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- RHETORIC HISTORY CHART -->
+    <div class="history-chart-card">
+        <div class="history-chart-header">
+            <span class="history-chart-title">📈 <span data-i18n="trendTitle">RHETORIC TREND</span></span>
+            <div class="history-toggle-group">
+                <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')">7 DAY</button>
+                <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')">30 DAY</button>
+                <button class="history-toggle-btn compare" id="btnCompare" onclick="setHistoryView('compare')">COMPARE</button>
+            </div>
+        </div>
+        <div class="history-chart-wrap">
+            <canvas id="historyChart"></canvas>
+            <div class="history-empty" id="historyEmpty" style="display:none;">📡 <span data-i18n="chartEmpty">Collecting data — first snapshot saves on next scan cycle</span></div>
+        </div>
+        <div class="history-legend" id="historyLegend">
+            <div class="history-legend-item"><div class="history-legend-dot" style="background:#ef4444;"></div> Iran</div>
+        </div>
+    </div>
+
+    <!-- COORDINATION / CROSS-THEATER SIGNALS -->
+    <div class="section-card" id="coordCard" style="display:none;">
+        <div class="section-title" data-i18n="coordTitle">🌐 PROXY COORDINATION SIGNALS</div>
+        <div id="coordList"></div>
+    </div>
+
+    <!-- ACTOR STATUS GRID -->
+    <div class="section-card">
+        <div class="section-title" data-i18n="actorTitle">🎯 ACTOR STATUS</div>
+        <div class="actors-grid" id="actorsGrid"></div>
+    </div>
+
+    <!-- TOP ARTICLES -->
+    <div class="section-card" id="articlesSection">
+        <div class="section-title" data-i18n="articlesTitle">📰 TOP ARTICLES BY ACTOR</div>
+        <div id="articlesList"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="page-footer">
+        © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0-iran-command-node |
+        <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#ef4444;text-decoration:none;">☕ buy me a coffee</a>
+    </div>
+
+    </div><!-- end main content -->
+    </div><!-- end page-with-sidebar -->
+
+</div><!-- /container -->
+
+<script>
+    const API_BASE = 'https://asifah-backend.onrender.com';
+
+    // ══════════════════════════════════════════════════════════════
+    // ESCALATION LEVELS
+    // ══════════════════════════════════════════════════════════════
+    const ESCALATION_LEVELS = {
+        0: { label:'Baseline',       color:'#6b7280', description:'No significant signals' },
+        1: { label:'Rhetoric',       color:'#3b82f6', description:'Standard state/IRGC statements' },
+        2: { label:'Warning',        color:'#f59e0b', description:'Escalatory language, proxy warnings' },
+        3: { label:'Directive',      color:'#f97316', description:'Command signals, proxy activation language' },
+        4: { label:'Operational',    color:'#ef4444', description:'Strike posture, imminent action signals' },
+        5: { label:'Active Command', color:'#dc2626', description:'Confirmed operations, numbered waves' },
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    // TRANSLATIONS
+    // ══════════════════════════════════════════════════════════════
+    const T = {
+        en: {
+            backLink:'← Back to Iran', pageFlag:'IRAN', pageTitle:'IRAN COMMAND NODE TRACKER',
+            pageSubtitle:'IRGC · Khamenei · Proxy Network · Nuclear · Hormuz · Domestic Signals',
+            commandNodeLabel:'COMMAND NODE',
+            loading:'Loading...', scoreLabel:'RHETORIC SCORE / 100',
+            escalationLabel:'THEATRE ESCALATION LEVEL',
+            proxyTitle:'PROXY NETWORK ACTIVATION INDEX',
+            proxySubtitle:'Reads live cross-theater Redis data',
+            otpTitle:'OPERATION TRUE PROMISE — ACTIVE SIGNALS',
+            otpSubtitle:'Signals in current scan window',
+            vectorTitle:'⚡ THREAT VECTORS',
+            vecIRGC:'IRGC Direct', vecProxy:'Proxy Activation',
+            vecNuclear:'Nuclear Escalation', vecDomestic:'Domestic Pressure', vecRegional:'Regional Retaliation',
+            ladderTitle:'🪜 ESCALATION LADDER',
+            articlesClassified:'📰 Corresponding articles in Top Articles by Actor below',
+            refreshScan:'Refresh Scan',
+            trendTitle:'RHETORIC TREND',
+            chartEmpty:'Collecting data — first snapshot saves on next scan cycle',
+            coordTitle:'🌐 PROXY COORDINATION SIGNALS',
+            actorTitle:'🎯 ACTOR STATUS',
+            articlesTitle:'📰 TOP ARTICLES BY ACTOR',
+            themeLabel:'THEME',
+            silence:'⚠️ UNUSUAL SILENCE — below baseline activity',
+            articles:'articles', maxLevel:'Max Level',
+            irgcVec:'IRGC', proxyVec:'Proxy', nuclearVec:'Nuclear', domesticVec:'Domestic', regionalVec:'Regional',
+            proxyTag:'🔗 Proxy Signal',
+        },
+        ar: {
+            backLink:'→ العودة لإيران', pageFlag:'إيران', pageTitle:'متتبع العقدة القيادية لإيران',
+            pageSubtitle:'الحرس الثوري · خامنئي · شبكة الوكلاء · النووي · هرمز · الإشارات الداخلية',
+            commandNodeLabel:'العقدة القيادية',
+            loading:'جارٍ التحميل...', scoreLabel:'نقاط الخطاب / 100',
+            escalationLabel:'مستوى التصعيد المسرحي',
+            proxyTitle:'مؤشر تفعيل شبكة الوكلاء',
+            proxySubtitle:'يقرأ بيانات Redis عبر المسارح مباشرة',
+            otpTitle:'عملية الوعد الصادق — الإشارات النشطة',
+            otpSubtitle:'الإشارات في نافذة المسح الحالية',
+            vectorTitle:'⚡ محاور التهديد',
+            vecIRGC:'الحرس الثوري المباشر', vecProxy:'تفعيل الوكلاء',
+            vecNuclear:'التصعيد النووي', vecDomestic:'الضغط الداخلي', vecRegional:'الانتقام الإقليمي',
+            ladderTitle:'🪜 سلم التصعيد',
+            articlesClassified:'📰 المقالات المقابلة في قسم المقالات أدناه',
+            refreshScan:'تحديث المسح',
+            trendTitle:'اتجاه الخطاب',
+            chartEmpty:'جمع البيانات — أول لقطة تُحفظ في دورة المسح القادمة',
+            coordTitle:'🌐 إشارات تنسيق الوكلاء',
+            actorTitle:'🎯 حالة الأطراف',
+            articlesTitle:'📰 أبرز المقالات حسب الطرف',
+            themeLabel:'المظهر',
+            silence:'⚠️ صمت غير معتاد — نشاط أقل من المعتاد',
+            articles:'مقالات', maxLevel:'أعلى مستوى',
+            irgcVec:'الحرس', proxyVec:'وكيل', nuclearVec:'نووي', domesticVec:'داخلي', regionalVec:'إقليمي',
+            proxyTag:'🔗 إشارة وكيل',
+        },
+        he: {
+            backLink:'← חזרה לאיראן', pageFlag:'איראן', pageTitle:'עוקב צומת פיקוד איראן',
+            pageSubtitle:'משמרות המהפכה · חמינאי · רשת פרוקסי · גרעין · הורמוז · אותות פנימיים',
+            commandNodeLabel:'צומת פיקוד',
+            loading:'טוען...', scoreLabel:'ציון רטוריקה / 100',
+            escalationLabel:'רמת הסלמה מחזאית',
+            proxyTitle:'מדד הפעלת רשת הפרוקסי',
+            proxySubtitle:'קורא נתוני Redis חוצי-תיאטרון',
+            otpTitle:'מבצע הבטחת אמת — אותות פעילים',
+            otpSubtitle:'אותות בחלון הסריקה הנוכחי',
+            vectorTitle:'⚡ ממדי איום',
+            vecIRGC:'משמרות מהפכה ישיר', vecProxy:'הפעלת פרוקסי',
+            vecNuclear:'הסלמה גרעינית', vecDomestic:'לחץ פנימי', vecRegional:'תגמול אזורי',
+            ladderTitle:'🪜 סולם ההסלמה',
+            articlesClassified:'📰 מאמרים תואמים בסעיף מאמרים מובילים למטה',
+            refreshScan:'רענן סריקה',
+            trendTitle:'מגמת רטוריקה',
+            chartEmpty:'אוסף נתונים — תמונת מצב ראשונה נשמרת במחזור הסריקה הבא',
+            coordTitle:'🌐 אותות תיאום פרוקסי',
+            actorTitle:'🎯 סטטוס שחקנים',
+            articlesTitle:'📰 מאמרים מובילים לפי שחקן',
+            themeLabel:'ערכת נושא',
+            silence:'⚠️ שתיקה חריגה — פעילות נמוכה מהבסיס',
+            articles:'מאמרים', maxLevel:'רמה מקסימלית',
+            irgcVec:'משמרות', proxyVec:'פרוקסי', nuclearVec:'גרעין', domesticVec:'פנימי', regionalVec:'אזורי',
+            proxyTag:'🔗 אות פרוקסי',
+        },
+        fa: {
+            backLink:'→ بازگشت به ایران', pageFlag:'ایران', pageTitle:'ردیاب گره فرماندهی ایران',
+            pageSubtitle:'سپاه پاسداران · خامنه‌ای · شبکه نیابتی · هسته‌ای · هرمز · سیگنال‌های داخلی',
+            commandNodeLabel:'گره فرماندهی',
+            loading:'در حال بارگذاری...', scoreLabel:'امتیاز خطاب / ۱۰۰',
+            escalationLabel:'سطح تشدید تئاتر',
+            proxyTitle:'شاخص فعال‌سازی شبکه نیابتی',
+            proxySubtitle:'داده‌های Redis میان‌تئاتری را در لحظه می‌خواند',
+            otpTitle:'عملیات وعده صادق — سیگنال‌های فعال',
+            otpSubtitle:'سیگنال‌ها در پنجره اسکن جاری',
+            vectorTitle:'⚡ بردارهای تهدید',
+            vecIRGC:'سپاه مستقیم', vecProxy:'فعال‌سازی نیابتی',
+            vecNuclear:'تشدید هسته‌ای', vecDomestic:'فشار داخلی', vecRegional:'تلافی منطقه‌ای',
+            ladderTitle:'🪜 نردبان تشدید',
+            articlesClassified:'📰 مقالات مرتبط در بخش مقالات برتر',
+            refreshScan:'بازخوانی اسکن',
+            trendTitle:'روند خطاب',
+            chartEmpty:'در حال جمع‌آوری داده‌ها — اولین اسنپ‌شات در چرخه بعدی',
+            coordTitle:'🌐 سیگنال‌های هماهنگی نیابتی',
+            actorTitle:'🎯 وضعیت بازیگران',
+            articlesTitle:'📰 مقالات برتر بر اساس بازیگر',
+            themeLabel:'تم',
+            silence:'⚠️ سکوت غیرمعمول — فعالیت کمتر از حد پایه',
+            articles:'مقالات', maxLevel:'حداکثر سطح',
+            irgcVec:'سپاه', proxyVec:'نیابتی', nuclearVec:'هسته‌ای', domesticVec:'داخلی', regionalVec:'منطقه‌ای',
+            proxyTag:'🔗 سیگنال نیابتی',
+        },
+    };
+
+    // ══════════════════════════════════════════════════════════════
+    // STATE
+    // ══════════════════════════════════════════════════════════════
+    let currentLang = 'en';
+    let currentVector = 'irgc';
+    let currentData = null;
+    let retryInterval = null;
+    let retryCount = 0;
+    let _historyChart = null;
+    let _historyView  = '7d';
+
+    const PROXY_ACTORS = ['hezbollah_iran','houthi_iran','pmf_iran'];
+    const COMMAND_ACTORS = ['khamenei','irgc'];
+    const ACTOR_ORDER = ['khamenei','irgc','iran_gov','hezbollah_iran','houthi_iran','pmf_iran','iran_people','israel_iran','us_iran'];
+
+    // ══════════════════════════════════════════════════════════════
+    // HISTORY CHART
+    // ══════════════════════════════════════════════════════════════
+    const HISTORY_CONFIG = {
+        theatre: 'Iran', color: '#ef4444',
+        historyUrl: API_BASE + '/api/rhetoric/iran/history',
+        compareTheatres: [
+            { label:'Iran',    url: API_BASE + '/api/rhetoric/iran/history',    color:'#ef4444' },
+            { label:'Lebanon', url: 'https://lebanon-stability-backend.onrender.com/api/rhetoric/lebanon/history', color:'#6495ed' },
+            { label:'Iraq',    url: API_BASE + '/api/rhetoric/iraq/history',    color:'#22c55e' },
+            { label:'Yemen',   url: API_BASE + '/api/rhetoric/yemen/history',   color:'#f97316' },
+            { label:'Syria',   url: API_BASE + '/api/rhetoric/syria/history',   color:'#d4943f' },
+        ]
+    };
+
+    const LEVEL_ZONES = [
+        { yMin:0,  yMax:20,  color:'rgba(107,114,128,0.08)' },
+        { yMin:20, yMax:40,  color:'rgba(59,130,246,0.08)'  },
+        { yMin:40, yMax:60,  color:'rgba(245,158,11,0.10)'  },
+        { yMin:60, yMax:80,  color:'rgba(249,115,22,0.12)'  },
+        { yMin:80, yMax:100, color:'rgba(220,38,38,0.14)'   },
+    ];
+
+    const zoneBandPlugin = {
+        id:'zoneBands',
+        beforeDraw(chart) {
+            const { ctx, chartArea:{ left, right }, scales:{ y } } = chart;
+            LEVEL_ZONES.forEach(zone => {
+                const yTop = y.getPixelForValue(zone.yMax);
+                const yBot = y.getPixelForValue(zone.yMin);
+                ctx.save(); ctx.fillStyle = zone.color;
+                ctx.fillRect(left, Math.min(yTop,yBot), right-left, Math.abs(yBot-yTop));
+                ctx.restore();
+            });
+        }
+    };
+
+    function _sliceEntries(entries, view) {
+        if (!entries || !entries.length) return [];
+        return view === '7d' ? entries.slice(-28) : entries;
+    }
+    function _fmtLabel(ts) {
+        try { return new Date(ts).toLocaleDateString('en-US', {month:'short',day:'numeric'}); }
+        catch { return ts; }
+    }
+
+    function renderHistoryChart(datasets, labels) {
+        const canvas = document.getElementById('historyChart');
+        const emptyEl = document.getElementById('historyEmpty');
+        if (!canvas) return;
+        if (!datasets || !datasets.length || !datasets[0].data.length) {
+            canvas.style.display='none'; if(emptyEl) emptyEl.style.display='block'; return;
+        }
+        canvas.style.display='block'; if(emptyEl) emptyEl.style.display='none';
+        if (_historyChart) { _historyChart.destroy(); _historyChart=null; }
+        const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+        const gridColor = isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)';
+        const tickColor = isDark?'#8a6050':'#7a6060';
+        const fontFam = "'Times New Roman', Times, serif";
+        _historyChart = new Chart(canvas.getContext('2d'), {
+            type:'line', plugins:[zoneBandPlugin], data:{labels,datasets},
+            options:{
+                responsive:true, maintainAspectRatio:false, animation:{duration:400},
+                interaction:{mode:'index',intersect:false},
+                plugins:{
+                    legend:{display:datasets.length>1,labels:{color:tickColor,font:{family:fontFam,size:10},boxWidth:20,boxHeight:2,usePointStyle:true,pointStyle:'line'}},
+                    tooltip:{
+                        backgroundColor:isDark?'#1a0808':'#fff',
+                        borderColor:isDark?'rgba(220,38,38,0.3)':'rgba(0,0,0,0.1)',
+                        borderWidth:1, titleColor:isDark?'#f0d5c8':'#1a1015',
+                        bodyColor:isDark?'#c4907a':'#4a3535',
+                        titleFont:{family:fontFam,size:11,weight:'bold'},
+                        bodyFont:{family:fontFam,size:10},
+                        callbacks:{label:ctx=>`Score: ${ctx.parsed.y}`}
+                    }
+                },
+                scales:{
+                    x:{grid:{color:gridColor},ticks:{color:tickColor,font:{family:fontFam,size:9},maxRotation:0,maxTicksLimit:10}},
+                    y:{min:0,max:100,grid:{color:gridColor},ticks:{color:tickColor,font:{family:fontFam,size:9},stepSize:20}}
+                }
+            }
+        });
+    }
+
+    async function loadHistoryData() {
+        try {
+            const resp = await fetch(HISTORY_CONFIG.historyUrl+'?limit=120');
+            if(!resp.ok) return;
+            const data = await resp.json();
+            const entries = _sliceEntries(data.entries||[], _historyView);
+            const legendEl = document.getElementById('historyLegend');
+            if(legendEl) legendEl.innerHTML=`<div class="history-legend-item"><div class="history-legend-dot" style="background:${HISTORY_CONFIG.color};"></div> Iran (Command Node)</div>`;
+            renderHistoryChart([{
+                label:'Iran', data:entries.map(e=>e.score??0),
+                borderColor:HISTORY_CONFIG.color, backgroundColor:'rgba(239,68,68,0.07)',
+                borderWidth:2, pointRadius:entries.length<15?3:0, pointHoverRadius:4, fill:true, tension:0.35
+            }], entries.map(e=>_fmtLabel(e.ts)));
+        } catch(e){ console.warn('[HistoryChart]',e); }
+    }
+
+    async function loadCompareData() {
+        try {
+            const results = await Promise.allSettled(
+                HISTORY_CONFIG.compareTheatres.map(t=>fetch(t.url+'?limit=120').then(r=>r.ok?r.json():null))
+            );
+            let maxEntries=[];
+            results.forEach(r=>{const e=r.status==='fulfilled'&&r.value?.entries?_sliceEntries(r.value.entries,_historyView):[];if(e.length>maxEntries.length)maxEntries=e;});
+            const labels=maxEntries.map(e=>_fmtLabel(e.ts));
+            const datasets=HISTORY_CONFIG.compareTheatres.map((t,i)=>{
+                const e=results[i].status==='fulfilled'&&results[i].value?.entries?_sliceEntries(results[i].value.entries,_historyView):[];
+                return{label:t.label,data:e.map(x=>x.score??0),borderColor:t.color,backgroundColor:'transparent',borderWidth:2,pointRadius:e.length<15?3:0,pointHoverRadius:4,fill:false,tension:0.35};
+            });
+            const legendEl=document.getElementById('historyLegend');
+            if(legendEl) legendEl.innerHTML=HISTORY_CONFIG.compareTheatres.map(t=>`<div class="history-legend-item"><div class="history-legend-dot" style="background:${t.color};"></div> ${t.label}</div>`).join('');
+            renderHistoryChart(datasets,labels);
+        } catch(e){ console.warn('[HistoryChart compare]',e); }
+    }
+
+    function setHistoryView(mode) {
+        _historyView=mode;
+        document.getElementById('btn7d').classList.toggle('active',mode==='7d');
+        document.getElementById('btn30d').classList.toggle('active',mode==='30d');
+        document.getElementById('btnCompare').classList.toggle('active',mode==='compare');
+        if(mode==='compare') loadCompareData(); else loadHistoryData();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // LANGUAGE
+    // ══════════════════════════════════════════════════════════════
+    function setLanguage(lang) {
+        currentLang = lang;
+        const rtl = ['ar','fa'];
+        document.documentElement.dir = rtl.includes(lang) ? 'rtl' : 'ltr';
+        document.documentElement.lang = lang;
+        const t = T[lang] || T.en;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) el.textContent = t[key];
+        });
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.classList.toggle('active',
+                btn.textContent.trim() === lang.toUpperCase() ||
+                (lang==='he' && btn.textContent.trim()==='עב') ||
+                (lang==='ar' && btn.textContent.trim()==='ع') ||
+                (lang==='fa' && btn.textContent.trim()==='ف'));
+        });
+        if (currentData) renderAll(currentData);
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // THEME
+    // ══════════════════════════════════════════════════════════════
+    function toggleTheme() {
+        const isDark = document.getElementById('themeToggle').checked;
+        document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
+        localStorage.setItem('ir_rhetoric_theme', isDark?'light':'dark');
+        if (_historyChart) { _historyChart.destroy(); _historyChart=null;
+            if(_historyView==='compare') loadCompareData(); else loadHistoryData(); }
+    }
+    function loadTheme() {
+        const saved = localStorage.getItem('ir_rhetoric_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('themeToggle').checked = saved==='light';
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // VECTOR TABS
+    // ══════════════════════════════════════════════════════════════
+    function setVector(v) {
+        currentVector = v;
+        document.querySelectorAll('.vector-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.vector === v);
+        });
+    }
+
+    function renderVectors(data) {
+        const map = {
+            irgc:     { id:'vecLevelIRGC',     level: data.irgc_direct_level     || 0 },
+            proxy:    { id:'vecLevelProxy',     level: data.proxy_activation_level || 0 },
+            nuclear:  { id:'vecLevelNuclear',   level: data.nuclear_level         || 0 },
+            domestic: { id:'vecLevelDomestic',  level: data.domestic_level        || 0 },
+            regional: { id:'vecLevelRegional',  level: data.regional_level        || 0 },
+        };
+        Object.entries(map).forEach(([key, cfg]) => {
+            const el = document.getElementById(cfg.id);
+            if (!el) return;
+            const lv = ESCALATION_LEVELS[cfg.level] || ESCALATION_LEVELS[0];
+            el.textContent = `L${cfg.level} — ${lv.label}`;
+            el.style.color = lv.color;
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // ESCALATION LADDER
+    // ══════════════════════════════════════════════════════════════
+    function renderLadder(activeLevel) {
+        const row = document.getElementById('ladderRow');
+        if (!row) return;
+        row.innerHTML = '';
+        for (let i = 0; i <= 5; i++) {
+            const lv = ESCALATION_LEVELS[i];
+            const div = document.createElement('div');
+            div.className = 'ladder-step' + (i===activeLevel?' active':'');
+            if (i===activeLevel) { div.style.borderColor=lv.color; div.style.boxShadow=`0 0 16px ${lv.color}55`; }
+            div.innerHTML = `<div class="ladder-step-num" style="color:${lv.color}">${i}</div>
+                             <div class="ladder-step-label" style="color:${lv.color}">${lv.label}</div>`;
+            row.appendChild(div);
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // PROXY ACTIVATION INDEX CARD
+    // ══════════════════════════════════════════════════════════════
+    function renderProxyActivation(data) {
+        const level = data.proxy_activation_level || 0;
+        const lv = ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0];
+        const detail = data.proxy_activation_detail || {};
+
+        document.getElementById('proxyActivationLevel').textContent = level;
+        document.getElementById('proxyActivationLevel').style.color = '#a78bfa';
+        document.getElementById('proxyActivationLabel').textContent = lv.label;
+
+        // Sync signal
+        const syncEl = document.getElementById('proxySyncSignal');
+        if (detail.synchronized_language || detail.shared_target_convergence) {
+            syncEl.style.display = 'block';
+            syncEl.textContent = detail.synchronized_language
+                ? `⚡ Synchronized language detected across proxy theaters — narrative coordination from Iran likely`
+                : `🎯 Shared target convergence — multiple proxies referencing same targets`;
+        }
+
+        // Theater cards
+        const grid = document.getElementById('proxyGrid');
+        if (!grid) return;
+        const elevated = detail.elevated_proxies || {};
+        const fresh = detail.fresh_proxies || [];
+        const theaters = [
+            { id:'lebanon', label:'Lebanon', icon:'🇱🇧' },
+            { id:'iraq',    label:'Iraq',    icon:'🇮🇶' },
+            { id:'yemen',   label:'Yemen',   icon:'🇾🇪' },
+            { id:'syria',   label:'Syria',   icon:'🇸🇾' },
+        ];
+        grid.innerHTML = theaters.map(t => {
+            const lvl = elevated[t.id] || 0;
+            const lvi = ESCALATION_LEVELS[lvl] || ESCALATION_LEVELS[0];
+            const isFresh = fresh.includes(t.id);
+            return `<div class="proxy-theater-card" style="${isFresh?'border-color:rgba(124,58,237,0.4);':'opacity:0.5;'}">
+                <div class="proxy-theater-name">${t.icon} ${t.label}</div>
+                <div class="proxy-theater-level" style="color:${lvi.color};">${lvl}</div>
+                <div class="proxy-theater-label" style="color:${lvi.color};">${lvi.label}</div>
+                ${!isFresh?'<div style="font-size:0.5rem;color:var(--text-muted);margin-top:2px;">stale</div>':''}
+            </div>`;
+        }).join('');
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // OPERATION TRUE PROMISE CARD
+    // ══════════════════════════════════════════════════════════════
+    function renderOTP(data) {
+        const count = data.operation_true_promise_count || 0;
+        const signals = data.operation_true_promise_signals || [];
+        const card = document.getElementById('otpCard');
+        if (count === 0) { card.style.display='none'; return; }
+        card.style.display = 'block';
+        document.getElementById('otpCount').textContent = count;
+        const list = document.getElementById('otpList');
+        list.innerHTML = signals.slice(0,4).map(s => `
+            <div class="otp-item">
+                <strong>${s.phrase}</strong>
+                <div style="font-size:0.6rem;color:var(--text-muted);margin-top:2px;">${s.article} · ${s.source||''}</div>
+            </div>`).join('');
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // THEATRE BANNER
+    // ══════════════════════════════════════════════════════════════
+    function renderTheatre(data) {
+        const level = data.theatre_escalation_level || 0;
+        const lv = ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0];
+        const score = data.theatre_score || 0;
+
+        document.getElementById('theatreScore').textContent = score;
+        document.getElementById('theatreScore').style.color = lv.color;
+
+        const badge = document.getElementById('theatreBadge');
+        badge.textContent = lv.label;
+        badge.style.background = lv.color;
+
+        document.getElementById('theatreLevelDisplay').textContent = `Level ${level} — ${lv.label}`;
+        document.getElementById('theatreLevelDisplay').style.color = lv.color;
+        document.getElementById('theatreLevelDesc').textContent = lv.description;
+
+        // Delta badge
+        const delta = data.delta;
+        if (delta && delta.direction !== 'insufficient_data' && !document.getElementById('irDeltaBadge')) {
+            const arrows = {rising:'▲',falling:'▼',stable:'→'};
+            const cls = {rising:'delta-rising',falling:'delta-falling',stable:'delta-stable'};
+            const sc = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+            const badge2 = document.createElement('span');
+            badge2.id = 'irDeltaBadge';
+            badge2.className = `delta-badge ${cls[delta.direction]||'delta-stable'}`;
+            badge2.textContent = `${arrows[delta.direction]||'→'} ${sc} pts vs ${delta.vs_period||'prior scans'}`;
+            document.getElementById('theatreLevelDisplay').appendChild(badge2);
+        }
+
+        // Specificity bar
+        const spec = data.specificity_score;
+        if (spec !== undefined && !document.getElementById('irSpecWrap')) {
+            const specColor = spec<=3?'#22c55e':spec<=6?'#f97316':'#ef4444';
+            const wrap = document.createElement('div');
+            wrap.id = 'irSpecWrap';
+            wrap.className = 'specificity-wrap';
+            wrap.innerHTML = `
+                <span class="specificity-label">Signal Specificity</span>
+                <div class="specificity-track"><div class="specificity-fill" style="width:${Math.min(spec*10,100)}%;background:${specColor};"></div></div>
+                <span class="specificity-value" style="color:${specColor};">${spec}/10</span>`;
+            document.getElementById('theatreScanInfo').parentNode.insertBefore(wrap, document.getElementById('theatreScanInfo'));
+        }
+
+        if (data.scanned_at || data.timestamp) {
+            const ts = new Date(data.scanned_at || data.timestamp);
+            const ago = Math.round((Date.now() - ts.getTime()) / 60000);
+            const agoTxt = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+            document.getElementById('theatreScanInfo').textContent =
+                `Last scan: ${agoTxt} · ${data.total_articles||0} articles analyzed`;
+        }
+        document.getElementById('lastUpdated').textContent =
+            new Date(data.scanned_at || data.timestamp || Date.now()).toLocaleString();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // COORDINATION SIGNALS
+    // ══════════════════════════════════════════════════════════════
+    function renderCoordination(signals) {
+        const card = document.getElementById('coordCard');
+        const list = document.getElementById('coordList');
+        if (!signals || signals.length === 0) { card.style.display='none'; return; }
+        card.style.display = 'block';
+        list.innerHTML = '';
+        signals.forEach(sig => {
+            const div = document.createElement('div');
+            const isCommandNode = sig.is_command_node || sig.type === 'proxy_activation';
+            div.className = 'coord-item' + (isCommandNode ? ' command-node' : '');
+            const conf = sig.confidence ? `<span class="coord-confidence">${sig.confidence}% confidence</span>` : '';
+            div.innerHTML = `<strong>⚡ ${sig.message}</strong>${conf}
+                ${sig.signal ? `<div style="font-size:0.65rem;color:var(--text-muted);margin-top:4px;">${sig.signal}</div>` : ''}
+                ${sig.elevated_proxies ? `<div style="font-size:0.6rem;color:#a78bfa;margin-top:4px;">Elevated: ${Object.entries(sig.elevated_proxies).map(([k,v])=>`${k}(L${v})`).join(', ')}</div>` : ''}`;
+            list.appendChild(div);
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // ACTOR STATUS GRID
+    // ══════════════════════════════════════════════════════════════
+    function renderActors(actors, silenceAnomalies) {
+        const grid = document.getElementById('actorsGrid');
+        if (!grid || !actors) return;
+        grid.innerHTML = '';
+        const t = T[currentLang] || T.en;
+        const silenceMap = {};
+        (silenceAnomalies||[]).forEach(a => { silenceMap[a.actor_id] = a.deviation; });
+
+        ACTOR_ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a) return;
+            const maxLv = a.max_level || 0;
+            const lv = ESCALATION_LEVELS[maxLv] || ESCALATION_LEVELS[0];
+            const isProxy = PROXY_ACTORS.includes(id);
+            const isCommand = COMMAND_ACTORS.includes(id);
+
+            const pills = [];
+            if ((a.irgc_direct_score||0)>0) pills.push(`<span class="vector-pill" style="background:${ESCALATION_LEVELS[a.irgc_direct_score]?.color||'#6b7280'}">${t.irgcVec} L${a.irgc_direct_score}</span>`);
+            if ((a.nuclear_score||0)>0)     pills.push(`<span class="vector-pill" style="background:${ESCALATION_LEVELS[a.nuclear_score]?.color||'#6b7280'}">${t.nuclearVec} L${a.nuclear_score}</span>`);
+            if ((a.regional_score||0)>0)    pills.push(`<span class="vector-pill" style="background:${ESCALATION_LEVELS[a.regional_score]?.color||'#6b7280'}">${t.regionalVec} L${a.regional_score}</span>`);
+            if ((a.domestic_score||0)>0)    pills.push(`<span class="vector-pill" style="background:${ESCALATION_LEVELS[a.domestic_score]?.color||'#6b7280'}">${t.domesticVec} L${a.domestic_score}</span>`);
+
+            const silenceText = silenceMap[id] || (a.silence_alert ? 'Below baseline' : null);
+            const silencePill = silenceText ? `<span class="silence-pill">🔇 ${silenceText}</span>` : '';
+            const proxyTag = isProxy ? `<div class="proxy-tag">${t.proxyTag}</div>` : '';
+
+            const card = document.createElement('div');
+            card.className = 'actor-card' + (isProxy?' proxy-actor':isCommand?' command-actor':'');
+            card.innerHTML = `
+                <div class="actor-header">
+                    <div class="actor-flag">${a.flag||''} ${a.icon||''}</div>
+                    <div style="flex:1;">
+                        <div class="actor-name">${a.name}${silencePill}</div>
+                        <div class="actor-role">${a.role||''}</div>
+                    </div>
+                    <div class="actor-level-badge" style="background:${lv.color}">${lv.label}</div>
+                </div>
+                <div class="actor-stats">
+                    <span>📰 ${a.statement_count||0} ${t.articles}</span>
+                    <span>📊 ${t.maxLevel} ${maxLv}</span>
+                </div>
+                ${pills.length ? `<div class="vector-pills">${pills.join('')}</div>` : ''}
+                ${proxyTag}
+                ${silenceText && !isProxy ? `<div class="actor-silence-alert">⚠️ ${t.silence}</div>` : ''}
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // TOP ARTICLES
+    // ══════════════════════════════════════════════════════════════
+    function renderArticles(actors) {
+        const list = document.getElementById('articlesList');
+        if (!list || !actors) return;
+        list.innerHTML = '';
+
+        ACTOR_ORDER.forEach(id => {
+            const a = actors[id];
+            if (!a || !a.top_articles || a.top_articles.length===0) return;
+
+            const section = document.createElement('div');
+            section.style.marginBottom = '18px';
+            section.innerHTML = `<div style="font-size:0.7rem;font-weight:700;color:#ef4444;letter-spacing:1px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--card-border);">${a.flag||''} ${a.name}</div>`;
+
+            a.top_articles.slice(0,3).forEach(art => {
+                const item = document.createElement('div');
+                item.className = 'article-item';
+                const dt = art.published ? new Date(art.published).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '';
+                item.innerHTML = `
+                    <a href="${art.url||'#'}" target="_blank" rel="noopener" class="article-link">${art.title||'Untitled'}</a>
+                    <div class="article-meta">${art.source||''} ${dt?'· '+dt:''} ${art.specificity_score>0?`· Specificity: ${art.specificity_score}`:''}</div>
+                `;
+                section.appendChild(item);
+            });
+            list.appendChild(section);
+        });
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // RENDER ALL
+    // ══════════════════════════════════════════════════════════════
+    function renderAll(data) {
+        currentData = data;
+        const level = data.theatre_escalation_level || 0;
+        renderTheatre(data);
+        renderLadder(level);
+        renderVectors(data);
+        renderProxyActivation(data);
+        renderOTP(data);
+        renderCoordination(data.crosstheater_coordination || []);
+        renderActors(data.actors || {}, data.silence_anomalies || []);
+        renderArticles(data.actors || {});
+
+        const artCount = document.getElementById('articlesClassified');
+        if (artCount) artCount.textContent = `📰 ${data.total_articles||0} articles analyzed · Corresponding articles below`;
+
+        loadHistoryData();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // DATA LOADING
+    // ══════════════════════════════════════════════════════════════
+    async function loadRhetoricData(forceRefresh=false) {
+        try {
+            const url = API_BASE + '/api/rhetoric/iran' + (forceRefresh?'?force=true':'');
+            const resp = await fetch(url);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+
+            if (data.awaiting_scan) {
+                document.getElementById('theatreScanInfo').textContent = 'Scan in progress — first scan takes 3-4 minutes (reading all proxy theaters)...';
+                renderLadder(0);
+                if (!retryInterval) {
+                    retryInterval = setInterval(async () => {
+                        retryCount++;
+                        try {
+                            const r = await fetch(API_BASE + '/api/rhetoric/iran');
+                            const d = await r.json();
+                            if (!d.awaiting_scan) {
+                                clearInterval(retryInterval); retryInterval=null; retryCount=0;
+                                renderAll(d);
+                            } else {
+                                document.getElementById('theatreScanInfo').textContent = `Reading proxy theaters — retry ${retryCount}/8...`;
+                                if (retryCount>=8) { clearInterval(retryInterval); retryInterval=null; }
+                            }
+                        } catch(e) { if(retryCount>=8){clearInterval(retryInterval);retryInterval=null;} }
+                    }, 60000);
+                }
+                return;
+            }
+            renderAll(data);
+        } catch(err) {
+            console.error('[Iran Rhetoric] Load error:', err);
+            document.getElementById('theatreScanInfo').textContent = 'Error loading data — retrying...';
+            setTimeout(() => loadRhetoricData(), 30000);
+        }
+    }
+
+    async function triggerScan() {
+        const btn = document.getElementById('scanBtn');
+        if (btn) { btn.style.opacity='0.5'; btn.disabled=true; }
+        document.getElementById('theatreScanInfo').textContent = 'Scan triggered — reading proxy theaters (3-4 min)...';
+        try { await loadRhetoricData(true); }
+        finally { if(btn){btn.style.opacity='1';btn.disabled=false;} }
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // INIT
+    // ══════════════════════════════════════════════════════════════
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTheme();
+        loadRhetoricData();
+    });
+</script>
+</body>
+</html>
