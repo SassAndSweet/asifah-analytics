@@ -48,6 +48,37 @@
             --text-primary: #e0e0e0;
             --text-secondary: #b0b0b0;
             --text-muted: #808080;
+
+        /* ── RHETORIC CARD ENHANCEMENTS ── */
+        .rhetoric-delta-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: bold;
+            margin-left: 8px; vertical-align: middle;
+        }
+        .rhetoric-delta-rising  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+        .rhetoric-delta-falling { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+        .rhetoric-delta-stable  { background: rgba(107,114,128,0.12); color: #9ca3af; border: 1px solid rgba(107,114,128,0.25); }
+
+        .rhetoric-spec-wrap {
+            display: flex; align-items: center; gap: 8px;
+            margin-top: 6px;
+        }
+        .rhetoric-spec-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); white-space: nowrap; }
+        .rhetoric-spec-track {
+            flex: 1; height: 4px;
+            background: rgba(107,114,128,0.2); border-radius: 2px; overflow: hidden;
+        }
+        .rhetoric-spec-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+        .rhetoric-spec-value { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+        .rhetoric-silence-pill {
+            display: inline-flex; align-items: center; gap: 3px;
+            background: rgba(245,158,11,0.12); color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 3px; padding: 1px 6px;
+            font-size: 9px; font-weight: bold; margin-left: 4px;
+        }
             --header-gradient-start: #1e3a5f;
             --header-gradient-end: #2c5282;
             --header-text: #ffffff;
@@ -1040,11 +1071,53 @@
                     const ago = Math.round((Date.now() - new Date(data.timestamp).getTime()) / 60000);
                     cardScan.textContent = `Last scan: ${ago < 60 ? ago+'m' : Math.round(ago/60)+'h'} ago`;
                 }
-                // Actor list
+                // Actor list + new v2.0 fields
                 const fullResp = await fetch(BACKEND_URL + '/api/rhetoric/yemen');
                 if (fullResp.ok) {
                     const fullData = await fullResp.json();
+
+                    // ── Delta badge ──
+                    const delta = fullData.delta;
+                    if (delta && delta.direction !== 'insufficient_data') {
+                        const arrows = { rising: '▲', falling: '▼', stable: '→' };
+                        const cls = { rising: 'rhetoric-delta-rising', falling: 'rhetoric-delta-falling', stable: 'rhetoric-delta-stable' };
+                        const sc = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+                        const badge = document.createElement('span');
+                        badge.className = `rhetoric-delta-badge ${cls[delta.direction] || 'rhetoric-delta-stable'}`;
+                        badge.textContent = `${arrows[delta.direction] || '→'} ${sc} pts`;
+                        badge.title = `vs ${delta.vs_period || 'prior scans'}`;
+                        // Inject after the score line
+                        const cardScan = document.getElementById('rhetoricCardScanInfo');
+                        if (cardScan && !document.getElementById('rhetoricDeltaBadge')) {
+                            badge.id = 'rhetoricDeltaBadge';
+                            cardScan.parentNode.insertBefore(badge, cardScan);
+                        }
+                    }
+
+                    // ── Specificity bar ──
+                    const spec = fullData.specificity_score;
+                    if (spec !== undefined && spec !== null) {
+                        const specColor = spec <= 3 ? '#22c55e' : spec <= 6 ? '#f97316' : '#ef4444';
+                        const cardScan = document.getElementById('rhetoricCardScanInfo');
+                        if (cardScan && !document.getElementById('rhetoricSpecWrap')) {
+                            const wrap = document.createElement('div');
+                            wrap.id = 'rhetoricSpecWrap';
+                            wrap.className = 'rhetoric-spec-wrap';
+                            wrap.innerHTML = `
+                                <span class="rhetoric-spec-label">Signal Specificity</span>
+                                <div class="rhetoric-spec-track">
+                                    <div class="rhetoric-spec-fill" style="width:${Math.min(spec*10,100)}%;background:${specColor};"></div>
+                                </div>
+                                <span class="rhetoric-spec-value" style="color:${specColor};">${spec}/10</span>`;
+                            cardScan.parentNode.insertBefore(wrap, cardScan.nextSibling);
+                        }
+                    }
+
+                    // ── Actor list (with silence anomaly pills) ──
                     const actorEl = document.getElementById('rhetoricCardActors');
+                    const silenceMap = {};
+                    (fullData.silence_anomalies || []).forEach(a => { silenceMap[a.actor_id] = a.deviation; });
+
                     if (actorEl && fullData.actors) {
                         const ORDER = ['houthis','usa','israel','ksa','uae','iran'];
                         const RLVLS = {0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#991b1b'};
@@ -1054,8 +1127,11 @@
                             const ml = Math.max(a.maritime_score||0, a.direct_strike_score||0);
                             const clr = RLVLS[ml]||'#6b7280';
                             const lbl = RHETORIC_LEVELS[ml]?.label||'Baseline';
+                            const silencePill = silenceMap[id]
+                                ? `<span class="rhetoric-silence-pill" title="Unusual quiet detected">🔇 ${silenceMap[id]}</span>`
+                                : '';
                             return `<div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--card-border);font-size:12px;">
-                                <span>${a.flag||''} ${a.name}</span>
+                                <span>${a.flag||''} ${a.name}${silencePill}</span>
                                 <span style="display:flex;align-items:center;gap:5px;">
                                     <span style="font-size:10px;color:var(--text-muted);">${a.statement_count||0} articles</span>
                                     <span style="width:9px;height:9px;border-radius:50%;background:${clr};display:inline-block;"></span>
@@ -1064,6 +1140,8 @@
                             </div>`;
                         }).join('');
                     }
+
+                    // ── Coordination signals ──
                     const coordAlerts = document.getElementById('rhetoricCardAlerts');
                     const coordList = document.getElementById('rhetoricCardAlertList');
                     const sigs = fullData.coordination_signals||[];
