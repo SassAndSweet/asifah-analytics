@@ -482,10 +482,16 @@
 
     // ── RENDER TRACKER BANNER ──
     function renderTrackerBanner(tracker, data) {
-        const level = data ? Math.round((data.theatre_score || 0) / 20) : null;
-        const lv = level !== null ? (ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0]) : null;
-        const color = data?.theatre_color || lv?.color || '#6b7280';
-        const label = data?.theatre_level || lv?.label || '---';
+        // Handle both Yemen pattern (theatre_score) and Lebanon pattern (rhetoric_score + theatre_level integer)
+        const rawLevel = data
+            ? (data.theatre_level !== undefined && typeof data.theatre_level === 'number'
+                ? data.theatre_level
+                : Math.round((data.theatre_score || data.rhetoric_score || 0) / 20))
+            : null;
+        const level = rawLevel !== null ? Math.min(rawLevel, 5) : null;
+        const lv = level !== null ? (ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0]) : null;
+        const color = data?.theatre_color || data?.theatre_escalation_color || lv?.color || '#6b7280';
+        const label = data?.theatre_label || data?.theatre_escalation_label || lv?.label || '---';
 
         // Delta
         let deltaHtml = '';
