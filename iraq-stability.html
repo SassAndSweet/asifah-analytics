@@ -162,6 +162,20 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
         .article-title { font-weight: bold; margin-bottom: 5px; }
         .article-meta { font-size: 12px; color: var(--text-muted); }
         .article-link { display: inline-block; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 13px; }
+
+        /* ── RHETORIC CARD v2.0 ── */
+        .iq-rhetoric-delta-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: bold; margin-left: 8px; vertical-align: middle; }
+        .iq-delta-rising  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+        .iq-delta-falling { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+        .iq-delta-stable  { background: rgba(107,114,128,0.12); color: #9ca3af; border: 1px solid rgba(107,114,128,0.25); }
+        .iq-spec-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+        .iq-spec-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); white-space: nowrap; }
+        .iq-spec-track { flex: 1; height: 4px; background: rgba(107,114,128,0.2); border-radius: 2px; overflow: hidden; }
+        .iq-spec-fill  { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+        .iq-spec-value { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+        .iq-silence-pill { display: inline-flex; align-items: center; gap: 3px; background: rgba(245,158,11,0.12); color: #f59e0b; border: 1px solid rgba(245,158,11,0.3); border-radius: 3px; padding: 1px 6px; font-size: 9px; font-weight: bold; margin-left: 4px; }
+        .iq-vector-pills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+        .iq-vector-pill { font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: white; white-space: nowrap; }
         .map-section, .knowledge-library, .articles-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .article-tab-btn { background: var(--article-bg); border: 1px solid var(--card-border); color: var(--text-secondary); padding: 6px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; font-family: 'Times New Roman', Times, serif; transition: all 0.2s; }
         .article-tab-btn:hover { background: var(--article-hover); color: var(--text-primary); }
@@ -794,24 +808,84 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                         ago < 60 ? `Last scan: ${ago}m ago` : `Last scan: ${Math.round(ago/60)}h ago`;
                 }
 
-                // Full data — actors, alerts, spokespersons
+                // ── Delta badge ──
+                const delta = sum.delta;
+                if (delta && delta.direction !== 'insufficient_data') {
+                    const arrows = { rising: '▲', falling: '▼', stable: '→' };
+                    const cls = { rising: 'iq-delta-rising', falling: 'iq-delta-falling', stable: 'iq-delta-stable' };
+                    const sc = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+                    if (!document.getElementById('iqDeltaBadge')) {
+                        const badge = document.createElement('span');
+                        badge.id = 'iqDeltaBadge';
+                        badge.className = `iq-rhetoric-delta-badge ${cls[delta.direction] || 'iq-delta-stable'}`;
+                        badge.textContent = `${arrows[delta.direction] || '→'} ${sc} pts`;
+                        badge.title = `vs ${delta.vs_period || 'prior scans'}`;
+                        const theatreEl = document.getElementById('iqRhetoricTheatreLabel');
+                        theatreEl.parentNode.insertBefore(badge, theatreEl.nextSibling);
+                    }
+                }
+
+                // ── Specificity bar ──
+                const spec = sum.specificity_score;
+                if (spec !== undefined && !document.getElementById('iqSpecWrap')) {
+                    const specColor = spec <= 3 ? '#22c55e' : spec <= 6 ? '#f97316' : '#ef4444';
+                    const wrap = document.createElement('div');
+                    wrap.id = 'iqSpecWrap';
+                    wrap.className = 'iq-spec-wrap';
+                    wrap.innerHTML = `
+                        <span class="iq-spec-label">Signal Specificity</span>
+                        <div class="iq-spec-track">
+                            <div class="iq-spec-fill" style="width:${Math.min(spec*10,100)}%;background:${specColor};"></div>
+                        </div>
+                        <span class="iq-spec-value" style="color:${specColor};">${spec}/10</span>`;
+                    const scanInfo = document.getElementById('iqRhetoricScanInfo');
+                    scanInfo.parentNode.insertBefore(wrap, scanInfo);
+                }
+
+                // ── Vector pills (non-zero only) ──
+                const IQ_VEC_COLORS = {0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626'};
+                const vectors = [
+                    { label: '⚔️ PMF',  level: sum.pmf_level || 0 },
+                    { label: '🚀 Iran', level: sum.iran_strike_level || 0 },
+                    { label: '🛡️ Base', level: sum.us_base_level || 0 },
+                    { label: '🏔️ KRG',  level: sum.kurdish_level || 0 },
+                    { label: '☠️ ISIS', level: sum.isis_level || 0 },
+                ].filter(v => v.level > 0);
+
+                if (vectors.length > 0 && !document.getElementById('iqVectorPills')) {
+                    const pillsWrap = document.createElement('div');
+                    pillsWrap.id = 'iqVectorPills';
+                    pillsWrap.className = 'iq-vector-pills';
+                    pillsWrap.innerHTML = vectors.map(v =>
+                        `<span class="iq-vector-pill" style="background:${IQ_VEC_COLORS[v.level] || '#6b7280'};">${v.label} L${v.level}</span>`
+                    ).join('');
+                    const subtitleEl = document.querySelector('[data-i18n="rhetoricSubtitleCard"]');
+                    if (subtitleEl) subtitleEl.parentNode.insertBefore(pillsWrap, subtitleEl.nextSibling);
+                }
+
+                // Full data — actors + silence anomalies + alerts
                 const fullResp = await fetch(BACKEND_URL + '/api/rhetoric/iraq');
                 if (!fullResp.ok) return;
                 const full = await fullResp.json();
+
+                // Build silence map from v2.0 anomalies
+                const silenceMap = {};
+                (full.silence_anomalies || []).forEach(a => { silenceMap[a.actor_id] = a.deviation; });
 
                 // Actor list
                 if (full.actors) {
                     const actorList = document.getElementById('iqRhetoricActorList');
                     actorList.innerHTML = '';
-                    const actorOrder = ['pmf_hashd', 'kataib', 'sadr', 'krg', 'iran_iraq', 'us_centcom', 'isis_iraq', 'iraqi_govt'];
+                    const actorOrder = ['pmf_hashd', 'kataib', 'iran_iraq', 'us_centcom', 'sadr', 'iraqi_gov', 'krg', 'isis_iraq'];
                     actorOrder.forEach(actorId => {
                         const actor = full.actors[actorId];
                         if (!actor) return;
-                        const silenceIcon = actor.silence_alert ? ' 🔇' : '';
+                        const silenceText = silenceMap[actorId] || (actor.silence_alert ? 'Below baseline' : null);
+                        const silencePill = silenceText ? `<span class="iq-silence-pill">🔇 ${silenceText}</span>` : '';
                         const countText = actor.statement_count > 0 ? `${actor.statement_count} articles` : 'No articles';
                         actorList.innerHTML += `
                             <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--card-border);">
-                                <span style="font-size:11px;">${actor.flag || ''} ${actor.icon || ''} ${actor.name}${silenceIcon}</span>
+                                <span style="font-size:11px;">${actor.flag || ''} ${actor.icon || ''} ${actor.name}${silencePill}</span>
                                 <span style="display:flex;align-items:center;gap:5px;">
                                     <span style="font-size:9px;color:var(--text-muted);">${countText}</span>
                                     <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${actor.escalation_color || '#6b7280'};"></span>
@@ -826,26 +900,11 @@ body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background
                     document.getElementById('iqRhetoricAlerts').style.display = 'block';
                     document.getElementById('iqRhetoricAlertList').innerHTML = full.alerts.slice(0, 3).map(alert => {
                         const bg = alert.severity === 'critical' ? 'rgba(248,113,113,0.15)' :
-                                   alert.severity === 'high'     ? 'rgba(251,146,60,0.15)'  :
-                                                                    'rgba(250,204,21,0.1)';
+                                   alert.severity === 'high'     ? 'rgba(251,146,60,0.15)'  : 'rgba(250,204,21,0.1)';
                         const bd = alert.severity === 'critical' ? '#f87171' :
                                    alert.severity === 'high'     ? '#fb923c' : '#facc15';
                         return `<div style="padding:5px 8px;margin-bottom:4px;background:${bg};border-left:3px solid ${bd};border-radius:4px;font-size:11px;color:var(--text-primary);">${alert.message}</div>`;
                     }).join('');
-                }
-
-                // Spokespersons
-                const spokes = [];
-                if (full.actors) {
-                    Object.values(full.actors).forEach(actor => {
-                        if (actor.spokespersons?.length) {
-                            actor.spokespersons.forEach(s => spokes.push(`${actor.icon || ''} ${s}`));
-                        }
-                    });
-                }
-                if (spokes.length > 0) {
-                    document.getElementById('iqRhetoricSpokespeople').style.display = 'block';
-                    document.getElementById('iqRhetoricSpokesList').textContent = spokes.slice(0, 6).join(' • ');
                 }
 
             } catch(e) {
