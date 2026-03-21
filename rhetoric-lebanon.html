@@ -564,6 +564,63 @@
         .loading-dot:nth-child(3) { animation-delay: 0.4s; }
         @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
 
+        /* ── VECTOR TABS ── */
+        .vector-tabs {
+            display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .vector-tab {
+            flex: 1; min-width: 160px;
+            background: var(--card-bg); border: 2px solid var(--card-border);
+            border-radius: 10px; padding: 14px 16px;
+            text-align: center; transition: all 0.2s ease;
+            box-shadow: var(--card-glow);
+        }
+        .vector-tab-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 4px; }
+        .vector-tab-value { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+        .vector-tab-badge { display: inline-block; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; color: white; }
+
+        /* ── DELTA BADGE ── */
+        .delta-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 3px 10px; border-radius: 12px;
+            font-size: 12px; font-weight: bold;
+            margin-left: 10px; vertical-align: middle;
+        }
+        .delta-rising  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+        .delta-falling { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+        .delta-stable  { background: rgba(107,114,128,0.12); color: #9ca3af; border: 1px solid rgba(107,114,128,0.25); }
+
+        /* ── SPECIFICITY BAR ── */
+        .specificity-wrap { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+        .specificity-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); white-space: nowrap; }
+        .specificity-track { flex: 1; height: 4px; background: rgba(107,114,128,0.2); border-radius: 2px; overflow: hidden; }
+        .specificity-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+        .specificity-value { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+        /* ── SILENCE PILL ── */
+        .silence-pill {
+            display: inline-flex; align-items: center; gap: 3px;
+            background: rgba(245,158,11,0.12); color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 3px; padding: 1px 6px;
+            font-size: 9px; font-weight: bold; margin-left: 4px;
+        }
+
+        /* ── CROSS-THEATER + CONDITIONAL ── */
+        .crosstheater-finding {
+            background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.25);
+            border-radius: 6px; padding: 10px 14px; margin-bottom: 8px;
+        }
+        .crosstheater-finding-title { font-size: 12px; font-weight: bold; color: #a78bfa; margin-bottom: 4px; }
+        .crosstheater-confidence { display: inline-block; font-size: 10px; font-weight: bold; padding: 1px 6px; border-radius: 3px; margin-left: 8px; background: rgba(124,58,237,0.2); color: #a78bfa; }
+        .crosstheater-signal { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+        .conditional-threat-item {
+            background: rgba(249,115,22,0.07); border-left: 3px solid #f97316;
+            border-radius: 0 6px 6px 0; padding: 8px 12px; margin-bottom: 6px;
+            font-size: 12px;
+        }
+        .conditional-phrase { font-weight: bold; color: #f97316; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+
         /* ── FOOTER ── */
         footer {
             background: var(--container-bg);
@@ -615,6 +672,30 @@
         </div>
     </header>
 
+    <!-- VECTOR TABS -->
+    <div class="vector-tabs">
+        <div class="vector-tab" id="tab-ground">
+            <div class="vector-tab-label">🪖 Ground Operations</div>
+            <div class="vector-tab-value" id="groundLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="groundBadge" style="background:#6b7280;">Monitoring</span></div>
+        </div>
+        <div class="vector-tab" id="tab-rockets">
+            <div class="vector-tab-label">🚀 Rockets / Missiles</div>
+            <div class="vector-tab-value" id="rocketsLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="rocketsBadge" style="background:#6b7280;">Monitoring</span></div>
+        </div>
+        <div class="vector-tab" id="tab-ceasefire">
+            <div class="vector-tab-label">🕊️ Ceasefire / Diplomacy</div>
+            <div class="vector-tab-value" id="ceasefireLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="ceasefireBadge" style="background:#6b7280;">Monitoring</span></div>
+        </div>
+        <div class="vector-tab" id="tab-crossborder">
+            <div class="vector-tab-label">⚡ Cross-border Escalation</div>
+            <div class="vector-tab-value" id="crossborderLevel" style="color:#6b7280;">--</div>
+            <div><span class="vector-tab-badge" id="crossborderBadge" style="background:#6b7280;">Monitoring</span></div>
+        </div>
+    </div>
+
     <!-- THEATRE BANNER -->
     <div class="theatre-banner" id="theatreBanner">
         <div class="theatre-left">
@@ -628,6 +709,13 @@
             <div class="theatre-meta-title" data-i18n="theatreEscalation">THEATRE ESCALATION LEVEL</div>
             <div style="font-size:28px;font-weight:bold;color:var(--text-primary);" id="theatreLevel">--</div>
             <div class="theatre-meta-sub" id="theatreLevelDesc">--</div>
+            <div class="specificity-wrap" id="specificityWrap" style="display:none;">
+                <span class="specificity-label">Signal Specificity</span>
+                <div class="specificity-track">
+                    <div class="specificity-fill" id="specificityFill" style="width:0%;"></div>
+                </div>
+                <span class="specificity-value" id="specificityValue">0/10</span>
+            </div>
             <div class="theatre-scan-info" id="theatreScanInfo">--</div>
         </div>
     </div>
@@ -685,6 +773,25 @@
     <div class="section-card" id="coordCard" style="display:none;">
         <div class="section-title" data-i18n="coordAlerts">⚡ COORDINATION SIGNALS</div>
         <div id="coordList"></div>
+    </div>
+
+    <!-- CROSS-THEATER COORDINATION -->
+    <div class="section-card" id="crosstheaterCard" style="display:none;">
+        <div class="section-title">🌐 CROSS-THEATER COORDINATION SIGNALS</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
+            Comparing rhetoric fingerprints across Yemen, Iraq, Syria, and Lebanon.
+            <span id="crosstheaterMissing"></span>
+        </div>
+        <div id="crosstheaterList"></div>
+    </div>
+
+    <!-- CONDITIONAL THREAT TRIPWIRES -->
+    <div class="section-card" id="conditionalCard" style="display:none;">
+        <div class="section-title">⚠️ CONDITIONAL THREAT TRIPWIRES</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">
+            "If/then" language detected — conditions under which escalation has been declared likely.
+        </div>
+        <div id="conditionalList"></div>
     </div>
 
     <!-- ACTOR STATUS GRID -->
@@ -881,15 +988,20 @@
 
 
     const ESCALATION_LEVELS = {
-        0: { label: 'Silent',        color: '#6b7280', desc: 'No statements detected' },
-        1: { label: 'Routine',       color: '#3b82f6', desc: 'Standard diplomatic language' },
-        2: { label: 'Cautionary',    color: '#f59e0b', desc: 'Warnings, expressions of concern' },
-        3: { label: 'Threatening',   color: '#f97316', desc: 'Explicit threats, red lines invoked' },
-        4: { label: 'Operational',   color: '#ef4444', desc: 'Military language, action imminent' },
-        5: { label: 'Active',        color: '#dc2626', desc: 'Claims of ongoing operations or strikes' },
+        0: { label: 'Monitoring',      color: '#6b7280', desc: 'No signals detected' },
+        1: { label: 'Rhetoric',        color: '#3b82f6', desc: 'Standard diplomatic language' },
+        2: { label: 'Warning',         color: '#f59e0b', desc: 'Warnings, expressions of concern' },
+        3: { label: 'Direct Threat',   color: '#f97316', desc: 'Explicit threats, red lines invoked' },
+        4: { label: 'Incident',        color: '#ef4444', desc: 'Military language, action imminent' },
+        5: { label: 'Active Conflict', color: '#dc2626', desc: 'Claims of ongoing operations or strikes' },
     };
 
-    const ACTOR_ORDER = ['hezbollah_military','hezbollah_political','israel_lebanon','iran_lebanon','lebanese_government','unifil'];
+    const ACTOR_ORDER = [
+        'hezbollah_military','hezbollah_political',
+        'israel_lebanon','iran_lebanon',
+        'lebanese_government','unifil',
+        'france','cyprus','syria_border'
+    ];
 
     // ── TRANSLATIONS ──
     const translations = {
@@ -1066,33 +1178,75 @@
         }
     }
 
+    // ── VECTOR TABS ──
+    function renderVectorTabs(data) {
+        const vectors = [
+            { id: 'ground',      level: data.ground_ops_level  || 0, label: data.ground_ops_label  || 'Monitoring' },
+            { id: 'rockets',     level: data.rockets_level     || 0, label: data.rockets_label     || 'Monitoring' },
+            { id: 'ceasefire',   level: data.ceasefire_level   || 0, label: data.ceasefire_label   || 'Monitoring' },
+            { id: 'crossborder', level: data.crossborder_level || 0, label: data.crossborder_label || 'Monitoring' },
+        ];
+        vectors.forEach(v => {
+            const lv = ESCALATION_LEVELS[v.level] || ESCALATION_LEVELS[0];
+            const levelEl = document.getElementById(`${v.id}Level`);
+            const badgeEl = document.getElementById(`${v.id}Badge`);
+            const tabEl   = document.getElementById(`tab-${v.id}`);
+            if (levelEl) { levelEl.textContent = v.level; levelEl.style.color = lv.color; }
+            if (badgeEl) { badgeEl.textContent = v.label; badgeEl.style.background = lv.color; }
+            if (tabEl && v.level >= 3) tabEl.style.borderColor = lv.color;
+        });
+    }
+
     // ── THEATRE BANNER ──
     function renderTheatre(data) {
         const score = data.rhetoric_score || 0;
         const level = data.theatre_escalation_level || 0;
-        const lv = ESCALATION_LEVELS[level];
+        const lv = ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0];
 
         document.getElementById('theatreScore').textContent = score;
         document.getElementById('theatreScore').style.color = lv.color;
         document.getElementById('theatreLabelBadge').textContent = data.theatre_escalation_label || lv.label;
         document.getElementById('theatreLabelBadge').style.background = lv.color;
-        document.getElementById('theatreLevel').textContent = `Level ${level} — ${lv.label}`;
+
+        // Delta badge
+        let deltaHtml = '';
+        const delta = data.delta;
+        if (delta && delta.direction !== 'insufficient_data') {
+            const arrows = { rising: '▲', falling: '▼', stable: '→' };
+            const cls = { rising: 'delta-rising', falling: 'delta-falling', stable: 'delta-stable' };
+            const sc = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+            deltaHtml = `<span class="delta-badge ${cls[delta.direction] || 'delta-stable'}">${arrows[delta.direction] || '→'} ${sc} pts vs ${delta.vs_period || 'prior scans'}</span>`;
+        }
+
+        document.getElementById('theatreLevel').innerHTML = `Level ${level} — ${lv.label}${deltaHtml}`;
         document.getElementById('theatreLevel').style.color = lv.color;
         document.getElementById('theatreLevelDesc').textContent = lv.desc;
 
-        if (data.scanned_at) {
-            const scanDate = new Date(data.scanned_at);
-            const ago = Math.round((Date.now() - scanDate.getTime()) / 60000);
-            const agoText = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
-            document.getElementById('theatreScanInfo').textContent = `Last scan: ${agoText}`;
+        // Specificity bar
+        const spec = data.specificity_score;
+        const specWrap = document.getElementById('specificityWrap');
+        if (specWrap && spec !== undefined) {
+            const specColor = spec <= 3 ? '#22c55e' : spec <= 6 ? '#f97316' : '#ef4444';
+            specWrap.style.display = 'flex';
+            document.getElementById('specificityFill').style.width = `${Math.min(spec * 10, 100)}%`;
+            document.getElementById('specificityFill').style.background = specColor;
+            document.getElementById('specificityValue').textContent = `${spec}/10`;
+            document.getElementById('specificityValue').style.color = specColor;
         }
 
-        // Last updated header
+        if (data.scanned_at) {
+            const ago = Math.round((Date.now() - new Date(data.scanned_at).getTime()) / 60000);
+            const agoText = ago < 60 ? `${ago}m ago` : `${Math.round(ago/60)}h ago`;
+            document.getElementById('theatreScanInfo').textContent =
+                `Last scan: ${agoText} | ${data.total_articles || 0} articles analyzed`;
+        }
+
         const ts = data.scanned_at ? new Date(data.scanned_at).toLocaleString() : new Date().toLocaleString();
-        const t = translations[currentLang];
-        document.getElementById('lastUpdated').textContent = (t.lastUpdated || 'Last updated: ') + ts;
+        document.getElementById('lastUpdated').textContent =
+            (translations[currentLang].lastUpdated || 'Last updated: ') + ts;
 
         renderLadder(level);
+        renderVectorTabs(data);
 
         const classified = data.articles_classified || 0;
         const total = data.total_articles || 0;
@@ -1123,27 +1277,34 @@
     }
 
     // ── ACTORS ──
-    function renderActors(actors) {
+    function renderActors(actors, silenceAnomalies) {
         const grid = document.getElementById('actorsGrid');
         grid.innerHTML = '';
+        // Build silence map from anomalies array
+        const silenceMap = {};
+        (silenceAnomalies || []).forEach(a => { silenceMap[a.actor_id] = a.deviation; });
+
         ACTOR_ORDER.forEach(id => {
             const a = actors[id];
             if (!a) return;
             const lv = ESCALATION_LEVELS[a.escalation_level] || ESCALATION_LEVELS[0];
-            const silenceBadge = a.silence_alert ? `<span class="silence-badge">🔇 Silence</span>` : '';
+
+            // Silence: prefer Redis-backed anomaly, fall back to static boolean
+            const silenceText = silenceMap[id] || (a.silence_alert ? 'Below baseline' : null);
+            const silencePill = silenceText
+                ? `<span class="silence-pill">🔇 ${silenceText}</span>` : '';
+
             const phraseBlock = a.escalation_phrase
                 ? `<div class="actor-phrase">"${a.escalation_phrase}"</div>` : '';
-            const spokesBlock = a.spokespersons && a.spokespersons.length > 0
-                ? `<div class="actor-spokespeople">🎤 ${a.spokespersons.slice(0,3).join(' · ')}</div>` : '';
 
             const div = document.createElement('div');
             div.className = 'actor-card';
             div.innerHTML = `
                 <div class="actor-header">
                     <div>
-                        <span class="actor-flag-icon">${a.flag} ${a.icon}</span>
+                        <span class="actor-flag-icon">${a.flag} ${a.icon || ''}</span>
                         <span class="actor-name"> ${a.name}</span>
-                        ${silenceBadge}
+                        ${silencePill}
                     </div>
                     <div class="actor-escalation-badge">
                         <div class="actor-dot" style="background:${lv.color}"></div>
@@ -1152,10 +1313,9 @@
                 </div>
                 <div class="actor-stats">
                     <span class="actor-stat">📄 ${a.statement_count || 0} articles</span>
-                    <span class="actor-stat">⬆️ Level ${a.escalation_level}</span>
+                    <span class="actor-stat">⬆️ Level ${a.escalation_level || 0}</span>
                 </div>
                 ${phraseBlock}
-                ${spokesBlock}
             `;
             grid.appendChild(div);
         });
@@ -1227,10 +1387,57 @@
         });
     }
 
+    // ── CROSS-THEATER ──
+    function renderCrosstheater(findings) {
+        const card = document.getElementById('crosstheaterCard');
+        const list = document.getElementById('crosstheaterList');
+        const missingEl = document.getElementById('crosstheaterMissing');
+        if (!findings || findings.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+        const missing = findings[0]?.missing_theaters || [];
+        if (missing.length > 0 && missingEl)
+            missingEl.textContent = ` (${missing.join(', ')} tracker${missing.length > 1 ? 's' : ''} not yet active)`;
+        list.innerHTML = findings.map(f => {
+            let detail = '';
+            if (f.type === 'simultaneous_elevation')
+                detail = `Theaters: ${(f.theaters||[]).join(', ')} | Avg level: ${f.avg_level}`;
+            else if (f.type === 'target_convergence')
+                detail = `Shared targets: ${Object.keys(f.shared_targets||{}).slice(0,4).join(', ')}`;
+            else if (f.type === 'phrase_synchronization')
+                detail = `Shared phrases: ${(f.shared_phrases||[]).slice(0,3).join(' · ')}`;
+            return `<div class="crosstheater-finding">
+                <div class="crosstheater-finding-title">${f.message || ''}
+                    <span class="crosstheater-confidence">${f.confidence || 0}% confidence</span>
+                </div>
+                <div style="font-size:11px;color:var(--text-muted);">${detail}</div>
+                <div class="crosstheater-signal">⚡ ${f.signal || ''}</div>
+            </div>`;
+        }).join('');
+    }
+
+    // ── CONDITIONAL THREATS ──
+    function renderConditionalThreats(threats) {
+        const card = document.getElementById('conditionalCard');
+        const list = document.getElementById('conditionalList');
+        if (!threats || threats.length === 0) { card.style.display = 'none'; return; }
+        card.style.display = 'block';
+        const seen = new Set();
+        const unique = threats.filter(t => { if (seen.has(t.phrase)) return false; seen.add(t.phrase); return true; });
+        list.innerHTML = unique.map(t => {
+            const lv = ESCALATION_LEVELS[t.level] || ESCALATION_LEVELS[1];
+            const date = t.published ? new Date(t.published).toLocaleDateString() : '';
+            return `<div class="conditional-threat-item">
+                <div class="conditional-phrase">L${t.level} tripwire — "${t.phrase}"</div>
+                <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">${t.article || ''}</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${date}${t.specificity > 0 ? ` · Specificity: ${t.specificity}/10` : ''}</div>
+            </div>`;
+        }).join('');
+    }
+
     // ── MAIN LOAD ──
     async function loadRhetoricData(forceRefresh = false) {
         try {
-            const url = API_BASE + '/api/rhetoric/lebanon' + (forceRefresh ? '?refresh=true' : '');
+            const url = API_BASE + '/api/rhetoric/lebanon' + (forceRefresh ? '?force=true' : '');
             const resp = await fetch(url);
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
             const data = await resp.json();
@@ -1266,8 +1473,10 @@
             renderTheatre(data);
             renderAlerts(data.alerts);
             renderCoordination(data.coordination_alerts);
+            renderCrosstheater(data.crosstheater_coordination);
+            renderConditionalThreats(data.conditional_threats);
             if (data.actors) {
-                renderActors(data.actors);
+                renderActors(data.actors, data.silence_anomalies);
                 renderArticles(data.actors);
             }
 
