@@ -383,16 +383,12 @@
     <div class="section-title">📡 Active Rhetoric Trackers — Alphabetical</div>
     <div class="trackers-list" id="trackersList"></div>
 
-    <!-- COMING SOON — ME only -->
-    <div class="section-title" style="margin-top:24px;">🔜 Middle East — In Development</div>
+    <!-- COMING SOON — future regions -->
+    <div class="section-title" style="margin-top:24px;">🔜 In Development</div>
     <div class="trackers-list">
         <div class="coming-soon-banner">
-            <div class="coming-soon-name">🇮🇷 Iran Dedicated Rhetoric Tracker</div>
-            <span class="coming-soon-badge">Build Queued — #3 Priority</span>
-        </div>
-        <div class="coming-soon-banner">
-            <div class="coming-soon-name">🇮🇱 Israel / Palestine Rhetoric Tracker</div>
-            <span class="coming-soon-badge">Planned</span>
+            <div class="coming-soon-name">🌏 Asia / Pacific Rhetoric Tracker</div>
+            <span class="coming-soon-badge">China · Taiwan · DPRK — Build Queued</span>
         </div>
     </div>
 
@@ -431,6 +427,16 @@
 
     const TRACKERS = [
         {
+            id: 'iran',
+            name: 'Iran Command Node Tracker',
+            flag: '🇮🇷',
+            actors: 'IRGC · Khamenei · Proxy Network · Nuclear · Hormuz · Domestic Signals',
+            url: 'https://www.asifahanalytics.com/rhetoric-iran.html',
+            summaryUrl: 'https://asifah-backend.onrender.com/api/rhetoric/iran/summary',
+            vectors: ['IRGC Direct', 'Proxy Network', 'Nuclear'],
+            isCommandNode: true,
+        },
+        {
             id: 'iraq',
             name: 'Iraq Rhetoric & Escalation Tracker',
             flag: '🇮🇶',
@@ -465,6 +471,16 @@
             url: 'https://www.asifahanalytics.com/rhetoric-yemen.html',
             summaryUrl: 'https://asifah-backend.onrender.com/api/rhetoric/yemen/summary',
             vectors: ['Maritime', 'Direct Strike', 'Horn of Africa'],
+        },
+        {
+            id: 'israel',
+            name: 'Israel / Palestine Rhetoric Tracker',
+            flag: '🇮🇱',
+            actors: 'IDF · War Cabinet · Hamas · Hezbollah · West Bank · Gaza · Settlers',
+            url: 'https://www.asifahanalytics.com/rhetoric-israel.html',
+            summaryUrl: 'https://asifah-backend.onrender.com/api/rhetoric/israel/summary',
+            vectors: ['Northern Front', 'Iran Direct', 'West Bank'],
+            isStrikeActor: true,
         },
     ];
 
@@ -512,15 +528,30 @@
             ? `<span style="font-size:10px;color:var(--text-muted);">Specificity: ${data.specificity_score ?? '--'}/10 &nbsp;·&nbsp; ${data.total_articles ?? '--'} articles analyzed</span>`
             : '';
 
+        // Command node badge (Iran) + Strike actor badge (Israel)
+        const commandBadge = tracker.isCommandNode
+            ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:1.5px;background:rgba(220,38,38,0.15);border:1px solid rgba(220,38,38,0.4);color:#ef4444;margin-left:8px;text-transform:uppercase;">⚡ COMMAND NODE</span>`
+            : tracker.isStrikeActor
+            ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;letter-spacing:1.5px;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.4);color:#60a5fa;margin-left:8px;text-transform:uppercase;">🎯 STRIKE ACTOR</span>`
+            : '';
+
+        // OTP signal badge for Iran
+        const otpBadge = tracker.isCommandNode && data?.operation_true_promise_count > 0
+            ? `<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:800;background:rgba(220,38,38,0.1);border:1px solid rgba(220,38,38,0.3);color:#ef4444;margin-top:4px;">🚀 ${data.operation_true_promise_count} OTP signals</span>`
+            : '';
+
         const div = document.createElement('div');
         div.className = 'tracker-banner';
+        if (tracker.isCommandNode) div.style.borderColor = 'rgba(220,38,38,0.4)';
+        if (tracker.isStrikeActor) div.style.borderColor = 'rgba(59,130,246,0.35)';
         div.innerHTML = `
             <div class="tracker-left">
                 <div class="tracker-name">
                     <span style="font-size:22px;">${tracker.flag}</span>
-                    ${tracker.name}
+                    ${tracker.name}${commandBadge}
                 </div>
                 <div class="tracker-actors">${tracker.actors}</div>
+                ${otpBadge}
             </div>
             <div class="tracker-middle">
                 <div class="tracker-vectors">${vectorPills}</div>
