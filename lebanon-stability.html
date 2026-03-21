@@ -704,8 +704,37 @@
             font-size: 13px;
         }
 
-        .article-link:hover {
-            text-decoration: underline;
+        .article-link:hover { color: #4a7dd4; text-decoration: underline; }
+
+        /* ── RHETORIC CARD v2.0 ENHANCEMENTS ── */
+        .rhetoric-delta-badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 2px 8px; border-radius: 10px;
+            font-size: 11px; font-weight: bold;
+            margin-left: 8px; vertical-align: middle;
+        }
+        .rhetoric-delta-rising  { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+        .rhetoric-delta-falling { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+        .rhetoric-delta-stable  { background: rgba(107,114,128,0.12); color: #9ca3af; border: 1px solid rgba(107,114,128,0.25); }
+
+        .rhetoric-spec-wrap { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+        .rhetoric-spec-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); white-space: nowrap; }
+        .rhetoric-spec-track { flex: 1; height: 4px; background: rgba(107,114,128,0.2); border-radius: 2px; overflow: hidden; }
+        .rhetoric-spec-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+        .rhetoric-spec-value { font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+
+        .rhetoric-silence-pill {
+            display: inline-flex; align-items: center; gap: 3px;
+            background: rgba(245,158,11,0.12); color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 3px; padding: 1px 6px;
+            font-size: 9px; font-weight: bold; margin-left: 4px;
+        }
+
+        .rhetoric-vector-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+        .rhetoric-vector-pill {
+            font-size: 10px; padding: 2px 7px; border-radius: 4px;
+            font-weight: bold; color: white; white-space: nowrap;
         }
 
         /* Dark mode: brighter link color */
@@ -2969,71 +2998,120 @@
                     document.getElementById('rhetoricScanInfo').textContent = `Last scan: ${agoText}`;
                 }
                 
-                // Now fetch full data for actor breakdown
+                // ── Delta badge ──
+                const delta = data.delta;
+                if (delta && delta.direction !== 'insufficient_data') {
+                    const arrows = { rising: '▲', falling: '▼', stable: '→' };
+                    const cls = { rising: 'rhetoric-delta-rising', falling: 'rhetoric-delta-falling', stable: 'rhetoric-delta-stable' };
+                    const sc = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+                    const badge = document.createElement('span');
+                    badge.className = `rhetoric-delta-badge ${cls[delta.direction] || 'rhetoric-delta-stable'}`;
+                    badge.textContent = `${arrows[delta.direction] || '→'} ${sc} pts`;
+                    badge.title = `vs ${delta.vs_period || 'prior scans'}`;
+                    const scanInfo = document.getElementById('rhetoricScanInfo');
+                    if (scanInfo && !document.getElementById('rhetoricDeltaBadge')) {
+                        badge.id = 'rhetoricDeltaBadge';
+                        scanInfo.parentNode.insertBefore(badge, scanInfo);
+                    }
+                }
+
+                // ── Specificity bar ──
+                const spec = data.specificity_score;
+                if (spec !== undefined && spec !== null) {
+                    const specColor = spec <= 3 ? '#22c55e' : spec <= 6 ? '#f97316' : '#ef4444';
+                    const scanInfo = document.getElementById('rhetoricScanInfo');
+                    if (scanInfo && !document.getElementById('rhetoricSpecWrap')) {
+                        const wrap = document.createElement('div');
+                        wrap.id = 'rhetoricSpecWrap';
+                        wrap.className = 'rhetoric-spec-wrap';
+                        wrap.innerHTML = `
+                            <span class="rhetoric-spec-label">Signal Specificity</span>
+                            <div class="rhetoric-spec-track">
+                                <div class="rhetoric-spec-fill" style="width:${Math.min(spec*10,100)}%;background:${specColor};"></div>
+                            </div>
+                            <span class="rhetoric-spec-value" style="color:${specColor};">${spec}/10</span>`;
+                        scanInfo.parentNode.insertBefore(wrap, scanInfo.nextSibling);
+                    }
+                }
+
+                // ── Vector pills ──
+                const vectors = [
+                    { key: 'ground_ops_level',  label: '🪖 Ground', labelKey: 'ground_ops_label' },
+                    { key: 'rockets_level',     label: '🚀 Rockets', labelKey: 'rockets_label' },
+                    { key: 'ceasefire_level',   label: '🕊️ Ceasefire', labelKey: 'ceasefire_label' },
+                ];
+                const VECTOR_COLORS = { 0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626' };
+                const vectorsWithData = vectors.filter(v => data[v.key] > 0);
+                if (vectorsWithData.length > 0) {
+                    const subtitleEl = document.getElementById('rhetoricTheatreLabel');
+                    if (subtitleEl && !document.getElementById('rhetoricVectorPills')) {
+                        const pillsWrap = document.createElement('div');
+                        pillsWrap.id = 'rhetoricVectorPills';
+                        pillsWrap.className = 'rhetoric-vector-pills';
+                        pillsWrap.innerHTML = vectors.map(v => {
+                            const lvl = data[v.key] || 0;
+                            if (lvl === 0) return '';
+                            return `<span class="rhetoric-vector-pill" style="background:${VECTOR_COLORS[lvl] || '#6b7280'};">${v.label} L${lvl}</span>`;
+                        }).join('');
+                        subtitleEl.parentNode.insertBefore(pillsWrap, subtitleEl.nextSibling);
+                    }
+                }
+
+                // Now fetch full data for actor breakdown + silence anomalies
                 const fullResponse = await fetch('https://lebanon-stability-backend.onrender.com/api/rhetoric/lebanon');
                 const fullData = await fullResponse.json();
-                
+
+                // Build silence map from v2.0 anomalies
+                const silenceMap = {};
+                (fullData.silence_anomalies || []).forEach(a => { silenceMap[a.actor_id] = a.deviation; });
+
                 if (fullData.actors) {
                     const actorList = document.getElementById('rhetoricActorList');
                     actorList.innerHTML = '';
-                    
-                    const actorOrder = ['hezbollah_political', 'hezbollah_military', 'iran_lebanon', 'israel_lebanon', 'lebanese_government', 'unifil'];
-                    
+
+                    const actorOrder = [
+                        'hezbollah_political', 'hezbollah_military',
+                        'iran_lebanon', 'israel_lebanon',
+                        'lebanese_government', 'unifil',
+                        'france', 'cyprus', 'syria_border'
+                    ];
+
                     actorOrder.forEach(actorId => {
                         const actor = fullData.actors[actorId];
                         if (!actor) return;
-                        
-                        const silenceIcon = actor.silence_alert ? ' 🔇' : '';
+
+                        const silenceText = silenceMap[actorId] || (actor.silence_alert ? 'Below baseline' : null);
+                        const silencePill = silenceText
+                            ? `<span class="rhetoric-silence-pill">🔇 ${silenceText}</span>` : '';
                         const countText = actor.statement_count > 0 ? `${actor.statement_count} articles` : 'No articles';
-                        
+                        const color = actor.escalation_color || '#6b7280';
+                        const label = actor.escalation_label || 'Monitoring';
+
                         actorList.innerHTML += `
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 1px solid var(--card-border);">
-                                <span>${actor.flag} ${actor.icon} ${actor.name}${silenceIcon}</span>
-                                <span style="display: flex; align-items: center; gap: 6px;">
-                                    <span style="font-size: 10px; color: var(--text-muted);">${countText}</span>
-                                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: ${actor.escalation_color};"></span>
-                                    <span style="font-size: 10px; font-weight: 600; color: ${actor.escalation_color};">${actor.escalation_label}</span>
+                            <div style="display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid var(--card-border);font-size:12px;">
+                                <span>${actor.flag || ''} ${actor.icon || ''} ${actor.name}${silencePill}</span>
+                                <span style="display:flex;align-items:center;gap:6px;">
+                                    <span style="font-size:10px;color:var(--text-muted);">${countText}</span>
+                                    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};"></span>
+                                    <span style="font-size:10px;font-weight:600;color:${color};">${label}</span>
                                 </span>
                             </div>
                         `;
                     });
                 }
-                
+
                 // Alerts
                 if (fullData.alerts && fullData.alerts.length > 0) {
                     const alertsContainer = document.getElementById('rhetoricAlerts');
                     const alertList = document.getElementById('rhetoricAlertList');
                     alertsContainer.style.display = 'block';
-                    
                     alertList.innerHTML = fullData.alerts.slice(0, 3).map(alert => {
                         const bgColor = alert.severity === 'critical' ? 'rgba(248,113,113,0.15)' :
-                                        alert.severity === 'high' ? 'rgba(251,146,60,0.15)' :
-                                        'rgba(250,204,21,0.1)';
+                                        alert.severity === 'high' ? 'rgba(251,146,60,0.15)' : 'rgba(250,204,21,0.1)';
                         const borderColor = alert.severity === 'critical' ? '#f87171' :
                                            alert.severity === 'high' ? '#fb923c' : '#facc15';
-                        return `
-                            <div style="padding: 6px 8px; margin-bottom: 4px; background: ${bgColor}; border-left: 3px solid ${borderColor}; border-radius: 4px; font-size: 11px; color: var(--text-primary);">
-                                ${alert.message}
-                            </div>
-                        `;
+                        return `<div style="padding:6px 8px;margin-bottom:4px;background:${bgColor};border-left:3px solid ${borderColor};border-radius:4px;font-size:11px;color:var(--text-primary);">${alert.message}</div>`;
                     }).join('');
-                }
-                
-                // Spokespersons
-                const allSpokes = [];
-                if (fullData.actors) {
-                    Object.values(fullData.actors).forEach(actor => {
-                        if (actor.spokespersons && actor.spokespersons.length > 0) {
-                            actor.spokespersons.forEach(s => {
-                                allSpokes.push(`${actor.icon} ${s}`);
-                            });
-                        }
-                    });
-                }
-                
-                if (allSpokes.length > 0) {
-                    document.getElementById('rhetoricSpokespeople').style.display = 'block';
-                    document.getElementById('rhetoricSpokesList').textContent = allSpokes.slice(0, 6).join(' • ');
                 }
                 
             } catch (error) {
