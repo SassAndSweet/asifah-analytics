@@ -310,6 +310,19 @@
     }
     [dir="rtl"] .back-link { flex-direction: row-reverse; }
     [dir="rtl"] .coord-item { border-left: none; border-right: 3px solid var(--accent); }
+
+    /* ── RTL FONT SIZE FIX ── */
+    [dir="rtl"] body { font-size: 115%; }
+    [dir="rtl"] .actor-name { font-size: 1.0rem; }
+    [dir="rtl"] .actor-role { font-size: 0.72rem; }
+    [dir="rtl"] .dashboard-row-label { font-size: 0.82rem; }
+    [dir="rtl"] .dashboard-row-level { font-size: 0.85rem; }
+    [dir="rtl"] .section-title { font-size: 0.82rem; }
+    [dir="rtl"] .vector-tab-label { font-size: 0.72rem; }
+    [dir="rtl"] .header-title { font-size: clamp(1.4rem, 3vw, 2.0rem); }
+    [dir="rtl"] .header-subtitle { font-size: 0.85rem; }
+    [dir="rtl"] .tci-theater-name { font-size: 0.65rem; }
+    [dir="rtl"] .alert-type-label { font-size: 0.65rem; }}
 </style>
 </head>
 <body>
@@ -1077,9 +1090,19 @@
         const silenceMap={};
         (silenceAnomalies||[]).forEach(a=>{silenceMap[a.actor_id]=a.deviation;});
 
+        const NAME_OVERRIDES = {
+            'domestic_opposition': 'Domestic Opposition',
+            'west_bank_civil': 'Judea & Samaria / The West Bank',
+        };
+        const ROLE_OVERRIDES = {
+            'west_bank_civil': 'Palestinian Territory Signals',
+        };
+
         ACTOR_ORDER.forEach(id=>{
             const a=actors[id];
             if(!a)return;
+            if(NAME_OVERRIDES[id]) a.name = NAME_OVERRIDES[id];
+            if(ROLE_OVERRIDES[id]) a.role = ROLE_OVERRIDES[id];
             const maxLv=a.max_level||0;
             const lv=ESCALATION_LEVELS[maxLv]||ESCALATION_LEVELS[0];
             const isInbound=INBOUND_ACTORS.includes(id);
