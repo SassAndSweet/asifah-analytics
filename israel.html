@@ -130,6 +130,35 @@
         /* ===== LAYOUT ===== */
         .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
 
+        /* ===== RHETORIC CARDS ===== */
+        .il-rhetoric-banner { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#052e16,#14532d); border:2px solid #22c55e; border-radius:10px; padding:14px 20px; margin-bottom:15px; box-shadow:0 4px 12px rgba(0,0,0,0.15); flex-wrap:wrap; }
+        .il-rhet-badge { background:#6b7280; color:white; font-size:10px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px; white-space:nowrap; }
+        .il-strike-badge { display:none; background:rgba(59,130,246,0.2); border:1px solid rgba(59,130,246,0.5); color:#93c5fd; font-size:10px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px; }
+        .il-rhet-cards { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px; }
+        @media(max-width:640px){ .il-rhet-cards { grid-template-columns:1fr; } }
+        .il-rhet-card { background:var(--card-bg); border:2px solid var(--card-border); border-radius:12px; padding:18px 20px; }
+        .il-rhet-card.inbound  { border-color:rgba(220,38,38,0.35); }
+        .il-rhet-card.outbound { border-color:rgba(59,130,246,0.35); }
+        .il-rhet-card-title { font-size:11px; font-weight:bold; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; padding-bottom:8px; border-bottom:1px solid var(--card-border); }
+        .il-rhet-card.inbound  .il-rhet-card-title { color:#ef4444; }
+        .il-rhet-card.outbound .il-rhet-card-title { color:#60a5fa; }
+        .il-rhet-score { font-size:32px; font-weight:900; font-family:'Courier New',monospace; line-height:1; }
+        .il-rhet-card.inbound  .il-rhet-score { color:#ef4444; }
+        .il-rhet-card.outbound .il-rhet-score { color:#60a5fa; }
+        .il-rhet-row { display:flex; justify-content:space-between; align-items:center; padding:3px 0; border-bottom:1px solid var(--card-border); font-size:11px; }
+        .il-rhet-row:last-child { border-bottom:none; }
+        .il-rhet-row-label { color:var(--text-secondary); }
+        .il-rhet-row-val { font-weight:700; font-size:11px; }
+        .il-rhet-delta { display:inline-flex; align-items:center; gap:3px; padding:1px 7px; border-radius:10px; font-size:10px; font-weight:bold; margin-left:6px; }
+        .il-rhet-delta.rising  { background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); }
+        .il-rhet-delta.falling { background:rgba(34,197,94,0.12);  color:#22c55e; border:1px solid rgba(34,197,94,0.25); }
+        .il-rhet-delta.stable  { background:rgba(107,114,128,0.12); color:#9ca3af; border:1px solid rgba(107,114,128,0.25); }
+        .il-alert-pill { display:inline-flex; align-items:center; gap:3px; background:rgba(245,158,11,0.12); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); border-radius:4px; padding:2px 8px; font-size:10px; font-weight:bold; margin-top:6px; }
+        .il-tci-pill { display:inline-flex; align-items:center; gap:3px; background:rgba(124,58,237,0.12); color:#a78bfa; border:1px solid rgba(124,58,237,0.3); border-radius:4px; padding:2px 8px; font-size:10px; font-weight:bold; margin-top:4px; }
+        .il-rhet-spec { display:flex; align-items:center; gap:6px; margin-top:6px; }
+        .il-spec-track { flex:1; height:3px; background:rgba(107,114,128,0.2); border-radius:2px; overflow:hidden; }
+        .il-spec-fill  { height:100%; border-radius:2px; transition:width 0.6s ease; }
+
         /* ===== TRAVEL WARNING BANNERS ===== */
         .travel-warning-banner {
             border-radius: 10px; padding: 14px 20px; margin-bottom: 12px;
@@ -400,6 +429,58 @@
     </div>
     <a href="https://travel.state.gov/content/travel/en/traveladvisories/ea/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW CAUTION →</a>
 </div>
+
+        <!-- ISRAEL RHETORIC TRACKER BANNER -->
+        <div class="il-rhetoric-banner">
+            <div style="font-size:24px;flex-shrink:0;">📡</div>
+            <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+                    <span style="font-size:11px;font-weight:bold;color:#86efac;text-transform:uppercase;letter-spacing:1.5px;">Israel Rhetoric Tracker — Live</span>
+                    <span class="il-rhet-badge" id="ilBannerBadge">LOADING</span>
+                    <span class="il-strike-badge" id="ilStrikeBadge">🎯 STRIKE ACTOR</span>
+                </div>
+                <div style="font-size:12px;color:#d1fae5;line-height:1.4;" id="ilBannerDesc">Fetching inbound threats · outbound posture · Pikud HaOref alerts...</div>
+            </div>
+            <a href="rhetoric-israel.html" style="flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:11px;font-weight:bold;white-space:nowrap;">Open Tracker →</a>
+        </div>
+
+        <!-- ISRAEL RHETORIC CARDS — Dual Dashboard -->
+        <div class="il-rhet-cards" id="ilRhetCards" style="display:none;">
+
+            <!-- Card 1: Inbound Threat -->
+            <div class="il-rhet-card inbound">
+                <div class="il-rhet-card-title">🎯 INBOUND THREAT DASHBOARD</div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
+                    <div class="il-rhet-score" id="ilInboundScore">--</div>
+                    <span id="ilInboundLabel" style="font-size:12px;font-weight:bold;padding:2px 8px;border-radius:4px;background:#6b7280;color:white;">--</span>
+                    <span id="ilInboundDelta"></span>
+                </div>
+                <div style="font-size:10px;color:var(--text-secondary);margin-bottom:8px;font-style:italic;">Q: Is Iran/proxy going to strike Israel?</div>
+                <div id="ilInboundRows"></div>
+                <div id="ilAlertPill"></div>
+                <div id="ilTCIPill"></div>
+                <div id="ilSpecBar"></div>
+                <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--card-border);text-align:center;">
+                    <a href="rhetoric-israel.html" style="color:#ef4444;text-decoration:none;font-size:11px;font-weight:600;">View Full Inbound Analysis →</a>
+                </div>
+            </div>
+
+            <!-- Card 2: Outbound Posture -->
+            <div class="il-rhet-card outbound">
+                <div class="il-rhet-card-title">🗺️ OUTBOUND POSTURE DASHBOARD</div>
+                <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:10px;">
+                    <div class="il-rhet-score" id="ilOutboundScore">--</div>
+                    <span id="ilOutboundLabel" style="font-size:12px;font-weight:bold;padding:2px 8px;border-radius:4px;background:#6b7280;color:white;">--</span>
+                </div>
+                <div style="font-size:10px;color:var(--text-secondary);margin-bottom:8px;font-style:italic;">Q: Is Israel gearing up to strike/invade/annex?</div>
+                <div id="ilOutboundRows"></div>
+                <div id="ilActorList" style="margin-top:10px;"></div>
+                <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--card-border);text-align:center;">
+                    <a href="rhetoric-israel.html" style="color:#60a5fa;text-decoration:none;font-size:11px;font-weight:600;">View Full Outbound Analysis →</a>
+                </div>
+            </div>
+
+        </div>
 
         <!-- ISRAEL TRAVEL ADVISORY — Level 4: Do Not Travel -->
 <div style="
@@ -1114,6 +1195,151 @@
             }
         };
 
+        // ============================================
+        // ISRAEL RHETORIC CARDS
+        // ============================================
+        const IL_RHETORIC_LEVELS = {
+            0:{label:'Baseline',color:'#6b7280'},1:{label:'Rhetoric',color:'#3b82f6'},
+            2:{label:'Warning',color:'#f59e0b'},3:{label:'Directive',color:'#f97316'},
+            4:{label:'Operational',color:'#ef4444'},5:{label:'Active Conflict',color:'#dc2626'},
+        };
+
+        async function loadIsraelRhetoricCards() {
+            try {
+                const resp = await fetch(`${BACKEND_URL}/api/rhetoric/israel/summary`);
+                if (!resp.ok) return;
+                const data = await resp.json();
+                if (!data.success) return;
+
+                const level = data.theatre_escalation_level || 0;
+                const lv = IL_RHETORIC_LEVELS[level] || IL_RHETORIC_LEVELS[0];
+
+                // ── Banner ──
+                const bannerBadge = document.getElementById('ilBannerBadge');
+                if (bannerBadge) { bannerBadge.textContent = `Level ${level} — ${lv.label}`; bannerBadge.style.background = lv.color; }
+                const strikeBadge = document.getElementById('ilStrikeBadge');
+                if (strikeBadge && data.is_strike_actor) strikeBadge.style.display = 'inline-flex';
+                const bannerDesc = document.getElementById('ilBannerDesc');
+                if (bannerDesc) {
+                    const alerts = data.alerts_24h?.total || 0;
+                    bannerDesc.textContent = `Inbound L${data.inbound_max_level||0} (TCI:${data.threat_convergence_index||0}) · Outbound L${data.outbound_max_level||0} · ${alerts} alerts/24h · Iran L${data.iran_threat_level||0} · Lebanon L${data.hezbollah_threat_level||0}`;
+                }
+
+                // Show cards
+                const cards = document.getElementById('ilRhetCards');
+                if (cards) cards.style.display = 'grid';
+
+                // ── Inbound Card ──
+                const inboundLv = IL_RHETORIC_LEVELS[data.inbound_max_level||0] || IL_RHETORIC_LEVELS[0];
+                const inboundScore = document.getElementById('ilInboundScore');
+                const inboundLabel = document.getElementById('ilInboundLabel');
+                if (inboundScore) { inboundScore.textContent = `${data.inbound_score||0}`; }
+                if (inboundLabel) { inboundLabel.textContent = inboundLv.label; inboundLabel.style.background = inboundLv.color; }
+
+                // Delta
+                const delta = data.delta;
+                if (delta && delta.direction !== 'insufficient_data') {
+                    const arrows = {rising:'▲',falling:'▼',stable:'→'};
+                    const cls = {rising:'rising',falling:'falling',stable:'stable'};
+                    const sc = delta.score_change > 0 ? `+${delta.score_change}` : delta.score_change;
+                    const deltaEl = document.getElementById('ilInboundDelta');
+                    if (deltaEl) deltaEl.innerHTML = `<span class="il-rhet-delta ${cls[delta.direction]||'stable'}">${arrows[delta.direction]||'→'} ${sc}</span>`;
+                }
+
+                // Inbound rows
+                const inboundRows = [
+                    {label:'🇮🇷 Iran',        level: data.iran_threat_level||0,      note: data.iran_is_command_node?'⚡ CMD':''},
+                    {label:'🇱🇧 Hezbollah',   level: data.hezbollah_threat_level||0, note:''},
+                    {label:'🇾🇪 Houthi',      level: data.houthi_threat_level||0,    note:''},
+                    {label:'🚨 Pikud HaOref', level: data.alert_level||0,            note:`${data.alerts_24h?.total||0} alerts`},
+                ];
+                const inboundRowsEl = document.getElementById('ilInboundRows');
+                if (inboundRowsEl) inboundRowsEl.innerHTML = inboundRows.map(r => {
+                    const rlv = IL_RHETORIC_LEVELS[r.level] || IL_RHETORIC_LEVELS[0];
+                    return `<div class="il-rhet-row">
+                        <span class="il-rhet-row-label">${r.label} ${r.note?`<span style="font-size:9px;color:#a78bfa;">${r.note}</span>`:''}</span>
+                        <span class="il-rhet-row-val" style="color:${rlv.color};">L${r.level} — ${rlv.label}</span>
+                    </div>`;
+                }).join('');
+
+                // Alert pill
+                const alertPill = document.getElementById('ilAlertPill');
+                const alerts24h = data.alerts_24h || {};
+                if (alertPill && alerts24h.total > 0) alertPill.innerHTML = `
+                    <div class="il-alert-pill">🚨 ${alerts24h.total} alerts/24h · 💥 ${alerts24h.ballistic||0} ballistic · 🚀 ${alerts24h.rockets||0} rockets · ⏱️ ${alerts24h.recent_6h||0} last 6h</div>`;
+
+                // TCI pill
+                const tci = data.threat_convergence_index || 0;
+                const tciPill = document.getElementById('ilTCIPill');
+                if (tciPill && tci > 0) {
+                    const tciLv = IL_RHETORIC_LEVELS[tci] || IL_RHETORIC_LEVELS[0];
+                    tciPill.innerHTML = `<div class="il-tci-pill">🌐 Threat Convergence Index: L${tci} — ${tciLv.label} · ${data.convergence_signal||''}</div>`;
+                }
+
+                // Specificity bar
+                const spec = data.specificity_score;
+                const specEl = document.getElementById('ilSpecBar');
+                if (specEl && spec !== undefined) {
+                    const specColor = spec <= 3 ? '#22c55e' : spec <= 6 ? '#f97316' : '#ef4444';
+                    specEl.innerHTML = `<div class="il-rhet-spec">
+                        <span style="font-size:10px;color:var(--text-muted);white-space:nowrap;">Specificity</span>
+                        <div class="il-spec-track"><div class="il-spec-fill" style="width:${Math.min(spec*10,100)}%;background:${specColor};"></div></div>
+                        <span style="font-size:10px;color:${specColor};white-space:nowrap;">${spec}/10</span>
+                    </div>`;
+                }
+
+                // ── Outbound Card ──
+                const outboundLv = IL_RHETORIC_LEVELS[data.outbound_max_level||0] || IL_RHETORIC_LEVELS[0];
+                const outboundScore = document.getElementById('ilOutboundScore');
+                const outboundLabel = document.getElementById('ilOutboundLabel');
+                if (outboundScore) outboundScore.textContent = `${data.outbound_score||0}`;
+                if (outboundLabel) { outboundLabel.textContent = outboundLv.label; outboundLabel.style.background = outboundLv.color; }
+
+                const outboundRows = [
+                    {label:'⚔️ IDF Strike Posture',    level: data.strike_posture_level||0},
+                    {label:'🗺️ Annexation / Expansion', level: data.annexation_level||0},
+                    {label:'🟢 US Greenlight Signals',  level: Math.min(data.greenlight_count||0,5), note:`${data.greenlight_count||0} detected`},
+                    {label:'🔴 US/EU Brake Signals',    level: Math.min(data.brake_count||0,5),      note:`${data.brake_count||0} detected`},
+                ];
+                const outboundRowsEl = document.getElementById('ilOutboundRows');
+                if (outboundRowsEl) outboundRowsEl.innerHTML = outboundRows.map(r => {
+                    const rlv = IL_RHETORIC_LEVELS[r.level] || IL_RHETORIC_LEVELS[0];
+                    return `<div class="il-rhet-row">
+                        <span class="il-rhet-row-label">${r.label} ${r.note?`<span style="font-size:9px;color:var(--text-muted);">${r.note}</span>`:''}</span>
+                        <span class="il-rhet-row-val" style="color:${rlv.color};">L${r.level} — ${rlv.label}</span>
+                    </div>`;
+                }).join('');
+
+                // Actor list from full endpoint (top actors only)
+                const fullResp = await fetch(`${BACKEND_URL}/api/rhetoric/israel`);
+                if (!fullResp.ok) return;
+                const fullData = await fullResp.json();
+                const silenceMap = {};
+                (fullData.silence_anomalies||[]).forEach(a => { silenceMap[a.actor_id] = true; });
+                const actorListEl = document.getElementById('ilActorList');
+                if (actorListEl && fullData.actors) {
+                    const ORDER = ['idf_military','war_cabinet','annexation_bloc'];
+                    actorListEl.innerHTML = `<div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:6px;">🎯 Key Outbound Actors</div>` +
+                    ORDER.map(id => {
+                        const a = fullData.actors[id];
+                        if (!a) return '';
+                        const maxLv = a.max_level || 0;
+                        const ac = IL_RHETORIC_LEVELS[maxLv] || IL_RHETORIC_LEVELS[0];
+                        const silence = silenceMap[id] || a.silence_alert ? ' 🔇' : '';
+                        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid var(--card-border);font-size:11px;">
+                            <span>${a.flag||''} ${a.name}${silence}</span>
+                            <span style="display:flex;align-items:center;gap:5px;">
+                                <span style="font-size:9px;color:var(--text-muted);">${a.statement_count||0} articles</span>
+                                <span style="width:8px;height:8px;border-radius:50%;background:${ac.color};display:inline-block;"></span>
+                                <span style="font-size:10px;font-weight:600;color:${ac.color};">${ac.label}</span>
+                            </span>
+                        </div>`;
+                    }).join('');
+                }
+
+            } catch(e) { console.error('[Israel Rhetoric Cards]', e); }
+        }
+
         function switchLanguage(lang, button) {
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             button.classList.add('active');
@@ -1123,11 +1349,12 @@
                 if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
             });
         }
-
         // ===== INIT =====
         document.addEventListener('DOMContentLoaded', () => {
             startLoadingProgress();
             loadIsraelData();
+            loadIsraelRhetoricCards();
+            setInterval(loadIsraelRhetoricCards, 30 * 60 * 1000);
         });
     </script>
 </body>
