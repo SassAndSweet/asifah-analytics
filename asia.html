@@ -1450,29 +1450,35 @@
         }
     }
 
-    // ===== SCAN =====
-    async function scanSingleTarget(target) {
-        const loading = document.getElementById(`${target}-loading`);
-        const scanBtns = document.querySelectorAll(`#${target}-card .card-scan-button`);
-        const timeWindowRadio = document.querySelector(`input[name="${target}-timeWindow"]:checked`);
-        const days = timeWindowRadio ? timeWindowRadio.value : '7';
-        loading.classList.add('active');
-        scanBtns.forEach(b => { b.disabled = true; b.classList.add('scanning'); });
-        try {
-            const response = await fetch(`${API_BASE}/api/asia/threat/${target}?days=${days}&force=true`);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-            displayTargetData(target, data);
-            hideError();
-        } catch(err) {
-            console.error(`Error scanning ${target}:`, err);
-            showError(`Failed to scan ${target}: ${err.message}. Backend may be warming up — try again in 30 seconds.`);
-        } finally {
-            loading.classList.remove('active');
-            scanBtns.forEach(b => { b.disabled = false; b.classList.remove('scanning'); });
-        }
+// ===== SCAN =====
+async function scanSingleTarget(target) {
+    const loading = document.getElementById(`${target}-loading`);
+    const scanBtns = document.querySelectorAll(`#${target}-card .card-scan-button`);
+    const timeWindowRadio = document.querySelector(`input[name="${target}-timeWindow"]:checked`);
+    const days = timeWindowRadio ? timeWindowRadio.value : '7';
+    loading.classList.add('active');
+    scanBtns.forEach(b => { b.disabled = true; b.classList.add('scanning'); });
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 180000); // 3 min timeout
+    try {
+        const response = await fetch(`${API_BASE}/api/asia/threat/${target}?days=${days}&force=true`, { signal: controller.signal });
+        clearTimeout(timeout);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        displayTargetData(target, data);
+        hideError();
+    } catch(err) {
+        clearTimeout(timeout);
+        const msg = err.name === 'AbortError'
+            ? `Scan timed out after 3 minutes. Backend is processing — check back in a moment.`
+            : `Failed to scan ${target}: ${err.message}. Backend may be warming up — try again in 30 seconds.`;
+        console.error(`Error scanning ${target}:`, err);
+        showError(msg);
+    } finally {
+        loading.classList.remove('active');
+        scanBtns.forEach(b => { b.disabled = false; b.classList.remove('scanning'); });
     }
-
+}
     // ===== DISPLAY =====
     function displayTargetData(target, data) {
         const prob = data.probability || 0;
