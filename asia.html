@@ -1459,7 +1459,7 @@ async function scanSingleTarget(target) {
     loading.classList.add('active');
     scanBtns.forEach(b => { b.disabled = true; b.classList.add('scanning'); });
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 180000); // 3 min timeout
+    const timeout = setTimeout(() => controller.abort(), 300000); // 5 min timeout
     try {
         const response = await fetch(`${API_BASE}/api/asia/threat/${target}?days=${days}&force=true`, { signal: controller.signal });
         clearTimeout(timeout);
