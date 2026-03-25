@@ -6,7 +6,7 @@
 <title>Asia Rhetoric Tracker - Asifah Analytics</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-  :root {
+:root {
     --bg-color: #0a0f1a;
     --card-bg: #111827;
     --card-border: #1e3a5f;
@@ -24,18 +24,39 @@
     --badge-bg: rgba(30,58,95,0.6);
     --divider: rgba(30,58,95,0.7);
     --header-bg: rgba(10,15,26,0.95);
+    --watermark-opacity: 0.22;
+    --watermark-filter: saturate(5) brightness(0.9);
+  }
+  [data-theme="light"] {
+    --bg-color: #f5f5f5;
+    --card-bg: #ffffff;
+    --card-border: #e1e8ed;
+    --accent: #0369a1;
+    --accent-hover: #0284c7;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --text-dim: #95a5a6;
+    --china-accent: #dc2626;
+    --china-border: rgba(220,38,38,0.4);
+    --china-glow: rgba(220,38,38,0.08);
+    --taiwan-accent: #0369a1;
+    --taiwan-border: rgba(3,105,161,0.4);
+    --taiwan-glow: rgba(3,105,161,0.08);
+    --badge-bg: rgba(226,232,240,0.8);
+    --divider: rgba(203,213,225,0.7);
+    --header-bg: rgba(10,15,26,0.95);
+    --watermark-opacity: 0.08;
+    --watermark-filter: none;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
-
   body {
     background-color: var(--bg-color);
     color: var(--text-primary);
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Times New Roman', Times, serif;
     min-height: 100vh;
     line-height: 1.5;
   }
-
   /* WATERMARK */
   body::before {
     content: '';
@@ -50,12 +71,11 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.22;
-    filter: saturate(5) brightness(0.9);
+    opacity: var(--watermark-opacity);
+    filter: var(--watermark-filter);
     pointer-events: none;
     z-index: 0;
   }
-
   .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 16px; }
 
   /* HEADER */
@@ -334,16 +354,21 @@
 
 <!-- HEADER -->
 <header>
-  <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
-  <div class="header-left">
-    <a href="https://www.asifahanalytics.com/asia.html" class="back-link">← Back to Asia Dashboard</a>
+  <div class="header-logo-wrap">
+    <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+    <a href="https://www.asifahanalytics.com/asia.html" class="back-link">← Back to Asia</a>
   </div>
   <div class="header-center">
     <div class="header-flag">🌏</div>
     <div class="header-title">ASIA RHETORIC TRACKERS</div>
     <div class="header-subtitle">Live OSINT · Cross-Strait Coercion · PLA Posture · Coalition Response</div>
   </div>
-  <div style="width:120px;"></div>
+  <div class="header-controls">
+    <div class="theme-toggle">
+      <span class="theme-toggle-label">Theme</span>
+      <div class="theme-toggle-switch" onclick="toggleTheme()" id="themeSwitch">☀️</div>
+    </div>
+  </div>
 </header>
 
 <!-- PAGE WITH SIDEBAR -->
@@ -527,10 +552,43 @@
     </div>
   </div>
 
+ <!-- OTHER REGIONS -->
+  <div class="section-divider" style="margin-top:24px;">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">🔜 Other Rhetoric Trackers</div>
+    <div class="section-divider-line"></div>
+  </div>
+  <div class="tracker-grid">
+    <a href="https://www.asifahanalytics.com/rhetoric-index.html" class="coming-soon-card" style="text-decoration:none;">
+      <div class="coming-soon-flag">🕌</div>
+      <div class="coming-soon-name">Middle East Rhetoric</div>
+      <div class="coming-soon-label" style="color:#22c55e;">● Live</div>
+    </a>
+    <div class="coming-soon-card">
+      <div class="coming-soon-flag">🌍</div>
+      <div class="coming-soon-name">Europe Rhetoric</div>
+      <div class="coming-soon-label">In Development</div>
+    </div>
+    <div class="coming-soon-card">
+      <div class="coming-soon-flag">🌎</div>
+      <div class="coming-soon-name">Western Hemisphere</div>
+      <div class="coming-soon-label">In Development</div>
+    </div>
+  </div>
+
   <!-- FOOTER -->
   <div class="page-footer">
-    © 2025–2026 ASIFAH ANALYTICS - ALL RIGHTS RESERVED - v1.0.0-asia-rhetoric |
-    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">☕ buy me a coffee</a>
+    <div>Data Sources: Google News RSS (EN/ZH), GDELT, Telegram OSINT, Reddit</div>
+    <div style="margin-top:6px;">Escalation levels: 0 Baseline · 1 Rhetoric · 2 Warning · 3 Confrontation · 4 High Alert · 5 Active Conflict</div>
+    <div style="margin-top:15px;">
+      <div>Asifah Analytics — Asia Rhetoric Monitor v1.0.0</div>
+      <div style="font-size:0.85em;margin-top:4px;">Updated every 6 hours | Not for operational use</div>
+    </div>
+    <div style="margin-top:15px;">
+      If you find Asifah Analytics useful,
+      <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">☕ buy me a coffee</a>
+    </div>
+    <div style="margin-top:20px;font-size:0.85em;">© 2025–2026 RCGG. All Rights Reserved. Proprietary and Confidential. Not for operational use.</div>
   </div>
 
 </div><!-- end main-content -->
@@ -538,6 +596,20 @@
 </div><!-- end container -->
 
 <script>
+function toggleTheme() {
+  const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', isLight ? 'dark' : 'light');
+  document.getElementById('themeSwitch').textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('asia_rhetoric_theme', isLight ? 'dark' : 'light');
+}
+(function() {
+  const saved = localStorage.getItem('asia_rhetoric_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.addEventListener('DOMContentLoaded', () => {
+    const sw = document.getElementById('themeSwitch');
+    if (sw) sw.textContent = saved === 'light' ? '🌙' : '☀️';
+  });
+})();
 const API_BASE = 'https://asifah-asia-backend.onrender.com';
 
 const LEVEL_COLORS = {
