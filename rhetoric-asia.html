@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Asia Rhetoric Tracker - Asifah Analytics</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg-color: #0a0f1a;
+    --card-bg: #111827;
+    --card-border: #1e3a5f;
+    --accent: #7dd3fc;
+    --accent-hover: #38bdf8;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-dim: #64748b;
+    --china-accent: #ef4444;
+    --china-border: rgba(220,38,38,0.5);
+    --china-glow: rgba(220,38,38,0.15);
+    --taiwan-accent: #7dd3fc;
+    --taiwan-border: rgba(125,211,252,0.5);
+    --taiwan-glow: rgba(125,211,252,0.1);
+    --badge-bg: rgba(30,58,95,0.6);
+    --divider: rgba(30,58,95,0.7);
+    --header-bg: rgba(10,15,26,0.95);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* WATERMARK */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(110vmin, 1400px);
+    height: min(110vmin, 1400px);
+    min-width: 800px;
+    min-height: 800px;
+    background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.22;
+    filter: saturate(5) brightness(0.9);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; padding: 0 16px; }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--header-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--divider);
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .header-logo { height: 36px; width: auto; }
+  .header-left { display: flex; flex-direction: column; gap: 4px; }
+  .back-link {
+    color: var(--accent); text-decoration: none; font-size: 12px;
+    opacity: 0.8; transition: opacity 0.2s;
+  }
+  .back-link:hover { opacity: 1; }
+  .header-center { flex: 1; text-align: center; }
+  .header-flag { font-size: 20px; margin-bottom: 2px; }
+  .header-title { font-size: 18px; font-weight: 700; letter-spacing: 0.12em; color: var(--accent); }
+  .header-subtitle { font-size: 11px; color: var(--text-secondary); letter-spacing: 0.05em; margin-top: 2px; }
+
+  /* PAGE LAYOUT */
+  .page-with-sidebar { display: flex; gap: 0; min-height: calc(100vh - 70px); }
+
+  /* SIDEBAR */
+  .nav-sidebar {
+    width: 180px; flex-shrink: 0;
+    background: rgba(10,15,26,0.7);
+    border-right: 1px solid var(--divider);
+    padding: 16px 10px;
+    display: flex; flex-direction: column; gap: 4px;
+    position: sticky; top: 70px; height: calc(100vh - 70px); overflow-y: auto;
+  }
+  .nav-sidebar-label {
+    font-size: 9px; letter-spacing: 0.15em; color: var(--text-dim);
+    text-transform: uppercase; padding: 4px 6px 8px;
+  }
+  .nav-btn {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 8px; border-radius: 6px; border: 1px solid transparent;
+    font-size: 11px; text-decoration: none; color: var(--text-secondary);
+    transition: all 0.2s;
+  }
+  .nav-btn-label { font-weight: 500; }
+  .nav-btn-status { font-size: 9px; opacity: 0.7; }
+  .active-nav { border-color: var(--card-border); color: var(--text-primary); }
+  .active-nav:hover { background: rgba(30,58,95,0.4); color: var(--accent); }
+  .inactive-nav { opacity: 0.4; cursor: default; }
+  .current-page {
+    background: rgba(125,211,252,0.08);
+    border-color: rgba(125,211,252,0.4) !important;
+    color: var(--accent) !important;
+  }
+  .military-btn { border-color: rgba(249,115,22,0.4); color: #fb923c; }
+  .military-btn:hover { background: rgba(249,115,22,0.08); }
+  .rhetoric-btn { border-color: rgba(125,211,252,0.3); }
+  .nav-divider { border-top: 1px solid var(--divider); margin: 6px 0; }
+
+  /* MAIN */
+  .main-content { flex: 1; padding: 24px 20px; min-width: 0; }
+
+  /* PAGE HEADER */
+  .page-header {
+    text-align: center; margin-bottom: 32px;
+  }
+  .page-header-badge {
+    display: inline-block;
+    background: rgba(125,211,252,0.1);
+    border: 1px solid rgba(125,211,252,0.3);
+    color: var(--accent);
+    font-size: 10px; letter-spacing: 0.15em;
+    padding: 4px 14px; border-radius: 20px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .page-header-title {
+    font-size: 28px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--text-primary); margin-bottom: 8px;
+  }
+  .page-header-subtitle {
+    font-size: 13px; color: var(--text-secondary); max-width: 600px; margin: 0 auto;
+  }
+
+  /* TRACKER CARDS GRID */
+  .tracker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .tracker-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    display: block;
+    position: relative;
+  }
+  .tracker-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .tracker-card.china-card {
+    border-color: var(--china-border);
+  }
+  .tracker-card.china-card:hover {
+    box-shadow: 0 8px 32px var(--china-glow);
+  }
+  .tracker-card.taiwan-card {
+    border-color: var(--taiwan-border);
+  }
+  .tracker-card.taiwan-card:hover {
+    box-shadow: 0 8px 32px var(--taiwan-glow);
+  }
+
+  /* CARD HEADER STRIP */
+  .card-header-strip {
+    padding: 14px 18px 12px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--divider);
+  }
+  .china-card .card-header-strip { background: rgba(220,38,38,0.08); }
+  .taiwan-card .card-header-strip { background: rgba(125,211,252,0.06); }
+
+  .card-country-info { display: flex; align-items: center; gap: 10px; }
+  .card-flag { font-size: 22px; }
+  .card-country-name {
+    font-size: 16px; font-weight: 700; letter-spacing: 0.08em; color: var(--text-primary);
+  }
+  .card-tracker-type {
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim); margin-top: 1px;
+  }
+  .china-card .card-tracker-type { color: rgba(220,38,38,0.7); }
+  .taiwan-card .card-tracker-type { color: rgba(125,211,252,0.6); }
+
+  .card-live-badge {
+    display: flex; align-items: center; gap: 5px;
+    background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3);
+    color: #10b981; padding: 3px 8px; border-radius: 10px;
+    font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  }
+  .live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #10b981;
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.8); }
+  }
+
+  /* CARD SCORES ROW */
+  .card-scores-row {
+    padding: 14px 18px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .score-block { text-align: center; }
+  .score-label {
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 4px;
+  }
+  .score-value {
+    font-size: 32px; font-weight: 700; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-sublabel {
+    font-size: 9px; color: var(--text-dim); margin-top: 3px;
+  }
+  .level-badge {
+    display: inline-block;
+    padding: 2px 10px; border-radius: 10px;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+    margin-top: 4px;
+  }
+
+  /* CARD MINI BARS */
+  .card-actors-row {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--divider);
+  }
+  .actors-row-label {
+    font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 8px;
+  }
+  .mini-actor-bars { display: flex; flex-direction: column; gap: 5px; }
+  .mini-bar-row {
+    display: flex; align-items: center; gap: 8px;
+  }
+  .mini-bar-name { font-size: 10px; color: var(--text-secondary); width: 130px; flex-shrink: 0; }
+  .mini-bar-track {
+    flex: 1; height: 5px; background: rgba(255,255,255,0.06);
+    border-radius: 3px; overflow: hidden;
+  }
+  .mini-bar-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+  .mini-bar-level { font-size: 9px; color: var(--text-dim); width: 20px; text-align: right; }
+
+  /* CARD FOOTER */
+  .card-footer {
+    padding: 10px 18px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-scan-time { font-size: 10px; color: var(--text-dim); }
+  .card-view-btn {
+    font-size: 10px; letter-spacing: 0.08em;
+    color: var(--accent); text-transform: uppercase;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .china-card .card-view-btn { color: var(--china-accent); }
+
+  /* LOADING SKELETON */
+  .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 4px;
+  }
+  @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+  /* COMING SOON CARDS */
+  .coming-soon-card {
+    background: var(--card-bg);
+    border: 1px dashed rgba(30,58,95,0.5);
+    border-radius: 12px;
+    padding: 28px 20px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 8px; opacity: 0.5; min-height: 180px;
+  }
+  .coming-soon-flag { font-size: 28px; }
+  .coming-soon-name { font-size: 14px; font-weight: 600; color: var(--text-secondary); }
+  .coming-soon-label {
+    font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-dim);
+    background: rgba(30,58,95,0.4); border: 1px solid var(--divider);
+    padding: 2px 10px; border-radius: 10px;
+  }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 8px 0 20px;
+  }
+  .section-divider-line { flex: 1; border-top: 1px solid var(--divider); }
+  .section-divider-label {
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  /* FOOTER */
+  .page-footer {
+    text-align: center; padding: 20px;
+    font-size: 10px; color: var(--text-dim);
+    border-top: 1px solid var(--divider);
+    margin-top: 20px;
+  }
+  .page-footer a { color: var(--accent); text-decoration: none; }
+
+  @media(max-width:700px) {
+    .tracker-grid { grid-template-columns: 1fr; }
+    .nav-sidebar { display: none; }
+    .header-title { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<header>
+  <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+  <div class="header-left">
+    <a href="https://www.asifahanalytics.com/asia.html" class="back-link">← Back to Asia Dashboard</a>
+  </div>
+  <div class="header-center">
+    <div class="header-flag">🌏</div>
+    <div class="header-title">ASIA RHETORIC TRACKERS</div>
+    <div class="header-subtitle">Live OSINT · Cross-Strait Coercion · PLA Posture · Coalition Response</div>
+  </div>
+  <div style="width:120px;"></div>
+</header>
+
+<!-- PAGE WITH SIDEBAR -->
+<div class="page-with-sidebar">
+
+<!-- SIDEBAR -->
+<nav class="nav-sidebar">
+  <div class="nav-sidebar-label">Dashboards</div>
+  <div class="nav-btn inactive-nav">
+    <span class="nav-btn-label">🌍 Africa</span>
+    <span class="nav-btn-status">🔒 Future</span>
+  </div>
+  <a href="asia.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="europe.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🌍 Europe</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="middle-east.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🕌 Middle East</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <div class="nav-btn inactive-nav">
+    <span class="nav-btn-label">🌎 W. Hemisphere</span>
+    <span class="nav-btn-status">🔒 In Dev</span>
+  </div>
+  <div class="nav-divider"></div>
+  <a href="military.html" class="nav-btn military-btn">
+    <span class="nav-btn-label">🎖️ Military Tracker</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="rhetoric-asia.html" class="nav-btn current-page rhetoric-btn">
+    <span class="nav-btn-label">📡 Asia Rhetoric</span>
+    <span class="nav-btn-status">◉ You are here</span>
+  </a>
+  <div class="nav-divider"></div>
+  <a href="rhetoric-china.html" class="nav-btn active-nav" style="border-color:rgba(220,38,38,0.4);">
+    <span class="nav-btn-label">🇨🇳 China</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="rhetoric-taiwan.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🇹🇼 Taiwan</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-badge">📡 Asia-Pacific · Rhetoric Intelligence</div>
+    <div class="page-header-title">ASIA RHETORIC TRACKERS</div>
+    <div class="page-header-subtitle">
+      Real-time OSINT monitoring of military signaling, coercion language, and deterrence posture across the Indo-Pacific theater. Each tracker answers a specific analytical question.
+    </div>
+  </div>
+
+  <!-- LIVE TRACKERS -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">● Live Trackers</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="tracker-grid" id="trackerGrid">
+
+    <!-- CHINA CARD -->
+    <a href="rhetoric-china.html" class="tracker-card china-card" id="chinaCard">
+      <div class="card-header-strip">
+        <div class="card-country-info">
+          <div class="card-flag">🇨🇳</div>
+          <div>
+            <div class="card-country-name">CHINA</div>
+            <div class="card-tracker-type">⚔️ Coercion Tracker</div>
+          </div>
+        </div>
+        <div class="card-live-badge">
+          <div class="live-dot"></div>
+          Live
+        </div>
+      </div>
+
+      <div class="card-scores-row">
+        <div class="score-block">
+          <div class="score-label">Outbound Score</div>
+          <div class="score-value" id="china-outbound" style="color:#ef4444;">--</div>
+          <div class="score-sublabel">/ 100</div>
+          <div class="level-badge" id="china-level-badge" style="background:rgba(107,114,128,0.2);color:#6b7280;">--</div>
+        </div>
+        <div class="score-block">
+          <div class="score-label">Inbound Score</div>
+          <div class="score-value" id="china-inbound" style="color:#60a5fa;">--</div>
+          <div class="score-sublabel">/ 100</div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:8px;">Coalition Response</div>
+        </div>
+      </div>
+
+      <div class="card-actors-row">
+        <div class="actors-row-label">🔴 Outbound Actors</div>
+        <div class="mini-actor-bars" id="china-actor-bars">
+          <div class="mini-bar-row"><div class="mini-bar-name">Xi / CMC</div><div class="mini-bar-track"><div class="mini-bar-fill skeleton" style="width:60%;background:#ef4444;"></div></div><div class="mini-bar-level">--</div></div>
+          <div class="mini-bar-row"><div class="mini-bar-name">PLA / Eastern Theater</div><div class="mini-bar-track"><div class="mini-bar-fill skeleton" style="width:60%;background:#ef4444;"></div></div><div class="mini-bar-level">--</div></div>
+          <div class="mini-bar-row"><div class="mini-bar-name">MFA / Global Times</div><div class="mini-bar-track"><div class="mini-bar-fill skeleton" style="width:60%;background:#ef4444;"></div></div><div class="mini-bar-level">--</div></div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="card-scan-time" id="china-scan-time">Loading…</div>
+        <div class="card-view-btn">View Full Tracker →</div>
+      </div>
+    </a>
+
+    <!-- TAIWAN CARD -->
+    <a href="rhetoric-taiwan.html" class="tracker-card taiwan-card" id="taiwanCard">
+      <div class="card-header-strip">
+        <div class="card-country-info">
+          <div class="card-flag">🇹🇼</div>
+          <div>
+            <div class="card-country-name">TAIWAN</div>
+            <div class="card-tracker-type">🛡️ Deterrence Tracker</div>
+          </div>
+        </div>
+        <div class="card-live-badge">
+          <div class="live-dot"></div>
+          Live
+        </div>
+      </div>
+
+      <div class="card-scores-row">
+        <div class="score-block">
+          <div class="score-label">Outbound Score</div>
+          <div class="score-value" id="taiwan-outbound" style="color:#7dd3fc;">--</div>
+          <div class="score-sublabel">/ 100</div>
+          <div class="level-badge" id="taiwan-level-badge" style="background:rgba(107,114,128,0.2);color:#6b7280;">--</div>
+        </div>
+        <div class="score-block">
+          <div class="score-label">China Pressure</div>
+          <div class="score-value" id="taiwan-inbound" style="color:#ef4444;">--</div>
+          <div class="score-sublabel">/ 100</div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:8px;">From China Fingerprint</div>
+        </div>
+      </div>
+
+      <div class="card-actors-row">
+        <div class="actors-row-label">🔵 Outbound Actors</div>
+        <div class="mini-actor-bars" id="taiwan-actor-bars">
+          <div class="mini-bar-row"><div class="mini-bar-name">Lai / Presidential</div><div class="mini-bar-track"><div class="mini-bar-fill skeleton" style="width:60%;background:#7dd3fc;"></div></div><div class="mini-bar-level">--</div></div>
+          <div class="mini-bar-row"><div class="mini-bar-name">ROC Defense / MND</div><div class="mini-bar-track"><div class="mini-bar-fill skeleton" style="width:60%;background:#7dd3fc;"></div></div><div class="mini-bar-level">--</div></div>
+          <div class="mini-bar-row"><div class="mini-bar-name">US Partnership</div><div class="mini-bar-track"><div class="mini-bar-fill skeleton" style="width:60%;background:#7dd3fc;"></div></div><div class="mini-bar-level">--</div></div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <div class="card-scan-time" id="taiwan-scan-time">Loading…</div>
+        <div class="card-view-btn">View Full Tracker →</div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- COMING SOON -->
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-label">🔒 Queued</div>
+    <div class="section-divider-line"></div>
+  </div>
+
+  <div class="tracker-grid">
+    <div class="coming-soon-card">
+      <div class="coming-soon-flag">🇰🇵</div>
+      <div class="coming-soon-name">North Korea</div>
+      <div class="coming-soon-label">Queued - Q2 2026</div>
+    </div>
+    <div class="coming-soon-card">
+      <div class="coming-soon-flag">🇮🇳🇵🇰</div>
+      <div class="coming-soon-name">India / Pakistan</div>
+      <div class="coming-soon-label">Queued - Q2 2026</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="page-footer">
+    © 2025–2026 ASIFAH ANALYTICS - ALL RIGHTS RESERVED - v1.0.0-asia-rhetoric |
+    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">☕ buy me a coffee</a>
+  </div>
+
+</div><!-- end main-content -->
+</div><!-- end page-with-sidebar -->
+</div><!-- end container -->
+
+<script>
+const API_BASE = 'https://asifah-asia-backend.onrender.com';
+
+const LEVEL_COLORS = {
+  0: '#6b7280', 1: '#3b82f6', 2: '#f59e0b',
+  3: '#f97316', 4: '#ef4444', 5: '#dc2626'
+};
+const LEVEL_LABELS = {
+  0: 'Baseline', 1: 'Rhetoric', 2: 'Warning',
+  3: 'Confrontation', 4: 'Coercion', 5: 'Active Conflict'
+};
+
+function levelColor(n) { return LEVEL_COLORS[n] || '#6b7280'; }
+function levelLabel(n) { return LEVEL_LABELS[n] || 'Unknown'; }
+function levelBarWidth(n) { return Math.round((n / 5) * 100); }
+
+function timeAgo(isoStr) {
+  if (!isoStr) return 'No data yet';
+  try {
+    const diff = Math.floor((Date.now() - new Date(isoStr)) / 60000);
+    if (diff < 1) return 'Just scanned';
+    if (diff < 60) return `Scanned ${diff}m ago`;
+    const h = Math.floor(diff / 60);
+    return `Scanned ${h}h ago`;
+  } catch { return ''; }
+}
+
+// -- CHINA CARD --
+async function loadChina() {
+  try {
+    const r = await fetch(`${API_BASE}/api/rhetoric/china/summary`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+
+    document.getElementById('china-outbound').textContent = d.outbound_score ?? '--';
+    document.getElementById('china-inbound').textContent  = d.inbound_score ?? '--';
+
+    const lvl = d.outbound_max_level ?? 0;
+    const badge = document.getElementById('china-level-badge');
+    badge.textContent = levelLabel(lvl);
+    badge.style.background = levelColor(lvl) + '33';
+    badge.style.color = levelColor(lvl);
+
+    document.getElementById('china-scan-time').textContent = timeAgo(d.scanned_at);
+
+    // Actor bars - xi, pla, mfa
+    const actors = [
+      { name: 'Xi / CMC',           level: d.xi_level  ?? 0 },
+      { name: 'PLA / Eastern Theater', level: d.pla_level ?? 0 },
+      { name: 'MFA / Global Times', level: d.mfa_level ?? 0 },
+    ];
+    renderActorBars('china-actor-bars', actors, '#ef4444');
+  } catch(e) {
+    console.warn('[China card]', e);
+    document.getElementById('china-scan-time').textContent = 'No data - scan pending';
+  }
+}
+
+// -- TAIWAN CARD --
+async function loadTaiwan() {
+  try {
+    const r = await fetch(`${API_BASE}/api/rhetoric/taiwan/summary`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+
+    document.getElementById('taiwan-outbound').textContent = d.outbound_score ?? '--';
+    document.getElementById('taiwan-inbound').textContent  = d.inbound_score  ?? '--';
+
+    const lvl = d.outbound_max_level ?? 0;
+    const badge = document.getElementById('taiwan-level-badge');
+    badge.textContent = levelLabel(lvl);
+    badge.style.background = levelColor(lvl) + '33';
+    badge.style.color = levelColor(lvl);
+
+    document.getElementById('taiwan-scan-time').textContent = timeAgo(d.scanned_at);
+
+    // Actor bars - lai/presidential, roc_defense, us_partnership
+    // Taiwan tracker actor keys: lai_presidential, roc_defense, us_partnership
+    const actors = [
+      { name: 'Lai / Presidential',  level: d.lai_level     ?? d.outbound_max_level ?? 0 },
+      { name: 'ROC Defense / MND',   level: d.defense_level ?? 0 },
+      { name: 'US Partnership',      level: d.us_level      ?? d.us_commitment_level ?? 0 },
+    ];
+    renderActorBars('taiwan-actor-bars', actors, '#7dd3fc');
+  } catch(e) {
+    console.warn('[Taiwan card]', e);
+    document.getElementById('taiwan-scan-time').textContent = 'No data - scan pending';
+  }
+}
+
+function renderActorBars(containerId, actors, color) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = actors.map(a => `
+    <div class="mini-bar-row">
+      <div class="mini-bar-name">${a.name}</div>
+      <div class="mini-bar-track">
+        <div class="mini-bar-fill" style="width:${levelBarWidth(a.level)}%;background:${levelColor(a.level)};"></div>
+      </div>
+      <div class="mini-bar-level" style="color:${levelColor(a.level)};">L${a.level}</div>
+    </div>
+  `).join('');
+}
+
+// Load both cards on page load
+Promise.all([loadChina(), loadTaiwan()]);
+</script>
+</body>
+</html>
