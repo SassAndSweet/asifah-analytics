@@ -649,7 +649,7 @@
         // Fetch articles from backend
         async function loadArticles() {
             try {
-                const response = await fetch(BACKEND_URL + '/scan-china');
+                const response = await fetch(BACKEND_URL + '/api/asia/threat/china?force=true');
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
                 if (data.success && data.articles && data.articles.length > 0) {
@@ -666,7 +666,7 @@
         async function loadArticlesFallback() {
             try {
                 const q = encodeURIComponent('China');
-                const response = await fetch(BACKEND_URL + '/scan-osint?q=' + q);
+                const response = await fetch(BACKEND_URL + '/api/asia/threat/china');
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 const data = await response.json();
                 if (data.articles && data.articles.length > 0) {
