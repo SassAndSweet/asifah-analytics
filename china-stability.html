@@ -260,6 +260,48 @@
         .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
         .article-link:hover { text-decoration: underline; }
 
+        /* ── STABILITY INDEX CARD ── */
+        .stability-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 768px) { .stability-grid { grid-template-columns: 1fr; } }
+        .stability-index-card {
+            background: var(--container-bg); border-radius: 12px; padding: 20px;
+            border: 1px solid var(--card-border); box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .stability-score-big {
+            font-size: 48px; font-weight: 700; line-height: 1;
+            color: var(--text-primary); margin-bottom: 4px;
+        }
+        .stability-bar-track {
+            width: 100%; height: 8px; background: rgba(107,114,128,0.2);
+            border-radius: 4px; overflow: hidden; margin: 8px 0;
+        }
+        .stability-bar-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+        /* ── LEADERSHIP CARDS ── */
+        .leadership-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .leader-card {
+            background: var(--container-bg); border-radius: 10px; padding: 14px;
+            border: 1px solid var(--card-border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .leader-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); }
+        .lc-role { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px;
+                   color: var(--text-muted); font-weight: 700; margin-bottom: 6px; }
+        .lc-name { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+        .lc-since { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; }
+        .lc-note { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+        .lc-risk { font-size: 10px; color: #f59e0b; margin-top: 6px;
+                   padding-top: 6px; border-top: 1px solid var(--card-border); font-style: italic; }
+        
         /* ── RHETORIC BANNER + CARD ── */
         .rhetoric-link-banner {
             background: linear-gradient(135deg, #0a1628, #0f2240);
@@ -412,6 +454,66 @@
                 <a href="rhetoric-china.html" style="color:#00c8d4;text-decoration:none;font-size:12px;font-weight:600;">View Full Rhetoric Analysis →</a>
             </div>
             <div id="rhetoricScanInfo" style="margin-top:8px;font-size:10px;color:var(--text-secondary);text-align:center;">--</div>
+        </div>
+
+        <!-- STABILITY INDEX + ECONOMIC INDICATORS -->
+        <div class="stability-grid">
+
+            <!-- Stability Score Card -->
+            <div class="stability-index-card">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);margin-bottom:12px;">🇨🇳 CHINA STABILITY INDEX</div>
+                <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;">
+                    <div class="stability-score-big" id="stabilityScore">--</div>
+                    <span id="stabilityLabel" style="font-size:13px;font-weight:bold;padding:3px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
+                </div>
+                <div class="stability-bar-track">
+                    <div class="stability-bar-fill" id="stabilityBarFill" style="width:0%;background:#22c55e;"></div>
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin-bottom:14px;">100 = Controlled · 0 = Crisis Risk</div>
+                <!-- Vector breakdown -->
+                <div id="stabilityVectors" style="font-size:12px;color:var(--text-secondary);">
+                    <span style="font-style:italic;">Loading...</span>
+                </div>
+                <div id="stabilityScanInfo" style="margin-top:10px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
+            </div>
+
+            <!-- Live Economic Indicators Card -->
+            <div class="stability-index-card">
+                <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);margin-bottom:12px;">💹 LIVE ECONOMIC INDICATORS</div>
+                <!-- Yuan/USD -->
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--card-border);">
+                    <div>
+                        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Yuan / USD Rate</div>
+                        <div style="font-size:22px;font-weight:700;color:var(--text-primary);" id="yuanRate">--</div>
+                        <div style="font-size:10px;color:var(--text-muted);">CNY per 1 USD · Higher = weaker yuan</div>
+                    </div>
+                    <span id="yuanStatus" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
+                </div>
+                <!-- Brent Oil -->
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--card-border);">
+                    <div>
+                        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">Brent Crude</div>
+                        <div style="font-size:22px;font-weight:700;color:var(--text-primary);" id="brentPrice">--</div>
+                        <div style="font-size:10px;color:var(--text-muted);" id="brentChange">-- · China imports ~75% of oil needs</div>
+                    </div>
+                    <span id="brentStatus" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
+                </div>
+                <!-- US-China tension level -->
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+                    <div>
+                        <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;">US-China Tension</div>
+                        <div style="font-size:10px;color:var(--text-secondary);margin-top:3px;">Tariffs · Tech decoupling · Sanctions</div>
+                    </div>
+                    <span id="usChinaLevel" style="font-size:11px;font-weight:700;padding:4px 10px;border-radius:4px;background:#6b7280;color:white;">L--</span>
+                </div>
+                <div id="econScanInfo" style="margin-top:8px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
+            </div>
+        </div>
+
+        <!-- LEADERSHIP CARDS -->
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--text-secondary);margin-bottom:10px;">👥 KEY LEADERSHIP</div>
+        <div class="leadership-grid" id="leadershipGrid">
+            <!-- Populated by JS -->
         </div>
 
         <!-- MAP SECTION — Leaflet -->
@@ -854,6 +956,120 @@
             } catch(e) { console.warn('[Rhetoric] Load failed:', e); }
         }
 
+        // China Stability Data
+        async function loadStabilityData() {
+            try {
+                const r = await fetch('https://asifah-asia-backend.onrender.com/api/china/stability/summary');
+                const data = await r.json();
+                if (!data.success) return;
+
+                const LEVEL_COLORS = {0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626'};
+
+                // Stability score card
+                const score = data.stability_score || 0;
+                const scoreEl = document.getElementById('stabilityScore');
+                if (scoreEl) scoreEl.textContent = score;
+
+                const labelEl = document.getElementById('stabilityLabel');
+                if (labelEl) {
+                    labelEl.textContent = data.stability_label || '--';
+                    labelEl.style.background = data.stability_color || '#6b7280';
+                }
+
+                const barEl = document.getElementById('stabilityBarFill');
+                if (barEl) {
+                    barEl.style.width = score + '%';
+                    barEl.style.background = data.stability_color || '#22c55e';
+                }
+
+                // Vector breakdown
+                const vectorEl = document.getElementById('stabilityVectors');
+                if (vectorEl) {
+                    const vectors = [
+                        { label: '💹 Economic',      level: data.econ_level || 0 },
+                        { label: '📡 Rhetoric/PLA',  level: data.rhetoric_level || 0 },
+                        { label: '✊ Unrest',        level: data.unrest_level || 0 },
+                        { label: '👁️ Leadership',    level: data.leadership_level || 0 },
+                        { label: '🔴 Minorities',    level: data.minority_level || 0 },
+                        { label: '🇺🇸 US-China',     level: data.us_china_level || 0 },
+                    ];
+                    vectorEl.innerHTML = vectors.map(v =>
+                        `<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--card-border);">
+                            <span>${v.label}</span>
+                            <span style="font-weight:700;color:${LEVEL_COLORS[v.level]};">L${v.level}</span>
+                        </div>`
+                    ).join('');
+                }
+
+                // Scan time
+                const scanEl = document.getElementById('stabilityScanInfo');
+                if (scanEl && data.scanned_at) {
+                    const ago = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
+                    scanEl.textContent = `Last scan: ${ago < 60 ? ago+'m' : Math.round(ago/60)+'h'} ago`;
+                }
+
+                // Economic indicators
+                if (data.yuan_usd) {
+                    const yuanEl = document.getElementById('yuanRate');
+                    if (yuanEl) yuanEl.textContent = data.yuan_usd.toFixed(4);
+                    const yuanStatusEl = document.getElementById('yuanStatus');
+                    if (yuanStatusEl) {
+                        const colors = { stable:'#22c55e', warning:'#f59e0b', stress:'#ef4444', unknown:'#6b7280' };
+                        yuanStatusEl.textContent = (data.yuan_status || 'unknown').toUpperCase();
+                        yuanStatusEl.style.background = colors[data.yuan_status] || '#6b7280';
+                    }
+                }
+
+                if (data.brent_price) {
+                    const brentEl = document.getElementById('brentPrice');
+                    if (brentEl) brentEl.textContent = `$${data.brent_price.toFixed(2)}`;
+                    const brentChangeEl = document.getElementById('brentChange');
+                    if (brentChangeEl) {
+                        const chg = data.brent_change_pct || 0;
+                        brentChangeEl.textContent = `${chg >= 0 ? '+' : ''}${chg.toFixed(2)}% today · China imports ~75% of oil needs`;
+                        brentChangeEl.style.color = chg >= 0 ? '#ef4444' : '#22c55e';
+                    }
+                    const brentStatusEl = document.getElementById('brentStatus');
+                    if (brentStatusEl) {
+                        const colors = { normal:'#22c55e', elevated:'#f59e0b', stress:'#ef4444', unknown:'#6b7280' };
+                        brentStatusEl.textContent = (data.brent_status || 'unknown').toUpperCase();
+                        brentStatusEl.style.background = colors[data.brent_status] || '#6b7280';
+                    }
+                }
+
+                const usChinaEl = document.getElementById('usChinaLevel');
+                if (usChinaEl) {
+                    const lvl = data.us_china_level || 0;
+                    usChinaEl.textContent = `L${lvl}`;
+                    usChinaEl.style.background = LEVEL_COLORS[lvl] || '#6b7280';
+                }
+
+                const econScanEl = document.getElementById('econScanInfo');
+                if (econScanEl && data.scanned_at) {
+                    const ago = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
+                    econScanEl.textContent = `Updated: ${ago < 60 ? ago+'m' : Math.round(ago/60)+'h'} ago`;
+                }
+
+                // Leadership cards
+                const leadership = data.leadership || [];
+                const gridEl = document.getElementById('leadershipGrid');
+                if (gridEl && leadership.length > 0) {
+                    gridEl.innerHTML = leadership.map(l => `
+                        <div class="leader-card">
+                            <div class="lc-role">${l.flag || '🇨🇳'} ${l.role}</div>
+                            <div class="lc-name">${l.name}</div>
+                            <div class="lc-since">Since ${l.since}</div>
+                            <div class="lc-note">${l.note}</div>
+                            ${l.risk_note ? `<div class="lc-risk">⚠️ ${l.risk_note}</div>` : ''}
+                        </div>
+                    `).join('');
+                }
+
+            } catch(e) {
+                console.warn('[Stability] Load failed:', e);
+            }
+        }
+        
         // Leaflet Map — China Strategic Overview
         function initChinaMap() {
             if (!document.getElementById('chinaMap')) return;
@@ -947,6 +1163,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             startLoadingProgress();
             loadRhetoricData();
+            loadStabilityData();
             initChinaMap();
             document.getElementById('lastUpdated').textContent =
                 'Last updated: ' + new Date().toLocaleString('en-US', {
