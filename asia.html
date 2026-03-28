@@ -1465,6 +1465,9 @@ async function scanSingleTarget(target) {
         clearTimeout(timeout);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
+        if (data.scan_in_progress) {
+            showError(`⏳ Scan running in background for ${target} — refresh in 60 seconds for updated data.`);
+        }
         displayTargetData(target, data);
         hideError();
     } catch(err) {
