@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Military Asset & Deployment Tracker v2.4.2 - Feb 25, 2026 -->
+<!-- Asifah Analytics - Military Asset & Deployment Tracker v3.0.0 - March 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
-<!-- v2.4.2: LiveUAMap link cards (replaces blocked iframes) -->
+<!-- v3.0.0: Western Hemisphere theatre + Global/NORTHCOM US anchor -->
 <html lang="en" dir="ltr">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -84,9 +84,6 @@
         .header-right-controls { display: flex; gap: 8px; align-items: center; }
         .home-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; padding: 6px 16px; border-radius: 6px; cursor: pointer; font-family: 'Times New Roman', Times, serif; font-size: 0.85rem; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.3s; }
         .home-btn:hover { background: rgba(255,255,255,0.2); border-color: rgba(255,255,255,0.5); }
-        .lang-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-family: 'Times New Roman', Times, serif; font-size: 0.8rem; transition: all 0.3s; }
-        .lang-btn:hover { background: rgba(255,255,255,0.2); }
-        .lang-btn.active { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
         .header-row-2 { text-align: center; padding-bottom: 4px; }
         .header-title { font-family: 'Times New Roman', Times, serif; font-size: 1.8rem; font-weight: 700; color: #ffffff; letter-spacing: 4px; text-transform: uppercase; }
         [data-theme="dark"] .header-title { text-shadow: 0 0 20px rgba(0,212,255,0.4); }
@@ -137,6 +134,13 @@
         .theatre-section.collapsed .collapse-icon { transform: rotate(-90deg); }
         .theatre-body { overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 1; }
         .theatre-section.collapsed .theatre-body { max-height: 0 !important; opacity: 0; }
+        /* Global/NORTHCOM theatre — distinct gold treatment for US anchor */
+        .theatre-header.northcom-header { border-color: rgba(214,158,46,0.5); background: linear-gradient(135deg, rgba(214,158,46,0.06) 0%, rgba(180,120,20,0.03) 100%); }
+        [data-theme="dark"] .theatre-header.northcom-header { border-color: rgba(255,204,0,0.3); background: linear-gradient(135deg, rgba(255,204,0,0.06) 0%, rgba(200,150,0,0.03) 100%); box-shadow: 0 0 12px rgba(255,204,0,0.05); }
+        .theatre-header.northcom-header:hover { border-color: rgba(214,158,46,0.8); }
+        [data-theme="dark"] .theatre-header.northcom-header:hover { border-color: rgba(255,204,0,0.6); box-shadow: 0 0 20px rgba(255,204,0,0.1); }
+        .northcom-tag { font-size: 0.55rem; padding: 2px 7px; border-radius: 3px; background: rgba(214,158,46,0.15); color: #b7791f; border: 1px solid rgba(214,158,46,0.3); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-left: 8px; }
+        [data-theme="dark"] .northcom-tag { background: rgba(255,204,0,0.1); color: #ffcc00; border-color: rgba(255,204,0,0.25); }
         .actor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 8px; }
         .actor-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 20px; box-shadow: var(--shadow-sm); transition: all 0.3s; }
         .actor-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
@@ -273,10 +277,6 @@
         <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics" class="header-logo">
         <div class="header-right-controls">
             <a href="index.html" class="home-btn">&#127968; HOME</a>
-            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" onclick="setLanguage('ar')">&#1593;&#1585;&#1576;&#1610;</button>
-            <button class="lang-btn" onclick="setLanguage('he')">&#1506;&#1489;&#1512;&#1497;&#1514;</button>
-            <button class="lang-btn" onclick="setLanguage('fa')">&#1601;&#1575;&#1585;&#1587;&#1740;</button>
         </div>
     </div>
     <div class="header-row-2">
@@ -466,7 +466,7 @@
     <div class="source-footer" id="sourceFooter"></div>
     <div class="updated-bar" id="updatedBar"></div>
     <div class="page-footer">
-        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v2.4.2</div>
+        <div class="copyright">&copy; 2025-2026 ASIFAH ANALYTICS &mdash; ALL RIGHTS RESERVED &mdash; v3.0.0</div>
         <a href="index.html" class="back-link" data-i18n="backToMain">&larr; Back to Main Dashboard</a>
     </div>
 </div>
@@ -487,9 +487,11 @@ var ASSET_ICONS = { carrier_strike_group:'\uD83D\uDEA2', submarine:'\uD83D\uDD31
 var ASSET_LABELS = { carrier_strike_group:'Carrier Strike Groups', submarine:'Submarines', bomber_deployment:'Strategic Bombers', amphibious_group:'Amphibious Groups', fighter_surge:'Fighter Surges', air_defense:'Air Defense', isr_assets:'ISR Assets', ground_forces:'Ground Forces', logistics:'Logistics', missile_test:'Missile Tests', naval_exercise:'Naval Exercises', base_evacuation:'Base Evacuations', military_posturing:'Posturing/Threats', drone_incursion:'Drone Incursions', unspecified:'General Activity' };
 
 var THEATRE_ORDER = [
+    { id:'global_northcom', label:'Global / NORTHCOM', icon:'\uD83C\uDF10', actors:['us'] },
     { id:'asia_pacific', label:'Asia & The Pacific Theatre', icon:'\uD83C\uDF0F', actors:['china','taiwan','north_korea','pakistan','afghanistan','india','south_korea','japan'] },
     { id:'europe', label:'European Theatre', icon:'\uD83C\uDF0D', actors:['armenia','azerbaijan','cyprus','greenland','nato','poland','russia','turkey','ukraine'] },
-    { id:'middle_east', label:'Middle East & North Africa', icon:'\uD83D\uDD4C', actors:['bahrain','egypt','iran','iraq','israel','jordan','kuwait','oman','qatar','saudi_arabia','uae','us'] }
+    { id:'middle_east', label:'Middle East & North Africa', icon:'\uD83D\uDD4C', actors:['bahrain','egypt','iran','iraq','israel','jordan','kuwait','oman','qatar','saudi_arabia','uae'] },
+    { id:'western_hemisphere', label:'Western Hemisphere', icon:'\uD83C\uDF0E', actors:['brazil','colombia','cuba','haiti','mexico','panama','venezuela'] }
 ];
 
 /* ====== v2.4.2: LIVE MAP LINK CARDS — replaces blocked iframe embeds ====== */
@@ -510,6 +512,9 @@ var THEATRE_MAPS = {
     asia_pacific: [
         { id:'korea', icon:'\uD83C\uDDF0\uD83C\uDDF7', label:'Korean Peninsula', url:'https://korea.liveuamap.com/', desc:'DMZ, DPRK activity \u2014 Korean Peninsula' },
         { id:'china', icon:'\uD83C\uDDE8\uD83C\uDDF3', label:'China \u00B7 Taiwan Strait', url:'https://china.liveuamap.com/', desc:'PLA activity, Taiwan Strait, South China Sea' }
+    ],
+    western_hemisphere: [
+        { id:'americas', icon:'\uD83C\uDF0E', label:'Americas \u00B7 Latin America', url:'https://liveuamap.com/en/americas', desc:'Venezuela, Haiti, Colombia, Mexico \u2014 Regional conflict events' }
     ]
 };
 
@@ -557,21 +562,6 @@ function buildMapPanel(theatreId) {
     panel.appendChild(note);
 
     return panel;
-}
-
-function setLanguage(lang) {
-    currentLang = lang;
-    var rtl = ['ar','he','fa'];
-    document.documentElement.dir = rtl.indexOf(lang) >= 0 ? 'rtl' : 'ltr';
-    document.documentElement.lang = lang;
-    if (rtl.indexOf(lang) >= 0) { document.body.style.fontFamily = "'Noto Sans Arabic', 'Noto Sans Hebrew', 'Times New Roman', serif"; }
-    else { document.body.style.fontFamily = ''; }
-    var els = document.querySelectorAll('[data-i18n]');
-    for (var i = 0; i < els.length; i++) { var key = els[i].getAttribute('data-i18n'); if (TRANSLATIONS[lang] && TRANSLATIONS[lang][key]) els[i].textContent = TRANSLATIONS[lang][key]; }
-    var btns = document.querySelectorAll('.lang-btn');
-    for (var j = 0; j < btns.length; j++) btns[j].classList.remove('active');
-    if (event && event.target) event.target.classList.add('active');
-    if (window._lastData) renderAll(window._lastData);
 }
 
 function toggleTheme() {
@@ -650,7 +640,7 @@ function renderAll(data) {
     renderSources(data.source_breakdown || {}, t);
 
     var dt = data.last_updated ? new Date(data.last_updated) : new Date();
-    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '2.4.2');
+    document.getElementById('updatedBar').textContent = (t.lastUpdated || 'Last Updated') + ': ' + dt.toLocaleString() + ' | ' + (t.scanTime || 'Scan Time') + ': ' + (data.scan_time_seconds || '?') + 's | v' + (data.version || '3.0.0');
 }
 
 function renderEvacBanner(alerts) {
@@ -690,7 +680,7 @@ function renderTheatres(actors, theatreGroupings, t) {
     for (var ti = 0; ti < THEATRE_ORDER.length; ti++) {
         var theatre = THEATRE_ORDER[ti];
         var section = document.createElement('div');
-        var isOpen = collapseState[theatre.id] || false;
+        var isOpen = collapseState[theatre.id] !== undefined ? collapseState[theatre.id] : (theatre.id === 'global_northcom');
         section.className = 'theatre-section' + (isOpen ? '' : ' collapsed');
         section.id = 'theatre-' + theatre.id;
 
@@ -711,11 +701,13 @@ function renderTheatres(actors, theatreGroupings, t) {
         else if (theatreScore >= 10) theatreAlert = 'elevated';
 
         var header = document.createElement('div');
-        header.className = 'theatre-header';
+        header.className = 'theatre-header' + (theatre.id === 'global_northcom' ? ' northcom-header' : '');
         header.onclick = (function(id) { return function() { toggleTheatre(id); }; })(theatre.id);
+        var northcomTag = theatre.id === 'global_northcom' ? '<span class="northcom-tag">CENTCOM \u00B7 SOUTHCOM \u00B7 NORTHCOM</span>' : '';
         header.innerHTML = '<div class="theatre-header-left">' +
             '<span class="theatre-icon">' + theatre.icon + '</span>' +
             '<span class="theatre-label">' + theatre.label + '</span>' +
+            northcomTag +
             '<span class="theatre-score-badge alert-badge ' + theatreAlert + '">' + theatreAlert.toUpperCase() + ' \u2014 ' + theatreScore.toFixed(1) + '</span>' +
             '</div>' +
             '<div class="theatre-header-right">' +
