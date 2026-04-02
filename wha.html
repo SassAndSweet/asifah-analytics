@@ -356,7 +356,59 @@
             .header-content { padding-top:0; text-align:center; max-width:100%; }
             h1 { font-size:20px; }
             .language-switcher,.theme-toggle,.home-button { position:static; width:100%; max-width:300px; justify-content:center; }
+            .notam-grid { grid-template-columns:1fr; }
+            .flight-cancellations-grid { grid-template-columns:1fr; }
         }
+
+        /* ========== NOTAM WIDGET ========== */
+        .notam-section { margin:30px 0; }
+        .notam-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+        .notam-header h3 { font-size:16px; font-weight:bold; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+        .notam-count-badge { background:#3b82f6; color:white; font-size:11px; font-weight:bold; padding:2px 8px; border-radius:10px; }
+        .notam-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:14px; }
+        .notam-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:10px; padding:14px 16px; border-left:4px solid #6b7280; }
+        .notam-card.red    { border-left-color:#ef4444; }
+        .notam-card.orange { border-left-color:#f97316; }
+        .notam-card.yellow { border-left-color:#eab308; }
+        .notam-card.purple { border-left-color:#a855f7; }
+        .notam-card.blue   { border-left-color:#3b82f6; }
+        .notam-card-header { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+        .notam-type-badge { font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px; padding:2px 7px; border-radius:4px; background:rgba(107,114,128,0.15); color:var(--text-secondary); }
+        .notam-card.red    .notam-type-badge { background:rgba(239,68,68,0.12);  color:#ef4444; }
+        .notam-card.orange .notam-type-badge { background:rgba(249,115,22,0.12); color:#f97316; }
+        .notam-card.yellow .notam-type-badge { background:rgba(234,179,8,0.12);  color:#ca8a04; }
+        .notam-card.purple .notam-type-badge { background:rgba(168,85,247,0.12); color:#a855f7; }
+        .notam-card.blue   .notam-type-badge { background:rgba(59,130,246,0.12); color:#3b82f6; }
+        .notam-country { font-size:13px; font-weight:bold; color:var(--text-primary); }
+        .notam-fir { font-size:11px; color:var(--text-secondary); margin-bottom:6px; }
+        .notam-summary { font-size:12px; color:var(--text-primary); line-height:1.5; font-family:'Courier New',monospace; background:rgba(0,0,0,0.04); padding:6px 8px; border-radius:4px; margin-bottom:6px; word-break:break-word; }
+        [data-theme="dark"] .notam-summary { background:rgba(255,255,255,0.05); }
+        .notam-dates { font-size:11px; color:var(--text-secondary); }
+        .notam-empty { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:10px; }
+        .notam-loading { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; }
+
+        /* ========== FLIGHT CANCELLATIONS WIDGET ========== */
+        .flight-section { margin:30px 0; }
+        .flight-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
+        .flight-header h3 { font-size:16px; font-weight:bold; color:var(--text-primary); display:flex; align-items:center; gap:8px; }
+        .flight-toggle-btn { background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.3); color:#3b82f6; font-size:12px; font-weight:bold; padding:5px 12px; border-radius:6px; cursor:pointer; font-family:'Times New Roman',Times,serif; transition:all 0.2s; }
+        .flight-toggle-btn:hover { background:rgba(59,130,246,0.2); }
+        .flight-cancellations-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:14px; }
+        .flight-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:10px; padding:14px 16px; }
+        .flight-card-status { display:inline-block; font-size:10px; font-weight:bold; text-transform:uppercase; letter-spacing:0.5px; padding:2px 8px; border-radius:4px; margin-bottom:8px; }
+        .flight-card-status.Suspended { background:rgba(239,68,68,0.12); color:#ef4444; border:1px solid rgba(239,68,68,0.25); }
+        .flight-card-status.Cancelled { background:rgba(249,115,22,0.12); color:#f97316; border:1px solid rgba(249,115,22,0.25); }
+        .flight-card-status.Resumed   { background:rgba(34,197,94,0.12);  color:#22c55e; border:1px solid rgba(34,197,94,0.25); }
+        .flight-card-status.Disrupted { background:rgba(234,179,8,0.12);  color:#ca8a04; border:1px solid rgba(234,179,8,0.25); }
+        .flight-airline { font-size:14px; font-weight:bold; color:var(--text-primary); margin-bottom:4px; }
+        .flight-route { font-size:12px; color:var(--text-secondary); margin-bottom:6px; }
+        .flight-headline { font-size:12px; color:var(--text-primary); line-height:1.4; margin-bottom:8px; }
+        .flight-meta { display:flex; gap:10px; flex-wrap:wrap; font-size:11px; color:var(--text-secondary); }
+        .flight-source { margin-top:8px; }
+        .flight-source a { font-size:11px; color:#3b82f6; text-decoration:none; }
+        .flight-source a:hover { text-decoration:underline; }
+        .flight-empty { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; background:var(--card-bg); border:1px solid var(--card-border); border-radius:10px; }
+        .flight-loading { text-align:center; padding:30px; color:var(--text-secondary); font-size:14px; }
     </style>
 </head>
 <body>
@@ -973,6 +1025,32 @@
 
 </div><!-- end targets-grid -->
 
+        <!-- ========== NOTAM WIDGET ========== -->
+        <div class="notam-section">
+            <div class="notam-header">
+                <h3>✈️ Active NOTAMs — Western Hemisphere
+                    <span class="notam-count-badge" id="notam-count">—</span>
+                </h3>
+                <span style="font-size:11px; color:var(--text-secondary);" id="notam-updated"></span>
+            </div>
+            <div id="notam-container">
+                <div class="notam-loading">⏳ Loading NOTAM data...</div>
+            </div>
+        </div>
+
+        <!-- ========== FLIGHT CANCELLATIONS WIDGET ========== -->
+        <div class="flight-section">
+            <div class="flight-header">
+                <h3>🛫 Flight Disruptions — Western Hemisphere
+                    <span class="notam-count-badge" id="flight-count">—</span>
+                </h3>
+                <button class="flight-toggle-btn" onclick="toggleFlights()" id="flight-toggle-btn">▼ Show</button>
+            </div>
+            <div id="flight-container" style="display:none;">
+                <div class="flight-loading">⏳ Loading flight disruption data...</div>
+            </div>
+        </div>
+
 <footer>
     <div class="footer-content">
         <div class="footer-section">
@@ -1376,6 +1454,120 @@ async function loadWeather(country){
 function loadAllWeather(){COUNTRIES.forEach(function(c){loadWeather(c);});}
 
 // ========================================
+// NOTAM LOADER
+// ========================================
+async function loadNotams() {
+    try {
+        var resp = await fetch(WHA_API + '/api/notams');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var data = await resp.json();
+
+        var countEl = document.getElementById('notam-count');
+        var updEl   = document.getElementById('notam-updated');
+        var container = document.getElementById('notam-container');
+
+        if (countEl) countEl.textContent = data.count || 0;
+        if (updEl && data.last_updated) {
+            var d = new Date(data.last_updated);
+            updEl.textContent = 'Updated ' + d.toUTCString().replace(':00 GMT', ' UTC');
+        }
+
+        if (!data.notams || data.notams.length === 0) {
+            container.innerHTML = '<div class="notam-empty">✅ No active NOTAMs for Western Hemisphere region</div>';
+            return;
+        }
+
+        var html = '<div class="notam-grid">';
+        data.notams.forEach(function(n) {
+            html += '<div class="notam-card ' + (n.color || 'gray') + '">' +
+                '<div class="notam-card-header">' +
+                    '<span style="font-size:18px;">' + (n.icon || '📋') + '</span>' +
+                    '<span class="notam-type-badge">' + n.type + '</span>' +
+                '</div>' +
+                '<div class="notam-country">' + (n.flag || '') + ' ' + n.country + '</div>' +
+                '<div class="notam-fir">' + n.fir + ' &nbsp;·&nbsp; ID: ' + n.id + '</div>' +
+                '<div class="notam-summary">' + n.summary + '</div>' +
+                '<div class="notam-dates">📅 ' + (n.valid_range || 'Dates unavailable') + '</div>' +
+                (n.source_url ? '<div style="margin-top:6px;"><a href="' + n.source_url + '" target="_blank" rel="noopener" style="font-size:11px;color:#3b82f6;">View full NOTAM ↗</a></div>' : '') +
+            '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+
+    } catch(err) {
+        document.getElementById('notam-container').innerHTML =
+            '<div class="notam-empty">⚠️ NOTAM data unavailable — ' + err.message + '</div>';
+        console.warn('[WHA] NOTAM error:', err);
+    }
+}
+
+// ========================================
+// FLIGHT CANCELLATIONS LOADER
+// ========================================
+var _flightVisible = false;
+
+function toggleFlights() {
+    _flightVisible = !_flightVisible;
+    var container = document.getElementById('flight-container');
+    var btn       = document.getElementById('flight-toggle-btn');
+    if (_flightVisible) {
+        container.style.display = 'block';
+        btn.textContent = '▲ Hide';
+        // Load on first expand
+        if (container.querySelector('.flight-loading')) {
+            loadFlightCancellations();
+        }
+    } else {
+        container.style.display = 'none';
+        btn.textContent = '▼ Show';
+    }
+}
+
+async function loadFlightCancellations() {
+    var container = document.getElementById('flight-container');
+    try {
+        var resp = await fetch(WHA_API + '/flight-cancellations');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var data = await resp.json();
+
+        var countEl = document.getElementById('flight-count');
+        if (countEl) countEl.textContent = data.count || 0;
+
+        if (!data.cancellations || data.cancellations.length === 0) {
+            container.innerHTML = '<div class="flight-empty">✅ No active flight disruptions found for Western Hemisphere</div>';
+            return;
+        }
+
+        var html = '<div class="flight-cancellations-grid">';
+        data.cancellations.forEach(function(f) {
+            var status = f.status || 'Disrupted';
+            var dateStr = '';
+            if (f.date) {
+                try { dateStr = new Date(f.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}); }
+                catch(e) { dateStr = f.date; }
+            }
+            html += '<div class="flight-card">' +
+                '<span class="flight-card-status ' + status + '">' + status + '</span>' +
+                '<div class="flight-airline">✈️ ' + (f.airline || 'Unknown Airline') + '</div>' +
+                '<div class="flight-route">🗺️ ' + (f.route || '') + '</div>' +
+                '<div class="flight-headline">' + (f.headline || '') + '</div>' +
+                '<div class="flight-meta">' +
+                    (dateStr ? '<span>📅 ' + dateStr + '</span>' : '') +
+                    (f.duration && f.duration !== 'Unknown' ? '<span>⏱️ ' + f.duration + '</span>' : '') +
+                '</div>' +
+                (f.source_url ? '<div class="flight-source"><a href="' + f.source_url + '" target="_blank" rel="noopener">Read more ↗</a></div>' : '') +
+            '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+
+    } catch(err) {
+        container.innerHTML = '<div class="flight-empty">⚠️ Flight disruption data unavailable — ' + err.message + '</div>';
+        console.warn('[WHA] Flight cancellations error:', err);
+    }
+}
+
+// ========================================
 // INIT
 // ========================================
 document.addEventListener('DOMContentLoaded',function(){
@@ -1384,6 +1576,7 @@ document.addEventListener('DOMContentLoaded',function(){
     loadTravelAdvisories();
     loadAllWeather();
     loadAllMilitaryPostures();
+    loadNotams();
 });
 </script>
 </body>
