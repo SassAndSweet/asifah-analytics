@@ -367,20 +367,29 @@
         .no-notams::before { content: "✓"; display: block; font-size: 48px; color: #10b981; margin-bottom: 15px; }
 
         /* Flight Widget */
-        .flight-widget { background: var(--card-bg); padding: 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid #e74c3c; }
-        .flight-widget-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .flight-widget-title { font-size: 17px; font-weight: bold; color: #c0392b; letter-spacing: 0.5px; }
-        .flight-widget-title::before { content: "✈️ "; font-size: 20px; margin-right: 8px; }
-        .flight-status-badge { padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-        .flight-status-badge.normal { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
-        .flight-status-badge.active { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
-        .flight-cancellations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .cancellation-card { background: linear-gradient(135deg, #fff5f5 0%, #fff 100%); border: 2px solid #fecaca; border-radius: 10px; padding: 18px; transition: all 0.3s ease; }
-        .cancellation-card:hover { border-color: #f87171; transform: translateY(-4px); }
-        .cancellation-airline { font-size: 16px; font-weight: bold; color: #991b1b; margin-bottom: 8px; }
-        .cancellation-details { font-size: 13px; color: #6b7280; line-height: 1.6; }
-        .no-cancellations { text-align: center; padding: 30px; color: #6b7280; font-style: italic; }
-        .no-cancellations::before { content: "✓"; display: block; font-size: 48px; color: #10b981; margin-bottom: 10px; }
+        /* ========== FLIGHT CANCELLATIONS WIDGET ========== */
+        .flight-section { margin: 30px 0; }
+        .flight-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .flight-header h3 { font-size: 16px; font-weight: bold; color: var(--text-primary); display: flex; align-items: center; gap: 8px; }
+        .flight-count-badge { background: #3b82f6; color: white; font-size: 11px; font-weight: bold; padding: 2px 8px; border-radius: 10px; }
+        .flight-toggle-btn { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); color: #3b82f6; font-size: 12px; font-weight: bold; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-family: 'Times New Roman', Times, serif; transition: all 0.2s; }
+        .flight-toggle-btn:hover { background: rgba(59,130,246,0.2); }
+        .flight-cancellations-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+        .flight-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px 16px; }
+        .flight-card-status { display: inline-block; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+        .flight-card-status.Suspended { background: rgba(239,68,68,0.12); color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+        .flight-card-status.Cancelled { background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.25); }
+        .flight-card-status.Resumed   { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+        .flight-card-status.Disrupted { background: rgba(234,179,8,0.12);  color: #ca8a04; border: 1px solid rgba(234,179,8,0.25); }
+        .flight-airline { font-size: 14px; font-weight: bold; color: var(--text-primary); margin-bottom: 4px; }
+        .flight-route { font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; }
+        .flight-headline { font-size: 12px; color: var(--text-primary); line-height: 1.4; margin-bottom: 8px; }
+        .flight-meta { display: flex; gap: 10px; flex-wrap: wrap; font-size: 11px; color: var(--text-secondary); }
+        .flight-source { margin-top: 8px; }
+        .flight-source a { font-size: 11px; color: #3b82f6; text-decoration: none; }
+        .flight-source a:hover { text-decoration: underline; }
+        .flight-empty { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 14px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; }
+        .flight-loading { text-align: center; padding: 30px; color: var(--text-secondary); font-size: 14px; }
 
         /* Rate Limit */
         .rate-limit-box { background: linear-gradient(to bottom, #fff 0%, #f8f9fa 100%); padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid #e1e8ed; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
@@ -483,8 +492,7 @@
         [data-theme="dark"] .notam-details { color: #94a3b8 !important; }
         [data-theme="dark"] .notam-link { color: #67e8f9 !important; }
         [data-theme="dark"] .no-notams { color: #94a3b8 !important; }
-        [data-theme="dark"] .flight-widget { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #991b1b; }
-        [data-theme="dark"] .flight-cancellations-grid .flight-card, [data-theme="dark"] .flight-cancellations-grid > div { background: linear-gradient(145deg, #1e293b 0%, #0f172a 100%); border-color: #334155; color: #e2e8f0; }
+        [data-theme="dark"] .flight-card { background: var(--card-bg); border-color: var(--card-border); }
 
         /* Card-specific accents */
         #greenland-card h3 { border-bottom-color: #0ea5e9; }
@@ -1356,13 +1364,16 @@
         </div>
 
         <!-- ========== FLIGHT WIDGET ========== -->
-        <div class="flight-widget" id="flightWidget">
-            <div class="flight-widget-header">
-                <div class="flight-widget-title" data-i18n="flightTitle">European Flight Disruption Monitor</div>
-                <div class="flight-status-badge normal" id="flightStatusBadge" data-i18n="flightScanning">SCANNING...</div>
+        <!-- ========== FLIGHT CANCELLATIONS WIDGET ========== -->
+        <div class="flight-section">
+            <div class="flight-header">
+                <h3>🛫 Flight Disruptions — Europe
+                    <span class="flight-count-badge" id="flight-count">—</span>
+                </h3>
+                <button class="flight-toggle-btn" onclick="toggleFlights()" id="flight-toggle-btn">▼ Show</button>
             </div>
-            <div class="flight-cancellations-grid" id="flightCancellationsGrid">
-                <div style="padding:30px; text-align:center; color:#7f8c8d; font-style:italic; grid-column: 1/-1;">Loading flight data...</div>
+            <div id="flight-container" style="display:none;">
+                <div class="flight-loading">⏳ Loading flight disruption data...</div>
             </div>
         </div>
 
@@ -1894,90 +1905,72 @@ async function loadCachedScoresFallback() {
     }
 
     // ===== FLIGHT LOADER =====
+    var _flightVisible = false;
+    var _flightLoaded  = false;
+
+    function toggleFlights() {
+        _flightVisible = !_flightVisible;
+        var container = document.getElementById('flight-container');
+        var btn       = document.getElementById('flight-toggle-btn');
+        if (_flightVisible) {
+            container.style.display = 'block';
+            btn.textContent = '▲ Hide';
+            if (!_flightLoaded) { loadFlights(); }
+        } else {
+            container.style.display = 'none';
+            btn.textContent = '▼ Show';
+        }
+    }
+
     async function loadFlights() {
         try {
             const response = await fetch(`${API_BASE}/api/europe/flights`);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
+            _flightLoaded = true;
             displayFlights(data);
         } catch (err) {
             console.error('Flight load error:', err);
-            document.getElementById('flightCancellationsGrid').innerHTML = '<div style="padding:30px;text-align:center;color:#c0392b;grid-column:1/-1;">Failed to load flight data.</div>';
+            document.getElementById('flight-container').innerHTML =
+                '<div class="flight-empty">⚠️ Flight disruption data unavailable — ' + err.message + '</div>';
         }
     }
-
-    let flightDisruptionsData = [];
-    let flightVisibleCount = 4;
-    const FLIGHT_PAGE_SIZE = 4;
-    const FLIGHT_MAX_VISIBLE = 20;
 
     function displayFlights(data) {
-        const grid = document.getElementById('flightCancellationsGrid');
-        const badge = document.getElementById('flightStatusBadge');
-        const disruptions = data.disruptions || data.cancellations || [];
-        flightDisruptionsData = disruptions;
-        flightVisibleCount = FLIGHT_PAGE_SIZE;
+        var container    = document.getElementById('flight-container');
+        var countEl      = document.getElementById('flight-count');
+        var disruptions  = data.disruptions || data.cancellations || [];
+
+        if (countEl) countEl.textContent = disruptions.length;
 
         if (disruptions.length === 0) {
-            grid.innerHTML = '<div class="no-cancellations" style="grid-column:1/-1;"><div style="font-size:16px;font-weight:bold;margin-bottom:8px;">No Active Disruptions</div><div>All monitored European carriers operating normally</div></div>';
-            badge.textContent = 'NORMAL'; badge.className = 'flight-status-badge normal';
+            container.innerHTML = '<div class="flight-empty">✅ No active flight disruptions found for Europe</div>';
             return;
         }
-        badge.textContent = `${disruptions.length} DISRUPTION${disruptions.length > 1 ? 'S' : ''}`;
-        badge.className = 'flight-status-badge active';
-        renderFlightCards();
-    }
 
-    function renderFlightCards() {
-        const grid = document.getElementById('flightCancellationsGrid');
-        const visible = flightDisruptionsData.slice(0, flightVisibleCount);
-        let html = '';
-        visible.forEach(d => {
-            html += `
-            <div class="cancellation-card">
-                <div class="cancellation-airline">🚫 ${d.airline || 'Unknown Airline'}</div>
-                <div class="cancellation-details">
-                    ${d.title ? `<div><strong>Headline:</strong> ${d.title}</div>` : ''}
-                    ${d.destination ? `<div><strong>Route:</strong> ${d.destination}</div>` : (d.route ? `<div><strong>Route:</strong> ${d.route}</div>` : '')}
-                    ${d.reason ? `<div><strong>Reason:</strong> ${d.reason}</div>` : ''}
-                    ${d.status ? `<div><strong>Status:</strong> ${d.status}</div>` : ''}
-                    ${d.date ? `<div><strong>Date:</strong> ${new Date(d.date).toLocaleDateString()}</div>` : (d.since ? `<div><strong>Since:</strong> ${d.since}</div>` : '')}
-                    ${d.source ? `<div><strong>Source:</strong> ${d.source}</div>` : ''}
-                    ${d.source_url ? `<div><a href="${d.source_url}" target="_blank" style="color:#2563eb;font-weight:600;">View Source →</a></div>` : ''}
-                </div>
-            </div>`;
+        var html = '<div class="flight-cancellations-grid">';
+        disruptions.forEach(function(d) {
+            var status  = d.status || 'Disrupted';
+            var dateStr = '';
+            if (d.date) {
+                try { dateStr = new Date(d.date).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'}); }
+                catch(e) { dateStr = d.date; }
+            } else if (d.since) { dateStr = d.since; }
+            html += '<div class="flight-card">' +
+                '<span class="flight-card-status ' + status + '">' + status + '</span>' +
+                '<div class="flight-airline">✈️ ' + (d.airline || 'Unknown Airline') + '</div>' +
+                (d.route || d.destination ? '<div class="flight-route">🗺️ ' + (d.route || d.destination) + '</div>' : '') +
+                '<div class="flight-headline">' + (d.headline || d.title || '') + '</div>' +
+                '<div class="flight-meta">' +
+                    (dateStr ? '<span>📅 ' + dateStr + '</span>' : '') +
+                    (d.duration && d.duration !== 'Unknown' ? '<span>⏱️ ' + d.duration + '</span>' : '') +
+                    (d.reason ? '<span>📌 ' + d.reason + '</span>' : '') +
+                '</div>' +
+                (d.source_url ? '<div class="flight-source"><a href="' + d.source_url + '" target="_blank" rel="noopener">Read more ↗</a></div>' : '') +
+            '</div>';
         });
-
-        // Show "Load More" button if there are more disruptions to show
-        const remaining = flightDisruptionsData.length - flightVisibleCount;
-        if (remaining > 0 && flightVisibleCount < FLIGHT_MAX_VISIBLE) {
-            const nextBatch = Math.min(remaining, FLIGHT_PAGE_SIZE);
-            html += `
-            <div style="grid-column:1/-1; text-align:center; padding:15px;">
-                <button onclick="loadMoreFlights()" style="
-                    background: linear-gradient(180deg, #34495e 0%, #2c3e50 100%);
-                    color: white; border: none; padding: 10px 25px;
-                    font-family: 'Times New Roman', serif; font-size: 13px; font-weight: bold;
-                    border-radius: 6px; cursor: pointer; transition: all 0.3s ease;
-                    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-                ">Show ${nextBatch} More Disruption${nextBatch > 1 ? 's' : ''} (${remaining} remaining)</button>
-                <div style="margin-top:8px; font-size:11px; color:#7f8c8d;">
-                    Showing ${visible.length} of ${flightDisruptionsData.length} (max ${FLIGHT_MAX_VISIBLE})
-                </div>
-            </div>`;
-        } else if (flightVisibleCount >= FLIGHT_MAX_VISIBLE && flightDisruptionsData.length > FLIGHT_MAX_VISIBLE) {
-            html += `
-            <div style="grid-column:1/-1; text-align:center; padding:10px; font-size:12px; color:#7f8c8d;">
-                Showing ${FLIGHT_MAX_VISIBLE} of ${flightDisruptionsData.length} disruptions (limit reached)
-            </div>`;
-        }
-
-        grid.innerHTML = html;
-    }
-
-    function loadMoreFlights() {
-        flightVisibleCount = Math.min(flightVisibleCount + FLIGHT_PAGE_SIZE, FLIGHT_MAX_VISIBLE);
-        renderFlightCards();
+        html += '</div>';
+        container.innerHTML = html;
     }
 
     // ===== RATE LIMITS =====
@@ -2195,19 +2188,28 @@ async function loadCachedScoresFallback() {
         startLoadingProgress();
 
         // Fire all data loads in parallel
-        const cachePromise = loadCachedScores();
-        const notamPromise = loadNotams();
-        const flightPromise = loadFlights();
+        const cachePromise   = loadCachedScores();
+        const notamPromise   = loadNotams();
         const weatherPromise = loadAllWeather();
-        const ratePromise = fetchRateLimits();
-        const taPromise = loadTravelAdvisories();
+        const ratePromise    = fetchRateLimits();
+        const taPromise      = loadTravelAdvisories();
 
-        // Wait for at least the cache + NOTAMs to resolve before hiding overlay
+        // Wait for cache + NOTAMs to resolve before hiding overlay
         try {
-            await Promise.allSettled([cachePromise, notamPromise, flightPromise, taPromise]);
+            await Promise.allSettled([cachePromise, notamPromise, taPromise]);
         } catch (e) {
             console.warn('Some init loads failed:', e);
         }
+
+        // Fetch flight count in background for the badge (don't block page load)
+        fetch(`${API_BASE}/api/europe/flights`)
+            .then(r => r.json())
+            .then(data => {
+                var disruptions = data.disruptions || data.cancellations || [];
+                var el = document.getElementById('flight-count');
+                if (el) el.textContent = disruptions.length;
+            })
+            .catch(function() {});
 
         // Hide overlay
         hideLoadingOverlay();
