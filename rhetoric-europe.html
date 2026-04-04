@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics — Europe Rhetoric Trackers Landing Page v1.0.0 — April 2026 -->
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Europe Rhetoric Trackers — Asifah Analytics</title>
+<style>
+  :root {
+    --bg-color: #060d1a;
+    --card-bg: #0d1b2e;
+    --card-border: #1e3a5f;
+    --accent: #38bdf8;
+    --accent-hover: #7dd3fc;
+    --text-primary: #e2f0fb;
+    --text-secondary: #93c5fd;
+    --text-dim: #4a7fa5;
+    --gl-accent: #38bdf8;
+    --gl-border: rgba(56,189,248,0.5);
+    --gl-glow: rgba(56,189,248,0.12);
+    --badge-bg: rgba(30,58,95,0.6);
+    --divider: rgba(30,58,95,0.7);
+    --header-bg: rgba(6,13,26,0.95);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Times New Roman', Times, serif;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* WATERMARK */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(110vmin, 1400px);
+    height: min(110vmin, 1400px);
+    min-width: 800px; min-height: 800px;
+    background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.22;
+    filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+    z-index: 0; pointer-events: none; user-select: none;
+  }
+  /* Dark cyan grid */
+  body::after {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+      linear-gradient(rgba(0,210,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,210,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+  /* ── HEADER ── */
+  .page-header {
+    display: flex; align-items: center; gap: 20px;
+    padding: 28px 30px;
+    background: linear-gradient(135deg, #050e1c, #0a1f3d);
+    border: 1px solid rgba(56,189,248,0.2);
+    border-radius: 12px; margin-bottom: 24px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px rgba(56,189,248,0.06);
+    flex-wrap: wrap; gap: 16px;
+  }
+  .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.35); flex-shrink: 0; }
+  .header-left { display: flex; flex-direction: column; gap: 6px; }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; border-radius: 6px;
+    border: 1px solid rgba(56,189,248,0.3); color: #38bdf8;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+    text-decoration: none; text-transform: uppercase; transition: all 0.2s;
+  }
+  .back-link:hover { border-color: #38bdf8; background: rgba(56,189,248,0.08); }
+  .header-center { flex: 1; text-align: center; }
+  .page-header-badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; margin-bottom: 6px; }
+  .page-header-title { font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; }
+  .page-header-subtitle { font-size: 0.75rem; color: var(--text-dim); margin-top: 6px; max-width: 600px; margin-left: auto; margin-right: auto; }
+  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+  .theme-row { display: flex; align-items: center; gap: 6px; }
+  .theme-label { font-size: 0.6rem; color: var(--text-dim); letter-spacing: 1.5px; text-transform: uppercase; }
+  .theme-toggle { position: relative; width: 44px; height: 22px; cursor: pointer; }
+  .theme-toggle input { opacity: 0; width: 0; height: 0; }
+  .theme-toggle-slider { position: absolute; inset: 0; border-radius: 11px; background: #1e3a5f; transition: 0.3s; }
+  .theme-toggle-slider::before { content: '☀️'; position: absolute; width: 18px; height: 18px; left: 2px; top: 2px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 10px; transition: 0.3s; }
+  input:checked + .theme-toggle-slider { background: #0284c7; }
+  input:checked + .theme-toggle-slider::before { content: '🌙'; left: 24px; }
+
+  /* Light theme overrides */
+  [data-theme="light"] { --bg-color:#f0f4f8; --card-bg:#ffffff; --card-border:#cbd5e1; --text-primary:#0f172a; --text-secondary:#334155; --text-dim:#64748b; --badge-bg:rgba(203,213,225,0.4); --divider:rgba(203,213,225,0.8); }
+  [data-theme="light"] body { background-color: var(--bg-color); }
+  [data-theme="light"] body::before { filter: none; opacity: 0.06; }
+  [data-theme="light"] body::after { display: none; }
+  [data-theme="light"] .page-header { background: linear-gradient(135deg, #1e3a5f, #2c5282); }
+  [data-theme="light"] .page-header-title { color: #ffffff; }
+  [data-theme="light"] .page-header-subtitle { color: rgba(255,255,255,0.7); }
+
+  /* ── NAV SIDEBAR ── */
+  .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
+  .nav-sidebar { width: 190px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+  .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 2px; padding-left: 2px; }
+  .nav-btn { display: flex; flex-direction: column; align-items: flex-start; padding: 9px 13px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', serif; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s; border: 1.5px solid rgba(0,200,255,0.2); background: linear-gradient(135deg, rgba(0,180,255,0.06), rgba(0,120,200,0.04)); color: rgba(255,255,255,0.7); }
+  .nav-btn .nav-btn-label { font-size: 12px; line-height: 1.3; }
+  .nav-btn .nav-btn-status { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; opacity: 0.7; color: #64dcff; }
+  .nav-btn.active-nav { background: linear-gradient(135deg, rgba(0,180,255,0.15), rgba(0,120,200,0.10)); border-color: rgba(0,200,255,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(0,180,255,0.12); }
+  .nav-btn.current-page { background: linear-gradient(135deg, rgba(2,132,199,0.25), rgba(3,105,161,0.18)); border-color: rgba(56,189,248,0.7); color: #ffffff; box-shadow: 0 0 18px rgba(56,189,248,0.2); }
+  .nav-btn.current-page .nav-btn-status { color: #38bdf8; }
+  .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.2); cursor: default; }
+  .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.15); }
+  .nav-divider { height: 1px; background: rgba(56,189,248,0.12); margin: 2px 0; }
+  .nav-btn.rhetoric-btn { border-color: rgba(249,115,22,0.3); background: linear-gradient(135deg, rgba(249,115,22,0.07), rgba(220,38,38,0.04)); }
+  .nav-btn.rhetoric-btn .nav-btn-status { color: #f97316; }
+  .nav-btn.military-btn { border-color: rgba(100,116,139,0.35); background: linear-gradient(135deg, rgba(100,116,139,0.07), rgba(51,65,85,0.04)); }
+  .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+  @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+  /* ── SECTION DIVIDER ── */
+  .section-divider { display: flex; align-items: center; gap: 12px; margin: 24px 0 16px; }
+  .section-divider-line { flex: 1; height: 1px; background: var(--divider); }
+  .section-divider-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--text-dim); white-space: nowrap; padding: 0 4px; }
+
+  /* ── TRACKER GRID ── */
+  .tracker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 8px; }
+
+  /* ── TRACKER CARDS ── */
+  .tracker-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px; overflow: hidden;
+    text-decoration: none; color: inherit;
+    display: flex; flex-direction: column;
+    transition: all 0.25s ease;
+    cursor: pointer;
+  }
+  .tracker-card:hover { transform: translateY(-3px); }
+  .tracker-card.gl-card { border-color: var(--gl-border); }
+  .tracker-card.gl-card:hover { box-shadow: 0 8px 28px var(--gl-glow); border-color: var(--gl-accent); }
+
+  .card-header-strip { padding: 16px 18px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--card-border); }
+  .gl-card .card-header-strip { background: rgba(56,189,248,0.06); }
+
+  .card-country-info { display: flex; align-items: center; gap: 10px; }
+  .card-flag { font-size: 22px; }
+  .card-country-name { font-size: 0.9rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-primary); }
+  .card-tracker-type { font-size: 0.65rem; margin-top: 2px; }
+  .gl-card .card-tracker-type { color: rgba(56,189,248,0.7); }
+
+  .card-live-badge { display: flex; align-items: center; gap: 5px; background: var(--badge-bg); border: 1px solid rgba(56,189,248,0.2); border-radius: 20px; padding: 4px 10px; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.8); animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+  .card-scores-row { display: flex; gap: 0; padding: 16px 18px; border-bottom: 1px solid var(--card-border); }
+  .score-block { flex: 1; text-align: center; padding: 0 8px; border-right: 1px solid var(--card-border); }
+  .score-block:last-child { border-right: none; }
+  .score-label { font-size: 0.55rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 4px; }
+  .score-value { font-size: 1.8rem; font-weight: 900; line-height: 1; font-family: 'Courier New', monospace; }
+  .score-sublabel { font-size: 0.6rem; color: var(--text-dim); margin-top: 2px; }
+  .level-badge { display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 4px; font-size: 0.55rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+
+  .card-actors-row { padding: 12px 18px; border-bottom: 1px solid var(--card-border); flex: 1; }
+  .actors-row-label { font-size: 0.55rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; }
+  .mini-actor-bars { display: flex; flex-direction: column; gap: 6px; }
+  .mini-bar-row { display: flex; align-items: center; gap: 8px; }
+  .mini-bar-name { font-size: 0.6rem; color: var(--text-secondary); min-width: 110px; }
+  .mini-bar-track { flex: 1; height: 4px; background: rgba(255,255,255,0.06); border-radius: 2px; overflow: hidden; }
+  [data-theme="light"] .mini-bar-track { background: rgba(0,0,0,0.07); }
+  .mini-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s ease; }
+  .mini-bar-level { font-size: 0.55rem; font-weight: 700; min-width: 14px; text-align: right; font-family: 'Courier New', monospace; }
+
+  .card-footer { padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
+  .card-scan-time { font-size: 0.55rem; color: var(--text-dim); }
+  .card-view-btn { font-size: 0.65rem; font-weight: 700; color: var(--gl-accent); letter-spacing: 0.5px; }
+
+  /* ── COMING SOON CARDS ── */
+  .coming-soon-card {
+    background: var(--card-bg); border: 1px dashed var(--card-border);
+    border-radius: 12px; padding: 30px 20px; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0.5;
+  }
+  .coming-soon-flag { font-size: 28px; }
+  .coming-soon-name { font-size: 0.8rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); }
+  .coming-soon-label { font-size: 0.6rem; color: var(--text-dim); font-family: 'Courier New', monospace; letter-spacing: 1px; }
+
+  /* ── FOOTER ── */
+  .page-footer { text-align: center; padding: 24px; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.5px; margin-top: 16px; }
+  .page-footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<div class="page-header">
+  <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+  <div class="header-left">
+    <a href="europe.html" class="back-link">← Back to Europe</a>
+    <div class="theme-row">
+      <span class="theme-label">THEME</span>
+      <label class="theme-toggle">
+        <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
+        <span class="theme-toggle-slider"></span>
+      </label>
+    </div>
+  </div>
+  <div class="header-center">
+    <div class="page-header-badge">📡 Europe · Rhetoric Intelligence</div>
+    <div class="page-header-title">EUROPE RHETORIC TRACKERS</div>
+    <div class="page-header-subtitle">Real-time OSINT monitoring of sovereignty pressure, military signaling, and diplomatic rhetoric across the European and Arctic theatre.</div>
+  </div>
+</div>
+
+<!-- PAGE WITH SIDEBAR -->
+<div class="page-with-sidebar">
+
+<!-- NAV SIDEBAR -->
+<nav class="nav-sidebar">
+  <div class="nav-sidebar-label">Dashboards</div>
+  <div class="nav-btn inactive-nav">
+    <span class="nav-btn-label">🌍 Africa</span>
+    <span class="nav-btn-status">🔒 Future</span>
+  </div>
+  <a href="asia.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="europe.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🌍 Europe</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="middle-east.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🕌 Middle East</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="wha.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🌎 W. Hemisphere</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <div class="nav-divider"></div>
+  <a href="military.html" class="nav-btn military-btn">
+    <span class="nav-btn-label">🎖️ Military Tracker</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-sidebar-label" style="margin-top:4px;">Rhetoric Trackers</div>
+  <a href="rhetoric-middle-east.html" class="nav-btn rhetoric-btn">
+    <span class="nav-btn-label">📡 ME Rhetoric</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+    <span class="nav-btn-label">📡 Asia Rhetoric</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn current-page">
+    <span class="nav-btn-label">📡 Europe Rhetoric</span>
+    <span class="nav-btn-status">◉ You are here</span>
+  </a>
+  <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn inactive-nav">
+    <span class="nav-btn-label">📡 WHA Rhetoric</span>
+    <span class="nav-btn-status">🔒 Coming Soon</span>
+  </a>
+  <div class="nav-divider"></div>
+  <div class="nav-sidebar-label" style="margin-top:4px;">Europe Countries</div>
+  <a href="rhetoric-greenland.html" class="nav-btn active-nav">
+    <span class="nav-btn-label">🇬🇱 Greenland</span>
+    <span class="nav-btn-status">● Live</span>
+  </a>
+  <div class="nav-btn inactive-nav">
+    <span class="nav-btn-label">🇺🇦 Ukraine</span>
+    <span class="nav-btn-status">🔒 Coming Soon</span>
+  </div>
+  <div class="nav-btn inactive-nav">
+    <span class="nav-btn-label">🇷🇺 Russia</span>
+    <span class="nav-btn-status">🔒 Coming Soon</span>
+  </div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div style="flex:1;min-width:0;">
+
+<!-- LIVE TRACKERS -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-label">● Live Trackers</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<div class="tracker-grid" id="trackerGrid">
+
+  <!-- GREENLAND CARD -->
+  <a href="rhetoric-greenland.html" class="tracker-card gl-card" id="greenlandCard">
+    <div class="card-header-strip">
+      <div class="card-country-info">
+        <div class="card-flag">🇬🇱</div>
+        <div>
+          <div class="card-country-name">GREENLAND</div>
+          <div class="card-tracker-type">🧊 Sovereignty Tracker</div>
+        </div>
+      </div>
+      <div class="card-live-badge">
+        <div class="live-dot"></div>
+        Live
+      </div>
+    </div>
+
+    <div class="card-scores-row">
+      <div class="score-block">
+        <div class="score-label">Pressure Score</div>
+        <div class="score-value" id="gl-score" style="color:#38bdf8;">--</div>
+        <div class="score-sublabel">/ 100</div>
+        <div class="level-badge" id="gl-level-badge" style="background:rgba(107,114,128,0.2);color:#6b7280;">--</div>
+      </div>
+      <div class="score-block">
+        <div class="score-label">U.S. Pressure</div>
+        <div class="score-value" id="gl-us-level" style="color:#3b82f6;">--</div>
+        <div class="score-sublabel">Level / 5</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:8px;">Primary Driver</div>
+      </div>
+    </div>
+
+    <div class="card-actors-row">
+      <div class="actors-row-label">🔵 Actor Levels</div>
+      <div class="mini-actor-bars" id="gl-actor-bars">
+        <div class="mini-bar-row">
+          <div class="mini-bar-name">🦅 U.S. Pressure</div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" id="gl-bar-us" style="width:0%;background:#3b82f6;"></div></div>
+          <div class="mini-bar-level" id="gl-lv-us" style="color:#3b82f6;">--</div>
+        </div>
+        <div class="mini-bar-row">
+          <div class="mini-bar-name">🧊 Greenland / Inuit</div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" id="gl-bar-gl" style="width:0%;background:#38bdf8;"></div></div>
+          <div class="mini-bar-level" id="gl-lv-gl" style="color:#38bdf8;">--</div>
+        </div>
+        <div class="mini-bar-row">
+          <div class="mini-bar-name">🛡️ Denmark / NATO</div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" id="gl-bar-dk" style="width:0%;background:#22c55e;"></div></div>
+          <div class="mini-bar-level" id="gl-lv-dk" style="color:#22c55e;">--</div>
+        </div>
+        <div class="mini-bar-row">
+          <div class="mini-bar-name">🐻 Russia Arctic</div>
+          <div class="mini-bar-track"><div class="mini-bar-fill" id="gl-bar-ru" style="width:0%;background:#ef4444;"></div></div>
+          <div class="mini-bar-level" id="gl-lv-ru" style="color:#ef4444;">--</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="card-scan-time" id="gl-scan-time">Loading…</div>
+      <div class="card-view-btn">View Full Tracker →</div>
+    </div>
+  </a>
+
+</div><!-- end tracker-grid -->
+
+<!-- COMING SOON -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-label">🔒 Queued</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<div class="tracker-grid">
+  <div class="coming-soon-card">
+    <div class="coming-soon-flag">🇺🇦</div>
+    <div class="coming-soon-name">Ukraine</div>
+    <div class="coming-soon-label">Queued — Q2 2026</div>
+  </div>
+  <div class="coming-soon-card">
+    <div class="coming-soon-flag">🇷🇺</div>
+    <div class="coming-soon-name">Russia</div>
+    <div class="coming-soon-label">Queued — Q2 2026</div>
+  </div>
+  <div class="coming-soon-card">
+    <div class="coming-soon-flag">🇵🇱</div>
+    <div class="coming-soon-name">Poland / Baltics</div>
+    <div class="coming-soon-label">Queued — Q3 2026</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  © 2025–2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0-europe-rhetoric |
+  <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">☕ buy me a coffee</a>
+</div>
+
+</div><!-- end main content -->
+</div><!-- end page-with-sidebar -->
+</div><!-- end container -->
+
+<script>
+const API_BASE = 'https://asifa-europe-backend.onrender.com';
+
+const LEVEL_COLORS = { 0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626' };
+const LEVEL_LABELS = { 0:'Baseline',1:'Rhetoric',2:'Pressure',3:'Crisis',4:'Confrontation',5:'Rupture' };
+
+function levelColor(n) { return LEVEL_COLORS[n] || '#6b7280'; }
+function levelLabel(n) { return LEVEL_LABELS[n] || 'Unknown'; }
+function barWidth(n)   { return Math.round((n / 5) * 100); }
+function timeAgo(isoStr) {
+  if (!isoStr) return 'No data yet';
+  try {
+    const diff = Math.floor((Date.now() - new Date(isoStr)) / 60000);
+    if (diff < 1) return 'Just scanned';
+    if (diff < 60) return `Scanned ${diff}m ago`;
+    return `Scanned ${Math.floor(diff/60)}h ago`;
+  } catch { return ''; }
+}
+
+async function loadGreenland() {
+  try {
+    const r = await fetch(`${API_BASE}/api/rhetoric/greenland/summary`);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (!d.success) return;
+
+    const level = d.theatre_level || 0;
+    const color = levelColor(level);
+
+    // Score + badge
+    const scoreEl = document.getElementById('gl-score');
+    if (scoreEl) { scoreEl.textContent = d.theatre_score || 0; scoreEl.style.color = color; }
+    const badgeEl = document.getElementById('gl-level-badge');
+    if (badgeEl) { badgeEl.textContent = levelLabel(level); badgeEl.style.background = color + '33'; badgeEl.style.color = color; }
+
+    // US level
+    const usLv = d.us_pressure_level || 0;
+    const usEl = document.getElementById('gl-us-level');
+    if (usEl) { usEl.textContent = usLv; usEl.style.color = levelColor(usLv); }
+
+    // Actor bars
+    const actors = [
+      { bar:'gl-bar-us', lv:'gl-lv-us', level: d.us_pressure_level  || 0, color:'#3b82f6' },
+      { bar:'gl-bar-gl', lv:'gl-lv-gl', level: d.greenland_level     || 0, color:'#38bdf8' },
+      { bar:'gl-bar-dk', lv:'gl-lv-dk', level: d.denmark_level       || 0, color:'#22c55e' },
+      { bar:'gl-bar-ru', lv:'gl-lv-ru', level: d.russia_level        || 0, color:'#ef4444' },
+    ];
+    actors.forEach(a => {
+      const bar = document.getElementById(a.bar);
+      if (bar) { bar.style.width = barWidth(a.level) + '%'; bar.style.background = a.color; }
+      const lv = document.getElementById(a.lv);
+      if (lv) { lv.textContent = 'L' + a.level; lv.style.color = a.color; }
+    });
+
+    const scanEl = document.getElementById('gl-scan-time');
+    if (scanEl) scanEl.textContent = timeAgo(d.scanned_at) + (d.total_articles ? ` · ${d.total_articles} articles` : '');
+
+  } catch(e) {
+    console.warn('[Greenland card]', e);
+    const scanEl = document.getElementById('gl-scan-time');
+    if (scanEl) scanEl.textContent = 'Backend warming up…';
+  }
+}
+
+// Theme
+function toggleTheme() {
+  const isDark = document.getElementById('themeToggle').checked;
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  localStorage.setItem('europe_rhetoric_theme', isDark ? 'light' : 'dark');
+}
+function loadTheme() {
+  const saved = localStorage.getItem('europe_rhetoric_theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  document.getElementById('themeToggle').checked = saved === 'light';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadTheme();
+  loadGreenland();
+});
+</script>
+</body>
+</html>
