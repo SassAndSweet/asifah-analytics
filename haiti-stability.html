@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Mexico Stability Index v1.0.0 -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<html lang="en" dir="ltr">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haiti Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --accent: #6495ED;
+        }
+        [data-theme="dark"] {
+            --bg-color: #1a1a1a;
+            --container-bg: #2d2d2d;
+            --card-bg: #2d2d2d;
+            --card-border: #404040;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --text-muted: #808080;
+            --article-bg: #333333;
+            --article-hover: #3a3a3a;
+            --accent: #00d4ff;
+        }
+
+        /* ── BODY + WATERMARK ── */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            /* Watermark */
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: 1800px;
+            background-attachment: fixed;
+        }
+        /* Light mode: white overlay at 50% so watermark shows at ~50% opacity */
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(245, 245, 245, 0.50);
+            transition: background-color 0.3s ease;
+            pointer-events: none;
+            z-index: -1;
+        }
+        /* Dark mode: no white overlay — cyan grid lines instead */
+        [data-theme="dark"] body::before {
+            background-color: rgba(26, 26, 26, 0.82);
+        }
+        [data-theme="dark"] body::after {
+            content: '';
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                linear-gradient(rgba(0,210,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,210,255,0.04) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container { max-width: 1400px; margin: 0 auto; }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+            color: white; padding: 35px; border-radius: 12px;
+            margin-bottom: 12px; position: relative; min-height: 130px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+        [data-theme="dark"] header {
+            background: linear-gradient(135deg, #0f172a 0%, #164e63 50%, #0f172a 100%);
+            border: 1px solid rgba(0,210,255,0.15);
+        }
+        header::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.015) 2px, rgba(0,255,255,0.015) 4px);
+            pointer-events: none; border-radius: 12px; z-index: 1;
+        }
+        .header-logo {
+            width: 70px; height: 70px;
+            position: absolute; top: 30px; left: 30px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+        .header-content {
+            text-align: center; max-width: 800px;
+            margin: 0 auto; padding-top: 5px;
+            position: relative; z-index: 2;
+        }
+        header h1 { font-size: 26px; font-weight: bold; margin-bottom: 8px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        [data-theme="dark"] h1 { text-shadow: 0 0 20px rgba(0,212,255,0.4); }
+        .subtitle { font-size: 14px; opacity: 0.92; letter-spacing: 0.5px; }
+        .last-updated { font-size: 12px; opacity: 0.80; margin-top: 8px; }
+
+        /* ── HEADER CONTROLS ── */
+        .home-btn {
+            position: absolute; top: 30px; left: 115px; z-index: 2;
+            display: flex; align-items: center; gap: 6px;
+            background: rgba(255,255,255,0.15); padding: 6px 14px;
+            border-radius: 6px; color: white; text-decoration: none;
+            font-size: 13px; font-weight: bold;
+            border: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.2s ease;
+        }
+        .home-btn:hover { background: rgba(255,255,255,0.28); }
+        .header-controls {
+            position: absolute; top: 30px; right: 30px; z-index: 2;
+            display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+        }
+        .lang-btn-row { display: flex; align-items: center; gap: 6px; }
+        .lang-btn {
+            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3);
+            color: white; padding: 5px 11px; border-radius: 5px;
+            cursor: pointer; font-size: 12px; font-family: 'Times New Roman', serif;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.25); }
+        .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
+        .theme-toggle { display: flex; align-items: center; gap: 6px; color: white; font-size: 12px; cursor: pointer; }
+        .theme-toggle input {
+            width: 36px; height: 20px; appearance: none;
+            background: rgba(255,255,255,0.2); border-radius: 10px;
+            position: relative; cursor: pointer; transition: background 0.3s;
+        }
+        .theme-toggle input::after {
+            content: ''; position: absolute; width: 16px; height: 16px;
+            background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s;
+        }
+        .theme-toggle input:checked { background: rgba(0,210,255,0.5); }
+        .theme-toggle input:checked::after { left: 18px; }
+
+        /* ── ADVISORY BANNERS ── */
+        .worldwide-caution-banner {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
+            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 4px 15px rgba(239,68,68,0.3);
+        }
+        .country-advisory-banner {
+            border-radius: 10px; padding: 14px 20px;
+            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .advisory-btn {
+            flex-shrink: 0; padding: 6px 14px;
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px; color: white; text-decoration: none;
+            font-size: 11px; font-weight: bold; white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .advisory-btn:hover { background: rgba(255,255,255,0.28); }
+
+        /* ── CARDS ── */
+        .map-section, .knowledge-library, .articles-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 25px; margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        [data-theme="dark"] .map-section,
+        [data-theme="dark"] .knowledge-library,
+        [data-theme="dark"] .articles-section {
+            box-shadow: 0 2px 12px rgba(0,210,255,0.04);
+            border-color: #404040;
+        }
+        .section-heading { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
+        .section-subtitle { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-bottom: 15px; }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .knowledge-categories { display: grid; gap: 10px; }
+        .knowledge-card { border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
+        .knowledge-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 13px 18px; cursor: pointer; background: var(--article-bg);
+            transition: background 0.2s;
+        }
+        .knowledge-header:hover { background: var(--article-hover); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 14px; }
+        .category-icon { font-size: 18px; }
+        .collapse-icon { font-size: 11px; color: var(--text-muted); transition: transform 0.3s; }
+        .knowledge-card.collapsed .knowledge-content { display: none; }
+        .knowledge-card:not(.collapsed) .collapse-icon { transform: rotate(180deg); }
+        .knowledge-content { padding: 18px; line-height: 1.8; font-size: 13px; }
+        .knowledge-content p { margin-bottom: 10px; }
+        .knowledge-content ul { margin: 8px 0 12px 20px; }
+        .knowledge-content li { margin-bottom: 5px; }
+        .report-links-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .report-link {
+            display: inline-block; padding: 5px 12px;
+            background: var(--article-bg); border: 1px solid var(--card-border);
+            border-radius: 6px; color: var(--accent); text-decoration: none;
+            font-size: 12px; font-weight: bold; transition: background 0.2s;
+        }
+        .report-link:hover { background: var(--article-hover); }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 8px; }
+
+        /* ── ARTICLES ── */
+        .section-title { font-size: 17px; font-weight: bold; margin-bottom: 15px; }
+        .article-item {
+            padding: 14px; border: 1px solid var(--card-border);
+            border-radius: 8px; margin-bottom: 10px; background: var(--article-bg);
+            transition: background 0.2s;
+        }
+        .article-item:hover { background: var(--article-hover); }
+        .article-title { font-weight: bold; margin-bottom: 4px; font-size: 13px; }
+        .article-meta { font-size: 11px; color: var(--text-muted); }
+        .article-link { display: inline-block; margin-top: 6px; color: var(--accent); text-decoration: none; font-size: 12px; }
+        .article-link:hover { text-decoration: underline; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: 12px; padding: 30px; margin-top: 20px; margin-bottom: 30px;
+            text-align: center; font-size: 13px; color: var(--text-secondary);
+        }
+        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; text-align: left; }
+        .footer-col h4 { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: var(--text-primary); }
+        .footer-col p { font-size: 12px; line-height: 1.6; }
+        .footer-divider { border: none; border-top: 1px solid var(--card-border); margin: 20px 0; }
+        .footer-bottom { font-size: 12px; color: var(--text-muted); }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 10px; flex-wrap: wrap; }
+        .footer-links a { color: var(--accent); text-decoration: none; font-size: 12px; }
+        .footer-links a:hover { text-decoration: underline; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            header { padding: 20px; min-height: auto; }
+            header h1 { font-size: 20px; }
+            .header-logo { position: static; width: 50px; height: 50px; display: block; margin: 0 auto 10px; }
+            .home-btn { position: static; display: inline-flex; margin-bottom: 10px; }
+            .header-controls { position: static; align-items: center; margin-top: 10px; }
+            .footer-grid { grid-template-columns: 1fr; }
+            .worldwide-caution-banner,
+            .country-advisory-banner { flex-direction: column; text-align: center; }
+            .advisory-btn { align-self: center; }
+        }
+    </style>
+    <!-- Leaflet for map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+<div class="container">
+
+    <!-- ── HEADER ── -->
+    <header>
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+             alt="Asifah Analytics" class="header-logo">
+        <a href="wha.html" class="home-btn">&#8592; <span data-i18n="backBtn">Back to WHA Dashboard</span></a>
+        <div class="header-controls">
+            <div class="lang-btn-row">
+                <button class="lang-btn active" onclick="switchLang('en',this)">EN</button>
+                <button class="lang-btn" onclick="switchLang('es',this)">ES</button>
+                <button class="lang-btn" onclick="switchLang('pt',this)">PT</button>
+            </div>
+            <label class="theme-toggle">
+                <span>☀️</span>
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                <span>🌙</span>
+            </label>
+        </div>
+        <div class="header-content">
+            <h1>&#x1F1ED;&#x1F1F9; <span data-i18n="pageTitle">HAITI STABILITY INDEX</span></h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Gang Territorial Control, State Collapse, MSS Violence & International Intervention</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
+        </div>
+    </header>
+
+    <!-- ── WORLDWIDE CAUTION ── -->
+    <div class="worldwide-caution-banner">
+        <div style="font-size:22px; flex-shrink:0;">&#x1F6A8;</div>
+        <div style="flex:1;">
+            <div style="font-size:11px; font-weight:bold; color:#fca5a5; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:3px;">
+                &#x26A0;&#xFE0F; <span data-i18n="wcLabel">U.S. State Department — Worldwide Caution</span>
+            </div>
+            <div style="font-size:12px; color:#fde8e8; line-height:1.5;" data-i18n="wcText">
+                The U.S. State Department maintains a standing Worldwide Caution advising U.S. citizens to be aware of the increased risk of terrorist attacks, violence, and other threats worldwide. Review local conditions before travel.
+            </div>
+        </div>
+        <a href="https://travel.state.gov/content/travel/en/international-travel/emergencies/worldwide-caution.html"
+           target="_blank" rel="noopener" class="advisory-btn" data-i18n="wcBtn">VIEW CAUTION &rarr;</a>
+    </div>
+
+    <!-- ── MEXICO TRAVEL ADVISORY — Level 3 ── -->
+    <div class="country-advisory-banner" style="background:linear-gradient(135deg,#5f0808 0%, 991b1b 50%, 5f0808 100%); border:2px solid #dc2626;">
+        <div style="font-size:24px; flex-shrink:0;">&#x1F1ED;&#x1F1F9;</div>
+        <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
+                <span style="font-size:11px; font-weight:bold; color:#fca5a5; text-transform:uppercase; letter-spacing:1.5px;" data-i18n="taLabel">U.S. State Department — Haiti Travel Advisory</span>
+                <span style="background:#dc2626; color:white; font-size:10px; font-weight:800; padding:2px 9px; border-radius:3px; letter-spacing:1px;">LEVEL 4</span>
+            </div>
+            <div style="font-size:12px; color:#e2e8f0; line-height:1.5;">
+                <strong style="color:#fb923c;" data-i18n="taHeadline">Do Not Travel to Haiti</strong>
+                <span data-i18n="taText"> due to crime and kidnapping. Violent crime — homicide, kidnapping, carjacking, and robbery — is widespread and common. The U.S. government has limited ability to provide emergency services to U.S. citizens in many areas of Mexico due to travel restrictions on U.S. government employees.</span>
+            </div>
+        </div>
+        <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/haiti-travel-advisory.html"
+           target="_blank" rel="noopener" class="advisory-btn" data-i18n="taBtn">VIEW ADVISORY &rarr;</a>
+    </div>
+
+    <!-- ── MAP ── -->
+    <div class="map-section">
+        <h2 class="section-heading">&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Haiti — Strategic Overview</span></h2>
+        <div class="section-subtitle" data-i18n="mapSubtitle">Strategic locations and key risk zones for Haiti. Data based on open-source reporting.</div>
+        <div id="haiti-map" style="width:100%; height:480px; border:2px solid var(--card-border); border-radius:8px; overflow:hidden; z-index:0;"></div>
+    </div>
+
+    <!-- ── KNOWLEDGE LIBRARY ── -->
+    <div class="knowledge-library">
+        <h2 class="section-heading">&#x1F4DA; <span data-i18n="kbTitle">Knowledge Library</span></h2>
+        <p class="open-source-disclaimer" data-i18n="kbDisclaimer">Background information compiled from open-source research, think tank analysis, and government publications.</p>
+        <div style="height:12px;"></div>
+        <div class="knowledge-categories">
+
+            <div class="knowledge-card collapsed" id="card-gangs">
+                <div class="knowledge-header" onclick="toggleCard('gangs')">
+                    <div class="knowledge-header-title">
+                        <span class="category-icon">⚠️</span>
+                        <span data-i18n="kb_gangs_title">Gang Control & MSS Alliance</span>
+                    </div>
+                    <span class="collapse-icon">&#x25BC;</span>
+                </div>
+                <div class="knowledge-content">
+                    <div data-i18n="kb_gangs_content"><p><strong>Haiti is in a state of near-total state collapse</strong> with gangs controlling an estimated 85–90% of Port-au-Prince. The dominant gang federation Viv Ansanm (Live Together) — a coalition of the G9 and G-Pèp — controls key infrastructure including roads, ports, and neighborhoods. Gang leader Jimmy "Barbecue" Chérizier has emerged as a de facto power broker.</p><p><strong>Violence levels</strong> are among the highest recorded anywhere in the world. Massacres, kidnappings for ransom, sexual violence, and forced displacement are routine. The healthcare system has collapsed in gang-controlled areas.</p></div>
+                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                    <div class="report-links-grid"><a href="https://www.crisisgroup.org/latin-america-caribbean/haiti" target="_blank" class="report-link">&#x1F4D1; ICG — Haiti</a><a href="https://insightcrime.org/haiti-organized-crime-news/" target="_blank" class="report-link">&#x1F4D1; InSight Crime — Haiti</a><a href="https://oios.un.org/" target="_blank" class="report-link">&#x1F4D1; UN OIOS</a></div>
+                </div>
+            </div>
+            <div class="knowledge-card collapsed" id="card-governance">
+                <div class="knowledge-header" onclick="toggleCard('governance')">
+                    <div class="knowledge-header-title">
+                        <span class="category-icon">🏛️</span>
+                        <span data-i18n="kb_governance_title">State Collapse & Governance</span>
+                    </div>
+                    <span class="collapse-icon">&#x25BC;</span>
+                </div>
+                <div class="knowledge-content">
+                    <div data-i18n="kb_governance_content"><p><strong>Haiti has had no elected president since the assassination of Jovenel Moïse in July 2021</strong>. A Presidential Transitional Council (CPT) was established in 2024 under international pressure, but governance remains deeply fragmented. The Haitian National Police (PNH) is overwhelmed, underfunded, and frequently outgunned by gang forces.</p><p><strong>Elections</strong> have been repeatedly postponed. No functioning electoral authority or electoral roll exists. The path to constitutional governance is deeply unclear.</p></div>
+                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                    <div class="report-links-grid"><a href="https://binuh.unmissions.org/" target="_blank" class="report-link">&#x1F4D1; UN Mission BINUH</a><a href="https://www.ohchr.org/en/countries/haiti" target="_blank" class="report-link">&#x1F4D1; OHCHR — Haiti</a><a href="https://www.hrw.org/americas/haiti" target="_blank" class="report-link">&#x1F4D1; Human Rights Watch</a></div>
+                </div>
+            </div>
+            <div class="knowledge-card collapsed" id="card-mss_mission">
+                <div class="knowledge-header" onclick="toggleCard('mss_mission')">
+                    <div class="knowledge-header-title">
+                        <span class="category-icon">🌐</span>
+                        <span data-i18n="kb_mss_mission_title">Multinational Security Support Mission</span>
+                    </div>
+                    <span class="collapse-icon">&#x25BC;</span>
+                </div>
+                <div class="knowledge-content">
+                    <div data-i18n="kb_mss_mission_content"><p><strong>Kenya leads a UN-authorized Multinational Security Support (MSS) Mission</strong> deployed in 2024 to assist Haiti's security forces. The mission has faced significant operational challenges including gang ambushes, logistics difficulties, and funding shortfalls. The U.S. has provided funding and logistical support.</p><p><strong>Limitations:</strong> The MSS mission is authorized for approximately 2,500 personnel — far below what security analysts estimate is needed to meaningfully shift the security environment. Gang forces have adapted tactics to challenge the mission.</p></div>
+                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                    <div class="report-links-grid"><a href="https://www.un.org/securitycouncil/" target="_blank" class="report-link">&#x1F4D1; UN Security Council</a><a href="https://caricom.org/" target="_blank" class="report-link">&#x1F4D1; CARICOM</a><a href="https://www.state.gov/countries-areas/haiti/" target="_blank" class="report-link">&#x1F4D1; State Dept — Haiti</a></div>
+                </div>
+            </div>
+            <div class="knowledge-card collapsed" id="card-humanitarian">
+                <div class="knowledge-header" onclick="toggleCard('humanitarian')">
+                    <div class="knowledge-header-title">
+                        <span class="category-icon">🤝</span>
+                        <span data-i18n="kb_humanitarian_title">Humanitarian Crisis</span>
+                    </div>
+                    <span class="collapse-icon">&#x25BC;</span>
+                </div>
+                <div class="knowledge-content">
+                    <div data-i18n="kb_humanitarian_content"><p><strong>Haiti faces a catastrophic humanitarian emergency.</strong> Over 5 million people — nearly half the population — face acute food insecurity. Cholera has re-emerged. More than 700,000 people are internally displaced. Access for humanitarian organizations is severely constrained by gang control of roads and distribution networks.</p><p><strong>Natural disaster vulnerability</strong> remains extreme. The 2010 earthquake killed over 200,000 people; the 2021 earthquake killed over 2,000 more. Haiti sits on major fault lines and in the Atlantic hurricane belt, with no adequate disaster response infrastructure.</p></div>
+                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                    <div class="report-links-grid"><a href="https://www.unocha.org/haiti" target="_blank" class="report-link">&#x1F4D1; OCHA — Haiti</a><a href="https://www.wfp.org/countries/haiti" target="_blank" class="report-link">&#x1F4D1; WFP — Haiti</a><a href="https://reliefweb.int/country/hti" target="_blank" class="report-link">&#x1F4D1; ReliefWeb</a></div>
+                </div>
+            </div>
+        </div><!-- end knowledge-categories -->
+    </div><!-- end knowledge-library -->
+
+    <!-- ── ARTICLES ── -->
+    <div class="articles-section">
+        <div class="section-title">&#x1F4F0; <span data-i18n="articlesTitle">Recent Haiti OSINT Articles (Last 7 Days)</span></div>
+        <div id="articlesContainer">
+            <div style="text-align:center; color:var(--text-secondary); padding:30px;" data-i18n="articlesLoading">Loading articles...</div>
+        </div>
+    </div>
+
+    <!-- ── FOOTER ── -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4 data-i18n="footerAboutTitle">About This Page</h4>
+                <p data-i18n="footerAboutText">Asifah Analytics is a personal-time, open-source OSINT geopolitical intelligence platform. Haiti stability data tracks gang territorial control, governance indicators, and humanitarian conditions via GDELT, NewsAPI, and RSS feeds updated every 12 hours.</p>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footerSourcesTitle">Data Sources</h4>
+                <p>GDELT Project · NewsAPI · Google News RSS · U.S. State Dept · OCHA · InSight Crime · UN BINUH</p>
+            </div>
+            <div class="footer-col">
+                <h4 data-i18n="footerBackendTitle">Backend</h4>
+                <p>asifah-wha-backend.onrender.com &middot; <span data-i18n="footerBackendText">Updates every 12 hours</span></p>
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <div class="footer-links">
+            <a href="privacy.html" data-i18n="footerPrivacy">Privacy Policy</a>
+            <a href="mailto:rcgg@asifahanalytics.com" data-i18n="footerContact">Contact</a>
+            <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" rel="noopener">&#x2615; <span data-i18n="footerCoffee">Buy Me a Coffee</span></a>
+        </div>
+        <div class="footer-bottom">
+            <div style="margin-bottom:6px;" data-i18n="footerDisclaimer">&#x26A0;&#xFE0F; Research &amp; Educational Use Only. Not for operational decision-making.</div>
+            &copy; 2025-2026 RCGG. All Rights Reserved.
+        </div>
+    </footer>
+
+</div><!-- end container -->
+
+<script>
+// ========================================
+// CONFIG
+// ========================================
+var WHA_API = 'https://asifah-wha-backend.onrender.com';
+
+// ========================================
+// TRANSLATIONS
+// ========================================
+var TRANSLATIONS = {
+    en: {
+        backBtn:         '← Back to WHA Dashboard',
+        themeLabel:      'Theme',
+        pageTitle:       'HAITI STABILITY INDEX',
+        pageSubtitle:    'Multi-Factor Analysis: Cartel Conflict, State Capacity, U.S. Border Dynamics & Democratic Institutions',
+        lastUpdated:     'Last updated: Loading...',
+        wcLabel:         'U.S. State Department — Worldwide Caution',
+        wcText:          'The U.S. State Department maintains a standing Worldwide Caution advising U.S. citizens to be aware of the increased risk of terrorist attacks, violence, and other threats worldwide. Review local conditions before travel.',
+        wcBtn:           'VIEW CAUTION →',
+        taLabel:         'U.S. State Department — Haiti Travel Advisory',
+        taHeadline:      'Do Not Travel to Haiti',
+        taText:          ' due to kidnapping, crime, and civil unrest. Gangs control large portions of Port-au-Prince and the surrounding regions. The U.S. Embassy has limited ability to provide emergency services. U.S. government employees are prohibited from traveling outside the Embassy compound after dark.',
+        taBtn:           'VIEW ADVISORY →',
+        mapTitle:        'Haiti — Strategic Overview',
+        mapSubtitle:     'Strategic locations and key risk zones for Haiti. Data based on open-source reporting.',
+        kbTitle:         'Knowledge Library',
+        kbDisclaimer:    'Background information compiled from open-source research, think tank analysis, and government publications.',
+        kb1Title:        'Cartel Landscape & Territorial Control',
+        kb1p1:           '<strong>Mexico\'s criminal landscape is dominated by several major cartel organizations</strong> competing for territory, drug trafficking routes, and control of extortion networks. The Sinaloa Cartel and the Jalisco New Generation Cartel (CJNG) are the two most powerful organizations.',
+        kb1p2:           '<strong>Territorial Hotspots:</strong> Sinaloa, Sonora, Chihuahua, Tamaulipas, Michoacán, Guerrero, Colima, and Zacatecas consistently record the highest rates of cartel-related violence.',
+        kb1p3:           '<strong>Military-Grade Capabilities:</strong> Major cartels now field drones, armored vehicles, and .50-caliber weapons, and have demonstrated the ability to temporarily defeat Mexican military forces in direct engagements.',
+        kb2Title:        'State Capacity & Security Forces',
+        kb2p1:           '<strong>Mexico\'s security architecture has shifted significantly</strong> under President Claudia Sheinbaum. The National Guard (Guardia Nacional) was created in 2019, but critics argue it lacks adequate training and civilian oversight.',
+        kb2p2:           '<strong>Police Corruption:</strong> Local and state police forces remain deeply compromised by cartel infiltration and corruption, limiting effective law enforcement at the municipal level.',
+        kb2p3:           '<strong>Hugs Not Bullets:</strong> AMLO\'s "abrazos no balazos" strategy avoided direct military confrontation with cartels. The Sheinbaum administration has signaled a more assertive approach.',
+        kb3Title:        'U.S.–Mexico Relations & Border Dynamics',
+        kb3p1:           '<strong>The U.S.–Mexico relationship encompasses $800+ billion in annual trade</strong>, shared border security challenges, migration flows, and drug trafficking. The two countries are bound by the USMCA trade agreement.',
+        kb3p2:           '<strong>Cartel Designation Pressure:</strong> The U.S. has debated designating Mexican cartels as Foreign Terrorist Organizations. Mexico firmly opposes any unilateral U.S. military operations on Mexican soil.',
+        kb3p3:           '<strong>Fentanyl Crisis:</strong> The flow of fentanyl trafficked by cartels through Mexico has become the defining drug policy challenge and a constant source of bilateral tension.',
+        kb4Title:        'Democratic Institutions & Rule of Law',
+        kb4p1:           '<strong>Mexico is a federal constitutional republic</strong> but faces deep structural challenges. A sweeping judicial reform in 2024 introduced popular election of judges, drawing international criticism.',
+        kb4p2:           '<strong>Press Freedom:</strong> Mexico is one of the world\'s most dangerous countries for journalists. Reporters covering cartel activity face assassination and many stories go unpublished.',
+        kb4p3:           '<strong>Morena\'s Dominance:</strong> The ruling Morena party and its allies hold supermajorities in both chambers of Congress, raising concerns about institutional checks and balances.',
+        kb5Title:        'Economy & Nearshoring',
+        kb5p1:           '<strong>Mexico\'s economy is the 12th largest in the world</strong> and deeply integrated with the United States. Mexico has emerged as a major nearshoring beneficiary as companies seek to reduce supply chain dependence on China.',
+        kb5p2:           '<strong>Remittances:</strong> Remittances exceeded $63 billion in 2023, surpassing oil revenues as a foreign exchange earner.',
+        kb5p3:           '<strong>Risks:</strong> Cartel extortion, state capture of local economies, and U.S. tariff threats represent significant economic risks given trade dependency.',
+        kb6Title:        'Humanitarian & Displacement',
+        kb6p1:           '<strong>Mexico hosts one of the world\'s largest internally displaced populations</strong> driven by cartel violence. Tens of thousands have fled Sinaloa, Michoacán, Chihuahua, and Guerrero.',
+        kb6p2:           '<strong>Transit Migration:</strong> Mexico is a major transit country for migrants from Central America, South America, and Haiti seeking to reach the U.S. border.',
+        kb6p3:           '<strong>Femicide Crisis:</strong> Mexico records among the highest rates of femicide in Latin America, with approximately 10 women killed per day.',
+        disclaimer:      '* Based on open-source intelligence, think tank analysis, and government publications',
+        articlesTitle:   'Recent Haiti OSINT Articles (Last 7 Days)',
+        articlesLoading: 'Loading articles...',
+        footerAboutTitle:   'About This Page',
+        footerAboutText:    'Asifah Analytics is a personal-time, open-source OSINT geopolitical intelligence platform. Haiti stability data tracks gang territorial control, governance indicators, and humanitarian conditions via GDELT, NewsAPI, and RSS feeds updated every 12 hours.',
+        footerSourcesTitle: 'Data Sources',
+        footerBackendTitle: 'Backend',
+        footerBackendText:  'Updates every 12 hours',
+        footerPrivacy:   'Privacy Policy',
+        footerContact:   'Contact',
+        footerCoffee:    'Buy Me a Coffee',
+        footerDisclaimer:'⚠️ Research & Educational Use Only. Not for operational decision-making.',
+    },
+    es: {
+        backBtn:         '← Volver al Panel WHA',
+        themeLabel:      'Tema',
+        pageTitle:       'ÍNDICE DE ESTABILIDAD DE HAITÍ',
+        pageSubtitle:    'Análisis Multifactorial: Control Territorial de Pandillas, Colapso Estatal, Violencia MSS e Intervención Internacional',
+        lastUpdated:     'Última actualización: Cargando...',
+        wcLabel:         'Depto. de Estado de EE.UU. — Precaución Mundial',
+        wcText:          'El Departamento de Estado de EE.UU. mantiene una Precaución Mundial vigente que aconseja a los ciudadanos estadounidenses estar atentos al mayor riesgo de ataques terroristas, violencia y otras amenazas en todo el mundo.',
+        wcBtn:           'VER PRECAUCIÓN →',
+        taLabel:         'Depto. de Estado de EE.UU. — Aviso de Viaje a Haití',
+        taHeadline:      'No Viajes a Haití',
+        taText:          ' debido a secuestros, crimen e inestabilidad civil. Las pandillas controlan grandes partes de Port-au-Prince. La Embajada de EE.UU. tiene capacidad muy limitada para brindar servicios de emergencia.',
+        taBtn:           'VER AVISO →',
+        mapTitle:        'México — Panorama Estratégico',
+        mapSubtitle:     'Zonas clave de conflicto, áreas de control territorial de cárteles y cruces fronterizos con EE.UU. Datos basados en informes de fuentes abiertas.',
+        kbTitle:         'Biblioteca de Conocimiento',
+        kbDisclaimer:    'Información de contexto compilada de investigación de fuentes abiertas, análisis de think tanks y publicaciones gubernamentales.',
+        kb1Title:        'Panorama de Cárteles y Control Territorial',
+        kb1p1:           '<strong>El panorama criminal de México está dominado por varias organizaciones de cárteles</strong> que compiten por territorio, rutas de tráfico de drogas y control de redes de extorsión. El Cártel de Sinaloa y el CJNG son las dos organizaciones más poderosas.',
+        kb1p2:           '<strong>Puntos Críticos:</strong> Sinaloa, Sonora, Chihuahua, Tamaulipas, Michoacán, Guerrero, Colima y Zacatecas registran consistentemente las tasas más altas de violencia relacionada con cárteles.',
+        kb1p3:           '<strong>Capacidades Militares:</strong> Los principales cárteles ahora emplean drones, vehículos blindados y armas calibre .50, y han demostrado capacidad para vencer temporalmente a las fuerzas militares mexicanas.',
+        kb2Title:        'Capacidad Estatal y Fuerzas de Seguridad',
+        kb2p1:           '<strong>La arquitectura de seguridad de México ha cambiado significativamente</strong> bajo la presidenta Claudia Sheinbaum. La Guardia Nacional fue creada en 2019, pero los críticos argumentan que carece de capacitación adecuada.',
+        kb2p2:           '<strong>Corrupción Policial:</strong> Las fuerzas policiales locales y estatales siguen profundamente comprometidas por la infiltración y corrupción de los cárteles.',
+        kb2p3:           '<strong>Abrazos No Balazos:</strong> La estrategia de AMLO evitó la confrontación militar directa con los cárteles. La administración Sheinbaum ha señalado un enfoque más asertivo.',
+        kb3Title:        'Relaciones EE.UU.–México y Dinámica Fronteriza',
+        kb3p1:           '<strong>La relación EE.UU.–México abarca más de 800 mil millones de dólares en comercio anual</strong>, desafíos compartidos de seguridad fronteriza, flujos migratorios y narcotráfico.',
+        kb3p2:           '<strong>Presión por Designación de Cárteles:</strong> EE.UU. ha debatido designar a los cárteles mexicanos como Organizaciones Terroristas Extranjeras. México se opone firmemente a operaciones unilaterales de EE.UU. en suelo mexicano.',
+        kb3p3:           '<strong>Crisis del Fentanilo:</strong> El flujo de fentanilo traficado por los cárteles a través de México es el principal desafío de política de drogas y fuente constante de tensión bilateral.',
+        kb4Title:        'Instituciones Democráticas y Estado de Derecho',
+        kb4p1:           '<strong>México es una república constitucional federal</strong> pero enfrenta profundos desafíos estructurales. Una reforma judicial de 2024 introdujo la elección popular de jueces, generando críticas internacionales.',
+        kb4p2:           '<strong>Libertad de Prensa:</strong> México es uno de los países más peligrosos del mundo para los periodistas. Los reporteros que cubren actividades de cárteles enfrentan asesinato.',
+        kb4p3:           '<strong>Dominio de Morena:</strong> El partido Morena y sus aliados tienen supermayorías en ambas cámaras del Congreso, generando preocupaciones sobre los controles institucionales.',
+        kb5Title:        'Economía y Nearshoring',
+        kb5p1:           '<strong>La economía de México es la 12ª más grande del mundo</strong> y está profundamente integrada con Estados Unidos. México ha emergido como un beneficiario importante del nearshoring.',
+        kb5p2:           '<strong>Remesas:</strong> Las remesas superaron los 63 mil millones de dólares en 2023, superando los ingresos petroleros como fuente de divisas.',
+        kb5p3:           '<strong>Riesgos:</strong> La extorsión de los cárteles y las amenazas arancelarias de EE.UU. representan riesgos económicos significativos.',
+        kb6Title:        'Humanitario y Desplazamiento',
+        kb6p1:           '<strong>México alberga una de las mayores poblaciones desplazadas internamente del mundo</strong> impulsada por la violencia de los cárteles en Sinaloa, Michoacán, Chihuahua y Guerrero.',
+        kb6p2:           '<strong>Migración de Tránsito:</strong> México es un país de tránsito importante para migrantes de Centroamérica, Sudamérica y Haití que buscan llegar a la frontera con EE.UU.',
+        kb6p3:           '<strong>Crisis de Feminicidio:</strong> México registra una de las tasas más altas de feminicidio en América Latina, con aproximadamente 10 mujeres asesinadas por día.',
+        disclaimer:      '* Basado en inteligencia de fuentes abiertas, análisis de think tanks y publicaciones gubernamentales',
+        articlesTitle:   'Artículos Recientes sobre Haití (Últimos 7 días)',
+        articlesLoading: 'Cargando artículos...',
+        footerAboutTitle:   'Acerca de Esta Página',
+        footerAboutText:    'Asifah Analytics es una plataforma de inteligencia geopolítica OSINT de código abierto. Los datos de estabilidad de México se actualizan cada 12 horas.',
+        footerSourcesTitle: 'Fuentes de Datos',
+        footerBackendTitle: 'Backend',
+        footerBackendText:  'Se actualiza cada 12 horas',
+        footerPrivacy:   'Política de Privacidad',
+        footerContact:   'Contacto',
+        footerCoffee:    'Invítame un Café',
+        footerDisclaimer:'⚠️ Solo para Investigación y Uso Educativo. No para toma de decisiones operativas.',
+    },
+    pt: {
+        backBtn:         '← Voltar ao Painel WHA',
+        themeLabel:      'Tema',
+        pageTitle:       'ÍNDICE DE ESTABILIDADE DO HAITI',
+        pageSubtitle:    'Análise Multifatorial: Controle Territorial de Gangues, Colapso do Estado, Violência MSS e Intervenção Internacional',
+        lastUpdated:     'Última atualização: Carregando...',
+        wcLabel:         'Depto. de Estado dos EUA — Cautela Mundial',
+        wcText:          'O Departamento de Estado dos EUA mantém uma Cautela Mundial vigente aconselhando os cidadãos americanos a estarem cientes do maior risco de ataques terroristas, violência e outras ameaças em todo o mundo.',
+        wcBtn:           'VER CAUTELA →',
+        taLabel:         'Depto. de Estado dos EUA — Aviso de Viagem ao Haiti',
+        taHeadline:      'Não Viaje ao Haiti',
+        taText:          ' devido a sequestros, crimes e instabilidade civil. Gangues controlam grandes partes de Porto Príncipe. A Embaixada dos EUA tem capacidade muito limitada para fornecer serviços de emergência.',
+        taBtn:           'VER AVISO →',
+        mapTitle:        'México — Visão Geral Estratégica',
+        mapSubtitle:     'Principais zonas de conflito, áreas de controle territorial de cartéis e pontos de cruzamento da fronteira com os EUA. Dados baseados em fontes abertas.',
+        kbTitle:         'Biblioteca de Conhecimento',
+        kbDisclaimer:    'Informações de contexto compiladas de pesquisa de fontes abertas, análise de think tanks e publicações governamentais.',
+        kb1Title:        'Panorama dos Cartéis e Controle Territorial',
+        kb1p1:           '<strong>O panorama criminal do México é dominado por várias organizações de cartéis</strong> que competem por território, rotas de tráfico de drogas e controle de redes de extorsão. O Cartel de Sinaloa e o CJNG são as duas organizações mais poderosas.',
+        kb1p2:           '<strong>Pontos Críticos:</strong> Sinaloa, Sonora, Chihuahua, Tamaulipas, Michoacán, Guerrero, Colima e Zacatecas registram consistentemente as maiores taxas de violência relacionada a cartéis.',
+        kb1p3:           '<strong>Capacidades Militares:</strong> Os principais cartéis empregam drones, veículos blindados e armas calibre .50, e demonstraram capacidade de derrotar temporariamente as forças militares mexicanas.',
+        kb2Title:        'Capacidade Estatal e Forças de Segurança',
+        kb2p1:           '<strong>A arquitetura de segurança do México mudou significativamente</strong> sob a presidenta Claudia Sheinbaum. A Guarda Nacional foi criada em 2019, mas críticos argumentam que carece de treinamento adequado.',
+        kb2p2:           '<strong>Corrupção Policial:</strong> As forças policiais locais e estaduais permanecem profundamente comprometidas pela infiltração e corrupção dos cartéis.',
+        kb2p3:           '<strong>Abraços Não Balas:</strong> A estratégia de AMLO evitou o confronto militar direto com os cartéis. A administração Sheinbaum sinalizou uma abordagem mais assertiva.',
+        kb3Title:        'Relações EUA–México e Dinâmica Fronteiriça',
+        kb3p1:           '<strong>A relação EUA–México abrange mais de 800 bilhões de dólares em comércio anual</strong>, desafios compartilhados de segurança fronteiriça, fluxos migratórios e tráfico de drogas.',
+        kb3p2:           '<strong>Pressão pela Designação de Cartéis:</strong> Os EUA debateram designar os cartéis mexicanos como Organizações Terroristas Estrangeiras. O México se opõe firmemente a operações unilaterais dos EUA em solo mexicano.',
+        kb3p3:           '<strong>Crise do Fentanil:</strong> O fluxo de fentanil traficado pelos cartéis pelo México tornou-se o principal desafio de política de drogas e fonte constante de tensão bilateral.',
+        kb4Title:        'Instituições Democráticas e Estado de Direito',
+        kb4p1:           '<strong>O México é uma república constitucional federal</strong> mas enfrenta profundos desafios estruturais. Uma reforma judicial de 2024 introduziu a eleição popular de juízes, gerando críticas internacionais.',
+        kb4p2:           '<strong>Liberdade de Imprensa:</strong> O México é um dos países mais perigosos do mundo para jornalistas. Repórteres que cobrem atividades de cartéis enfrentam assassinato.',
+        kb4p3:           '<strong>Domínio do Morena:</strong> O partido Morena e seus aliados têm supermaioria em ambas as câmaras do Congresso, levantando preocupações sobre controles institucionais.',
+        kb5Title:        'Economia e Nearshoring',
+        kb5p1:           '<strong>A economia do México é a 12ª maior do mundo</strong> e profundamente integrada com os Estados Unidos. O México emergiu como um grande beneficiário do nearshoring.',
+        kb5p2:           '<strong>Remessas:</strong> As remessas ultrapassaram US$ 63 bilhões em 2023, superando as receitas do petróleo como fonte de divisas.',
+        kb5p3:           '<strong>Riscos:</strong> A extorsão dos cartéis e as ameaças tarifárias dos EUA representam riscos econômicos significativos.',
+        kb6Title:        'Humanitário e Deslocamento',
+        kb6p1:           '<strong>O México abriga uma das maiores populações deslocadas internamente do mundo</strong> impulsionada pela violência dos cartéis em Sinaloa, Michoacán, Chihuahua e Guerrero.',
+        kb6p2:           '<strong>Migração de Trânsito:</strong> O México é um país de trânsito importante para migrantes da América Central, América do Sul e Haiti que buscam chegar à fronteira com os EUA.',
+        kb6p3:           '<strong>Crise do Feminicídio:</strong> O México registra uma das maiores taxas de feminicídio da América Latina, com aproximadamente 10 mulheres assassinadas por dia.',
+        disclaimer:      '* Baseado em inteligência de fontes abertas, análise de think tanks e publicações governamentais',
+        articlesTitle:   'Artigos Recentes sobre Haiti (Últimos 7 dias)',
+        articlesLoading: 'Carregando artigos...',
+        footerAboutTitle:   'Sobre Esta Página',
+        footerAboutText:    'Asifah Analytics é uma plataforma de inteligência geopolítica OSINT de código aberto. Os dados de estabilidade do México são atualizados a cada 12 horas.',
+        footerSourcesTitle: 'Fontes de Dados',
+        footerBackendTitle: 'Backend',
+        footerBackendText:  'Atualizado a cada 12 horas',
+        footerPrivacy:   'Política de Privacidade',
+        footerContact:   'Contato',
+        footerCoffee:    'Me Pague um Café',
+        footerDisclaimer:'⚠️ Apenas para Pesquisa e Uso Educacional. Não para tomada de decisões operacionais.',
+    }
+};
+
+var currentLang = 'en';
+
+function switchLang(lang, btn) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    applyTranslations();
+}
+
+function applyTranslations() {
+    var t = TRANSLATIONS[currentLang] || TRANSLATIONS['en'];
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) {
+            el.innerHTML = t[key];
+        }
+    });
+}
+
+// ========================================
+// THEME
+// ========================================
+function initTheme() {
+    var saved = localStorage.getItem('asifah-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    document.getElementById('themeToggle').checked = (saved === 'dark');
+}
+function toggleTheme() {
+    var current = document.documentElement.getAttribute('data-theme');
+    var next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('asifah-theme', next);
+}
+initTheme();
+
+// ========================================
+// KNOWLEDGE CARDS
+// ========================================
+function toggleCard(id) {
+    var card = document.getElementById('card-' + id);
+    if (card) card.classList.toggle('collapsed');
+}
+
+// ========================================
+// MAP
+// ========================================
+function initMap() {
+    var map = L.map('haiti-map', { zoomControl: true, scrollWheelZoom: false }).setView([18.9, -72.6], 8);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        maxZoom: 10
+    }).addTo(map);
+
+    // Key markers
+    var markers = [
+        { lat: 25.686, lng: -100.316, label: '🏙️ Monterrey (Cartel Border Hub)', color: 'orange' },
+        { lat: 24.8,   lng: -107.4,   label: '⚠️ Culiacán (Sinaloa Cartel HQ)', color: 'red' },
+        { lat: 19.76,  lng: -101.19,  label: '⚠️ Michoacán Conflict Zone', color: 'red' },
+        { lat: 17.55,  lng: -99.5,    label: '⚠️ Guerrero (High Violence)', color: 'red' },
+        { lat: 31.74,  lng: -106.49,  label: '🇺🇸 El Paso / Ciudad Juárez Border Crossing', color: 'blue' },
+        { lat: 32.53,  lng: -116.97,  label: '🇺🇸 San Diego / Tijuana Border Crossing', color: 'blue' },
+        { lat: 26.08,  lng: -98.29,   label: '🇺🇸 McAllen / Reynosa Border Crossing', color: 'blue' },
+        { lat: 19.43,  lng: -99.13,   label: '🏛️ Mexico City (Federal Government)', color: 'green' },
+        { lat: 20.97,  lng: -89.62,   label: '🏙️ Mérida (Relatively Stable)', color: 'green' },
+    ];
+
+    var colorMap = { red: '#ef4444', orange: '#f97316', blue: '#3b82f6', green: '#22c55e' };
+
+    markers.forEach(function(m) {
+        var circle = L.circleMarker([m.lat, m.lng], {
+            radius: 8, fillColor: colorMap[m.color] || '#6b7280',
+            color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.85
+        }).addTo(map);
+        circle.bindPopup('<strong>' + m.label + '</strong>');
+    });
+
+    // Legend
+    var legend = L.control({ position: 'bottomright' });
+    legend.onAdd = function() {
+        var div = L.DomUtil.create('div');
+        div.style.cssText = 'background:white;padding:10px;border-radius:6px;font-size:12px;font-family:Times New Roman,serif;line-height:1.8;box-shadow:0 2px 6px rgba(0,0,0,0.2);';
+        div.innerHTML =
+            '<strong>Map Legend</strong><br><span style="color:#ef4444;">●</span> Gang-Controlled Zone<br><span style="color:#f97316;">●</span> Government Area<br><span style="color:#3b82f6;">●</span> Key Infrastructure<br><span style="color:#22c55e;">●</span> Relatively Stable';
+        return div;
+    };
+    legend.addTo(map);
+}
+
+// ========================================
+// ARTICLES
+// ========================================
+async function loadArticles() {
+    try {
+        var r = await fetch(WHA_API + '/api/wha/threat/haiti');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        var d = await r.json();
+        var articles = d.top_scoring_articles || d.articles || [];
+        if (articles.length > 0) {
+            displayArticles(articles);
+        } else {
+            displayFallback();
+        }
+    } catch(e) {
+        displayFallback();
+    }
+}
+
+function displayArticles(articles) {
+    var html = articles.slice(0, 20).map(function(a) {
+        var title = a.title || a.article_title || 'Untitled';
+        var source = a.source || a.source_name || '';
+        var pub = a.published || a.publishedAt || '';
+        var url = a.url || '#';
+        var dateStr = 'Recent';
+        if (pub) { try { dateStr = new Date(pub).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) {} }
+        return '<div class="article-item">' +
+            '<div class="article-title">' + title + '</div>' +
+            '<div class="article-meta">' + source + (source && dateStr ? ' &bull; ' : '') + dateStr + '</div>' +
+            (url !== '#' ? '<a href="' + url + '" target="_blank" rel="noopener" class="article-link">Read &rarr;</a>' : '') +
+            '</div>';
+    }).join('');
+    document.getElementById('articlesContainer').innerHTML = html;
+}
+
+function displayFallback() {
+    document.getElementById('articlesContainer').innerHTML =
+        '<div style="text-align:center; padding:30px; color:var(--text-secondary);">&#x1F4E1; Live article feed loading — check back shortly or run a manual scan.</div>';
+}
+
+// ========================================
+// INIT
+// ========================================
+document.addEventListener('DOMContentLoaded', function() {
+    applyTranslations();
+    initMap();
+    loadArticles();
+    document.getElementById('lastUpdated').textContent =
+        (TRANSLATIONS[currentLang] || TRANSLATIONS['en']).lastUpdated.replace('Loading...', new Date().toUTCString());
+});
+</script>
+</body>
+</html>
