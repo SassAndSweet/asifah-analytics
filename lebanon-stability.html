@@ -1274,9 +1274,63 @@
         .leader-card .lc-note { font-size: 10px; color: #64748b; font-style: italic; line-height: 1.4; }
         .leader-card .lc-since { font-size: 10px; color: #475569; margin-top: 4px; }
 
+        /* ── CYBER DARK MODE -- Cyan outlines across Lebanon Stability ── */
+        [data-theme="dark"] .stability-index-card {
+            border-color: rgba(100,149,237,0.25);
+            box-shadow: 0 0 10px rgba(100,149,237,0.08);
+        }
+        [data-theme="dark"] .metric-card {
+            border-color: rgba(100,149,237,0.2);
+            box-shadow: 0 0 6px rgba(100,149,237,0.06);
+        }
+        [data-theme="dark"] .metric-card:hover {
+            border-color: rgba(100,149,237,0.4) !important;
+            box-shadow: 0 0 18px rgba(100,149,237,0.18), 0 8px 20px rgba(0,0,0,0.4) !important;
+        }
+        [data-theme="dark"] .security-situation-block {
+            border-color: rgba(100,149,237,0.2);
+        }
+        [data-theme="dark"] .security-card {
+            border-color: rgba(100,149,237,0.15);
+        }
+        [data-theme="dark"] .security-card:hover {
+            border-color: rgba(100,149,237,0.3);
+            box-shadow: 0 0 12px rgba(100,149,237,0.1);
+        }
+        [data-theme="dark"] .lebanon-map-section {
+            border-color: rgba(100,149,237,0.2);
+        }
+        [data-theme="dark"] .knowledge-library {
+            border-color: rgba(100,149,237,0.2);
+        }
+        [data-theme="dark"] .knowledge-card {
+            border-color: rgba(100,149,237,0.15);
+        }
+        [data-theme="dark"] .knowledge-card:hover {
+            border-color: rgba(100,149,237,0.35) !important;
+            box-shadow: 0 6px 16px rgba(100,149,237,0.12) !important;
+        }
+        [data-theme="dark"] .knowledge-header {
+            background: linear-gradient(135deg, rgba(100,149,237,0.07) 0%, rgba(30,58,95,0.1) 100%) !important;
+        }
+        [data-theme="dark"] .knowledge-header:hover {
+            background: linear-gradient(135deg, rgba(100,149,237,0.12) 0%, rgba(30,58,95,0.15) 100%) !important;
+        }
+        [data-theme="dark"] .articles-section {
+            border-color: rgba(100,149,237,0.2);
+        }
+        [data-theme="dark"] footer {
+            border-color: rgba(100,149,237,0.15);
+        }
+        /* Rhetoric banner link in dark mode -- was green, now navy+cyan */
+        [data-theme="dark"] #rhetoricLevelBadge {
+            box-shadow: 0 0 8px rgba(100,149,237,0.2);
+        }
+
         @media (max-width: 768px) {
             .security-cards-grid { grid-template-columns: 1fr; }
             .leadership-grid { grid-template-columns: 1fr; }
+            #rhetoricScore { font-size: 28px !important; }
         }
     </style>
 </head>
@@ -1367,8 +1421,8 @@
             <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/lebanon-travel-advisory.html" target="_blank" class="ctb-link">View Advisory →</a>
         </div>
 
-        <!-- RHETORIC BANNER -->
-        <div style="background: linear-gradient(135deg, #1a2f1a, #2d4a2d); border: 2px solid rgba(22,163,74,0.4); border-radius: 10px; padding: 14px 20px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
+        <!-- RHETORIC BANNER -- quick-glance link bar -->
+        <div style="background: linear-gradient(135deg, #1a2f1a, #2d4a2d); border: 2px solid rgba(22,163,74,0.4); border-radius: 10px; padding: 14px 20px; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 15px; flex-wrap: wrap;">
             <div>
                 <div style="font-size:13px;font-weight:bold;color:white;">📡 Lebanon Rhetoric &amp; Escalation Tracker</div>
                 <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px;">Hezbollah · Israel · Iran · Lebanese Government · UNIFIL · Real-time signal analysis</div>
@@ -1376,6 +1430,38 @@
             <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
                 <span id="rhetoricLevelBadge" style="background:#6b7280;color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px;">📡 Loading…</span>
                 <a href="rhetoric-lebanon.html" style="padding:8px 18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;white-space:nowrap;">Open Tracker →</a>
+            </div>
+        </div>
+
+        <!-- RHETORIC CARD -- Full width, below banners -->
+        <div style="background:var(--card-bg);border:2px solid var(--card-border);border-radius:12px;padding:20px 25px;margin-bottom:20px;box-shadow:var(--card-glow);">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px;">
+                <div style="font-size:13px;font-weight:bold;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);">📡 RHETORIC TRACKER</div>
+                <span id="rhetoricLevelBadge" style="background:#6b7280;color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px;">📡 Loading…</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+                <!-- Left: Score -->
+                <div>
+                    <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:6px;">THEATRE SCORE</div>
+                    <div style="display:flex;align-items:baseline;gap:10px;">
+                        <div style="font-size:36px;font-weight:900;font-family:'Courier New',monospace;color:var(--text-primary);" id="rhetoricScore">--</div>
+                        <span id="rhetoricTheatreLabel" style="font-size:13px;font-weight:bold;padding:3px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
+                    </div>
+                    <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">Theatre escalation level</div>
+                    <div id="rhetoricScanInfo" style="font-size:10px;color:var(--text-muted);margin-top:4px;font-style:italic;">--</div>
+                    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--card-border);text-align:center;">
+                        <a href="rhetoric-lebanon.html" style="color:#6495ED;text-decoration:none;font-size:12px;font-weight:600;">View Full Rhetoric Analysis →</a>
+                    </div>
+                </div>
+                <!-- Right: Actors + Alerts -->
+                <div>
+                    <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:8px;">🎯 ACTOR STATUS</div>
+                    <div id="rhetoricActorList" style="font-size:12px;"><span style="color:var(--text-muted);font-style:italic;">Loading...</span></div>
+                    <div id="rhetoricAlerts" style="margin-top:10px;display:none;">
+                        <div style="font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);font-weight:600;margin-bottom:6px;">⚡ ACTIVE ALERTS</div>
+                        <div id="rhetoricAlertList"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1750,53 +1836,6 @@
                     </div>
                 </div>
 
-                <!-- Rhetoric Tracker (v1.1.0) -->
-                <div class="metric-card" id="rhetoricCard">
-                    <div class="metric-title" data-i18n="rhetoricTracker">RHETORIC TRACKER</div>
-                    <div style="display: flex; align-items: baseline; gap: 10px;">
-                        <div class="metric-value" id="rhetoricScore">--</div>
-                        <span id="rhetoricTheatreLabel" style="font-size: 14px; font-weight: bold; padding: 3px 10px; border-radius: 4px; background: #6b7280; color: white;">--</span>
-                    </div>
-                    <div class="metric-subtitle" data-i18n="rhetoricSubtitle">Theatre escalation level</div>
-                    
-                    <!-- Actor Escalation Grid -->
-                    <div id="rhetoricActors" style="margin-top: 12px;">
-                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600;">
-                            🎯 <span data-i18n="actorStatus">ACTOR STATUS</span>
-                        </div>
-                        <div id="rhetoricActorList" style="font-size: 12px;">
-                            <span style="color: var(--text-secondary); font-style: italic;">Loading...</span>
-                        </div>
-                    </div>
-                    
-                    <!-- Alerts Banner -->
-                    <div id="rhetoricAlerts" style="margin-top: 12px; display: none;">
-                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
-                            🚨 <span data-i18n="activeAlerts">ACTIVE ALERTS</span>
-                        </div>
-                        <div id="rhetoricAlertList"></div>
-                    </div>
-                    
-                    <!-- Spokespersons Detected -->
-                    <div id="rhetoricSpokespeople" style="margin-top: 12px; display: none;">
-                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; font-weight: 600;">
-                            🎤 <span data-i18n="voicesDetected">VOICES DETECTED</span>
-                        </div>
-                        <div id="rhetoricSpokesList" style="font-size: 11px; color: var(--text-secondary);"></div>
-                    </div>
-                    
-                    <!-- Link to full analysis -->
-                    <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border); text-align: center;">
-                        <a href="rhetoric-lebanon.html" style="color: #6495ED; text-decoration: none; font-size: 12px; font-weight: 600;" data-i18n="viewFullAnalysis">
-                            View Full Rhetoric Analysis →
-                        </a>
-                    </div>
-                    
-                    <!-- Scan info -->
-                    <div id="rhetoricScanInfo" style="margin-top: 8px; font-size: 10px; color: var(--text-muted); text-align: center;">
-                        --
-                    </div>
-                </div>
             </div>
 
             <!-- Lebanon Map -->
