@@ -1,54 +1,64 @@
-<!-- Asifah Analytics — Greenland Sovereignty Rhetoric Tracker v1.0.0 — April 2026 -->
+<!-- Asifah Analytics — Europe Rhetoric Monitor v1.0.0 — April 2026 -->
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<title>Greenland Sovereignty Tracker — Asifah Analytics</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<title>Europe Rhetoric Monitor — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"/>
 <style>
-    /* ── THEME VARIABLES ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
         --bg-color: #f0f4f8;
-        --container-bg: #ffffff;
         --card-bg: #ffffff;
         --card-border: #cbd5e1;
         --text-primary: #0f172a;
         --text-secondary: #334155;
         --text-muted: #64748b;
         --article-bg: #f1f5f9;
-        --accent: #0284c7;
-        --accent-glow: rgba(2,132,199,0.25);
-        --card-glow: none;
-        --card-hover-glow: 0 8px 20px rgba(0,0,0,0.10);
         --watermark-opacity: 0.06;
         --watermark-filter: none;
+        --card-glow: none;
+        --card-hover-glow: 0 8px 20px rgba(0,0,0,0.10);
+        --accent: #0284c7;
+        --cyber-cyan: #0284c7;
+        --cyber-cyan-glow: rgba(2,132,199,0.15);
+        --header-gradient-start: #050e1c;
+        --header-gradient-end: #0a1f3d;
+        --header-text: #ffffff;
     }
+
     [data-theme="dark"] {
         --bg-color: #060d1a;
-        --container-bg: #0d1b2e;
         --card-bg: #0d1b2e;
         --card-border: #1e3a5f;
         --text-primary: #e2f0fb;
         --text-secondary: #93c5fd;
         --text-muted: #4a7fa5;
         --article-bg: #091525;
-        --accent: #38bdf8;
-        --accent-glow: rgba(56,189,248,0.2);
-        --card-glow: 0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
-        --card-hover-glow: 0 0 22px rgba(56,189,248,0.18), 0 8px 25px rgba(0,0,0,0.5);
         --watermark-opacity: 0.22;
         --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+        --accent: #38bdf8;
+        --cyber-cyan: #38bdf8;
+        --cyber-cyan-glow: rgba(56,189,248,0.18);
+        --card-glow: 0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
+        --card-hover-glow: 0 0 22px rgba(56,189,248,0.18), 0 8px 25px rgba(0,0,0,0.5);
+        --header-gradient-start: #050e1c;
+        --header-gradient-end: #0a1f3d;
+        --header-text: #e2f0fb;
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
         font-family: 'Times New Roman', Times, serif;
         background-color: var(--bg-color);
         color: var(--text-primary);
         min-height: 100vh;
         transition: background-color 0.3s ease, color 0.3s ease;
+        position: relative;
     }
+
     /* Watermark */
     body::before {
         content: '';
@@ -62,783 +72,523 @@
         opacity: var(--watermark-opacity); filter: var(--watermark-filter);
         z-index: 0; pointer-events: none; user-select: none;
     }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
     /* ── HEADER ── */
     header {
-        background: linear-gradient(135deg, #050e1c, #0a1f3d);
-        border: 1px solid var(--card-border);
-        border-radius: 12px; padding: 20px 25px; margin-bottom: 20px;
-        display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px rgba(56,189,248,0.08);
-        border-bottom: 1px solid rgba(56,189,248,0.2);
+        background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+        border-radius: 12px; padding: 20px;
+        margin-bottom: 24px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "logo title controls";
+        align-items: center;
+        gap: 16px;
+        border: 1px solid rgba(56,189,248,0.3);
+        min-height: 110px;
+        position: relative;
+        overflow: hidden;
     }
-    [data-theme="light"] header { background: linear-gradient(135deg, #1e3a5f, #2c5282); }
-    .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.4); flex-shrink: 0; }
-    .header-left { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    [data-theme="dark"] header::after {
+        content: '';
+        position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+        background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
+        opacity: 0.5;
+    }
+    .header-logo-wrap { grid-area: logo; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .header-logo { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(56,189,248,0.4); }
     .back-link {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 6px 12px; background: rgba(255,255,255,0.15);
+        color: var(--header-text); text-decoration: none;
+        border-radius: 6px; border: 2px solid rgba(255,255,255,0.3);
+        font-size: 12px; font-weight: bold; transition: all 0.2s ease; white-space: nowrap;
+    }
+    .back-link:hover { background: rgba(255,255,255,0.25); }
+    .header-content { grid-area: title; text-align: center; }
+    h1 { font-size: 26px; font-weight: bold; letter-spacing: 1px; margin-bottom: 5px; color: var(--header-text); }
+    [data-theme="dark"] h1 { color: var(--cyber-cyan); text-shadow: 0 0 20px rgba(56,189,248,0.25); }
+    .subtitle { font-size: 13px; opacity: 0.85; font-style: italic; color: var(--header-text); }
+    .last-updated { font-size: 11px; opacity: 0.7; color: var(--header-text); margin-top: 4px; }
+    .header-controls { grid-area: controls; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .theme-toggle { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.1); padding: 6px 10px; border-radius: 8px; }
+    .theme-toggle-label { font-size: 11px; color: rgba(255,255,255,0.85); text-transform: uppercase; letter-spacing: 0.5px; }
+    .theme-toggle-switch { position: relative; width: 44px; height: 24px; background: rgba(255,255,255,0.2); border-radius: 12px; cursor: pointer; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3); }
+    .theme-toggle-slider { position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 9px; }
+    .theme-toggle-slider::before { content: '☀️'; }
+    [data-theme="dark"] .theme-toggle-slider { transform: translateX(20px); }
+    [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
+
+    /* ── REGIONAL POSTURE BANNER ── */
+    .posture-banner {
+        background: var(--card-bg); border: 2px solid var(--card-border);
+        border-radius: 12px; padding: 16px 24px; margin-bottom: 24px;
+        display: flex; align-items: center; justify-content: space-between;
+        flex-wrap: wrap; gap: 12px; box-shadow: var(--card-glow);
+    }
+    [data-theme="dark"] .posture-banner { border-color: var(--cyber-cyan); box-shadow: 0 0 14px rgba(56,189,248,0.12), var(--card-glow); }
+    .posture-left { display: flex; flex-direction: column; gap: 4px; }
+    .posture-label { font-size: 10px; text-transform: uppercase; letter-spacing: 2px; color: var(--cyber-cyan); font-weight: bold; }
+    .posture-value { font-size: 20px; font-weight: 900; }
+    .posture-right { display: flex; gap: 24px; flex-wrap: wrap; }
+    .posture-stat { text-align: center; }
+    .posture-stat-num { font-size: 22px; font-weight: bold; }
+    .posture-stat-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+        font-size: 10px; text-transform: uppercase; letter-spacing: 2px;
+        color: var(--cyber-cyan); font-weight: bold;
+        margin-bottom: 12px; padding-bottom: 6px;
+        border-bottom: 1px solid var(--card-border);
+    }
+
+    /* ── BLUF CARD ── */
+    .bluf-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 10px; padding: 18px 22px; margin-bottom: 18px;
+        box-shadow: var(--card-glow); transition: border-color 0.3s ease;
+    }
+    [data-theme="dark"] .bluf-card { border-color: rgba(56,189,248,0.25); box-shadow: 0 0 10px rgba(56,189,248,0.06); }
+    .bluf-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap; }
+    .bluf-label { font-size:0.6rem; letter-spacing:2.5px; text-transform:uppercase; color:var(--cyber-cyan); font-family:'Courier New',monospace; font-weight:700; }
+    .bluf-posture-pill { font-size:0.6rem; font-weight:700; letter-spacing:1.5px; padding:2px 8px; border-radius:4px; text-transform:uppercase; font-family:'Courier New',monospace; color:#fff; flex-shrink:0; }
+    .bluf-prose { font-size:0.82rem; line-height:1.7; font-family:'Times New Roman',Times,serif; color:var(--text-primary); margin-bottom:14px; }
+    .bluf-signals { display:flex; flex-direction:column; gap:6px; padding-top:12px; border-top:1px solid var(--card-border); }
+    .bluf-signal-item { display:flex; align-items:flex-start; gap:8px; font-size:0.72rem; font-family:'Courier New',monospace; padding:5px 10px; border-radius:6px; background:rgba(0,0,0,0.05); border-left:3px solid var(--card-border); }
+    [data-theme="dark"] .bluf-signal-item { background:rgba(255,255,255,0.04); }
+    .bluf-signal-icon { font-size:0.9rem; flex-shrink:0; margin-top:1px; }
+    .bluf-signal-text { flex:1; line-height:1.5; }
+    .bluf-footer { font-size:0.6rem; color:var(--text-muted); font-family:'Courier New',monospace; margin-top:10px; font-style:italic; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; }
+    .bluf-loading { text-align:center; padding:16px; font-size:0.72rem; color:var(--text-muted); font-family:'Courier New',monospace; letter-spacing:1px; }
+
+    /* ── TRACKER BANNERS ── */
+    .trackers-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 10px; }
+    .tracker-banner {
+        background: var(--card-bg); border: 2px solid var(--card-border);
+        border-radius: 12px; padding: 16px 22px;
+        display: grid; grid-template-columns: 2fr 1fr auto;
+        align-items: center; gap: 20px;
+        box-shadow: var(--card-glow);
+        transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .tracker-banner:hover { box-shadow: var(--card-hover-glow); }
+    [data-theme="dark"] .tracker-banner:hover { border-color: var(--cyber-cyan); }
+    .tracker-name { font-size: 14px; font-weight: bold; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    [data-theme="dark"] .tracker-name { color: #7dd3fc; }
+    .tracker-actors { font-size: 11px; color: var(--text-muted); }
+    .tracker-middle { display: flex; flex-direction: column; gap: 6px; }
+    .tracker-vectors { display: flex; gap: 6px; flex-wrap: wrap; }
+    .vector-pill {
+        font-size: 10px; padding: 2px 8px; border-radius: 4px;
+        font-weight: bold; white-space: nowrap;
+        background: rgba(56,189,248,0.08); color: var(--cyber-cyan);
+        border: 1px solid rgba(56,189,248,0.2);
+    }
+    .tracker-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .level-badge {
         display: inline-flex; align-items: center; gap: 6px;
-        padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.3);
-        color: #38bdf8; font-size: 0.7rem; font-weight: 700;
-        letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: all 0.2s;
+        padding: 6px 14px; border-radius: 8px; font-size: 12px;
+        font-weight: bold; color: white; white-space: nowrap;
+        letter-spacing: 0.5px;
     }
-    .back-link:hover { border-color: #38bdf8; background: rgba(56,189,248,0.08); }
-    .theme-row { display: flex; align-items: center; gap: 8px; }
-    .theme-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
-    .theme-toggle { position: relative; width: 48px; height: 24px; cursor: pointer; }
-    .theme-toggle input { opacity: 0; width: 0; height: 0; }
-    .theme-toggle-slider { position: absolute; inset: 0; border-radius: 12px; background: #475569; transition: 0.3s; display: flex; align-items: center; padding: 2px; }
-    [data-theme="dark"] .theme-toggle-slider { background: #0284c7; }
-    .theme-toggle-slider::before { content: '☀️'; width: 20px; height: 20px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.3s; }
-    [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; margin-left: 24px; }
-    .header-center { flex: 1; text-align: center; }
-    .header-flag { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; }
-    .header-title { font-family: 'Times New Roman', Times, serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; margin: 4px 0; }
-    [data-theme="light"] .header-title { color: #ffffff; }
-    .header-subtitle { font-size: 0.75rem; color: #93c5fd; letter-spacing: 1px; }
-    [data-theme="light"] .header-subtitle { color: rgba(255,255,255,0.8); }
-    .header-timestamp { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
-    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
-    .lang-group { display: flex; gap: 4px; flex-wrap: wrap; }
-    .lang-btn { font-family: 'Times New Roman', Times, serif; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--card-border); background: transparent; color: var(--text-muted); font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .lang-btn.active { background: #0284c7; color: #fff; border-color: #0284c7; }
-    .scan-btn {
-        display: inline-flex; align-items: center; gap: 8px;
-        padding: 8px 20px; border-radius: 8px;
-        background: linear-gradient(135deg, #0284c7, #0369a1);
-        border: 1px solid rgba(56,189,248,0.4); color: white;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
-        text-transform: uppercase; cursor: pointer; transition: all 0.2s;
+    .open-btn {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 6px 14px; border-radius: 8px;
+        background: rgba(56,189,248,0.1); color: var(--cyber-cyan);
+        text-decoration: none; font-size: 11px; font-weight: bold;
+        border: 1px solid rgba(56,189,248,0.3); transition: all 0.2s ease;
+        white-space: nowrap;
     }
-    .scan-btn:hover { background: linear-gradient(135deg, #38bdf8, #0284c7); box-shadow: 0 0 16px rgba(56,189,248,0.35); }
-    .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .scan-btn .spin { display: inline-block; animation: spin 1s linear infinite; }
+    .open-btn:hover { background: rgba(56,189,248,0.2); box-shadow: 0 0 12px rgba(56,189,248,0.15); }
 
-    /* ── NAV SIDEBAR ── */
-    .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
-    .nav-sidebar { width: 190px; flex-shrink: 0; display: flex; flex-direction: column; gap: 6px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
-    .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 2px; padding-left: 2px; }
-    .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 9px 13px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(0,200,255,0.2); background: linear-gradient(135deg, rgba(0,180,255,0.06) 0%, rgba(0,120,200,0.04) 100%); color: rgba(255,255,255,0.7); }
-    .nav-btn .nav-btn-label { position: relative; z-index: 2; font-size: 12px; line-height: 1.3; }
-    .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; opacity: 0.7; color: #64dcff; }
-    .nav-btn.active-nav { background: linear-gradient(135deg, rgba(0,180,255,0.15) 0%, rgba(0,120,200,0.10) 100%); border-color: rgba(0,200,255,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(0,180,255,0.12); }
-    .nav-btn.active-nav:hover { box-shadow: 0 0 20px rgba(0,180,255,0.2); transform: translateY(-1px); }
-    .nav-btn.current-page { background: linear-gradient(135deg, rgba(2,132,199,0.25) 0%, rgba(3,105,161,0.18) 100%); border-color: rgba(56,189,248,0.7); color: #ffffff; box-shadow: 0 0 18px rgba(56,189,248,0.2); }
-    .nav-btn.current-page .nav-btn-status { color: #38bdf8; }
-    .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.2); cursor: default; }
-    .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.15); }
-    .nav-divider { height: 1px; background: rgba(56,189,248,0.12); margin: 2px 0; }
-    .nav-btn.rhetoric-btn { border-color: rgba(249,115,22,0.3); background: linear-gradient(135deg, rgba(249,115,22,0.07) 0%, rgba(220,38,38,0.04) 100%); }
-    .nav-btn.rhetoric-btn:hover { border-color: rgba(249,115,22,0.6); box-shadow: 0 0 16px rgba(249,115,22,0.15); transform: translateY(-1px); }
-    .nav-btn.rhetoric-btn .nav-btn-status { color: #f97316; }
-    .nav-btn.military-btn { border-color: rgba(100,116,139,0.35); background: linear-gradient(135deg, rgba(100,116,139,0.07) 0%, rgba(51,65,85,0.04) 100%); }
-    .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
-    @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+    /* ── COMING SOON BANNERS ── */
+    .coming-soon-banner {
+        background: var(--card-bg); border: 2px solid var(--card-border);
+        border-radius: 12px; padding: 14px 22px;
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 16px; opacity: 0.5;
+    }
+    .coming-soon-name { font-size: 14px; font-weight: bold; color: var(--text-muted); }
+    .coming-soon-badge {
+        font-size: 11px; padding: 3px 10px; border-radius: 6px;
+        background: rgba(100,116,139,0.1); color: var(--text-muted);
+        border: 1px solid rgba(100,116,139,0.2); white-space: nowrap;
+    }
 
-    /* ── SECTION CARDS ── */
-    .section-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: var(--card-glow); transition: background 0.3s, border-color 0.3s, box-shadow 0.3s; }
-    .section-card:hover { box-shadow: var(--card-hover-glow); }
-    .section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
+    /* ── DELTA ── */
+    .tracker-delta { font-size: 11px; font-weight: bold; }
+    .delta-rising  { color: #ef4444; }
+    .delta-falling { color: #22c55e; }
+    .delta-stable  { color: #9ca3af; }
 
-    /* ── THEATRE BANNER ── */
-    .theatre-banner { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px 28px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--card-glow); }
-    .theatre-score-big { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; line-height: 1; color: var(--accent); }
-    .theatre-score-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
-    .theatre-badge { display: inline-block; padding: 5px 16px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: white; margin-top: 8px; }
-    .theatre-right { text-align: right; }
-    .theatre-escalation-label-text { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); }
-    .theatre-level-display { font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 700; margin: 4px 0; }
-    .theatre-level-desc { font-size: 0.7rem; color: var(--text-muted); max-width: 280px; }
-    .theatre-scan-info { font-size: 0.6rem; color: var(--text-muted); font-style: italic; margin-top: 6px; }
+    /* ── LOADING DOTS ── */
+    .loading-dot { animation: blink 1.4s infinite both; }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes blink { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
 
-    /* ── CONVERGENCE SIGNAL ── */
-    .convergence-box { border-radius: 10px; padding: 14px 18px; margin-bottom: 18px; border: 1px solid; display: flex; align-items: center; gap: 14px; }
-    .convergence-box.active { background: rgba(2,132,199,0.08); border-color: rgba(56,189,248,0.4); }
-    .convergence-box.quiet { background: rgba(100,116,139,0.06); border-color: rgba(100,116,139,0.2); }
-    .convergence-text { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
-    .convergence-sub { font-size: 0.65rem; color: var(--text-muted); margin-top: 3px; }
+    /* ── FOOTER ── */
+    footer { text-align: center; padding: 30px 20px; color: var(--text-muted); font-size: 12px; line-height: 1.8; border-top: 1px solid var(--card-border); margin-top: 30px; }
 
-    /* ── ACTOR PANELS (4-column grid) ── */
-    .actor-panels { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-bottom: 18px; }
-    @media (max-width: 700px) { .actor-panels { grid-template-columns: 1fr; } }
-    .actor-panel { border-radius: 12px; padding: 18px; border: 2px solid; transition: all 0.2s; }
-    .actor-panel:hover { box-shadow: var(--card-hover-glow); }
-    .actor-panel.us-panel    { background: rgba(29,78,216,0.06); border-color: rgba(59,130,246,0.35); }
-    .actor-panel.gl-panel    { background: rgba(2,132,199,0.06); border-color: rgba(56,189,248,0.35); }
-    .actor-panel.dk-panel    { background: rgba(22,163,74,0.06); border-color: rgba(34,197,94,0.35); }
-    .actor-panel.ru-panel    { background: rgba(220,38,38,0.06); border-color: rgba(239,68,68,0.35); }
-    .actor-panel.cn-panel    { background: rgba(124,58,237,0.06); border-color: rgba(167,139,250,0.25); }
-    [data-theme="dark"] .actor-panel.us-panel { background: rgba(29,78,216,0.08); }
-    [data-theme="dark"] .actor-panel.gl-panel { background: rgba(2,132,199,0.08); }
-    [data-theme="dark"] .actor-panel.dk-panel { background: rgba(22,163,74,0.08); }
-    [data-theme="dark"] .actor-panel.ru-panel { background: rgba(220,38,38,0.08); }
-    .actor-panel-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
-    .actor-flag-name { display: flex; align-items: center; gap: 10px; }
-    .actor-flag { font-size: 1.4rem; }
-    .actor-name { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); line-height: 1.2; }
-    .actor-role { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; letter-spacing: 0.3px; }
-    .actor-level-badge { padding: 4px 12px; border-radius: 5px; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: white; white-space: nowrap; flex-shrink: 0; }
-    .actor-score-bar-wrap { margin-bottom: 10px; }
-    .actor-score-bar-label { display: flex; justify-content: space-between; font-size: 0.6rem; color: var(--text-muted); margin-bottom: 4px; }
-    .actor-score-bar { height: 5px; border-radius: 3px; background: rgba(255,255,255,0.08); overflow: hidden; }
-    [data-theme="light"] .actor-score-bar { background: rgba(0,0,0,0.08); }
-    .actor-score-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
-    .actor-stats { font-size: 0.6rem; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
-    .actor-top-articles { margin-top: 8px; }
-    .actor-article { padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-    [data-theme="light"] .actor-article { border-bottom-color: rgba(0,0,0,0.06); }
-    .actor-article:last-child { border-bottom: none; }
-    .actor-article a { font-size: 0.65rem; color: var(--text-secondary); text-decoration: none; line-height: 1.3; display: block; }
-    .actor-article a:hover { color: var(--accent); }
-    .actor-article-meta { font-size: 0.55rem; color: var(--text-muted); margin-top: 2px; }
-    .kw-pill { display: inline-block; font-size: 0.5rem; background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.2); border-radius: 3px; padding: 1px 5px; color: var(--accent); margin-right: 3px; }
-
-    /* ── ESCALATION LADDER ── */
-    .ladder-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 14px 0; }
-    .ladder-step { flex: 1; min-width: 75px; background: var(--article-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 10px 6px; text-align: center; transition: all 0.2s; }
-    .ladder-step.active { background: rgba(2,132,199,0.08); }
-    .ladder-step-num { font-size: 1.4rem; font-weight: 900; }
-    .ladder-step-label { font-size: 0.5rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 4px; }
-
-    /* ── HISTORY CHART ── */
-    .history-chart-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: var(--card-glow); }
-    .history-chart-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-    .history-chart-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
-    .history-toggle-group { display: flex; gap: 4px; background: rgba(0,0,0,0.15); border-radius: 6px; padding: 3px; }
-    [data-theme="light"] .history-toggle-group { background: rgba(0,0,0,0.06); }
-    .history-toggle-btn { font-family: 'Times New Roman', Times, serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background: transparent; color: var(--text-muted); transition: all 0.2s; }
-    .history-toggle-btn.active { background: #0284c7; color: #fff; border-color: #0284c7; }
-    .history-chart-wrap { position: relative; height: 180px; }
-    .history-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; }
-    .history-legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; }
-    .history-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-    .history-legend-dot { width: 10px; height: 3px; border-radius: 2px; }
-
-    /* ── ARTICLES ── */
-    .article-item { padding: 8px 0; border-bottom: 1px solid var(--card-border); }
-    .article-item:last-child { border-bottom: none; }
-    .article-link { color: var(--text-primary); text-decoration: none; font-size: 0.75rem; line-height: 1.4; font-weight: 600; }
-    .article-link:hover { color: var(--accent); }
-    .article-meta { font-size: 0.6rem; color: var(--text-muted); margin-top: 3px; }
-    .article-kw { font-size: 0.55rem; background: rgba(56,189,248,0.1); border-radius: 3px; padding: 1px 5px; color: var(--accent); margin-left: 6px; }
-
-    /* ── PAGE FOOTER ── */
-    .page-footer { text-align: center; padding: 20px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.5px; margin-top: 10px; }
-    .page-footer a { color: var(--accent); text-decoration: none; }
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+        header { grid-template-columns: 1fr; grid-template-areas: "title" "logo" "controls"; text-align: center; }
+        .header-controls { align-items: center; }
+        .tracker-banner { grid-template-columns: 1fr; }
+        .tracker-right { align-items: flex-start; flex-direction: row; flex-wrap: wrap; }
+    }
 </style>
 </head>
 <body>
 <div class="container">
 
-<!-- ── HEADER ── -->
+<!-- HEADER -->
 <header>
-    <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
-    <div class="header-left">
-        <a href="greenland-stability.html" class="back-link" data-i18n="backLink">← Back to Greenland Stability</a>
-        <div class="theme-row">
-            <span class="theme-label" data-i18n="themeLabel">THEME</span>
-            <label class="theme-toggle">
-                <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
-                <span class="theme-toggle-slider"></span>
-            </label>
-        </div>
+    <div class="header-logo-wrap">
+        <a href="europe.html" class="back-link">← Back to Europe</a>
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+             alt="Asifah Analytics Logo" class="header-logo"/>
     </div>
-    <div class="header-center">
-        <div class="header-flag">🇬🇱 <span data-i18n="pageFlag">GREENLAND</span></div>
-        <div class="header-title" data-i18n="pageTitle">SOVEREIGNTY RHETORIC TRACKER</div>
-        <div class="header-subtitle" data-i18n="pageSubtitle">U.S. Pressure · Inuit/Greenlandic Voice · Denmark/NATO Defense · Russia Arctic Opportunism</div>
-        <div class="header-timestamp">Last updated: <span id="lastUpdated">--</span></div>
+    <div class="header-content">
+        <h1>🌍 EUROPE RHETORIC MONITOR</h1>
+        <div class="subtitle">Sovereignty pressure · Russian opportunism · Arctic security · NATO cohesion signals</div>
+        <div class="last-updated" id="lastUpdated">Connecting to trackers...</div>
     </div>
-    <div class="header-right">
-        <div class="lang-group">
-            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" onclick="setLanguage('fr')">FR</button>
-            <button class="lang-btn" onclick="setLanguage('de')">DE</button>
-            <button class="lang-btn" onclick="setLanguage('ru')">RU</button>
+    <div class="header-controls">
+        <div class="theme-toggle">
+            <span class="theme-toggle-label">Theme</span>
+            <div class="theme-toggle-switch" onclick="toggleTheme()">
+                <div class="theme-toggle-slider"></div>
+            </div>
         </div>
-        <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
-            <span id="scanBtnIcon">🔄</span>
-            <span data-i18n="refreshScan">Refresh Scan</span>
-        </button>
     </div>
 </header>
 
-<!-- ── PAGE WITH SIDEBAR ── -->
-<div class="page-with-sidebar">
-
-<!-- ── LEFT NAV SIDEBAR ── -->
-<nav class="nav-sidebar">
-    <div class="nav-sidebar-label">Dashboards</div>
-    <div class="nav-btn inactive-nav">
-        <span class="nav-btn-label">🌍 Africa</span>
-        <span class="nav-btn-status">🔒 Future</span>
-    </div>
-    <a href="asia.html" class="nav-btn active-nav">
-        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <a href="europe.html" class="nav-btn active-nav">
-        <span class="nav-btn-label">🌍 Europe</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <a href="middle-east.html" class="nav-btn active-nav">
-        <span class="nav-btn-label">🕌 Middle East</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <a href="wha.html" class="nav-btn active-nav">
-        <span class="nav-btn-label">🌎 W. Hemisphere</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <div class="nav-divider"></div>
-    <a href="military.html" class="nav-btn military-btn">
-        <span class="nav-btn-label">🎖️ Military Tracker</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <div class="nav-divider"></div>
-    <div class="nav-sidebar-label" style="margin-top:4px;">Rhetoric Trackers</div>
-    <a href="https://www.asifahanalytics.com/rhetoric-index.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">📡 ME Rhetoric</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">📡 Asia Rhetoric</span>
-        <span class="nav-btn-status">● Live</span>
-    </a>
-    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn current-page">
-        <span class="nav-btn-label">📡 Europe Rhetoric</span>
-        <span class="nav-btn-status">◉ You are here</span>
-    </a>
-    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn inactive-nav">
-        <span class="nav-btn-label">📡 WHA Rhetoric</span>
-        <span class="nav-btn-status">🔒 Coming Soon</span>
-    </a>
-    <div class="nav-divider"></div>
-    <div class="nav-sidebar-label" style="margin-top:4px;">Europe Countries</div>
-    <a href="rhetoric-greenland.html" class="nav-btn active-nav current-page">
-        <span class="nav-btn-label">🇬🇱 Greenland</span>
-        <span class="nav-btn-status">◉ This page</span>
-    </a>
-    <div class="nav-btn inactive-nav">
-        <span class="nav-btn-label">🇺🇦 Ukraine</span>
-        <span class="nav-btn-status">🔒 Coming Soon</span>
-    </div>
-    <div class="nav-btn inactive-nav">
-        <span class="nav-btn-label">🇷🇺 Russia</span>
-        <span class="nav-btn-status">🔒 Coming Soon</span>
-    </div>
-</nav>
-
-<!-- ── MAIN CONTENT ── -->
-<div style="flex:1;min-width:0;">
-
-<!-- THEATRE BANNER -->
-<div class="theatre-banner" id="theatreBanner">
-    <div>
-        <div class="theatre-score-big" id="theatreScore">--</div>
-        <div class="theatre-score-label" data-i18n="scoreLabel">SOVEREIGNTY PRESSURE SCORE / 100</div>
-        <div class="theatre-badge" id="theatreBadge" style="background:#6b7280;">--</div>
-    </div>
-    <div class="theatre-right">
-        <div class="theatre-escalation-label-text" data-i18n="escalationLabel">SOVEREIGNTY CRISIS LEVEL</div>
-        <div class="theatre-level-display" id="theatreLevelDisplay">--</div>
-        <div class="theatre-level-desc" id="theatreLevelDesc">--</div>
-        <div class="theatre-scan-info" id="theatreScanInfo" data-i18n="loading">Loading...</div>
-    </div>
-</div>
-
-<!-- CONVERGENCE SIGNAL -->
-<div class="convergence-box quiet" id="convergenceBox">
-    <div style="font-size:1.8rem;flex-shrink:0;">🧊</div>
-    <div>
-        <div class="convergence-text" id="convergenceText" data-i18n="convergenceQuiet">No active convergence signal — monitoring baseline conditions</div>
-        <div class="convergence-sub" data-i18n="convergenceSub">Convergence fires when U.S. pressure meets active sovereignty defense</div>
-    </div>
-</div>
-
-<!-- ACTOR PANELS -->
-<div class="actor-panels" id="actorPanels">
-    <!-- populated by JS -->
-</div>
-
-<!-- ESCALATION LADDER -->
-<div class="section-card">
-    <div class="section-title" data-i18n="ladderTitle">🪜 SOVEREIGNTY CRISIS LADDER</div>
-    <div class="ladder-row" id="ladderRow"></div>
-    <div style="font-size:0.65rem;color:var(--text-muted);margin-top:8px;" id="articlesClassified"></div>
-</div>
-
-<!-- HISTORY CHART -->
-<div class="history-chart-card">
-    <div class="history-chart-header">
-        <div class="history-chart-title" data-i18n="trendTitle">📈 PRESSURE TREND</div>
-        <div class="history-toggle-group">
-            <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')">7D</button>
-            <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')">30D</button>
+<!-- REGIONAL POSTURE BANNER -->
+<div class="posture-banner">
+    <div class="posture-left">
+        <div class="posture-label">🌐 Europe Regional Posture</div>
+        <div class="posture-value" id="postureValue" style="color:var(--text-muted);">
+            <span class="loading-dot">●</span>
+            <span class="loading-dot">●</span>
+            <span class="loading-dot">●</span>
         </div>
     </div>
-    <div class="history-chart-wrap">
-        <canvas id="historyChart"></canvas>
-        <div id="historyEmpty" class="history-empty" style="display:none;" data-i18n="chartEmpty">Collecting data — first snapshot saves on next scan cycle</div>
-    </div>
-    <div class="history-legend" id="historyLegend"></div>
+    <div class="posture-right" id="postureStats"></div>
 </div>
 
-<!-- TOP ARTICLES -->
-<div class="section-card">
-    <div class="section-title" data-i18n="articlesTitle">📰 TOP ARTICLES BY ACTOR</div>
-    <div id="articlesList"></div>
+<!-- EUROPE BLUF — placeholder until europe_regional_bluf.py is built -->
+<div class="bluf-card" id="blufCard">
+    <div id="blufContent">
+        <div class="bluf-header">
+            <span class="bluf-label">BLUF</span>
+            <span class="bluf-posture-pill" id="blufPosturePill" style="background:#6b7280;">Loading</span>
+        </div>
+        <div class="bluf-prose" id="blufProse">
+            Loading Europe regional assessment...
+        </div>
+        <div class="bluf-signals" id="blufSignals"></div>
+        <div class="bluf-footer">
+            <span id="blufTimestamp"></span>
+            <span>Asifah Analytics · Europe Regional Synthesis · Open-source signals only</span>
+        </div>
+    </div>
+</div>
+
+<!-- ACTIVE TRACKERS -->
+<div class="section-title">📡 Active Rhetoric Trackers — Europe</div>
+<div class="trackers-list" id="trackersList"></div>
+
+<!-- COMING SOON -->
+<div class="section-title" style="margin-top:24px;">🔜 In Development</div>
+<div class="trackers-list">
+    <div class="coming-soon-banner">
+        <div class="coming-soon-name">🇷🇺 Russia Rhetoric Tracker</div>
+        <span class="coming-soon-badge">In Development</span>
+    </div>
+    <div class="coming-soon-banner">
+        <div class="coming-soon-name">🇺🇦 Ukraine Rhetoric Tracker</div>
+        <span class="coming-soon-badge">In Development</span>
+    </div>
+    <div class="coming-soon-banner">
+        <div class="coming-soon-name">🇵🇱 Poland Rhetoric Tracker</div>
+        <span class="coming-soon-badge">In Development</span>
+    </div>
 </div>
 
 <!-- FOOTER -->
-<div class="page-footer">
-    © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0-greenland |
-    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">☕ buy me a coffee</a>
-</div>
+<footer>
+    <div>Data Sources: Google News RSS (EN/DA/RU/UK), GDELT, Telegram OSINT channels, Nitter/X feeds</div>
+    <div style="margin-top:6px;font-size:0.85em;">
+        Escalation levels: 0 Baseline · 1 Rhetoric · 2 Pressure · 3 Crisis · 4 Confrontation · 5 Rupture
+    </div>
+    <div style="margin-top:15px;padding:15px;background:var(--article-bg);border-radius:8px;">
+        <div style="font-size:0.9em;margin-bottom:4px;">Asifah Analytics — Europe Rhetoric Monitor v1.0.0</div>
+        <div style="font-size:0.8em;">Updated every 6 hours · Not for operational use</div>
+    </div>
+    <div style="margin-top:20px;padding:15px;background:rgba(56,189,248,0.06);border-radius:8px;">
+        <span style="font-size:0.9em;">
+            If you find Asifah Analytics useful,
+            <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--cyber-cyan);">☕ buy me a coffee</a>
+        </span>
+    </div>
+    <div style="margin-top:25px;font-size:0.75em;color:var(--text-muted);">
+        © 2025-2026 Asifah Analytics · All rights reserved · Open-source OSINT research platform
+    </div>
+</footer>
 
-</div><!-- end main content -->
-</div><!-- end page-with-sidebar -->
 </div><!-- end container -->
 
 <script>
-    const API_BASE = 'https://asifa-europe-backend.onrender.com';
+    const EUROPE_BACKEND = 'https://asifa-europe-backend.onrender.com';
 
     const ESCALATION_LEVELS = {
-        0: { label:'Baseline',      color:'#6b7280', description:'Normal diplomatic noise — no acquisition pressure' },
-        1: { label:'Rhetoric',      color:'#3b82f6', description:'U.S. public statements of interest — no operational signals' },
-        2: { label:'Pressure',      color:'#f59e0b', description:'Active U.S. coercion, economic leverage, military signaling' },
-        3: { label:'Crisis',        color:'#f97316', description:'Formal protests, NATO consultations triggered, diplomatic rupture' },
-        4: { label:'Confrontation', color:'#ef4444', description:'U.S. unilateral actions, Danish military deployment, Article 5 language' },
-        5: { label:'Rupture',       color:'#dc2626', description:'Military incident, annexation attempt, alliance fracture' },
+        0: { label:'Baseline',      color:'#6b7280' },
+        1: { label:'Rhetoric',      color:'#3b82f6' },
+        2: { label:'Pressure',      color:'#f59e0b' },
+        3: { label:'Crisis',        color:'#f97316' },
+        4: { label:'Confrontation', color:'#ef4444' },
+        5: { label:'Rupture',       color:'#dc2626' },
     };
 
-    const ACTOR_CONFIG = {
-        us_pressure:     { panelClass:'us-panel',  barColor:'#3b82f6', label:'U.S. Pressure' },
-        greenland_inuit: { panelClass:'gl-panel',  barColor:'#38bdf8', label:'Greenland / Inuit' },
-        denmark_nato:    { panelClass:'dk-panel',  barColor:'#22c55e', label:'Denmark / NATO' },
-        russia_arctic:   { panelClass:'ru-panel',  barColor:'#ef4444', label:'Russia Arctic' },
-        china_observer:  { panelClass:'cn-panel',  barColor:'#a78bfa', label:'China Observer' },
-    };
-    const ACTOR_ORDER = ['us_pressure','greenland_inuit','denmark_nato','russia_arctic','china_observer'];
-
-    // ── TRANSLATIONS ──
-    const T = {
-        en: {
-            backLink: '← Back to Greenland Stability',
-            pageFlag: 'GREENLAND', themeLabel: 'THEME',
-            pageTitle: 'SOVEREIGNTY RHETORIC TRACKER',
-            pageSubtitle: 'U.S. Pressure · Inuit/Greenlandic Voice · Denmark/NATO Defense · Russia Arctic Opportunism',
-            loading: 'Loading...', scoreLabel: 'SOVEREIGNTY PRESSURE SCORE / 100',
-            escalationLabel: 'SOVEREIGNTY CRISIS LEVEL',
-            convergenceQuiet: 'No active convergence signal — monitoring baseline conditions',
-            convergenceSub: 'Convergence fires when U.S. pressure meets active sovereignty defense',
-            ladderTitle: '🪜 SOVEREIGNTY CRISIS LADDER',
-            trendTitle: '📈 PRESSURE TREND',
-            chartEmpty: 'Collecting data — first snapshot saves on next scan cycle',
-            articlesTitle: '📰 TOP ARTICLES BY ACTOR',
-            refreshScan: 'Refresh Scan',
-            articles: 'articles', hits: 'hits', score: 'score',
-            noArticles: 'No articles yet — run a scan to populate.',
-            awaiting: 'First scan in progress — fetching Arctic/Nordic sources...',
+    // ── TRACKER DEFINITIONS ──
+    // One entry per live tracker. Add Russia/Ukraine/Poland here when ready.
+    const TRACKERS = [
+        {
+            id:         'greenland',
+            name:       'Greenland Sovereignty Tracker',
+            flag:       '🇬🇱',
+            actors:     'U.S. Pressure · Inuit/Greenlandic Voice · Denmark/NATO · Russia Arctic',
+            vectors:    ['US Pressure', 'Sovereignty Defense', 'Russia Opportunism', 'Arctic Shipping'],
+            summaryUrl: EUROPE_BACKEND + '/api/rhetoric/greenland/summary',
+            url:        'https://www.asifahanalytics.com/rhetoric-greenland.html',
         },
-        fr: {
-            backLink: '← Retour à la Stabilité du Groenland',
-            pageFlag: 'GROENLAND', themeLabel: 'THÈME',
-            pageTitle: 'SUIVI DE LA RHÉTORIQUE DE SOUVERAINETÉ',
-            pageSubtitle: 'Pression américaine · Voix inuite/groenlandaise · Défense Danemark/OTAN · Opportunisme arctique russe',
-            loading: 'Chargement...', scoreLabel: 'SCORE DE PRESSION SUR LA SOUVERAINETÉ / 100',
-            escalationLabel: 'NIVEAU DE CRISE DE SOUVERAINETÉ',
-            convergenceQuiet: 'Aucun signal de convergence actif — surveillance des conditions de référence',
-            convergenceSub: 'La convergence se déclenche quand la pression américaine rencontre une défense active de la souveraineté',
-            ladderTitle: '🪜 ÉCHELLE DE CRISE DE SOUVERAINETÉ',
-            trendTitle: '📈 TENDANCE DE PRESSION',
-            chartEmpty: 'Collecte de données — premier instantané au prochain cycle de scan',
-            articlesTitle: '📰 ARTICLES PRINCIPAUX PAR ACTEUR',
-            refreshScan: 'Actualiser le Scan',
-            articles: 'articles', hits: 'hits', score: 'score',
-            noArticles: 'Pas encore d\'articles — lancez un scan pour remplir.',
-            awaiting: 'Premier scan en cours — récupération des sources arctiques/nordiques...',
-        },
-        de: {
-            backLink: '← Zurück zur Grönland-Stabilität',
-            pageFlag: 'GRÖNLAND', themeLabel: 'THEMA',
-            pageTitle: 'SOUVERÄNITÄTS-RHETORIK-TRACKER',
-            pageSubtitle: 'US-Druck · Inuit/Grönländische Stimme · Dänemark/NATO-Verteidigung · Russischer Arktis-Opportunismus',
-            loading: 'Lädt...', scoreLabel: 'SOUVERÄNITÄTSDRUCK-SCORE / 100',
-            escalationLabel: 'SOUVERÄNITÄTSKRISENLEVEL',
-            convergenceQuiet: 'Kein aktives Konvergenzsignal — Basisbedingungen werden überwacht',
-            convergenceSub: 'Konvergenz löst aus wenn US-Druck auf aktive Souveränitätsverteidigung trifft',
-            ladderTitle: '🪜 SOUVERÄNITÄTSKRISENLEITER',
-            trendTitle: '📈 DRUCKTREND',
-            chartEmpty: 'Daten werden gesammelt — erste Momentaufnahme beim nächsten Scan-Zyklus',
-            articlesTitle: '📰 TOP-ARTIKEL NACH AKTEUR',
-            refreshScan: 'Scan Aktualisieren',
-            articles: 'Artikel', hits: 'Treffer', score: 'Punkte',
-            noArticles: 'Noch keine Artikel — führen Sie einen Scan durch.',
-            awaiting: 'Erster Scan läuft — arktische/nordische Quellen werden abgerufen...',
-        },
-        ru: {
-            backLink: '← Назад к стабильности Гренландии',
-            pageFlag: 'ГРЕНЛАНДИЯ', themeLabel: 'ТЕМА',
-            pageTitle: 'ТРЕКЕР РИТОРИКИ СУВЕРЕНИТЕТА',
-            pageSubtitle: 'Давление США · Голос инуитов/Гренландии · Защита Дании/НАТО · Российский арктический оппортунизм',
-            loading: 'Загрузка...', scoreLabel: 'ОЦЕНКА ДАВЛЕНИЯ НА СУВЕРЕНИТЕТ / 100',
-            escalationLabel: 'УРОВЕНЬ КРИЗИСА СУВЕРЕНИТЕТА',
-            convergenceQuiet: 'Нет активного сигнала конвергенции — мониторинг базовых условий',
-            convergenceSub: 'Конвергенция срабатывает когда давление США встречает активную защиту суверенитета',
-            ladderTitle: '🪜 ЛЕСТНИЦА КРИЗИСА СУВЕРЕНИТЕТА',
-            trendTitle: '📈 ТЕНДЕНЦИЯ ДАВЛЕНИЯ',
-            chartEmpty: 'Сбор данных — первый снимок сохраняется при следующем цикле сканирования',
-            articlesTitle: '📰 ТОП СТАТЕЙ ПО АКТОРУ',
-            refreshScan: 'Обновить Сканирование',
-            articles: 'статей', hits: 'совпадений', score: 'балл',
-            noArticles: 'Статей пока нет — запустите сканирование.',
-            awaiting: 'Выполняется первое сканирование — получение арктических/скандинавских источников...',
-        },
-    };
-
-    let currentLang = 'en';
-    let currentData = null;
-    let _historyChart = null;
-    let _historyView  = '7d';
-
-    // ── LANGUAGE ──
-    function setLanguage(lang) {
-        currentLang = lang;
-        document.documentElement.lang = lang;
-        const t = T[lang] || T.en;
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (t[key] !== undefined) el.textContent = t[key];
-        });
-        document.querySelectorAll('.lang-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.textContent.trim() === lang.toUpperCase());
-        });
-        if (currentData) renderAll(currentData);
-    }
+    ];
 
     // ── THEME ──
-    function toggleTheme() {
-        const isDark = document.getElementById('themeToggle').checked;
-        document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        localStorage.setItem('gl_rhetoric_theme', isDark ? 'light' : 'dark');
-        if (_historyChart) { _historyChart.destroy(); _historyChart = null; loadHistoryData(); }
-    }
     function loadTheme() {
-        const saved = localStorage.getItem('gl_rhetoric_theme') || 'dark';
+        const saved = localStorage.getItem('asifah-theme') || 'dark';
         document.documentElement.setAttribute('data-theme', saved);
-        document.getElementById('themeToggle').checked = saved === 'light';
+    }
+    function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme');
+        const next    = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('asifah-theme', next);
     }
 
-    // ── THEATRE BANNER ──
-    function renderTheatre(data) {
-        const level  = data.theatre_level || 0;
-        const lv     = ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0];
-        const score  = data.theatre_score || 0;
+    // ── RENDER TRACKER BANNER ──
+    function renderTrackerBanner(tracker, data) {
+        let level = 0, color = '#6b7280', label = '---';
 
-        const scoreEl = document.getElementById('theatreScore');
-        scoreEl.textContent = score;
-        scoreEl.style.color = lv.color;
-
-        const badge = document.getElementById('theatreBadge');
-        badge.textContent  = lv.label;
-        badge.style.background = lv.color;
-
-        document.getElementById('theatreLevelDisplay').textContent = `Level ${level} — ${lv.label}`;
-        document.getElementById('theatreLevelDisplay').style.color = lv.color;
-        document.getElementById('theatreLevelDesc').textContent = lv.description;
-
-        if (data.scanned_at) {
-            const ago    = Math.round((Date.now() - new Date(data.scanned_at).getTime()) / 60000);
-            const agoTxt = ago < 60 ? `${ago}m ago` : `${Math.round(ago / 60)}h ago`;
-            document.getElementById('theatreScanInfo').textContent =
-                `Last scan: ${agoTxt} · ${data.total_articles || 0} articles · ${data.telegram_messages || 0} Telegram msgs`;
+        if (data) {
+            level = data.theatre_level ?? data.theatre_escalation_level ?? 0;
+            const lv = ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0];
+            color = data.theatre_color || data.theatre_escalation_color || lv.color;
+            label = data.theatre_label || data.theatre_escalation_label || lv.label;
         }
-        document.getElementById('lastUpdated').textContent =
-            new Date(data.scanned_at || Date.now()).toLocaleString();
-    }
 
-    // ── CONVERGENCE SIGNAL ──
-    function renderConvergence(data) {
-        const box  = document.getElementById('convergenceBox');
-        const text = document.getElementById('convergenceText');
-        const sig  = data.convergence_signal || '';
-        const t    = T[currentLang] || T.en;
-
-        if (sig) {
-            box.className  = 'convergence-box active';
-            text.textContent = sig;
-        } else {
-            box.className  = 'convergence-box quiet';
-            text.textContent = t.convergenceQuiet;
+        // Delta badge
+        let deltaHtml = '';
+        if (data?.delta && data.delta.direction !== 'insufficient_data') {
+            const arrows = { rising:'▲', falling:'▼', stable:'→' };
+            const cls    = { rising:'delta-rising', falling:'delta-falling', stable:'delta-stable' };
+            const sc     = data.delta.score_change > 0 ? `+${data.delta.score_change}` : data.delta.score_change;
+            deltaHtml = `<span class="tracker-delta ${cls[data.delta.direction] || 'delta-stable'}">
+                ${arrows[data.delta.direction] || '→'} ${sc} pts vs prior scans
+            </span>`;
         }
-    }
 
-    // ── ACTOR PANELS ──
-    function renderActors(actors) {
-        const t    = T[currentLang] || T.en;
-        const grid = document.getElementById('actorPanels');
-        if (!grid || !actors) return;
-        grid.innerHTML = '';
+        const vectorPills = tracker.vectors.map(v =>
+            `<span class="vector-pill">${v}</span>`
+        ).join('');
 
-        ACTOR_ORDER.forEach(id => {
-            const a   = actors[id];
-            if (!a) return;
-            const cfg = ACTOR_CONFIG[id] || {};
-            const lv  = ESCALATION_LEVELS[a.level || 0] || ESCALATION_LEVELS[0];
-            const score = a.raw_score || 0;
-            const pct   = Math.min(100, score);
+        const metaLine = data
+            ? `<span style="font-size:10px;color:var(--text-muted);">${data.total_articles ?? '--'} articles · ${data.telegram_messages ?? '--'} Telegram msgs</span>`
+            : '';
 
-            // Top articles
-            let artHtml = '';
-            (a.top_articles || []).slice(0, 2).forEach(art => {
-                const kws = (art.matched_keywords || []).slice(0, 2).map(k =>
-                    `<span class="kw-pill">${k}</span>`).join('');
-                const dt = art.published
-                    ? new Date(art.published).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'2-digit'})
-                    : '';
-                artHtml += `<div class="actor-article">
-                    <a href="${art.url || '#'}" target="_blank" rel="noopener">${art.title || 'Untitled'}</a>
-                    <div class="actor-article-meta">${dt}${kws ? ' · ' + kws : ''}</div>
-                </div>`;
-            });
-
-            const panel = document.createElement('div');
-            panel.className = `actor-panel ${cfg.panelClass || ''}`;
-            panel.innerHTML = `
-                <div class="actor-panel-header">
-                    <div class="actor-flag-name">
-                        <div class="actor-flag">${a.flag || ''} ${a.icon || ''}</div>
-                        <div>
-                            <div class="actor-name">${a.name}</div>
-                            <div class="actor-role">${a.role || ''}</div>
-                        </div>
-                    </div>
-                    <div class="actor-level-badge" style="background:${lv.color}">L${a.level} ${lv.label}</div>
+        const div = document.createElement('div');
+        div.className = 'tracker-banner';
+        div.innerHTML = `
+            <div class="tracker-left">
+                <div class="tracker-name">
+                    <span style="font-size:22px;">${tracker.flag}</span>
+                    ${tracker.name}
                 </div>
-                <div class="actor-score-bar-wrap">
-                    <div class="actor-score-bar-label">
-                        <span>${cfg.label || a.name}</span>
-                        <span>${score}/100</span>
-                    </div>
-                    <div class="actor-score-bar">
-                        <div class="actor-score-fill" style="width:${pct}%;background:${cfg.barColor || lv.color};"></div>
-                    </div>
-                </div>
-                <div class="actor-stats">
-                    <span>📰 ${a.article_hits || 0} ${t.articles}</span>
-                    <span>🔑 ${a.keyword_hits || 0} ${t.hits}</span>
-                    <span>📡 ${a.telegram_hits || 0} Telegram</span>
-                </div>
-                ${artHtml ? `<div class="actor-top-articles">${artHtml}</div>` : ''}
-            `;
-            grid.appendChild(panel);
-        });
-    }
-
-    // ── ESCALATION LADDER ──
-    function renderLadder(activeLevel) {
-        const row = document.getElementById('ladderRow');
-        if (!row) return;
-        row.innerHTML = '';
-        for (let i = 0; i <= 5; i++) {
-            const lv  = ESCALATION_LEVELS[i];
-            const div = document.createElement('div');
-            div.className = 'ladder-step' + (i === activeLevel ? ' active' : '');
-            if (i === activeLevel) {
-                div.style.borderColor = lv.color;
-                div.style.boxShadow   = `0 0 14px ${lv.color}44`;
-            }
-            div.innerHTML = `
-                <div class="ladder-step-num" style="color:${lv.color}">${i}</div>
-                <div class="ladder-step-label" style="color:${lv.color}">${lv.label}</div>`;
-            row.appendChild(div);
-        }
-    }
-
-    // ── HISTORY CHART ──
-    function renderHistoryChart(datasets, labels) {
-        const wrap = document.getElementById('historyChart');
-        const empty = document.getElementById('historyEmpty');
-        if (!wrap) return;
-        if (!labels.length) { if (empty) empty.style.display = 'block'; return; }
-        if (empty) empty.style.display = 'none';
-        if (_historyChart) { _historyChart.destroy(); _historyChart = null; }
-        const isDark    = document.documentElement.getAttribute('data-theme') !== 'light';
-        const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
-        const tickColor = isDark ? '#4a7fa5' : '#94a3b8';
-        const fontFam   = "'Times New Roman', serif";
-        _historyChart = new Chart(wrap, {
-            type: 'line',
-            data: { labels, datasets },
-            options: {
-                responsive: true, maintainAspectRatio: false,
-                plugins: { legend: { display: false }, tooltip: {
-                    backgroundColor: isDark ? '#0d1b2e' : '#fff',
-                    titleColor: isDark ? '#e2f0fb' : '#0f172a',
-                    bodyColor:  isDark ? '#93c5fd'  : '#334155',
-                    borderColor: isDark ? '#1e3a5f' : '#cbd5e1',
-                    borderWidth: 1,
-                }},
-                scales: {
-                    x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { family: fontFam, size: 9 }, maxTicksLimit: 8 }},
-                    y: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: tickColor, font: { family: fontFam, size: 9 }, stepSize: 20 }},
+                <div class="tracker-actors">${tracker.actors}</div>
+            </div>
+            <div class="tracker-middle">
+                <div class="tracker-vectors">${vectorPills}</div>
+                ${deltaHtml}
+                ${metaLine}
+            </div>
+            <div class="tracker-right">
+                ${data
+                    ? `<div class="level-badge" style="background:${color};">⚡ Level ${level} — ${label}</div>`
+                    : `<div class="level-badge" style="background:#374151;min-width:120px;justify-content:center;"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>`
                 }
-            }
+                <a href="${tracker.url}" class="open-btn">🔍 Open Tracker →</a>
+            </div>
+        `;
+        return div;
+    }
+
+    // ── REGIONAL POSTURE ──
+    function updatePosture(resolved) {
+        const loaded = resolved.filter(r => r.data);
+        if (loaded.length === 0) return;
+
+        const levels  = loaded.map(r => r.data.theatre_level ?? r.data.theatre_escalation_level ?? 0);
+        const maxLevel = Math.max(...levels);
+        const avgScore = Math.round(
+            loaded.reduce((s, r) => s + (r.data.theatre_score || 0), 0) / loaded.length
+        );
+        const elevated = levels.filter(l => l >= 3).length;
+
+        let postureLabel, postureColor;
+        if (maxLevel >= 4)      { postureLabel = 'ELEVATED — CONFRONTATION';  postureColor = '#ef4444'; }
+        else if (maxLevel >= 3) { postureLabel = 'ELEVATED — CRISIS';          postureColor = '#f97316'; }
+        else if (maxLevel >= 2) { postureLabel = 'PRESSURE ACTIVE';            postureColor = '#f59e0b'; }
+        else if (maxLevel >= 1) { postureLabel = 'MONITORING — RHETORIC';      postureColor = '#3b82f6'; }
+        else                    { postureLabel = 'BASELINE';                   postureColor = '#6b7280'; }
+
+        document.getElementById('postureValue').innerHTML =
+            `<span style="color:${postureColor};">${postureLabel}</span>`;
+
+        const cyanColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#38bdf8' : '#0284c7';
+
+        document.getElementById('postureStats').innerHTML = `
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${(ESCALATION_LEVELS[Math.min(maxLevel,5)] || ESCALATION_LEVELS[0]).color};">${maxLevel}</div>
+                <div class="posture-stat-label">Peak Level</div>
+            </div>
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${postureColor};">${avgScore}</div>
+                <div class="posture-stat-label">Avg Score</div>
+            </div>
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${elevated > 0 ? '#ef4444' : cyanColor};">${elevated}</div>
+                <div class="posture-stat-label">Theaters L3+</div>
+            </div>
+            <div class="posture-stat">
+                <div class="posture-stat-num" style="color:${cyanColor};">${loaded.length}/${resolved.length}</div>
+                <div class="posture-stat-label">Trackers Live</div>
+            </div>
+        `;
+
+        document.getElementById('lastUpdated').textContent =
+            `Last updated: ${new Date().toLocaleString()} · ${loaded.length} of ${resolved.length} trackers live`;
+    }
+
+    // ── BLUF — build from Greenland summary until europe_regional_bluf.py exists ──
+    function updateBluf(resolved) {
+        const loaded = resolved.filter(r => r.data);
+        if (!loaded.length) {
+            document.getElementById('blufProse').textContent = 'No tracker data available yet — check back after first scan.';
+            return;
+        }
+
+        // Synthesize a simple prose sentence from available data
+        const greenlandData = loaded.find(r => r.tracker.id === 'greenland')?.data;
+        const gl_level      = greenlandData ? (greenlandData.theatre_level ?? 0) : 0;
+        const gl_label      = greenlandData ? (greenlandData.theatre_label || 'Baseline') : 'Baseline';
+        const gl_color      = greenlandData ? (greenlandData.theatre_color || '#6b7280') : '#6b7280';
+        const gl_us         = greenlandData?.us_pressure_level ?? 0;
+        const gl_russia     = greenlandData?.russia_level ?? 0;
+        const gl_conv       = greenlandData?.convergence_signal || '';
+
+        // Posture pill
+        const pill = document.getElementById('blufPosturePill');
+        pill.textContent = gl_label.toUpperCase();
+        pill.style.background = gl_color;
+
+        // Prose
+        let prose = `Europe Rhetoric Monitor (${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}): `;
+        prose += `Regional posture at ${gl_label.toUpperCase()} with 1 tracker live. `;
+        prose += `Greenland sovereignty pressure at L${gl_level} — `;
+        prose += gl_us >= 2
+            ? `U.S. coercion signals active (L${gl_us}). `
+            : `U.S. pressure monitoring-level, no operational signals. `;
+        prose += gl_russia >= 2
+            ? `Russia Arctic opportunism elevated (L${gl_russia}) — GIUK Gap watch active. `
+            : `Russia Arctic signals at baseline. `;
+        if (gl_conv) prose += `Convergence signal: ${gl_conv}. `;
+        prose += 'Russia and Ukraine trackers in development — full Europe synthesis coming soon.';
+
+        document.getElementById('blufProse').textContent = prose;
+
+        // Signals
+        const signalsEl = document.getElementById('blufSignals');
+        signalsEl.innerHTML = '';
+        const signals = [];
+        if (gl_us >= 2) signals.push({ icon:'🦅', color:'#3b82f6', text:`GREENLAND L${gl_level}: U.S. pressure at L${gl_us} — coercion signals beyond baseline rhetoric` });
+        if (gl_russia >= 2) signals.push({ icon:'🐻', color:'#ef4444', text:`GREENLAND: Russia Arctic L${gl_russia} — opportunism signals, GIUK chokepoint watch` });
+        if (!signals.length) signals.push({ icon:'🧊', color:'#6b7280', text:'All Europe theatres at baseline — monitoring for sovereignty and alliance signals' });
+
+        signals.forEach(sig => {
+            const div = document.createElement('div');
+            div.className = 'bluf-signal-item';
+            div.style.borderLeftColor = sig.color;
+            div.innerHTML = `<span class="bluf-signal-icon">${sig.icon}</span>
+                <span class="bluf-signal-text" style="color:${sig.color};">${sig.text}</span>`;
+            signalsEl.appendChild(div);
         });
+
+        document.getElementById('blufTimestamp').textContent =
+            `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
     }
 
-    function _sliceEntries(history, view) {
-        const n = view === '30d' ? 30 : 7;
-        return history.slice(-n);
-    }
-    function _fmtLabel(ts) {
-        if (!ts) return '';
-        return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-    }
-
-    async function loadHistoryData() {
-        try {
-            const resp = await fetch(`${API_BASE}/api/rhetoric/greenland/history?limit=120`);
-            if (!resp.ok) return;
-            const data = await resp.json();
-            const entries = _sliceEntries(data.entries || [], _historyView);
-            const legendEl = document.getElementById('historyLegend');
-            if (legendEl) legendEl.innerHTML = `
-                <div class="history-legend-item"><div class="history-legend-dot" style="background:#38bdf8;"></div> Theatre Score</div>
-                <div class="history-legend-item"><div class="history-legend-dot" style="background:#3b82f6;"></div> U.S. Pressure</div>
-                <div class="history-legend-item"><div class="history-legend-dot" style="background:#22c55e;"></div> Sovereignty Defense</div>
-                <div class="history-legend-item"><div class="history-legend-dot" style="background:#ef4444;"></div> Russia Arctic</div>`;
-            renderHistoryChart([
-                { label:'Theatre',   data: entries.map(e => e.theatre_score    || 0), borderColor:'#38bdf8', backgroundColor:'rgba(56,189,248,0.07)',  borderWidth:2, pointRadius:entries.length<15?3:0, fill:true,  tension:0.35 },
-                { label:'US',        data: entries.map(e => e.us_pressure_level*20 || 0), borderColor:'#3b82f6', backgroundColor:'transparent', borderWidth:1.5, pointRadius:0, fill:false, tension:0.35 },
-                { label:'Greenland', data: entries.map(e => (e.greenland_level||0 + (e.denmark_level||0))*10), borderColor:'#22c55e', backgroundColor:'transparent', borderWidth:1.5, pointRadius:0, fill:false, tension:0.35 },
-                { label:'Russia',    data: entries.map(e => e.russia_level*20   || 0), borderColor:'#ef4444', backgroundColor:'transparent', borderWidth:1.5, pointRadius:0, fill:false, tension:0.35 },
-            ], entries.map(e => _fmtLabel(e.timestamp)));
-        } catch(e) { console.warn('[Greenland History]', e); }
-    }
-
-    function setHistoryView(mode) {
-        _historyView = mode;
-        document.getElementById('btn7d').classList.toggle('active', mode === '7d');
-        document.getElementById('btn30d').classList.toggle('active', mode === '30d');
-        loadHistoryData();
-    }
-
-    // ── TOP ARTICLES BY ACTOR ──
-    function renderArticles(actors) {
-        const list = document.getElementById('articlesList');
-        const t    = T[currentLang] || T.en;
-        if (!list || !actors) return;
+    // ── MAIN LOAD ──
+    async function loadAll() {
+        const list = document.getElementById('trackersList');
         list.innerHTML = '';
 
-        const ACTOR_COLORS = {
-            us_pressure: '#3b82f6', greenland_inuit: '#38bdf8',
-            denmark_nato: '#22c55e', russia_arctic: '#ef4444', china_observer: '#a78bfa',
-        };
-
-        ACTOR_ORDER.forEach(id => {
-            const a = actors[id];
-            if (!a || !a.top_articles || !a.top_articles.length) return;
-            const color = ACTOR_COLORS[id] || '#6b7280';
-
-            const section = document.createElement('div');
-            section.style.marginBottom = '18px';
-            section.innerHTML = `<div style="font-size:0.7rem;font-weight:700;color:${color};letter-spacing:1px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--card-border);">${a.flag || ''} ${a.name}</div>`;
-
-            a.top_articles.slice(0, 3).forEach(art => {
-                const dt  = art.published
-                    ? new Date(art.published).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'})
-                    : '';
-                const kws = (art.matched_keywords || []).slice(0, 2).map(k =>
-                    `<span class="article-kw">${k}</span>`).join('');
-                const item = document.createElement('div');
-                item.className = 'article-item';
-                item.innerHTML = `
-                    <a href="${art.url || '#'}" target="_blank" rel="noopener" class="article-link">${art.title || 'Untitled'}</a>${kws}
-                    <div class="article-meta">${art.source ? art.source.replace(/https?:\/\/[^/]+\/rss[^?]*/,'RSS') : ''} ${dt ? '· ' + dt : ''}</div>`;
-                section.appendChild(item);
-            });
-            list.appendChild(section);
+        // Pre-render loading skeletons
+        TRACKERS.forEach(tracker => {
+            const el = renderTrackerBanner(tracker, null);
+            el.id = `banner-${tracker.id}`;
+            list.appendChild(el);
         });
 
-        if (!list.innerHTML) {
-            list.innerHTML = `<div style="color:var(--text-muted);font-size:0.75rem;font-style:italic;">${t.noArticles}</div>`;
-        }
-    }
+        // Fetch all summaries in parallel
+        const settled = await Promise.allSettled(
+            TRACKERS.map(async tracker => {
+                try {
+                    const resp = await fetch(tracker.summaryUrl, { cache: 'no-store' });
+                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                    const data = await resp.json();
+                    return { tracker, data };
+                } catch(e) {
+                    console.warn(`[${tracker.id}] fetch error:`, e);
+                    return { tracker, data: null };
+                }
+            })
+        );
 
-    // ── RENDER ALL ──
-    function renderAll(data) {
-        currentData = data;
-        renderTheatre(data);
-        renderConvergence(data);
-        renderActors(data.actors || {});
-        renderLadder(data.theatre_level || 0);
-        renderArticles(data.actors || {});
-        const artCount = document.getElementById('articlesClassified');
-        if (artCount) artCount.textContent =
-            `📰 ${data.total_articles || 0} articles analyzed · ${data.telegram_messages || 0} Telegram messages · See Top Articles below`;
-        loadHistoryData();
-    }
+        const resolved = settled.map(r =>
+            r.status === 'fulfilled' ? r.value : { tracker: null, data: null }
+        );
 
-    // ── DATA LOADING ──
-    async function loadRhetoricData(forceRefresh = false) {
-        const t = T[currentLang] || T.en;
-        try {
-            const url = API_BASE + '/api/rhetoric/greenland' + (forceRefresh ? '?force=true' : '');
-            const controller = new AbortController();
-            const timeout    = setTimeout(() => controller.abort(), 300000);
-            const resp       = await fetch(url, { signal: controller.signal });
-            clearTimeout(timeout);
-            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-            const data = await resp.json();
-            if (data.awaiting_scan) {
-                document.getElementById('theatreScanInfo').textContent = t.awaiting;
-                setTimeout(() => loadRhetoricData(), 15000);
-                return;
-            }
-            if (!data.success) throw new Error(data.error || 'Scan failed');
-            renderAll(data);
-        } catch(err) {
-            if (err.name === 'AbortError') {
-                document.getElementById('theatreScanInfo').textContent =
-                    'Scan timed out (5min) — backend processing. Check back in a moment.';
-            } else {
-                console.error('[Greenland Rhetoric]', err);
-                document.getElementById('theatreScanInfo').textContent =
-                    'Error loading — retrying in 30s...';
-                setTimeout(() => loadRhetoricData(), 30000);
-            }
-        } finally {
-            const btn = document.getElementById('scanBtn');
-            if (btn) {
-                btn.style.opacity = '1';
-                btn.disabled = false;
-                document.getElementById('scanBtnIcon').textContent = '🔄';
-            }
-        }
-    }
+        // Update each banner with live data
+        resolved.forEach(({ tracker, data }) => {
+            if (!tracker) return;
+            const newEl = renderTrackerBanner(tracker, data);
+            newEl.id = `banner-${tracker.id}`;
+            const old = document.getElementById(`banner-${tracker.id}`);
+            if (old) old.replaceWith(newEl);
+        });
 
-    async function triggerScan() {
-        const btn = document.getElementById('scanBtn');
-        const t   = T[currentLang] || T.en;
-        if (btn) {
-            btn.style.opacity = '0.5';
-            btn.disabled = true;
-            document.getElementById('scanBtnIcon').innerHTML = '<span class="spin">⟳</span>';
-        }
-        document.getElementById('theatreScanInfo').textContent =
-            'Scan triggered — reading Arctic/Nordic sources (~1 min)...';
-        await loadRhetoricData(true);
+        updatePosture(resolved);
+        updateBluf(resolved);
     }
 
     // ── INIT ──
-    document.addEventListener('DOMContentLoaded', function() {
-        loadTheme();
-        setLanguage('en');
-        loadRhetoricData();
-    });
+    loadTheme();
+    loadAll();
+    // Refresh posture/BLUF every 30 minutes
+    setInterval(loadAll, 30 * 60 * 1000);
 </script>
 </body>
 </html>
