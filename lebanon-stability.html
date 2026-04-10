@@ -2085,6 +2085,7 @@
             document.getElementById('humKilled').textContent = (cas.killed || 0).toLocaleString();
             document.getElementById('humInjured').textContent = (cas.injured || 0).toLocaleString();
             const casDetails = [];
+            if (cas.april8_single_day_killed) casDetails.push(`🔴 Apr 8 single-day: ${cas.april8_single_day_killed} killed, ${cas.april8_single_day_wounded || 0}+ wounded`);
             if (cas.children_killed) casDetails.push(`👶 ${cas.children_killed} children killed`);
             if (cas.women_killed) casDetails.push(`👩 ${cas.women_killed} women killed`);
             if (cas.rescue_workers_killed) casDetails.push(`🚑 ${cas.rescue_workers_killed} rescue workers killed`);
@@ -2122,10 +2123,10 @@
 
             // Healthcare
             const hc = data.healthcare || {};
-            document.getElementById('humFacilitiesAttacked').textContent = (hc.facilities_attacked_since_oct_2023 || 0).toLocaleString();
-            document.getElementById('humHealthKilled').textContent = (hc.health_workers_killed_since_oct_2023 || 0).toLocaleString();
-            document.getElementById('humHealthInjured').textContent = (hc.health_workers_injured_since_oct_2023 || 0).toLocaleString();
-            document.getElementById('healthcareSource').innerHTML = `Source: ${hc.source || 'WHO'} • ${hc.note || ''} • As of ${hc.as_of || 'Unknown'}`;
+            document.getElementById('humFacilitiesAttacked').textContent = (hc.healthcare_attacks_since_mar2 || hc.facilities_attacked_since_oct_2023 || 0).toLocaleString();
+            document.getElementById('humHealthKilled').textContent = (hc.health_workers_killed_since_mar2 || hc.health_workers_killed_since_oct_2023 || 0).toLocaleString();
+            document.getElementById('humHealthInjured').textContent = (hc.health_workers_injured_since_mar2 || hc.health_workers_injured_since_oct_2023 || 0).toLocaleString();
+            document.getElementById('healthcareSource').innerHTML = `Source: ${hc.source || 'WHO'} • As of ${hc.as_of || 'Unknown'}`;
 
             // Source Links
             const srcContainer = document.getElementById('humanitarianSourceLinks');
