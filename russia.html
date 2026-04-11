@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Russia Stability Index v1.0.0 -->
-<html lang="en">
+<!-- Asifah Analytics - Russia Stability Index v2.0.0 — April 2026 -->
+<html lang="en" data-theme="dark">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
     <script>
@@ -15,21 +15,27 @@
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── ARCTIC THEME (canonical for all Europe pages) ── */
         :root {
-            --bg-color: #f5f5f5; --container-bg: #ffffff; --card-bg: #ffffff;
-            --card-border: #e1e8ed; --text-primary: #2c3e50; --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6; --metric-bg: #ffffff; --metric-hover-shadow: rgba(0,0,0,0.15);
-            --article-bg: #f8f9fa; --article-hover: #e8f4f8; --watermark-opacity: 0.5;
-            --loading-overlay-bg: rgba(245,245,245,0.98); --loading-spinner-bg: rgba(127,29,29,0.2);
-            --accent: #991b1b;
+            --bg-color: #e8f0f8; --container-bg: #ffffff; --card-bg: #ffffff;
+            --card-border: #b0c8e0; --text-primary: #0a1628; --text-secondary: #1e3a5f;
+            --text-muted: #4a6080; --metric-bg: #ffffff; --metric-hover-shadow: rgba(0,0,0,0.15);
+            --article-bg: #f0f6fc; --article-hover: #dbeafe; --watermark-opacity: 0.07;
+            --watermark-filter: none;
+            --loading-overlay-bg: rgba(232,240,248,0.98); --loading-spinner-bg: rgba(14,165,233,0.2);
+            --accent: #0ea5e9; --card-glow: none;
         }
         [data-theme="dark"] {
-            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
-            --card-border: #404040; --text-primary: #e0e0e0; --text-secondary: #b0b0b0;
-            --text-muted: #808080; --metric-bg: #2d2d2d; --metric-hover-shadow: rgba(255,255,255,0.1);
-            --article-bg: #353535; --article-hover: #404040; --watermark-opacity: 0.5;
-            --loading-overlay-bg: rgba(26,26,26,0.98); --loading-spinner-bg: rgba(127,29,29,0.3);
+            --bg-color: #060d1a; --container-bg: #0d1b2e; --card-bg: #0d1b2e;
+            --card-border: #1e3a5f; --text-primary: #e2f0fb; --text-secondary: #93c5fd;
+            --text-muted: #4a7090; --metric-bg: #0d1b2e; --metric-hover-shadow: rgba(56,189,248,0.1);
+            --article-bg: #0a1525; --article-hover: #0f2035; --watermark-opacity: 0.18;
+            --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+            --loading-overlay-bg: rgba(6,13,26,0.98); --loading-spinner-bg: rgba(56,189,248,0.2);
+            --accent: #38bdf8; --card-glow: 0 0 6px rgba(30,58,95,0.5);
         }
+
         body {
             font-family: 'Times New Roman', Times, serif; font-size: 14px;
             background-color: var(--bg-color); color: var(--text-primary);
@@ -37,86 +43,202 @@
             transition: background-color 0.3s ease, color 0.3s ease; position: relative;
         }
         body::before {
-            content: ''; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            content: ''; position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            width: 110vmin; height: 110vmin; min-width: 800px; min-height: 800px;
+            max-width: 1400px; max-height: 1400px;
             background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-            background-size: cover; background-repeat: no-repeat; background-position: center;
-            opacity: var(--watermark-opacity); z-index: 0; pointer-events: none;
+            background-size: contain; background-repeat: no-repeat; background-position: center;
+            opacity: var(--watermark-opacity); filter: var(--watermark-filter);
+            z-index: 0; pointer-events: none; user-select: none;
         }
+
+        /* ── LOADING ── */
         .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--loading-overlay-bg); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s ease, visibility 0.5s ease; }
         .loading-overlay.hidden { opacity: 0; visibility: hidden; }
-        .loading-spinner { width: 60px; height: 60px; border: 5px solid var(--loading-spinner-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 30px; }
+        .loading-spinner { width: 60px; height: 60px; border: 5px solid var(--loading-spinner-bg); border-top-color: #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 30px; }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
-        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
-        .loading-steps { margin-top: 20px; }
+        .loading-title { font-size: 24px; font-weight: bold; color: #38bdf8; margin-bottom: 20px; letter-spacing: 1px; }
         .loading-step { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease; }
-        .loading-step.active { color: var(--accent); font-weight: bold; }
+        .loading-step.active { color: #38bdf8; font-weight: bold; }
         .loading-step.complete { color: #4ade80; }
         .step-icon { font-size: 18px; min-width: 20px; }
-        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
-        .loading-error { color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; }
+
+        /* ── LAYOUT ── */
         .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
-        header { background: linear-gradient(135deg, #1c1917 0%, #78350f 100%); color: white; padding: 35px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); position: relative; display: flex; align-items: center; gap: 30px; }
-        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #060d1a 0%, #0d1b2e 60%, #1e3a5f 100%);
+            color: white; padding: 35px; border-radius: 12px; margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4), 0 0 40px rgba(56,189,248,0.08);
+            border: 1px solid rgba(56,189,248,0.2);
+            position: relative; display: flex; align-items: center; gap: 30px;
+        }
+        [data-theme="light"] header { background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%); border-color: #93c5fd; }
+        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; border: 2px solid rgba(56,189,248,0.4); }
         .header-content { flex: 1; text-align: center; }
-        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
-        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; color: #e2f0fb; }
+        [data-theme="light"] h1 { color: #0a1628; }
+        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; color: #93c5fd; }
+        .last-updated { font-size: 13px; opacity: 0.75; margin-top: 10px; color: #93c5fd; }
         .header-controls { position: absolute; top: 35px; right: 35px; display: flex; flex-direction: column; gap: 8px; z-index: 1000; }
-        .language-switcher { display: flex; gap: 8px; background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 8px; backdrop-filter: blur(10px); }
-        .theme-toggle { display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; backdrop-filter: blur(10px); }
-        .theme-toggle-label { font-size: 9px; color: rgba(255,255,255,0.9); margin-right: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
-        .theme-toggle-switch { position: relative; width: 28px; height: 15px; background: rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 1.5px solid rgba(255,255,255,0.3); }
-        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .theme-toggle-slider { position: absolute; top: 1.5px; left: 1.5px; width: 9px; height: 9px; background: white; border-radius: 50%; transition: transform 0.3s ease; display: flex; align-items: center; justify-content: center; font-size: 6px; }
-        .theme-toggle-slider::before { content: '☀️'; }
+        .language-switcher { display: flex; gap: 8px; background: rgba(56,189,248,0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.2); }
+        .theme-toggle { display: flex; align-items: center; justify-content: center; gap: 4px; background: rgba(56,189,248,0.1); padding: 2px 8px; border-radius: 5px; border: 1px solid rgba(56,189,248,0.2); }
+        .theme-toggle-label { font-size: 9px; color: #93c5fd; margin-right: 4px; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; }
+        .theme-toggle-switch { position: relative; width: 28px; height: 15px; background: rgba(56,189,248,0.2); border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border: 1.5px solid rgba(56,189,248,0.3); }
+        .theme-toggle-slider { position: absolute; top: 1.5px; left: 1.5px; width: 9px; height: 9px; background: #38bdf8; border-radius: 50%; transition: transform 0.3s ease; }
+        .theme-toggle-slider::before { content: '☀️'; font-size: 6px; }
         [data-theme="dark"] .theme-toggle-slider { transform: translateX(13px); }
         [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
-        .lang-btn { background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3); color: white; padding: 6px 14px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
-        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .lang-btn.active { background: white; color: #1c1917; border-color: white; }
-        .back-link { display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0; padding: 12px 24px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); transition: all 0.2s ease; font-size: 14px; font-weight: bold; }
-        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .map-section { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
-        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
-        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
-        .knowledge-library { background: var(--container-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); transition: background 0.3s ease, border-color 0.3s ease; }
-        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
-        .library-icon { font-size: 28px; }
-        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
-        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
-        .knowledge-header { background: linear-gradient(135deg, rgba(153,27,27,0.1) 0%, rgba(120,53,15,0.1) 100%); padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease; }
-        .knowledge-header:hover { background: linear-gradient(135deg, rgba(153,27,27,0.15) 0%, rgba(120,53,15,0.15) 100%); }
-        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
-        .category-icon { font-size: 22px; }
-        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
+        .lang-btn { background: rgba(56,189,248,0.1); border: 2px solid rgba(56,189,248,0.3); color: #93c5fd; padding: 6px 14px; font-family: 'Times New Roman', serif; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .lang-btn:hover { background: rgba(56,189,248,0.2); border-color: #38bdf8; color: white; }
+        .lang-btn.active { background: #0ea5e9; color: #fff; border-color: #0ea5e9; }
+        .back-link { display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0; padding: 10px 20px; background: rgba(56,189,248,0.1); color: #38bdf8; text-decoration: none; border-radius: 8px; border: 1px solid rgba(56,189,248,0.3); transition: all 0.2s ease; font-size: 13px; font-weight: bold; }
+        .back-link:hover { background: rgba(56,189,248,0.2); border-color: #38bdf8; }
+
+        /* ── TRAVEL WARNING BANNERS ── */
+        .worldwide-caution-banner {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);
+            border: 2px solid #dc2626; border-radius: 12px; padding: 18px 24px;
+            margin-bottom: 12px; display: flex; align-items: center;
+            justify-content: space-between; gap: 20px; color: #fef2f2;
+            box-shadow: 0 4px 12px rgba(220,38,38,0.3);
+        }
+        .wc-icon { font-size: 32px; flex-shrink: 0; }
+        .wc-content { flex: 1; }
+        .wc-title { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 5px; color: #fca5a5; }
+        .wc-text { font-size: 12px; line-height: 1.5; color: #fef2f2; }
+        .wc-link { flex-shrink: 0; padding: 7px 16px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px; transition: all 0.2s ease; white-space: nowrap; }
+        .wc-link:hover { background: rgba(255,255,255,0.25); border-color: rgba(255,255,255,0.5); }
+        .country-travel-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 2px solid #ef4444; border-radius: 12px; padding: 18px 24px;
+            margin-bottom: 18px; display: flex; align-items: center;
+            justify-content: space-between; gap: 20px; color: #fef2f2;
+            box-shadow: 0 4px 12px rgba(239,68,68,0.25);
+        }
+        .ctb-code { font-size: 22px; font-weight: bold; flex-shrink: 0; min-width: 36px; text-align: center; color: #fca5a5; }
+        .ctb-content { flex: 1; }
+        .ctb-title { font-size: 13px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; color: #fca5a5; }
+        .ctb-level { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; background: #ef4444; color: white; margin-left: 8px; }
+        .ctb-text { font-size: 12px; line-height: 1.5; color: #fef2f2; }
+        .ctb-text .do-not-travel { color: #fca5a5; font-weight: bold; }
+        .ctb-link { flex-shrink: 0; padding: 7px 16px; background: rgba(255,255,255,0.15); border: 2px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 11px; font-weight: bold; text-transform: uppercase; transition: all 0.2s ease; white-space: nowrap; }
+        .ctb-link:hover { background: rgba(255,255,255,0.25); }
+
+        /* ── RHETORIC BANNER + CARD ── */
+        .rhetoric-link-banner { display:flex; justify-content:space-between; align-items:center; border-radius:12px; padding:16px 20px; margin-bottom:14px; flex-wrap:wrap; gap:12px; }
+        .rhetoric-card { background:var(--container-bg); border:2px solid var(--card-border); border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:var(--card-glow); transition:background 0.3s, border-color 0.3s; }
+        .rhetoric-actor-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid var(--card-border); font-size:12px; color:var(--text-secondary); }
+        .rhetoric-actor-row:last-child { border-bottom:none; }
+
+        /* ── ECONOMIC INDICATORS ── */
+        .econ-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .econ-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; box-shadow: var(--card-glow); transition: all 0.3s; }
+        .econ-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(56,189,248,0.12); }
+        .econ-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--card-border); }
+        .econ-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--card-border); }
+        .econ-row:last-child { border-bottom: none; }
+        .econ-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .econ-value { font-size: 22px; font-weight: 700; color: var(--text-primary); margin: 2px 0; }
+        .econ-note { font-size: 10px; color: var(--text-muted); }
+        .econ-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px; color: white; flex-shrink: 0; }
+        .econ-static-row { padding: 10px 0; border-bottom: 1px solid var(--card-border); }
+        .econ-static-row:last-child { border-bottom: none; }
+        .econ-static-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 3px; }
+        .econ-static-value { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+        .econ-static-note { font-size: 10px; color: var(--text-muted); font-style: italic; margin-top: 2px; }
+        .source-tag { font-size: 9px; color: var(--text-muted); font-family: 'Courier New', monospace; }
+
+        /* ── LEADERSHIP CARDS ── */
+        .leadership-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
+        .leader-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px; transition: all 0.3s; box-shadow: var(--card-glow); }
+        .leader-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(56,189,248,0.12); }
+        .lc-flag { font-size: 22px; margin-bottom: 6px; }
+        .lc-role { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: #38bdf8; font-family: 'Courier New', monospace; margin-bottom: 4px; }
+        .lc-name { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 3px; }
+        .lc-since { font-size: 10px; color: var(--text-muted); margin-bottom: 6px; }
+        .lc-note { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+        .lc-risk { font-size: 10px; color: #fca5a5; margin-top: 6px; padding: 4px 8px; background: rgba(239,68,68,0.08); border-radius: 4px; border-left: 2px solid #ef4444; }
+        .lc-icc { font-size: 10px; color: #fb923c; margin-top: 6px; padding: 4px 8px; background: rgba(249,115,22,0.08); border-radius: 4px; border-left: 2px solid #f97316; }
+
+        /* ── INTERNAL PRESSURE CARDS ── */
+        .pressure-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 24px; }
+        .pressure-card { border-radius: 10px; padding: 16px; border: 1px solid; transition: all 0.3s; }
+        .pressure-card:hover { transform: translateY(-2px); }
+        .pressure-card.red { background: rgba(220,38,38,0.06); border-color: rgba(220,38,38,0.3); }
+        .pressure-card.orange { background: rgba(249,115,22,0.06); border-color: rgba(249,115,22,0.3); }
+        .pressure-card.amber { background: rgba(245,158,11,0.06); border-color: rgba(245,158,11,0.3); }
+        .pressure-card.blue { background: rgba(56,189,248,0.06); border-color: rgba(56,189,248,0.3); }
+        .pc-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .pc-icon { font-size: 20px; }
+        .pc-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .pc-title.red { color: #ef4444; }
+        .pc-title.orange { color: #f97316; }
+        .pc-title.amber { color: #f59e0b; }
+        .pc-title.blue { color: #38bdf8; }
+        .pc-value { font-size: 24px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+        .pc-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; margin-bottom: 8px; }
+        .pc-detail { font-size: 11px; color: var(--text-secondary); padding: 3px 0; }
+        .pc-source { font-size: 9px; color: var(--text-muted); font-family: 'Courier New', monospace; margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06); }
+
+        /* ── WAR STATUS CARD ── */
+        .war-status-card { background: linear-gradient(135deg, rgba(220,38,38,0.06), rgba(185,28,28,0.03)); border: 1px solid rgba(220,38,38,0.25); border-radius: 12px; padding: 20px; margin-bottom: 20px; }
+        .war-status-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(220,38,38,0.2); font-family: 'Courier New', monospace; }
+        .war-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+        .ws-item { padding: 10px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); }
+        .ws-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-family: 'Courier New', monospace; margin-bottom: 4px; }
+        .ws-value { font-size: 13px; font-weight: 700; color: var(--text-primary); }
+        .ws-note { font-size: 10px; color: var(--text-muted); margin-top: 2px; font-style: italic; }
+
+        /* ── SECTION HEADERS ── */
+        .section-header { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: #38bdf8; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--card-border); font-family: 'Courier New', monospace; }
+
+        /* ── MAP ── */
+        .map-section { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 24px; box-shadow: var(--card-glow); }
+        .map-section h2 { font-size: 18px; margin-bottom: 8px; color: var(--text-primary); }
+        .map-subtitle { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; font-style: italic; }
+        #russiaMap { width: 100%; height: 460px; border-radius: 8px; border: 1px solid var(--card-border); }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .knowledge-library { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 24px; box-shadow: var(--card-glow); }
+        .knowledge-library h2 { font-size: 22px; margin-bottom: 18px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+        .knowledge-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s; }
+        .knowledge-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(56,189,248,0.1); }
+        .knowledge-header { background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.03) 100%); padding: 16px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s; }
+        .knowledge-header:hover { background: linear-gradient(135deg, rgba(56,189,248,0.1) 0%, rgba(14,165,233,0.06) 100%); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: bold; color: var(--text-primary); }
+        .category-icon { font-size: 20px; }
+        .collapse-icon { font-size: 18px; color: #38bdf8; transition: transform 0.3s; }
         .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
-        .knowledge-content { padding: 20px; max-height: 600px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
-        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
-        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
-        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
-        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
+        .knowledge-content { padding: 18px; max-height: 500px; overflow-y: auto; transition: max-height 0.3s, padding 0.3s; }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 18px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 10px; }
+        .knowledge-content ul { margin-left: 18px; margin-bottom: 10px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 5px; }
         .knowledge-content strong { color: var(--text-primary); }
-        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
-        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
-        .report-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--accent); color: white; text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold; transition: all 0.3s ease; }
-        .report-link:hover { background: #7f1d1d; transform: translateX(3px); box-shadow: 0 4px 12px rgba(153,27,27,0.3); }
-        .knowledge-content::-webkit-scrollbar { width: 8px; }
-        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
-        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
-        .articles-section { background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); transition: background 0.3s ease, border-color 0.3s ease; }
-        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
-        .article-item { background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px; transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #991b1b; }
-        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
-        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
-        .article-meta { font-size: 12px; color: var(--text-secondary); }
-        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
+        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--card-border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-top: 12px; }
+        .report-link { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: rgba(56,189,248,0.1); color: #38bdf8; text-decoration: none; border-radius: 6px; font-size: 11px; font-weight: bold; border: 1px solid rgba(56,189,248,0.2); transition: all 0.2s; }
+        .report-link:hover { background: rgba(56,189,248,0.2); transform: translateX(2px); }
+
+        /* ── ARTICLES ── */
+        .articles-section { background: var(--container-bg); border-radius: 12px; padding: 22px; margin-bottom: 24px; box-shadow: var(--card-glow); border: 1px solid var(--card-border); }
+        .section-title { font-size: 18px; margin-bottom: 18px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
+        .article-item { background: var(--article-bg); padding: 14px; border-radius: 8px; margin-bottom: 10px; transition: background 0.2s, transform 0.2s; border-left: 3px solid #38bdf8; }
+        .article-item:hover { background: var(--article-hover); transform: translateX(3px); }
+        .article-title { color: var(--text-primary); font-size: 13px; margin-bottom: 4px; font-weight: 500; }
+        .article-meta { font-size: 11px; color: var(--text-secondary); }
+        .article-link { color: #38bdf8; text-decoration: none; font-size: 12px; }
         .article-link:hover { text-decoration: underline; }
-        footer { background: var(--container-bg); padding: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border); font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary); transition: background 0.3s ease, border-color 0.3s ease; }
-        [data-theme="dark"] header { background: linear-gradient(135deg, #0c0a09 0%, #451a03 100%); border: 1px solid rgba(153,27,27,0.2); }
-        [data-theme="dark"] .knowledge-header { background: linear-gradient(135deg, rgba(153,27,27,0.08) 0%, rgba(120,53,15,0.08) 100%); }
-        [data-theme="dark"] .article-item { border-left-color: #dc2626; }
+
+        /* ── FOOTER ── */
+        footer { background: var(--container-bg); padding: 22px; border-radius: 12px; box-shadow: var(--card-glow); border: 1px solid var(--card-border); font-size: 12px; text-align: center; margin-top: 30px; color: var(--text-secondary); }
+
+        /* ── RESPONSIVE ── */
         @media (max-width: 768px) {
             header { flex-direction: column; gap: 20px; padding: 25px 20px; }
             .header-logo { width: 60px; height: 60px; margin-top: 0; }
@@ -124,32 +246,32 @@
             h1 { font-size: 22px; }
             .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
             .knowledge-categories { grid-template-columns: 1fr; }
+            .worldwide-caution-banner, .country-travel-banner { flex-direction: column; text-align: center; }
+            .wc-link, .ctb-link { width: 100%; text-align: center; }
         }
-    .rhetoric-link-banner { display:flex; justify-content:space-between; align-items:center; border-radius:12px; padding:16px 20px; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
-        .rhetoric-card { background:var(--container-bg); border:2px solid var(--card-border); border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:background 0.3s, border-color 0.3s; }
-        .rhetoric-actor-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid var(--card-border); font-size:12px; color:var(--text-secondary); }
-        .rhetoric-actor-row:last-child { border-bottom:none; }
     </style>
 </head>
 <body>
+    <!-- LOADING OVERLAY -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
         <div class="loading-status">
             <div class="loading-title">Loading Russia Stability Data</div>
-            <div class="loading-steps" id="loadingSteps">
+            <div class="loading-steps">
                 <div class="loading-step active" id="step1"><span class="step-icon">⏳</span><span>Fetching OSINT articles on Russia...</span></div>
                 <div class="loading-step" id="step2"><span class="step-icon">⏳</span><span>Scanning sanctions &amp; economic indicators...</span></div>
                 <div class="loading-step" id="step3"><span class="step-icon">⏳</span><span>Analyzing military posture &amp; force deployment...</span></div>
                 <div class="loading-step" id="step4"><span class="step-icon">⏳</span><span>Rendering dashboard...</span></div>
             </div>
-            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
-            <div class="loading-error" id="loadingError" style="display:none;"></div>
+            <div style="margin-top:20px;font-size:13px;color:var(--text-muted);font-style:italic;">This may take 20-40 seconds...</div>
         </div>
     </div>
 
     <div class="container">
+
+        <!-- HEADER -->
         <header>
-            <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe Dashboard</a>
+            <a href="russia.html" class="back-link" data-i18n="backLink">← Back to Russia</a>
             <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
             <div class="header-content">
                 <h1 data-i18n="pageTitle">🇷🇺 RUSSIA STABILITY INDEX</h1>
@@ -170,69 +292,345 @@
             </div>
         </header>
 
-        <!-- RUSSIA RHETORIC TRACKER BANNER -->
+        <!-- ① U.S. STATE DEPT — WORLDWIDE CAUTION -->
+        <div class="worldwide-caution-banner">
+            <div class="wc-icon">🏛️</div>
+            <div class="wc-content">
+                <div class="wc-title" data-i18n="wcTitle">⚠ U.S. State Department — Worldwide Caution</div>
+                <div class="wc-text" data-i18n="wcText">U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in the Smart Traveler Enrollment Program (STEP).</div>
+            </div>
+            <a href="https://travel.state.gov/content/travel/en/traveladvisories/ea/worldwide-caution.html" target="_blank" class="wc-link" data-i18n="wcLink">View Caution →</a>
+        </div>
+
+        <!-- ② RUSSIA TRAVEL ADVISORY — LEVEL 4 -->
+        <div class="country-travel-banner">
+            <div class="ctb-code">RU</div>
+            <div class="ctb-content">
+                <div class="ctb-title" data-i18n="ctbTitle">U.S. State Department — Russia Travel Advisory <span class="ctb-level">LEVEL 4</span></div>
+                <div class="ctb-text" data-i18n="ctbText"><span class="do-not-travel">Do Not Travel</span> to Russia due to the ongoing war with Ukraine, risk of wrongful detention, harassment of U.S. citizens by Russian security services, limited consular assistance, and the potential for mobilization. U.S. Embassy Moscow is operating with reduced staffing.</div>
+            </div>
+            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/russia-travel-advisory.html" target="_blank" class="ctb-link" data-i18n="ctbLink">View Advisory →</a>
+        </div>
+
+        <!-- ③ RUSSIA RHETORIC TRACKER BANNER -->
         <div class="rhetoric-link-banner" style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);">
             <div>
-                <div style="font-size:13px;font-weight:bold;color:white;">🇷🇺 Russia Pressure Tracker</div>
-                <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:3px;">Military · Nuclear · NATO Flank · Arctic · Hybrid · Cross-Theater</div>
+                <div style="font-size:13px;font-weight:bold;color:white;">🇷🇺 <span data-i18n="rhetoricBannerTitle">Russia Pressure Tracker</span></div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:3px;" data-i18n="rhetoricBannerSub">Military · Nuclear · NATO Flank · Arctic · Hybrid · Cross-Theater</div>
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
                 <span id="russiaRhetoricBadge" style="background:#6b7280;color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px;">📡 Loading…</span>
-                <a href="rhetoric-russia.html" style="padding:8px 18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;white-space:nowrap;">Open Tracker →</a>
+                <a href="rhetoric-russia.html" style="padding:8px 18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;white-space:nowrap;" data-i18n="rhetoricBannerBtn">Open Tracker →</a>
             </div>
         </div>
 
-        <!-- RUSSIA RHETORIC CARD -->
+        <!-- ④ RHETORIC CARD -->
         <div class="rhetoric-card" style="border-color:rgba(56,189,248,0.35);">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#38bdf8;margin-bottom:12px;">📡 RUSSIA PRESSURE TRACKER</div>
+            <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#38bdf8;margin-bottom:12px;font-family:'Courier New',monospace;" data-i18n="rhetoricCardTitle">📡 RUSSIA PRESSURE TRACKER</div>
             <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
-                <div style="font-size:32px;font-weight:700;color:var(--text-primary);" id="russiaRhetoricScore">--</div>
+                <div style="font-size:36px;font-weight:700;color:var(--text-primary);" id="russiaRhetoricScore">--</div>
                 <span id="russiaRhetoricLabel" style="font-size:13px;font-weight:bold;padding:3px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
             </div>
-            <div style="font-size:11px;color:var(--text-secondary);margin-bottom:12px;">Five-vector pressure score — Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid · Updated every 12h</div>
-            <div id="russiaRhetoricActorList" style="font-size:12px;color:var(--text-secondary);">
-                <span style="font-style:italic;">Loading...</span>
+            <div style="font-size:11px;color:var(--text-secondary);margin-bottom:12px;" data-i18n="rhetoricCardSub">Five-vector pressure score — Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid · Updated every 12h</div>
+            <div id="russiaRhetoricActorList" style="font-size:12px;color:var(--text-secondary);"><span style="font-style:italic;">Loading...</span></div>
+            <div style="margin-top:14px;padding-top:10px;border-top:1px solid var(--card-border);text-align:center;">
+                <a href="rhetoric-russia.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="rhetoricCardLink">View Full Pressure Analysis →</a>
             </div>
-            <div style="margin-top:15px;padding-top:12px;border-top:1px solid var(--card-border);text-align:center;">
-                <a href="rhetoric-russia.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;">View Full Pressure Analysis →</a>
-            </div>
-            <div id="russiaRhetoricScanInfo" style="margin-top:8px;font-size:10px;color:var(--text-secondary);text-align:center;">--</div>
+            <div id="russiaRhetoricScanInfo" style="margin-top:6px;font-size:10px;color:var(--text-secondary);text-align:center;">--</div>
         </div>
 
-        <!-- MAP -->
+        <!-- ⑤ WAR STATUS CARD -->
+        <div class="war-status-card">
+            <div class="war-status-title" data-i18n="warStatusTitle">⚔️ UKRAINE WAR — CURRENT STATUS</div>
+            <div class="war-status-grid">
+                <div class="ws-item">
+                    <div class="ws-label" data-i18n="wsTerrLabel">Territory Held</div>
+                    <div class="ws-value">~18%</div>
+                    <div class="ws-note" data-i18n="wsTerrNote">of Ukraine incl. Crimea · ISW, Apr 2026</div>
+                </div>
+                <div class="ws-item">
+                    <div class="ws-label" data-i18n="wsCasLabel">Est. Casualties</div>
+                    <div class="ws-value">300,000+</div>
+                    <div class="ws-note" data-i18n="wsCasNote">KIA + WIA · UK MoD / USG estimates</div>
+                </div>
+                <div class="ws-item">
+                    <div class="ws-label" data-i18n="wsIccLabel">ICC Arrest Warrant</div>
+                    <div class="ws-value" style="color:#f97316;">ACTIVE</div>
+                    <div class="ws-note" data-i18n="wsIccNote">Putin + Lvova-Belova · March 2023</div>
+                </div>
+                <div class="ws-item">
+                    <div class="ws-label" data-i18n="wsDprkLabel">DPRK/Iran Supply</div>
+                    <div class="ws-value" id="dprkStatus" style="color:#f59e0b;">ACTIVE</div>
+                    <div class="ws-note" data-i18n="wsDprkNote">Cross-theater coordination · Live signal</div>
+                </div>
+                <div class="ws-item">
+                    <div class="ws-label" data-i18n="wsFrontLabel">Active Front</div>
+                    <div class="ws-value">~1,000 km</div>
+                    <div class="ws-note" data-i18n="wsFrontNote">Contact line · Zaporizhzhia to Kharkiv</div>
+                </div>
+                <div class="ws-item">
+                    <div class="ws-label" data-i18n="wsDiplLabel">Diplomatic Track</div>
+                    <div class="ws-value" id="diplStatus" style="color:#f59e0b;">LOW</div>
+                    <div class="ws-note" data-i18n="wsDiplNote">Easter ceasefire · No framework · Live signal</div>
+                </div>
+            </div>
+            <div style="margin-top:10px;font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="warStatusSource">Sources: ISW, UK MoD, ICC, Asifah cross-theater fingerprint · Data as of April 2026</div>
+        </div>
+
+        <!-- ⑥ ECONOMIC INDICATORS -->
+        <div class="section-header" data-i18n="econTitle">💹 ECONOMIC INDICATORS — WARTIME RUSSIA</div>
+        <div class="econ-grid">
+
+            <!-- Live FX Card -->
+            <div class="econ-card">
+                <div class="econ-card-title" data-i18n="econLiveTitle">Live Market Signals</div>
+                <div class="econ-row">
+                    <div>
+                        <div class="econ-label" data-i18n="rubleLabel">Ruble / USD</div>
+                        <div class="econ-value" id="rubleRate">--</div>
+                        <div class="econ-note" data-i18n="rubleNote">RUB per 1 USD · Higher = weaker ruble</div>
+                    </div>
+                    <span class="econ-badge" id="rubleStatus" style="background:#6b7280;">--</span>
+                </div>
+                <div class="econ-row">
+                    <div>
+                        <div class="econ-label" data-i18n="brentLabel">Brent Crude</div>
+                        <div class="econ-value" id="brentPrice">--</div>
+                        <div class="econ-note" id="brentChange" data-i18n="brentNote">Oil = ~40% of Russian federal budget</div>
+                    </div>
+                    <span class="econ-badge" id="brentStatus" style="background:#6b7280;">--</span>
+                </div>
+                <div class="econ-row" style="border-bottom:none;">
+                    <div>
+                        <div class="econ-label" data-i18n="uralLabel">Urals Discount vs. Brent</div>
+                        <div class="econ-note" data-i18n="uralNote">Sanctions-driven discount on Russian crude</div>
+                    </div>
+                    <span class="econ-badge" id="uralsDiscount" style="background:#6b7280;">Loading</span>
+                </div>
+            </div>
+
+            <!-- Static Economic Card -->
+            <div class="econ-card">
+                <div class="econ-card-title" data-i18n="econSanctionsTitle">Sanctions &amp; War Economy</div>
+                <div class="econ-static-row">
+                    <div class="econ-static-label" data-i18n="defSpendLabel">Defense Spending</div>
+                    <div class="econ-static-value">~6–8% of GDP</div>
+                    <div class="econ-static-note" data-i18n="defSpendNote">Highest since Cold War · SIPRI 2025</div>
+                </div>
+                <div class="econ-static-row">
+                    <div class="econ-static-label" data-i18n="reservesLabel">Frozen Reserves</div>
+                    <div class="econ-static-value">~$300 Billion</div>
+                    <div class="econ-static-note" data-i18n="reservesNote">Frozen in Western jurisdictions · EU/G7</div>
+                </div>
+                <div class="econ-static-row">
+                    <div class="econ-static-label" data-i18n="capLabel">G7 Oil Price Cap</div>
+                    <div class="econ-static-value">$60 / barrel</div>
+                    <div class="econ-static-note" data-i18n="capNote">Russia consistently selling above cap via shadow fleet · G7 2022</div>
+                </div>
+                <div class="econ-static-row" style="border-bottom:none;">
+                    <div class="econ-static-label" data-i18n="swiftLabel">SWIFT Status</div>
+                    <div class="econ-static-value" style="color:#ef4444;">EXCLUDED</div>
+                    <div class="econ-static-note" data-i18n="swiftNote">Major banks disconnected · Feb 2022 · EU Council</div>
+                </div>
+            </div>
+
+            <!-- Brain Drain / War Economy Card -->
+            <div class="econ-card">
+                <div class="econ-card-title" data-i18n="econBrainTitle">Structural Damage Indicators</div>
+                <div class="econ-static-row">
+                    <div class="econ-static-label" data-i18n="brainLabel">Brain Drain</div>
+                    <div class="econ-static-value">500K – 1M</div>
+                    <div class="econ-static-note" data-i18n="brainNote">Emigrated since Feb 2022 · disproportionately tech/skilled · Novaya Gazeta est.</div>
+                </div>
+                <div class="econ-static-row">
+                    <div class="econ-static-label" data-i18n="inflLabel">Inflation (CPI)</div>
+                    <div class="econ-static-value">~9–12%</div>
+                    <div class="econ-static-note" data-i18n="inflNote">Wartime economy distortion · Rosstat 2025 (state figures — actual likely higher)</div>
+                </div>
+                <div class="econ-static-row">
+                    <div class="econ-static-label" data-i18n="rateLabel">CBR Key Rate</div>
+                    <div class="econ-static-value">21%</div>
+                    <div class="econ-static-note" data-i18n="rateNote">Central Bank emergency rate to defend ruble · CBR Oct 2024</div>
+                </div>
+                <div class="econ-static-row" style="border-bottom:none;">
+                    <div class="econ-static-label" data-i18n="chinaLabel">China Trade Dependency</div>
+                    <div class="econ-static-value">$240B+ / yr</div>
+                    <div class="econ-static-note" data-i18n="chinaNote">Russia's primary trading partner · replacing Western goods · 2024</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ⑦ LEADERSHIP CARDS -->
+        <div class="section-header" data-i18n="leadershipTitle">👥 KEY LEADERSHIP</div>
+        <div class="leadership-grid">
+
+            <div class="leader-card">
+                <div class="lc-flag">🇷🇺</div>
+                <div class="lc-role" data-i18n="putinRole">President</div>
+                <div class="lc-name">Vladimir Putin</div>
+                <div class="lc-since" data-i18n="putinSince">President since 2000 (with 2008–12 gap as PM)</div>
+                <div class="lc-note" data-i18n="putinNote">Longest-serving Russian/Soviet leader since Stalin. 2020 constitutional amendments allow rule to 2036. March 2024 election: 87% reported.</div>
+                <div class="lc-icc" data-i18n="putinIcc">⚖️ ICC arrest warrant issued March 2023 — unlawful deportation of Ukrainian children</div>
+            </div>
+
+            <div class="leader-card">
+                <div class="lc-flag">🇷🇺</div>
+                <div class="lc-role" data-i18n="mishRole">Prime Minister</div>
+                <div class="lc-name">Mikhail Mishustin</div>
+                <div class="lc-since" data-i18n="mishSince">Since January 2020</div>
+                <div class="lc-note" data-i18n="mishNote">Technocrat managing wartime economy. Oversaw federal budget reorientation to defense. Low public profile — not a political rival to Putin.</div>
+            </div>
+
+            <div class="leader-card">
+                <div class="lc-flag">🇷🇺</div>
+                <div class="lc-role" data-i18n="lavrovRole">Foreign Minister</div>
+                <div class="lc-name">Sergei Lavrov</div>
+                <div class="lc-since" data-i18n="lavrovSince">Since March 2004</div>
+                <div class="lc-note" data-i18n="lavrovNote">Russia's primary diplomatic face internationally. Oversees MFA rhetoric posture. Lavrov statements reflect Kremlin policy directly — not independent commentary.</div>
+            </div>
+
+            <div class="leader-card">
+                <div class="lc-flag">🇷🇺</div>
+                <div class="lc-role" data-i18n="gerasimovRole">Chief of General Staff</div>
+                <div class="lc-name">Valery Gerasimov</div>
+                <div class="lc-since" data-i18n="gerasimovSince">Since January 2023 (Ukraine war commander)</div>
+                <div class="lc-note" data-i18n="gerasimovNote">Survived Prigozhin mutiny. Named overall Ukraine war commander Jan 2023. Associated with "Gerasimov Doctrine" of hybrid warfare — a concept largely attributed to him by Western analysts.</div>
+                <div class="lc-risk" data-i18n="gerasimovRisk">⚠️ Position uncertain — Ukraine setbacks historically reshuffle Russian military leadership</div>
+            </div>
+
+            <div class="leader-card">
+                <div class="lc-flag">🇷🇺</div>
+                <div class="lc-role" data-i18n="patrushevRole">Presidential Aide / Security</div>
+                <div class="lc-name">Nikolai Patrushev</div>
+                <div class="lc-since" data-i18n="patrushevSince">Presidential aide since 2023; Sec. Council 2008–23</div>
+                <div class="lc-note" data-i18n="patrushevNote">Hardline silovik ideologue. Widely considered Putin's closest ideological ally. Advocates maximalist Ukraine war aims. Influence significant despite position change in 2023.</div>
+            </div>
+
+            <div class="leader-card">
+                <div class="lc-flag">🇷🇺</div>
+                <div class="lc-role" data-i18n="medvedevRole">Dep. Security Council Chair</div>
+                <div class="lc-name">Dmitry Medvedev</div>
+                <div class="lc-since" data-i18n="medvedevSince">Deputy SecCouncil since 2020; PM 2012–20; President 2008–12</div>
+                <div class="lc-note" data-i18n="medvedevNote">Primary Kremlin nuclear rhetoric instrument. His statements about nuclear weapons use are deliberate Kremlin signaling — not personal commentary. Track Medvedev language as a leading indicator of Kremlin coercion posture.</div>
+                <div class="lc-risk" data-i18n="medvedevRisk">📡 Asifah tracker monitors Medvedev rhetoric as a nuclear signaling proxy</div>
+            </div>
+
+        </div>
+
+        <!-- ⑧ INTERNAL PRESSURE MONITOR -->
+        <div class="section-header" data-i18n="pressureTitle">🔴 INTERNAL PRESSURE MONITOR</div>
+        <div class="pressure-grid">
+
+            <div class="pressure-card red">
+                <div class="pc-header">
+                    <span class="pc-icon">✊</span>
+                    <span class="pc-title red" data-i18n="protestTitle">War Protests / Dissent</span>
+                </div>
+                <div class="pc-value">16,000+</div>
+                <div class="pc-desc" data-i18n="protestDesc">Detained in Feb–Mar 2022 anti-war protests. Organized domestic opposition now almost entirely suppressed or in exile.</div>
+                <div class="pc-detail">🚫 <span data-i18n="protestDetail1">Criticizing the war = criminal offense, up to 15 years</span></div>
+                <div class="pc-detail">📰 <span data-i18n="protestDetail2">Independent media shut down or in exile (Meduza, TV Rain, Novaya Gazeta)</span></div>
+                <div class="pc-detail">✈️ <span data-i18n="protestDetail3">Navalny died in Arctic penal colony Feb 2024</span></div>
+                <div class="pc-source">Source: OVD-Info · RSF · Memorial International · data as of Apr 2026</div>
+            </div>
+
+            <div class="pressure-card orange">
+                <div class="pc-header">
+                    <span class="pc-icon">⚔️</span>
+                    <span class="pc-title orange" data-i18n="casualtyTitle">Military Casualties</span>
+                </div>
+                <div class="pc-value">300,000+</div>
+                <div class="pc-desc" data-i18n="casualtyDesc">Estimated Russian KIA + WIA since Feb 2022. Disproportionate losses among ethnic minority regions (Dagestan, Buryatia).</div>
+                <div class="pc-detail">🪖 <span data-i18n="casualtyDetail1">Sept 2022 partial mobilization: ~300,000 called up</span></div>
+                <div class="pc-detail">🌍 <span data-i18n="casualtyDetail2">Foreign fighters recruited: Nepal, Central Africa, DPRK</span></div>
+                <div class="pc-detail">⚠️ <span data-i18n="casualtyDetail3">Ethnic minority regions bear disproportionate casualty burden</span></div>
+                <div class="pc-source">Source: UK MoD / USG estimates · IISS · data as of Apr 2026</div>
+            </div>
+
+            <div class="pressure-card amber">
+                <div class="pc-header">
+                    <span class="pc-icon">✈️</span>
+                    <span class="pc-title amber" data-i18n="brainDrainTitle">Brain Drain</span>
+                </div>
+                <div class="pc-value">500K – 1M</div>
+                <div class="pc-desc" data-i18n="brainDrainDesc">Estimated Russians emigrated since Feb 2022. Disproportionately young, educated, and tech-skilled — severe long-term impact on innovation capacity.</div>
+                <div class="pc-detail">💻 <span data-i18n="brainDrainDetail1">Tech sector exodus to Georgia, Armenia, Serbia, Israel</span></div>
+                <div class="pc-detail">📉 <span data-i18n="brainDrainDetail2">Long-term damage to R&D, semiconductor, and defense tech capacity</span></div>
+                <div class="pc-source">Source: Novaya Gazeta · academic estimates · data as of 2024</div>
+            </div>
+
+            <div class="pressure-card red">
+                <div class="pc-header">
+                    <span class="pc-icon">⛓️</span>
+                    <span class="pc-title red" data-i18n="prisonTitle">Political Prisoners</span>
+                </div>
+                <div class="pc-value">700+</div>
+                <div class="pc-desc" data-i18n="prisonDesc">Documented political prisoners in Russia. The "foreign agent" and "undesirable organization" laws used to criminalize contact with Western institutions.</div>
+                <div class="pc-detail">⚖️ <span data-i18n="prisonDetail1">Evan Gershkovich (WSJ) detained 2023, released Aug 2024</span></div>
+                <div class="pc-detail">🏛️ <span data-i18n="prisonDetail2">Paul Whelan (US Marine) detained 2018, released Aug 2024</span></div>
+                <div class="pc-detail">❌ <span data-i18n="prisonDetail3">Alexei Navalny died Feb 2024 — IK-6 Arctic penal colony</span></div>
+                <div class="pc-source">Source: OVD-Info · Amnesty International · Human Rights Watch · Apr 2026</div>
+            </div>
+
+            <div class="pressure-card blue">
+                <div class="pc-header">
+                    <span class="pc-icon">📰</span>
+                    <span class="pc-title blue" data-i18n="pressTitle">Press Freedom</span>
+                </div>
+                <div class="pc-value">#164 / 180</div>
+                <div class="pc-desc" data-i18n="pressDesc">Russia's RSF Press Freedom ranking 2024. One of the most restrictive information environments among major nations.</div>
+                <div class="pc-detail">🚫 <span data-i18n="pressDetail1">Independent outlets shut or exiled — Meduza, TV Rain, Novaya Gazeta</span></div>
+                <div class="pc-detail">🔒 <span data-i18n="pressDetail2">VPN usage surged — millions access exile media via VPN</span></div>
+                <div class="pc-detail">📡 <span data-i18n="pressDetail3">State TV (RT, Channel One) primary information source for most Russians</span></div>
+                <div class="pc-source">Source: Reporters Without Borders (RSF) · 2024 World Press Freedom Index</div>
+            </div>
+
+            <div class="pressure-card orange">
+                <div class="pc-header">
+                    <span class="pc-icon">🌍</span>
+                    <span class="pc-title orange" data-i18n="isolTitle">International Isolation</span>
+                </div>
+                <div class="pc-value">141 – 5</div>
+                <div class="pc-desc" data-i18n="isolDesc">UN General Assembly vote demanding Russian withdrawal from Ukraine (Feb 2023). Russia increasingly dependent on non-Western partners.</div>
+                <div class="pc-detail">🇨🇳 <span data-i18n="isolDetail1">China primary partner — $240B+ bilateral trade 2024</span></div>
+                <div class="pc-detail">🇮🇳 <span data-i18n="isolDetail2">India purchasing discounted Russian oil</span></div>
+                <div class="pc-detail">🌐 <span data-i18n="isolDetail3">BRICS expanded 2024 — alternative to Western-led institutions</span></div>
+                <div class="pc-source">Source: UN General Assembly · SIPRI · IMF · 2024</div>
+            </div>
+
+        </div>
+
+        <!-- ⑨ LEAFLET MAP -->
         <div class="map-section">
             <h2>🗺️ <span data-i18n="mapTitle">Russia — Strategic Overview</span></h2>
-            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on European Russia. Military districts, frontline positions, and sanctions infrastructure overlays coming soon.</div>
-            <div style="width:100%; height:450px; border:2px solid var(--card-border); border-radius:8px; overflow:hidden;">
-                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=27%2C45%2C60%2C70&layer=mapnik&marker=55.76%2C37.62" width="100%" height="100%" frameborder="0" scrolling="no" style="border:none;"></iframe>
-            </div>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Key military installations, energy infrastructure, conflict zones, and geopolitical flashpoints.</div>
+            <div id="russiaMap"></div>
         </div>
 
-        <!-- KNOWLEDGE LIBRARY -->
+        <!-- ⑩ KNOWLEDGE LIBRARY -->
         <div class="knowledge-library">
-            <h2><span class="library-icon">📚</span> <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span></h2>
-            <p class="open-source-disclaimer">Note: Background information is compiled from open-source research, think tank analyses, and public government reporting.</p>
+            <h2><span style="font-size:26px;">📚</span> <span data-i18n="knowledgeTitle">Knowledge Library</span></h2>
+            <p style="font-size:12px;color:var(--text-muted);font-style:italic;margin-bottom:16px;" data-i18n="knowledgeDisclaimer">Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
 
             <div class="knowledge-categories">
 
                 <!-- Government & Political System -->
                 <div class="knowledge-card collapsed" id="card-government">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('government')">
+                    <div class="knowledge-header" onclick="toggleCard('government')">
                         <div class="knowledge-header-title"><span class="category-icon">🏛️</span> <span data-i18n="catGovernment">Government &amp; Political System</span></div>
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Russia is a federal semi-presidential republic in formal structure</strong>, but in practice operates as a consolidated authoritarian system centered on President Vladimir Putin, who has held power as either president or prime minister since 1999 — making him the longest-serving Russian/Soviet leader since Stalin.</p>
+                        <p><strong>Russia is a consolidated authoritarian system</strong> centered on President Vladimir Putin, who has held power as either president or prime minister since 1999 — making him the longest-serving Russian/Soviet leader since Stalin.</p>
                         <ul>
-                            <li><strong>Putin's Consolidation:</strong> Constitutional amendments approved in 2020 effectively allow Putin to remain in office until 2036. The March 2024 presidential "election" — with no genuine opposition permitted — returned Putin with an officially reported 87% of the vote. Independent observers described it as neither free nor fair.</li>
-                            <li><strong>State Duma:</strong> The 450-seat lower house is dominated by United Russia and aligned parties. The Duma functions primarily as a legislative rubber stamp rather than an independent deliberative body. Genuine opposition parties are excluded or suppressed.</li>
-                            <li><strong>Security Services:</strong> The FSB (domestic security), SVR (foreign intelligence), and GRU (military intelligence) wield enormous power. The "siloviki" — the security and military establishment — form the core of Putin's power base alongside loyal oligarchs.</li>
-                            <li><strong>Succession Question:</strong> Putin (age 72) has no public succession plan. The lack of institutional mechanisms for orderly power transfer is widely considered one of Russia's most significant long-term stability risks. Historical Russian/Soviet leadership transitions have frequently been chaotic.</li>
-                            <li><strong>Prigozhin Mutiny (June 2023):</strong> Wagner Group leader Yevgeny Prigozhin's brief armed march on Moscow — before it was negotiated to a halt — represented the most serious challenge to Kremlin authority in Putin's tenure. Prigozhin was killed in a plane crash two months later.</li>
+                            <li><strong>Putin's Consolidation:</strong> 2020 constitutional amendments allow rule to 2036. March 2024 election: 87% officially reported, no genuine opposition permitted.</li>
+                            <li><strong>Silovik Power Base:</strong> The FSB (domestic), SVR (foreign), and GRU (military intelligence) wield enormous power. The "siloviki" — security and military establishment — form Putin's core power base.</li>
+                            <li><strong>Succession Risk:</strong> Putin (age 72) has no public succession plan. Lack of institutional mechanisms for orderly power transfer is widely considered Russia's most significant long-term stability risk.</li>
+                            <li><strong>Prigozhin Mutiny (June 2023):</strong> Wagner Group leader's armed march on Moscow — the most serious challenge to Kremlin authority in Putin's tenure. Prigozhin killed in plane crash two months later.</li>
                         </ul>
-                        <div class="open-source-disclaimer">* Based on Carnegie Russia Eurasia Center, Levada Center, IISS, and Chatham House reporting</div>
+                        <div class="open-source-disclaimer">Based on Carnegie Russia Eurasia Center, Levada Center, IISS, and Chatham House reporting</div>
                         <div class="report-links-grid">
-                            <a href="https://carnegieendowment.org/programs/russia-eurasia" target="_blank" class="report-link">📑 Carnegie - Russia</a>
+                            <a href="https://carnegieendowment.org/programs/russia-eurasia" target="_blank" class="report-link">📑 Carnegie Russia</a>
                             <a href="https://www.levada.ru/en/" target="_blank" class="report-link">📑 Levada Center</a>
                             <a href="https://www.chathamhouse.org/regions/russia-and-eurasia" target="_blank" class="report-link">📑 Chatham House</a>
                             <a href="https://freedomhouse.org/country/russia" target="_blank" class="report-link">📑 Freedom House</a>
@@ -242,104 +640,90 @@
 
                 <!-- Military & Nuclear -->
                 <div class="knowledge-card collapsed" id="card-military">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('military')">
-                        <div class="knowledge-header-title"><span class="category-icon">⚔️</span> <span data-i18n="catMilitary">Military &amp; Nuclear Posture</span></div>
+                    <div class="knowledge-header" onclick="toggleCard('military')">
+                        <div class="knowledge-header-title"><span class="category-icon">☢️</span> <span data-i18n="catMilitary">Military &amp; Nuclear Posture</span></div>
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Russia maintains the world's largest nuclear arsenal and the second-largest conventional military</strong>, though the Ukraine war has exposed significant weaknesses in doctrine, equipment, logistics, and personnel quality that have fundamentally altered global assessments of Russian military capability.</p>
+                        <p><strong>Russia maintains the world's largest nuclear arsenal</strong> (~5,580 warheads) and the second-largest conventional military, though the Ukraine war has exposed significant weaknesses in doctrine, equipment, and logistics.</p>
                         <ul>
-                            <li><strong>Nuclear Arsenal:</strong> Approximately 5,580 nuclear warheads (deployed, reserve, and retired) — the world's largest stockpile. The strategic triad includes ICBMs (Topol-M, Yars, Sarmat in development), submarine-launched ballistic missiles (Bulava on Borei-class SSBNs), and air-launched cruise missiles on Tu-160 and Tu-95 bombers.</li>
-                            <li><strong>Nuclear Doctrine:</strong> Russia's revised 2024 nuclear doctrine lowered the threshold for nuclear use — stating that aggression by a non-nuclear state supported by a nuclear power could trigger a nuclear response. Western analysts view this as deliberate ambiguity designed to deter deeper Western involvement in Ukraine.</li>
-                            <li><strong>Conventional Forces — Ukraine Losses:</strong> Russia has suffered enormous equipment and personnel losses in Ukraine — estimated at over 300,000 casualties (killed and wounded), thousands of tanks, armored vehicles, and aircraft. The pre-war force structure has been fundamentally degraded.</li>
-                            <li><strong>Mobilization &amp; Recruitment:</strong> The September 2022 "partial mobilization" called up approximately 300,000 reservists. Russia has since relied on high-salary contracts, recruitment from prisons, and foreign fighters (including from Nepal and Central Africa) to sustain force levels without declaring another formal mobilization.</li>
-                            <li><strong>Defense Industrial Base:</strong> Russia has shifted to a wartime production footing — increasing tank, artillery shell, and drone manufacturing. However, it remains dependent on imported components (particularly microelectronics) that are subject to Western export controls. Sanctions evasion through third countries is a constant cat-and-mouse dynamic.</li>
-                            <li><strong>North Korean &amp; Iranian Support:</strong> North Korea has provided millions of artillery shells and reportedly deployed troops. Iran has supplied Shahed-series kamikaze drones. Both relationships have deepened into broader military-technical cooperation that concerns Western intelligence agencies.</li>
+                            <li><strong>Nuclear Doctrine (2024 Revision):</strong> Lowered threshold for nuclear use — aggression by a non-nuclear state supported by a nuclear power could trigger nuclear response. Western analysts view this as deliberate coercive ambiguity.</li>
+                            <li><strong>Ukraine Losses:</strong> Over 300,000 casualties (KIA + WIA); thousands of tanks, armored vehicles, aircraft destroyed. Pre-war force structure fundamentally degraded.</li>
+                            <li><strong>DPRK &amp; Iranian Support:</strong> North Korea providing millions of artillery shells and reportedly troops. Iran supplying Shahed drones. Both relationships have deepened into broader military-technical cooperation.</li>
+                            <li><strong>Defense Production:</strong> Russia shifted to wartime footing — increased shell, tank, and drone manufacturing. Dependent on imported microelectronics — subject to Western export controls.</li>
                         </ul>
-                        <div class="open-source-disclaimer">* Based on IISS, SIPRI, RUSI, Janes, and CSIS reporting</div>
+                        <div class="open-source-disclaimer">Based on IISS, SIPRI, RUSI, Janes, and CSIS reporting</div>
                         <div class="report-links-grid">
                             <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
                             <a href="https://www.sipri.org/" target="_blank" class="report-link">📑 SIPRI</a>
                             <a href="https://www.rusi.org/" target="_blank" class="report-link">📑 RUSI</a>
-                            <a href="https://www.csis.org/" target="_blank" class="report-link">📑 CSIS</a>
-                            <a href="https://www.armscontrol.org/" target="_blank" class="report-link">📑 Arms Control Assoc.</a>
+                            <a href="https://www.armscontrol.org/" target="_blank" class="report-link">📑 Arms Control</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Sanctions & Economy -->
                 <div class="knowledge-card collapsed" id="card-sanctions">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('sanctions')">
+                    <div class="knowledge-header" onclick="toggleCard('sanctions')">
                         <div class="knowledge-header-title"><span class="category-icon">💰</span> <span data-i18n="catSanctions">Sanctions &amp; Economic Impact</span></div>
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Russia faces the most comprehensive sanctions regime ever imposed on a major economy</strong> — targeting financial institutions, energy exports, technology imports, and individual oligarchs. The long-term impact is significant but Russia has demonstrated greater short-term resilience than many initially expected.</p>
+                        <p><strong>Russia faces the most comprehensive sanctions regime ever imposed on a major economy</strong>, targeting financial institutions, energy exports, and technology imports. The impact is significant but Russia has demonstrated greater short-term resilience than initially expected.</p>
                         <ul>
-                            <li><strong>Financial Sanctions:</strong> Approximately $300 billion in Russian Central Bank reserves have been frozen in Western jurisdictions. Major Russian banks have been disconnected from SWIFT. The ruble experienced sharp initial volatility but was stabilized through capital controls and energy revenues.</li>
-                            <li><strong>Energy Revenues:</strong> Oil and gas revenues — historically representing approximately 40% of Russia's federal budget — have been hit by the G7 oil price cap ($60/barrel for crude). Russia has redirected significant export volumes to China, India, and Turkey at discounted prices. Revenue has declined but not collapsed.</li>
-                            <li><strong>Technology Restrictions:</strong> Export controls on advanced semiconductors, precision machine tools, and dual-use technologies aim to degrade Russia's ability to produce advanced weapons systems. Evidence suggests significant impact on high-end military production, though sanctions evasion through intermediary countries continues.</li>
-                            <li><strong>Wartime Economy:</strong> Russia's economy has shifted to a de facto wartime footing — with defense spending exceeding 6% of GDP (some estimates suggest over 8% when including security services). This has created short-term GDP growth driven by military production but at the cost of civilian economic investment, labor market distortions, and accelerating inflation.</li>
-                            <li><strong>Brain Drain:</strong> An estimated 500,000–1 million Russians — disproportionately young, educated, and tech-skilled — have emigrated since February 2022. The long-term impact on Russia's technology sector and innovation capacity is considered severe.</li>
-                            <li><strong>Shadow Fleet:</strong> Russia has assembled a "shadow fleet" of aging oil tankers to circumvent Western shipping restrictions — raising significant environmental and insurance concerns in European and Arctic waters.</li>
+                            <li><strong>~$300B Frozen:</strong> Russian Central Bank reserves frozen in Western jurisdictions. Major banks SWIFT-disconnected.</li>
+                            <li><strong>Energy Redirect:</strong> Oil and gas exports redirected to China, India, Turkey at discounted prices. Revenue declined but not collapsed.</li>
+                            <li><strong>Shadow Fleet:</strong> Russia assembled aging oil tanker fleet to circumvent shipping restrictions — significant environmental risk in European and Arctic waters.</li>
+                            <li><strong>Wartime Economy:</strong> Defense spending exceeding 6-8% of GDP. Short-term GDP growth driven by military production — at cost of civilian investment and accelerating inflation.</li>
                         </ul>
-                        <div class="open-source-disclaimer">* Based on EU sanctions database, OFAC/Treasury, IMF, World Bank, and KSE Institute tracking</div>
+                        <div class="open-source-disclaimer">Based on EU sanctions database, OFAC/Treasury, IMF, World Bank, and KSE Institute tracking</div>
                         <div class="report-links-grid">
-                            <a href="https://www.treasury.gov/resource-center/sanctions" target="_blank" class="report-link">📑 U.S. Treasury OFAC</a>
-                            <a href="https://www.consilium.europa.eu/en/policies/sanctions/restrictive-measures-against-russia-over-ukraine/" target="_blank" class="report-link">📑 EU Sanctions</a>
-                            <a href="https://kse.ua/sanctions/" target="_blank" class="report-link">📑 KSE Sanctions Tracker</a>
-                            <a href="https://www.imf.org/en/Countries/RUS" target="_blank" class="report-link">📑 IMF - Russia</a>
+                            <a href="https://www.treasury.gov/resource-center/sanctions" target="_blank" class="report-link">📑 US Treasury OFAC</a>
+                            <a href="https://kse.ua/sanctions/" target="_blank" class="report-link">📑 KSE Tracker</a>
+                            <a href="https://www.imf.org/en/Countries/RUS" target="_blank" class="report-link">📑 IMF Russia</a>
                         </div>
                     </div>
                 </div>
 
                 <!-- Internal Dissent -->
                 <div class="knowledge-card collapsed" id="card-dissent">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('dissent')">
+                    <div class="knowledge-header" onclick="toggleCard('dissent')">
                         <div class="knowledge-header-title"><span class="category-icon">✊</span> <span data-i18n="catDissent">Internal Dissent &amp; Civil Society</span></div>
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Russia's domestic political space has been dramatically constricted since the Ukraine invasion.</strong> Independent media, opposition movements, and civil society organizations have been systematically eliminated, driven underground, or forced into exile — creating one of the most restrictive information environments among major nations.</p>
+                        <p><strong>Russia's domestic political space has been dramatically constricted since the Ukraine invasion.</strong> Independent media, opposition movements, and civil society have been systematically eliminated, driven underground, or forced into exile.</p>
                         <ul>
-                            <li><strong>Navalny:</strong> Opposition leader Alexei Navalny died in an Arctic penal colony in February 2024 under circumstances widely attributed to state action. His death removed the most prominent remaining domestic opposition figure and signaled the Kremlin's willingness to eliminate even imprisoned dissidents.</li>
-                            <li><strong>Media Suppression:</strong> Independent outlets (Novaya Gazeta, Meduza, TV Rain) have been shut down or forced to operate from exile. The "foreign agent" and "undesirable organization" laws have been used to criminalize contact with Western institutions. Criticizing the war is a criminal offense carrying up to 15 years imprisonment.</li>
-                            <li><strong>Anti-War Movement:</strong> Anti-war protests in February-March 2022 resulted in over 16,000 detentions. The protest movement was effectively suppressed through mass arrests, criminal prosecution, and emigration. Organized domestic opposition to the war is now almost entirely covert.</li>
-                            <li><strong>Ethnic Minorities &amp; Regions:</strong> Casualty rates in the Ukraine war have been disproportionately borne by ethnic minority regions (Dagestan, Buryatia) and economically disadvantaged areas — a pattern that has generated localized resentment but not yet organized resistance.</li>
-                            <li><strong>Exile Opposition:</strong> A significant Russian opposition community operates from abroad (Lithuania, Georgia, Germany, Israel). Its ability to influence events inside Russia is limited by the Kremlin's information control, though exile media outlets reach millions of Russians through VPNs.</li>
+                            <li><strong>Navalny:</strong> Died in Arctic penal colony February 2024. Removed the most prominent remaining domestic opposition figure.</li>
+                            <li><strong>Media Suppression:</strong> Novaya Gazeta, Meduza, TV Rain forced to operate from exile. Criticizing the war carries up to 15 years imprisonment.</li>
+                            <li><strong>Exile Opposition:</strong> Significant Russian opposition community in Lithuania, Georgia, Germany. Reach inside Russia limited by information control — millions access via VPN.</li>
                         </ul>
-                        <div class="open-source-disclaimer">* Based on Memorial, OVD-Info, RSF, Amnesty International, and Human Rights Watch</div>
+                        <div class="open-source-disclaimer">Based on OVD-Info, RSF, Amnesty International, Human Rights Watch, Memorial</div>
                         <div class="report-links-grid">
-                            <a href="https://ovd.info/en" target="_blank" class="report-link">📑 OVD-Info (Detentions)</a>
-                            <a href="https://www.amnesty.org/en/location/europe-and-central-asia/russian-federation/" target="_blank" class="report-link">📑 Amnesty - Russia</a>
-                            <a href="https://www.hrw.org/europe/central-asia/russia" target="_blank" class="report-link">📑 Human Rights Watch</a>
-                            <a href="https://rsf.org/en/country/russia" target="_blank" class="report-link">📑 RSF - Press Freedom</a>
-                            <a href="https://memorialinternational.org/en/" target="_blank" class="report-link">📑 Memorial International</a>
+                            <a href="https://ovd.info/en" target="_blank" class="report-link">📑 OVD-Info</a>
+                            <a href="https://www.hrw.org/europe/central-asia/russia" target="_blank" class="report-link">📑 HRW Russia</a>
+                            <a href="https://rsf.org/en/country/russia" target="_blank" class="report-link">📑 RSF Press Freedom</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Ukraine War Strategy -->
+                <!-- Ukraine War -->
                 <div class="knowledge-card collapsed" id="card-ukraine">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('ukraine')">
+                    <div class="knowledge-header" onclick="toggleCard('ukraine')">
                         <div class="knowledge-header-title"><span class="category-icon">🎯</span> <span data-i18n="catUkraine">Ukraine War Strategy &amp; Objectives</span></div>
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>Russia's full-scale invasion of Ukraine (February 24, 2022) represents the largest conventional military conflict in Europe since 1945</strong> and has fundamentally altered the European security architecture, global energy markets, and the international rules-based order.</p>
+                        <p><strong>Russia's full-scale invasion of Ukraine (February 24, 2022)</strong> is the largest conventional military conflict in Europe since 1945. Russia holds approximately 18% of Ukrainian territory including Crimea.</p>
                         <ul>
-                            <li><strong>Stated Objectives:</strong> Russia's publicly stated objectives have evolved — from initial "denazification and demilitarization" to effective control of four Ukrainian oblasts (Donetsk, Luhansk, Zaporizhzhia, Kherson, all illegally annexed in September 2022) and prevention of Ukraine's NATO membership. Analysts debate whether Moscow's actual minimum acceptable outcome extends beyond these stated goals.</li>
-                            <li><strong>Military Situation:</strong> After initial failures at Kyiv, the conflict has become a grinding attritional war concentrated in eastern and southern Ukraine. Russia holds approximately 18% of Ukrainian territory (including Crimea). Front lines have moved slowly despite massive resource expenditure by both sides.</li>
-                            <li><strong>Escalation Dynamics:</strong> Russia has deployed Iranian-designed drones, North Korean ammunition, and increasingly sophisticated strike packages against Ukrainian infrastructure — including sustained campaigns against the energy grid, civilian infrastructure, and port facilities.</li>
-                            <li><strong>Ceasefire Prospects:</strong> Multiple ceasefire proposals have been floated (Trump "peace plan," Chinese framework, various third-party mediations). Key obstacles include: Ukraine's insistence on territorial integrity, Russia's refusal to withdraw from occupied territories, security guarantees for Ukraine, and the question of sanctions relief.</li>
-                            <li><strong>War Crimes &amp; Accountability:</strong> The ICC issued arrest warrants for Putin and Children's Rights Commissioner Maria Lvova-Belova in March 2023 for the unlawful deportation of Ukrainian children. Documented atrocities at Bucha, Irpin, and Mariupol have been extensively investigated by UN mechanisms, the ICC, and independent investigators.</li>
+                            <li><strong>Stated Objectives:</strong> Evolved from "denazification" to control of four illegally annexed oblasts (Donetsk, Luhansk, Zaporizhzhia, Kherson) and preventing NATO membership.</li>
+                            <li><strong>ICC Warrants:</strong> Putin and Children's Rights Commissioner Maria Lvova-Belova — unlawful deportation of Ukrainian children, March 2023.</li>
+                            <li><strong>Ceasefire Prospects:</strong> Trump-Putin talks, Chinese framework, and third-party mediations all floated. Key obstacles: Ukrainian territorial integrity, Russian occupation, security guarantees.</li>
                         </ul>
-                        <div class="open-source-disclaimer">* Based on ISW, RUSI, IISS, UN Human Rights Monitoring Mission, and ICC reporting</div>
+                        <div class="open-source-disclaimer">Based on ISW, RUSI, IISS, UN Human Rights Monitoring Mission, and ICC reporting</div>
                         <div class="report-links-grid">
                             <a href="https://www.understandingwar.org/" target="_blank" class="report-link">📑 ISW</a>
-                            <a href="https://www.rusi.org/" target="_blank" class="report-link">📑 RUSI</a>
                             <a href="https://www.icc-cpi.int/" target="_blank" class="report-link">📑 ICC</a>
-                            <a href="https://www.ohchr.org/en/countries/ukraine" target="_blank" class="report-link">📑 UN OHCHR - Ukraine</a>
                             <a href="https://www.crisisgroup.org/europe-central-asia/eastern-europe/ukraine" target="_blank" class="report-link">📑 Crisis Group</a>
                         </div>
                     </div>
@@ -347,24 +731,19 @@
 
                 <!-- Russia-China -->
                 <div class="knowledge-card collapsed" id="card-china">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('china')">
+                    <div class="knowledge-header" onclick="toggleCard('china')">
                         <div class="knowledge-header-title"><span class="category-icon">🌐</span> <span data-i18n="catChina">Russia-China &amp; Global Alignment</span></div>
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong>The Russia-China relationship has deepened significantly since the Ukraine invasion</strong>, evolving from a "partnership without limits" (as declared weeks before the invasion) into Russia's most critical international relationship as Western isolation has intensified.</p>
+                        <p><strong>The Russia-China relationship has deepened significantly since the invasion</strong>, evolving from a "partnership without limits" into Russia's most critical international relationship as Western isolation intensified.</p>
                         <ul>
-                            <li><strong>Economic Dependence:</strong> China has become Russia's most important trading partner, with bilateral trade exceeding $240 billion in 2024. Russia has become heavily dependent on Chinese imports for consumer goods, electronics, automobiles, and industrial equipment that Western sanctions have cut off.</li>
-                            <li><strong>Energy Corridor:</strong> Russia has redirected oil and gas exports toward China via the Power of Siberia pipeline and increased LNG and crude shipments. A second major pipeline (Power of Siberia 2) has been under negotiation. China benefits from discounted Russian energy.</li>
-                            <li><strong>Technology Transfer:</strong> China provides Russia with dual-use technologies — including components that appear in Russian weapons systems. While China officially denies providing lethal military aid, Western intelligence has documented Chinese components in Russian drones and precision munitions.</li>
-                            <li><strong>Strategic Coordination:</strong> Joint military exercises, coordinated UN vetoes, aligned positions on international institutions, and shared opposition to what both describe as "U.S. hegemony" constitute a deepening strategic alignment — though it falls short of a formal alliance.</li>
-                            <li><strong>BRICS &amp; Alternative Order:</strong> Russia has invested heavily in BRICS (expanded in 2024 to include Iran, Saudi Arabia, UAE, Egypt, Ethiopia) as an alternative to Western-led institutions. De-dollarization efforts, alternative payment systems, and South-South diplomatic engagement are central to Russia's strategy for circumventing isolation.</li>
-                            <li><strong>Global South Outreach:</strong> Russia maintains significant diplomatic and military relationships across Africa (Wagner/Africa Corps), the Middle East (Syria, Iran), Latin America (Venezuela, Cuba, Nicaragua), and Central/South Asia — positioning itself as an anti-Western alternative partner.</li>
+                            <li><strong>Economic Dependence:</strong> Bilateral trade exceeding $240 billion in 2024. Russia dependent on Chinese imports for consumer goods, electronics, and industrial equipment.</li>
+                            <li><strong>Technology Transfer:</strong> China provides dual-use technologies — components appearing in Russian weapons systems. Western intelligence documented Chinese components in Russian drones and precision munitions.</li>
+                            <li><strong>BRICS &amp; Alternative Order:</strong> Russia invested in expanded BRICS, de-dollarization, and alternative payment systems as strategy to circumvent Western isolation.</li>
                         </ul>
-                        <div class="open-source-disclaimer">* Based on SIPRI, Brookings, Carnegie, IISS, and academic research</div>
+                        <div class="open-source-disclaimer">Based on SIPRI, Brookings, Carnegie, IISS, and academic research</div>
                         <div class="report-links-grid">
-                            <a href="https://www.sipri.org/" target="_blank" class="report-link">📑 SIPRI</a>
-                            <a href="https://www.brookings.edu/" target="_blank" class="report-link">📑 Brookings</a>
                             <a href="https://carnegieendowment.org/" target="_blank" class="report-link">📑 Carnegie</a>
                             <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
                             <a href="https://ecfr.eu/" target="_blank" class="report-link">📑 ECFR</a>
@@ -375,32 +754,51 @@
             </div>
         </div>
 
-        <!-- ARTICLES -->
+        <!-- ⑪ ARTICLES -->
         <div class="articles-section">
             <div class="section-title" data-i18n="recentArticles">📰 Recent Russia Security &amp; Stability Articles (Last 7 Days)</div>
-            <div id="articlesContainer"><div style="text-align:center; color:var(--text-secondary); padding:30px;">Loading articles...</div></div>
+            <div id="articlesContainer"><div style="text-align:center;color:var(--text-secondary);padding:30px;" data-i18n="loadingArticles">Loading articles...</div></div>
         </div>
 
         <footer>
             <div>Data Sources: NewsAPI, GDELT, ISW, SIPRI, and OSINT sources</div>
-            <div style="margin-top:15px;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
-            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics — Russia Stability Index v1.0.0</div>
+            <div style="margin-top:12px;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:#38bdf8;">asifahanalytics@gmail.com</a></div>
+            <div style="margin-top:16px;padding:12px;background:var(--article-bg);border-radius:8px;">
+                <div style="font-size:0.9em;margin-bottom:6px;">Asifah Analytics — Russia Stability Index v2.0.0</div>
             </div>
-            <div style="margin-top:20px; padding:15px; background:rgba(153,27,27,0.1); border-radius:8px;">
-                <span style="font-size:0.9em;">If you find Asifah Analytics useful, you can <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a></span>
+            <div style="margin-top:14px;padding:12px;background:rgba(56,189,248,0.06);border-radius:8px;">
+                <span style="font-size:0.9em;">If you find Asifah Analytics useful, <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#38bdf8;">☕ buy me a coffee</a></span>
             </div>
-            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>Unauthorized use, reproduction, or distribution prohibited.</div>
+            <div style="margin-top:20px;font-size:0.75em;color:var(--text-muted);">© 2025-2026 RCGG. All Rights Reserved.</div>
         </footer>
-    </div>
+
+    </div><!-- end container -->
 
     <script>
+    // ── CONFIG ──
     const API_BASE = 'https://asifa-europe-backend.onrender.com';
-    function initTheme() { const s = localStorage.getItem('asifah-theme') || 'light'; document.documentElement.setAttribute('data-theme', s); }
-    function toggleTheme() { const c = document.documentElement.getAttribute('data-theme'); const n = c === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); localStorage.setItem('asifah-theme', n); }
+
+    // ── THEME ──
+    function initTheme() {
+        const s = localStorage.getItem('asifah-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', s);
+    }
+    function toggleTheme() {
+        const c = document.documentElement.getAttribute('data-theme');
+        const n = c === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', n);
+        localStorage.setItem('asifah-theme', n);
+    }
     initTheme();
-    function toggleKnowledgeCard(id) { const c = document.getElementById('card-' + id); if (c) c.classList.toggle('collapsed'); }
-    let loadingStepIndex = 0, loadingInterval = null, loadingTimeout = null;
+
+    // ── KNOWLEDGE CARDS ──
+    function toggleCard(id) {
+        const c = document.getElementById('card-' + id);
+        if (c) c.classList.toggle('collapsed');
+    }
+
+    // ── LOADING OVERLAY ──
+    let loadingStepIndex = 0, loadingInterval = null;
     function startLoadingProgress() {
         const steps = ['step1','step2','step3','step4'];
         loadingInterval = setInterval(() => {
@@ -412,60 +810,20 @@
                 if (next) next.classList.add('active');
             }
         }, 4000);
-        loadingTimeout = setTimeout(() => { document.getElementById('loadingError').style.display = 'block'; document.getElementById('loadingError').textContent = '⚠️ Loading is taking longer than expected.'; }, 60000);
     }
     function hideLoadingOverlay() {
         if (loadingInterval) clearInterval(loadingInterval);
-        if (loadingTimeout) clearTimeout(loadingTimeout);
-        document.querySelectorAll('.loading-step').forEach(s => { s.classList.remove('active'); s.classList.add('complete'); s.querySelector('.step-icon').textContent = '✓'; });
-        setTimeout(() => { const o = document.getElementById('loadingOverlay'); if (o) o.classList.add('hidden'); }, 500);
-    }
-    async function loadArticles() {
-        try {
-            const r = await fetch(`${API_BASE}/api/europe/articles/russia`);
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            const d = await r.json();
-            const articles = d.articles || d.recent_headlines || [];
-            if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
-        } catch (e) { console.warn('Articles failed:', e.message); displayFallback(); }
-    }
-    function displayArticles(articles) {
-        const c = document.getElementById('articlesContainer');
-        c.innerHTML = articles.slice(0, 20).map(a => {
-            const title = a.title || 'Untitled';
-            const source = a.source || a.source_name || '';
-            const published = a.published || a.publishedAt || '';
-            const url = a.url || '#';
-            const desc = a.description || '';
-            let ds = 'Recent';
-            if (published) { try { ds = new Date(published).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) { ds = published; } }
-            return `<div class="article-item"><div class="article-title">${title}</div>${desc ? `<div style="font-size:12px;color:var(--text-secondary);margin-bottom:8px;line-height:1.5;">${desc.substring(0,200)}${desc.length > 200 ? '...' : ''}</div>` : ''}<div class="article-meta">${source} • ${ds}</div>${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}</div>`;
-        }).join('');
-    }
-    function displayFallback() {
-        document.getElementById('articlesContainer').innerHTML = '<div style="text-align:center;padding:30px;color:var(--text-secondary);"><p style="font-size:16px;margin-bottom:15px;">📡 Live article feed loading. Check these curated sources:</p><div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:15px;"><a href="https://meduza.io/en" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Meduza</a><a href="https://www.themoscowtimes.com/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Moscow Times</a><a href="https://www.understandingwar.org/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">ISW</a><a href="https://www.reuters.com/world/europe/" target="_blank" style="padding:10px 18px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:13px;font-weight:bold;">Reuters</a></div></div>';
-    }
-
-    const translations = {
-        en: { pageTitle:"🇷🇺 RUSSIA STABILITY INDEX", pageSubtitle:"Multi-Factor Analysis: Sanctions Impact, Military Posture, Internal Dynamics & Global Alignment", backLink:"← Back to Europe Dashboard", themeToggle:"Theme", lastUpdated:"Last updated: ", mapTitle:"Russia — Strategic Overview", mapSubtitle:"Interactive map centered on European Russia. Military districts, frontline positions, and sanctions infrastructure overlays coming soon.", knowledgeLibraryTitle:"Knowledge Library", catGovernment:"Government & Political System", catMilitary:"Military & Nuclear Posture", catSanctions:"Sanctions & Economic Impact", catDissent:"Internal Dissent & Civil Society", catUkraine:"Ukraine War Strategy & Objectives", catChina:"Russia-China & Global Alignment", recentArticles:"📰 Recent Russia Security & Stability Articles (Last 7 Days)" },
-        fr: { pageTitle:"🇷🇺 INDICE DE STABILITÉ DE LA RUSSIE", pageSubtitle:"Analyse multifactorielle : Impact des sanctions, posture militaire, dynamiques internes et alignement mondial", backLink:"← Retour au tableau de bord Europe", themeToggle:"Thème", lastUpdated:"Dernière mise à jour : ", mapTitle:"Russie — Vue stratégique", mapSubtitle:"Carte interactive centrée sur la Russie européenne.", knowledgeLibraryTitle:"Bibliothèque de connaissances", catGovernment:"Gouvernement et système politique", catMilitary:"Posture militaire et nucléaire", catSanctions:"Sanctions et impact économique", catDissent:"Dissidence interne et société civile", catUkraine:"Stratégie et objectifs de guerre en Ukraine", catChina:"Relations Russie-Chine et alignement mondial", recentArticles:"📰 Articles récents sur la Russie" },
-        ru: { pageTitle:"🇷🇺 ИНДЕКС СТАБИЛЬНОСТИ РОССИИ", pageSubtitle:"Многофакторный анализ: влияние санкций, военная позиция, внутренняя динамика и глобальное выравнивание", backLink:"← Назад к панели Европы", themeToggle:"Тема", lastUpdated:"Последнее обновление: ", mapTitle:"Россия — Стратегический обзор", mapSubtitle:"Интерактивная карта европейской России.", knowledgeLibraryTitle:"Библиотека знаний", catGovernment:"Правительство и политическая система", catMilitary:"Военная и ядерная позиция", catSanctions:"Санкции и экономическое воздействие", catDissent:"Внутреннее инакомыслие и гражданское общество", catUkraine:"Стратегия и цели войны в Украине", catChina:"Россия-Китай и глобальное выравнивание", recentArticles:"📰 Последние статьи о России" },
-        de: { pageTitle:"🇷🇺 RUSSLAND-STABILITÄTSINDEX", pageSubtitle:"Mehrfaktorenanalyse: Sanktionsauswirkungen, Militärhaltung, interne Dynamik und globale Ausrichtung", backLink:"← Zurück zum Europa-Dashboard", themeToggle:"Design", lastUpdated:"Letzte Aktualisierung: ", mapTitle:"Russland — Strategischer Überblick", mapSubtitle:"Interaktive Karte des europäischen Russlands.", knowledgeLibraryTitle:"Wissensbibliothek", catGovernment:"Regierung und politisches System", catMilitary:"Militär- und Nuklearhaltung", catSanctions:"Sanktionen und wirtschaftliche Auswirkungen", catDissent:"Innere Dissidenz und Zivilgesellschaft", catUkraine:"Ukraine-Kriegsstrategie und Ziele", catChina:"Russland-China und globale Ausrichtung", recentArticles:"📰 Aktuelle Artikel über Russland" }
-    };
-    function switchLanguage(lang, button) {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        button.classList.add('active');
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if (translations[lang] && translations[lang][key]) {
-                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
-                    const parts = el.textContent.split(': '); const ts = parts.length > 1 ? parts.slice(1).join(': ') : 'Loading...';
-                    el.textContent = translations[lang][key] + ts;
-                } else { el.textContent = translations[lang][key]; }
-            }
+        document.querySelectorAll('.loading-step').forEach(s => {
+            s.classList.remove('active'); s.classList.add('complete');
+            s.querySelector('.step-icon').textContent = '✓';
         });
+        setTimeout(() => {
+            const o = document.getElementById('loadingOverlay');
+            if (o) o.classList.add('hidden');
+        }, 500);
     }
 
+    // ── RHETORIC CARD ──
     async function loadRussiaRhetoricData() {
         const LEVELS = { 0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626' };
         const LABELS = { 0:'Baseline',1:'Rhetoric',2:'Warning',3:'Confrontation',4:'Coercion',5:'Active Conflict' };
@@ -502,13 +860,551 @@
                 const ago = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
                 scanEl.textContent = 'Last scan: ' + (ago < 60 ? ago + 'm' : Math.round(ago/60) + 'h') + ' ago · ' + (data.total_articles || 0) + ' articles analyzed';
             }
+            // Wire diplomatic track status
+            const diplEl = document.getElementById('diplStatus');
+            if (diplEl && data.diplomatic_score !== undefined) {
+                const ds = data.diplomatic_score || 0;
+                diplEl.textContent = ds >= 60 ? 'ACTIVE' : ds >= 30 ? 'LOW' : 'NONE';
+                diplEl.style.color = ds >= 60 ? '#10b981' : ds >= 30 ? '#f59e0b' : '#ef4444';
+            }
         } catch(e) { console.warn('[Russia Rhetoric]', e); }
     }
 
+    // ── ECONOMIC INDICATORS ──
+    async function loadEconomicIndicators() {
+        // Ruble/USD from frankfurter.app (free, no key)
+        try {
+            const fx = await fetch('https://api.frankfurter.app/latest?from=USD&to=RUB');
+            if (fx.ok) {
+                const fxData = await fx.json();
+                const rate = fxData.rates?.RUB;
+                if (rate) {
+                    document.getElementById('rubleRate').textContent = rate.toFixed(2) + ' ₽';
+                    const badge = document.getElementById('rubleStatus');
+                    if (rate > 90) { badge.textContent = 'WEAK'; badge.style.background = '#ef4444'; }
+                    else if (rate > 75) { badge.textContent = 'STRESSED'; badge.style.background = '#f59e0b'; }
+                    else { badge.textContent = 'STABLE'; badge.style.background = '#10b981'; }
+                }
+            }
+        } catch(e) { document.getElementById('rubleRate').textContent = 'Unavailable'; }
+
+        // Brent from open API
+        try {
+            const oil = await fetch('https://api.frankfurter.app/latest?from=USD&to=EUR'); // placeholder structure
+            // Use static fallback for Brent — free real-time oil APIs are limited
+            document.getElementById('brentPrice').textContent = '~$65–70 /bbl';
+            document.getElementById('brentChange').textContent = 'Live price — check Reuters/Bloomberg · Oil = ~40% of Russian federal budget';
+            const brentBadge = document.getElementById('brentStatus');
+            brentBadge.textContent = 'MONITOR';
+            brentBadge.style.background = '#f59e0b';
+        } catch(e) {}
+
+        // Urals discount (static — updated monthly)
+        const urals = document.getElementById('uralsDiscount');
+        if (urals) { urals.textContent = '~$10–15 discount'; urals.style.background = '#f97316'; }
+    }
+
+    // ── ARTICLES ──
+    async function loadArticles() {
+        try {
+            const r = await fetch(API_BASE + '/api/europe/articles/russia');
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const d = await r.json();
+            const articles = d.articles || d.recent_headlines || [];
+            if (articles.length > 0) {
+                displayArticles(articles);
+            } else {
+                displayFallback();
+            }
+        } catch(e) { displayFallback(); }
+    }
+    function displayArticles(articles) {
+        const c = document.getElementById('articlesContainer');
+        c.innerHTML = articles.slice(0, 20).map(a => {
+            const title = a.title || 'Untitled';
+            const source = a.source || a.source_name || '';
+            const published = a.published || a.publishedAt || '';
+            const url = a.url || '#';
+            const desc = a.description || '';
+            let ds = 'Recent';
+            try { if (published) ds = new Date(published).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){}
+            return `<div class="article-item">
+                <div class="article-title">${title}</div>
+                ${desc ? `<div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;line-height:1.4;">${desc.substring(0,180)}${desc.length>180?'...':''}</div>` : ''}
+                <div class="article-meta">${source} · ${ds}</div>
+                ${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}
+            </div>`;
+        }).join('');
+    }
+    function displayFallback() {
+        document.getElementById('articlesContainer').innerHTML = `
+            <div style="text-align:center;padding:30px;color:var(--text-secondary);">
+                <p style="font-size:15px;margin-bottom:14px;">📡 Live article feed loading. Check these curated sources:</p>
+                <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:12px;">
+                    <a href="https://meduza.io/en" target="_blank" style="padding:8px 16px;background:rgba(56,189,248,0.1);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;border:1px solid rgba(56,189,248,0.2);">Meduza</a>
+                    <a href="https://kyivindependent.com" target="_blank" style="padding:8px 16px;background:rgba(56,189,248,0.1);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;border:1px solid rgba(56,189,248,0.2);">Kyiv Independent</a>
+                    <a href="https://www.understandingwar.org/" target="_blank" style="padding:8px 16px;background:rgba(56,189,248,0.1);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;border:1px solid rgba(56,189,248,0.2);">ISW</a>
+                    <a href="https://www.rferl.org" target="_blank" style="padding:8px 16px;background:rgba(56,189,248,0.1);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;border:1px solid rgba(56,189,248,0.2);">RFE/RL</a>
+                </div>
+            </div>`;
+    }
+
+    // ── LEAFLET MAP ──
+    function initMap() {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+        document.head.appendChild(link);
+        const script = document.createElement('script');
+        script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+        script.onload = function() {
+            const map = L.map('russiaMap', { zoomControl: true, scrollWheelZoom: false })
+                .setView([58.0, 48.0], 3);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors', maxZoom: 10
+            }).addTo(map);
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+            function pin(lat, lng, color, label, note) {
+                const m = L.circleMarker([lat, lng], {
+                    radius: 7, fillColor: color, color: isDark ? '#0d1b2e' : '#fff',
+                    weight: 2, opacity: 1, fillOpacity: 0.85
+                }).addTo(map);
+                m.bindPopup(`<strong>${label}</strong><br><span style="font-size:12px;">${note}</span>`, { maxWidth: 260 });
+                return m;
+            }
+
+            // ── POLITICAL / ADMINISTRATIVE ──
+            pin(55.75, 37.62,  '#ef4444', '🏛️ Moscow',          'Capital — Kremlin, FSB HQ, Gerasimov General Staff');
+            pin(59.93, 30.32,  '#f97316', '🏙️ St. Petersburg',   'Second city — Baltic Fleet HQ, Putin hometown');
+            pin(56.85, 60.61,  '#f59e0b', '🏭 Yekaterinburg',    'Urals industrial hub — major defense manufacturing');
+            pin(53.20, 50.15,  '#f59e0b', '🏭 Samara',           'Aerospace and defense industrial city');
+
+            // ── MILITARY / NUCLEAR ──
+            pin(68.98, 33.09,  '#dc2626', '🧊 Murmansk',         'Northern Fleet HQ — SSBN base — GIUK Gap access point');
+            pin(54.71, 20.51,  '#dc2626', '⚠️ Kaliningrad',      'NATO encirclement exclave — Iskander missile deployment site — Suwalki Gap threat');
+            pin(58.60, 49.66,  '#dc2626', '☢️ Kirov (Vyatka)',   'Closed nuclear weapons assembly facility — Rosatom complex');
+            pin(56.77, 60.63,  '#dc2626', '☢️ Sverdlovsk-44',    'Closed nuclear city — HEU production — Rosatom');
+            pin(51.53, 46.03,  '#dc2626', '🚀 Kapustin Yar',     'Russian missile test range — ballistic missile launches');
+            pin(45.93, 63.34,  '#dc2626', '🚀 Baikonur Cosmod.', 'Primary launch facility — shared with Kazakhstan');
+
+            // ── UKRAINE FRONT ──
+            pin(47.83, 35.14,  '#ef4444', '⚔️ Zaporizhzhia Front','Active front line — nuclear plant nearby — contested oblast');
+            pin(48.00, 37.80,  '#ef4444', '⚔️ Donetsk Front',    'Primary Russian advance zone — heaviest fighting 2024-26');
+            pin(50.00, 36.25,  '#f97316', '⚔️ Kharkiv Oblast',   'Northern front — cross-border strikes, Ukrainian counteroffensive zone');
+            pin(51.72, 35.45,  '#f97316', '⚔️ Kursk Oblast',     'Russian territory — Ukrainian incursion 2024, ongoing pressure');
+            pin(46.63, 32.62,  '#f97316', '⚔️ Kherson Oblast',   'Occupied south — Dnieper River line');
+
+            // ── NAVY ──
+            pin(44.60, 33.52,  '#3b82f6', '⚓ Sevastopol',        'Black Sea Fleet HQ — Crimea — degraded by Ukrainian strikes 2023-24');
+            pin(44.95, 34.10,  '#3b82f6', '🏖️ Crimea',           'Illegally annexed 2014 — Kerch Bridge supply link to mainland');
+
+            // ── ENERGY ──
+            pin(61.25, 73.42,  '#22c55e', '🛢️ Surgut',           'Core Siberian oil production hub — Urals blend source');
+            pin(60.97, 68.97,  '#22c55e', '🛢️ Khanty-Mansiysk',  'West Siberia oil fields — ~50% of Russian oil output region');
+            pin(69.35, 88.20,  '#22c55e', '🛢️ Norilsk',          'Nickel / palladium / copper — strategic metals for sanctions monitoring');
+
+            // ── ARCTIC ──
+            pin(77.55, 68.02,  '#0ea5e9', '🧊 Novaya Zemlya',    'Russian Arctic — former nuclear test site — Northern Fleet operations area');
+            pin(74.72, 142.77, '#0ea5e9', '🧊 Tiksi',            'Arctic military base — Russia Arctic expansion');
+
+        };
+        document.head.appendChild(script);
+    }
+
+    // ── TRANSLATIONS ──
+    const translations = {
+        en: {
+            pageTitle: '🇷🇺 RUSSIA STABILITY INDEX',
+            pageSubtitle: 'Multi-Factor Analysis: Sanctions Impact, Military Posture, Internal Dynamics & Global Alignment',
+            backLink: '← Back to Russia', themeToggle: 'Theme',
+            lastUpdated: 'Last updated: ',
+            wcTitle: '⚠ U.S. State Department — Worldwide Caution',
+            wcText: 'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media and heed official guidance.',
+            wcLink: 'View Caution →',
+            ctbTitle: 'U.S. State Department — Russia Travel Advisory',
+            ctbText: 'Do Not Travel to Russia due to the ongoing war with Ukraine, risk of wrongful detention, harassment by Russian security services, limited consular assistance, and potential for mobilization.',
+            ctbLink: 'View Advisory →',
+            rhetoricBannerTitle: 'Russia Pressure Tracker',
+            rhetoricBannerSub: 'Military · Nuclear · NATO Flank · Arctic · Hybrid · Cross-Theater',
+            rhetoricBannerBtn: 'Open Tracker →',
+            rhetoricCardTitle: '📡 RUSSIA PRESSURE TRACKER',
+            rhetoricCardSub: 'Five-vector pressure score — Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid · Updated every 12h',
+            rhetoricCardLink: 'View Full Pressure Analysis →',
+            warStatusTitle: '⚔️ UKRAINE WAR — CURRENT STATUS',
+            wsTerrLabel: 'Territory Held', wsTerrNote: 'of Ukraine incl. Crimea · ISW, Apr 2026',
+            wsCasLabel: 'Est. Casualties', wsCasNote: 'KIA + WIA · UK MoD / USG estimates',
+            wsIccLabel: 'ICC Arrest Warrant', wsIccNote: 'Putin + Lvova-Belova · March 2023',
+            wsDprkLabel: 'DPRK/Iran Supply', wsDprkNote: 'Cross-theater coordination · Live signal',
+            wsFrontLabel: 'Active Front', wsFrontNote: 'Contact line · Zaporizhzhia to Kharkiv',
+            wsDiplLabel: 'Diplomatic Track', wsDiplNote: 'Easter ceasefire · No framework · Live signal',
+            warStatusSource: 'Sources: ISW, UK MoD, ICC, Asifah cross-theater fingerprint · Data as of April 2026',
+            econTitle: '💹 ECONOMIC INDICATORS — WARTIME RUSSIA',
+            econLiveTitle: 'Live Market Signals',
+            rubleLabel: 'Ruble / USD', rubleNote: 'RUB per 1 USD · Higher = weaker ruble',
+            brentLabel: 'Brent Crude', brentNote: 'Oil = ~40% of Russian federal budget',
+            uralLabel: 'Urals Discount vs. Brent', uralNote: 'Sanctions-driven discount on Russian crude',
+            econSanctionsTitle: 'Sanctions & War Economy',
+            defSpendLabel: 'Defense Spending', defSpendNote: 'Highest since Cold War · SIPRI 2025',
+            reservesLabel: 'Frozen Reserves', reservesNote: 'Frozen in Western jurisdictions · EU/G7',
+            capLabel: 'G7 Oil Price Cap', capNote: 'Russia selling above cap via shadow fleet · G7 2022',
+            swiftLabel: 'SWIFT Status', swiftNote: 'Major banks disconnected · Feb 2022 · EU Council',
+            econBrainTitle: 'Structural Damage Indicators',
+            brainLabel: 'Brain Drain', brainNote: 'Emigrated since Feb 2022 · disproportionately tech/skilled · Novaya Gazeta est.',
+            inflLabel: 'Inflation (CPI)', inflNote: 'Wartime economy distortion · Rosstat 2025 (state figures — actual likely higher)',
+            rateLabel: 'CBR Key Rate', rateNote: 'Central Bank emergency rate to defend ruble · CBR Oct 2024',
+            chinaLabel: 'China Trade Dependency', chinaNote: 'Russia primary trading partner · replacing Western goods · 2024',
+            leadershipTitle: '👥 KEY LEADERSHIP',
+            putinRole: 'President', putinSince: 'President since 2000 (with 2008–12 gap as PM)',
+            putinNote: 'Longest-serving Russian/Soviet leader since Stalin. 2020 constitutional amendments allow rule to 2036. March 2024 election: 87% reported.',
+            putinIcc: '⚖️ ICC arrest warrant issued March 2023 — unlawful deportation of Ukrainian children',
+            mishRole: 'Prime Minister', mishSince: 'Since January 2020',
+            mishNote: 'Technocrat managing wartime economy. Oversaw federal budget reorientation to defense. Low public profile.',
+            lavrovRole: 'Foreign Minister', lavrovSince: 'Since March 2004',
+            lavrovNote: 'Primary diplomatic face internationally. Lavrov statements reflect Kremlin policy directly.',
+            gerasimovRole: 'Chief of General Staff', gerasimovSince: 'Since January 2023 (Ukraine war commander)',
+            gerasimovNote: 'Survived Prigozhin mutiny. Named overall Ukraine war commander Jan 2023.',
+            gerasimovRisk: '⚠️ Position uncertain — Ukraine setbacks historically reshuffle Russian military leadership',
+            patrushevRole: 'Presidential Aide / Security', patrushevSince: 'Presidential aide since 2023; Sec. Council 2008–23',
+            patrushevNote: 'Hardline silovik ideologue. Widely considered Putin\'s closest ideological ally.',
+            medvedevRole: 'Dep. Security Council Chair', medvedevSince: 'Deputy SecCouncil since 2020',
+            medvedevNote: 'Primary Kremlin nuclear rhetoric instrument. His statements about nuclear weapons are deliberate Kremlin signaling.',
+            medvedevRisk: '📡 Asifah tracker monitors Medvedev rhetoric as a nuclear signaling proxy',
+            pressureTitle: '🔴 INTERNAL PRESSURE MONITOR',
+            protestTitle: 'War Protests / Dissent', protestDesc: 'Detained in Feb–Mar 2022 anti-war protests. Organized domestic opposition now almost entirely suppressed or in exile.',
+            protestDetail1: 'Criticizing the war = criminal offense, up to 15 years',
+            protestDetail2: 'Independent media shut down or in exile (Meduza, TV Rain, Novaya Gazeta)',
+            protestDetail3: 'Navalny died in Arctic penal colony Feb 2024',
+            casualtyTitle: 'Military Casualties', casualtyDesc: 'Estimated Russian KIA + WIA since Feb 2022. Disproportionate losses among ethnic minority regions.',
+            casualtyDetail1: 'Sept 2022 partial mobilization: ~300,000 called up',
+            casualtyDetail2: 'Foreign fighters recruited: Nepal, Central Africa, DPRK',
+            casualtyDetail3: 'Ethnic minority regions bear disproportionate casualty burden',
+            brainDrainTitle: 'Brain Drain', brainDrainDesc: 'Estimated Russians emigrated since Feb 2022. Disproportionately young, educated, and tech-skilled.',
+            brainDrainDetail1: 'Tech sector exodus to Georgia, Armenia, Serbia, Israel',
+            brainDrainDetail2: 'Long-term damage to R&D, semiconductor, and defense tech capacity',
+            prisonTitle: 'Political Prisoners', prisonDesc: 'Documented political prisoners in Russia. "Foreign agent" laws criminalize contact with Western institutions.',
+            prisonDetail1: 'Evan Gershkovich (WSJ) detained 2023, released Aug 2024',
+            prisonDetail2: 'Paul Whelan (US Marine) detained 2018, released Aug 2024',
+            prisonDetail3: 'Alexei Navalny died Feb 2024 — IK-6 Arctic penal colony',
+            pressTitle: 'Press Freedom', pressDesc: 'Russia\'s RSF Press Freedom ranking 2024. One of the most restrictive information environments among major nations.',
+            pressDetail1: 'Independent outlets shut or exiled — Meduza, TV Rain, Novaya Gazeta',
+            pressDetail2: 'VPN usage surged — millions access exile media via VPN',
+            pressDetail3: 'State TV (RT, Channel One) primary information source for most Russians',
+            isolTitle: 'International Isolation', isolDesc: 'UN General Assembly vote demanding Russian withdrawal from Ukraine (Feb 2023).',
+            isolDetail1: 'China primary partner — $240B+ bilateral trade 2024',
+            isolDetail2: 'India purchasing discounted Russian oil',
+            isolDetail3: 'BRICS expanded 2024 — alternative to Western-led institutions',
+            mapTitle: 'Russia — Strategic Overview',
+            mapSubtitle: 'Key military installations, energy infrastructure, conflict zones, and geopolitical flashpoints.',
+            knowledgeTitle: 'Knowledge Library',
+            knowledgeDisclaimer: 'Background information compiled from open-source research, think tank analyses, and public government reporting.',
+            catGovernment: 'Government & Political System', catMilitary: 'Military & Nuclear Posture',
+            catSanctions: 'Sanctions & Economic Impact', catDissent: 'Internal Dissent & Civil Society',
+            catUkraine: 'Ukraine War Strategy & Objectives', catChina: 'Russia-China & Global Alignment',
+            recentArticles: '📰 Recent Russia Security & Stability Articles (Last 7 Days)',
+            loadingArticles: 'Loading articles...',
+        },
+        fr: {
+            pageTitle: '🇷🇺 INDICE DE STABILITÉ DE LA RUSSIE',
+            pageSubtitle: 'Analyse multifactorielle : Impact des sanctions, posture militaire, dynamiques internes et alignement mondial',
+            backLink: '← Retour à la Russie', themeToggle: 'Thème',
+            lastUpdated: 'Dernière mise à jour : ',
+            wcTitle: '⚠ Département d\'État américain — Mise en garde mondiale',
+            wcText: 'Les citoyens américains dans le monde entier doivent rester vigilants. Des groupes terroristes et des criminels continuent de planifier des attaques à l\'échelle mondiale.',
+            wcLink: 'Voir la mise en garde →',
+            ctbTitle: 'Département d\'État américain — Avis de voyage Russie',
+            ctbText: 'Ne pas voyager en Russie en raison de la guerre en cours avec l\'Ukraine, du risque de détention arbitraire, du harcèlement par les services de sécurité russes et de la mobilisation potentielle.',
+            ctbLink: 'Voir l\'avis →',
+            rhetoricBannerTitle: 'Suivi de pression Russie',
+            rhetoricBannerSub: 'Militaire · Nucléaire · Flanc OTAN · Arctique · Hybride · Multithéâtre',
+            rhetoricBannerBtn: 'Ouvrir le tracker →',
+            rhetoricCardTitle: '📡 SUIVI DE PRESSION RUSSE',
+            rhetoricCardSub: 'Score de pression cinq vecteurs — Nucléaire · Opérations terrestres · Flanc OTAN · Arctique · Hybride · Mis à jour toutes les 12h',
+            rhetoricCardLink: 'Voir l\'analyse complète →',
+            warStatusTitle: '⚔️ GUERRE EN UKRAINE — STATUT ACTUEL',
+            wsTerrLabel: 'Territoire occupé', wsTerrNote: 'de l\'Ukraine, Crimée incluse · ISW, avr. 2026',
+            wsCasLabel: 'Pertes estimées', wsCasNote: 'Tués + blessés · UK MoD / estimations américaines',
+            wsIccLabel: 'Mandat d\'arrêt CPI', wsIccNote: 'Poutine + Lvova-Belova · mars 2023',
+            wsDprkLabel: 'Approvisionnement RPDC/Iran', wsDprkNote: 'Coordination multithéâtre · Signal en direct',
+            wsFrontLabel: 'Front actif', wsFrontNote: 'Ligne de contact · Zaporijjia à Kharkiv',
+            wsDiplLabel: 'Piste diplomatique', wsDiplNote: 'Cessez-le-feu pascal · Sans cadre · Signal en direct',
+            warStatusSource: 'Sources : ISW, UK MoD, CPI, empreinte croisée Asifah · Données d\'avril 2026',
+            econTitle: '💹 INDICATEURS ÉCONOMIQUES — RUSSIE EN TEMPS DE GUERRE',
+            econLiveTitle: 'Signaux de marché en direct',
+            rubleLabel: 'Rouble / USD', rubleNote: 'RUB pour 1 USD · Plus élevé = rouble plus faible',
+            brentLabel: 'Brent brut', brentNote: 'Pétrole = ~40 % du budget fédéral russe',
+            uralLabel: 'Décote Urals vs. Brent', uralNote: 'Décote sur le brut russe due aux sanctions',
+            econSanctionsTitle: 'Sanctions et économie de guerre',
+            defSpendLabel: 'Dépenses de défense', defSpendNote: 'Plus élevées depuis la Guerre froide · SIPRI 2025',
+            reservesLabel: 'Réserves gelées', reservesNote: 'Gelées dans les juridictions occidentales · UE/G7',
+            capLabel: 'Plafond pétrolier G7', capNote: 'La Russie vend au-dessus du plafond via la flotte fantôme · G7 2022',
+            swiftLabel: 'Statut SWIFT', swiftNote: 'Principales banques déconnectées · Fév. 2022 · Conseil UE',
+            econBrainTitle: 'Indicateurs de dommages structurels',
+            brainLabel: 'Fuite des cerveaux', brainNote: 'Émigrés depuis fév. 2022 · majoritairement tech/qualifiés · est. Novaya Gazeta',
+            inflLabel: 'Inflation (IPC)', inflNote: 'Distorsion de l\'économie de guerre · Rosstat 2025',
+            rateLabel: 'Taux directeur BCR', rateNote: 'Taux d\'urgence de la Banque centrale pour défendre le rouble · Oct. 2024',
+            chinaLabel: 'Dépendance commerciale envers la Chine', chinaNote: 'Principal partenaire commercial de la Russie · 2024',
+            leadershipTitle: '👥 LEADERSHIP CLÉ',
+            putinRole: 'Président', putinSince: 'Président depuis 2000 (avec interruption 2008–12 comme PM)',
+            putinNote: 'Dirigeant russe/soviétique au pouvoir depuis le plus longtemps depuis Staline. Les amendements constitutionnels de 2020 permettent un mandat jusqu\'en 2036.',
+            putinIcc: '⚖️ Mandat d\'arrêt CPI émis en mars 2023 — déportation illégale d\'enfants ukrainiens',
+            mishRole: 'Premier ministre', mishSince: 'Depuis janvier 2020',
+            mishNote: 'Technocrate gérant l\'économie de guerre. A supervisé la réorientation du budget fédéral vers la défense.',
+            lavrovRole: 'Ministre des Affaires étrangères', lavrovSince: 'Depuis mars 2004',
+            lavrovNote: 'Principal visage diplomatique international de la Russie. Les déclarations de Lavrov reflètent directement la politique du Kremlin.',
+            gerasimovRole: 'Chef d\'État-major général', gerasimovSince: 'Depuis janvier 2023 (commandant de la guerre en Ukraine)',
+            gerasimovNote: 'A survécu à la mutinerie Prigojine. Nommé commandant général de la guerre en Ukraine en jan. 2023.',
+            gerasimovRisk: '⚠️ Position incertaine — les revers en Ukraine réorganisent historiquement le commandement militaire russe',
+            patrushevRole: 'Aide présidentiel / Sécurité', patrushevSince: 'Aide présidentiel depuis 2023 ; Conseil de sécurité 2008–23',
+            patrushevNote: 'Idéologue silovik de la ligne dure. Considéré comme l\'allié idéologique le plus proche de Poutine.',
+            medvedevRole: 'Vice-président du Conseil de sécurité', medvedevSince: 'Vice-président depuis 2020',
+            medvedevNote: 'Principal instrument rhétorique nucléaire du Kremlin. Ses déclarations sur les armes nucléaires sont une signalisation délibérée du Kremlin.',
+            medvedevRisk: '📡 Le tracker Asifah surveille la rhétorique de Medvedev comme indicateur avancé nucléaire',
+            pressureTitle: '🔴 MONITEUR DE PRESSION INTERNE',
+            protestTitle: 'Protestations / Dissidence', protestDesc: 'Détenus lors des manifestations anti-guerre de fév.–mars 2022. L\'opposition domestique organisée est maintenant presque entièrement supprimée.',
+            protestDetail1: 'Critiquer la guerre = délit pénal, jusqu\'à 15 ans',
+            protestDetail2: 'Médias indépendants fermés ou en exil (Meduza, TV Rain, Novaya Gazeta)',
+            protestDetail3: 'Navalny décédé dans un camp pénitentiaire arctique en fév. 2024',
+            casualtyTitle: 'Pertes militaires', casualtyDesc: 'Pertes russes estimées (tués + blessés) depuis fév. 2022.',
+            casualtyDetail1: 'Mobilisation partielle de sept. 2022 : ~300 000 appelés',
+            casualtyDetail2: 'Combattants étrangers recrutés : Népal, Afrique centrale, RPDC',
+            casualtyDetail3: 'Les régions des minorités ethniques supportent un fardeau disproportionné',
+            brainDrainTitle: 'Fuite des cerveaux', brainDrainDesc: 'Russes émigrés estimés depuis fév. 2022. Surtout jeunes, éduqués et qualifiés en tech.',
+            brainDrainDetail1: 'Exode du secteur tech vers la Géorgie, l\'Arménie, la Serbie, Israël',
+            brainDrainDetail2: 'Dommages à long terme pour la R&D, les semi-conducteurs et les technologies de défense',
+            prisonTitle: 'Prisonniers politiques', prisonDesc: 'Prisonniers politiques documentés en Russie.',
+            prisonDetail1: 'Evan Gershkovich (WSJ) détenu en 2023, libéré en août 2024',
+            prisonDetail2: 'Paul Whelan (US Marine) détenu en 2018, libéré en août 2024',
+            prisonDetail3: 'Alexei Navalny décédé en fév. 2024 — pénitencier arctique IK-6',
+            pressTitle: 'Liberté de la presse', pressDesc: 'Classement RSF 2024 de la liberté de la presse en Russie.',
+            pressDetail1: 'Médias indépendants fermés ou exilés — Meduza, TV Rain, Novaya Gazeta',
+            pressDetail2: 'Utilisation du VPN en hausse — des millions accèdent aux médias en exil via VPN',
+            pressDetail3: 'TV d\'État (RT, Chaîne 1) principale source d\'information',
+            isolTitle: 'Isolement international', isolDesc: 'Vote de l\'Assemblée générale de l\'ONU exigeant le retrait russe d\'Ukraine (fév. 2023).',
+            isolDetail1: 'Chine partenaire principal — +240 Mrd$ de commerce bilatéral 2024',
+            isolDetail2: 'L\'Inde achète du pétrole russe à prix réduit',
+            isolDetail3: 'BRICS élargi en 2024 — alternative aux institutions occidentales',
+            mapTitle: 'Russie — Vue stratégique',
+            mapSubtitle: 'Principales installations militaires, infrastructure énergétique, zones de conflit et points chauds géopolitiques.',
+            knowledgeTitle: 'Bibliothèque de connaissances',
+            knowledgeDisclaimer: 'Informations générales compilées à partir de recherches open source, d\'analyses de groupes de réflexion et de rapports gouvernementaux publics.',
+            catGovernment: 'Gouvernement et système politique', catMilitary: 'Posture militaire et nucléaire',
+            catSanctions: 'Sanctions et impact économique', catDissent: 'Dissidence interne et société civile',
+            catUkraine: 'Stratégie et objectifs de guerre en Ukraine', catChina: 'Relations Russie-Chine et alignement mondial',
+            recentArticles: '📰 Articles récents sur la sécurité et la stabilité de la Russie (7 derniers jours)',
+            loadingArticles: 'Chargement des articles...',
+        },
+        ru: {
+            pageTitle: '🇷🇺 ИНДЕКС СТАБИЛЬНОСТИ РОССИИ',
+            pageSubtitle: 'Многофакторный анализ: влияние санкций, военная позиция, внутренняя динамика и глобальное выравнивание',
+            backLink: '← Назад к России', themeToggle: 'Тема',
+            lastUpdated: 'Последнее обновление: ',
+            wcTitle: '⚠ Государственный департамент США — Всемирное предупреждение',
+            wcText: 'Гражданам США во всём мире следует сохранять бдительность. Террористические группы и преступники продолжают планировать атаки по всему миру.',
+            wcLink: 'Посмотреть предупреждение →',
+            ctbTitle: 'Государственный департамент США — Предупреждение о поездках в Россию',
+            ctbText: 'Не выезжайте в Россию из-за продолжающейся войны с Украиной, риска незаконного задержания, преследований со стороны российских спецслужб и возможной мобилизации.',
+            ctbLink: 'Посмотреть рекомендацию →',
+            rhetoricBannerTitle: 'Трекер давления России',
+            rhetoricBannerSub: 'Военные · Ядерные · Фланг НАТО · Арктика · Гибридные · Многотеатральные',
+            rhetoricBannerBtn: 'Открыть трекер →',
+            rhetoricCardTitle: '📡 ТРЕКЕР ДАВЛЕНИЯ РОССИИ',
+            rhetoricCardSub: 'Пятивекторная оценка давления — Ядерный · Наземные операции · Фланг НАТО · Арктика · Гибридный · Обновление каждые 12 часов',
+            rhetoricCardLink: 'Полный анализ давления →',
+            warStatusTitle: '⚔️ ВОЙНА В УКРАИНЕ — ТЕКУЩИЙ СТАТУС',
+            wsTerrLabel: 'Занятая территория', wsTerrNote: 'Украины, включая Крым · ISW, апр. 2026',
+            wsCasLabel: 'Оценочные потери', wsCasNote: 'Убитые + раненые · UK MoD / оценки США',
+            wsIccLabel: 'Ордер на арест МУС', wsIccNote: 'Путин + Львова-Белова · март 2023',
+            wsDprkLabel: 'Поставки КНДР/Ирана', wsDprkNote: 'Многотеатральная координация · Живой сигнал',
+            wsFrontLabel: 'Активный фронт', wsFrontNote: 'Линия соприкосновения · Запорожье — Харьков',
+            wsDiplLabel: 'Дипломатический трек', wsDiplNote: 'Пасхальное перемирие · Без рамок · Живой сигнал',
+            warStatusSource: 'Источники: ISW, UK MoD, МУС, перекрёстный след Asifah · Данные на апрель 2026',
+            econTitle: '💹 ЭКОНОМИЧЕСКИЕ ПОКАЗАТЕЛИ — РОССИЯ В ВОЕННОЕ ВРЕМЯ',
+            econLiveTitle: 'Живые рыночные сигналы',
+            rubleLabel: 'Рубль / USD', rubleNote: 'РУБ за 1 USD · Выше = слабее рубль',
+            brentLabel: 'Нефть Brent', brentNote: 'Нефть = ~40% федерального бюджета России',
+            uralLabel: 'Дисконт Urals к Brent', uralNote: 'Скидка на российскую нефть из-за санкций',
+            econSanctionsTitle: 'Санкции и военная экономика',
+            defSpendLabel: 'Военные расходы', defSpendNote: 'Максимум со времён холодной войны · SIPRI 2025',
+            reservesLabel: 'Замороженные резервы', reservesNote: 'Заморожены в западных юрисдикциях · ЕС/G7',
+            capLabel: 'Нефтяной потолок G7', capNote: 'Россия продаёт выше потолка через теневой флот · G7 2022',
+            swiftLabel: 'Статус SWIFT', swiftNote: 'Крупные банки отключены · Фев. 2022 · Совет ЕС',
+            econBrainTitle: 'Показатели структурного ущерба',
+            brainLabel: 'Утечка мозгов', brainNote: 'Эмигрировали с фев. 2022 · преимущественно технические специалисты · оценка Новой газеты',
+            inflLabel: 'Инфляция (ИПЦ)', inflNote: 'Искажение военной экономики · Росстат 2025',
+            rateLabel: 'Ключевая ставка ЦБ', rateNote: 'Экстренная ставка ЦБ для защиты рубля · Окт. 2024',
+            chinaLabel: 'Торговая зависимость от Китая', chinaNote: 'Основной торговый партнёр России · 2024',
+            leadershipTitle: '👥 КЛЮЧЕВОЕ РУКОВОДСТВО',
+            putinRole: 'Президент', putinSince: 'Президент с 2000 года (с перерывом 2008–2012 в роли премьера)',
+            putinNote: 'Самый долго правящий российский/советский лидер после Сталина. Поправки 2020 года позволяют правление до 2036 года.',
+            putinIcc: '⚖️ Ордер МУС выдан в марте 2023 года — незаконная депортация украинских детей',
+            mishRole: 'Премьер-министр', mishSince: 'С января 2020 года',
+            mishNote: 'Технократ, управляющий военной экономикой. Курировал переориентацию федерального бюджета на оборону.',
+            lavrovRole: 'Министр иностранных дел', lavrovSince: 'С марта 2004 года',
+            lavrovNote: 'Основное дипломатическое лицо России на международной арене. Заявления Лаврова отражают политику Кремля напрямую.',
+            gerasimovRole: 'Начальник Генерального штаба', gerasimovSince: 'С января 2023 года (командующий войной в Украине)',
+            gerasimovNote: 'Пережил мятеж Пригожина. Назначен командующим войной в Украине в январе 2023 года.',
+            gerasimovRisk: '⚠️ Позиция неустойчива — неудачи в Украине исторически перекраивают военное командование России',
+            patrushevRole: 'Помощник президента / Безопасность', patrushevSince: 'Помощник президента с 2023; Совет безопасности 2008–2023',
+            patrushevNote: 'Жёсткий идеолог-силовик. Считается ближайшим идеологическим союзником Путина.',
+            medvedevRole: 'Зам. председателя Совбеза', medvedevSince: 'Зам. председателя с 2020 года',
+            medvedevNote: 'Основной инструмент ядерной риторики Кремля. Его заявления о ядерном оружии — намеренные сигналы Кремля.',
+            medvedevRisk: '📡 Трекер Asifah отслеживает риторику Медведева как индикатор ядерного давления',
+            pressureTitle: '🔴 МОНИТОР ВНУТРЕННЕГО ДАВЛЕНИЯ',
+            protestTitle: 'Протесты / Инакомыслие', protestDesc: 'Задержаны во время антивоенных протестов фев.–март 2022. Организованная внутренняя оппозиция почти полностью подавлена.',
+            protestDetail1: 'Критика войны = уголовное преступление, до 15 лет',
+            protestDetail2: 'Независимые СМИ закрыты или в изгнании (Meduza, Дождь, Новая газета)',
+            protestDetail3: 'Навальный скончался в арктической колонии в фев. 2024',
+            casualtyTitle: 'Военные потери', casualtyDesc: 'Оценочные потери России (убитые + раненые) с фев. 2022.',
+            casualtyDetail1: 'Частичная мобилизация сент. 2022: ~300 000 призвано',
+            casualtyDetail2: 'Завербованы иностранные бойцы: Непал, Центральная Африка, КНДР',
+            casualtyDetail3: 'Непропорционально высокие потери среди этнических меньшинств',
+            brainDrainTitle: 'Утечка мозгов', brainDrainDesc: 'Оценочное число россиян, эмигрировавших с фев. 2022.',
+            brainDrainDetail1: 'Исход технического сектора в Грузию, Армению, Сербию, Израиль',
+            brainDrainDetail2: 'Долгосрочный ущерб для НИОКР, полупроводников и оборонных технологий',
+            prisonTitle: 'Политические заключённые', prisonDesc: 'Задокументированные политические заключённые в России.',
+            prisonDetail1: 'Эван Гершкович (WSJ) задержан в 2023, освобождён в авг. 2024',
+            prisonDetail2: 'Пол Уилан (морской пехотинец США) задержан в 2018, освобождён в авг. 2024',
+            prisonDetail3: 'Алексей Навальный скончался в фев. 2024 — ИК-6 в Арктике',
+            pressTitle: 'Свобода прессы', pressDesc: 'Рейтинг свободы прессы RSF 2024 для России.',
+            pressDetail1: 'Независимые СМИ закрыты или высланы — Meduza, Дождь, Новая газета',
+            pressDetail2: 'Использование VPN резко возросло — миллионы читают изгнанные СМИ через VPN',
+            pressDetail3: 'ГосТВ (RT, Первый канал) — основной источник информации для большинства россиян',
+            isolTitle: 'Международная изоляция', isolDesc: 'Голосование Генассамблеи ООН с требованием вывода российских войск из Украины (фев. 2023).',
+            isolDetail1: 'Китай — основной партнёр — $240+ млрд двустороннего товарооборота в 2024',
+            isolDetail2: 'Индия покупает российскую нефть со скидкой',
+            isolDetail3: 'БРИКС расширен в 2024 — альтернатива западным институтам',
+            mapTitle: 'Россия — Стратегический обзор',
+            mapSubtitle: 'Ключевые военные объекты, энергетическая инфраструктура, зоны конфликтов и геополитические точки напряжённости.',
+            knowledgeTitle: 'Библиотека знаний',
+            knowledgeDisclaimer: 'Общая информация составлена на основе публичных исследований, аналитических центров и официальных правительственных отчётов.',
+            catGovernment: 'Правительство и политическая система', catMilitary: 'Военная и ядерная позиция',
+            catSanctions: 'Санкции и экономическое воздействие', catDissent: 'Внутреннее инакомыслие и гражданское общество',
+            catUkraine: 'Стратегия и цели войны в Украине', catChina: 'Россия-Китай и глобальное выравнивание',
+            recentArticles: '📰 Последние статьи о безопасности и стабильности России (последние 7 дней)',
+            loadingArticles: 'Загрузка статей...',
+        },
+        de: {
+            pageTitle: '🇷🇺 RUSSLAND-STABILITÄTSINDEX',
+            pageSubtitle: 'Mehrfaktorenanalyse: Sanktionsauswirkungen, Militärhaltung, interne Dynamik und globale Ausrichtung',
+            backLink: '← Zurück zu Russland', themeToggle: 'Design',
+            lastUpdated: 'Letzte Aktualisierung: ',
+            wcTitle: '⚠ US-Außenministerium — Weltweite Warnung',
+            wcText: 'US-Bürger weltweit sollten wachsam bleiben. Terrorgruppen und Kriminelle planen weiterhin Anschläge weltweit. Lokale Medien beobachten und offizielle Anweisungen befolgen.',
+            wcLink: 'Warnung ansehen →',
+            ctbTitle: 'US-Außenministerium — Reisewarnung Russland',
+            ctbText: 'Reisen nach Russland nicht empfohlen wegen des anhaltenden Krieges mit der Ukraine, des Risikos willkürlicher Festnahmen, Belästigung durch russische Sicherheitsdienste und möglicher Mobilisierung.',
+            ctbLink: 'Hinweis ansehen →',
+            rhetoricBannerTitle: 'Russland Drucktracker',
+            rhetoricBannerSub: 'Militär · Nuklear · NATO-Flanke · Arktis · Hybrid · Multitheatralisch',
+            rhetoricBannerBtn: 'Tracker öffnen →',
+            rhetoricCardTitle: '📡 RUSSLAND DRUCKTRACKER',
+            rhetoricCardSub: 'Fünf-Vektor-Druckwert — Nuklear · Bodenoperationen · NATO-Flanke · Arktis · Hybrid · Aktualisierung alle 12 Stunden',
+            rhetoricCardLink: 'Vollständige Druckanalyse →',
+            warStatusTitle: '⚔️ UKRAINE-KRIEG — AKTUELLER STATUS',
+            wsTerrLabel: 'Besetztes Gebiet', wsTerrNote: 'der Ukraine inkl. Krim · ISW, Apr. 2026',
+            wsCasLabel: 'Geschätzte Verluste', wsCasNote: 'Getötete + Verwundete · UK MoD / US-Schätzungen',
+            wsIccLabel: 'IStGH-Haftbefehl', wsIccNote: 'Putin + Lwowa-Belowa · März 2023',
+            wsDprkLabel: 'DVRK/Iran-Versorgung', wsDprkNote: 'Multitheatralische Koordination · Live-Signal',
+            wsFrontLabel: 'Aktive Front', wsFrontNote: 'Kontaktlinie · Saporischschja bis Charkiw',
+            wsDiplLabel: 'Diplomatischer Kanal', wsDiplNote: 'Osterceasefire · Kein Rahmen · Live-Signal',
+            warStatusSource: 'Quellen: ISW, UK MoD, IStGH, Asifah-Querschnitts-Fingerabdruck · Stand April 2026',
+            econTitle: '💹 WIRTSCHAFTSINDIKATOREN — RUSSLAND IM KRIEGSMODUS',
+            econLiveTitle: 'Live-Marktsignale',
+            rubleLabel: 'Rubel / USD', rubleNote: 'RUB pro 1 USD · Höher = schwächerer Rubel',
+            brentLabel: 'Brent-Rohöl', brentNote: 'Öl = ~40 % des russischen Bundeshaushalts',
+            uralLabel: 'Urals-Rabatt ggü. Brent', uralNote: 'Sanktionsbedingter Abschlag auf russisches Rohöl',
+            econSanctionsTitle: 'Sanktionen und Kriegswirtschaft',
+            defSpendLabel: 'Verteidigungsausgaben', defSpendNote: 'Höchststand seit dem Kalten Krieg · SIPRI 2025',
+            reservesLabel: 'Eingefrorene Reserven', reservesNote: 'In westlichen Gerichtsbarkeiten eingefroren · EU/G7',
+            capLabel: 'G7-Ölpreisdeckel', capNote: 'Russland verkauft oberhalb des Deckels über Schattenflotte · G7 2022',
+            swiftLabel: 'SWIFT-Status', swiftNote: 'Große Banken abgekoppelt · Feb. 2022 · EU-Rat',
+            econBrainTitle: 'Strukturschadensindikatoren',
+            brainLabel: 'Brain Drain', brainNote: 'Ausgewandert seit Feb. 2022 · überwiegend Tech-/Fachkräfte · Novaya Gazeta Schätzung',
+            inflLabel: 'Inflation (VPI)', inflNote: 'Kriegswirtschaftliche Verzerrung · Rosstat 2025',
+            rateLabel: 'Leitzins ZBR', rateNote: 'Notfall-Zinssatz der Zentralbank zur Rubelverteidigung · Okt. 2024',
+            chinaLabel: 'Handelsabhängigkeit von China', chinaNote: 'Wichtigster Handelspartner Russlands · 2024',
+            leadershipTitle: '👥 SCHLÜSSELFÜHRUNG',
+            putinRole: 'Präsident', putinSince: 'Präsident seit 2000 (mit Unterbrechung 2008–12 als Premier)',
+            putinNote: 'Langzeit-Herrscher — länger als jeder russische/sowjetische Führer seit Stalin. Verfassungsänderungen 2020 erlauben Regieren bis 2036.',
+            putinIcc: '⚖️ IStGH-Haftbefehl März 2023 — unrechtmäßige Deportation ukrainischer Kinder',
+            mishRole: 'Premierminister', mishSince: 'Seit Januar 2020',
+            mishNote: 'Technokrat, der die Kriegswirtschaft verwaltet. Überwachte die Neuausrichtung des Bundeshaushalts auf Verteidigung.',
+            lavrovRole: 'Außenminister', lavrovSince: 'Seit März 2004',
+            lavrovNote: 'Primäres diplomatisches Gesicht Russlands international. Lawrows Aussagen spiegeln Kremlpolitik direkt wider.',
+            gerasimovRole: 'Generalstabschef', gerasimovSince: 'Seit Januar 2023 (Ukraine-Kriegskommandeur)',
+            gerasimovNote: 'Überlebte den Prigoschin-Aufstand. Im Januar 2023 zum Gesamtkommandeur des Ukraine-Krieges ernannt.',
+            gerasimovRisk: '⚠️ Position unsicher — Ukraine-Rückschläge führen historisch zur Umstrukturierung der russischen Militärführung',
+            patrushevRole: 'Präsidialberater / Sicherheit', patrushevSince: 'Präsidialberater seit 2023; Sicherheitsrat 2008–23',
+            patrushevNote: 'Hardline-Silowiki-Ideologe. Gilt weithin als Putins engster ideologischer Verbündeter.',
+            medvedevRole: 'Stv. Sicherheitsratsvorsitzender', medvedevSince: 'Stv. Vorsitzender seit 2020',
+            medvedevNote: 'Primäres nukleares Rhetorik-Instrument des Kremls. Seine Aussagen über Atomwaffen sind bewusste Kreml-Signale.',
+            medvedevRisk: '📡 Asifah-Tracker überwacht Medwedews Rhetorik als nuklearen Signalindikator',
+            pressureTitle: '🔴 INNENDRUCKMONITOR',
+            protestTitle: 'Kriegsproteste / Dissens', protestDesc: 'Festgenommen bei Antikriegsprotesten Feb.–März 2022. Organisierte Inlandsopposition weitgehend unterdrückt.',
+            protestDetail1: 'Kritik am Krieg = Straftat, bis zu 15 Jahre',
+            protestDetail2: 'Unabhängige Medien geschlossen oder im Exil (Meduza, TV Rain, Novaya Gazeta)',
+            protestDetail3: 'Nawalny gestorben in arktischem Straflager Feb. 2024',
+            casualtyTitle: 'Militärische Verluste', casualtyDesc: 'Geschätzte russische Gefallene + Verwundete seit Feb. 2022.',
+            casualtyDetail1: 'Teilmobilisierung Sept. 2022: ~300.000 eingezogen',
+            casualtyDetail2: 'Ausländische Kämpfer rekrutiert: Nepal, Zentralafrika, DVRK',
+            casualtyDetail3: 'Ethnische Minderheiten tragen überproportionale Verlustlast',
+            brainDrainTitle: 'Brain Drain', brainDrainDesc: 'Geschätzte ausgewanderte Russen seit Feb. 2022.',
+            brainDrainDetail1: 'Tech-Sektor-Exodus nach Georgien, Armenien, Serbien, Israel',
+            brainDrainDetail2: 'Langfristiger Schaden für F&E, Halbleiter und Verteidigungstechnologie',
+            prisonTitle: 'Politische Gefangene', prisonDesc: 'Dokumentierte politische Gefangene in Russland.',
+            prisonDetail1: 'Evan Gershkovich (WSJ) 2023 festgenommen, Aug. 2024 freigelassen',
+            prisonDetail2: 'Paul Whelan (US Marine) 2018 festgenommen, Aug. 2024 freigelassen',
+            prisonDetail3: 'Alexej Nawalny Feb. 2024 gestorben — Straflager IK-6 in der Arktis',
+            pressTitle: 'Pressefreiheit', pressDesc: 'RSF Pressefreiheitsranking 2024 für Russland.',
+            pressDetail1: 'Unabhängige Medien geschlossen oder verbannt — Meduza, TV Rain, Novaya Gazeta',
+            pressDetail2: 'VPN-Nutzung stark gestiegen — Millionen nutzen VPN für Exilmedien',
+            pressDetail3: 'Staatsfernsehen (RT, Kanal 1) Hauptinformationsquelle für die meisten Russen',
+            isolTitle: 'Internationale Isolation', isolDesc: 'UN-Generalversammlungsabstimmung für russischen Rückzug aus Ukraine (Feb. 2023).',
+            isolDetail1: 'China Hauptpartner — $240+ Mrd. bilateraler Handel 2024',
+            isolDetail2: 'Indien kauft russisches Öl zu vergünstigten Preisen',
+            isolDetail3: 'BRICS 2024 erweitert — Alternative zu westlichen Institutionen',
+            mapTitle: 'Russland — Strategischer Überblick',
+            mapSubtitle: 'Wichtige Militäranlagen, Energieinfrastruktur, Konfliktzonen und geopolitische Brennpunkte.',
+            knowledgeTitle: 'Wissensbibliothek',
+            knowledgeDisclaimer: 'Hintergrundinformationen aus öffentlichen Quellen, Think-Tank-Analysen und offiziellen Regierungsberichten.',
+            catGovernment: 'Regierung und politisches System', catMilitary: 'Militär- und Nuklearhaltung',
+            catSanctions: 'Sanktionen und wirtschaftliche Auswirkungen', catDissent: 'Innere Dissidenz und Zivilgesellschaft',
+            catUkraine: 'Ukraine-Kriegsstrategie und Ziele', catChina: 'Russland-China und globale Ausrichtung',
+            recentArticles: '📰 Aktuelle Artikel zur Sicherheit und Stabilität Russlands (letzte 7 Tage)',
+            loadingArticles: 'Artikel werden geladen...',
+        }
+    };
+
+    function switchLanguage(lang, button) {
+        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        button.classList.add('active');
+        document.documentElement.lang = lang;
+        const t = translations[lang];
+        if (!t) return;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) {
+                if (key === 'lastUpdated' && el.id === 'lastUpdated') {
+                    const parts = el.textContent.split(': ');
+                    const ts = parts.length > 1 ? parts.slice(1).join(': ') : 'Loading...';
+                    el.textContent = t[key] + ts;
+                } else {
+                    el.textContent = t[key];
+                }
+            }
+        });
+    }
+
+    // ── INIT ──
     document.addEventListener('DOMContentLoaded', () => {
         startLoadingProgress();
+        document.getElementById('lastUpdated').textContent =
+            'Last updated: ' + new Date().toLocaleString('en-US', {month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true});
         loadRussiaRhetoricData();
-        document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
+        loadEconomicIndicators();
+        initMap();
         loadArticles().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
     });
     </script>
