@@ -895,7 +895,61 @@
         .interp-card-title { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:#0e7490; font-family:'Courier New',monospace; margin-bottom:2px; }
         .interp-card-subtitle { font-size:0.85rem; font-weight:800; color:#1e293b; font-family:'Times New Roman',serif; }
 
+        /* Diplomatic Track card */
+        .diplomatic-track-card {
+            border-radius:12px; padding:20px 24px; margin-bottom:16px;
+            border:1px solid rgba(16,185,129,0.35);
+            background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+        }
+        .diplomatic-track-card .interp-card-title { color:#065f46; }
+        .diplomatic-track-card .interp-card-subtitle { color:#1e293b; }
+        .green-line-item {
+            display:flex; align-items:flex-start; gap:10px;
+            padding:10px 12px; border-radius:8px; margin-bottom:8px;
+            background:rgba(255,255,255,0.85); border:1px solid rgba(16,185,129,0.18);
+        }
+        .green-line-item.active {
+            border-left:3px solid #10b981; background:rgba(16,185,129,0.05);
+            border-top:1px solid rgba(16,185,129,0.12); border-right:1px solid rgba(16,185,129,0.12); border-bottom:1px solid rgba(16,185,129,0.12);
+        }
+        .green-line-item.signaled {
+            border-left:3px solid #84cc16; background:rgba(132,204,22,0.04);
+            border-top:1px solid rgba(132,204,22,0.12); border-right:1px solid rgba(132,204,22,0.12); border-bottom:1px solid rgba(132,204,22,0.12);
+        }
+        .green-line-status-badge {
+            font-size:0.55rem; font-weight:700; letter-spacing:1.5px;
+            padding:2px 7px; border-radius:4px; text-transform:uppercase;
+            font-family:'Courier New',monospace; flex-shrink:0;
+        }
+        .green-line-status-badge.active { background:#10b981; color:#fff; }
+        .green-line-status-badge.signaled { background:#84cc16; color:#fff; }
+        .disruption-alert {
+            display:flex; align-items:flex-start; gap:10px;
+            padding:12px 14px; border-radius:8px; margin-bottom:12px;
+            background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.3);
+            border-left:3px solid #f59e0b;
+        }
+        .diplomatic-score-bar {
+            background:#e2e8f0; border-radius:4px; height:8px;
+            overflow:hidden; margin:8px 0 4px;
+        }
+        .diplomatic-score-fill {
+            height:100%; border-radius:4px;
+            background:linear-gradient(90deg, #10b981, #22c55e);
+            transition:width 1s ease;
+        }
         /* ── DARK MODE OVERRIDES ── */
+        [data-theme="dark"] .diplomatic-track-card {
+            background:linear-gradient(135deg, rgba(0,20,10,0.5) 0%, rgba(0,10,5,0.4) 100%);
+            border-color:rgba(16,185,129,0.25);
+        }
+        [data-theme="dark"] .green-line-item { background:rgba(0,0,0,0.25); border-color:transparent; }
+        [data-theme="dark"] .green-line-item.active { background:rgba(16,185,129,0.08); border-left-color:#10b981; border-top-color:transparent; border-right-color:transparent; border-bottom-color:transparent; }
+        [data-theme="dark"] .green-line-item.signaled { background:rgba(132,204,22,0.06); border-left-color:#84cc16; border-top-color:transparent; border-right-color:transparent; border-bottom-color:transparent; }
+        [data-theme="dark"] .green-line-status-badge.active { background:rgba(16,185,129,0.3); color:#6ee7b7; }
+        [data-theme="dark"] .green-line-status-badge.signaled { background:rgba(132,204,22,0.25); color:#d9f99d; }
+        [data-theme="dark"] .disruption-alert { background:rgba(245,158,11,0.1); border-color:rgba(245,158,11,0.3); }
+        [data-theme="dark"] .diplomatic-score-bar { background:rgba(255,255,255,0.1); }
         [data-theme="dark"] .interp-so-what {
             background:linear-gradient(135deg, rgba(0,200,212,0.06) 0%, rgba(30,58,95,0.08) 100%);
             border:2px solid rgba(0,200,212,0.35);
@@ -1122,6 +1176,55 @@
             </div>
         </div>
         <div id="redLineItems"></div>
+    </div>
+
+    <!-- Diplomatic Track Card -->
+    <div class="diplomatic-track-card" id="diplomaticTrackCard" style="display:none;">
+        <div class="interp-card-header">
+            <span style="font-size:1rem;">🕊️</span>
+            <div style="flex:1;">
+                <div class="interp-card-title">DIPLOMATIC TRACK</div>
+                <div class="interp-card-subtitle">Israel–Lebanon Off-Ramp Signals — Current Status</div>
+            </div>
+            <div style="display:flex;gap:16px;">
+                <div style="text-align:right;">
+                    <div style="font-size:1.4rem;font-weight:900;color:#10b981;" id="greenLineActiveCount">0</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">ACTIVE</div>
+                </div>
+                <div style="text-align:right;">
+                    <div style="font-size:1.4rem;font-weight:900;color:#84cc16;" id="greenLineSignaledCount">0</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">SIGNALED</div>
+                </div>
+            </div>
+        </div>
+        <!-- Diplomatic momentum score bar -->
+        <div style="margin-bottom:14px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:#065f46;font-family:'Courier New',monospace;">DIPLOMATIC MOMENTUM</span>
+                <span style="font-size:0.85rem;font-weight:800;color:#10b981;" id="diplomaticScore">0/100</span>
+            </div>
+            <div class="diplomatic-score-bar">
+                <div class="diplomatic-score-fill" id="diplomaticScoreFill" style="width:0%;"></div>
+            </div>
+            <div style="font-size:0.72rem;font-weight:700;font-family:'Times New Roman',serif;" id="diplomaticScenario"></div>
+        </div>
+        <!-- Hezbollah disruption alert (only shown when disrupting=true) -->
+        <div class="disruption-alert" id="diplomaticDisruptionAlert" style="display:none;">
+            <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
+            <div>
+                <div style="font-size:0.72rem;font-weight:800;color:#92400e;font-family:'Courier New',monospace;letter-spacing:1px;margin-bottom:4px;">DUAL-TRACK ALERT — HEZBOLLAH DISRUPTION PATTERN</div>
+                <div style="font-size:0.75rem;color:#78350f;font-family:'Times New Roman',serif;line-height:1.5;">
+                    Hezbollah is escalating militarily <em>simultaneously</em> with the opening of direct Israel–Lebanon talks.
+                    Classic playbook: escalate to collapse diplomacy before it gains momentum.
+                    Watch for a major Hezbollah attack in the 48–72 hours before April 15 State Dept talks.
+                </div>
+            </div>
+        </div>
+        <!-- Green line items -->
+        <div id="greenLineItems"></div>
+        <div style="font-size:0.62rem;color:#065f46;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;">
+            Green lines track diplomatic off-ramp signals. ACTIVE = confirmed in current scan. SIGNALED = contextual signal present.
+        </div>
     </div>
 
     <!-- Historical Precedent Card -->
@@ -1668,6 +1771,64 @@
                         <div class="red-line-source">${r.source || ''}</div>
                     </div>`;
                 rlEl.appendChild(item);
+            });
+        }
+
+        // ── Diplomatic Track ──
+        const dt = interp.diplomatic_track;
+        const gl = interp.green_lines;
+        if (dt && gl && gl.triggered && gl.triggered.length) {
+            document.getElementById('diplomaticTrackCard').style.display = 'block';
+            document.getElementById('greenLineActiveCount').textContent = gl.active_count || 0;
+            document.getElementById('greenLineSignaledCount').textContent = gl.signaled_count || 0;
+
+            // Score bar
+            const dscore = dt.score || 0;
+            document.getElementById('diplomaticScore').textContent = `${dscore}/100`;
+            document.getElementById('diplomaticScore').style.color = dt.scenario_color || '#10b981';
+            document.getElementById('diplomaticScoreFill').style.width = `${dscore}%`;
+            document.getElementById('diplomaticScoreFill').style.background =
+                dscore >= 75 ? 'linear-gradient(90deg,#10b981,#22c55e)' :
+                dscore >= 50 ? 'linear-gradient(90deg,#22c55e,#84cc16)' :
+                               'linear-gradient(90deg,#84cc16,#f59e0b)';
+            const scenEl = document.getElementById('diplomaticScenario');
+            scenEl.textContent = dt.scenario || '';
+            scenEl.style.color = dt.scenario_color || '#10b981';
+
+            // Disruption alert
+            if (dt.hezbollah_disrupting) {
+                document.getElementById('diplomaticDisruptionAlert').style.display = 'flex';
+            }
+
+            // Green line items
+            const glEl = document.getElementById('greenLineItems');
+            glEl.innerHTML = '';
+            const catLabels = {
+                'direct_contact':    '🤝 DIRECT CONTACT',
+                'us_mediation':      '🇺🇸 US MEDIATION',
+                'framework':         '📋 FRAMEWORK',
+                'hezbollah_political': '🕊️ HEZBOLLAH',
+                'international':     '🌐 INTERNATIONAL',
+                'laf_signal':        '🎖️ LAF/GOL',
+            };
+            gl.triggered.forEach(g => {
+                const catLabel = catLabels[g.category] || g.category;
+                const statusClass = g.status === 'ACTIVE' ? 'active' : 'signaled';
+                const item = document.createElement('div');
+                item.className = 'green-line-item ' + statusClass;
+                item.innerHTML = `
+                    <span class="red-line-icon">${g.icon || '🟢'}</span>
+                    <div style="flex:1;">
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <span class="red-line-label">${g.label}</span>
+                            <span class="green-line-status-badge ${statusClass}">${g.status}</span>
+                            <span style="font-size:0.55rem;color:#94a3b8;font-family:'Courier New',monospace;">${catLabel}</span>
+                            <span style="font-size:0.55rem;color:#94a3b8;font-family:'Courier New',monospace;">MOMENTUM ${g.momentum}/3</span>
+                        </div>
+                        <div class="red-line-trigger">${g.trigger || ''}</div>
+                        <div class="red-line-source">${g.source || ''}</div>
+                    </div>`;
+                glEl.appendChild(item);
             });
         }
 
