@@ -125,6 +125,10 @@
             .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
             .knowledge-categories { grid-template-columns: 1fr; }
         }
+    .rhetoric-link-banner { display:flex; justify-content:space-between; align-items:center; border-radius:12px; padding:16px 20px; margin-bottom:16px; flex-wrap:wrap; gap:12px; }
+        .rhetoric-card { background:var(--container-bg); border:2px solid var(--card-border); border-radius:12px; padding:20px; margin-bottom:20px; box-shadow:0 4px 12px rgba(0,0,0,0.08); transition:background 0.3s, border-color 0.3s; }
+        .rhetoric-actor-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid var(--card-border); font-size:12px; color:var(--text-secondary); }
+        .rhetoric-actor-row:last-child { border-bottom:none; }
     </style>
 </head>
 <body>
@@ -165,6 +169,35 @@
                 </div>
             </div>
         </header>
+
+        <!-- RUSSIA RHETORIC TRACKER BANNER -->
+        <div class="rhetoric-link-banner" style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);">
+            <div>
+                <div style="font-size:13px;font-weight:bold;color:white;">🇷🇺 Russia Pressure Tracker</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-top:3px;">Military · Nuclear · NATO Flank · Arctic · Hybrid · Cross-Theater</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
+                <span id="russiaRhetoricBadge" style="background:#6b7280;color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px;">📡 Loading…</span>
+                <a href="rhetoric-russia.html" style="padding:8px 18px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:12px;font-weight:bold;white-space:nowrap;">Open Tracker →</a>
+            </div>
+        </div>
+
+        <!-- RUSSIA RHETORIC CARD -->
+        <div class="rhetoric-card" style="border-color:rgba(56,189,248,0.35);">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#38bdf8;margin-bottom:12px;">📡 RUSSIA PRESSURE TRACKER</div>
+            <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px;">
+                <div style="font-size:32px;font-weight:700;color:var(--text-primary);" id="russiaRhetoricScore">--</div>
+                <span id="russiaRhetoricLabel" style="font-size:13px;font-weight:bold;padding:3px 10px;border-radius:4px;background:#6b7280;color:white;">--</span>
+            </div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-bottom:12px;">Five-vector pressure score — Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid · Updated every 12h</div>
+            <div id="russiaRhetoricActorList" style="font-size:12px;color:var(--text-secondary);">
+                <span style="font-style:italic;">Loading...</span>
+            </div>
+            <div style="margin-top:15px;padding-top:12px;border-top:1px solid var(--card-border);text-align:center;">
+                <a href="rhetoric-russia.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;">View Full Pressure Analysis →</a>
+            </div>
+            <div id="russiaRhetoricScanInfo" style="margin-top:8px;font-size:10px;color:var(--text-secondary);text-align:center;">--</div>
+        </div>
 
         <!-- MAP -->
         <div class="map-section">
@@ -431,9 +464,48 @@
                 } else { el.textContent = translations[lang][key]; }
             }
         });
+    async function loadRussiaRhetoricData() {
+        const LEVELS = { 0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626' };
+        const LABELS = { 0:'Baseline',1:'Rhetoric',2:'Warning',3:'Confrontation',4:'Coercion',5:'Active Conflict' };
+        try {
+            const r = await fetch(API_BASE + '/api/rhetoric/russia/summary');
+            if (!r.ok) throw new Error('HTTP ' + r.status);
+            const data = await r.json();
+            if (!data.success) return;
+            const level = data.theatre_level || 0;
+            const color = LEVELS[level] || '#6b7280';
+            const label = LABELS[level] || 'Baseline';
+            const badge = document.getElementById('russiaRhetoricBadge');
+            if (badge) { badge.style.background = color; badge.textContent = '🇷🇺 Level ' + level + ' — ' + label; }
+            const scoreEl = document.getElementById('russiaRhetoricScore');
+            if (scoreEl) { scoreEl.textContent = (data.theatre_score || 0) + '/100'; scoreEl.style.color = color; }
+            const labelEl = document.getElementById('russiaRhetoricLabel');
+            if (labelEl) { labelEl.textContent = label; labelEl.style.background = color; }
+            const actorEl = document.getElementById('russiaRhetoricActorList');
+            if (actorEl) {
+                const actors = [
+                    { label: '⚔️ Russia Military',  level: data.russia_military_level || 0 },
+                    { label: '🏛️ Russia Government', level: data.russia_gov_level      || 0 },
+                    { label: '☢️ Nuclear Vector',    level: data.nuclear_level         || 0 },
+                    { label: '🧊 Arctic Vector',     level: data.arctic_level          || 0 },
+                    { label: '🇺🇦 Ukraine',           level: data.ukraine_level         || 0 },
+                ];
+                actorEl.innerHTML = actors.map(a =>
+                    '<div class="rhetoric-actor-row"><span>' + a.label + '</span>' +
+                    '<span style="font-weight:700;color:' + (LEVELS[a.level]||'#6b7280') + ';">L' + a.level + ' — ' + (LABELS[a.level]||'Baseline') + '</span></div>'
+                ).join('');
+            }
+            const scanEl = document.getElementById('russiaRhetoricScanInfo');
+            if (scanEl && data.scanned_at) {
+                const ago = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
+                scanEl.textContent = 'Last scan: ' + (ago < 60 ? ago + 'm' : Math.round(ago/60) + 'h') + ' ago · ' + (data.total_articles || 0) + ' articles analyzed';
+            }
+        } catch(e) { console.warn('[Russia Rhetoric]', e); }
     }
+
     document.addEventListener('DOMContentLoaded', () => {
         startLoadingProgress();
+        loadRussiaRhetoricData();
         document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
         loadArticles().then(() => hideLoadingOverlay()).catch(() => hideLoadingOverlay());
     });
