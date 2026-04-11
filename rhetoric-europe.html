@@ -305,10 +305,6 @@
 <div class="section-title" style="margin-top:24px;">🔜 In Development</div>
 <div class="trackers-list">
     <div class="coming-soon-banner">
-        <div class="coming-soon-name">🇷🇺 Russia Rhetoric Tracker</div>
-        <span class="coming-soon-badge">In Development</span>
-    </div>
-    <div class="coming-soon-banner">
         <div class="coming-soon-name">🇺🇦 Ukraine Rhetoric Tracker</div>
         <span class="coming-soon-badge">In Development</span>
     </div>
@@ -364,6 +360,15 @@
             vectors:    ['US Pressure', 'Sovereignty Defense', 'Russia Opportunism', 'Arctic Shipping'],
             summaryUrl: EUROPE_BACKEND + '/api/rhetoric/greenland/summary',
             url:        'https://www.asifahanalytics.com/rhetoric-greenland.html',
+        },
+        {
+            id:         'russia',
+            name:       'Russia Pressure Tracker',
+            flag:       '🇷🇺',
+            actors:     'Russia Military · Russia Government · Ukraine · NATO Alliance · US · Baltic Flank · Arctic',
+            vectors:    ['Nuclear', 'Ground Ops', 'NATO Flank', 'Arctic', 'Hybrid'],
+            summaryUrl: EUROPE_BACKEND + '/api/rhetoric/russia/summary',
+            url:        'https://www.asifahanalytics.com/rhetoric-russia.html',
         },
     ];
 
@@ -515,7 +520,22 @@
             ? `Russia Arctic opportunism elevated (L${gl_russia}) — GIUK Gap watch active. `
             : `Russia Arctic signals at baseline. `;
         if (gl_conv) prose += `Convergence signal: ${gl_conv}. `;
-        prose += 'Russia and Ukraine trackers in development — full Europe synthesis coming soon.';
+        const russiaData  = loaded.find(r => r.tracker.id === 'russia')?.data;
+        const ru_level    = russiaData ? (russiaData.theatre_level ?? 0) : null;
+        const ru_nuclear  = russiaData?.nuclear_level ?? 0;
+        const ru_arctic   = russiaData?.arctic_level  ?? 0;
+
+        if (ru_level !== null) {
+            prose += ru_level >= 3
+                ? `Russia pressure at L${ru_level} — multi-vector escalation signals present. `
+                : ru_level >= 1
+                ? `Russia pressure at L${ru_level} — monitoring. `
+                : `Russia pressure at baseline. `;
+            if (ru_nuclear >= 2) prose += `Nuclear rhetoric above baseline (L${ru_nuclear}). `;
+            if (ru_arctic  >= 2) prose += `Arctic signals elevated (L${ru_arctic}) — GIUK Gap watch. `;
+        } else {
+            prose += 'Ukraine and Poland trackers in development — full Europe synthesis coming soon.';
+        }
 
         document.getElementById('blufProse').textContent = prose;
 
@@ -525,8 +545,9 @@
         const signals = [];
         if (gl_us >= 2) signals.push({ icon:'🦅', color:'#3b82f6', text:`GREENLAND L${gl_level}: U.S. pressure at L${gl_us} — coercion signals beyond baseline rhetoric` });
         if (gl_russia >= 2) signals.push({ icon:'🐻', color:'#ef4444', text:`GREENLAND: Russia Arctic L${gl_russia} — opportunism signals, GIUK chokepoint watch` });
+        if (ru_level >= 3)  signals.push({ icon:'☢️', color:'#dc2626', text:`RUSSIA L${ru_level}: Multi-vector pressure — nuclear L${ru_nuclear}, arctic L${ru_arctic}` });
+        else if (ru_level >= 1) signals.push({ icon:'🇷🇺', color:'#3b82f6', text:`RUSSIA L${ru_level}: Monitoring — rhetoric level, below escalation threshold` });
         if (!signals.length) signals.push({ icon:'🧊', color:'#6b7280', text:'All Europe theatres at baseline — monitoring for sovereignty and alliance signals' });
-
         signals.forEach(sig => {
             const div = document.createElement('div');
             div.className = 'bluf-signal-item';
