@@ -2185,6 +2185,8 @@ async function loadCachedScoresFallback() {
     }
 
     // ===== TRAVEL ADVISORY LOADER =====
+    // Renders BOTH the collapsed landing-page card AND the expanded-card widget
+    // for every target. One fetch, two render targets.
     async function loadTravelAdvisories() {
         try {
             const response = await fetch(`${API_BASE}/api/europe/travel-advisories`);
@@ -2192,9 +2194,14 @@ async function loadCachedScoresFallback() {
             const data = await response.json();
             if (!data.success || !data.advisories) throw new Error('No advisory data');
 
-            for (const [target, advisory] of Object.entries(data.advisories)) {
+            const advisories = data.advisories;
+
+            // Render both collapsed + expanded views for each target
+            TARGETS.forEach(target => {
+                const advisory = advisories[target];
+                renderCollapsedTravelAdvisory(target, advisory);
                 renderTravelAdvisory(target, advisory);
-            }
+            });
         } catch (err) {
             console.warn('[Travel Advisories] Load error:', err);
             TARGETS.forEach(t => {
@@ -2204,9 +2211,37 @@ async function loadCachedScoresFallback() {
         }
     }
 
+    // Render the COLLAPSED (landing page) travel advisory card
+    function renderCollapsedTravelAdvisory(target, advisory) {
+        const el = document.getElementById(`${target}CollapsedTA`);
+        if (!el || !advisory || !advisory.level) return;
+        const level = advisory.level;
+        const label = advisory.level_short || advisory.level_label || 'Unknown';
+        const summary = advisory.short_summary || '';
+        const link = advisory.link || '#';
+        el.href = link;
+        el.className = `collapsed-travel-advisory level-${level}`;
+        el.innerHTML = `
+            <div class="ta-level-badge level-${level}">
+                <div class="ta-level-num">${level}</div>
+                <div class="ta-level-label">LEVEL</div>
+            </div>
+            <div class="ta-content">
+                <div class="ta-title">U.S. State Dept: ${label}</div>
+                <div class="ta-summary">${summary}</div>
+            </div>
+            <div class="ta-arrow">→</div>
+        `;
+    }
+
+    // Render the EXPANDED card travel advisory widget
     function renderTravelAdvisory(target, advisory) {
         const container = document.getElementById(`${target}-travel-advisory`);
         if (!container) return;
+        if (!advisory) {
+            container.innerHTML = '<div class="ta-loading">🏛️ Travel advisory unavailable for this country</div>';
+            return;
+        }
 
         const level = advisory.level || 0;
         const color = advisory.level_color || '#6b7280';
@@ -2234,40 +2269,6 @@ async function loadCachedScoresFallback() {
                 </div>
                 <div class="ta-link-icon">→</div>
             </a>`;
-    }
-        
-    // ===== TRAVEL ADVISORY LOADER =====
-    async function loadTravelAdvisories() {
-        try {
-            const response = await fetch(`${API_BASE}/api/europe/travel-advisories`);
-            if (!response.ok) return;
-            const data = await response.json();
-            const advisories = data.advisories || {};
-            TARGETS.forEach(target => {
-                const ta = advisories[target];
-                const el = document.getElementById(`${target}CollapsedTA`);
-                if (!el || !ta || !ta.level) return;
-                const level = ta.level;
-                const label = ta.level_short || ta.level_label || 'Unknown';
-                const summary = ta.short_summary || '';
-                const link = ta.link || '#';
-                el.href = link;
-                el.className = `collapsed-travel-advisory level-${level}`;
-                el.innerHTML = `
-                    <div class="ta-level-badge level-${level}">
-                        <div class="ta-level-num">${level}</div>
-                        <div class="ta-level-label">LEVEL</div>
-                    </div>
-                    <div class="ta-content">
-                        <div class="ta-title">U.S. State Dept: ${label}</div>
-                        <div class="ta-summary">${summary}</div>
-                    </div>
-                    <div class="ta-arrow">→</div>
-                `;
-            });
-        } catch (err) {
-            console.warn('[Travel Advisories] Load failed:', err.message);
-        }
     }
 
     // ===== INIT =====
