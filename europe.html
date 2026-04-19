@@ -45,8 +45,7 @@
             pointer-events: none; z-index: -1;
         }
         [data-theme="dark"] body::before { background-color: rgba(26, 26, 26, 0.88); }
-        .container { max-width: 1400px; margin: 0 auto; }
-
+        .container { max-width: 1800px; margin: 0 auto; padding: 0 20px; }
         /* ===== LOADING OVERLAY ===== */
         .loading-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -178,7 +177,7 @@
         [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; }
 
         /* TARGETS GRID */
-        .targets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 30px; }
+        .targets-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin-bottom: 30px; flex: 1; min-width: 0; }
 
         /* TARGET CARDS */
         .target-card {
@@ -329,6 +328,18 @@
         .headline-item a { color: #2c3e50; text-decoration: none; font-weight: 500; }
         .headline-item a:hover { color: #1e3a5f; text-decoration: underline; }
         .headline-item .source { color: #7f8c8d; font-style: italic; font-size: 11px; margin-top: 6px; }
+
+        /* INTELLIGENCE SOURCES STRIP */
+        .intel-sources { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 8px 0; padding: 10px 12px; background: rgba(0,180,255,0.04); border-left: 3px solid rgba(0,180,255,0.3); border-radius: 4px; }
+        .intel-sources-label { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; align-self: center; font-family: 'Courier New', monospace; }
+        .intel-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 10px; letter-spacing: 0.5px; transition: all 0.2s ease; cursor: default; }
+        .intel-pill.active { background: rgba(34,197,94,0.12); color: #15803d; border: 1px solid rgba(34,197,94,0.3); }
+        .intel-pill.inactive { background: rgba(148,163,184,0.08); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+        .intel-pill.active:hover { background: rgba(34,197,94,0.2); transform: translateY(-1px); }
+        [data-theme="dark"] .intel-sources { background: rgba(0,180,255,0.06); border-left-color: rgba(0,210,255,0.4); }
+        [data-theme="dark"] .intel-sources-label { color: #94a3b8; }
+        [data-theme="dark"] .intel-pill.active { background: rgba(34,197,94,0.18); color: #86efac; border-color: rgba(34,197,94,0.4); }
+        [data-theme="dark"] .intel-pill.inactive { background: rgba(148,163,184,0.08); color: #64748b; border-color: rgba(148,163,184,0.15); }
         .article-weight-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; margin-left: 8px; }
         .article-weight-badge.high-impact { background-color: #c0392b; color: white; }
         .article-weight-badge.medium-impact { background-color: #f39c12; color: white; }
@@ -560,11 +571,11 @@
         }
 
         .nav-sidebar {
-            width: 180px;
+            width: 200px;
             flex-shrink: 0;
             display: none;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             padding-top: 4px;
             position: sticky;
             top: 20px;
@@ -1884,6 +1895,43 @@ async function loadCachedScoresFallback() {
         // Headlines
         const headlinesEl = document.getElementById(`${target}-headlines`);
         const articlesList = data.articles || data.top_scoring_articles || data.recent_headlines || [];
+
+        // --- INTELLIGENCE SOURCES STRIP ---
+        // GDELT = sum of all 2-letter language arrays the backend returns (articles_en, _ru, _uk, _hu, etc.)
+        // Non-GDELT direct-source arrays: articles_bluesky, articles_telegram, articles_reddit
+        // RSS = total_articles minus everything else
+        const getCount = (arr) => Array.isArray(arr) ? arr.length : 0;
+        let gdeltCount = 0;
+        Object.keys(data).forEach(key => {
+            // Match articles_XX where XX is exactly 2 lowercase letters (language codes)
+            if (/^articles_[a-z]{2}$/.test(key)) gdeltCount += getCount(data[key]);
+        });
+        const blueskyCount = getCount(data.articles_bluesky);
+        const telegramCount = getCount(data.articles_telegram);
+        const redditCount = getCount(data.articles_reddit);
+        const totalArticles = data.total_articles || 0;
+        const rssCount = Math.max(0, totalArticles - gdeltCount - blueskyCount - telegramCount - redditCount);
+
+        const intelEl = document.getElementById(`${target}-intel-sources`);
+        if (intelEl) {
+            const pills = [
+                { label: '🌐 GDELT',    count: gdeltCount,    name: 'GDELT' },
+                { label: '📰 RSS',      count: rssCount,      name: 'RSS' },
+                { label: '🦋 Bluesky',  count: blueskyCount,  name: 'Bluesky' },
+                { label: '✈️ Telegram', count: telegramCount, name: 'Telegram' },
+                { label: '💬 Reddit',   count: redditCount,   name: 'Reddit' }
+            ];
+            intelEl.innerHTML =
+                `<span class="intel-sources-label">Signals:</span>` +
+                pills.map(p => {
+                    const active = p.count > 0;
+                    const title = active
+                        ? `${p.count} signal${p.count !== 1 ? 's' : ''} from ${p.name}`
+                        : `No ${p.name} signals this scan`;
+                    return `<span class="intel-pill ${active ? 'active' : 'inactive'}" title="${title}">${p.label}${active ? ` <strong>${p.count}</strong>` : ''}</span>`;
+                }).join('');
+        }
+
         if (headlinesEl && articlesList.length > 0) {
             let html = `<h4>${translations[currentLang]?.recentHeadlines || 'Recent Headlines:'}</h4>`;
             const normalized = articlesList.map(a => ({
