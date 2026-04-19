@@ -1624,35 +1624,39 @@ async function loadCountry(country){
         if(ts&&data.last_updated)ts.textContent=new Date(data.last_updated).toLocaleString();
 
         // --- INTELLIGENCE SOURCES STRIP ---
-        // HYBRID MODE: works with current top_signals response AND future articles_XX arrays
-        // (when Cuba/Bluesky wiring ships, no frontend re-work needed)
+        // WHA backend uses `feed_type` field on top_signals for precise source classification
+        // (vs. Asia/Europe backends which use dedicated articles_XX arrays)
+        // This code handles BOTH patterns — future-proof for Cuba/Bluesky integration
         var getCount=function(arr){return Array.isArray(arr)?arr.length:0;};
         var gdeltCount=0, blueskyCount=0, telegramCount=0, redditCount=0, rssCount=0;
 
-        // PATH A: future pattern — backend sends dedicated arrays (like Asia/Europe backends)
+        // PATH A: future pattern — dedicated arrays (matches Asia/Europe)
         Object.keys(data).forEach(function(key){
             if(/^articles_[a-z]{2}$/.test(key)) gdeltCount += getCount(data[key]);
         });
         blueskyCount = getCount(data.articles_bluesky);
         telegramCount = getCount(data.articles_telegram);
         redditCount = getCount(data.articles_reddit);
-        var totalArticles = data.total_articles || 0;
-        if(totalArticles > 0){
-            rssCount = Math.max(0, totalArticles - gdeltCount - blueskyCount - telegramCount - redditCount);
-        }
 
-        // PATH B: current pattern — classify from top_signals[].source when dedicated arrays aren't present
-        if(gdeltCount===0 && blueskyCount===0 && telegramCount===0 && redditCount===0 && Array.isArray(data.top_signals)){
+        // PATH B: current WHA pattern — use feed_type on top_signals (MUCH cleaner than name guessing)
+        if(Array.isArray(data.top_signals)){
             data.top_signals.forEach(function(sig){
+                var ft = (sig.feed_type || '').toLowerCase();
                 var srcName = (typeof sig.source === 'object' ? (sig.source && sig.source.name || '') : (sig.source || '')).toLowerCase();
                 var srcUrl = (sig.url || sig.link || '').toLowerCase();
-                if(srcName.indexOf('bluesky')!==-1 || srcName.indexOf('.bsky.')!==-1 || srcUrl.indexOf('bsky.app')!==-1) blueskyCount++;
-                else if(srcName.indexOf('telegram')!==-1 || srcName.charAt(0)==='@' || srcUrl.indexOf('t.me')!==-1) telegramCount++;
-                else if(srcName.indexOf('reddit')!==-1 || srcUrl.indexOf('reddit.com')!==-1) redditCount++;
-                else if(srcName.indexOf('gdelt')!==-1) gdeltCount++;
-                else rssCount++;
+
+                // Prefer explicit feed_type; fall back to source/url heuristics
+                if(ft === 'bluesky' || srcName.indexOf('.bsky.')!==-1 || srcUrl.indexOf('bsky.app')!==-1) blueskyCount++;
+                else if(ft === 'telegram' || srcName.charAt(0)==='@' || srcUrl.indexOf('t.me')!==-1) telegramCount++;
+                else if(ft === 'reddit' || srcUrl.indexOf('reddit.com')!==-1) redditCount++;
+                else if(ft === 'gdelt') gdeltCount++;
+                else if(ft === 'rss') rssCount++;
+                else rssCount++; // unknown feed_type = treat as RSS
             });
         }
+
+        // Total scanned (WHA uses articles_scanned, Asia/Europe use total_articles)
+        var totalScanned = data.articles_scanned || data.total_articles || 0;
 
         var intelEl = document.getElementById(country+'-intel-sources');
         if(intelEl){
@@ -1669,6 +1673,10 @@ async function loadCountry(country){
                 var title = active ? (p.count + ' signal' + (p.count!==1?'s':'') + ' from ' + p.name) : ('No ' + p.name + ' signals this scan');
                 html += '<span class="intel-pill ' + (active?'active':'inactive') + '" title="' + title + '">' + p.label + (active ? ' <strong>'+p.count+'</strong>' : '') + '</span>';
             });
+            // Optional: show total scanned as a subtle hint
+            if(totalScanned > 0){
+                html += '<span class="intel-sources-total" style="font-size:9px;color:#94a3b8;margin-left:auto;align-self:center;font-family:monospace;" title="Total articles scanned this run">' + totalScanned + ' scanned</span>';
+            }
             intelEl.innerHTML = html;
         }
     }catch(err){console.warn('[WHA] load error for '+country,err);}
