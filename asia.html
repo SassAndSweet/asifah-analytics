@@ -1484,8 +1484,14 @@ async function scanSingleTarget(target) {
         clearTimeout(timeout);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        if (data.scan_in_progress) {
+        if (data.scan_in_progress || data.warming) {
             showError(`⏳ Scan running in background for ${target} — refresh in 60 seconds for updated data.`);
+            // Update collapsed card to show "Scanning…" instead of overwriting with 0%
+            const collapsedScore = document.getElementById(`${target}CollapsedScore`);
+            if (collapsedScore) collapsedScore.textContent = 'Scanning…';
+            const gaugeText = document.getElementById(`${target}-prob`);
+            if (gaugeText) gaugeText.textContent = '…';
+            return;  // Don't render 0% — wait for real data on next refresh
         }
         displayTargetData(target, data);
         hideError();
@@ -1503,7 +1509,13 @@ async function scanSingleTarget(target) {
 }
     // ===== DISPLAY =====
     function displayTargetData(target, data) {
-        const prob = data.probability || 0;
+        // v1.1.0 (April 2026) — Guard against null probability from warming state.
+        // Previously `null || 0` evaluated to 0 and rendered 0% incorrectly.
+        if (data.probability === null || data.probability === undefined) {
+            console.warn(`[${target}] probability is null — skipping render`);
+            return;
+        }
+        const prob = data.probability;
         const probRounded = Math.round(prob);
         const level = prob >= 60 ? 'high' : prob >= 35 ? 'medium' : 'low';
         const gauge = document.getElementById(`${target}-gauge`);
