@@ -1635,36 +1635,37 @@ async function scanSingleTarget(target) {
         const articlesList = data.articles || data.top_scoring_articles || [];
 
         // --- INTELLIGENCE SOURCES STRIP ---
-        // Auto-detect which source types contributed signals from the article list.
-        // Backend also sends separate articles_bluesky/articles_telegram arrays when available.
-        const sourceBreakdown = { gdelt: 0, rss: 0, bluesky: 0, telegram: 0, reddit: 0 };
-        articlesList.forEach(a => {
-            const srcName = (typeof a.source === 'object' ? (a.source?.name || '') : (a.source || '')).toLowerCase();
-            const srcUrl = (a.url || a.link || '').toLowerCase();
-            if (srcName.includes('bluesky') || srcName.includes('.bsky.') || srcUrl.includes('bsky.app')) sourceBreakdown.bluesky++;
-            else if (srcName.includes('telegram') || srcName.startsWith('@') || srcUrl.includes('t.me')) sourceBreakdown.telegram++;
-            else if (srcName.includes('reddit') || srcUrl.includes('reddit.com')) sourceBreakdown.reddit++;
-            else if (srcName.includes('gdelt')) sourceBreakdown.gdelt++;
-            else sourceBreakdown.rss++;
-        });
-        // Also count from dedicated arrays if backend provides them
-        if (Array.isArray(data.articles_bluesky)) sourceBreakdown.bluesky = Math.max(sourceBreakdown.bluesky, data.articles_bluesky.length);
-        if (Array.isArray(data.articles_telegram)) sourceBreakdown.telegram = Math.max(sourceBreakdown.telegram, data.articles_telegram.length);
+        // Backend returns dedicated arrays per source type. Count directly.
+        // GDELT = sum of language arrays (articles_en, _zh, _ja, _ko, _fa, _ur)
+        // RSS = remainder from total_articles (what's left after other sources)
+        const getCount = (arr) => Array.isArray(arr) ? arr.length : 0;
+        const gdeltCount =
+            getCount(data.articles_en) + getCount(data.articles_zh) +
+            getCount(data.articles_ja) + getCount(data.articles_ko) +
+            getCount(data.articles_fa) + getCount(data.articles_ur);
+        const blueskyCount = getCount(data.articles_bluesky);
+        const telegramCount = getCount(data.articles_telegram);
+        const redditCount = getCount(data.articles_reddit);
+        const totalArticles = data.total_articles || 0;
+        // RSS = whatever's left after we account for GDELT, Bluesky, Telegram, Reddit
+        const rssCount = Math.max(0, totalArticles - gdeltCount - blueskyCount - telegramCount - redditCount);
 
         const intelEl = document.getElementById(`${target}-intel-sources`);
         if (intelEl) {
             const pills = [
-                { key: 'gdelt',    label: '🌐 GDELT',    count: sourceBreakdown.gdelt },
-                { key: 'rss',      label: '📰 RSS',      count: sourceBreakdown.rss },
-                { key: 'bluesky',  label: '🦋 Bluesky',  count: sourceBreakdown.bluesky },
-                { key: 'telegram', label: '✈️ Telegram', count: sourceBreakdown.telegram },
-                { key: 'reddit',   label: '💬 Reddit',   count: sourceBreakdown.reddit }
+                { label: '🌐 GDELT',    count: gdeltCount,    name: 'GDELT' },
+                { label: '📰 RSS',      count: rssCount,      name: 'RSS' },
+                { label: '🦋 Bluesky',  count: blueskyCount,  name: 'Bluesky' },
+                { label: '✈️ Telegram', count: telegramCount, name: 'Telegram' },
+                { label: '💬 Reddit',   count: redditCount,   name: 'Reddit' }
             ];
             intelEl.innerHTML =
                 `<span class="intel-sources-label">Signals:</span>` +
                 pills.map(p => {
                     const active = p.count > 0;
-                    const title = active ? `${p.count} signal${p.count !== 1 ? 's' : ''} from ${p.label.split(' ')[1]}` : `No ${p.label.split(' ')[1]} signals this scan`;
+                    const title = active
+                        ? `${p.count} signal${p.count !== 1 ? 's' : ''} from ${p.name}`
+                        : `No ${p.name} signals this scan`;
                     return `<span class="intel-pill ${active ? 'active' : 'inactive'}" title="${title}">${p.label}${active ? ` <strong>${p.count}</strong>` : ''}</span>`;
                 }).join('');
         }
