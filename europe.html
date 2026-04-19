@@ -1824,6 +1824,8 @@ async function loadCachedScoresFallback() {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
             displayTargetData(target, data);
+            // Refresh military posture alongside the threat scan
+            loadMilitaryPosture(target);
             hideError();
         } catch (err) {
             console.error(`Error scanning ${target}:`, err);
@@ -2271,6 +2273,100 @@ async function loadCachedScoresFallback() {
             </a>`;
     }
 
+    // ===== MILITARY POSTURE LOADER =====
+    // Fetches military posture (alert_level, top_signals) for a target from Europe backend.
+    // Europe backend proxies to ME backend, which is the single source of truth.
+    // On first call, loads for ALL TARGETS. Can also be called for a single target
+    // after a fresh scan.
+    async function loadMilitaryPosture(target) {
+        // Single-target mode
+        if (target) {
+            return await _loadSingleMilPosture(target);
+        }
+        // Bulk mode — load all targets in parallel
+        await Promise.allSettled(TARGETS.map(t => _loadSingleMilPosture(t)));
+    }
+
+    async function _loadSingleMilPosture(target) {
+        const container = document.getElementById(`${target}-mil-posture`);
+        if (!container) return;
+        try {
+            const response = await fetch(`${API_BASE}/api/military-posture/${target}`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            renderMilitaryPosture(target, data);
+        } catch (err) {
+            console.warn(`[Mil Posture] ${target} load failed:`, err.message);
+            renderMilitaryPosture(target, null);  // fallback to "unavailable"
+        }
+    }
+
+    function renderMilitaryPosture(target, posture) {
+        const container = document.getElementById(`${target}-mil-posture`);
+        if (!container) return;
+
+        // Graceful fallback if fetch failed or ME unreachable
+        if (!posture || posture._proxy_error) {
+            container.className = 'mil-posture-awaiting';
+            container.innerHTML = `
+                🎖️ <span>Military Posture — <em>Temporarily unavailable</em></span>
+                <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
+            `;
+            return;
+        }
+
+        const level   = posture.alert_level || 'normal';
+        const label   = posture.alert_label || 'Normal';
+        const color   = posture.alert_color || 'green';
+        const banner  = posture.banner_text || '';
+        const signals = posture.top_signals || [];
+
+        // Color map — matches ME backend semantics
+        const colorMap = {
+            green:  { bg: 'rgba(16,185,129,0.10)',  border: '#10b981', text: '#065f46' },
+            yellow: { bg: 'rgba(245,158,11,0.12)',  border: '#f59e0b', text: '#92400e' },
+            orange: { bg: 'rgba(249,115,22,0.12)',  border: '#f97316', text: '#9a3412' },
+            red:    { bg: 'rgba(239,68,68,0.12)',   border: '#ef4444', text: '#7f1d1d' },
+        };
+        const style = colorMap[color] || colorMap.green;
+
+        // Top signal preview (one line, truncated)
+        let signalLine = '';
+        if (signals.length > 0) {
+            const sig = signals[0];
+            const title = (sig.article_title || sig.title || sig.query || '').substring(0, 80);
+            signalLine = title
+                ? `<div style="font-size:11px; opacity:0.85; margin-top:4px; font-style:italic;">↳ ${title}${title.length >= 80 ? '…' : ''}</div>`
+                : '';
+        }
+
+        const bannerLine = banner
+            ? `<div style="font-size:11px; margin-top:4px; font-weight:600;">${banner}</div>`
+            : '';
+
+        // Use a non-awaiting class so it gets a different visual treatment than the placeholder
+        container.className = `mil-posture-loaded level-${level}`;
+        container.style.cssText = `
+            display: flex;
+            flex-direction: column;
+            padding: 10px 14px;
+            background: ${style.bg};
+            border: 1px solid ${style.border};
+            border-radius: 8px;
+            margin: 20px 0 5px 0;
+            color: ${style.text};
+        `;
+        container.innerHTML = `
+            <div style="display:flex; align-items:center; gap:8px;">
+                🎖️ <span style="font-weight:600;">Military Posture: ${label}</span>
+                <span style="font-size:10px; background:${style.border}; color:white; padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px;">${level}</span>
+                <a href="military.html" class="mil-page-btn" style="margin-left:auto;">MIL TRACKER →</a>
+            </div>
+            ${bannerLine}
+            ${signalLine}
+        `;
+    }
+
     // ===== INIT =====
     document.addEventListener('DOMContentLoaded', async function() {
         // Start loading overlay progress
@@ -2282,10 +2378,11 @@ async function loadCachedScoresFallback() {
         const weatherPromise = loadAllWeather();
         const ratePromise    = fetchRateLimits();
         const taPromise      = loadTravelAdvisories();
+        const milPromise     = loadMilitaryPosture();  // all targets, parallel
 
         // Wait for cache + NOTAMs to resolve before hiding overlay
         try {
-            await Promise.allSettled([cachePromise, notamPromise, taPromise]);
+            await Promise.allSettled([cachePromise, notamPromise, taPromise, milPromise]);
         } catch (e) {
             console.warn('Some init loads failed:', e);
         }
