@@ -49,7 +49,7 @@
             background-size: 40px 40px; pointer-events: none; z-index: -1;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1800px; margin: 0 auto; padding: 0 20px; }
 
         /* ── HEADER ── */
         header {
@@ -99,7 +99,7 @@
         .lang-btn.active { background:white; color:#1e3a5f; border-color:white; }
 
         /* ── NAV SIDEBAR ── */
-        .nav-sidebar { width:180px; flex-shrink:0; display:flex; flex-direction:column; gap:8px; padding-top:4px; position:sticky; top:20px; height:fit-content; align-self:flex-start; }
+        .nav-sidebar { width:200px; flex-shrink:0; display:flex; flex-direction:column; gap:10px; padding-top:4px; position:sticky; top:20px; height:fit-content; align-self:flex-start; }
         .nav-sidebar-label { font-size:9px; text-transform:uppercase; letter-spacing:2px; color:rgba(0,200,255,0.5); font-family:'Courier New',monospace; margin-bottom:4px; padding-left:2px; }
         .nav-btn { position:relative; display:flex; flex-direction:column; align-items:flex-start; padding:10px 14px; border-radius:8px; text-decoration:none; font-family:'Times New Roman',Times,serif; font-size:13px; font-weight:bold; letter-spacing:0.5px; transition:all 0.3s ease; cursor:pointer; overflow:hidden; border:1.5px solid rgba(0,200,255,0.2); background:linear-gradient(135deg,rgba(0,180,255,0.06) 0%,rgba(0,120,200,0.04) 100%); color:rgba(255,255,255,0.7); }
         .nav-btn .nav-btn-label { position:relative; z-index:2; font-size:12px; line-height:1.3; }
@@ -120,7 +120,7 @@
         @media (max-width:1199px) { .nav-sidebar { display:none; } }
 
         /* ── LAYOUT ── */
-        .main-content-wrapper { display:flex; flex-direction:row; align-items:flex-start; gap:20px; max-width:1400px; margin:0 auto; }
+        .main-content-wrapper { display:flex; flex-direction:row; align-items:flex-start; gap:20px; max-width:1800px; margin:0 auto; }
         .main-content { flex:1; min-width:0; }
         .targets-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:25px; }
         @media (max-width:1199px) { .main-content-wrapper { flex-direction:column; } .targets-grid { grid-template-columns:1fr; } }
@@ -338,6 +338,18 @@
         .headline-item a:hover { color:#1e3a5f; text-decoration:underline; }
         [data-theme="dark"] .headline-item a { color:#e2e8f0; }
         .headline-item .source { color:#7f8c8d; font-style:italic; font-size:11px; margin-top:6px; }
+
+        /* INTELLIGENCE SOURCES STRIP */
+        .intel-sources { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 8px 0; padding: 10px 12px; background: rgba(0,180,255,0.04); border-left: 3px solid rgba(0,180,255,0.3); border-radius: 4px; }
+        .intel-sources-label { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; align-self: center; font-family: 'Courier New', monospace; }
+        .intel-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 10px; letter-spacing: 0.5px; transition: all 0.2s ease; cursor: default; }
+        .intel-pill.active { background: rgba(34,197,94,0.12); color: #15803d; border: 1px solid rgba(34,197,94,0.3); }
+        .intel-pill.inactive { background: rgba(148,163,184,0.08); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+        .intel-pill.active:hover { background: rgba(34,197,94,0.2); transform: translateY(-1px); }
+        [data-theme="dark"] .intel-sources { background: rgba(0,180,255,0.06); border-left-color: rgba(0,210,255,0.4); }
+        [data-theme="dark"] .intel-sources-label { color: #94a3b8; }
+        [data-theme="dark"] .intel-pill.active { background: rgba(34,197,94,0.18); color: #86efac; border-color: rgba(34,197,94,0.4); }
+        [data-theme="dark"] .intel-pill.inactive { background: rgba(148,163,184,0.08); color: #64748b; border-color: rgba(148,163,184,0.15); }
 
         /* ── FOOTER ── */
         footer { background:white; padding:25px; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.08); border:2px solid #e1e8ed; font-size:12px; margin-top:30px; }
@@ -1544,6 +1556,55 @@ async function loadCountry(country){
         if(ctx&&data.context)ctx.textContent=data.context;
         var ts=document.getElementById(country+'-collapsed-ts');
         if(ts&&data.last_updated)ts.textContent=new Date(data.last_updated).toLocaleString();
+
+        // --- INTELLIGENCE SOURCES STRIP ---
+        // HYBRID MODE: works with current top_signals response AND future articles_XX arrays
+        // (when Cuba/Bluesky wiring ships, no frontend re-work needed)
+        var getCount=function(arr){return Array.isArray(arr)?arr.length:0;};
+        var gdeltCount=0, blueskyCount=0, telegramCount=0, redditCount=0, rssCount=0;
+
+        // PATH A: future pattern — backend sends dedicated arrays (like Asia/Europe backends)
+        Object.keys(data).forEach(function(key){
+            if(/^articles_[a-z]{2}$/.test(key)) gdeltCount += getCount(data[key]);
+        });
+        blueskyCount = getCount(data.articles_bluesky);
+        telegramCount = getCount(data.articles_telegram);
+        redditCount = getCount(data.articles_reddit);
+        var totalArticles = data.total_articles || 0;
+        if(totalArticles > 0){
+            rssCount = Math.max(0, totalArticles - gdeltCount - blueskyCount - telegramCount - redditCount);
+        }
+
+        // PATH B: current pattern — classify from top_signals[].source when dedicated arrays aren't present
+        if(gdeltCount===0 && blueskyCount===0 && telegramCount===0 && redditCount===0 && Array.isArray(data.top_signals)){
+            data.top_signals.forEach(function(sig){
+                var srcName = (typeof sig.source === 'object' ? (sig.source && sig.source.name || '') : (sig.source || '')).toLowerCase();
+                var srcUrl = (sig.url || sig.link || '').toLowerCase();
+                if(srcName.indexOf('bluesky')!==-1 || srcName.indexOf('.bsky.')!==-1 || srcUrl.indexOf('bsky.app')!==-1) blueskyCount++;
+                else if(srcName.indexOf('telegram')!==-1 || srcName.charAt(0)==='@' || srcUrl.indexOf('t.me')!==-1) telegramCount++;
+                else if(srcName.indexOf('reddit')!==-1 || srcUrl.indexOf('reddit.com')!==-1) redditCount++;
+                else if(srcName.indexOf('gdelt')!==-1) gdeltCount++;
+                else rssCount++;
+            });
+        }
+
+        var intelEl = document.getElementById(country+'-intel-sources');
+        if(intelEl){
+            var pills = [
+                { label: '🌐 GDELT',    count: gdeltCount,    name: 'GDELT' },
+                { label: '📰 RSS',      count: rssCount,      name: 'RSS' },
+                { label: '🦋 Bluesky',  count: blueskyCount,  name: 'Bluesky' },
+                { label: '✈️ Telegram', count: telegramCount, name: 'Telegram' },
+                { label: '💬 Reddit',   count: redditCount,   name: 'Reddit' }
+            ];
+            var html = '<span class="intel-sources-label">Signals:</span>';
+            pills.forEach(function(p){
+                var active = p.count > 0;
+                var title = active ? (p.count + ' signal' + (p.count!==1?'s':'') + ' from ' + p.name) : ('No ' + p.name + ' signals this scan');
+                html += '<span class="intel-pill ' + (active?'active':'inactive') + '" title="' + title + '">' + p.label + (active ? ' <strong>'+p.count+'</strong>' : '') + '</span>';
+            });
+            intelEl.innerHTML = html;
+        }
     }catch(err){console.warn('[WHA] load error for '+country,err);}
 }
 
