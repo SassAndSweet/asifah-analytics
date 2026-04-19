@@ -1484,14 +1484,22 @@ async function scanSingleTarget(target) {
         clearTimeout(timeout);
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const data = await response.json();
-        if (data.scan_in_progress || data.warming) {
+        // v1.1.0 (April 2026) — Handle warming state without overwriting UI with 0%.
+        // Backend returns {probability: null, warming: true, scan_in_progress: true}
+        // when a country has no cache. Previously displayTargetData() was called
+        // anyway, and `null || 0` rendered 0% — confusing users into thinking
+        // the country had zero conflict signal. Now we surface a proper
+        // "Scanning..." state and leave the gauge placeholder in place.
+        if (data.scan_in_progress || data.warming || data.probability === null) {
             showError(`⏳ Scan running in background for ${target} — refresh in 60 seconds for updated data.`);
-            // Update collapsed card to show "Scanning…" instead of overwriting with 0%
-            const collapsedScore = document.getElementById(`${target}CollapsedScore`);
-            if (collapsedScore) collapsedScore.textContent = 'Scanning…';
+            // Render a visible "scanning" placeholder instead of 0%
             const gaugeText = document.getElementById(`${target}-prob`);
+            const collapsedScore = document.getElementById(`${target}CollapsedScore`);
+            const collapsedTimestamp = document.getElementById(`${target}CollapsedTimestamp`);
             if (gaugeText) gaugeText.textContent = '…';
-            return;  // Don't render 0% — wait for real data on next refresh
+            if (collapsedScore) collapsedScore.textContent = 'Scanning';
+            if (collapsedTimestamp) collapsedTimestamp.textContent = 'First scan in progress — refresh in 60s';
+            return;  // Exit early; don't render 0% and don't hideError()
         }
         displayTargetData(target, data);
         hideError();
@@ -1509,10 +1517,11 @@ async function scanSingleTarget(target) {
 }
     // ===== DISPLAY =====
     function displayTargetData(target, data) {
-        // v1.1.0 (April 2026) — Guard against null probability from warming state.
-        // Previously `null || 0` evaluated to 0 and rendered 0% incorrectly.
+        // v1.1.0 (April 2026) — Guard against null probability. Previously
+        // `data.probability || 0` would render 0% when the scan was still
+        // warming. Now we bail early and log a warning instead.
         if (data.probability === null || data.probability === undefined) {
-            console.warn(`[${target}] probability is null — skipping render`);
+            console.warn(`[${target}] probability is null — skipping render (likely warming)`);
             return;
         }
         const prob = data.probability;
