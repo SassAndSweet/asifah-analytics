@@ -85,8 +85,9 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1800px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         header {
@@ -1122,6 +1123,18 @@
             font-size: 11px;
             margin-top: 6px;
         }
+
+        /* INTELLIGENCE SOURCES STRIP */
+        .intel-sources { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 8px 0; padding: 10px 12px; background: rgba(0,180,255,0.04); border-left: 3px solid rgba(0,180,255,0.3); border-radius: 4px; }
+        .intel-sources-label { font-size: 10px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-right: 4px; align-self: center; font-family: 'Courier New', monospace; }
+        .intel-pill { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: bold; padding: 3px 8px; border-radius: 10px; letter-spacing: 0.5px; transition: all 0.2s ease; cursor: default; }
+        .intel-pill.active { background: rgba(34,197,94,0.12); color: #15803d; border: 1px solid rgba(34,197,94,0.3); }
+        .intel-pill.inactive { background: rgba(148,163,184,0.08); color: #94a3b8; border: 1px solid rgba(148,163,184,0.2); }
+        .intel-pill.active:hover { background: rgba(34,197,94,0.2); transform: translateY(-1px); }
+        [data-theme="dark"] .intel-sources { background: rgba(0,180,255,0.06); border-left-color: rgba(0,210,255,0.4); }
+        [data-theme="dark"] .intel-sources-label { color: #94a3b8; }
+        [data-theme="dark"] .intel-pill.active { background: rgba(34,197,94,0.18); color: #86efac; border-color: rgba(34,197,94,0.4); }
+        [data-theme="dark"] .intel-pill.inactive { background: rgba(148,163,184,0.08); color: #64748b; border-color: rgba(148,163,184,0.15); }
 
         .headline-item a {
             color: #2c3e50;
@@ -2863,11 +2876,11 @@
    NAV SIDEBAR
    ======================================== */
 .nav-sidebar {
-    width: 180px;
+    width: 200px;
     flex-shrink: 0;
     display: none;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     padding-top: 4px;
     position: sticky;
     top: 20px;
@@ -3028,9 +3041,13 @@
         flex-direction: row;
         align-items: flex-start;
         gap: 20px;
-        max-width: 1400px;
+        max-width: 1800px;
         margin: 0 auto;
         padding: 0 20px;
+    }
+    .main-content-wrapper > .targets-grid {
+        flex: 1;
+        min-width: 0;
     }
     .osint-sidebar {
         /* Moved to bottom section — no sticky positioning needed */
@@ -3307,6 +3324,11 @@
 
         <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
             <span class="nav-btn-label">📡 ME Rhetoric Monitor</span>
+            <span class="nav-btn-status">● Live</span>
+        </a>
+
+        <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+            <span class="nav-btn-label">📡 Asia Rhetoric</span>
             <span class="nav-btn-status">● Live</span>
         </a>
 
@@ -7014,6 +7036,63 @@ async function scanTarget(targetName, days) {
             updateTimeline(targetName, timeline, probability);
             displayHeadlinesWithWeights(targetName, data);
             renderMilitaryPosture(targetName, data);
+            renderIntelSourcesStrip(targetName, data);
+        }
+
+        // --- INTELLIGENCE SOURCES STRIP ---
+        // Counts signals per source type and lights up pills accordingly.
+        // Supports BOTH ME response shapes:
+        //   - Dedicated arrays (articles_en, _he, _ar, _fa, _bluesky, _telegram, _reddit)
+        //   - Classification from recent_headlines[].source when arrays aren't present
+        // Future-proof: when Bluesky/Telegram pipelines expand, no frontend re-work needed.
+        function renderIntelSourcesStrip(target, data) {
+            const getCount = (arr) => Array.isArray(arr) ? arr.length : 0;
+            let gdeltCount = 0, blueskyCount = 0, telegramCount = 0, redditCount = 0, rssCount = 0;
+
+            // PATH A — dedicated language/source arrays (future-proof, matches Asia/Europe pattern)
+            Object.keys(data).forEach(key => {
+                if (/^articles_[a-z]{2}$/.test(key)) gdeltCount += getCount(data[key]);
+            });
+            blueskyCount += getCount(data.articles_bluesky);
+            telegramCount += getCount(data.articles_telegram);
+            redditCount += getCount(data.articles_reddit);
+
+            // PATH B — classify from recent_headlines[].source when no dedicated arrays
+            if (gdeltCount === 0 && blueskyCount === 0 && telegramCount === 0 && redditCount === 0
+                && Array.isArray(data.recent_headlines)) {
+                data.recent_headlines.forEach(h => {
+                    const ft = (h.feed_type || '').toLowerCase();
+                    const srcName = (typeof h.source === 'object' ? (h.source?.name || '') : (h.source || '')).toLowerCase();
+                    const srcUrl = (h.url || h.link || '').toLowerCase();
+                    if (ft === 'bluesky' || srcName.indexOf('.bsky.') !== -1 || srcUrl.indexOf('bsky.app') !== -1) blueskyCount++;
+                    else if (ft === 'telegram' || srcName.charAt(0) === '@' || srcUrl.indexOf('t.me') !== -1 || srcName.indexOf('telegram') !== -1) telegramCount++;
+                    else if (ft === 'reddit' || srcUrl.indexOf('reddit.com') !== -1) redditCount++;
+                    else if (ft === 'gdelt' || srcName.indexOf('gdelt') !== -1) gdeltCount++;
+                    else rssCount++;
+                });
+            }
+
+            const totalScanned = data.articles_scanned || data.total_articles || data.articles_analyzed || 0;
+            const intelEl = document.getElementById(`${target}-intel-sources`);
+            if (intelEl) {
+                const pills = [
+                    { label: '🌐 GDELT',    count: gdeltCount,    name: 'GDELT' },
+                    { label: '📰 RSS',      count: rssCount,      name: 'RSS' },
+                    { label: '🦋 Bluesky',  count: blueskyCount,  name: 'Bluesky' },
+                    { label: '✈️ Telegram', count: telegramCount, name: 'Telegram' },
+                    { label: '💬 Reddit',   count: redditCount,   name: 'Reddit' }
+                ];
+                let html = `<span class="intel-sources-label">Signals:</span>`;
+                pills.forEach(p => {
+                    const active = p.count > 0;
+                    const title = active ? `${p.count} signal${p.count !== 1 ? 's' : ''} from ${p.name}` : `No ${p.name} signals this scan`;
+                    html += `<span class="intel-pill ${active ? 'active' : 'inactive'}" title="${title}">${p.label}${active ? ` <strong>${p.count}</strong>` : ''}</span>`;
+                });
+                if (totalScanned > 0) {
+                    html += `<span style="font-size:9px;color:#94a3b8;margin-left:auto;align-self:center;font-family:monospace;" title="Total articles scanned this run">${totalScanned} scanned</span>`;
+                }
+                intelEl.innerHTML = html;
+            }
         }
 
         function updateProbability(targetId, probability, isCached) {
