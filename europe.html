@@ -1807,6 +1807,16 @@
         if (card.classList.contains('collapsed')) {
             card.classList.remove('collapsed');
             card.classList.add('expanded');
+
+            // Lazy-load military posture on first expand (Optimization #2 — v1.3.0)
+            // Was: all 9 targets pre-loaded on DOMContentLoaded blocking the overlay
+            // Now: load on-demand when user actually views the expanded card
+            if (!card.dataset.milLoaded) {
+                // cardId format is "{target}-card" — strip suffix to get target key
+                const target = cardId.replace(/-card$/, '');
+                loadMilitaryPosture(target);
+                card.dataset.milLoaded = '1';
+            }
         } else {
             card.classList.remove('expanded');
             card.classList.add('collapsed');
@@ -2306,8 +2316,79 @@ async function loadCachedScoresFallback() {
     }
 
     async function loadAllWeather() {
-        for (const target of Object.keys(WEATHER_CAPITALS)) {
-            loadWeather(target);
+        // v1.3.0: Single backend bundle call replaces 9 external open-meteo calls.
+        // If the /api/europe/weather endpoint isn't deployed yet, we fall back
+        // to the original per-country open-meteo behavior — so this is safe to
+        // deploy BEFORE the backend is updated.
+        try {
+            const response = await fetch(`${API_BASE}/api/europe/weather`);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const bundle = await response.json();
+            const capitals = bundle.capitals || {};
+            let bundleUsed = false;
+            for (const target of Object.keys(WEATHER_CAPITALS)) {
+                const data = capitals[target];
+                if (data) {
+                    renderWeatherForTarget(target, data);
+                    bundleUsed = true;
+                } else {
+                    // Single-country fallback for any missing entry
+                    loadWeather(target);
+                }
+            }
+            if (bundleUsed) {
+                console.log(`[Weather] Used backend bundle (${bundle.ok_count}/${bundle.total_count} capitals, cached ${bundle.cached_at || '—'})`);
+                return;
+            }
+            throw new Error('empty bundle');
+        } catch (err) {
+            console.warn('[Weather] Bundle endpoint unavailable, falling back to per-country open-meteo:', err.message);
+            // Fallback: original behavior (9 direct calls to open-meteo)
+            for (const target of Object.keys(WEATHER_CAPITALS)) {
+                loadWeather(target);
+            }
+        }
+    }
+
+    // Extracted render-only helper so both bundle mode and fallback mode share the same rendering code
+    function renderWeatherForTarget(target, data) {
+        const container = document.getElementById(`${target}-weather-forecast`);
+        if (!container) return;
+        try {
+            const days  = data.daily.time;
+            const codes = data.daily.weather_code;
+            const highs = data.daily.temperature_2m_max;
+            const lows  = data.daily.temperature_2m_min;
+            let html = '';
+            let clearNights = 0;
+            for (let i = 0; i < days.length; i++) {
+                const date = new Date(days[i] + 'T12:00:00');
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                const emoji = getWeatherEmoji(codes[i]);
+                const label = getWeatherLabel(codes[i]);
+                if (isClearDay(codes[i])) clearNights++;
+                html += `
+                    <div class="weather-day" style="${isClearDay(codes[i]) ? 'border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.05);' : ''}">
+                        <div class="weather-day-name">${dayName}</div>
+                        <div class="weather-icon">${emoji}</div>
+                        <div class="weather-temps">
+                            <span class="weather-high">${Math.round(highs[i])}°</span>
+                            <span class="weather-low">${Math.round(lows[i])}°</span>
+                        </div>
+                        <div class="weather-conditions">${label}</div>
+                    </div>`;
+            }
+            if (clearNights >= 4) {
+                html += `</div><div class="weather-strike-note">⚠️ ${clearNights}/7 clear days — favorable conditions for aerial operations</div>`;
+            } else if (clearNights >= 2) {
+                html += `</div><div class="weather-strike-note">🌤️ ${clearNights}/7 clear days — mixed conditions window</div>`;
+            } else {
+                html += `</div><div class="weather-strike-note">☁️ ${clearNights}/7 clear days — poor conditions for aerial operations</div>`;
+            }
+            container.innerHTML = html;
+        } catch (error) {
+            console.warn(`[Weather] Render failed for ${target}:`, error);
+            container.innerHTML = '<div class="weather-loading">Weather data unavailable</div>';
         }
     }
 
@@ -2498,16 +2579,17 @@ async function loadCachedScoresFallback() {
         startLoadingProgress();
 
         // Fire all data loads in parallel
+        // v1.3.0: Military posture DEFERRED to card expansion (saves 9 proxy-cascade calls
+        // through ME backend on every landing — see toggleCard + _loadSingleMilPosture)
         const cachePromise   = loadCachedScores();
         const notamPromise   = loadNotams();
         const weatherPromise = loadAllWeather();
         const ratePromise    = fetchRateLimits();
         const taPromise      = loadTravelAdvisories();
-        const milPromise     = loadMilitaryPosture();  // all targets, parallel
 
         // Wait for cache + NOTAMs to resolve before hiding overlay
         try {
-            await Promise.allSettled([cachePromise, notamPromise, taPromise, milPromise]);
+            await Promise.allSettled([cachePromise, notamPromise, taPromise]);
         } catch (e) {
             console.warn('Some init loads failed:', e);
         }
