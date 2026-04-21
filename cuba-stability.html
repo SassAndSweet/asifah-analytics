@@ -230,6 +230,81 @@
         .article-link { display: inline-block; margin-top: 6px; color: var(--accent); text-decoration: none; font-size: 12px; }
         .article-link:hover { text-decoration: underline; }
 
+        /* ── RHETORIC BANNER + CARD ── */
+        .rhetoric-link-banner {
+            background: linear-gradient(135deg, #065f46, #047857);
+            border: 2px solid rgba(52,211,153,0.4);
+            border-radius: 10px; padding: 14px 20px;
+            margin-bottom: 15px;
+            display: flex; align-items: center;
+            justify-content: space-between; gap: 15px; flex-wrap: wrap;
+        }
+        .rhetoric-vector-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+        .rhetoric-vector-pill {
+            font-size: 10px; font-weight: 700; padding: 3px 9px;
+            border-radius: 4px; color: white; letter-spacing: 0.5px;
+        }
+        .rhetoric-card {
+            background: var(--card-bg); border-radius: 12px; padding: 20px;
+            margin-bottom: 20px; border: 1px solid var(--card-border);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .rhetoric-card-label {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 12px;
+        }
+        .rhetoric-score-row {
+            display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
+        }
+        .rhetoric-score {
+            font-size: 32px; font-weight: 700; color: var(--text-primary);
+        }
+        .rhetoric-theatre-label {
+            font-size: 13px; font-weight: bold; padding: 3px 10px;
+            border-radius: 4px; background: #6b7280; color: white;
+        }
+        .rhetoric-scenario-line {
+            font-size: 12px; font-weight: 700; padding: 6px 10px;
+            background: rgba(52,211,153,0.08); border-left: 3px solid #34d399;
+            border-radius: 4px; color: var(--text-primary); margin: 10px 0;
+        }
+        .rhetoric-vector-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 8px; margin: 12px 0;
+        }
+        .rhetoric-vector-item {
+            padding: 8px; border: 1px solid var(--card-border); border-radius: 6px;
+            text-align: center; background: var(--article-bg);
+        }
+        .rhetoric-vector-item-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.8px; color: var(--text-secondary); margin-bottom: 4px;
+        }
+        .rhetoric-vector-item-value {
+            font-size: 16px; font-weight: 800; color: var(--text-primary);
+        }
+        .rhetoric-actor-row {
+            display: flex; justify-content: space-between; padding: 3px 0;
+            border-bottom: 1px solid var(--card-border); font-size: 12px;
+        }
+        .rhetoric-actor-row:last-child { border-bottom: none; }
+        .rhetoric-full-link {
+            margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border);
+            text-align: center;
+        }
+        .rhetoric-full-link a {
+            color: #10b981; text-decoration: none; font-size: 12px; font-weight: 600;
+        }
+        .rhetoric-full-link a:hover { text-decoration: underline; }
+        .rhetoric-red-lines {
+            margin-top: 10px; padding: 8px 12px; border-radius: 6px;
+            background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25);
+            font-size: 11px; color: var(--text-primary);
+        }
+        @media (max-width: 768px) {
+            .rhetoric-vector-grid { grid-template-columns: 1fr; }
+        }
+
         /* ── FOOTER ── */
         footer {
             background: var(--card-bg); border: 1px solid var(--card-border);
@@ -319,6 +394,70 @@
         </div>
         <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cuba-travel-advisory.html"
            target="_blank" rel="noopener" class="advisory-btn" data-i18n="taBtn">VIEW ADVISORY &rarr;</a>
+    </div>
+
+    <!-- ── RHETORIC BANNER ── -->
+    <div class="rhetoric-link-banner">
+        <div style="flex:1; min-width:220px;">
+            <div style="font-size:13px; font-weight:bold; color:white;">
+                📡 <span data-i18n="rhetoricBannerTitle">Cuba Rhetoric &amp; Pressure Tracker</span>
+            </div>
+            <div style="font-size:11px; color:rgba(255,255,255,0.75); margin-top:3px;" data-i18n="rhetoricBannerSubtitle">
+                U.S. Pressure · Regime Fracture · Adversary Access · Red Lines · Cross-Theater
+            </div>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            <span id="rhetoricLevelBadge" style="background:#6b7280; color:white; font-size:12px; font-weight:700; padding:5px 14px; border-radius:6px; letter-spacing:0.5px;">
+                📡 <span data-i18n="rhetoricLoading">Loading…</span>
+            </span>
+            <a href="rhetoric-cuba.html" style="padding:8px 18px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:12px; font-weight:bold; white-space:nowrap;" data-i18n="rhetoricOpenTracker">
+                Open Tracker →
+            </a>
+        </div>
+    </div>
+
+    <!-- ── RHETORIC SUMMARY CARD ── -->
+    <div class="rhetoric-card">
+        <div class="rhetoric-card-label">📡 <span data-i18n="rhetoricCardLabel">RHETORIC TRACKER</span></div>
+
+        <!-- Scenario line -->
+        <div id="rhetoricScenarioLine" class="rhetoric-scenario-line" style="display:none;">
+            <span id="rhetoricScenarioIcon">⚪</span>
+            <span id="rhetoricScenarioText" data-i18n-dynamic="scenario">--</span>
+        </div>
+
+        <!-- Three composite vectors -->
+        <div class="rhetoric-vector-grid">
+            <div class="rhetoric-vector-item">
+                <div class="rhetoric-vector-item-label" data-i18n="vecUsPressure">U.S. Pressure</div>
+                <div class="rhetoric-vector-item-value" id="rhetVecUsPressure" style="color:#6b7280;">L0</div>
+            </div>
+            <div class="rhetoric-vector-item">
+                <div class="rhetoric-vector-item-label" data-i18n="vecRegimeFracture">Regime Fracture</div>
+                <div class="rhetoric-vector-item-value" id="rhetVecRegimeFracture" style="color:#6b7280;">L0</div>
+            </div>
+            <div class="rhetoric-vector-item">
+                <div class="rhetoric-vector-item-label" data-i18n="vecAdversaryAccess">Adversary Access</div>
+                <div class="rhetoric-vector-item-value" id="rhetVecAdversaryAccess" style="color:#6b7280;">L0</div>
+            </div>
+        </div>
+
+        <!-- Actor breakdown -->
+        <div id="rhetoricActorList" style="margin-top:10px;">
+            <div style="font-style:italic; font-size:11px; color:var(--text-muted);" data-i18n="rhetoricLoadingActors">Loading actor breakdown...</div>
+        </div>
+
+        <!-- Red Lines summary -->
+        <div id="rhetoricRedLines" class="rhetoric-red-lines" style="display:none;">
+            <strong>🚨 <span data-i18n="rhetoricRedLinesLabel">Red Lines:</span></strong>
+            <span id="rhetoricRedLinesText">--</span>
+        </div>
+
+        <!-- Link to full rhetoric page -->
+        <div class="rhetoric-full-link">
+            <a href="rhetoric-cuba.html" data-i18n="rhetoricViewFull">View Full Rhetoric Analysis →</a>
+        </div>
+        <div id="rhetoricScanInfo" style="margin-top:8px; font-size:10px; color:var(--text-muted); text-align:center;">--</div>
     </div>
 
     <!-- ── MAP ── -->
@@ -475,6 +614,17 @@ var TRANSLATIONS = {
         taHeadline:      'Exercise Increased Caution in Cuba',
         taText:          ' due to arbitrary enforcement of local laws. Cuba\'s government arbitrarily enforces laws and may detain U.S. citizens. The U.S. Embassy in Havana has limited ability to assist U.S. citizens.',
         taBtn:           'VIEW ADVISORY \u2192',
+        rhetoricBannerTitle:    'Cuba Rhetoric & Pressure Tracker',
+        rhetoricBannerSubtitle: 'U.S. Pressure · Regime Fracture · Adversary Access · Red Lines · Cross-Theater',
+        rhetoricLoading:        'Loading\u2026',
+        rhetoricOpenTracker:    'Open Tracker \u2192',
+        rhetoricCardLabel:      'RHETORIC TRACKER',
+        vecUsPressure:          'U.S. Pressure',
+        vecRegimeFracture:      'Regime Fracture',
+        vecAdversaryAccess:     'Adversary Access',
+        rhetoricLoadingActors:  'Loading actor breakdown...',
+        rhetoricRedLinesLabel:  'Red Lines:',
+        rhetoricViewFull:       'View Full Rhetoric Analysis \u2192',
         mapTitle:        'Cuba \u2014 Strategic Overview',
         mapSubtitle:     'Strategic locations and key risk zones for Cuba. Data based on open-source reporting.',
         kbTitle:         'Knowledge Library',
@@ -513,6 +663,17 @@ var TRANSLATIONS = {
         taHeadline:      'Extrema Precauciones en Cuba',
         taText:          ' debido a la aplicaci\u00f3n arbitraria de leyes locales. El gobierno cubano aplica leyes de forma arbitraria y puede detener a ciudadanos estadounidenses.',
         taBtn:           'VER AVISO \u2192',
+        rhetoricBannerTitle:    'Rastreador de Ret\u00f3rica y Presi\u00f3n sobre Cuba',
+        rhetoricBannerSubtitle: 'Presi\u00f3n EE.UU. · Fractura del R\u00e9gimen · Acceso Adversario · L\u00edneas Rojas · Multi-Teatro',
+        rhetoricLoading:        'Cargando\u2026',
+        rhetoricOpenTracker:    'Abrir Rastreador \u2192',
+        rhetoricCardLabel:      'RASTREADOR DE RET\u00d3RICA',
+        vecUsPressure:          'Presi\u00f3n EE.UU.',
+        vecRegimeFracture:      'Fractura del R\u00e9gimen',
+        vecAdversaryAccess:     'Acceso Adversario',
+        rhetoricLoadingActors:  'Cargando desglose de actores...',
+        rhetoricRedLinesLabel:  'L\u00edneas Rojas:',
+        rhetoricViewFull:       'Ver An\u00e1lisis Completo de Ret\u00f3rica \u2192',
         mapTitle:        'Cuba \u2014 Panorama Estrat\u00e9gico',
         mapSubtitle:     'Ubicaciones estrat\u00e9gicas y zonas de riesgo clave para Cuba. Datos basados en informes de fuentes abiertas.',
         kbTitle:         'Biblioteca de Conocimiento',
@@ -551,6 +712,17 @@ var TRANSLATIONS = {
         taHeadline:      'Tenha Cautela Redobrada em Cuba',
         taText:          ' devido \u00e0 aplica\u00e7\u00e3o arbitr\u00e1ria de leis locais. O governo cubano aplica leis de forma arbitr\u00e1ria e pode deter cidad\u00e3os americanos.',
         taBtn:           'VER AVISO \u2192',
+        rhetoricBannerTitle:    'Rastreador de Ret\u00f3rica e Press\u00e3o sobre Cuba',
+        rhetoricBannerSubtitle: 'Press\u00e3o EUA · Fratura do Regime · Acesso de Advers\u00e1rios · Linhas Vermelhas · Multi-Teatro',
+        rhetoricLoading:        'Carregando\u2026',
+        rhetoricOpenTracker:    'Abrir Rastreador \u2192',
+        rhetoricCardLabel:      'RASTREADOR DE RET\u00d3RICA',
+        vecUsPressure:          'Press\u00e3o EUA',
+        vecRegimeFracture:      'Fratura do Regime',
+        vecAdversaryAccess:     'Acesso de Advers\u00e1rios',
+        rhetoricLoadingActors:  'Carregando detalhamento de atores...',
+        rhetoricRedLinesLabel:  'Linhas Vermelhas:',
+        rhetoricViewFull:       'Ver An\u00e1lise Completa de Ret\u00f3rica \u2192',
         mapTitle:        'Cuba \u2014 Vis\u00e3o Geral Estrat\u00e9gica',
         mapSubtitle:     'Localiza\u00e7\u00f5es estrat\u00e9gicas e zonas de risco chave para Cuba. Dados baseados em fontes abertas.',
         kbTitle:         'Biblioteca de Conhecimento',
@@ -703,12 +875,123 @@ function displayFallback() {
 }
 
 // ========================================
+// RHETORIC TRACKER — fetch + render summary card
+// ========================================
+async function loadRhetoricData() {
+    try {
+        const r = await fetch('https://asifah-wha-backend.onrender.com/api/rhetoric/cuba/summary', {
+            cache: 'no-store'
+        });
+        const data = await r.json();
+        if (!data || !data.success) {
+            console.warn('[Cuba Rhetoric] Summary unavailable');
+            return;
+        }
+
+        const LEVEL_COLORS = {
+            0: '#6b7280', 1: '#3b82f6', 2: '#f59e0b',
+            3: '#f97316', 4: '#ef4444', 5: '#dc2626'
+        };
+        const LEVEL_LABELS = {
+            0: 'Baseline', 1: 'Rhetoric',    2: 'Warning',
+            3: 'Confrontation', 4: 'Coercion', 5: 'Active Conflict'
+        };
+
+        const theatreLevel = data.theatre_level || 0;
+        const color = LEVEL_COLORS[Math.min(theatreLevel, 5)] || '#6b7280';
+        const label = LEVEL_LABELS[Math.min(theatreLevel, 5)] || '--';
+
+        // Banner badge
+        const badge = document.getElementById('rhetoricLevelBadge');
+        if (badge) {
+            badge.style.background = color;
+            badge.textContent = `⚡ Level ${theatreLevel} — ${label}`;
+        }
+
+        // Scenario line
+        const scenario = data.scenario || '';
+        if (scenario) {
+            const sLine = document.getElementById('rhetoricScenarioLine');
+            const sText = document.getElementById('rhetoricScenarioText');
+            const sIcon = document.getElementById('rhetoricScenarioIcon');
+            // Pick icon from first few chars of scenario (the interpreter emits these)
+            const icons = { 'CRITICAL': '🔴', 'ELEVATED': '🟠', 'WARNING': '🟡',
+                            'MONITORING': '🔵', 'BASELINE': '⚪' };
+            let icon = '⚪';
+            for (const k of Object.keys(icons)) {
+                if (scenario.toUpperCase().includes(k)) { icon = icons[k]; break; }
+            }
+            if (sIcon) sIcon.textContent = icon;
+            if (sText) sText.textContent = scenario;
+            if (sLine) sLine.style.display = 'block';
+        }
+
+        // Three composite vectors
+        const vMap = [
+            ['rhetVecUsPressure',      data.us_pressure      || 0],
+            ['rhetVecRegimeFracture',  data.regime_fracture  || 0],
+            ['rhetVecAdversaryAccess', data.adversary_access || 0],
+        ];
+        vMap.forEach(([id, lvl]) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = 'L' + lvl;
+                el.style.color = LEVEL_COLORS[Math.min(lvl, 5)] || '#6b7280';
+            }
+        });
+
+        // Actor breakdown (9 actors grouped into 3 rows of 3)
+        const actorEl = document.getElementById('rhetoricActorList');
+        if (actorEl) {
+            const actors = [
+                { label: '🏛️ US Gov',          level: data.us_government_level    || 0 },
+                { label: '⚖️ US Sanctions',     level: data.us_sanctions_level     || 0 },
+                { label: '⚓ US Military',       level: data.us_military_level      || 0 },
+                { label: '🏛️ Cuban Gov',        level: data.cuban_government_level || 0 },
+                { label: '🪖 Cuban Military',   level: data.cuban_military_level   || 0 },
+                { label: '✊ Cuban Dissidents', level: data.cuban_dissidents_level || 0 },
+                { label: '🤝 Russia Axis',      level: data.russia_cuba_level      || 0 },
+                { label: '🤝 China Axis',       level: data.china_cuba_level       || 0 },
+                { label: '🤝 Iran Axis',        level: data.iran_cuba_level        || 0 },
+            ];
+            actorEl.innerHTML = actors.map(a =>
+                `<div class="rhetoric-actor-row">
+                    <span>${a.label}</span>
+                    <span style="font-weight:700; color:${LEVEL_COLORS[Math.min(a.level, 5)]};">L${a.level}</span>
+                </div>`
+            ).join('');
+        }
+
+        // Red lines summary
+        const rlCount = data.red_lines_count || 0;
+        const rlBox = document.getElementById('rhetoricRedLines');
+        const rlText = document.getElementById('rhetoricRedLinesText');
+        if (rlCount > 0 && rlBox && rlText) {
+            rlText.textContent = `${rlCount} red line${rlCount === 1 ? '' : 's'} triggered`;
+            rlBox.style.display = 'block';
+        }
+
+        // Scan info
+        const scanEl = document.getElementById('rhetoricScanInfo');
+        if (scanEl && data.scanned_at) {
+            const mins = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
+            const ago = mins < 60 ? `${mins}m` : `${Math.round(mins/60)}h`;
+            scanEl.textContent = `Last scan: ${ago} ago`;
+        }
+
+    } catch (e) {
+        console.warn('[Cuba Rhetoric] Load failed:', e);
+    }
+}
+
+// ========================================
 // INIT
 // ========================================
 document.addEventListener('DOMContentLoaded', function() {
     applyTranslations();
     initMap();
     loadArticles();
+    loadRhetoricData();
     document.getElementById('lastUpdated').textContent =
         (TRANSLATIONS[currentLang] || TRANSLATIONS['en']).lastUpdated.replace('Loading...', new Date().toUTCString());
 });
