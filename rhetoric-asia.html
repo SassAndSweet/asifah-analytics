@@ -378,16 +378,15 @@
     <div class="posture-right" id="postureStats"></div>
 </div>
 
-<!-- ASIA BLUF -->
+<!-- ASIA BLUF (v2.1.0 — now backend-synthesized via /api/rhetoric/asia/bluf) -->
 <div class="bluf-card" id="blufCard">
-    <div id="blufContent">
+    <div id="blufLoading" class="bluf-loading">⏳ Loading Asia-Pacific regional BLUF synthesis...</div>
+    <div id="blufContent" style="display:none;">
         <div class="bluf-header">
             <span class="bluf-label">BLUF</span>
             <span class="bluf-posture-pill" id="blufPosturePill" style="background:#6b7280;">Loading</span>
         </div>
-        <div class="bluf-prose" id="blufProse">
-            Loading Asia-Pacific regional assessment...
-        </div>
+        <div class="bluf-prose" id="blufProse"></div>
         <div class="bluf-signals" id="blufSignals"></div>
         <div class="bluf-footer">
             <span id="blufTimestamp"></span>
@@ -586,156 +585,45 @@
     }
 
     // ── BLUF — Asia-Pacific regional synthesis ──
-    function updateBluf(resolved) {
-        const loaded = resolved.filter(r => r.data && r.data.success);
-        if (!loaded.length) {
-            document.getElementById('blufProse').textContent = 'No tracker data available yet — check back after first scan.';
-            return;
-        }
-
-        // Extract China + Taiwan data
-        const chinaData  = loaded.find(r => r.tracker.id === 'china')?.data;
-        const taiwanData = loaded.find(r => r.tracker.id === 'taiwan')?.data;
-
-        // Overall posture (highest of the two)
-        const overallLevel = Math.max(
-            chinaData?.overall_level || 0,
-            taiwanData?.overall_level || 0
-        );
-        const overallLv = ESCALATION_LEVELS[Math.min(overallLevel, 5)] || ESCALATION_LEVELS[0];
-
-        // Posture pill
-        const pill = document.getElementById('blufPosturePill');
-        pill.textContent = overallLv.label.toUpperCase();
-        pill.style.background = overallLv.color;
-
-        // Prose synthesis
-        let prose = `Asia-Pacific Rhetoric Monitor (${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}): `;
-        prose += `Regional posture at ${overallLv.label.toUpperCase()} — ${loaded.length} tracker${loaded.length === 1 ? '' : 's'} live. `;
-
-        if (chinaData) {
-            const cn_level = chinaData.overall_level || 0;
-            const cn_pla   = chinaData.pla_level || 0;
-            const cn_xi    = chinaData.xi_level || 0;
-            const cn_econ  = chinaData.econ_level || 0;
-            const cn_out   = chinaData.outbound_score || 0;
-
-            prose += `China coercion posture at L${cn_level} (outbound ${cn_out}/100) `;
-            if (cn_pla >= 3) {
-                prose += `— PLA operational signals L${cn_pla} indicate cross-strait pressure. `;
-            } else if (cn_pla >= 2) {
-                prose += `— PLA Eastern Theater activity elevated (L${cn_pla}). `;
-            } else if (cn_xi >= 2) {
-                prose += `— Xi/CMC political signaling elevated (L${cn_xi}). `;
-            } else {
-                prose += `— rhetoric-level, below operational threshold. `;
+    // v2.1.0 — now fetched from backend /api/rhetoric/asia/bluf endpoint
+    //          (same pattern as ME's /api/rhetoric/me/bluf)
+    async function loadAsiaBluf() {
+        try {
+            const resp = await fetch(API_BASE + '/api/rhetoric/asia/bluf');
+            if (!resp.ok) {
+                document.getElementById('blufLoading').textContent = '⚠️ BLUF unavailable';
+                return;
             }
-            if (cn_econ >= 3) {
-                prose += `Economic coercion vector active (L${cn_econ}). `;
+            const data = await resp.json();
+            if (!data.success) {
+                document.getElementById('blufLoading').textContent = '⚠️ BLUF unavailable';
+                return;
             }
-        }
-
-        if (taiwanData) {
-            const tw_level = taiwanData.overall_level || 0;
-            const tw_us    = taiwanData.us_level || 0;
-            const tw_def   = taiwanData.defense_level || 0;
-            const tw_diplo = taiwanData.diplomatic_level || 0;
-            const tw_out   = taiwanData.outbound_score || 0;
-
-            prose += `Taiwan deterrence posture at L${tw_level} (outbound ${tw_out}/100) `;
-            if (tw_us >= 3) {
-                prose += `— U.S. partnership signaling elevated (L${tw_us}). `;
-            } else if (tw_def >= 3) {
-                prose += `— ROC defense posture elevated (L${tw_def}). `;
-            } else if (tw_diplo >= 2) {
-                prose += `— diplomatic coalition-building active (L${tw_diplo}). `;
-            } else {
-                prose += `— monitoring, baseline resilience signals. `;
-            }
-        }
-
-        // Convergence note — when both sides are elevated together
-        const cn_level = chinaData?.overall_level || 0;
-        const tw_level = taiwanData?.overall_level || 0;
-        if (cn_level >= 3 && tw_level >= 3) {
-            prose += `⚠️ Mutual escalation detected — both sides at L3+ simultaneously. `;
-        } else if (cn_level >= 3) {
-            prose += `Taiwan response appears to be de-escalatory relative to PRC pressure. `;
-        } else if (tw_level >= 3) {
-            prose += `Taiwan posture elevated while PRC signals remain at lower tempo — watch for asymmetric signaling. `;
-        }
-
-        document.getElementById('blufProse').textContent = prose;
-
-        // Signals
-        const signalsEl = document.getElementById('blufSignals');
-        signalsEl.innerHTML = '';
-        const signals = [];
-
-        if (chinaData) {
-            const cn_level = chinaData.overall_level || 0;
-            const cn_pla   = chinaData.pla_level || 0;
-            const cn_econ  = chinaData.econ_level || 0;
-            if (cn_pla >= 3) {
-                signals.push({
-                    icon: '⚔️', color: '#ef4444',
-                    text: `CHINA L${cn_level}: PLA operational L${cn_pla} — Eastern Theater cross-strait activity elevated`
-                });
-            }
-            if (cn_econ >= 3) {
-                signals.push({
-                    icon: '💰', color: '#f97316',
-                    text: `CHINA: Economic coercion L${cn_econ} — trade/investment pressure vectors active`
-                });
-            } else if (cn_level >= 1 && cn_pla < 3 && cn_econ < 3) {
-                signals.push({
-                    icon: '🇨🇳', color: '#3b82f6',
-                    text: `CHINA L${cn_level}: Rhetoric-level coercion, monitoring — below operational threshold`
-                });
-            }
-        }
-
-        if (taiwanData) {
-            const tw_level = taiwanData.overall_level || 0;
-            const tw_us    = taiwanData.us_level || 0;
-            const tw_def   = taiwanData.defense_level || 0;
-            if (tw_us >= 3) {
-                signals.push({
-                    icon: '🤝', color: '#10b981',
-                    text: `TAIWAN: U.S. partnership L${tw_us} — deterrence signaling above coordination baseline`
-                });
-            }
-            if (tw_def >= 3) {
-                signals.push({
-                    icon: '🛡️', color: '#38bdf8',
-                    text: `TAIWAN: Defense posture L${tw_def} — ROC MND activity elevated`
-                });
-            } else if (tw_level >= 1 && tw_us < 3 && tw_def < 3) {
-                signals.push({
-                    icon: '🇹🇼', color: '#3b82f6',
-                    text: `TAIWAN L${tw_level}: Resilience posture, monitoring coalition and asymmetric signals`
-                });
-            }
-        }
-
-        if (!signals.length) {
-            signals.push({
-                icon: '🌏', color: '#6b7280',
-                text: 'All Asia-Pacific theaters at baseline — monitoring for coercion escalation and deterrence signals'
+            const pill = document.getElementById('blufPosturePill');
+            pill.textContent = data.posture_label || 'UNKNOWN';
+            pill.style.background = data.posture_color || '#6b7280';
+            document.getElementById('blufProse').textContent = data.bluf || '';
+            const signalsEl = document.getElementById('blufSignals');
+            signalsEl.innerHTML = '';
+            (data.signals || []).forEach(sig => {
+                const div = document.createElement('div');
+                div.className = 'bluf-signal-item';
+                div.style.borderLeftColor = sig.color || '#6b7280';
+                div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
+                    <span class="bluf-signal-text" style="color:${sig.color || 'var(--text-secondary)'};">${sig.text}</span>`;
+                signalsEl.appendChild(div);
             });
+            if (data.generated_at) {
+                const dt = new Date(data.generated_at);
+                document.getElementById('blufTimestamp').textContent =
+                    `Generated: ${dt.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}${data.from_cache?' (cached)':''}`;
+            }
+            document.getElementById('blufLoading').style.display = 'none';
+            document.getElementById('blufContent').style.display = 'block';
+        } catch (e) {
+            document.getElementById('blufLoading').textContent = '⚠️ BLUF unavailable';
+            console.warn('[Asia BLUF]', e);
         }
-
-        signals.forEach(sig => {
-            const div = document.createElement('div');
-            div.className = 'bluf-signal-item';
-            div.style.borderLeftColor = sig.color;
-            div.innerHTML = `<span class="bluf-signal-icon">${sig.icon}</span>
-                <span class="bluf-signal-text" style="color:${sig.color};">${sig.text}</span>`;
-            signalsEl.appendChild(div);
-        });
-
-        document.getElementById('blufTimestamp').textContent =
-            `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
     }
 
     // ── MAIN LOAD ──
@@ -779,14 +667,15 @@
         });
 
         updatePosture(resolved);
-        updateBluf(resolved);
     }
 
     // ── INIT ──
     loadTheme();
+    loadAsiaBluf();
     loadAll();
-    // Refresh posture/BLUF every 30 minutes
-    setInterval(loadAll, 30 * 60 * 1000);
+    // Refresh BLUF every 30 minutes, tracker scores every 15 minutes (match ME pattern)
+    setInterval(loadAsiaBluf, 30 * 60 * 1000);
+    setInterval(loadAll,      15 * 60 * 1000);
 </script>
 </body>
 </html>
