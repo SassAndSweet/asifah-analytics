@@ -5,7 +5,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-<title>China Rhetoric Tracker — Asifah Analytics</title>
+<title>China Coercion Tracker — Asifah Analytics</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
     /* ── THEME VARIABLES ── */
@@ -231,6 +231,47 @@
 
     /* ── PAGE FOOTER ── */
     .page-footer { text-align: center; padding: 20px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.5px; margin-top: 10px; }
+
+    /* ── INTERPRETATION CARDS (So What / Red Lines) — v1.1.0 ── */
+    .interp-so-what {
+        border-radius: 12px; padding: 22px; margin-bottom: 16px;
+        border: 2px solid rgba(56,189,248,0.3);
+        background: linear-gradient(135deg, rgba(56,189,248,0.05) 0%, rgba(14,165,233,0.03) 100%);
+    }
+    .interp-scenario-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .interp-scenario-icon { font-size: 1.3rem; }
+    .interp-scenario-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .interp-scenario-value { font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; font-family: 'Times New Roman', serif; }
+    .interp-section-title { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: #38bdf8; font-family: 'Courier New', monospace; margin: 12px 0 6px; border-bottom: 1px solid rgba(56,189,248,0.2); padding-bottom: 4px; }
+    .interp-text { font-size: 0.82rem; line-height: 1.65; color: var(--text-primary); font-family: 'Times New Roman', serif; }
+    .interp-indicator { font-size: 0.78rem; line-height: 1.5; color: var(--text-secondary); padding: 5px 10px; border-left: 3px solid #38bdf8; background: rgba(56,189,248,0.06); border-radius: 0 6px 6px 0; margin: 5px 0; font-family: 'Times New Roman', serif; }
+    .interp-indicator.breached-ind   { color: #fca5a5; border-left-color: #dc2626; background: rgba(220,38,38,0.06); }
+    .interp-indicator.historical-ind { color: #c4b5fd; border-left-color: #7c3aed; background: rgba(124,58,237,0.06); }
+    .interp-watch-item { font-size: 0.72rem; color: #38bdf8; padding: 3px 0 3px 10px; border-left: 2px solid rgba(56,189,248,0.4); margin: 3px 0; font-family: 'Courier New', monospace; }
+    .interp-confidence-note { font-size: 0.65rem; color: var(--text-muted); font-style: italic; margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(56,189,248,0.15); font-family: 'Courier New', monospace; }
+
+    .vector-readout { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 14px 0; }
+    @media (max-width: 600px) { .vector-readout { grid-template-columns: repeat(2, 1fr); } }
+    .vector-stat { text-align: center; padding: 10px 8px; border-radius: 8px; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); }
+    .vector-stat-label { font-size: 0.55rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .vector-stat-value { font-size: 1.4rem; font-weight: 900; margin-top: 3px; }
+
+    /* ── RED LINES CARD ── */
+    .red-lines-card { border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; border: 1px solid rgba(30,58,95,0.4); background: linear-gradient(135deg, #0a1525 0%, #0d1b2e 100%); }
+    [data-theme="light"] .red-lines-card { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-color: rgba(100,116,139,0.3); }
+    .interp-card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .interp-card-title { font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px; color: #38bdf8; text-transform: uppercase; }
+    .interp-card-subtitle { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+    .red-line-item { display: flex; gap: 10px; padding: 12px; border-radius: 8px; margin-bottom: 8px; background: rgba(56,189,248,0.04); border-left: 3px solid rgba(56,189,248,0.4); }
+    .red-line-item.breached    { border-left-color: #dc2626; background: rgba(220,38,38,0.08); }
+    .red-line-item.approaching { border-left-color: #f97316; background: rgba(249,115,22,0.06); }
+    .red-line-icon { font-size: 1.3rem; flex-shrink: 0; }
+    .red-line-label { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
+    .red-line-status-badge { font-size: 0.55rem; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 1px; color: white; font-family: 'Courier New', monospace; }
+    .red-line-status-badge.breached    { background: #dc2626; }
+    .red-line-status-badge.approaching { background: #f97316; }
+    .red-line-trigger { font-size: 0.68rem; color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
+    .red-line-source { font-size: 0.6rem; color: var(--text-muted); margin-top: 4px; font-style: italic; line-height: 1.4; }
 </style>
 </head>
 <body>
@@ -251,7 +292,7 @@
     </div>
     <div class="header-center">
         <div class="header-flag">🇨🇳 <span data-i18n="pageFlag">CHINA</span></div>
-        <div class="header-title" data-i18n="pageTitle">CHINA RHETORIC TRACKER</div>
+        <div class="header-title" data-i18n="pageTitle">CHINA COERCION TRACKER</div>
         <div class="header-subtitle" data-i18n="pageSubtitle">Xi / CMC · PLA Posture · MFA Signals · TAO · US / Japan / Taiwan Coalition</div>
         <div class="header-timestamp">Last updated: <span id="lastUpdated">--</span></div>
     </div>
@@ -333,6 +374,68 @@
     </div>
 </div>
 
+<!-- SO WHAT CARD (v1.1.0 — backend-synthesized via china_signal_interpreter) -->
+<div class="interp-so-what" id="soWhatCard" style="display:none;">
+    <div class="interp-scenario-header">
+        <span class="interp-scenario-icon" id="soWhatIcon">⚪</span>
+        <div>
+            <div class="interp-scenario-label">CHINA STRATEGIC ASSESSMENT</div>
+            <div class="interp-scenario-value" id="soWhatScenario">--</div>
+        </div>
+    </div>
+
+    <!-- Four-vector readout -->
+    <div class="vector-readout" id="soWhatVectors">
+        <div class="vector-stat">
+            <div class="vector-stat-label">Kinetic</div>
+            <div class="vector-stat-value" id="vecKinetic" style="color:#ef4444;">--</div>
+        </div>
+        <div class="vector-stat">
+            <div class="vector-stat-label">Economic</div>
+            <div class="vector-stat-value" id="vecEconomic" style="color:#f97316;">--</div>
+        </div>
+        <div class="vector-stat">
+            <div class="vector-stat-label">Coalition Pushback</div>
+            <div class="vector-stat-value" id="vecCoalition" style="color:#38bdf8;">--</div>
+        </div>
+        <div class="vector-stat">
+            <div class="vector-stat-label">Domestic Fracture</div>
+            <div class="vector-stat-value" id="vecDomestic" style="color:#7c3aed;">--</div>
+        </div>
+    </div>
+
+    <div class="interp-section-title">SITUATION</div>
+    <div class="interp-text" id="soWhatSituation"></div>
+    <div id="soWhatIndicators"></div>
+    <div class="interp-section-title" style="margin-top:14px;">ASSESSMENT</div>
+    <div class="interp-text" id="soWhatAssessment"></div>
+    <div class="interp-section-title" style="margin-top:14px;">WATCH FOR</div>
+    <div id="soWhatWatchList"></div>
+    <div class="interp-confidence-note" id="soWhatNote"></div>
+</div>
+
+<!-- RED LINES CARD -->
+<div class="red-lines-card" id="redLinesCard" style="display:none;">
+    <div class="interp-card-header">
+        <span style="font-size:1rem;">🚨</span>
+        <div style="flex:1;">
+            <div class="interp-card-title">RED LINE PROXIMITY</div>
+            <div class="interp-card-subtitle">China Escalation Triggers — Cross-Strait · Economic · Decoupling · Domestic · Alliance</div>
+        </div>
+        <div style="display:flex;gap:16px;">
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;">BREACHED</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#f97316;" id="redLineApproachingCount">0</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;">APPROACHING</div>
+            </div>
+        </div>
+    </div>
+    <div id="redLineItems"></div>
+</div>
+
 <!-- DUAL DASHBOARD -->
 <div class="dual-dashboard">
     <!-- OUTBOUND -->
@@ -399,11 +502,8 @@
 
 <!-- FOOTER -->
 <div class="page-footer">
-    <div>Data Sources: Google News RSS (EN/ZH), GDELT, Telegram OSINT, Reddit</div>
-    <div style="margin-top:6px;">Escalation levels: 0 Baseline · 1 Rhetoric · 2 Warning · 3 Confrontation · 4 Coercion · 5 Active Conflict</div>
-    <div style="margin-top:10px;">Asifah Analytics — China Rhetoric & Coercion Tracker v1.0.0 | Updated every 6 hours | Not for operational use</div>
-    <div style="margin-top:10px;"><a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);text-decoration:none;">☕ buy me a coffee</a></div>
-    <div style="margin-top:10px;">© 2025–2026 RCGG. All Rights Reserved. Proprietary and Confidential.</div>
+    © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0-china |
+    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);text-decoration:none;">☕ buy me a coffee</a>
 </div>
 
 </div><!-- end main content -->
@@ -422,7 +522,7 @@
         5: { label:'Active Conflict', color:'#dc2626', description:'Confirmed military action, blockade in effect, invasion underway' },
     };
 
-    const OUTBOUND_ACTORS = ['xi_cmc','pla_operational','mfa_globaltimes','tao','economic_coercion','china_iran_axis'];
+    const OUTBOUND_ACTORS = ['xi_cmc','pla_operational','mfa_globaltimes','tao','economic_coercion'];
     const INBOUND_ACTORS  = ['taiwan_defense','us_commitment','japan_regional'];
     const ACTOR_ORDER     = [...OUTBOUND_ACTORS, ...INBOUND_ACTORS];
 
@@ -430,7 +530,7 @@
     const T = {
         en: {
             backLink:'← Back to China Stability', pageFlag:'CHINA',
-            pageTitle:'CHINA RHETORIC TRACKER',
+            pageTitle:'CHINA COERCION TRACKER',
             pageSubtitle:'Xi / CMC · PLA Posture · MFA Signals · TAO · US / Japan / Taiwan Coalition',
             loading:'Loading...', scoreLabel:'OUTBOUND SCORE / 100',
             escalationLabel:'COERCION ESCALATION LEVEL',
@@ -452,7 +552,7 @@
         },
         zh: {
             backLink:'← 返回中国稳定页', pageFlag:'中国',
-            pageTitle:'中国修辞追踪器',
+            pageTitle:'中国胁迫追踪器',
             pageSubtitle:'习近平/中央军委 · 解放军态势 · 外交部信号 · 国台办 · 美日台联盟',
             loading:'加载中...', scoreLabel:'对外评分 / 100',
             escalationLabel:'胁迫升级级别',
@@ -474,7 +574,7 @@
         },
         ja: {
             backLink:'← 中国安定ページへ戻る', pageFlag:'中国',
-            pageTitle:'中国レトリックトラッカー',
+            pageTitle:'中国威圧トラッカー',
             pageSubtitle:'習近平/中央軍事委員会 · PLA態勢 · 外務省シグナル · 台湾事務弁公室 · 米日台連合',
             loading:'読み込み中...', scoreLabel:'対外スコア / 100',
             escalationLabel:'威圧エスカレーションレベル',
@@ -496,7 +596,7 @@
         },
         ko: {
             backLink:'← 중국 안정 페이지로', pageFlag:'중국',
-            pageTitle:'중국 수사학 추적기',
+            pageTitle:'중국 강압 추적기',
             pageSubtitle:'시진핑/중앙군사위 · PLA 자세 · 외교부 신호 · 국무원 · 미일대만 연합',
             loading:'로딩 중...', scoreLabel:'대외 점수 / 100',
             escalationLabel:'강압 에스컬레이션 수준',
@@ -851,9 +951,101 @@
         renderLadder(data.overall_level || 0);
         renderActors(data.actors || {});
         renderArticles(data.actors || {});
+        renderSoWhat(data);
+        renderRedLines(data);
         const artCount = document.getElementById('articlesClassified');
         if (artCount) artCount.textContent = `📰 ${data.total_articles||0} articles analyzed · Corresponding articles in Top Articles by Actor below`;
         loadHistoryData();
+    }
+
+    // ── RENDER: SO WHAT CARD (v1.1.0) ──
+    function renderSoWhat(data) {
+        const sw = data.so_what;
+        if (!sw) { document.getElementById('soWhatCard').style.display = 'none'; return; }
+
+        document.getElementById('soWhatCard').style.display = 'block';
+        document.getElementById('soWhatIcon').textContent = sw.scenario_icon || '⚪';
+
+        const scenEl = document.getElementById('soWhatScenario');
+        scenEl.textContent = sw.scenario || '--';
+        scenEl.style.color = sw.scenario_color || '#6b7280';
+
+        // Four-vector readout
+        document.getElementById('vecKinetic').textContent   = 'L' + (sw.kinetic_pressure   ?? 0);
+        document.getElementById('vecEconomic').textContent  = 'L' + (sw.economic_pressure  ?? 0);
+        document.getElementById('vecCoalition').textContent = 'L' + (sw.coalition_pushback ?? 0);
+        document.getElementById('vecDomestic').textContent  = 'L' + (sw.domestic_fracture  ?? 0);
+
+        document.getElementById('soWhatSituation').textContent = sw.situation || '';
+
+        const indEl = document.getElementById('soWhatIndicators');
+        indEl.innerHTML = '';
+        (sw.indicators || []).forEach(ind => {
+            const div = document.createElement('div');
+            const text = typeof ind === 'string' ? ind : (ind.text || '');
+            const icon = typeof ind === 'object' ? (ind.icon || '') : '';
+            const isBreached   = text.toUpperCase().includes('BREACHED') || text.toUpperCase().includes('RED LINE');
+            const isHistorical = text.toLowerCase().includes('historical') || text.toLowerCase().includes('analog');
+            div.className = `interp-indicator${isBreached ? ' breached-ind' : isHistorical ? ' historical-ind' : ''}`;
+            div.innerHTML = `${icon ? `<span style="margin-right:6px;">${icon}</span>` : ''}${text}`;
+            indEl.appendChild(div);
+        });
+
+        document.getElementById('soWhatAssessment').textContent = sw.assessment || '';
+
+        const wlEl = document.getElementById('soWhatWatchList');
+        wlEl.innerHTML = '';
+        (sw.watch_list || []).forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'interp-watch-item';
+            div.textContent = `→ ${item}`;
+            wlEl.appendChild(div);
+        });
+
+        document.getElementById('soWhatNote').textContent = sw.confidence_note || '';
+    }
+
+    // ── RENDER: RED LINES CARD (v1.1.0) ──
+    function renderRedLines(data) {
+        const rls = data.red_lines || [];
+        const card = document.getElementById('redLinesCard');
+        if (!rls.length) { card.style.display = 'none'; return; }
+
+        card.style.display = 'block';
+        const breached    = rls.filter(r => r.status === 'BREACHED');
+        const approaching = rls.filter(r => r.status === 'APPROACHING');
+        document.getElementById('redLineBreachedCount').textContent    = breached.length;
+        document.getElementById('redLineApproachingCount').textContent = approaching.length;
+
+        const catLabels = {
+            'cross_strait_kinetic':  '⚔️ CROSS-STRAIT KINETIC',
+            'economic_coercion':     '💰 ECONOMIC COERCION',
+            'us_china_decoupling':   '🎯 US-CHINA DECOUPLING',
+            'domestic_fracture':     '🏛️ DOMESTIC FRACTURE',
+            'alliance_pressure':     '🗾 ALLIANCE PRESSURE',
+        };
+
+        const itemsEl = document.getElementById('redLineItems');
+        itemsEl.innerHTML = '';
+        [...breached, ...approaching].forEach(r => {
+            const badgeClass = r.status === 'BREACHED' ? 'breached' : 'approaching';
+            const catLabel   = catLabels[r.category] || (r.category || '').toUpperCase();
+            const item = document.createElement('div');
+            item.className = `red-line-item ${badgeClass}`;
+            item.innerHTML = `
+                <span class="red-line-icon">${r.icon || '⚠️'}</span>
+                <div style="flex:1;">
+                    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                        <span class="red-line-label">${r.label || ''}</span>
+                        <span class="red-line-status-badge ${badgeClass}">${r.status || ''}</span>
+                        <span style="font-size:0.55rem;color:var(--text-muted);font-family:'Courier New',monospace;">${catLabel}</span>
+                        ${r.severity ? `<span style="font-size:0.55rem;color:var(--text-muted);font-family:'Courier New',monospace;">SEV ${r.severity}/3</span>` : ''}
+                    </div>
+                    <div class="red-line-trigger">${r.trigger || r.detail || ''}</div>
+                    ${r.source ? `<div class="red-line-source">${r.source}</div>` : ''}
+                </div>`;
+            itemsEl.appendChild(item);
+        });
     }
 
     // ── DATA LOADING ──
