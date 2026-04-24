@@ -1166,12 +1166,16 @@
             </div>
             <div style="display:flex;gap:16px;">
                 <div style="text-align:right;">
-                    <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
-                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">BREACHED</div>
+                    <div style="font-size:1.4rem;font-weight:900;color:#10b981;" id="greenLineActiveCount">0</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">ACTIVE</div>
                 </div>
                 <div style="text-align:right;">
-                    <div style="font-size:1.4rem;font-weight:900;color:#00c8d4;" id="redLineApproachingCount">0</div>
-                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">APPROACHING</div>
+                    <div style="font-size:1.4rem;font-weight:900;color:#84cc16;" id="greenLineSignaledCount">0</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">SIGNALED</div>
+                </div>
+                <div style="text-align:right;" id="pressureModifierWrap">
+                    <div style="font-size:1.4rem;font-weight:900;color:#16a34a;" id="diplomaticModifierValue">--</div>
+                    <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">PRESSURE</div>
                 </div>
             </div>
         </div>
@@ -1224,6 +1228,14 @@
         <div id="greenLineItems"></div>
         <div style="font-size:0.62rem;color:#065f46;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;">
             Green lines track diplomatic off-ramp signals. ACTIVE = confirmed in current scan. SIGNALED = contextual signal present.
+        </div>
+        <!-- v2.3: Pressure Modifier explainer — quantitative effect on rhetoric score -->
+        <div id="pressureModifierBlock" style="display:none;margin-top:12px;padding-top:10px;border-top:1px dashed rgba(34,197,94,0.30);">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <span style="font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;color:#065f46;font-family:'Courier New',monospace;font-weight:700;">Score Impact</span>
+                <span id="diplomaticLabelDetailed" style="font-size:0.78rem;font-weight:700;color:var(--text-primary);">--</span>
+            </div>
+            <div id="pressureModifierExplainer" style="font-size:0.7rem;color:var(--text-secondary);font-style:italic;line-height:1.5;">--</div>
         </div>
     </div>
 
@@ -1798,6 +1810,35 @@
             // Disruption alert
             if (dt.hezbollah_disrupting) {
                 document.getElementById('diplomaticDisruptionAlert').style.display = 'flex';
+            }
+
+            // ── v2.3: Pressure Modifier (quantitative effect on rhetoric score) ──
+            const modifier = data.diplomatic_modifier || 0;
+            const modLabel = data.diplomatic_label_detailed || 'Quiet';
+            const modBlock = document.getElementById('pressureModifierBlock');
+            const modValEl = document.getElementById('diplomaticModifierValue');
+            const modLabelEl = document.getElementById('diplomaticLabelDetailed');
+            const modExplainEl = document.getElementById('pressureModifierExplainer');
+
+            if (modifier !== 0) {
+                if (modValEl) modValEl.textContent = (modifier > 0 ? '+' : '') + modifier;
+                if (modLabelEl) modLabelEl.textContent = modLabel;
+                if (modBlock) modBlock.style.display = 'block';
+                if (modExplainEl) {
+                    let msg;
+                    if (modifier <= -10) {
+                        msg = 'Direct talks or active negotiations are reducing the rhetoric score significantly. Threat vectors above remain ground truth on what fighters are doing.';
+                    } else if (modifier <= -6) {
+                        msg = 'Mediator activity (envoys, shuttle diplomacy, third-party brokering) is moderately reducing the score.';
+                    } else if (modifier <= -3) {
+                        msg = 'Diplomatic push detected — calls for ceasefire, pre-negotiation positioning. Slight downward pressure.';
+                    } else {
+                        msg = 'Background diplomatic mentions — minimal effect on the score.';
+                    }
+                    modExplainEl.textContent = msg;
+                }
+            } else {
+                if (modBlock) modBlock.style.display = 'none';
             }
 
             // Green line items
