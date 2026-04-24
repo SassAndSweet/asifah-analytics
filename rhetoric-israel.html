@@ -288,6 +288,60 @@
     .hist-match-label { font-size: 0.82rem; font-weight: 700; color: var(--text-main); font-family: 'Times New Roman', serif; }
     .hist-match-outcome { font-size: 0.75rem; color: rgba(251,191,36,0.85); margin: 4px 0; font-family: 'Times New Roman', serif; }
     .hist-match-meta { font-size: 0.65rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+
+    /* ── DIPLOMATIC DE-ESCALATION CARD (v1.1) ── */
+    .diplomatic-deescalation-card {
+        border-radius: 12px; padding: 20px 24px; margin-bottom: 16px;
+        border: 1px solid rgba(34,197,94,0.30);
+        background: linear-gradient(135deg, rgba(0,40,20,0.35) 0%, rgba(0,20,15,0.25) 100%);
+    }
+    .deesc-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .deesc-title { font-size: 0.85rem; font-weight: 800; color: #86efac; font-family: 'Times New Roman', serif; }
+    .deesc-modifier-badge {
+        margin-left: auto; text-align: right;
+        display: flex; flex-direction: column; align-items: flex-end;
+    }
+    .deesc-modifier-value {
+        font-size: 1.4rem; font-weight: 900; color: #16a34a;
+    }
+    .deesc-modifier-label {
+        font-size: 0.6rem; color: var(--text-muted);
+        font-family: 'Courier New', monospace; letter-spacing: 1px;
+    }
+    .deesc-track-item {
+        display: flex; align-items: flex-start; gap: 12px;
+        padding: 10px 12px; border-radius: 8px; margin-bottom: 8px;
+        background: rgba(0,0,0,0.20);
+        border-left: 3px solid #16a34a;
+    }
+    .deesc-track-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .deesc-track-body { flex: 1; }
+    .deesc-track-header-row {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+        margin-bottom: 3px;
+    }
+    .deesc-track-theater {
+        font-size: 0.82rem; font-weight: 800; color: var(--text-main);
+        font-family: 'Times New Roman', serif;
+    }
+    .deesc-track-status-badge {
+        font-size: 0.55rem; font-weight: 700; letter-spacing: 1.5px;
+        padding: 2px 6px; border-radius: 4px; text-transform: uppercase;
+        font-family: 'Courier New', monospace; flex-shrink: 0;
+        background: rgba(34,197,94,0.25); color: #86efac;
+    }
+    .deesc-track-modifier {
+        font-size: 0.7rem; font-weight: 700; color: #4ade80;
+        font-family: 'Courier New', monospace;
+    }
+    .deesc-track-detail {
+        font-size: 0.7rem; color: var(--text-muted);
+        font-family: 'Courier New', monospace; margin-top: 2px;
+    }
+    .deesc-footer-note {
+        font-size: 0.62rem; color: var(--text-muted);
+        font-family: 'Courier New', monospace; margin-top: 10px; font-style: italic;
+    }
     .hist-matched-signals { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
     .hist-signal-tag {
         font-size: 0.6rem; padding: 2px 6px; border-radius: 4px;
@@ -736,6 +790,28 @@
         <div id="historicalItems"></div>
         <div style="font-size:0.62rem;color:var(--text-muted);font-family:'Courier New',monospace;margin-top:10px;font-style:italic;">
             Sources: INSS, IISS, CSIS, ISW post-event analysis. Pattern match is analytical, not predictive.
+        </div>
+    </div>
+
+    <!-- ── DIPLOMATIC DE-ESCALATION CARD (v1.1) ── -->
+    <!-- Visible when one or more Iran-axis theaters are in active diplomatic tracks.
+         Shows parallel tracks: Iran negotiating here, Lebanon negotiating there.
+         Aggregate modifier reduces inbound score (still capped at 0). -->
+    <div class="diplomatic-deescalation-card" id="diplomaticDeescCard" style="display:none;">
+        <div class="deesc-header">
+            <span style="font-size:1rem;">🕊️</span>
+            <div>
+                <div class="interp-scenario-label">DIPLOMATIC DE-ESCALATION</div>
+                <div class="deesc-title">Cross-Theater Off-Ramp Signals — Reducing Inbound Pressure</div>
+            </div>
+            <div class="deesc-modifier-badge">
+                <div class="deesc-modifier-value" id="deescAggregateModifier">--</div>
+                <div class="deesc-modifier-label">INBOUND PRESSURE</div>
+            </div>
+        </div>
+        <div id="deescTrackItems"></div>
+        <div class="deesc-footer-note" id="deescFooterNote">
+            Each parallel diplomatic track reduces inbound pressure on Israel. Threat vectors above remain ground truth — diplomacy and threats coexist.
         </div>
     </div>
 
@@ -1642,6 +1718,7 @@
         const level=data.theatre_escalation_level||0;
         renderTheatre(data);
         renderInterpretation(data);
+        renderDiplomaticDeescalation(data);
         renderLadder(level);
         renderVectors(data);
         renderDualDashboard(data);
@@ -1653,6 +1730,78 @@
         const artCount=document.getElementById('articlesClassified');
         if(artCount)artCount.textContent=`📰 ${data.total_articles||0} articles analyzed · Corresponding articles below`;
         loadHistoryData();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // DIPLOMATIC DE-ESCALATION CARD (v1.1)
+    // Renders parallel diplomatic tracks across Iran-axis theaters
+    // ══════════════════════════════════════════════════════════════
+    function renderDiplomaticDeescalation(data) {
+        const card = document.getElementById('diplomaticDeescCard');
+        if (!card) return;
+
+        const tracks = data.theaters_in_diplomacy || [];
+        const aggModifier = data.inbound_diplomatic_modifier || 0;
+        const active = data.inbound_diplomatic_active === true;
+
+        if (!active || tracks.length === 0 || aggModifier === 0) {
+            card.style.display = 'none';
+            return;
+        }
+
+        card.style.display = 'block';
+
+        // Aggregate modifier badge
+        const aggEl = document.getElementById('deescAggregateModifier');
+        if (aggEl) {
+            aggEl.textContent = (aggModifier > 0 ? '+' : '') + aggModifier;
+        }
+
+        // Per-theater track items
+        const itemsEl = document.getElementById('deescTrackItems');
+        if (!itemsEl) return;
+        itemsEl.innerHTML = '';
+
+        // Map theater key to flag emoji for visual recognition
+        const theaterFlag = {
+            'iran':    '🇮🇷', 'lebanon': '🇱🇧',
+            'yemen':   '🇾🇪', 'syria':   '🇸🇾', 'iraq': '🇮🇶'
+        };
+
+        tracks.forEach(t => {
+            const theater  = (t.theater || '').toLowerCase();
+            const display  = t.theater_display || theater.charAt(0).toUpperCase() + theater.slice(1);
+            const label    = t.label || 'Quiet';
+            const modifier = t.modifier || 0;
+            const flag     = theaterFlag[theater] || '🕊️';
+
+            const item = document.createElement('div');
+            item.className = 'deesc-track-item';
+            item.innerHTML = `
+                <span class="deesc-track-icon">${flag}</span>
+                <div class="deesc-track-body">
+                    <div class="deesc-track-header-row">
+                        <span class="deesc-track-theater">${display}</span>
+                        <span class="deesc-track-status-badge">${label.toUpperCase()}</span>
+                        <span class="deesc-track-modifier">${modifier > 0 ? '+' : ''}${modifier} pressure</span>
+                    </div>
+                    <div class="deesc-track-detail">
+                        Diplomatic track active in ${display} — reducing inbound threat pressure on Israel.
+                    </div>
+                </div>`;
+            itemsEl.appendChild(item);
+        });
+
+        // Tailor footer note to track count
+        const footEl = document.getElementById('deescFooterNote');
+        if (footEl) {
+            const n = tracks.length;
+            if (n === 1) {
+                footEl.textContent = `One parallel diplomatic track is reducing inbound pressure on Israel. Threat vectors above remain ground truth — diplomacy and threats coexist.`;
+            } else {
+                footEl.textContent = `${n} parallel diplomatic tracks across the Iran-axis are reducing inbound pressure on Israel. Threat vectors above remain ground truth — diplomacy and threats coexist.`;
+            }
+        }
     }
 
     // ══════════════════════════════════════════════════════════════
