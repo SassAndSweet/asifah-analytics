@@ -361,6 +361,47 @@
     .otp-count { font-size: 2.5rem; font-weight: 900; color: #ef4444; line-height: 1; }
     .otp-item { background: rgba(220,38,38,0.06); border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0; padding: 8px 12px; margin-bottom: 6px; font-size: 0.7rem; }
 
+    /* ── DIPLOMATIC TRACK CARD (v1.1) ── */
+    .diplomatic-track-card {
+        background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(16,185,129,0.04));
+        border: 1px solid rgba(34,197,94,0.35);
+        border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    }
+    .diplomatic-track-title {
+        font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
+        text-transform: uppercase; color: #16a34a; margin-bottom: 14px;
+        padding-bottom: 10px; border-bottom: 1px solid rgba(34,197,94,0.2);
+    }
+    [data-theme="dark"] .diplomatic-track-title { color: #4ade80; }
+    .diplomatic-track-header {
+        display: flex; align-items: flex-end; gap: 16px;
+        flex-wrap: wrap; margin-bottom: 12px;
+    }
+    .diplomatic-modifier-badge {
+        font-size: 2.5rem; font-weight: 900; color: #16a34a; line-height: 1;
+    }
+    [data-theme="dark"] .diplomatic-modifier-badge { color: #4ade80; }
+    .diplomatic-modifier-sub {
+        font-size: 0.65rem; color: var(--text-muted);
+        letter-spacing: 1px; margin-top: 4px; text-transform: uppercase;
+        font-family: 'Courier New', monospace;
+    }
+    .diplomatic-detailed-label {
+        font-size: 1rem; font-weight: 700; color: var(--text-primary);
+        margin-bottom: 4px;
+    }
+    .diplomatic-track-explainer {
+        font-size: 0.78rem; color: var(--text-secondary);
+        font-style: italic; line-height: 1.55;
+    }
+    .diplomatic-track-note {
+        margin-top: 10px; padding-top: 10px;
+        border-top: 1px dashed rgba(34,197,94,0.25);
+        font-size: 0.62rem; color: var(--text-muted);
+        text-transform: uppercase; letter-spacing: 1px;
+        font-family: 'Courier New', monospace; font-style: italic;
+    }
+
     /* ── VECTOR TABS ── */
     .vector-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
     .vector-tab { background: var(--article-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 10px 16px; cursor: pointer; transition: all 0.2s; flex: 1; min-width: 130px; text-align: center; }
@@ -592,6 +633,28 @@
         <div id="historicalItems"></div>
         <div style="font-size:0.62rem;color:#64748b;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;">
             Sources: RAND, IISS, CSIS, ISW, INSS post-event analysis. Pattern match is analytical, not predictive.
+        </div>
+    </div>
+
+    <!-- ── DIPLOMATIC TRACK CARD (v1.1) ── -->
+    <!-- Visible when ceasefire_level >= 2. Shows the downward modifier
+         applied to Iran's rhetoric score from active negotiations / mediation. -->
+    <div class="diplomatic-track-card" id="diplomaticTrackCard" style="display:none;">
+        <div class="diplomatic-track-title">🕊️ Diplomatic Track Active</div>
+        <div class="diplomatic-track-header">
+            <div>
+                <div class="diplomatic-modifier-badge" id="diplomaticModifierValue">--</div>
+                <div class="diplomatic-modifier-sub">Pressure</div>
+            </div>
+            <div style="flex:1;">
+                <div class="diplomatic-detailed-label" id="diplomaticLabelDetailed">--</div>
+                <div class="diplomatic-track-explainer" id="diplomaticTrackExplainer">
+                    Active negotiations are reducing the rhetoric score. Threat vectors above remain ground truth.
+                </div>
+            </div>
+        </div>
+        <div class="diplomatic-track-note">
+            ⓘ Diplomacy and threats coexist — IRGC posture, nuclear program, and proxy activation remain tracked independently above.
         </div>
     </div>
 
@@ -1398,6 +1461,7 @@
         const level = data.theatre_escalation_level || 0;
         renderTheatre(data);
         renderInterpretation(data);
+        renderDiplomaticTrack(data);
         renderLadder(level);
         renderVectors(data);
         renderProxyActivation(data);
@@ -1410,6 +1474,47 @@
         if (artCount) artCount.textContent = `📰 ${data.total_articles||0} articles analyzed · Corresponding articles below`;
 
         loadHistoryData();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // DIPLOMATIC TRACK CARD (v1.1)
+    // Displays downward modifier when active negotiations are detected
+    // ══════════════════════════════════════════════════════════════
+    function renderDiplomaticTrack(data) {
+        const card = document.getElementById('diplomaticTrackCard');
+        if (!card) return;
+
+        const active   = data.diplomatic_track_active === true;
+        const modifier = data.diplomatic_modifier || 0;
+        const label    = data.diplomatic_label_detailed || 'Quiet';
+
+        if (!active || modifier === 0) {
+            card.style.display = 'none';
+            return;
+        }
+
+        card.style.display = 'block';
+
+        const valueEl = document.getElementById('diplomaticModifierValue');
+        if (valueEl) valueEl.textContent = (modifier > 0 ? '+' : '') + modifier;
+
+        const labelEl = document.getElementById('diplomaticLabelDetailed');
+        if (labelEl) labelEl.textContent = label;
+
+        const explainerEl = document.getElementById('diplomaticTrackExplainer');
+        if (explainerEl) {
+            let msg;
+            if (modifier <= -10) {
+                msg = 'Direct talks or active negotiations detected — Araghchi shuttle, US envoy contact, or framework discussions. Score reduced significantly. Threat vectors above remain ground truth on what IRGC and proxies are doing.';
+            } else if (modifier <= -6) {
+                msg = 'Mediator activity detected — Pakistan, Oman, or Russia brokering between Iran and the US. Pressure score is moderately reduced.';
+            } else if (modifier <= -3) {
+                msg = 'Diplomatic push detected — calls for talks, ceasefire offers, or pre-negotiation positioning. Slight downward pressure on the score.';
+            } else {
+                msg = 'Background diplomatic mentions — minimal effect on the threat score.';
+            }
+            explainerEl.textContent = msg;
+        }
     }
 
     // ══════════════════════════════════════════════════════════════
