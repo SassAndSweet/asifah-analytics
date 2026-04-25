@@ -256,7 +256,94 @@ header {
 .article-meta { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
 .articles-empty { padding: 30px 16px; text-align: center; color: var(--text-muted); font-style: italic; }
 
-footer { color: var(--text-muted); font-size: 0.78rem; padding: 16px 0; text-align: center; line-height: 1.6; }
+/* ── GOLD STANDARD FOOTER (arctic palette adaptation) ── */
+footer {
+    background: var(--card-bg);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--card-glow);
+    border: 1px solid var(--card-border);
+    font-size: 12px;
+    margin-top: 20px;
+    color: var(--text-secondary);
+}
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+.footer-section {
+    flex: 1;
+    min-width: 250px;
+}
+.footer-section h4 {
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+}
+.footer-section span {
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+.support-footer {
+    margin-top: 30px;
+    padding: 15px 20px;
+    background: rgba(139, 92, 246, 0.08);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+.support-footer a {
+    color: #a78bfa;
+    text-decoration: none;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+.support-footer a:hover {
+    color: #c4b5fd;
+    text-decoration: underline;
+}
+.disclaimer {
+    background-color: rgba(245, 158, 11, 0.08);
+    border: 2px solid rgba(245, 158, 11, 0.5);
+    padding: 18px;
+    border-radius: 10px;
+    margin-top: 25px;
+    font-size: 12px;
+    color: #fbbf24;
+    line-height: 1.5;
+}
+[data-theme="light"] .disclaimer {
+    background-color: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+}
+.disclaimer strong {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+.copyright-footer {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 11px;
+    line-height: 1.7;
+}
+.copyright-footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+.copyright-footer a:hover {
+    text-decoration: underline;
+}
 
 /* ── LOADING OVERLAY ── */
 .loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--loading-overlay-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.3s; }
@@ -739,13 +826,44 @@ footer { color: var(--text-muted); font-size: 0.78rem; padding: 16px 0; text-ali
             <div class="tab-content" id="tab-dissident"></div>
         </div>
 
-        <!-- ── FOOTER ── -->
+        <!-- ── GOLD STANDARD FOOTER ── -->
         <footer>
-            <p><strong>Asifah Analytics</strong> — <span data-i18n="footerBrand">Cuba Stability Index v2.1.0</span></p>
-            <p>asifah-wha-backend.onrender.com · <span data-i18n="footerFreq">Updates every 12 hours · Manual refresh:</span> <a href="https://asifah-wha-backend.onrender.com/api/rhetoric/cuba?force=true" target="_blank" data-i18n="footerForce">force scan</a></p>
-            <p style="font-size:0.7rem;margin-top:8px;color:var(--text-muted);font-style:italic;" data-i18n="footerDisclaimer">
-                OSINT signal aggregation. Does not reflect classified intelligence. Three-question analytical frame is Asifah-specific methodology and should not be cited as official assessment.
-            </p>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 data-i18n="footerDataSourcesLabel">Data Sources:</h4>
+                    <span data-i18n="footerDataSourcesText">NewsAPI for aggregating news sources, GDELT for English and Spanish content, RSS feeds from Cuban state and dissident media (Granma, CubaNet, 14ymedio, Diario de Cuba), Bluesky AppView for Trump Truth Social mirrors, Brave Search for tertiary fallback, plus other OSINT sources. For inquiries, contact: asifahanalytics@gmail.com</span>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footerMethodologyLabel">Methodology:</h4>
+                    <span data-i18n="footerMethodologyText">Multi-vector pressure analysis combining rhetoric tracking (regime, dissidents, U.S. posture, adversary access), civilian pressure index (blackouts, fuel, food, medicine), bidirectional migration flows, and adversary oil tanker arrivals. Keyword-based escalation detection across English and Spanish, weighted by source reliability.</span>
+                </div>
+                <div class="footer-section">
+                    <h4 data-i18n="footerLastUpdatedLabel">Last Updated:</h4>
+                    <span id="footerLastUpdatedValue" data-i18n="footerNotYetScanned">Not yet scanned</span>
+                </div>
+            </div>
+
+            <div class="support-footer">
+                <p>
+                    <span data-i18n="footerSupportText">If you find Asifah Analytics useful and want to support ongoing development, you can</span>
+                    <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" rel="noopener noreferrer">
+                        ☕ <span data-i18n="footerBuyCoffee">buy me a coffee</span>
+                    </a>
+                </p>
+            </div>
+
+            <div class="disclaimer">
+                <strong data-i18n="footerDisclaimerTitle">⚠️ DISCLAIMER:</strong>
+                <span data-i18n="footerDisclaimerText">This index is an analytical tool for educational and research purposes only. Pressure scores are based on open-source news aggregation and keyword analysis. Measures pressure buildup toward instability, conflict, or political rupture. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.</span>
+            </div>
+
+            <div class="copyright-footer">
+                <a href="privacy.html" data-i18n="footerPrivacyPolicy">Privacy Policy</a> |
+                <a href="mailto:asifahanalytics@gmail.com" data-i18n="footerContact">Contact</a>
+                <br><br>
+                <span data-i18n="footerCopyright">© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.</span><br>
+                <span data-i18n="footerUnauthorized">Unauthorized use, reproduction, or distribution prohibited.</span>
+            </div>
         </footer>
 
     </div><!-- end main-content -->
@@ -884,10 +1002,20 @@ var TRANSLATIONS = {
         artEmpty: 'No articles in this category.',
 
         // Footer
-        footerBrand: 'Cuba Stability Index v2.1.0',
-        footerFreq: 'Updates every 12 hours · Manual refresh:',
-        footerForce: 'force scan',
-        footerDisclaimer: 'OSINT signal aggregation. Does not reflect classified intelligence. Three-question analytical frame is Asifah-specific methodology and should not be cited as official assessment.',
+        footerDataSourcesLabel: 'Data Sources:',
+        footerDataSourcesText: 'NewsAPI for aggregating news sources, GDELT for English and Spanish content, RSS feeds from Cuban state and dissident media (Granma, CubaNet, 14ymedio, Diario de Cuba), Bluesky AppView for Trump Truth Social mirrors, Brave Search for tertiary fallback, plus other OSINT sources. For inquiries, contact: asifahanalytics@gmail.com',
+        footerMethodologyLabel: 'Methodology:',
+        footerMethodologyText: 'Multi-vector pressure analysis combining rhetoric tracking (regime, dissidents, U.S. posture, adversary access), civilian pressure index (blackouts, fuel, food, medicine), bidirectional migration flows, and adversary oil tanker arrivals. Keyword-based escalation detection across English and Spanish, weighted by source reliability.',
+        footerLastUpdatedLabel: 'Last Updated:',
+        footerNotYetScanned: 'Not yet scanned',
+        footerSupportText: 'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footerBuyCoffee: 'buy me a coffee',
+        footerDisclaimerTitle: '⚠️ DISCLAIMER:',
+        footerDisclaimerText: 'This index is an analytical tool for educational and research purposes only. Pressure scores are based on open-source news aggregation and keyword analysis. Measures pressure buildup toward instability, conflict, or political rupture. This tool does not represent official U.S. government assessments or policy positions. Users should consult official intelligence sources for operational decision-making.',
+        footerPrivacyPolicy: 'Privacy Policy',
+        footerContact: 'Contact',
+        footerCopyright: '© 2025 RCGG. All Rights Reserved. Proprietary and Confidential.',
+        footerUnauthorized: 'Unauthorized use, reproduction, or distribution prohibited.',
 
         // Score band labels (used dynamically)
         rcFirm: 'Firm Grip',
@@ -1035,10 +1163,20 @@ var TRANSLATIONS = {
         artLoading: 'Cargando artículos...',
         artEmpty: 'No hay artículos en esta categoría.',
 
-        footerBrand: 'Índice de Estabilidad de Cuba v2.1.0',
-        footerFreq: 'Actualiza cada 12 horas · Refresco manual:',
-        footerForce: 'forzar escaneo',
-        footerDisclaimer: 'Agregación de señales OSINT. No refleja inteligencia clasificada. El marco analítico de tres preguntas es metodología específica de Asifah y no debe citarse como evaluación oficial.',
+        footerDataSourcesLabel: 'Fuentes de Datos:',
+        footerDataSourcesText: 'NewsAPI para la agregación de fuentes de noticias, GDELT para contenido en inglés y español, feeds RSS de medios estatales y disidentes cubanos (Granma, CubaNet, 14ymedio, Diario de Cuba), Bluesky AppView para espejos de Trump Truth Social, Brave Search como respaldo terciario, además de otras fuentes OSINT. Para consultas: asifahanalytics@gmail.com',
+        footerMethodologyLabel: 'Metodología:',
+        footerMethodologyText: 'Análisis de presión multi-vector combinando rastreo de retórica (régimen, disidentes, postura EE.UU., acceso adversario), índice de presión civil (apagones, combustible, comida, medicinas), flujos migratorios bidireccionales y llegadas de petroleros adversarios. Detección de escalada basada en palabras clave en inglés y español, ponderada por confiabilidad de la fuente.',
+        footerLastUpdatedLabel: 'Última Actualización:',
+        footerNotYetScanned: 'Aún no escaneado',
+        footerSupportText: 'Si encuentras útil Asifah Analytics y deseas apoyar el desarrollo continuo, puedes',
+        footerBuyCoffee: 'invitarme un café',
+        footerDisclaimerTitle: '⚠️ DESCARGO DE RESPONSABILIDAD:',
+        footerDisclaimerText: 'Este índice es una herramienta analítica con fines educativos y de investigación únicamente. Las puntuaciones de presión se basan en agregación de noticias de fuente abierta y análisis de palabras clave. Mide la acumulación de presión hacia la inestabilidad, el conflicto o la ruptura política. Esta herramienta no representa evaluaciones oficiales del gobierno de EE.UU. ni posiciones de política. Los usuarios deben consultar fuentes oficiales de inteligencia para la toma de decisiones operativas.',
+        footerPrivacyPolicy: 'Política de Privacidad',
+        footerContact: 'Contacto',
+        footerCopyright: '© 2025 RCGG. Todos los derechos reservados. Propietario y Confidencial.',
+        footerUnauthorized: 'Uso, reproducción o distribución no autorizada prohibida.',
 
         rcFirm: 'Control Firme',
         rcMaintained: 'Control Mantenido',
@@ -1182,10 +1320,20 @@ var TRANSLATIONS = {
         artLoading: 'Carregando artigos...',
         artEmpty: 'Nenhum artigo nesta categoria.',
 
-        footerBrand: 'Índice de Estabilidade de Cuba v2.1.0',
-        footerFreq: 'Atualiza a cada 12 horas · Atualização manual:',
-        footerForce: 'forçar varredura',
-        footerDisclaimer: 'Agregação de sinais OSINT. Não reflete inteligência classificada. Marco analítico de três perguntas é metodologia específica da Asifah e não deve ser citado como avaliação oficial.',
+        footerDataSourcesLabel: 'Fontes de Dados:',
+        footerDataSourcesText: 'NewsAPI para agregação de fontes de notícias, GDELT para conteúdo em inglês e espanhol, feeds RSS da mídia estatal e dissidente cubana (Granma, CubaNet, 14ymedio, Diario de Cuba), Bluesky AppView para espelhos do Trump Truth Social, Brave Search como fallback terciário, além de outras fontes OSINT. Para consultas: asifahanalytics@gmail.com',
+        footerMethodologyLabel: 'Metodologia:',
+        footerMethodologyText: 'Análise de pressão multi-vetor combinando rastreamento de retórica (regime, dissidentes, postura dos EUA, acesso adversário), índice de pressão civil (apagões, combustível, comida, remédios), fluxos migratórios bidirecionais e chegadas de petroleiros adversários. Detecção de escalada baseada em palavras-chave em inglês e espanhol, ponderada pela confiabilidade da fonte.',
+        footerLastUpdatedLabel: 'Última Atualização:',
+        footerNotYetScanned: 'Ainda não escaneado',
+        footerSupportText: 'Se você acha o Asifah Analytics útil e deseja apoiar o desenvolvimento contínuo, pode',
+        footerBuyCoffee: 'me pagar um café',
+        footerDisclaimerTitle: '⚠️ AVISO LEGAL:',
+        footerDisclaimerText: 'Este índice é uma ferramenta analítica para fins educacionais e de pesquisa apenas. As pontuações de pressão são baseadas em agregação de notícias de fonte aberta e análise de palavras-chave. Mede o acúmulo de pressão em direção à instabilidade, conflito ou ruptura política. Esta ferramenta não representa avaliações oficiais do governo dos EUA nem posições políticas. Os usuários devem consultar fontes oficiais de inteligência para tomada de decisões operacionais.',
+        footerPrivacyPolicy: 'Política de Privacidade',
+        footerContact: 'Contato',
+        footerCopyright: '© 2025 RCGG. Todos os direitos reservados. Proprietário e Confidencial.',
+        footerUnauthorized: 'Uso, reprodução ou distribuição não autorizada é proibida.',
 
         rcFirm: 'Controle Firme',
         rcMaintained: 'Controle Mantido',
@@ -1576,6 +1724,16 @@ function renderAll(data) {
         var prefix = CURRENT_LANG === 'es' ? 'Última actualización:' : CURRENT_LANG === 'pt' ? 'Última atualização:' : 'Last updated:';
         lastUpd.textContent = prefix + ' ' + new Date(data.scanned_at).toLocaleString() +
             ' · ' + (data.total_articles || 0) + ' · v' + (data.version || '2.1');
+    }
+    // Footer "Last Updated" — same scan timestamp, formatted for footer slot
+    var footerLU = document.getElementById('footerLastUpdatedValue');
+    if (footerLU && data.scanned_at) {
+        var localeMap = { en: 'en-US', es: 'es-ES', pt: 'pt-BR' };
+        var locale = localeMap[CURRENT_LANG] || 'en-US';
+        footerLU.textContent = new Date(data.scanned_at).toLocaleString(locale, {
+            dateStyle: 'medium',
+            timeStyle: 'short'
+        });
     }
 }
 
