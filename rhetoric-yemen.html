@@ -12,51 +12,48 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg-color: #f5f5f5;
-            --container-bg: #ffffff;
-            --card-bg: #ffffff;
-            --card-border: #e1e8ed;
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6;
-            --header-gradient-start: #1a2f1a;
-            --header-gradient-end: #2d4a2d;
-            --header-text: #ffffff;
-            --article-bg: #f8f9fa;
-            --article-hover: #e8f4e8;
-            --watermark-opacity: 0.08;
-            --watermark-filter: none;
-            --card-glow: none;
-            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
-            --accent: #16a34a;
-            --accent-2: #dc2626;
+            /* ── Arctic palette (canonical for Yemen rhetoric tracker) ── */
+            --bg-color:       #e8f0f8;
+            --container-bg:   #ffffff;
+            --card-bg:        #ffffff;
+            --card-border:    #b0c8e0;
+            --text-primary:   #0a1628;
+            --text-secondary: #1e3a5f;
+            --text-muted:     #64748b;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end:   #2c5282;
+            --header-text:    #ffffff;
+            --article-bg:     #f8fafc;
+            --article-hover:  #e0ecf8;
+            --watermark-opacity:      0.08;
+            --watermark-filter:       none;
+            --card-glow:      none;
+            --card-hover-glow: 0 8px 20px rgba(0,0,0,0.12);
+            --accent:         #0ea5e9;
+            --accent-2:       #dc2626;
+            --accent-glow:    rgba(14,165,233,0.2);
         }
 
         [data-theme="dark"] {
-            --bg-color: #0d0b08;
-            --container-bg: #111209;
-            --card-bg: #111209;
-            --card-border: #00c8d4;
-            --text-primary: #7dd3fc;
-            --text-secondary: #38bdf8;
-            --text-muted: #0ea5e9;
-            --header-gradient-start: #080d08;
-            --header-gradient-end: #1a2f1a;
-            --header-text: #7dd3fc;
-            --article-bg: #0a1628;
-            --article-hover: #0f2040;
-            --article-bg: #0c0f0a;
-            --text-primary: #e8d5a3;
-            --text-secondary: #c4a96d;
-            --text-muted: #8a7048;
-            --accent: #f97316;
-            --accent-2: #ef4444;
-            --cyber-cyan: #00c8d4;
-            --cyber-cyan-glow: rgba(0,200,212,0.18);
-            --card-glow: 0 0 6px rgba(0,200,212,0.12), 0 0 1px rgba(0,200,212,0.25);
-            --card-hover-glow: 0 0 22px rgba(0,200,212,0.28), 0 8px 25px rgba(0,0,0,0.5);
-            --watermark-opacity: 0.22;
-            --watermark-filter: saturate(5) brightness(0.9) hue-rotate(170deg);
+            --bg-color:       #060d1a;
+            --container-bg:   #0d1b2e;
+            --card-bg:        #0d1b2e;
+            --card-border:    #1e3a5f;
+            --text-primary:   #e2f0fb;
+            --text-secondary: #93c5fd;
+            --text-muted:     #64748b;
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end:   #2c5282;
+            --header-text:    #e2f0fb;
+            --article-bg:     #0a1628;
+            --article-hover:  #142540;
+            --accent:         #38bdf8;
+            --accent-2:       #ef4444;
+            --accent-glow:    rgba(56,189,248,0.18);
+            --card-glow:      0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
+            --card-hover-glow: 0 0 22px rgba(56,189,248,0.2), 0 8px 25px rgba(0,0,0,0.5);
+            --watermark-opacity:      0.22;
+            --watermark-filter:       saturate(3) brightness(0.8) hue-rotate(185deg);
         }
 
         body {
@@ -974,6 +971,45 @@
         </div>
     </div>
 
+    <!-- ── DIPLOMATIC TRACK CARD (v2.1) ── -->
+    <!-- Visible when ceasefire_level >= 2. Shows downward modifier from
+         active KSA-Houthi talks, Oman shuttle, UN envoy activity. -->
+    <div class="diplomatic-track-card" id="diplomaticTrackCard" style="display:none;background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(16,185,129,0.04));border:1px solid rgba(34,197,94,0.35);border-radius:12px;padding:20px;margin-bottom:18px;">
+        <div style="font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#16a34a;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(34,197,94,0.2);">
+            🕊️ Diplomatic Track Active
+        </div>
+        <div style="display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:12px;">
+            <div>
+                <div id="diplomaticModifierValue" style="font-size:2.5rem;font-weight:900;color:#16a34a;line-height:1;">--</div>
+                <div style="font-size:0.65rem;color:var(--text-muted);letter-spacing:1px;margin-top:4px;text-transform:uppercase;font-family:'Courier New',monospace;">Pressure</div>
+            </div>
+            <div style="flex:1;">
+                <div id="diplomaticLabelDetailed" style="font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;">--</div>
+                <div id="diplomaticTrackExplainer" style="font-size:0.78rem;color:var(--text-secondary);font-style:italic;line-height:1.55;">
+                    Active diplomatic signals are reducing the rhetoric score.
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px dashed rgba(34,197,94,0.25);font-size:0.62rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;font-family:'Courier New',monospace;font-style:italic;">
+            ⓘ Diplomacy and threats coexist — Houthi maritime posture, direct strikes, and Iran-axis coordination remain tracked independently above.
+        </div>
+    </div>
+
+    <!-- ── MIGRATION CORRIDOR LINE (v2.1) ── -->
+    <!-- Compact bidirectional indicator. Stability page shows the full card. -->
+    <div id="migrationCorridorLine" style="display:none;background:var(--card-bg);border:1px solid var(--card-border);border-radius:8px;padding:10px 16px;margin-bottom:18px;font-size:0.85rem;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <span style="font-size:0.7rem;font-weight:700;letter-spacing:1.5px;color:var(--text-muted);text-transform:uppercase;">↔️ Migration:</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;">
+            <span style="color:#dc2626;font-weight:700;">🇾🇪→🇴🇲</span>
+            <span id="migOutBadge" style="background:rgba(220,38,38,0.15);color:#dc2626;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;">L0</span>
+        </span>
+        <span style="display:inline-flex;align-items:center;gap:6px;">
+            <span style="color:#16a34a;font-weight:700;">🇴🇲→🇾🇪</span>
+            <span id="migReturnBadge" style="background:rgba(16,185,129,0.15);color:#16a34a;padding:2px 8px;border-radius:4px;font-size:0.72rem;font-weight:700;">L0</span>
+        </span>
+        <span id="migNetEffect" style="margin-left:auto;font-size:0.75rem;color:var(--text-secondary);font-style:italic;">Net: 0</span>
+    </div>
+
     <!-- ESCALATION LADDER -->
     <div class="section-card">
         <div class="section-title" data-i18n="escalationLadder">🪜 ESCALATION LADDER</div>
@@ -1569,6 +1605,79 @@
     }
 
     // ── THEATRE BANNER ──
+    // ══════════════════════════════════════════════════════════════
+    // DIPLOMATIC TRACK CARD (v2.1)
+    // Shows downward modifier when KSA/Oman/UN diplomatic activity detected
+    // ══════════════════════════════════════════════════════════════
+    function renderDiplomaticTrack(data) {
+        const card = document.getElementById('diplomaticTrackCard');
+        if (!card) return;
+
+        const active   = data.diplomatic_track_active === true;
+        const modifier = data.diplomatic_modifier || 0;
+        const label    = data.diplomatic_label_detailed || 'Quiet';
+
+        if (!active || modifier === 0) {
+            card.style.display = 'none';
+            return;
+        }
+
+        card.style.display = 'block';
+
+        const valueEl = document.getElementById('diplomaticModifierValue');
+        if (valueEl) valueEl.textContent = (modifier > 0 ? '+' : '') + modifier;
+
+        const labelEl = document.getElementById('diplomaticLabelDetailed');
+        if (labelEl) labelEl.textContent = label;
+
+        const explainerEl = document.getElementById('diplomaticTrackExplainer');
+        if (explainerEl) {
+            let msg;
+            if (modifier <= -10) {
+                msg = 'Direct talks or active negotiations detected — Riyadh delegation, Houthi political committee meetings, or framework discussions. Score reduced significantly. Threat vectors above remain ground truth on Houthi maritime posture.';
+            } else if (modifier <= -6) {
+                msg = 'Mediator activity detected — Oman shuttle diplomacy, UN envoy Grundberg engagement, or Saudi brokerage. Pressure score moderately reduced.';
+            } else if (modifier <= -3) {
+                msg = 'Diplomatic push detected — peace talks language, ceasefire offers, or pre-negotiation positioning. Slight downward pressure on the score.';
+            } else {
+                msg = 'Background diplomatic mentions — minimal effect on the score.';
+            }
+            explainerEl.textContent = msg;
+        }
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // MIGRATION CORRIDOR LINE (v2.1)
+    // Compact indicator showing bidirectional Yemen ↔ Oman flows
+    // ══════════════════════════════════════════════════════════════
+    function renderMigrationCorridor(data) {
+        const line = document.getElementById('migrationCorridorLine');
+        if (!line) return;
+
+        const outLevel = data.migration_out_level || 0;
+        const retLevel = data.migration_return_level || 0;
+        const netMod   = data.migration_net_modifier || 0;
+
+        // Hide entirely if no migration signal in either direction
+        if (outLevel === 0 && retLevel === 0) {
+            line.style.display = 'none';
+            return;
+        }
+
+        line.style.display = 'flex';
+
+        document.getElementById('migOutBadge').textContent = `L${outLevel}`;
+        document.getElementById('migReturnBadge').textContent = `L${retLevel}`;
+
+        const netEl = document.getElementById('migNetEffect');
+        if (netEl) {
+            const sign = netMod > 0 ? '+' : '';
+            const color = netMod > 0 ? '#dc2626' : netMod < 0 ? '#16a34a' : 'var(--text-secondary)';
+            const desc = netMod > 0 ? 'pressure' : netMod < 0 ? 'relief' : 'balanced';
+            netEl.innerHTML = `Net: <strong style="color:${color};">${sign}${netMod}</strong> ${desc}`;
+        }
+    }
+
     function renderTheatre(data) {
         const score = data.theatre_score || 0;
         const level = Math.round(score / 20);
@@ -1847,6 +1956,8 @@
 
             renderTheatre(data);
             renderInterpretation(data);
+            renderDiplomaticTrack(data);     // v2.1
+            renderMigrationCorridor(data);   // v2.1
             renderVectorTabs(data);
             renderCoordination(data.coordination_signals);
 
