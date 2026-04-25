@@ -405,18 +405,7 @@
     </div>
 </div>
 
-<!-- SCAN CONTROL BAR -->
-<div class="scan-bar">
-    <div class="scan-info" id="scanInfo">
-        <span class="loading-dot">●</span>
-        <span class="loading-dot">●</span>
-        <span class="loading-dot">●</span>
-        <span data-i18n="scanLoading">Loading cached scan…</span>
-    </div>
-    <button class="scan-btn" id="scanBtn" onclick="forceScan()" data-i18n="scanBtnIdle">🔄 Force Rescan</button>
-</div>
-
-<!-- THEATRE BANNER (DUAL-AXIS) -->
+<!-- THEATRE BANNER (DUAL-AXIS — scoring) -->
 <div class="theatre-banner" id="theatreBanner">
     <div>
         <div class="theatre-score-big" id="theatreScore" style="color:#38bdf8;">--</div>
@@ -434,64 +423,7 @@
     </div>
 </div>
 
-<!-- TWO COMPOSITE VECTORS (Threat + Influence) -->
-<div class="vector-tabs">
-    <div class="vector-tab" id="vecThreatTab">
-        <div class="vector-tab-icon">⚠️</div>
-        <div class="vector-tab-label" data-i18n="vecThreat">Threat Vector</div>
-        <div class="vector-tab-level" id="vecThreatLevel" style="color:#6b7280;">L--</div>
-        <div class="vector-tab-label-text" id="vecThreatText">--</div>
-    </div>
-    <div class="vector-tab" id="vecInfluenceTab">
-        <div class="vector-tab-icon">🕊️</div>
-        <div class="vector-tab-label" data-i18n="vecInfluence">Influence Vector</div>
-        <div class="vector-tab-level" id="vecInfluenceLevel" style="color:#6b7280;">L--</div>
-        <div class="vector-tab-label-text" id="vecInfluenceText">--</div>
-    </div>
-</div>
-
-<!-- SO WHAT CARD -->
-<div class="interp-so-what" id="soWhatCard" style="display:none;">
-    <div class="interp-scenario-header">
-        <span class="interp-scenario-icon" id="soWhatIcon">⚪</span>
-        <div>
-            <div class="interp-scenario-label" data-i18n="soWhatLabel">OMAN STRATEGIC ASSESSMENT</div>
-            <div class="interp-scenario-value" id="soWhatScenario">--</div>
-        </div>
-    </div>
-    <div class="interp-section-title" data-i18n="situationLabel">SITUATION</div>
-    <div class="interp-text" id="soWhatSituation"></div>
-    <div id="soWhatIndicators"></div>
-    <div class="interp-section-title" style="margin-top:14px;" data-i18n="assessmentLabel">ASSESSMENT</div>
-    <div class="interp-text" id="soWhatAssessment"></div>
-    <div class="interp-section-title" style="margin-top:14px;" data-i18n="watchLabel">WATCH FOR</div>
-    <div id="soWhatWatchList"></div>
-    <div class="interp-confidence-note" id="soWhatNote"></div>
-</div>
-
-<!-- RED LINES CARD -->
-<div class="red-lines-card" id="redLinesCard" style="display:none;">
-    <div class="interp-card-header">
-        <span style="font-size:1rem;">🚨</span>
-        <div style="flex:1;">
-            <div class="interp-card-title" data-i18n="redLinesTitle">RED LINE PROXIMITY</div>
-            <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Oman Stability Triggers — Succession · External Threat · Security · Mediation</div>
-        </div>
-        <div style="display:flex;gap:16px;">
-            <div style="text-align:right;">
-                <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
-                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="breachedLabel">BREACHED</div>
-            </div>
-            <div style="text-align:right;">
-                <div style="font-size:1.4rem;font-weight:900;color:#f97316;" id="redLineApproachingCount">0</div>
-                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="approachingLabel">APPROACHING</div>
-            </div>
-        </div>
-    </div>
-    <div id="redLineItems"></div>
-</div>
-
-<!-- CROSS-THEATER FINGERPRINT CARD -->
+<!-- CROSS-THEATER FINGERPRINT CARD (paired with scoring) -->
 <div class="crosstheater-card" id="crosstheaterCard">
     <div class="ct-title">🌐 <span data-i18n="ctTitle">Cross-Theater Fingerprint</span></div>
     <div class="ct-subtitle" data-i18n="ctSubtitle">Cross-theater fingerprint signals Oman reads from Iran, Yemen, and Pakistan trackers</div>
@@ -520,6 +452,74 @@
             <div class="ct-signal-label" data-i18n="ctZanzibar">Zanzibar Watch</div>
             <div class="ct-signal-value ct-inactive" id="ctZanzibar">—</div>
         </div>
+    </div>
+</div>
+
+<!-- SO WHAT CARD (STRATEGIC ASSESSMENT) -->
+<div class="interp-so-what" id="soWhatCard" style="display:none;">
+    <div class="interp-scenario-header">
+        <span class="interp-scenario-icon" id="soWhatIcon">⚪</span>
+        <div>
+            <div class="interp-scenario-label" data-i18n="soWhatLabel">OMAN STRATEGIC ASSESSMENT</div>
+            <div class="interp-scenario-value" id="soWhatScenario">--</div>
+        </div>
+    </div>
+    <div class="interp-section-title" data-i18n="situationLabel">SITUATION</div>
+    <div class="interp-text" id="soWhatSituation"></div>
+    <div id="soWhatIndicators"></div>
+    <div class="interp-section-title" style="margin-top:14px;" data-i18n="assessmentLabel">ASSESSMENT</div>
+    <div class="interp-text" id="soWhatAssessment"></div>
+    <div class="interp-section-title" style="margin-top:14px;" data-i18n="watchLabel">WATCH FOR</div>
+    <div id="soWhatWatchList"></div>
+    <div class="interp-confidence-note" id="soWhatNote"></div>
+</div>
+
+<!-- RED LINES CARD (paired with Strategic Assessment) -->
+<div class="red-lines-card" id="redLinesCard" style="display:none;">
+    <div class="interp-card-header">
+        <span style="font-size:1rem;">🚨</span>
+        <div style="flex:1;">
+            <div class="interp-card-title" data-i18n="redLinesTitle">RED LINE PROXIMITY</div>
+            <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Oman Stability Triggers — Succession · External Threat · Security · Mediation</div>
+        </div>
+        <div style="display:flex;gap:16px;">
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="breachedLabel">BREACHED</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#f97316;" id="redLineApproachingCount">0</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="approachingLabel">APPROACHING</div>
+            </div>
+        </div>
+    </div>
+    <div id="redLineItems"></div>
+</div>
+
+<!-- SCAN CONTROL BAR (moved down — operational) -->
+<div class="scan-bar">
+    <div class="scan-info" id="scanInfo">
+        <span class="loading-dot">●</span>
+        <span class="loading-dot">●</span>
+        <span class="loading-dot">●</span>
+        <span data-i18n="scanLoading">Loading cached scan…</span>
+    </div>
+    <button class="scan-btn" id="scanBtn" onclick="forceScan()" data-i18n="scanBtnIdle">🔄 Force Rescan</button>
+</div>
+
+<!-- TWO COMPOSITE VECTORS (Threat + Influence — moved down) -->
+<div class="vector-tabs">
+    <div class="vector-tab" id="vecThreatTab">
+        <div class="vector-tab-icon">⚠️</div>
+        <div class="vector-tab-label" data-i18n="vecThreat">Threat Vector</div>
+        <div class="vector-tab-level" id="vecThreatLevel" style="color:#6b7280;">L--</div>
+        <div class="vector-tab-label-text" id="vecThreatText">--</div>
+    </div>
+    <div class="vector-tab" id="vecInfluenceTab">
+        <div class="vector-tab-icon">🕊️</div>
+        <div class="vector-tab-label" data-i18n="vecInfluence">Influence Vector</div>
+        <div class="vector-tab-level" id="vecInfluenceLevel" style="color:#6b7280;">L--</div>
+        <div class="vector-tab-label-text" id="vecInfluenceText">--</div>
     </div>
 </div>
 
