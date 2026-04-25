@@ -1,1000 +1,1652 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Mexico Stability Index v1.0.0 -->
+<!-- Asifah Analytics — Cuba Stability Index v2.1.0 — Apr 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
-<html lang="en" dir="ltr">
+<html lang="en" data-theme="dark">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Z9114D1Z5C');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cuba Stability Index | Asifah Analytics</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cuba Stability Index — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --bg-color: #f5f5f5;
-            --container-bg: #ffffff;
-            --card-bg: #ffffff;
-            --card-border: #e1e8ed;
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6;
-            --article-bg: #f8f9fa;
-            --article-hover: #e8f4f8;
-            --accent: #6495ED;
-        }
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --container-bg: #2d2d2d;
-            --card-bg: #2d2d2d;
-            --card-border: #404040;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --article-bg: #333333;
-            --article-hover: #3a3a3a;
-            --accent: #00d4ff;
-        }
+/* ── Arctic palette (canonical for Cuba — aligned with Greenland/Russia/Yemen) ── */
+:root {
+    --bg-color:       #e8f0f8;
+    --container-bg:   #ffffff;
+    --card-bg:        #ffffff;
+    --card-border:    #b0c8e0;
+    --text-primary:   #0a1628;
+    --text-secondary: #1e3a5f;
+    --text-muted:     #64748b;
+    --header-gradient-start: #1e3a5f;
+    --header-gradient-end:   #2c5282;
+    --header-text:    #ffffff;
+    --metric-bg:      #ffffff;
+    --metric-hover-shadow: rgba(0,0,0,0.12);
+    --article-bg:     #f8fafc;
+    --article-hover:  #e0ecf8;
+    --watermark-opacity: 0.03;
+    --loading-overlay-bg: rgba(232, 240, 248, 0.98);
+    --loading-spinner-bg: rgba(14, 165, 233, 0.2);
+    --accent: #0ea5e9;
+    --accent-glow: rgba(14,165,233,0.2);
+    --card-glow: none;
+    --card-hover-glow: 0 8px 20px rgba(0,0,0,0.12);
+}
+[data-theme="dark"] {
+    --bg-color:       #060d1a;
+    --container-bg:   #0d1b2e;
+    --card-bg:        #0d1b2e;
+    --card-border:    #1e3a5f;
+    --text-primary:   #e2f0fb;
+    --text-secondary: #93c5fd;
+    --text-muted:     #64748b;
+    --header-gradient-start: #1e3a5f;
+    --header-gradient-end:   #2c5282;
+    --header-text:    #e2f0fb;
+    --metric-bg:      #0d1b2e;
+    --metric-hover-shadow: rgba(56,189,248,0.18);
+    --article-bg:     #0a1628;
+    --article-hover:  #142540;
+    --watermark-opacity: 0.02;
+    --loading-overlay-bg: rgba(6, 13, 26, 0.98);
+    --loading-spinner-bg: rgba(56, 189, 248, 0.25);
+    --accent: #38bdf8;
+    --accent-glow: rgba(56,189,248,0.18);
+    --card-glow: 0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
+    --card-hover-glow: 0 0 22px rgba(56,189,248,0.2), 0 8px 25px rgba(0,0,0,0.5);
+}
+body {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    line-height: 1.5;
+    transition: background-color 0.3s, color 0.3s;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
 
-        /* ── BODY + WATERMARK ── */
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            /* Watermark */
-            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-            background-position: center center;
-            background-repeat: no-repeat;
-            background-size: 1800px;
-            background-attachment: fixed;
-        }
-        /* Light mode: white overlay at 50% so watermark shows at ~50% opacity */
-        body::before {
-            content: '';
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(245, 245, 245, 0.50);
-            transition: background-color 0.3s ease;
-            pointer-events: none;
-            z-index: -1;
-        }
-        /* Dark mode: no white overlay — cyan grid lines instead */
-        [data-theme="dark"] body::before {
-            background-color: rgba(26, 26, 26, 0.82);
-        }
-        [data-theme="dark"] body::after {
-            content: '';
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image:
-                linear-gradient(rgba(0,210,255,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,210,255,0.04) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: -1;
-        }
+.container { max-width: 1400px; margin: 0 auto; padding: 18px; display: flex; gap: 20px; align-items: flex-start; }
+.main-content { flex: 1; min-width: 0; }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+/* ── HEADER ── */
+header {
+    background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+    color: var(--header-text);
+    padding: 22px 28px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid var(--card-border);
+}
+.header-logo { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; }
+.home-btn { background: rgba(255,255,255,0.15); color: white; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-family: 'Courier New',monospace; letter-spacing:1px; text-transform:uppercase; }
+.home-btn:hover { background: rgba(255,255,255,0.25); text-decoration: none; }
+.header-content { flex: 1; min-width: 220px; text-align: center; }
+.header-content h1 { font-size: 28px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+.subtitle { font-style: italic; opacity: 0.92; font-size: 14px; }
+.last-updated { font-size: 11px; font-family: 'Courier New',monospace; opacity: 0.7; margin-top: 6px; letter-spacing: 1px; }
+.header-controls { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.lang-btn-row { display: flex; gap: 4px; }
+.lang-btn { background: rgba(255,255,255,0.12); color: white; padding: 6px 10px; border: 0; border-radius: 4px; cursor: pointer; font-size: 11px; font-family: 'Courier New',monospace; }
+.lang-btn.active { background: rgba(255,255,255,0.35); }
+.theme-toggle { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; font-size: 11px; font-family: 'Courier New',monospace; }
+.theme-toggle input { display: none; }
+.theme-slider { width: 38px; height: 20px; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; transition: background 0.3s; }
+.theme-slider::before { content:''; position: absolute; top:2px; left:2px; width:16px; height:16px; background: #fff; border-radius:50%; transition: transform 0.3s; }
+.theme-toggle input:checked + .theme-slider::before { transform: translateX(18px); }
 
-        /* ── HEADER ── */
-        header {
-            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-            color: white; padding: 35px; border-radius: 12px;
-            margin-bottom: 12px; position: relative; min-height: 130px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-        [data-theme="dark"] header {
-            background: linear-gradient(135deg, #0f172a 0%, #164e63 50%, #0f172a 100%);
-            border: 1px solid rgba(0,210,255,0.15);
-        }
-        header::after {
-            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.015) 2px, rgba(0,255,255,0.015) 4px);
-            pointer-events: none; border-radius: 12px; z-index: 1;
-        }
-        .header-logo {
-            width: 70px; height: 70px;
-            position: absolute; top: 30px; left: 30px;
-            border-radius: 50%;
-            z-index: 2;
-        }
-        .header-content {
-            text-align: center; max-width: 800px;
-            margin: 0 auto; padding-top: 5px;
-            position: relative; z-index: 2;
-        }
-        header h1 { font-size: 26px; font-weight: bold; margin-bottom: 8px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        [data-theme="dark"] h1 { text-shadow: 0 0 20px rgba(0,212,255,0.4); }
-        .subtitle { font-size: 14px; opacity: 0.92; letter-spacing: 0.5px; }
-        .last-updated { font-size: 12px; opacity: 0.80; margin-top: 8px; }
+/* ── NAV SIDEBAR (Gold Standard) ── */
+.nav-sidebar { width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+.nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+.nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(56,189,248,0.2); background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.04) 100%); color: rgba(255,255,255,0.7); }
+[data-theme="light"] .nav-btn { color: var(--text-secondary); }
+.nav-btn .nav-btn-label { font-size: 12px; line-height: 1.3; }
+.nav-btn .nav-btn-status { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #38bdf8; }
+.nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); border-color: rgba(56,189,248,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(56,189,248,0.12); }
+.nav-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); border-color: rgba(34,197,94,0.6); color: #ffffff; box-shadow: 0 0 18px rgba(34,197,94,0.2); }
+.nav-btn.current-page .nav-btn-status { color: #4ade80; }
+.nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
+.nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
+.nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+.nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+.nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+.nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+.nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 6px 0; }
+@media (max-width: 1199px) { .nav-sidebar { display: none; } .container { display: block; } }
 
-        /* ── HEADER CONTROLS ── */
-        .home-btn {
-            position: absolute; top: 30px; left: 115px; z-index: 2;
-            display: flex; align-items: center; gap: 6px;
-            background: rgba(255,255,255,0.15); padding: 6px 14px;
-            border-radius: 6px; color: white; text-decoration: none;
-            font-size: 13px; font-weight: bold;
-            border: 1px solid rgba(255,255,255,0.3);
-            transition: all 0.2s ease;
-        }
-        .home-btn:hover { background: rgba(255,255,255,0.28); }
-        .header-controls {
-            position: absolute; top: 30px; right: 30px; z-index: 2;
-            display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
-        }
-        .lang-btn-row { display: flex; align-items: center; gap: 6px; }
-        .lang-btn {
-            background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.3);
-            color: white; padding: 5px 11px; border-radius: 5px;
-            cursor: pointer; font-size: 12px; font-family: 'Times New Roman', serif;
-            transition: all 0.2s;
-        }
-        .lang-btn:hover { background: rgba(255,255,255,0.25); }
-        .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
-        .theme-toggle { display: flex; align-items: center; gap: 6px; color: white; font-size: 12px; cursor: pointer; }
-        .theme-toggle input {
-            width: 36px; height: 20px; appearance: none;
-            background: rgba(255,255,255,0.2); border-radius: 10px;
-            position: relative; cursor: pointer; transition: background 0.3s;
-        }
-        .theme-toggle input::after {
-            content: ''; position: absolute; width: 16px; height: 16px;
-            background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s;
-        }
-        .theme-toggle input:checked { background: rgba(0,210,255,0.5); }
-        .theme-toggle input:checked::after { left: 18px; }
+/* ── ADVISORY BANNERS ── */
+.worldwide-caution-banner { background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%); border: 2px solid #dc2626; border-radius: 10px; padding: 14px 20px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.worldwide-caution-banner .icon { font-size: 24px; }
+.worldwide-caution-banner .text-block { flex: 1; min-width: 220px; color: #fee2e2; }
+.worldwide-caution-banner h3 { font-size: 13px; letter-spacing: 1.5px; color: #fef2f2; font-weight: 700; margin-bottom: 4px; }
+.country-advisory-banner { background: linear-gradient(135deg, #422006 0%, #78350f 50%, #422006 100%); border: 2px solid #f59e0b; border-radius: 10px; padding: 14px 20px; margin-bottom: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.country-advisory-banner .icon { font-size: 24px; color: #fbbf24; }
+.country-advisory-banner .text-block { flex: 1; min-width: 220px; color: #fed7aa; }
+.country-advisory-banner h3 { font-size: 13px; letter-spacing: 1.5px; color: #ffedd5; font-weight: 700; margin-bottom: 4px; }
+.advisory-level-badge { display: inline-block; background: #f59e0b; color: #422006; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: 800; margin-left: 6px; letter-spacing: 1px; }
+.advisory-btn { background: rgba(255,255,255,0.18); color: white; padding: 8px 14px; border-radius: 6px; font-size: 11px; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+.advisory-btn:hover { background: rgba(255,255,255,0.28); text-decoration: none; }
 
-        /* ── ADVISORY BANNERS ── */
-        .worldwide-caution-banner {
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 15px rgba(239,68,68,0.3);
-        }
-        .country-advisory-banner {
-            border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        .advisory-btn {
-            flex-shrink: 0; padding: 6px 14px;
-            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 6px; color: white; text-decoration: none;
-            font-size: 11px; font-weight: bold; white-space: nowrap;
-            transition: background 0.2s;
-        }
-        .advisory-btn:hover { background: rgba(255,255,255,0.28); }
+/* ── RHETORIC LINK BANNER ── */
+.rhetoric-link-banner { background: linear-gradient(135deg, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.10) 100%); border: 1px solid rgba(34,197,94,0.45); border-radius: 10px; padding: 14px 20px; margin-bottom: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.rhetoric-link-banner .icon { font-size: 22px; }
+.rhetoric-link-banner .text-block { flex: 1; min-width: 200px; color: var(--text-primary); }
+.rhetoric-link-banner h3 { font-size: 14px; color: #4ade80; font-weight: 700; margin-bottom: 3px; }
+.rhetoric-link-banner .subnote { font-size: 12px; color: var(--text-muted); }
+.rhetoric-link-banner .open-tracker-btn { background: rgba(34,197,94,0.20); border: 1px solid rgba(34,197,94,0.5); color: #4ade80; padding: 8px 14px; border-radius: 6px; font-size: 12px; font-family: 'Courier New', monospace; letter-spacing: 1px; font-weight: 700; text-transform: uppercase; }
+.rhetoric-link-banner .open-tracker-btn:hover { background: rgba(34,197,94,0.30); text-decoration: none; }
+.rhetoric-link-banner .level-pill { background: rgba(56,189,248,0.20); color: #38bdf8; padding: 4px 10px; border-radius: 4px; font-size: 11px; font-family: 'Courier New', monospace; letter-spacing: 1px; font-weight: 700; }
 
-        /* ── CARDS ── */
-        .map-section, .knowledge-library, .articles-section {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 25px; margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-        [data-theme="dark"] .map-section,
-        [data-theme="dark"] .knowledge-library,
-        [data-theme="dark"] .articles-section {
-            box-shadow: 0 2px 12px rgba(0,210,255,0.04);
-            border-color: #404040;
-        }
-        .section-heading { font-size: 18px; font-weight: bold; margin-bottom: 6px; }
-        .section-subtitle { font-size: 12px; color: var(--text-secondary); font-style: italic; margin-bottom: 15px; }
+/* ── SECTION CARD BASE ── */
+.section-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px 24px; margin-bottom: 18px; box-shadow: var(--card-glow); }
+.section-heading { font-size: 1rem; font-weight: 800; color: var(--text-primary); margin-bottom: 12px; letter-spacing: 0.5px; }
+.section-subhead { font-size: 0.7rem; color: var(--text-muted); font-style: italic; margin-bottom: 12px; line-height: 1.5; }
 
-        /* ── KNOWLEDGE LIBRARY ── */
-        .knowledge-categories { display: grid; gap: 10px; }
-        .knowledge-card { border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
-        .knowledge-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 13px 18px; cursor: pointer; background: var(--article-bg);
-            transition: background 0.2s;
-        }
-        .knowledge-header:hover { background: var(--article-hover); }
-        .knowledge-header-title { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 14px; }
-        .category-icon { font-size: 18px; }
-        .collapse-icon { font-size: 11px; color: var(--text-muted); transition: transform 0.3s; }
-        .knowledge-card.collapsed .knowledge-content { display: none; }
-        .knowledge-card:not(.collapsed) .collapse-icon { transform: rotate(180deg); }
-        .knowledge-content { padding: 18px; line-height: 1.8; font-size: 13px; }
-        .knowledge-content p { margin-bottom: 10px; }
-        .knowledge-content ul { margin: 8px 0 12px 20px; }
-        .knowledge-content li { margin-bottom: 5px; }
-        .report-links-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-        .report-link {
-            display: inline-block; padding: 5px 12px;
-            background: var(--article-bg); border: 1px solid var(--card-border);
-            border-radius: 6px; color: var(--accent); text-decoration: none;
-            font-size: 12px; font-weight: bold; transition: background 0.2s;
-        }
-        .report-link:hover { background: var(--article-hover); }
-        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 8px; }
+/* ── STABILITY HEADLINE CARD ── */
+.stability-headline { background: linear-gradient(135deg, var(--card-bg) 0%, var(--article-bg) 100%); border: 2px solid var(--card-border); border-radius: 14px; padding: 24px 28px; margin-bottom: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 800px) { .stability-headline { grid-template-columns: 1fr; } }
+.stab-block { padding: 16px; background: var(--card-bg); border-radius: 10px; border: 1px solid var(--card-border); }
+.stab-block-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New',monospace; margin-bottom: 8px; }
+.stab-score { font-size: 3rem; font-weight: 900; line-height: 1; margin-bottom: 6px; }
+.stab-label { font-size: 0.95rem; font-weight: 700; }
+.stab-detail { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; }
+.stab-pill { display: inline-block; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; color: white; margin-top: 4px; letter-spacing: 0.5px; }
 
-        /* ── ARTICLES ── */
-        .section-title { font-size: 17px; font-weight: bold; margin-bottom: 15px; }
-        .article-item {
-            padding: 14px; border: 1px solid var(--card-border);
-            border-radius: 8px; margin-bottom: 10px; background: var(--article-bg);
-            transition: background 0.2s;
-        }
-        .article-item:hover { background: var(--article-hover); }
-        .article-title { font-weight: bold; margin-bottom: 4px; font-size: 13px; }
-        .article-meta { font-size: 11px; color: var(--text-muted); }
-        .article-link { display: inline-block; margin-top: 6px; color: var(--accent); text-decoration: none; font-size: 12px; }
-        .article-link:hover { text-decoration: underline; }
+/* ── CIVILIAN PRESSURE CARD ── */
+.civ-press-card { background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(217,119,6,0.04) 100%); border: 2px solid rgba(245,158,11,0.35); border-radius: 12px; padding: 20px 24px; margin-bottom: 18px; }
+.civ-press-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.civ-press-title { font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px; color: #f59e0b; text-transform: uppercase; }
+.civ-press-badge { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; color: white; }
+.civ-press-grid { display: grid; grid-template-columns: 2fr 3fr; gap: 16px; }
+@media (max-width: 700px) { .civ-press-grid { grid-template-columns: 1fr; } }
+.civ-press-score { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 16px; text-align: center; }
+.civ-press-score-num { font-size: 2.4rem; font-weight: 900; line-height: 1; color: #f59e0b; }
+.civ-press-score-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-family: 'Courier New',monospace; letter-spacing: 1px; text-transform: uppercase; }
+.civ-press-signals-list { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 16px; max-height: 220px; overflow-y: auto; }
+.civ-press-signal-item { padding: 6px 0; border-bottom: 1px dashed var(--card-border); font-size: 0.8rem; }
+.civ-press-signal-item:last-child { border-bottom: none; }
+.civ-press-signal-phrase { display: inline-block; background: rgba(245,158,11,0.18); color: #f59e0b; padding: 1px 6px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 0.7rem; margin-right: 6px; }
+.civ-press-empty { padding: 30px 16px; text-align: center; color: var(--text-muted); font-style: italic; font-size: 0.85rem; }
 
-        /* ── RHETORIC BANNER + CARD ── */
-        .rhetoric-link-banner {
-            background: linear-gradient(135deg, #065f46, #047857);
-            border: 2px solid rgba(52,211,153,0.4);
-            border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 15px;
-            display: flex; align-items: center;
-            justify-content: space-between; gap: 15px; flex-wrap: wrap;
-        }
-        .rhetoric-vector-pills { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
-        .rhetoric-vector-pill {
-            font-size: 10px; font-weight: 700; padding: 3px 9px;
-            border-radius: 4px; color: white; letter-spacing: 0.5px;
-        }
-        .rhetoric-card {
-            background: var(--card-bg); border-radius: 12px; padding: 20px;
-            margin-bottom: 20px; border: 1px solid var(--card-border);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .rhetoric-card-label {
-            font-size: 11px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 12px;
-        }
-        .rhetoric-score-row {
-            display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px;
-        }
-        .rhetoric-score {
-            font-size: 32px; font-weight: 700; color: var(--text-primary);
-        }
-        .rhetoric-theatre-label {
-            font-size: 13px; font-weight: bold; padding: 3px 10px;
-            border-radius: 4px; background: #6b7280; color: white;
-        }
-        .rhetoric-scenario-line {
-            font-size: 12px; font-weight: 700; padding: 6px 10px;
-            background: rgba(52,211,153,0.08); border-left: 3px solid #34d399;
-            border-radius: 4px; color: var(--text-primary); margin: 10px 0;
-        }
-        .rhetoric-vector-grid {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 8px; margin: 12px 0;
-        }
-        .rhetoric-vector-item {
-            padding: 8px; border: 1px solid var(--card-border); border-radius: 6px;
-            text-align: center; background: var(--article-bg);
-        }
-        .rhetoric-vector-item-label {
-            font-size: 10px; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.8px; color: var(--text-secondary); margin-bottom: 4px;
-        }
-        .rhetoric-vector-item-value {
-            font-size: 16px; font-weight: 800; color: var(--text-primary);
-        }
-        .rhetoric-actor-row {
-            display: flex; justify-content: space-between; padding: 3px 0;
-            border-bottom: 1px solid var(--card-border); font-size: 12px;
-        }
-        .rhetoric-actor-row:last-child { border-bottom: none; }
-        .rhetoric-full-link {
-            margin-top: 15px; padding-top: 12px; border-top: 1px solid var(--card-border);
-            text-align: center;
-        }
-        .rhetoric-full-link a {
-            color: #10b981; text-decoration: none; font-size: 12px; font-weight: 600;
-        }
-        .rhetoric-full-link a:hover { text-decoration: underline; }
-        .rhetoric-red-lines {
-            margin-top: 10px; padding: 8px 12px; border-radius: 6px;
-            background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.25);
-            font-size: 11px; color: var(--text-primary);
-        }
-        @media (max-width: 768px) {
-            .rhetoric-vector-grid { grid-template-columns: 1fr; }
-        }
+/* ── OIL TANKER CARD ── */
+.oil-tanker-card { background: linear-gradient(135deg, rgba(124,58,237,0.06) 0%, rgba(91,33,182,0.04) 100%); border: 2px solid rgba(124,58,237,0.35); border-radius: 12px; padding: 20px 24px; margin-bottom: 18px; }
+.oil-tanker-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.oil-tanker-title { font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px; color: #a78bfa; text-transform: uppercase; }
+.oil-tanker-badge { padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; color: white; background: #7c3aed; }
+.oil-tanker-empty { padding: 16px; text-align: center; color: var(--text-muted); font-style: italic; font-size: 0.85rem; }
+.oil-tanker-signal { padding: 8px 12px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 6px; font-size: 0.82rem; }
+.oil-tanker-signal-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+.oil-tanker-level-pill { background: rgba(124,58,237,0.2); color: #a78bfa; padding: 1px 8px; border-radius: 3px; font-family: 'Courier New', monospace; font-size: 0.7rem; font-weight: 700; }
 
-        /* ── FOOTER ── */
-        footer {
-            background: var(--card-bg); border: 1px solid var(--card-border);
-            border-radius: 12px; padding: 30px; margin-top: 20px; margin-bottom: 30px;
-            text-align: center; font-size: 13px; color: var(--text-secondary);
-        }
-        .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; text-align: left; }
-        .footer-col h4 { font-size: 13px; font-weight: bold; margin-bottom: 8px; color: var(--text-primary); }
-        .footer-col p { font-size: 12px; line-height: 1.6; }
-        .footer-divider { border: none; border-top: 1px solid var(--card-border); margin: 20px 0; }
-        .footer-bottom { font-size: 12px; color: var(--text-muted); }
-        .footer-links { display: flex; justify-content: center; gap: 20px; margin-bottom: 10px; flex-wrap: wrap; }
-        .footer-links a { color: var(--accent); text-decoration: none; font-size: 12px; }
-        .footer-links a:hover { text-decoration: underline; }
+/* ── MIGRATION CARD ── */
+.migration-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 12px; padding: 20px 24px; margin-bottom: 18px; }
+.migration-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .migration-grid { grid-template-columns: 1fr; } }
+.mig-flow { padding: 14px; border-radius: 10px; }
+.mig-flow.outbound { background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.3); }
+.mig-flow.return   { background: rgba(16,185,129,0.06); border: 1px solid rgba(16,185,129,0.3); }
+.mig-flow-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.mig-flow-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+.mig-flow.outbound .mig-flow-label { color: #dc2626; }
+.mig-flow.return   .mig-flow-label { color: #16a34a; }
+.mig-flow-stats { display: flex; align-items: baseline; gap: 10px; }
+.mig-flow-level { font-size: 1.6rem; font-weight: 900; }
+.mig-flow.outbound .mig-flow-level { color: #dc2626; }
+.mig-flow.return   .mig-flow-level { color: #16a34a; }
+.mig-flow-text { font-size: 0.85rem; color: var(--text-secondary); }
+.mig-flow-note { font-size: 10px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
 
-        /* ── RESPONSIVE ── */
-        @media (max-width: 768px) {
-            header { padding: 20px; min-height: auto; }
-            header h1 { font-size: 20px; }
-            .header-logo { position: static; width: 50px; height: 50px; display: block; margin: 0 auto 10px; }
-            .home-btn { position: static; display: inline-flex; margin-bottom: 10px; }
-            .header-controls { position: static; align-items: center; margin-top: 10px; }
-            .footer-grid { grid-template-columns: 1fr; }
-            .worldwide-caution-banner,
-            .country-advisory-banner { flex-direction: column; text-align: center; }
-            .advisory-btn { align-self: center; }
-        }
-    </style>
-    <!-- Leaflet for map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+/* ── THREE-VECTOR SNAPSHOT ── */
+.vector-snapshot { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 700px) { .vector-snapshot { grid-template-columns: 1fr; } }
+.vector-tile { padding: 16px; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px; text-align: center; }
+.vector-tile-icon { font-size: 1.6rem; margin-bottom: 6px; }
+.vector-tile-label { font-size: 0.65rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New',monospace; }
+.vector-tile-level { font-size: 1.8rem; font-weight: 900; line-height: 1; margin: 4px 0; }
+.vector-tile-status { font-size: 0.78rem; }
+
+/* ── RED LINES CARD ── */
+.red-lines-card-stab { background: linear-gradient(135deg, rgba(220,38,38,0.06) 0%, rgba(185,28,28,0.04) 100%); border: 2px solid rgba(220,38,38,0.35); border-radius: 12px; padding: 20px 24px; margin-bottom: 18px; }
+.red-lines-header-stab { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.red-line-item-stab { padding: 8px 12px; background: var(--card-bg); border-left: 3px solid #dc2626; border-radius: 0 6px 6px 0; margin-bottom: 6px; font-size: 0.85rem; }
+.red-line-empty { color: var(--text-muted); font-style: italic; font-size: 0.85rem; }
+
+#cuba-map { height: 380px; border-radius: 10px; }
+
+/* ── KNOWLEDGE LIBRARY ── */
+.knowledge-library { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; box-shadow: var(--card-glow); }
+.knowledge-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 800px) { .knowledge-categories { grid-template-columns: 1fr; } }
+.knowledge-card { background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s; }
+.knowledge-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+.knowledge-header { padding: 14px 16px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; user-select: none; transition: background 0.2s; }
+.knowledge-header:hover { background: rgba(56,189,248,0.05); }
+.knowledge-header-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 0.95rem; color: var(--text-primary); }
+.category-icon { font-size: 1.2rem; }
+.collapse-icon { font-size: 0.85rem; color: var(--text-muted); transition: transform 0.3s; }
+.knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+.knowledge-content { padding: 0 16px 16px; max-height: 800px; overflow-y: auto; transition: all 0.3s; }
+.knowledge-card.collapsed .knowledge-content { display: none; }
+.knowledge-content p { margin-bottom: 10px; line-height: 1.6; font-size: 0.85rem; }
+.report-links-grid { display: flex; flex-direction: column; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--card-border); }
+.report-link { font-size: 0.8rem; padding: 4px 0; color: var(--accent); }
+.open-source-disclaimer { font-size: 0.7rem; color: var(--text-muted); font-style: italic; }
+
+/* ── ARTICLES TABBED ── */
+.articles-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px 24px; margin-bottom: 20px; box-shadow: var(--card-glow); }
+.tabs-row { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; border-bottom: 1px solid var(--card-border); padding-bottom: 8px; }
+.tab-btn { background: transparent; border: 1px solid var(--card-border); color: var(--text-secondary); padding: 8px 14px; border-radius: 6px 6px 0 0; cursor: pointer; font-family: 'Times New Roman', serif; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s; }
+.tab-btn:hover { background: rgba(56,189,248,0.10); }
+.tab-btn.active { background: rgba(56,189,248,0.18); color: var(--accent); border-color: var(--accent); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.article-item { padding: 10px 0; border-bottom: 1px dashed var(--card-border); font-size: 0.85rem; }
+.article-item:last-child { border-bottom: none; }
+.article-title { font-weight: 700; color: var(--text-primary); display: block; margin-bottom: 3px; line-height: 1.4; }
+.article-title:hover { color: var(--accent); }
+.article-meta { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+.articles-empty { padding: 30px 16px; text-align: center; color: var(--text-muted); font-style: italic; }
+
+footer { color: var(--text-muted); font-size: 0.78rem; padding: 16px 0; text-align: center; line-height: 1.6; }
+
+/* ── LOADING OVERLAY ── */
+.loading-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--loading-overlay-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.3s; }
+.loading-spinner { width: 50px; height: 50px; border: 4px solid var(--loading-spinner-bg); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { margin-top: 14px; color: var(--text-primary); font-family: 'Courier New', monospace; font-size: 0.85rem; letter-spacing: 1px; }
+</style>
 </head>
 <body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loadingText" data-i18n="loadingText">Loading Cuba stability data...</div>
+</div>
+
 <div class="container">
 
-    <!-- ── HEADER ── -->
-    <header>
-        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
-             alt="Asifah Analytics" class="header-logo">
-        <a href="wha.html" class="home-btn">&#8592; <span data-i18n="backBtn">Back to WHA Dashboard</span></a>
-        <div class="header-controls">
-            <div class="lang-btn-row">
-                <button class="lang-btn active" onclick="switchLang('en',this)">EN</button>
-                <button class="lang-btn" onclick="switchLang('es',this)">ES</button>
-                <button class="lang-btn" onclick="switchLang('pt',this)">PT</button>
+    <!-- ── NAV SIDEBAR ── -->
+    <nav class="nav-sidebar">
+        <div class="nav-sidebar-label" data-i18n="navDashboards">Dashboards</div>
+        <div class="nav-btn inactive-nav">
+            <span class="nav-btn-label">🌍 <span data-i18n="navAfrica">Africa</span></span>
+            <span class="nav-btn-status" data-i18n="navFuture">🔒 Future</span>
+        </div>
+        <a href="asia.html" class="nav-btn active-nav">
+            <span class="nav-btn-label">🌏 <span data-i18n="navAsia">Asia &amp; Pacific</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+        <a href="europe.html" class="nav-btn active-nav">
+            <span class="nav-btn-label">🌍 <span data-i18n="navEurope">Europe</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+        <a href="middle-east.html" class="nav-btn active-nav">
+            <span class="nav-btn-label">🕌 <span data-i18n="navMideast">Middle East</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+        <a href="wha.html" class="nav-btn active-nav current-page">
+            <span class="nav-btn-label">🌎 <span data-i18n="navWHA">W. Hemisphere</span></span>
+            <span class="nav-btn-status" data-i18n="navYouAreHere">◉ You are here</span>
+        </a>
+
+        <div class="nav-divider"></div>
+
+        <a href="military.html" class="nav-btn military-btn">
+            <span class="nav-btn-label">🎖️ <span data-i18n="navMilitary">Military Tracker</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+
+        <div class="nav-divider"></div>
+        <div class="nav-sidebar-label" data-i18n="navRhetoricTrackers">Rhetoric Trackers</div>
+
+        <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+            <span class="nav-btn-label">📡 <span data-i18n="navMERhetoric">ME Rhetoric</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+        <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+            <span class="nav-btn-label">📡 <span data-i18n="navAsiaRhetoric">Asia Rhetoric</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+        <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+            <span class="nav-btn-label">📡 <span data-i18n="navEuropeRhetoric">Europe Rhetoric</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+        <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+            <span class="nav-btn-label">📡 <span data-i18n="navWHARhetoric">WHA Rhetoric</span></span>
+            <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+        </a>
+    </nav>
+
+    <!-- ── MAIN CONTENT ── -->
+    <div class="main-content">
+
+        <!-- ── HEADER ── -->
+        <header>
+            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+                 alt="Asifah Analytics" class="header-logo">
+            <a href="wha.html" class="home-btn">&#8592; <span data-i18n="backBtn">Back to WHA Dashboard</span></a>
+            <div class="header-content">
+                <h1>🇨🇺 <span data-i18n="pageTitle">Cuba Stability Index</span></h1>
+                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Regime Control vs. Collapse · Civilian Pressure · Adversary Lifelines · Migration Flows · U.S. Pressure</div>
+                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdatedLoading">Last updated: Loading...</div>
             </div>
-            <label class="theme-toggle">
-                <span>☀️</span>
-                <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-                <span>🌙</span>
-            </label>
-        </div>
-        <div class="header-content">
-            <h1>&#x1F1E8;&#x1F1FA; <span data-i18n="pageTitle">CUBA STABILITY INDEX</span></h1>
-            <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: Regime Stability, Blackouts & Economic Crisis, Protest Suppression & U.S. Relations</div>
-            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
-        </div>
-    </header>
-
-    <!-- ── WORLDWIDE CAUTION ── -->
-    <div class="worldwide-caution-banner">
-        <div style="font-size:22px; flex-shrink:0;">&#x1F6A8;</div>
-        <div style="flex:1;">
-            <div style="font-size:11px; font-weight:bold; color:#fca5a5; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:3px;">
-                &#x26A0;&#xFE0F; <span data-i18n="wcLabel">U.S. State Department — Worldwide Caution</span>
-            </div>
-            <div style="font-size:12px; color:#fde8e8; line-height:1.5;" data-i18n="wcText">
-                The U.S. State Department maintains a standing Worldwide Caution advising U.S. citizens to be aware of the increased risk of terrorist attacks, violence, and other threats worldwide. Review local conditions before travel.
-            </div>
-        </div>
-        <a href="https://travel.state.gov/content/travel/en/international-travel/emergencies/worldwide-caution.html"
-           target="_blank" rel="noopener" class="advisory-btn" data-i18n="wcBtn">VIEW CAUTION &rarr;</a>
-    </div>
-
-    <!-- ── MEXICO TRAVEL ADVISORY — Level 3 ── -->
-    <div class="country-advisory-banner" style="background:linear-gradient(135deg,#3b1f00 0%, 78350f 50%, 3b1f00 100%); border:2px solid #d97706;">
-        <div style="font-size:24px; flex-shrink:0;">&#x1F1E8;&#x1F1FA;</div>
-        <div style="flex:1;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
-                <span style="font-size:11px; font-weight:bold; color:#fcd34d; text-transform:uppercase; letter-spacing:1.5px;" data-i18n="taLabel">U.S. State Department — Cuba Travel Advisory</span>
-                <span style="background:#d97706; color:white; font-size:10px; font-weight:800; padding:2px 9px; border-radius:3px; letter-spacing:1px;">LEVEL 2</span>
-            </div>
-            <div style="font-size:12px; color:#e2e8f0; line-height:1.5;">
-                <strong style="color:#fb923c;" data-i18n="taHeadline">Exercise Increased Caution in Cuba</strong>
-                <span data-i18n="taText"> due to crime and kidnapping. Violent crime — homicide, kidnapping, carjacking, and robbery — is widespread and common. The U.S. government has limited ability to provide emergency services to U.S. citizens in many areas of Mexico due to travel restrictions on U.S. government employees.</span>
-            </div>
-        </div>
-        <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cuba-travel-advisory.html"
-           target="_blank" rel="noopener" class="advisory-btn" data-i18n="taBtn">VIEW ADVISORY &rarr;</a>
-    </div>
-
-    <!-- ── RHETORIC BANNER ── -->
-    <div class="rhetoric-link-banner">
-        <div style="flex:1; min-width:220px;">
-            <div style="font-size:13px; font-weight:bold; color:white;">
-                📡 <span data-i18n="rhetoricBannerTitle">Cuba Rhetoric &amp; Pressure Tracker</span>
-            </div>
-            <div style="font-size:11px; color:rgba(255,255,255,0.75); margin-top:3px;" data-i18n="rhetoricBannerSubtitle">
-                U.S. Pressure · Regime Fracture · Adversary Access · Red Lines · Cross-Theater
-            </div>
-        </div>
-        <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
-            <span id="rhetoricLevelBadge" style="background:#6b7280; color:white; font-size:12px; font-weight:700; padding:5px 14px; border-radius:6px; letter-spacing:0.5px;">
-                📡 <span data-i18n="rhetoricLoading">Loading…</span>
-            </span>
-            <a href="rhetoric-cuba.html" style="padding:8px 18px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:12px; font-weight:bold; white-space:nowrap;" data-i18n="rhetoricOpenTracker">
-                Open Tracker →
-            </a>
-        </div>
-    </div>
-
-    <!-- ── RHETORIC SUMMARY CARD ── -->
-    <div class="rhetoric-card">
-        <div class="rhetoric-card-label">📡 <span data-i18n="rhetoricCardLabel">RHETORIC TRACKER</span></div>
-
-        <!-- Scenario line -->
-        <div id="rhetoricScenarioLine" class="rhetoric-scenario-line" style="display:none;">
-            <span id="rhetoricScenarioIcon">⚪</span>
-            <span id="rhetoricScenarioText" data-i18n-dynamic="scenario">--</span>
-        </div>
-
-        <!-- Three composite vectors -->
-        <div class="rhetoric-vector-grid">
-            <div class="rhetoric-vector-item">
-                <div class="rhetoric-vector-item-label" data-i18n="vecUsPressure">U.S. Pressure</div>
-                <div class="rhetoric-vector-item-value" id="rhetVecUsPressure" style="color:#6b7280;">L0</div>
-            </div>
-            <div class="rhetoric-vector-item">
-                <div class="rhetoric-vector-item-label" data-i18n="vecRegimeFracture">Regime Fracture</div>
-                <div class="rhetoric-vector-item-value" id="rhetVecRegimeFracture" style="color:#6b7280;">L0</div>
-            </div>
-            <div class="rhetoric-vector-item">
-                <div class="rhetoric-vector-item-label" data-i18n="vecAdversaryAccess">Adversary Access</div>
-                <div class="rhetoric-vector-item-value" id="rhetVecAdversaryAccess" style="color:#6b7280;">L0</div>
-            </div>
-        </div>
-
-        <!-- Actor breakdown -->
-        <div id="rhetoricActorList" style="margin-top:10px;">
-            <div style="font-style:italic; font-size:11px; color:var(--text-muted);" data-i18n="rhetoricLoadingActors">Loading actor breakdown...</div>
-        </div>
-
-        <!-- Red Lines summary -->
-        <div id="rhetoricRedLines" class="rhetoric-red-lines" style="display:none;">
-            <strong>🚨 <span data-i18n="rhetoricRedLinesLabel">Red Lines:</span></strong>
-            <span id="rhetoricRedLinesText">--</span>
-        </div>
-
-        <!-- Link to full rhetoric page -->
-        <div class="rhetoric-full-link">
-            <a href="rhetoric-cuba.html" data-i18n="rhetoricViewFull">View Full Rhetoric Analysis →</a>
-        </div>
-        <div id="rhetoricScanInfo" style="margin-top:8px; font-size:10px; color:var(--text-muted); text-align:center;">--</div>
-    </div>
-
-    <!-- ── MAP ── -->
-    <div class="map-section">
-        <h2 class="section-heading">&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Cuba — Strategic Overview</span></h2>
-        <div class="section-subtitle" data-i18n="mapSubtitle">Strategic locations and key risk zones for Cuba. Data based on open-source reporting.</div>
-        <div id="cuba-map" style="width:100%; height:480px; border:2px solid var(--card-border); border-radius:8px; overflow:hidden; z-index:0;"></div>
-    </div>
-
-    <!-- ── KNOWLEDGE LIBRARY ── -->
-    <div class="knowledge-library">
-        <h2 class="section-heading">&#x1F4DA; <span data-i18n="kbTitle">Knowledge Library</span></h2>
-        <p class="open-source-disclaimer" data-i18n="kbDisclaimer">Background information compiled from open-source research, think tank analysis, and government publications.</p>
-        <div style="height:12px;"></div>
-        <div class="knowledge-categories">
-
-            <div class="knowledge-card collapsed" id="card-regime">
-                <div class="knowledge-header" onclick="toggleCard('regime')">
-                    <div class="knowledge-header-title">
-                        <span class="category-icon">&#x1F3DB;&#xFE0F;</span>
-                        <span data-i18n="kb_regime_title">Regime Stability &amp; Leadership</span>
-                    </div>
-                    <span class="collapse-icon">&#x25BC;</span>
+            <div class="header-controls">
+                <div class="lang-btn-row">
+                    <button class="lang-btn active" onclick="switchLang('en',this)">EN</button>
+                    <button class="lang-btn" onclick="switchLang('es',this)">ES</button>
+                    <button class="lang-btn" onclick="switchLang('pt',this)">PT</button>
                 </div>
-                <div class="knowledge-content">
-                    <div data-i18n="kb_regime_content"><p><strong>Cuba is governed by the Communist Party of Cuba</strong> under President Miguel D&iacute;az-Canel, who succeeded Ra&uacute;l Castro in 2021. The party apparatus, military, and MININT retain control. The regime faces its most serious legitimacy crisis in decades following the 2021 protests.</p><p><strong>11J Protests (2021):</strong> The July 11, 2021 protests were the largest in Cuba since 1994. Over 1,000 remain imprisoned with sentences up to 25 years.</p></div>
-                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                    <div class="report-links-grid">
-                        <a href="https://freedomhouse.org/country/cuba" target="_blank" class="report-link">&#x1F4D1; Freedom House &mdash; Cuba</a>
-                        <a href="https://www.hrw.org/americas/cuba" target="_blank" class="report-link">&#x1F4D1; Human Rights Watch</a>
-                        <a href="https://www.amnesty.org/en/location/americas/cuba/" target="_blank" class="report-link">&#x1F4D1; Amnesty International</a>
-                    </div>
+                <label class="theme-toggle">
+                    <span data-i18n="themeLabel">THEME</span>
+                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                    <span class="theme-slider"></span>
+                </label>
+            </div>
+        </header>
+
+        <!-- ── WORLDWIDE CAUTION ── -->
+        <div class="worldwide-caution-banner">
+            <span class="icon">🚨</span>
+            <div class="text-block">
+                <h3 data-i18n="wwTitle">U.S. STATE DEPARTMENT — WORLDWIDE CAUTION</h3>
+                <span data-i18n="wwText">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</span>
+            </div>
+            <a href="https://travel.state.gov/content/travel/en/international-travel/before-you-go/travelers-with-special-considerations/high-risk-travelers/worldwide-caution.html"
+               target="_blank" rel="noopener" class="advisory-btn" data-i18n="wwBtn">VIEW CAUTION →</a>
+        </div>
+
+        <!-- ── CUBA TRAVEL ADVISORY ── -->
+        <div class="country-advisory-banner">
+            <span class="icon">⚠️</span>
+            <div class="text-block">
+                <h3><span data-i18n="advTitle">U.S. STATE DEPARTMENT — CUBA TRAVEL ADVISORY</span> <span class="advisory-level-badge" data-i18n="advLevel">LEVEL 2</span></h3>
+                <span data-i18n="advText">Exercise increased caution in Cuba due to crime and unreliable electrical power. Petty crime, violent crime including armed robbery and homicide, prolonged power outages, and fuel shortages affect daily life. U.S. tourist travel to Cuba is prohibited; OFAC license required for authorized categories.</span>
+            </div>
+            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/cuba-travel-advisory.html"
+               target="_blank" rel="noopener" class="advisory-btn" data-i18n="advBtn">VIEW ADVISORY →</a>
+        </div>
+
+        <!-- ── RHETORIC TRACKER LINK ── -->
+        <div class="rhetoric-link-banner">
+            <span class="icon">📡</span>
+            <div class="text-block">
+                <h3 data-i18n="rhTitle">Cuba Rhetoric &amp; Pressure Tracker</h3>
+                <div class="subnote" data-i18n="rhSubtitle">U.S. Pressure · Regime Fracture · Adversary Access · Real-time signal analysis</div>
+            </div>
+            <span class="level-pill" id="rhetoricLevelPill" data-i18n="loading">Loading...</span>
+            <a href="rhetoric-cuba.html" class="open-tracker-btn" data-i18n="rhBtn">Open Tracker →</a>
+        </div>
+
+        <!-- ── STABILITY HEADLINE ── -->
+        <div class="stability-headline">
+            <div class="stab-block">
+                <div class="stab-block-label" data-i18n="regimeControlLabel">🏛️ Regime Control Index</div>
+                <div class="stab-score" id="regimeControlScore" style="color:#16a34a;">--</div>
+                <div class="stab-label" id="regimeControlBand" data-i18n="loading">Loading...</div>
+                <span class="stab-pill" id="regimeControlPill" style="background:#64748b;">--</span>
+                <div class="stab-detail" data-i18n="regimeControlDetail">
+                    Higher = regime maintains coercive grip. Lower = fracture risk: protests overwhelming security, mass dissent, regime split.
                 </div>
             </div>
-
-            <div class="knowledge-card collapsed" id="card-economy">
-                <div class="knowledge-header" onclick="toggleCard('economy')">
-                    <div class="knowledge-header-title">
-                        <span class="category-icon">&#x1F4A1;</span>
-                        <span data-i18n="kb_economy_title">Energy Crisis &amp; Economic Collapse</span>
-                    </div>
-                    <span class="collapse-icon">&#x25BC;</span>
+            <div class="stab-block">
+                <div class="stab-block-label" data-i18n="extPressureLabel">🇺🇸 External Pressure Index</div>
+                <div class="stab-score" id="externalPressureScore" style="color:#dc2626;">--</div>
+                <div class="stab-label" id="externalPressureBand" data-i18n="loading">Loading...</div>
+                <span class="stab-pill" id="externalPressurePill" style="background:#64748b;">--</span>
+                <div class="stab-detail" data-i18n="extPressureDetail">
+                    Higher = U.S. moving toward forcing regime change (Venezuela 2026 pattern). Lower = baseline diplomatic posture.
                 </div>
-                <div class="knowledge-content">
-                    <div data-i18n="kb_economy_content"><p><strong>Cuba faces a severe energy crisis</strong> with rolling blackouts lasting 12&ndash;20 hours per day in many provinces. The electricity grid relies on aging Soviet-era infrastructure. In 2024, the national grid collapsed multiple times leaving the entire island without power for days.</p><p><strong>Economic conditions</strong> include hyperinflation, severe shortages of food and medicine. Remittances from the Cuban diaspora are a lifeline.</p></div>
-                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                    <div class="report-links-grid">
-                        <a href="https://www.imf.org/en/Countries/CUB" target="_blank" class="report-link">&#x1F4D1; IMF &mdash; Cuba</a>
-                        <a href="https://www.cepal.org/en" target="_blank" class="report-link">&#x1F4D1; CEPAL</a>
-                        <a href="https://www.reuters.com/world/americas/" target="_blank" class="report-link">&#x1F4D1; Reuters Cuba Coverage</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="knowledge-card collapsed" id="card-us_relations">
-                <div class="knowledge-header" onclick="toggleCard('us_relations')">
-                    <div class="knowledge-header-title">
-                        <span class="category-icon">&#x1F1FA;&#x1F1F8;</span>
-                        <span data-i18n="kb_us_relations_title">U.S.&ndash;Cuba Relations</span>
-                    </div>
-                    <span class="collapse-icon">&#x25BC;</span>
-                </div>
-                <div class="knowledge-content">
-                    <div data-i18n="kb_us_relations_content"><p><strong>U.S.&ndash;Cuba relations remain deeply adversarial.</strong> The U.S. embargo (in place since 1962) continues. Cuba is designated a State Sponsor of Terrorism. The U.S. Embassy in Havana operates with reduced staff and limited consular services.</p><p><strong>Migration:</strong> Cuba&rsquo;s crisis has driven record migration to the United States, with hundreds of thousands arriving via the southern border.</p></div>
-                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                    <div class="report-links-grid">
-                        <a href="https://www.state.gov/countries-areas/cuba/" target="_blank" class="report-link">&#x1F4D1; State Dept &mdash; Cuba</a>
-                        <a href="https://www.cubastudygroup.org/" target="_blank" class="report-link">&#x1F4D1; Cuba Study Group</a>
-                        <a href="https://www.wola.org/areas/cuba/" target="_blank" class="report-link">&#x1F4D1; WOLA &mdash; Cuba</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="knowledge-card collapsed" id="card-humanitarian">
-                <div class="knowledge-header" onclick="toggleCard('humanitarian')">
-                    <div class="knowledge-header-title">
-                        <span class="category-icon">&#x1F90D;</span>
-                        <span data-i18n="kb_humanitarian_title">Humanitarian Conditions</span>
-                    </div>
-                    <span class="collapse-icon">&#x25BC;</span>
-                </div>
-                <div class="knowledge-content">
-                    <div data-i18n="kb_humanitarian_content"><p><strong>Cuba&rsquo;s healthcare system</strong> &mdash; once a point of national pride &mdash; has deteriorated sharply due to lack of medicines and emigration of trained personnel. Food insecurity is widespread.</p><p><strong>Migration wave:</strong> Cuba lost an estimated 500,000+ people between 2022 and 2024 &mdash; roughly 5% of its population &mdash; to emigration.</p></div>
-                    <div class="open-source-disclaimer" data-i18n="disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                    <div class="report-links-grid">
-                        <a href="https://www.unhcr.org/en-us/cuba.html" target="_blank" class="report-link">&#x1F4D1; UNHCR &mdash; Cuba</a>
-                        <a href="https://reliefweb.int/country/cub" target="_blank" class="report-link">&#x1F4D1; ReliefWeb</a>
-                        <a href="https://www.iom.int/countries/cuba" target="_blank" class="report-link">&#x1F4D1; IOM &mdash; Cuba</a>
-                    </div>
-                </div>
-            </div>
-
-        </div><!-- end knowledge-categories -->
-    </div><!-- end knowledge-library -->
-
-    <!-- ── ARTICLES ── -->
-    <div class="articles-section">
-        <div class="section-title">&#x1F4F0; <span data-i18n="articlesTitle">Recent Cuba OSINT Articles (Last 7 Days)</span></div>
-        <div id="articlesContainer">
-            <div style="text-align:center; color:var(--text-secondary); padding:30px;" data-i18n="articlesLoading">Loading articles...</div>
-        </div>
-    </div>
-
-    <!-- ── FOOTER ── -->
-    <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4 data-i18n="footerAboutTitle">About This Page</h4>
-                <p data-i18n="footerAboutText">Asifah Analytics is a personal-time, open-source OSINT geopolitical intelligence platform. Cuba stability data tracks regime durability, energy crisis indicators, and protest activity via GDELT, NewsAPI, and RSS feeds updated every 12 hours.</p>
-            </div>
-            <div class="footer-col">
-                <h4 data-i18n="footerSourcesTitle">Data Sources</h4>
-                <p>GDELT Project · NewsAPI · Google News RSS · U.S. State Dept · Freedom House · WOLA</p>
-            </div>
-            <div class="footer-col">
-                <h4 data-i18n="footerBackendTitle">Backend</h4>
-                <p>asifah-wha-backend.onrender.com &middot; <span data-i18n="footerBackendText">Updates every 12 hours</span></p>
             </div>
         </div>
-        <hr class="footer-divider">
-        <div class="footer-links">
-            <a href="privacy.html" data-i18n="footerPrivacy">Privacy Policy</a>
-            <a href="mailto:rcgg@asifahanalytics.com" data-i18n="footerContact">Contact</a>
-            <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" rel="noopener">&#x2615; <span data-i18n="footerCoffee">Buy Me a Coffee</span></a>
+
+        <!-- ── CIVILIAN PRESSURE ── -->
+        <div class="civ-press-card">
+            <div class="civ-press-header">
+                <span class="civ-press-title" data-i18n="cpTitle">🔌 Civilian Pressure Index</span>
+                <span class="civ-press-badge" id="civPressBadge" style="background:#64748b;">L0 — Stable</span>
+            </div>
+            <div class="section-subhead" data-i18n="cpSubhead">
+                Tracks <em>what is actually breaking</em> on the ground — blackouts, fuel rationing, food/medicine shortages, currency collapse. Distinct from rhetoric: rhetoric measures what people <em>say</em>; civilian pressure measures what the population <em>experiences</em>. Cuba's stability is fundamentally about civilian infrastructure, and historically people respond to its collapse by leaving (the "boats not bullets" pattern) — not rising up against the regime.
+            </div>
+            <div class="civ-press-grid">
+                <div class="civ-press-score">
+                    <div class="civ-press-score-num" id="civPressScoreNum">0</div>
+                    <div class="civ-press-score-label" data-i18n="cpScoreLabel">Pressure Score / 100</div>
+                </div>
+                <div class="civ-press-signals-list" id="civPressSignalsList">
+                    <div class="civ-press-empty" data-i18n="cpEmpty">No active civilian pressure signals detected. Monitoring blackout, fuel, and scarcity keywords across English/Spanish sources.</div>
+                </div>
+            </div>
         </div>
-        <div class="footer-bottom">
-            <div style="margin-bottom:6px;" data-i18n="footerDisclaimer">&#x26A0;&#xFE0F; Research &amp; Educational Use Only. Not for operational decision-making.</div>
-            &copy; 2025-2026 RCGG. All Rights Reserved.
+
+        <!-- ── OIL TANKER ── -->
+        <div class="oil-tanker-card">
+            <div class="oil-tanker-header">
+                <span class="oil-tanker-title" data-i18n="otTitle">⛽ Adversary Oil Lifeline — Russia / Iran / Venezuela</span>
+                <span class="oil-tanker-badge" id="oilTankerBadge">L0 — Baseline</span>
+            </div>
+            <div class="section-subhead" data-i18n="otSubhead">
+                Russian Rosneft, Iranian, and Venezuelan PDVSA tanker arrivals to Cienfuegos / Matanzas / Havana ports. Oil delivery directly mitigates blackouts (the regime's #1 stability lever) and signals adversary access depth. Active tanker traffic = regime can keep the lights on. Tanker drought = blackouts intensify.
+            </div>
+            <div id="oilTankerSignalsContainer">
+                <div class="oil-tanker-empty" data-i18n="otEmpty">No tanker arrival signals in current scan window.</div>
+            </div>
         </div>
-    </footer>
+
+        <!-- ── MIGRATION ── -->
+        <div class="migration-card">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
+                <h2 style="font-size:1rem;color:var(--text-primary);margin:0;" data-i18n="migTitle">↔️ Cuban Migration Corridor — Bidirectional Flows</h2>
+                <span id="migrationNetBadge" style="padding:4px 12px;border-radius:6px;color:white;font-size:12px;font-weight:bold;background:#64748b;">--</span>
+            </div>
+            <div class="section-subhead" data-i18n="migSubhead">
+                Outbound (Cuba → US/Mexico) = stability pressure: when blackouts and scarcity intensify, Cubans leave on rafts or via the Darién/Central America route. Return flow (deportations, repatriations) = de-escalation: indicates US-Cuba normalization or improving conditions. Mass exodus is Cuba's historical safety valve — Mariel 1980, Balseros 1994, post-2022 wave.
+            </div>
+            <div class="migration-grid">
+                <div class="mig-flow outbound">
+                    <div class="mig-flow-header">
+                        <span style="font-size:1.3rem;">🇨🇺→🇺🇸</span>
+                        <span class="mig-flow-label" data-i18n="migOutLabel">Outbound (Pressure)</span>
+                    </div>
+                    <div class="mig-flow-stats">
+                        <span class="mig-flow-level" id="migOutLevel">L0</span>
+                        <span class="mig-flow-text" id="migOutText" data-i18n="loading">Baseline</span>
+                    </div>
+                    <div class="mig-flow-note" data-i18n="migOutNote">Cubans fleeing — escalates regime instability score</div>
+                </div>
+                <div class="mig-flow return">
+                    <div class="mig-flow-header">
+                        <span style="font-size:1.3rem;">🇺🇸→🇨🇺</span>
+                        <span class="mig-flow-label" data-i18n="migReturnLabel">Return (Relief)</span>
+                    </div>
+                    <div class="mig-flow-stats">
+                        <span class="mig-flow-level" id="migReturnLevel">L0</span>
+                        <span class="mig-flow-text" id="migReturnText" data-i18n="loading">Baseline</span>
+                    </div>
+                    <div class="mig-flow-note" data-i18n="migReturnNote">Deportations / repatriation — reduces pressure</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── THREE-VECTOR SNAPSHOT ── -->
+        <div class="section-card">
+            <div class="section-heading" data-i18n="vsTitle">📊 Three-Vector Snapshot — From Rhetoric Tracker</div>
+            <div class="section-subhead" data-i18n="vsSubhead">
+                Live read of Cuba's three composite rhetoric vectors. Click "Open Tracker" above for full actor-level analysis.
+            </div>
+            <div class="vector-snapshot">
+                <div class="vector-tile">
+                    <div class="vector-tile-icon">🦅</div>
+                    <div class="vector-tile-label" data-i18n="vsUSPressure">U.S. Pressure</div>
+                    <div class="vector-tile-level" id="vecUsPressureLevel" style="color:#6b7280;">L--</div>
+                    <div class="vector-tile-status" id="vecUsPressureStatus">--</div>
+                </div>
+                <div class="vector-tile">
+                    <div class="vector-tile-icon">✊</div>
+                    <div class="vector-tile-label" data-i18n="vsRegimeFracture">Regime Fracture</div>
+                    <div class="vector-tile-level" id="vecRegimeFractureLevel" style="color:#6b7280;">L--</div>
+                    <div class="vector-tile-status" id="vecRegimeFractureStatus">--</div>
+                </div>
+                <div class="vector-tile">
+                    <div class="vector-tile-icon">🤝</div>
+                    <div class="vector-tile-label" data-i18n="vsAdversaryAccess">Adversary Access</div>
+                    <div class="vector-tile-level" id="vecAdversaryAccessLevel" style="color:#6b7280;">L--</div>
+                    <div class="vector-tile-status" id="vecAdversaryAccessStatus">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── RED LINES ── -->
+        <div class="red-lines-card-stab" id="redLinesCardStab" style="display:none;">
+            <div class="red-lines-header-stab">
+                <span style="font-size:1.2rem;">🚨</span>
+                <span style="font-size:0.85rem;font-weight:800;letter-spacing:1.5px;color:#dc2626;text-transform:uppercase;" data-i18n="redLinesActive">Red Lines Active</span>
+            </div>
+            <div id="redLineItemsStab"></div>
+        </div>
+
+        <!-- ── MAP ── -->
+        <div class="section-card">
+            <h2 class="section-heading" data-i18n="mapTitle">🗺️ Cuba Strategic Geography</h2>
+            <div id="cuba-map"></div>
+        </div>
+
+        <!-- ── KNOWLEDGE LIBRARY ── -->
+        <div class="knowledge-library">
+            <h2 class="section-heading" data-i18n="kbTitle">📚 Knowledge Library</h2>
+            <p class="open-source-disclaimer" data-i18n="kbDisclaimer">Background information compiled from open-source research, think tank analysis, and government publications.</p>
+            <div style="height:12px;"></div>
+            <div class="knowledge-categories">
+
+                <div class="knowledge-card collapsed" id="card-regime">
+                    <div class="knowledge-header" onclick="toggleCard('regime')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🏛️</span>
+                            <span data-i18n="kbRegimeTitle">Cuban Regime &amp; Leadership</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbRegimeContent">
+                            <p><strong>Cuba is governed by the Communist Party of Cuba (PCC)</strong> under President Miguel Díaz-Canel, who succeeded Raúl Castro in 2021. Manuel Marrero serves as Prime Minister. The party apparatus, FAR (military), MININT (interior ministry), and G2 (state security) retain control. The regime faces its most serious legitimacy crisis in decades following the 2021 protests.</p>
+                            <p><strong>11J Protests (2021):</strong> The July 11, 2021 protests were the largest in Cuba since 1994. Over 1,000 protesters remain imprisoned with sentences up to 25 years.</p>
+                            <p><strong>Coercive apparatus:</strong> MININT handles civilian suppression; FAR (army) deployment against civilians would be a major red line and historical break.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://freedomhouse.org/country/cuba" target="_blank" class="report-link">📑 Freedom House — Cuba</a>
+                            <a href="https://www.hrw.org/americas/cuba" target="_blank" class="report-link">📑 Human Rights Watch — Cuba</a>
+                            <a href="https://www.amnesty.org/en/location/americas/cuba/" target="_blank" class="report-link">📑 Amnesty International — Cuba</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-energy">
+                    <div class="knowledge-header" onclick="toggleCard('energy')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">⚡</span>
+                            <span data-i18n="kbEnergyTitle">Energy Crisis &amp; Civilian Pressure</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbEnergyContent">
+                            <p><strong>Cuba faces a chronic energy crisis</strong> with rolling blackouts of 12–20 hours per day across many provinces. The grid is built on Soviet-era thermoelectric infrastructure (~60 years old). October 2024 and subsequent months saw multiple complete national grid collapses leaving the entire island dark for days.</p>
+                            <p><strong>Why this matters analytically:</strong> Blackouts directly degrade healthcare (no refrigeration for vaccines/insulin), food preservation, water supply (electric pumps), and economic activity. Civilian pressure rises with every hour of darkness.</p>
+                            <p><strong>Adversary lifelines:</strong> Russia (Rosneft) and Iran intermittently send oil tankers to Cienfuegos and Matanzas. Each tanker docking is a regime stability event — when tankers stop arriving, blackouts intensify within weeks.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.csis.org/analysis/cuba" target="_blank" class="report-link">📑 CSIS — Cuba</a>
+                            <a href="https://www.reuters.com/world/americas/" target="_blank" class="report-link">📑 Reuters Cuba Coverage</a>
+                            <a href="https://www.iea.org/" target="_blank" class="report-link">📑 IEA — Energy Security</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-us-relations">
+                    <div class="knowledge-header" onclick="toggleCard('us-relations')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🇺🇸</span>
+                            <span data-i18n="kbUSTitle">U.S.–Cuba Relations &amp; Sanctions</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbUSContent">
+                            <p><strong>U.S.–Cuba relations remain deeply adversarial.</strong> The U.S. embargo (in place since 1962) continues. Cuba is designated a State Sponsor of Terrorism. The U.S. Embassy in Havana operates with reduced staff and limited consular services.</p>
+                            <p><strong>Sanctions regime:</strong> Helms-Burton Act (1996), Cuba Restricted List (military/security entities barred from US transactions), OFAC sanctions on GAESA/CIMEX (military business conglomerates), remittance and travel restrictions.</p>
+                            <p><strong>Venezuela 2026 precedent:</strong> The U.S. forced regime change in Venezuela in early 2026 (Maduro ousted). Whether this becomes the template for Cuba is the central strategic question for this dashboard.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.state.gov/countries-areas/cuba/" target="_blank" class="report-link">📑 State Dept — Cuba</a>
+                            <a href="https://ofac.treasury.gov/sanctions-programs-and-country-information/cuba-sanctions" target="_blank" class="report-link">📑 OFAC — Cuba Sanctions</a>
+                            <a href="https://www.wola.org/areas/cuba/" target="_blank" class="report-link">📑 WOLA — Cuba</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-adversary">
+                    <div class="knowledge-header" onclick="toggleCard('adversary')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🤝</span>
+                            <span data-i18n="kbAdvTitle">Adversary Access — Russia / China / Iran</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbAdvContent">
+                            <p><strong>Russia:</strong> Rosneft oil shipments, intermittent warship Caribbean visits, Lavrov/Medvedev Cuba visits, Lourdes SIGINT base rumors (Cold War-era facility, reactivation would be a Category 5 escalation).</p>
+                            <p><strong>China:</strong> WSJ 2023 reporting alleged a Chinese SIGINT facility in Cuba. Watch for PLAN warship visits to Mariel Port, Huawei/ZTE infrastructure, Belt and Road inclusion, Xi/Wang Yi Cuba visits. PLAN port call to Mariel = Category 5.</p>
+                            <p><strong>Iran:</strong> Sparser but recurring. IRGC delegations, Iranian oil tanker dockings (recurring pattern since 2020), Pezeshkian/Khamenei statements on Cuba, Iran-Cuba MOUs.</p>
+                            <p><strong>Cuba's strategic role:</strong> 90 miles from Florida, deep-water Mariel Port, Soviet-legacy SIGINT infrastructure. Adversary footholds here are existential US national security signals.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.csis.org/analysis/great-power-competition-latin-america" target="_blank" class="report-link">📑 CSIS — Great Power Competition</a>
+                            <a href="https://www.dialogo-americas.com/" target="_blank" class="report-link">📑 Diálogo Américas (SOUTHCOM)</a>
+                            <a href="https://www.lawfaremedia.org/topics/foreign-relations" target="_blank" class="report-link">📑 Lawfare — Foreign Relations</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-migration">
+                    <div class="knowledge-header" onclick="toggleCard('migration')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">↔️</span>
+                            <span data-i18n="kbMigTitle">Migration Patterns &amp; Historical Waves</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbMigContent">
+                            <p><strong>Cuba's escape valve:</strong> When civilian pressure builds, Cubans historically leave rather than rise up. Major waves:</p>
+                            <p><strong>Mariel Boatlift (1980):</strong> 125,000 Cubans to Florida in 6 months. Castro opened the port deliberately to reduce internal pressure.</p>
+                            <p><strong>Balseros Crisis (1994):</strong> ~35,000 rafters intercepted; led to "wet foot, dry foot" policy.</p>
+                            <p><strong>Post-2022 wave:</strong> Estimated 500,000+ Cubans (~5% of population) emigrated 2022–2024 via the Darién Gap and Central America route. Largest exodus in Cuban history by absolute numbers.</p>
+                            <p><strong>Cuban Adjustment Act (1966):</strong> Provides path to permanent residency for Cubans reaching US soil. Periodically modified by parole programs.</p>
+                            <p><strong>Coast Guard interdiction tempo</strong> is a real-time stability indicator: rising = pressure rising on the island.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.uscis.gov/policy-manual/volume-7-part-p" target="_blank" class="report-link">📑 USCIS — Cuban Adjustment Act</a>
+                            <a href="https://www.cbp.gov/" target="_blank" class="report-link">📑 CBP — Migration Statistics</a>
+                            <a href="https://www.migrationpolicy.org/topics/cuba" target="_blank" class="report-link">📑 Migration Policy Institute</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-dissidents">
+                    <div class="knowledge-header" onclick="toggleCard('dissidents')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">✊</span>
+                            <span data-i18n="kbDissTitle">Dissident Movement &amp; Independent Media</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbDissContent">
+                            <p><strong>Inverse stability indicator:</strong> High dissident activity does NOT make Cuba stronger — it signals regime weakness. The matrix Asifah tracks: dissident activity vs. security suppression intensity. If dissidents ≥ 3 levels above suppression, the regime is fracturing.</p>
+                            <p><strong>San Isidro Movement (MSI):</strong> Artists' collective, formed 2018. Focal point of cultural dissent.</p>
+                            <p><strong>Independent media:</strong> 14ymedio (Yoani Sánchez), Diario de Cuba, CubaNet, ADN Cuba, El Toque, Periodismo de Barrio. These outlets are Asifah's primary signal source for Cuban-side dissent reporting.</p>
+                            <p><strong>11J prisoners:</strong> Continued detention of 2021 protesters; ongoing trials are a chronic legitimacy drag on the regime.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.14ymedio.com/" target="_blank" class="report-link">📑 14ymedio</a>
+                            <a href="https://www.cubanet.org/" target="_blank" class="report-link">📑 CubaNet</a>
+                            <a href="https://diariodecuba.com/" target="_blank" class="report-link">📑 Diario de Cuba</a>
+                            <a href="https://www.prisonersdefenders.org/" target="_blank" class="report-link">📑 Prisoners Defenders</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-geography">
+                    <div class="knowledge-header" onclick="toggleCard('geography')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🗺️</span>
+                            <span data-i18n="kbGeoTitle">Strategic Geography</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbGeoContent">
+                            <p><strong>Mariel Port:</strong> Deep-water container port, 30 km west of Havana. Capable of receiving large warships. Chinese / Russian PLA(N) port calls here would be Category 5 escalation events.</p>
+                            <p><strong>GTMO (Guantánamo Bay):</strong> US naval base in southeastern Cuba; longest-leased foreign military installation. Cuba does not recognize the lease.</p>
+                            <p><strong>Florida Straits:</strong> 90-mile maritime border. Migration route + naval encounter zone. US SOUTHCOM and Coast Guard primary AOR.</p>
+                            <p><strong>Cienfuegos &amp; Matanzas:</strong> Primary oil terminal ports. Russian and Iranian tanker arrivals concentrate here. Tanker tracking is a real-time stability indicator.</p>
+                            <p><strong>Lourdes (Bejucal):</strong> Soviet-era SIGINT facility, closed 2002. Reported reactivation rumors recurring; would be a Cold War-style return.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbDisclaimerShort">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.southcom.mil/" target="_blank" class="report-link">📑 US SOUTHCOM</a>
+                            <a href="https://www.uscg.mil/d7/" target="_blank" class="report-link">📑 US Coast Guard 7th District</a>
+                            <a href="https://www.cna.org/" target="_blank" class="report-link">📑 CNA Maritime Analysis</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="knowledge-card collapsed" id="card-methodology">
+                    <div class="knowledge-header" onclick="toggleCard('methodology')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">📐</span>
+                            <span data-i18n="kbMethTitle">Asifah Methodology — Cuba</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content">
+                        <div data-i18n="kbMethContent">
+                            <p><strong>Stability score philosophy:</strong> Cuba's stability is a function of three interlocking dynamics:</p>
+                            <p><strong>1. Regime control vs. fracture</strong> — measured via the rhetoric tracker's regime_fracture vector (cuban_dissidents level minus cuban_military_security level). High fracture = regime losing grip.</p>
+                            <p><strong>2. External pressure</strong> — measured via us_pressure vector (max of US gov / sanctions / military posture levels). Models the Venezuela-2026 regime change pathway.</p>
+                            <p><strong>3. Civilian pressure</strong> — separate index tracking what's actually breaking on the ground (blackouts, fuel, food, medicine). Does not feed rhetoric score; feeds the headline stability composite.</p>
+                            <p><strong>Why Cuba is different:</strong> Most stability models assume civilian pressure → revolution. In Cuba, civilian pressure → emigration. Asifah models this explicitly via the bidirectional migration corridor.</p>
+                            <p><strong>Three-question analytical frame:</strong> Q1) Is Washington escalating? Q2) Is the regime cracking? Q3) Are RU/CN/IR exploiting the friction? All three must be tracked together.</p>
+                        </div>
+                        <div class="open-source-disclaimer" data-i18n="kbMethDisclaimer">* Asifah Analytics methodology is OSINT-derived and explicitly NOT a substitute for classified intelligence assessment.</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ── ARTICLES TABBED ── -->
+        <div class="articles-card">
+            <h2 class="section-heading" data-i18n="artTitle">📰 Recent Articles</h2>
+            <p class="section-subhead" data-i18n="artSubhead">Live feed from Cuban state media, dissident outlets, GDELT (English/Spanish), and Bluesky (Trump Truth Social mirrors). Tab to filter by source language.</p>
+            <div class="tabs-row">
+                <button class="tab-btn active" onclick="switchTab('all',this)" data-i18n="tabAll">All</button>
+                <button class="tab-btn" onclick="switchTab('en',this)" data-i18n="tabEn">🇺🇸 English</button>
+                <button class="tab-btn" onclick="switchTab('es',this)" data-i18n="tabEs">🇪🇸 Spanish</button>
+                <button class="tab-btn" onclick="switchTab('bluesky',this)" data-i18n="tabBluesky">📡 Bluesky</button>
+                <button class="tab-btn" onclick="switchTab('dissident',this)" data-i18n="tabDissident">✊ Dissident</button>
+            </div>
+            <div class="tab-content active" id="tab-all"><div class="articles-empty" data-i18n="artLoading">Loading articles...</div></div>
+            <div class="tab-content" id="tab-en"></div>
+            <div class="tab-content" id="tab-es"></div>
+            <div class="tab-content" id="tab-bluesky"></div>
+            <div class="tab-content" id="tab-dissident"></div>
+        </div>
+
+        <!-- ── FOOTER ── -->
+        <footer>
+            <p><strong>Asifah Analytics</strong> — <span data-i18n="footerBrand">Cuba Stability Index v2.1.0</span></p>
+            <p>asifah-wha-backend.onrender.com · <span data-i18n="footerFreq">Updates every 12 hours · Manual refresh:</span> <a href="https://asifah-wha-backend.onrender.com/api/rhetoric/cuba?force=true" target="_blank" data-i18n="footerForce">force scan</a></p>
+            <p style="font-size:0.7rem;margin-top:8px;color:var(--text-muted);font-style:italic;" data-i18n="footerDisclaimer">
+                OSINT signal aggregation. Does not reflect classified intelligence. Three-question analytical frame is Asifah-specific methodology and should not be cited as official assessment.
+            </p>
+        </footer>
+
+    </div><!-- end main-content -->
 
 </div><!-- end container -->
 
 <script>
-// ========================================
+// ════════════════════════════════════════════════════════════════
 // CONFIG
-// ========================================
+// ════════════════════════════════════════════════════════════════
 var WHA_API = 'https://asifah-wha-backend.onrender.com';
 
-// ========================================
-// TRANSLATIONS
-// ========================================
+// ════════════════════════════════════════════════════════════════
+// I18N TRANSLATIONS — EN / ES / PT
+// ════════════════════════════════════════════════════════════════
 var TRANSLATIONS = {
     en: {
-        backBtn:         '\u2190 Back to WHA Dashboard',
-        themeLabel:      'Theme',
-        pageTitle:       'CUBA STABILITY INDEX',
-        pageSubtitle:    'Multi-Factor Analysis: Regime Stability, Blackouts & Economic Crisis, Protest Suppression & U.S. Relations',
-        lastUpdated:     'Last updated: Loading...',
-        wcLabel:         'U.S. State Department \u2014 Worldwide Caution',
-        wcText:          'The U.S. State Department maintains a standing Worldwide Caution advising U.S. citizens to be aware of the increased risk of terrorist attacks, violence, and other threats worldwide. Review local conditions before travel.',
-        wcBtn:           'VIEW CAUTION \u2192',
-        taLabel:         'U.S. State Department \u2014 Cuba Travel Advisory',
-        taHeadline:      'Exercise Increased Caution in Cuba',
-        taText:          ' due to arbitrary enforcement of local laws. Cuba\'s government arbitrarily enforces laws and may detain U.S. citizens. The U.S. Embassy in Havana has limited ability to assist U.S. citizens.',
-        taBtn:           'VIEW ADVISORY \u2192',
-        rhetoricBannerTitle:    'Cuba Rhetoric & Pressure Tracker',
-        rhetoricBannerSubtitle: 'U.S. Pressure · Regime Fracture · Adversary Access · Red Lines · Cross-Theater',
-        rhetoricLoading:        'Loading\u2026',
-        rhetoricOpenTracker:    'Open Tracker \u2192',
-        rhetoricCardLabel:      'RHETORIC TRACKER',
-        vecUsPressure:          'U.S. Pressure',
-        vecRegimeFracture:      'Regime Fracture',
-        vecAdversaryAccess:     'Adversary Access',
-        rhetoricLoadingActors:  'Loading actor breakdown...',
-        rhetoricRedLinesLabel:  'Red Lines:',
-        rhetoricViewFull:       'View Full Rhetoric Analysis \u2192',
-        mapTitle:        'Cuba \u2014 Strategic Overview',
-        mapSubtitle:     'Strategic locations and key risk zones for Cuba. Data based on open-source reporting.',
-        kbTitle:         'Knowledge Library',
-        kbDisclaimer:    'Background information compiled from open-source research, think tank analysis, and government publications.',
-        kb_regime_title:   'Regime Stability & Leadership',
-        kb_regime_content: '<p><strong>Cuba is governed by the Communist Party of Cuba</strong> under President Miguel D\u00edaz-Canel, who succeeded Ra\u00fal Castro in 2021. The party apparatus, military, and MININT (Ministry of Interior) retain control. The regime faces its most serious legitimacy crisis in decades following the 2021 protests.</p><p><strong>11J Protests (2021):</strong> The July 11, 2021 protests were the largest in Cuba since 1994, erupting across dozens of cities in response to economic hardship and blackouts. Over 1,000 remain imprisoned.</p>',
-        kb_economy_title:   'Energy Crisis & Economic Collapse',
-        kb_economy_content: '<p><strong>Cuba faces a severe energy crisis</strong> with rolling blackouts lasting 12\u201320 hours per day in many provinces. The electricity grid relies on aging Soviet-era infrastructure. In 2024, the national grid collapsed multiple times leaving the entire island without power for days.</p><p><strong>Economic conditions</strong> include hyperinflation, severe shortages of food and medicine, and a rapidly shrinking economy. Remittances from the Cuban diaspora are a lifeline.</p>',
-        kb_us_relations_title:   'U.S.\u2013Cuba Relations',
-        kb_us_relations_content: '<p><strong>U.S.\u2013Cuba relations remain deeply adversarial.</strong> The U.S. embargo (in place since 1962) continues. Cuba is designated a State Sponsor of Terrorism by the U.S. The U.S. Embassy in Havana operates with reduced staff and limited consular services.</p><p><strong>Migration:</strong> Cuba\'s economic and political crisis has driven record migration to the United States, with hundreds of thousands arriving via the southern border.</p>',
-        kb_humanitarian_title:   'Humanitarian Conditions',
-        kb_humanitarian_content: '<p><strong>Cuba\'s healthcare system</strong> \u2014 once a point of national pride \u2014 has deteriorated sharply due to lack of medicines and emigration of trained personnel. Food insecurity is widespread.</p><p><strong>Migration wave:</strong> Cuba lost an estimated 500,000+ people between 2022 and 2024 \u2014 roughly 5% of its population \u2014 to emigration.</p>',
-        disclaimer:      '* Based on open-source intelligence, think tank analysis, and government publications',
-        articlesTitle:   'Recent Cuba OSINT Articles (Last 7 Days)',
-        articlesLoading: 'Loading articles...',
-        footerAboutTitle:   'About This Page',
-        footerAboutText:    'Cuba stability data tracks regime durability, energy crisis indicators, and protest activity via GDELT, NewsAPI, and RSS feeds updated every 12 hours.',
-        footerSourcesTitle: 'Data Sources',
-        footerBackendTitle: 'Backend',
-        footerBackendText:  'Updates every 12 hours',
-        footerPrivacy:   'Privacy Policy',
-        footerContact:   'Contact',
-        footerCoffee:    'Buy Me a Coffee',
-        footerDisclaimer:'\u26a0\ufe0f Research & Educational Use Only. Not for operational decision-making.',
+        // Loading + generic
+        loadingText: 'Loading Cuba stability data...',
+        loading: 'Loading...',
+        themeLabel: 'THEME',
+
+        // Sidebar
+        navDashboards: 'Dashboards',
+        navAfrica: 'Africa',
+        navAsia: 'Asia & Pacific',
+        navEurope: 'Europe',
+        navMideast: 'Middle East',
+        navWHA: 'W. Hemisphere',
+        navMilitary: 'Military Tracker',
+        navRhetoricTrackers: 'Rhetoric Trackers',
+        navMERhetoric: 'ME Rhetoric',
+        navAsiaRhetoric: 'Asia Rhetoric',
+        navEuropeRhetoric: 'Europe Rhetoric',
+        navWHARhetoric: 'WHA Rhetoric',
+        navLive: '● Live',
+        navFuture: '🔒 Future',
+        navYouAreHere: '◉ You are here',
+
+        // Header
+        backBtn: 'Back to WHA Dashboard',
+        pageTitle: 'Cuba Stability Index',
+        pageSubtitle: 'Multi-Factor Analysis: Regime Control vs. Collapse · Civilian Pressure · Adversary Lifelines · Migration Flows · U.S. Pressure',
+        lastUpdatedLoading: 'Last updated: Loading...',
+
+        // Worldwide caution
+        wwTitle: 'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
+        wwText: 'Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.',
+        wwBtn: 'VIEW CAUTION →',
+
+        // Cuba advisory
+        advTitle: 'U.S. STATE DEPARTMENT — CUBA TRAVEL ADVISORY',
+        advLevel: 'LEVEL 2',
+        advText: 'Exercise increased caution in Cuba due to crime and unreliable electrical power. Petty crime, violent crime including armed robbery and homicide, prolonged power outages, and fuel shortages affect daily life. U.S. tourist travel to Cuba is prohibited; OFAC license required for authorized categories.',
+        advBtn: 'VIEW ADVISORY →',
+
+        // Rhetoric link
+        rhTitle: 'Cuba Rhetoric & Pressure Tracker',
+        rhSubtitle: 'U.S. Pressure · Regime Fracture · Adversary Access · Real-time signal analysis',
+        rhBtn: 'Open Tracker →',
+
+        // Stability headline
+        regimeControlLabel: '🏛️ Regime Control Index',
+        regimeControlDetail: 'Higher = regime maintains coercive grip. Lower = fracture risk: protests overwhelming security, mass dissent, regime split.',
+        extPressureLabel: '🇺🇸 External Pressure Index',
+        extPressureDetail: 'Higher = U.S. moving toward forcing regime change (Venezuela 2026 pattern). Lower = baseline diplomatic posture.',
+
+        // Civilian Pressure
+        cpTitle: '🔌 Civilian Pressure Index',
+        cpSubhead: 'Tracks <em>what is actually breaking</em> on the ground — blackouts, fuel rationing, food/medicine shortages, currency collapse. Distinct from rhetoric: rhetoric measures what people <em>say</em>; civilian pressure measures what the population <em>experiences</em>. Cuba\'s stability is fundamentally about civilian infrastructure, and historically people respond to its collapse by leaving (the "boats not bullets" pattern) — not rising up against the regime.',
+        cpScoreLabel: 'Pressure Score / 100',
+        cpEmpty: 'No active civilian pressure signals detected. Monitoring blackout, fuel, and scarcity keywords across English/Spanish sources.',
+
+        // Oil Tanker
+        otTitle: '⛽ Adversary Oil Lifeline — Russia / Iran / Venezuela',
+        otSubhead: 'Russian Rosneft, Iranian, and Venezuelan PDVSA tanker arrivals to Cienfuegos / Matanzas / Havana ports. Oil delivery directly mitigates blackouts (the regime\'s #1 stability lever) and signals adversary access depth. Active tanker traffic = regime can keep the lights on. Tanker drought = blackouts intensify.',
+        otEmpty: 'No tanker arrival signals in current scan window.',
+
+        // Migration
+        migTitle: '↔️ Cuban Migration Corridor — Bidirectional Flows',
+        migSubhead: 'Outbound (Cuba → US/Mexico) = stability pressure: when blackouts and scarcity intensify, Cubans leave on rafts or via the Darién/Central America route. Return flow (deportations, repatriations) = de-escalation: indicates US-Cuba normalization or improving conditions. Mass exodus is Cuba\'s historical safety valve — Mariel 1980, Balseros 1994, post-2022 wave.',
+        migOutLabel: 'Outbound (Pressure)',
+        migOutNote: 'Cubans fleeing — escalates regime instability score',
+        migReturnLabel: 'Return (Relief)',
+        migReturnNote: 'Deportations / repatriation — reduces pressure',
+
+        // Vector snapshot
+        vsTitle: '📊 Three-Vector Snapshot — From Rhetoric Tracker',
+        vsSubhead: 'Live read of Cuba\'s three composite rhetoric vectors. Click "Open Tracker" above for full actor-level analysis.',
+        vsUSPressure: 'U.S. Pressure',
+        vsRegimeFracture: 'Regime Fracture',
+        vsAdversaryAccess: 'Adversary Access',
+
+        redLinesActive: 'Red Lines Active',
+        mapTitle: '🗺️ Cuba Strategic Geography',
+
+        // Knowledge Library
+        kbTitle: '📚 Knowledge Library',
+        kbDisclaimer: 'Background information compiled from open-source research, think tank analysis, and government publications.',
+        kbDisclaimerShort: '* Based on open-source intelligence, think tank analysis, and government publications',
+
+        kbRegimeTitle: 'Cuban Regime & Leadership',
+        kbRegimeContent: '<p><strong>Cuba is governed by the Communist Party of Cuba (PCC)</strong> under President Miguel Díaz-Canel, who succeeded Raúl Castro in 2021. Manuel Marrero serves as Prime Minister. The party apparatus, FAR (military), MININT (interior ministry), and G2 (state security) retain control. The regime faces its most serious legitimacy crisis in decades following the 2021 protests.</p><p><strong>11J Protests (2021):</strong> The July 11, 2021 protests were the largest in Cuba since 1994. Over 1,000 protesters remain imprisoned with sentences up to 25 years.</p><p><strong>Coercive apparatus:</strong> MININT handles civilian suppression; FAR (army) deployment against civilians would be a major red line and historical break.</p>',
+
+        kbEnergyTitle: 'Energy Crisis & Civilian Pressure',
+        kbEnergyContent: '<p><strong>Cuba faces a chronic energy crisis</strong> with rolling blackouts of 12–20 hours per day across many provinces. The grid is built on Soviet-era thermoelectric infrastructure (~60 years old). October 2024 and subsequent months saw multiple complete national grid collapses leaving the entire island dark for days.</p><p><strong>Why this matters analytically:</strong> Blackouts directly degrade healthcare (no refrigeration for vaccines/insulin), food preservation, water supply (electric pumps), and economic activity. Civilian pressure rises with every hour of darkness.</p><p><strong>Adversary lifelines:</strong> Russia (Rosneft) and Iran intermittently send oil tankers to Cienfuegos and Matanzas. Each tanker docking is a regime stability event — when tankers stop arriving, blackouts intensify within weeks.</p>',
+
+        kbUSTitle: 'U.S.–Cuba Relations & Sanctions',
+        kbUSContent: '<p><strong>U.S.–Cuba relations remain deeply adversarial.</strong> The U.S. embargo (in place since 1962) continues. Cuba is designated a State Sponsor of Terrorism. The U.S. Embassy in Havana operates with reduced staff and limited consular services.</p><p><strong>Sanctions regime:</strong> Helms-Burton Act (1996), Cuba Restricted List (military/security entities barred from US transactions), OFAC sanctions on GAESA/CIMEX (military business conglomerates), remittance and travel restrictions.</p><p><strong>Venezuela 2026 precedent:</strong> The U.S. forced regime change in Venezuela in early 2026 (Maduro ousted). Whether this becomes the template for Cuba is the central strategic question for this dashboard.</p>',
+
+        kbAdvTitle: 'Adversary Access — Russia / China / Iran',
+        kbAdvContent: '<p><strong>Russia:</strong> Rosneft oil shipments, intermittent warship Caribbean visits, Lavrov/Medvedev Cuba visits, Lourdes SIGINT base rumors (Cold War-era facility, reactivation would be a Category 5 escalation).</p><p><strong>China:</strong> WSJ 2023 reporting alleged a Chinese SIGINT facility in Cuba. Watch for PLAN warship visits to Mariel Port, Huawei/ZTE infrastructure, Belt and Road inclusion, Xi/Wang Yi Cuba visits. PLAN port call to Mariel = Category 5.</p><p><strong>Iran:</strong> Sparser but recurring. IRGC delegations, Iranian oil tanker dockings (recurring pattern since 2020), Pezeshkian/Khamenei statements on Cuba, Iran-Cuba MOUs.</p><p><strong>Cuba\'s strategic role:</strong> 90 miles from Florida, deep-water Mariel Port, Soviet-legacy SIGINT infrastructure. Adversary footholds here are existential US national security signals.</p>',
+
+        kbMigTitle: 'Migration Patterns & Historical Waves',
+        kbMigContent: '<p><strong>Cuba\'s escape valve:</strong> When civilian pressure builds, Cubans historically leave rather than rise up. Major waves:</p><p><strong>Mariel Boatlift (1980):</strong> 125,000 Cubans to Florida in 6 months. Castro opened the port deliberately to reduce internal pressure.</p><p><strong>Balseros Crisis (1994):</strong> ~35,000 rafters intercepted; led to "wet foot, dry foot" policy.</p><p><strong>Post-2022 wave:</strong> Estimated 500,000+ Cubans (~5% of population) emigrated 2022–2024 via the Darién Gap and Central America route. Largest exodus in Cuban history by absolute numbers.</p><p><strong>Cuban Adjustment Act (1966):</strong> Provides path to permanent residency for Cubans reaching US soil. Periodically modified by parole programs.</p><p><strong>Coast Guard interdiction tempo</strong> is a real-time stability indicator: rising = pressure rising on the island.</p>',
+
+        kbDissTitle: 'Dissident Movement & Independent Media',
+        kbDissContent: '<p><strong>Inverse stability indicator:</strong> High dissident activity does NOT make Cuba stronger — it signals regime weakness. The matrix Asifah tracks: dissident activity vs. security suppression intensity. If dissidents ≥ 3 levels above suppression, the regime is fracturing.</p><p><strong>San Isidro Movement (MSI):</strong> Artists\' collective, formed 2018. Focal point of cultural dissent.</p><p><strong>Independent media:</strong> 14ymedio (Yoani Sánchez), Diario de Cuba, CubaNet, ADN Cuba, El Toque, Periodismo de Barrio. These outlets are Asifah\'s primary signal source for Cuban-side dissent reporting.</p><p><strong>11J prisoners:</strong> Continued detention of 2021 protesters; ongoing trials are a chronic legitimacy drag on the regime.</p>',
+
+        kbGeoTitle: 'Strategic Geography',
+        kbGeoContent: '<p><strong>Mariel Port:</strong> Deep-water container port, 30 km west of Havana. Capable of receiving large warships. Chinese / Russian PLA(N) port calls here would be Category 5 escalation events.</p><p><strong>GTMO (Guantánamo Bay):</strong> US naval base in southeastern Cuba; longest-leased foreign military installation. Cuba does not recognize the lease.</p><p><strong>Florida Straits:</strong> 90-mile maritime border. Migration route + naval encounter zone. US SOUTHCOM and Coast Guard primary AOR.</p><p><strong>Cienfuegos & Matanzas:</strong> Primary oil terminal ports. Russian and Iranian tanker arrivals concentrate here. Tanker tracking is a real-time stability indicator.</p><p><strong>Lourdes (Bejucal):</strong> Soviet-era SIGINT facility, closed 2002. Reported reactivation rumors recurring; would be a Cold War-style return.</p>',
+
+        kbMethTitle: 'Asifah Methodology — Cuba',
+        kbMethContent: '<p><strong>Stability score philosophy:</strong> Cuba\'s stability is a function of three interlocking dynamics:</p><p><strong>1. Regime control vs. fracture</strong> — measured via the rhetoric tracker\'s regime_fracture vector (cuban_dissidents level minus cuban_military_security level). High fracture = regime losing grip.</p><p><strong>2. External pressure</strong> — measured via us_pressure vector (max of US gov / sanctions / military posture levels). Models the Venezuela-2026 regime change pathway.</p><p><strong>3. Civilian pressure</strong> — separate index tracking what\'s actually breaking on the ground (blackouts, fuel, food, medicine). Does not feed rhetoric score; feeds the headline stability composite.</p><p><strong>Why Cuba is different:</strong> Most stability models assume civilian pressure → revolution. In Cuba, civilian pressure → emigration. Asifah models this explicitly via the bidirectional migration corridor.</p><p><strong>Three-question analytical frame:</strong> Q1) Is Washington escalating? Q2) Is the regime cracking? Q3) Are RU/CN/IR exploiting the friction? All three must be tracked together.</p>',
+        kbMethDisclaimer: '* Asifah Analytics methodology is OSINT-derived and explicitly NOT a substitute for classified intelligence assessment.',
+
+        // Articles
+        artTitle: '📰 Recent Articles',
+        artSubhead: 'Live feed from Cuban state media, dissident outlets, GDELT (English/Spanish), and Bluesky (Trump Truth Social mirrors). Tab to filter by source language.',
+        tabAll: 'All',
+        tabEn: '🇺🇸 English',
+        tabEs: '🇪🇸 Spanish',
+        tabBluesky: '📡 Bluesky',
+        tabDissident: '✊ Dissident',
+        artLoading: 'Loading articles...',
+        artEmpty: 'No articles in this category.',
+
+        // Footer
+        footerBrand: 'Cuba Stability Index v2.1.0',
+        footerFreq: 'Updates every 12 hours · Manual refresh:',
+        footerForce: 'force scan',
+        footerDisclaimer: 'OSINT signal aggregation. Does not reflect classified intelligence. Three-question analytical frame is Asifah-specific methodology and should not be cited as official assessment.',
+
+        // Score band labels (used dynamically)
+        rcFirm: 'Firm Grip',
+        rcMaintained: 'Maintained Control',
+        rcStrained: 'Strained',
+        rcFragile: 'Fragile',
+        rcFracture: 'Fracture Risk',
+        epRegimeChange: 'Regime-Change Posture',
+        epActiveConfront: 'Active Confrontation',
+        epElevated: 'Elevated Pressure',
+        epIncreased: 'Increased Posture',
+        epBaseline: 'Baseline Diplomatic',
+
+        // Level labels
+        levelBaseline: 'Baseline',
+        levelRhetoric: 'Rhetoric',
+        levelWarning: 'Warning',
+        levelConfrontation: 'Confrontation',
+        levelActive: 'Active Threat',
+        levelStrike: 'Strike Imminent',
+
+        // Civilian pressure labels
+        cpStable: 'Stable',
+        cpBackgroundStrain: 'Background Strain',
+        cpVisibleStrain: 'Visible Strain',
+        cpActiveCrisis: 'Active Crisis',
+        cpSevereCrisis: 'Severe Crisis',
+        cpCatastrophic: 'Catastrophic',
+
+        // Migration net labels
+        mnQuiet: 'Quiet',
+        mnBackground: 'Background Movement',
+        mnReturn: 'Return Activity',
+        mnOutbound: 'Outbound Pressure',
+        mnMixed: 'Mixed Flows',
+
+        pressure: 'pressure',
     },
+
     es: {
-        backBtn:         '\u2190 Volver al Panel WHA',
-        themeLabel:      'Tema',
-        pageTitle:       '\u00cdNDICE DE ESTABILIDAD DE CUBA',
-        pageSubtitle:    'An\u00e1lisis Multifactorial: Estabilidad del R\u00e9gimen, Apagones y Crisis Econ\u00f3mica, Represi\u00f3n de Protestas y Relaciones con EE.UU.',
-        lastUpdated:     '\u00daltima actualizaci\u00f3n: Cargando...',
-        wcLabel:         'Depto. de Estado de EE.UU. \u2014 Precauci\u00f3n Mundial',
-        wcText:          'El Departamento de Estado de EE.UU. mantiene una Precauci\u00f3n Mundial vigente que aconseja a los ciudadanos estadounidenses estar atentos al mayor riesgo de ataques terroristas, violencia y otras amenazas en todo el mundo.',
-        wcBtn:           'VER PRECAUCI\u00d3N \u2192',
-        taLabel:         'Depto. de Estado de EE.UU. \u2014 Aviso de Viaje a Cuba',
-        taHeadline:      'Extrema Precauciones en Cuba',
-        taText:          ' debido a la aplicaci\u00f3n arbitraria de leyes locales. El gobierno cubano aplica leyes de forma arbitraria y puede detener a ciudadanos estadounidenses.',
-        taBtn:           'VER AVISO \u2192',
-        rhetoricBannerTitle:    'Rastreador de Ret\u00f3rica y Presi\u00f3n sobre Cuba',
-        rhetoricBannerSubtitle: 'Presi\u00f3n EE.UU. · Fractura del R\u00e9gimen · Acceso Adversario · L\u00edneas Rojas · Multi-Teatro',
-        rhetoricLoading:        'Cargando\u2026',
-        rhetoricOpenTracker:    'Abrir Rastreador \u2192',
-        rhetoricCardLabel:      'RASTREADOR DE RET\u00d3RICA',
-        vecUsPressure:          'Presi\u00f3n EE.UU.',
-        vecRegimeFracture:      'Fractura del R\u00e9gimen',
-        vecAdversaryAccess:     'Acceso Adversario',
-        rhetoricLoadingActors:  'Cargando desglose de actores...',
-        rhetoricRedLinesLabel:  'L\u00edneas Rojas:',
-        rhetoricViewFull:       'Ver An\u00e1lisis Completo de Ret\u00f3rica \u2192',
-        mapTitle:        'Cuba \u2014 Panorama Estrat\u00e9gico',
-        mapSubtitle:     'Ubicaciones estrat\u00e9gicas y zonas de riesgo clave para Cuba. Datos basados en informes de fuentes abiertas.',
-        kbTitle:         'Biblioteca de Conocimiento',
-        kbDisclaimer:    'Informaci\u00f3n de contexto compilada de investigaci\u00f3n de fuentes abiertas, an\u00e1lisis de think tanks y publicaciones gubernamentales.',
-        kb_regime_title:   'Estabilidad del R\u00e9gimen y Liderazgo',
-        kb_regime_content: '<p><strong>Cuba est\u00e1 gobernada por el Partido Comunista de Cuba</strong> bajo el presidente Miguel D\u00edaz-Canel. El r\u00e9gimen enfrenta su crisis de legitimidad m\u00e1s grave en d\u00e9cadas tras las protestas de 2021.</p><p><strong>Protestas 11J (2021):</strong> Las protestas del 11 de julio de 2021 fueron las m\u00e1s grandes en Cuba desde 1994. M\u00e1s de 1.000 permanecen encarcelados.</p>',
-        kb_economy_title:   'Crisis Energ\u00e9tica y Colapso Econ\u00f3mico',
-        kb_economy_content: '<p><strong>Cuba enfrenta una grave crisis energ\u00e9tica</strong> con apagones rotativos de 12-20 horas diarias en muchas provincias. En 2024, la red nacional colaps\u00f3 varias veces dejando toda la isla sin electricidad por d\u00edas.</p>',
-        kb_us_relations_title:   'Relaciones EE.UU.\u2013Cuba',
-        kb_us_relations_content: '<p><strong>Las relaciones EE.UU.\u2013Cuba siguen siendo profundamente adversariales.</strong> El embargo de EE.UU. (vigente desde 1962) contin\u00faa. Cuba est\u00e1 designada como Estado Patrocinador del Terrorismo.</p>',
-        kb_humanitarian_title:   'Condiciones Humanitarias',
-        kb_humanitarian_content: '<p><strong>El sistema de salud de Cuba</strong> se ha deteriorado gravemente. La inseguridad alimentaria es generalizada. Cuba perdi\u00f3 aproximadamente 500.000 personas entre 2022 y 2024 debido a la emigraci\u00f3n.</p>',
-        disclaimer:      '* Basado en inteligencia de fuentes abiertas, an\u00e1lisis de think tanks y publicaciones gubernamentales',
-        articlesTitle:   'Art\u00edculos Recientes sobre Cuba (\u00daltimos 7 d\u00edas)',
-        articlesLoading: 'Cargando art\u00edculos...',
-        footerAboutTitle:   'Acerca de Esta P\u00e1gina',
-        footerAboutText:    'Los datos de estabilidad de Cuba se actualizan cada 12 horas.',
-        footerSourcesTitle: 'Fuentes de Datos',
-        footerBackendTitle: 'Backend',
-        footerBackendText:  'Se actualiza cada 12 horas',
-        footerPrivacy:   'Pol\u00edtica de Privacidad',
-        footerContact:   'Contacto',
-        footerCoffee:    'Inv\u00edtame un Caf\u00e9',
-        footerDisclaimer:'\u26a0\ufe0f Solo para Investigaci\u00f3n y Uso Educativo.',
+        loadingText: 'Cargando datos de estabilidad de Cuba...',
+        loading: 'Cargando...',
+        themeLabel: 'TEMA',
+
+        navDashboards: 'Paneles',
+        navAfrica: 'África',
+        navAsia: 'Asia y Pacífico',
+        navEurope: 'Europa',
+        navMideast: 'Oriente Medio',
+        navWHA: 'Hemisferio Occ.',
+        navMilitary: 'Rastreador Militar',
+        navRhetoricTrackers: 'Rastreadores de Retórica',
+        navMERhetoric: 'Retórica OM',
+        navAsiaRhetoric: 'Retórica Asia',
+        navEuropeRhetoric: 'Retórica Europa',
+        navWHARhetoric: 'Retórica HO',
+        navLive: '● En Vivo',
+        navFuture: '🔒 Futuro',
+        navYouAreHere: '◉ Estás aquí',
+
+        backBtn: 'Volver al Panel HO',
+        pageTitle: 'Índice de Estabilidad de Cuba',
+        pageSubtitle: 'Análisis Multi-Factor: Control del Régimen vs. Colapso · Presión Civil · Salvavidas Adversarios · Flujos Migratorios · Presión EE.UU.',
+        lastUpdatedLoading: 'Última actualización: Cargando...',
+
+        wwTitle: 'DEPARTAMENTO DE ESTADO EE.UU. — PRECAUCIÓN MUNDIAL',
+        wwText: 'Tras el inicio de operaciones de combate de EE.UU. en Irán, los estadounidenses en todo el mundo y especialmente en Oriente Medio deben seguir las orientaciones de la embajada o consulado más cercano.',
+        wwBtn: 'VER PRECAUCIÓN →',
+
+        advTitle: 'DEPARTAMENTO DE ESTADO EE.UU. — AVISO DE VIAJE PARA CUBA',
+        advLevel: 'NIVEL 2',
+        advText: 'Ejerza mayor precaución en Cuba debido al crimen y al suministro eléctrico inestable. Robos menores, crímenes violentos incluyendo robos a mano armada y homicidios, apagones prolongados y escasez de combustible afectan la vida diaria. Los viajes turísticos de EE.UU. a Cuba están prohibidos; se requiere licencia OFAC para categorías autorizadas.',
+        advBtn: 'VER AVISO →',
+
+        rhTitle: 'Rastreador de Retórica y Presión de Cuba',
+        rhSubtitle: 'Presión EE.UU. · Fractura del Régimen · Acceso Adversario · Análisis de señales en tiempo real',
+        rhBtn: 'Abrir Rastreador →',
+
+        regimeControlLabel: '🏛️ Índice de Control del Régimen',
+        regimeControlDetail: 'Más alto = el régimen mantiene el control coercitivo. Más bajo = riesgo de fractura: protestas que abruman a la seguridad, disenso masivo, división del régimen.',
+        extPressureLabel: '🇺🇸 Índice de Presión Externa',
+        extPressureDetail: 'Más alto = EE.UU. avanza hacia forzar un cambio de régimen (patrón de Venezuela 2026). Más bajo = postura diplomática base.',
+
+        cpTitle: '🔌 Índice de Presión Civil',
+        cpSubhead: 'Rastrea <em>lo que realmente se está rompiendo</em> en el terreno — apagones, racionamiento de combustible, escasez de comida/medicinas, colapso monetario. Distinto de la retórica: la retórica mide lo que la gente <em>dice</em>; la presión civil mide lo que la población <em>experimenta</em>. La estabilidad de Cuba depende fundamentalmente de la infraestructura civil, e históricamente la gente responde a su colapso yéndose (el patrón "balsas no balas") — no levantándose contra el régimen.',
+        cpScoreLabel: 'Puntuación de Presión / 100',
+        cpEmpty: 'No se detectaron señales activas de presión civil. Monitoreando palabras clave de apagones, combustible y escasez en fuentes en inglés/español.',
+
+        otTitle: '⛽ Salvavidas Petrolero Adversario — Rusia / Irán / Venezuela',
+        otSubhead: 'Llegadas de tanqueros de Rosneft (Rusia), iraníes y PDVSA (Venezuela) a los puertos de Cienfuegos / Matanzas / La Habana. La entrega de petróleo mitiga directamente los apagones (la palanca de estabilidad #1 del régimen) y señala la profundidad del acceso adversario. Tráfico activo de tanqueros = el régimen puede mantener las luces encendidas. Sequía de tanqueros = los apagones se intensifican.',
+        otEmpty: 'No hay señales de llegadas de tanqueros en la ventana de escaneo actual.',
+
+        migTitle: '↔️ Corredor Migratorio Cubano — Flujos Bidireccionales',
+        migSubhead: 'Salida (Cuba → EE.UU./México) = presión de estabilidad: cuando los apagones y la escasez se intensifican, los cubanos se van en balsas o vía Darién/ruta centroamericana. Flujo de retorno (deportaciones, repatriaciones) = des-escalada: indica normalización EE.UU.-Cuba o condiciones mejorando. El éxodo masivo es la válvula de seguridad histórica de Cuba — Mariel 1980, Balseros 1994, ola post-2022.',
+        migOutLabel: 'Salida (Presión)',
+        migOutNote: 'Cubanos huyendo — escala la puntuación de inestabilidad del régimen',
+        migReturnLabel: 'Retorno (Alivio)',
+        migReturnNote: 'Deportaciones / repatriación — reduce la presión',
+
+        vsTitle: '📊 Resumen de Tres Vectores — Del Rastreador de Retórica',
+        vsSubhead: 'Lectura en vivo de los tres vectores compuestos de retórica de Cuba. Haga clic en "Abrir Rastreador" arriba para análisis completo a nivel de actor.',
+        vsUSPressure: 'Presión EE.UU.',
+        vsRegimeFracture: 'Fractura del Régimen',
+        vsAdversaryAccess: 'Acceso Adversario',
+
+        redLinesActive: 'Líneas Rojas Activas',
+        mapTitle: '🗺️ Geografía Estratégica de Cuba',
+
+        kbTitle: '📚 Biblioteca de Conocimiento',
+        kbDisclaimer: 'Información de fondo compilada de investigación de fuentes abiertas, análisis de think tanks y publicaciones gubernamentales.',
+        kbDisclaimerShort: '* Basado en inteligencia de fuentes abiertas, análisis de think tanks y publicaciones gubernamentales',
+
+        kbRegimeTitle: 'Régimen Cubano y Liderazgo',
+        kbRegimeContent: '<p><strong>Cuba es gobernada por el Partido Comunista de Cuba (PCC)</strong> bajo el presidente Miguel Díaz-Canel, quien sucedió a Raúl Castro en 2021. Manuel Marrero es Primer Ministro. El aparato del partido, las FAR (militar), MININT (ministerio del interior) y G2 (seguridad del estado) mantienen el control. El régimen enfrenta su crisis de legitimidad más seria en décadas tras las protestas de 2021.</p><p><strong>Protestas 11J (2021):</strong> Las protestas del 11 de julio de 2021 fueron las más grandes en Cuba desde 1994. Más de 1,000 manifestantes permanecen encarcelados con sentencias de hasta 25 años.</p><p><strong>Aparato coercitivo:</strong> MININT maneja la represión civil; el despliegue de las FAR (ejército) contra civiles sería una línea roja mayor y un quiebre histórico.</p>',
+
+        kbEnergyTitle: 'Crisis Energética y Presión Civil',
+        kbEnergyContent: '<p><strong>Cuba enfrenta una crisis energética crónica</strong> con apagones rotativos de 12–20 horas diarias en muchas provincias. La red está construida sobre infraestructura termoeléctrica de la era soviética (~60 años). Octubre de 2024 y meses subsiguientes vieron múltiples colapsos completos de la red nacional dejando a toda la isla sin electricidad por días.</p><p><strong>Por qué esto importa analíticamente:</strong> Los apagones degradan directamente la salud (sin refrigeración para vacunas/insulina), la conservación de alimentos, el suministro de agua (bombas eléctricas) y la actividad económica. La presión civil aumenta con cada hora de oscuridad.</p><p><strong>Salvavidas adversarios:</strong> Rusia (Rosneft) e Irán envían intermitentemente tanqueros petroleros a Cienfuegos y Matanzas. Cada atraque de tanquero es un evento de estabilidad del régimen — cuando dejan de llegar tanqueros, los apagones se intensifican en semanas.</p>',
+
+        kbUSTitle: 'Relaciones EE.UU.–Cuba y Sanciones',
+        kbUSContent: '<p><strong>Las relaciones EE.UU.–Cuba siguen siendo profundamente adversarias.</strong> El embargo de EE.UU. (vigente desde 1962) continúa. Cuba está designada como Estado Patrocinador del Terrorismo. La Embajada de EE.UU. en La Habana opera con personal reducido y servicios consulares limitados.</p><p><strong>Régimen de sanciones:</strong> Ley Helms-Burton (1996), Lista Restringida de Cuba (entidades militares/de seguridad excluidas de transacciones con EE.UU.), sanciones OFAC sobre GAESA/CIMEX (conglomerados militares de negocios), restricciones de remesas y viajes.</p><p><strong>Precedente Venezuela 2026:</strong> EE.UU. forzó el cambio de régimen en Venezuela a principios de 2026 (Maduro derrocado). Si esto se convierte en plantilla para Cuba es la pregunta estratégica central de este panel.</p>',
+
+        kbAdvTitle: 'Acceso Adversario — Rusia / China / Irán',
+        kbAdvContent: '<p><strong>Rusia:</strong> Embarques petroleros de Rosneft, visitas intermitentes de buques de guerra al Caribe, visitas de Lavrov/Medvedev a Cuba, rumores de la base SIGINT de Lourdes (instalación de la Guerra Fría, su reactivación sería una escalada de Categoría 5).</p><p><strong>China:</strong> Reportes del WSJ en 2023 alegaron una instalación SIGINT china en Cuba. Atención a visitas de buques PLAN al Puerto de Mariel, infraestructura Huawei/ZTE, inclusión en Belt and Road, visitas de Xi/Wang Yi a Cuba. Visita PLAN a Mariel = Categoría 5.</p><p><strong>Irán:</strong> Más escaso pero recurrente. Delegaciones del IRGC, atraques de tanqueros petroleros iraníes (patrón recurrente desde 2020), declaraciones de Pezeshkian/Khamenei sobre Cuba, MOUs Irán-Cuba.</p><p><strong>Rol estratégico de Cuba:</strong> 90 millas de Florida, Puerto de Mariel de aguas profundas, infraestructura SIGINT legado soviético. Asentamientos adversarios aquí son señales existenciales de seguridad nacional de EE.UU.</p>',
+
+        kbMigTitle: 'Patrones Migratorios y Olas Históricas',
+        kbMigContent: '<p><strong>Válvula de escape de Cuba:</strong> Cuando se acumula la presión civil, los cubanos históricamente se van en lugar de levantarse. Olas mayores:</p><p><strong>Éxodo del Mariel (1980):</strong> 125,000 cubanos a Florida en 6 meses. Castro abrió el puerto deliberadamente para reducir la presión interna.</p><p><strong>Crisis de los Balseros (1994):</strong> ~35,000 balseros interceptados; llevó a la política de "pies mojados, pies secos".</p><p><strong>Ola post-2022:</strong> Se estiman 500,000+ cubanos (~5% de la población) emigraron 2022–2024 vía el Tapón del Darién y la ruta centroamericana. El mayor éxodo en la historia cubana en números absolutos.</p><p><strong>Ley de Ajuste Cubano (1966):</strong> Ofrece camino a residencia permanente para cubanos que llegan a suelo estadounidense. Modificada periódicamente por programas de parole.</p><p><strong>El ritmo de interdicción de la Guardia Costera</strong> es un indicador de estabilidad en tiempo real: subiendo = presión subiendo en la isla.</p>',
+
+        kbDissTitle: 'Movimiento Disidente y Medios Independientes',
+        kbDissContent: '<p><strong>Indicador inverso de estabilidad:</strong> Alta actividad disidente NO hace a Cuba más fuerte — señala debilidad del régimen. La matriz que Asifah rastrea: actividad disidente vs. intensidad de represión de seguridad. Si los disidentes ≥ 3 niveles sobre la represión, el régimen está fracturándose.</p><p><strong>Movimiento San Isidro (MSI):</strong> Colectivo de artistas, formado en 2018. Punto focal del disenso cultural.</p><p><strong>Medios independientes:</strong> 14ymedio (Yoani Sánchez), Diario de Cuba, CubaNet, ADN Cuba, El Toque, Periodismo de Barrio. Estos medios son la fuente principal de Asifah para reportajes de disenso desde Cuba.</p><p><strong>Presos del 11J:</strong> Detención continuada de manifestantes de 2021; los juicios en curso son un drag crónico de legitimidad sobre el régimen.</p>',
+
+        kbGeoTitle: 'Geografía Estratégica',
+        kbGeoContent: '<p><strong>Puerto de Mariel:</strong> Puerto de contenedores de aguas profundas, 30 km al oeste de La Habana. Capaz de recibir grandes buques de guerra. Visitas de PLA(N) chinos / rusos aquí serían eventos de escalada de Categoría 5.</p><p><strong>GTMO (Bahía de Guantánamo):</strong> Base naval estadounidense en el sureste de Cuba; instalación militar extranjera arrendada por más tiempo. Cuba no reconoce el arriendo.</p><p><strong>Estrecho de Florida:</strong> Frontera marítima de 90 millas. Ruta migratoria + zona de encuentros navales. AOR primario de SOUTHCOM y Guardia Costera de EE.UU.</p><p><strong>Cienfuegos y Matanzas:</strong> Puertos terminales petroleros principales. Las llegadas de tanqueros rusos e iraníes se concentran aquí. El rastreo de tanqueros es un indicador de estabilidad en tiempo real.</p><p><strong>Lourdes (Bejucal):</strong> Instalación SIGINT de la era soviética, cerrada en 2002. Rumores recurrentes de reactivación; sería un retorno estilo Guerra Fría.</p>',
+
+        kbMethTitle: 'Metodología Asifah — Cuba',
+        kbMethContent: '<p><strong>Filosofía de puntuación de estabilidad:</strong> La estabilidad de Cuba es función de tres dinámicas entrelazadas:</p><p><strong>1. Control vs. fractura del régimen</strong> — medido vía el vector regime_fracture del rastreador de retórica (nivel de cuban_dissidents menos nivel de cuban_military_security). Alta fractura = régimen perdiendo control.</p><p><strong>2. Presión externa</strong> — medida vía vector us_pressure (máximo de niveles de gobierno EE.UU. / sanciones / postura militar). Modela el camino de cambio de régimen Venezuela-2026.</p><p><strong>3. Presión civil</strong> — índice separado rastreando lo que realmente se rompe en el terreno (apagones, combustible, comida, medicina). No alimenta puntuación de retórica; alimenta el compuesto de estabilidad principal.</p><p><strong>Por qué Cuba es diferente:</strong> La mayoría de modelos de estabilidad asumen presión civil → revolución. En Cuba, presión civil → emigración. Asifah modela esto explícitamente vía el corredor migratorio bidireccional.</p><p><strong>Marco analítico de tres preguntas:</strong> P1) ¿Está escalando Washington? P2) ¿Está agrietándose el régimen? P3) ¿Están RU/CN/IR explotando la fricción? Las tres deben rastrearse juntas.</p>',
+        kbMethDisclaimer: '* La metodología de Asifah Analytics se deriva de OSINT y NO es sustituto de evaluación de inteligencia clasificada.',
+
+        artTitle: '📰 Artículos Recientes',
+        artSubhead: 'Feed en vivo de medios estatales cubanos, medios disidentes, GDELT (inglés/español), y Bluesky (espejos de Trump Truth Social). Tab para filtrar por idioma.',
+        tabAll: 'Todos',
+        tabEn: '🇺🇸 Inglés',
+        tabEs: '🇪🇸 Español',
+        tabBluesky: '📡 Bluesky',
+        tabDissident: '✊ Disidente',
+        artLoading: 'Cargando artículos...',
+        artEmpty: 'No hay artículos en esta categoría.',
+
+        footerBrand: 'Índice de Estabilidad de Cuba v2.1.0',
+        footerFreq: 'Actualiza cada 12 horas · Refresco manual:',
+        footerForce: 'forzar escaneo',
+        footerDisclaimer: 'Agregación de señales OSINT. No refleja inteligencia clasificada. El marco analítico de tres preguntas es metodología específica de Asifah y no debe citarse como evaluación oficial.',
+
+        rcFirm: 'Control Firme',
+        rcMaintained: 'Control Mantenido',
+        rcStrained: 'Tensionado',
+        rcFragile: 'Frágil',
+        rcFracture: 'Riesgo de Fractura',
+        epRegimeChange: 'Postura de Cambio de Régimen',
+        epActiveConfront: 'Confrontación Activa',
+        epElevated: 'Presión Elevada',
+        epIncreased: 'Postura Incrementada',
+        epBaseline: 'Diplomática Base',
+
+        levelBaseline: 'Base',
+        levelRhetoric: 'Retórica',
+        levelWarning: 'Alerta',
+        levelConfrontation: 'Confrontación',
+        levelActive: 'Amenaza Activa',
+        levelStrike: 'Ataque Inminente',
+
+        cpStable: 'Estable',
+        cpBackgroundStrain: 'Tensión de Fondo',
+        cpVisibleStrain: 'Tensión Visible',
+        cpActiveCrisis: 'Crisis Activa',
+        cpSevereCrisis: 'Crisis Severa',
+        cpCatastrophic: 'Catastrófica',
+
+        mnQuiet: 'Tranquilo',
+        mnBackground: 'Movimiento de Fondo',
+        mnReturn: 'Actividad de Retorno',
+        mnOutbound: 'Presión de Salida',
+        mnMixed: 'Flujos Mixtos',
+
+        pressure: 'presión',
     },
+
     pt: {
-        backBtn:         '\u2190 Voltar ao Painel WHA',
-        themeLabel:      'Tema',
-        pageTitle:       '\u00cdNDICE DE ESTABILIDADE DE CUBA',
-        pageSubtitle:    'An\u00e1lise Multifatorial: Estabilidade do Regime, Apag\u00f5es e Crise Econ\u00f4mica, Repress\u00e3o de Protestos e Rela\u00e7\u00f5es com os EUA',
-        lastUpdated:     '\u00daltima atualiza\u00e7\u00e3o: Carregando...',
-        wcLabel:         'Depto. de Estado dos EUA \u2014 Cautela Mundial',
-        wcText:          'O Departamento de Estado dos EUA mant\u00e9m uma Cautela Mundial vigente aconselhando os cidad\u00e3os americanos a estarem cientes do maior risco de ataques terroristas, viol\u00eancia e outras amea\u00e7as em todo o mundo.',
-        wcBtn:           'VER CAUTELA \u2192',
-        taLabel:         'Depto. de Estado dos EUA \u2014 Aviso de Viagem a Cuba',
-        taHeadline:      'Tenha Cautela Redobrada em Cuba',
-        taText:          ' devido \u00e0 aplica\u00e7\u00e3o arbitr\u00e1ria de leis locais. O governo cubano aplica leis de forma arbitr\u00e1ria e pode deter cidad\u00e3os americanos.',
-        taBtn:           'VER AVISO \u2192',
-        rhetoricBannerTitle:    'Rastreador de Ret\u00f3rica e Press\u00e3o sobre Cuba',
-        rhetoricBannerSubtitle: 'Press\u00e3o EUA · Fratura do Regime · Acesso de Advers\u00e1rios · Linhas Vermelhas · Multi-Teatro',
-        rhetoricLoading:        'Carregando\u2026',
-        rhetoricOpenTracker:    'Abrir Rastreador \u2192',
-        rhetoricCardLabel:      'RASTREADOR DE RET\u00d3RICA',
-        vecUsPressure:          'Press\u00e3o EUA',
-        vecRegimeFracture:      'Fratura do Regime',
-        vecAdversaryAccess:     'Acesso de Advers\u00e1rios',
-        rhetoricLoadingActors:  'Carregando detalhamento de atores...',
-        rhetoricRedLinesLabel:  'Linhas Vermelhas:',
-        rhetoricViewFull:       'Ver An\u00e1lise Completa de Ret\u00f3rica \u2192',
-        mapTitle:        'Cuba \u2014 Vis\u00e3o Geral Estrat\u00e9gica',
-        mapSubtitle:     'Localiza\u00e7\u00f5es estrat\u00e9gicas e zonas de risco chave para Cuba. Dados baseados em fontes abertas.',
-        kbTitle:         'Biblioteca de Conhecimento',
-        kbDisclaimer:    'Informa\u00e7\u00f5es de contexto compiladas de pesquisa de fontes abertas, an\u00e1lise de think tanks e publica\u00e7\u00f5es governamentais.',
-        kb_regime_title:   'Estabilidade do Regime e Lideran\u00e7a',
-        kb_regime_content: '<p><strong>Cuba \u00e9 governada pelo Partido Comunista de Cuba</strong> sob o presidente Miguel D\u00edaz-Canel. O regime enfrenta sua crise de legitimidade mais grave em d\u00e9cadas ap\u00f3s os protestos de 2021.</p>',
-        kb_economy_title:   'Crise Energ\u00e9tica e Colapso Econ\u00f4mico',
-        kb_economy_content: '<p><strong>Cuba enfrenta uma grave crise energ\u00e9tica</strong> com apag\u00f5es rotativos de 12-20 horas di\u00e1rias em muitas prov\u00edncias.</p>',
-        kb_us_relations_title:   'Rela\u00e7\u00f5es EUA\u2013Cuba',
-        kb_us_relations_content: '<p><strong>As rela\u00e7\u00f5es EUA\u2013Cuba permanecem profundamente advers\u00e1rias.</strong> O embargo dos EUA (em vigor desde 1962) continua. Cuba \u00e9 designada como Patrocinador Estatal do Terrorismo.</p>',
-        kb_humanitarian_title:   'Condi\u00e7\u00f5es Humanit\u00e1rias',
-        kb_humanitarian_content: '<p><strong>O sistema de sa\u00fade de Cuba</strong> deteriorou-se acentuadamente. A inseguran\u00e7a alimentar \u00e9 generalizada. Cuba perdeu aproximadamente 500.000 pessoas entre 2022 e 2024 devido \u00e0 emigra\u00e7\u00e3o.</p>',
-        disclaimer:      '* Baseado em intelig\u00eancia de fontes abertas, an\u00e1lise de think tanks e publica\u00e7\u00f5es governamentais',
-        articlesTitle:   'Artigos Recentes sobre Cuba (\u00daltimos 7 dias)',
-        articlesLoading: 'Carregando artigos...',
-        footerAboutTitle:   'Sobre Esta P\u00e1gina',
-        footerAboutText:    'Os dados de estabilidade de Cuba s\u00e3o atualizados a cada 12 horas.',
-        footerSourcesTitle: 'Fontes de Dados',
-        footerBackendTitle: 'Backend',
-        footerBackendText:  'Atualizado a cada 12 horas',
-        footerPrivacy:   'Pol\u00edtica de Privacidade',
-        footerContact:   'Contato',
-        footerCoffee:    'Me Pague um Caf\u00e9',
-        footerDisclaimer:'\u26a0\ufe0f Apenas para Pesquisa e Uso Educacional.',
+        loadingText: 'Carregando dados de estabilidade de Cuba...',
+        loading: 'Carregando...',
+        themeLabel: 'TEMA',
+
+        navDashboards: 'Painéis',
+        navAfrica: 'África',
+        navAsia: 'Ásia e Pacífico',
+        navEurope: 'Europa',
+        navMideast: 'Oriente Médio',
+        navWHA: 'Hemisfério Oc.',
+        navMilitary: 'Rastreador Militar',
+        navRhetoricTrackers: 'Rastreadores de Retórica',
+        navMERhetoric: 'Retórica OM',
+        navAsiaRhetoric: 'Retórica Ásia',
+        navEuropeRhetoric: 'Retórica Europa',
+        navWHARhetoric: 'Retórica HO',
+        navLive: '● Ao Vivo',
+        navFuture: '🔒 Futuro',
+        navYouAreHere: '◉ Você está aqui',
+
+        backBtn: 'Voltar ao Painel HO',
+        pageTitle: 'Índice de Estabilidade de Cuba',
+        pageSubtitle: 'Análise Multi-Fator: Controle do Regime vs. Colapso · Pressão Civil · Salva-vidas Adversários · Fluxos Migratórios · Pressão dos EUA',
+        lastUpdatedLoading: 'Última atualização: Carregando...',
+
+        wwTitle: 'DEPARTAMENTO DE ESTADO DOS EUA — CAUTELA MUNDIAL',
+        wwText: 'Após o lançamento de operações de combate dos EUA no Irã, americanos em todo o mundo e especialmente no Oriente Médio devem seguir orientação da embaixada ou consulado dos EUA mais próximo.',
+        wwBtn: 'VER CAUTELA →',
+
+        advTitle: 'DEPARTAMENTO DE ESTADO DOS EUA — AVISO DE VIAGEM PARA CUBA',
+        advLevel: 'NÍVEL 2',
+        advText: 'Exerça maior cautela em Cuba devido a crime e suprimento elétrico não confiável. Crimes menores, crimes violentos incluindo roubo armado e homicídio, apagões prolongados e escassez de combustível afetam a vida diária. Viagens turísticas dos EUA a Cuba são proibidas; licença OFAC necessária para categorias autorizadas.',
+        advBtn: 'VER AVISO →',
+
+        rhTitle: 'Rastreador de Retórica e Pressão de Cuba',
+        rhSubtitle: 'Pressão dos EUA · Fratura do Regime · Acesso Adversário · Análise de sinais em tempo real',
+        rhBtn: 'Abrir Rastreador →',
+
+        regimeControlLabel: '🏛️ Índice de Controle do Regime',
+        regimeControlDetail: 'Mais alto = regime mantém controle coercitivo. Mais baixo = risco de fratura: protestos sobrecarregando segurança, dissidência em massa, divisão do regime.',
+        extPressureLabel: '🇺🇸 Índice de Pressão Externa',
+        extPressureDetail: 'Mais alto = EUA avançando para forçar mudança de regime (padrão Venezuela 2026). Mais baixo = postura diplomática base.',
+
+        cpTitle: '🔌 Índice de Pressão Civil',
+        cpSubhead: 'Rastreia <em>o que está realmente quebrando</em> no terreno — apagões, racionamento de combustível, escassez de comida/remédios, colapso monetário. Distinto da retórica: a retórica mede o que as pessoas <em>dizem</em>; a pressão civil mede o que a população <em>experiencia</em>. A estabilidade de Cuba é fundamentalmente sobre infraestrutura civil, e historicamente o povo responde ao seu colapso indo embora (o padrão "barcos não balas") — não se levantando contra o regime.',
+        cpScoreLabel: 'Pontuação de Pressão / 100',
+        cpEmpty: 'Nenhum sinal ativo de pressão civil detectado. Monitorando palavras-chave de apagões, combustível e escassez em fontes em inglês/espanhol.',
+
+        otTitle: '⛽ Salva-vidas Petrolífero Adversário — Rússia / Irã / Venezuela',
+        otSubhead: 'Chegadas de petroleiros da Rosneft russa, iranianos e PDVSA venezuelanos aos portos de Cienfuegos / Matanzas / Havana. A entrega de petróleo mitiga diretamente os apagões (a alavanca de estabilidade #1 do regime) e sinaliza a profundidade do acesso adversário. Tráfego ativo de petroleiros = regime consegue manter as luzes acesas. Seca de petroleiros = apagões intensificam.',
+        otEmpty: 'Nenhum sinal de chegada de petroleiros na janela de varredura atual.',
+
+        migTitle: '↔️ Corredor Migratório Cubano — Fluxos Bidirecionais',
+        migSubhead: 'Saída (Cuba → EUA/México) = pressão de estabilidade: quando apagões e escassez se intensificam, cubanos partem em jangadas ou via Darién/rota da América Central. Fluxo de retorno (deportações, repatriações) = desescalada: indica normalização EUA-Cuba ou condições melhorando. Êxodo em massa é a válvula de segurança histórica de Cuba — Mariel 1980, Balseros 1994, onda pós-2022.',
+        migOutLabel: 'Saída (Pressão)',
+        migOutNote: 'Cubanos fugindo — escala a pontuação de instabilidade do regime',
+        migReturnLabel: 'Retorno (Alívio)',
+        migReturnNote: 'Deportações / repatriação — reduz a pressão',
+
+        vsTitle: '📊 Resumo de Três Vetores — Do Rastreador de Retórica',
+        vsSubhead: 'Leitura ao vivo dos três vetores compostos de retórica de Cuba. Clique em "Abrir Rastreador" acima para análise completa em nível de ator.',
+        vsUSPressure: 'Pressão dos EUA',
+        vsRegimeFracture: 'Fratura do Regime',
+        vsAdversaryAccess: 'Acesso Adversário',
+
+        redLinesActive: 'Linhas Vermelhas Ativas',
+        mapTitle: '🗺️ Geografia Estratégica de Cuba',
+
+        kbTitle: '📚 Biblioteca de Conhecimento',
+        kbDisclaimer: 'Informações de fundo compiladas de pesquisa de fonte aberta, análise de think tanks e publicações governamentais.',
+        kbDisclaimerShort: '* Baseado em inteligência de fonte aberta, análise de think tanks e publicações governamentais',
+
+        kbRegimeTitle: 'Regime Cubano e Liderança',
+        kbRegimeContent: '<p><strong>Cuba é governada pelo Partido Comunista de Cuba (PCC)</strong> sob o presidente Miguel Díaz-Canel, que sucedeu Raúl Castro em 2021. Manuel Marrero serve como Primeiro-Ministro. O aparato do partido, FAR (militar), MININT (ministério do interior) e G2 (segurança do estado) mantêm o controle. O regime enfrenta sua mais séria crise de legitimidade em décadas após os protestos de 2021.</p><p><strong>Protestos 11J (2021):</strong> Os protestos de 11 de julho de 2021 foram os maiores em Cuba desde 1994. Mais de 1.000 manifestantes permanecem presos com sentenças de até 25 anos.</p><p><strong>Aparato coercitivo:</strong> MININT trata de repressão civil; o desdobramento das FAR (exército) contra civis seria uma linha vermelha maior e ruptura histórica.</p>',
+
+        kbEnergyTitle: 'Crise Energética e Pressão Civil',
+        kbEnergyContent: '<p><strong>Cuba enfrenta uma crise energética crônica</strong> com apagões rotativos de 12–20 horas por dia em muitas províncias. A rede é construída sobre infraestrutura termoelétrica da era soviética (~60 anos). Outubro de 2024 e meses subsequentes viram múltiplos colapsos completos da rede nacional deixando toda a ilha sem luz por dias.</p><p><strong>Por que isso importa analiticamente:</strong> Apagões degradam diretamente a saúde (sem refrigeração para vacinas/insulina), conservação de alimentos, abastecimento de água (bombas elétricas) e atividade econômica. A pressão civil aumenta a cada hora de escuridão.</p><p><strong>Salva-vidas adversários:</strong> Rússia (Rosneft) e Irã enviam intermitentemente petroleiros a Cienfuegos e Matanzas. Cada atracação de petroleiro é um evento de estabilidade do regime — quando os petroleiros param de chegar, os apagões se intensificam em semanas.</p>',
+
+        kbUSTitle: 'Relações EUA–Cuba e Sanções',
+        kbUSContent: '<p><strong>Relações EUA–Cuba permanecem profundamente adversárias.</strong> O embargo dos EUA (em vigor desde 1962) continua. Cuba é designada como Estado Patrocinador do Terrorismo. A Embaixada dos EUA em Havana opera com pessoal reduzido e serviços consulares limitados.</p><p><strong>Regime de sanções:</strong> Lei Helms-Burton (1996), Lista Restrita de Cuba (entidades militares/de segurança barradas de transações com os EUA), sanções OFAC sobre GAESA/CIMEX (conglomerados militares de negócios), restrições de remessas e viagens.</p><p><strong>Precedente Venezuela 2026:</strong> Os EUA forçaram mudança de regime na Venezuela no início de 2026 (Maduro deposto). Se isso se torna o modelo para Cuba é a questão estratégica central deste painel.</p>',
+
+        kbAdvTitle: 'Acesso Adversário — Rússia / China / Irã',
+        kbAdvContent: '<p><strong>Rússia:</strong> Embarques de petróleo da Rosneft, visitas intermitentes de navios de guerra ao Caribe, visitas de Lavrov/Medvedev a Cuba, rumores da base SIGINT de Lourdes (instalação da Guerra Fria, sua reativação seria escalada de Categoria 5).</p><p><strong>China:</strong> Reportagem do WSJ em 2023 alegou uma instalação SIGINT chinesa em Cuba. Atenção a visitas de navios PLAN ao Porto de Mariel, infraestrutura Huawei/ZTE, inclusão na Belt and Road, visitas de Xi/Wang Yi a Cuba. Visita PLAN a Mariel = Categoria 5.</p><p><strong>Irã:</strong> Mais esparso mas recorrente. Delegações IRGC, atracações de petroleiros iranianos (padrão recorrente desde 2020), declarações de Pezeshkian/Khamenei sobre Cuba, MOUs Irã-Cuba.</p><p><strong>Papel estratégico de Cuba:</strong> 90 milhas da Flórida, Porto de Mariel de águas profundas, infraestrutura SIGINT de legado soviético. Posicionamentos adversários aqui são sinais existenciais de segurança nacional dos EUA.</p>',
+
+        kbMigTitle: 'Padrões Migratórios e Ondas Históricas',
+        kbMigContent: '<p><strong>Válvula de escape de Cuba:</strong> Quando a pressão civil se acumula, cubanos historicamente partem em vez de se levantarem. Ondas maiores:</p><p><strong>Êxodo de Mariel (1980):</strong> 125.000 cubanos para a Flórida em 6 meses. Castro abriu o porto deliberadamente para reduzir a pressão interna.</p><p><strong>Crise dos Balseros (1994):</strong> ~35.000 balseiros interceptados; levou à política de "pés molhados, pés secos".</p><p><strong>Onda pós-2022:</strong> Estimados 500.000+ cubanos (~5% da população) emigraram 2022–2024 via Tampão de Darién e rota da América Central. Maior êxodo na história cubana em números absolutos.</p><p><strong>Lei de Ajuste Cubano (1966):</strong> Fornece caminho para residência permanente para cubanos chegando em solo americano. Modificada periodicamente por programas de parole.</p><p><strong>O ritmo de interdição da Guarda Costeira</strong> é um indicador de estabilidade em tempo real: subindo = pressão subindo na ilha.</p>',
+
+        kbDissTitle: 'Movimento Dissidente e Mídia Independente',
+        kbDissContent: '<p><strong>Indicador inverso de estabilidade:</strong> Alta atividade dissidente NÃO faz Cuba mais forte — sinaliza fraqueza do regime. A matriz que Asifah rastreia: atividade dissidente vs. intensidade de repressão de segurança. Se dissidentes ≥ 3 níveis acima da repressão, o regime está fraturando.</p><p><strong>Movimento San Isidro (MSI):</strong> Coletivo de artistas, formado em 2018. Ponto focal do dissenso cultural.</p><p><strong>Mídia independente:</strong> 14ymedio (Yoani Sánchez), Diario de Cuba, CubaNet, ADN Cuba, El Toque, Periodismo de Barrio. Esses veículos são a fonte primária de Asifah para reportagem de dissenso do lado cubano.</p><p><strong>Presos do 11J:</strong> Detenção continuada de manifestantes de 2021; julgamentos em curso são um peso crônico de legitimidade sobre o regime.</p>',
+
+        kbGeoTitle: 'Geografia Estratégica',
+        kbGeoContent: '<p><strong>Porto de Mariel:</strong> Porto de contêineres de águas profundas, 30 km a oeste de Havana. Capaz de receber grandes navios de guerra. Visitas de PLA(N) chinesas / russas aqui seriam eventos de escalada de Categoria 5.</p><p><strong>GTMO (Baía de Guantánamo):</strong> Base naval americana no sudeste de Cuba; instalação militar estrangeira arrendada por mais tempo. Cuba não reconhece o arrendamento.</p><p><strong>Estreito da Flórida:</strong> Fronteira marítima de 90 milhas. Rota migratória + zona de encontro naval. AOR primário do SOUTHCOM e Guarda Costeira dos EUA.</p><p><strong>Cienfuegos e Matanzas:</strong> Portos terminais petrolíferos primários. Chegadas de petroleiros russos e iranianos se concentram aqui. Rastreamento de petroleiros é um indicador de estabilidade em tempo real.</p><p><strong>Lourdes (Bejucal):</strong> Instalação SIGINT da era soviética, fechada em 2002. Rumores recorrentes de reativação; seria um retorno estilo Guerra Fria.</p>',
+
+        kbMethTitle: 'Metodologia Asifah — Cuba',
+        kbMethContent: '<p><strong>Filosofia da pontuação de estabilidade:</strong> A estabilidade de Cuba é função de três dinâmicas entrelaçadas:</p><p><strong>1. Controle vs. fratura do regime</strong> — medida via vetor regime_fracture do rastreador de retórica (nível cuban_dissidents menos nível cuban_military_security). Alta fratura = regime perdendo controle.</p><p><strong>2. Pressão externa</strong> — medida via vetor us_pressure (máximo de níveis governo EUA / sanções / postura militar). Modela o caminho de mudança de regime Venezuela-2026.</p><p><strong>3. Pressão civil</strong> — índice separado rastreando o que realmente quebra no terreno (apagões, combustível, comida, remédios). Não alimenta pontuação de retórica; alimenta o composto principal de estabilidade.</p><p><strong>Por que Cuba é diferente:</strong> A maioria dos modelos de estabilidade assume pressão civil → revolução. Em Cuba, pressão civil → emigração. Asifah modela isso explicitamente via o corredor migratório bidirecional.</p><p><strong>Marco analítico de três perguntas:</strong> Q1) Washington está escalando? Q2) O regime está rachando? Q3) RU/CN/IR estão explorando o atrito? Os três devem ser rastreados juntos.</p>',
+        kbMethDisclaimer: '* A metodologia da Asifah Analytics é derivada de OSINT e NÃO é substituto de avaliação de inteligência classificada.',
+
+        artTitle: '📰 Artigos Recentes',
+        artSubhead: 'Feed ao vivo da mídia estatal cubana, veículos dissidentes, GDELT (inglês/espanhol) e Bluesky (espelhos do Trump Truth Social). Tab para filtrar por idioma.',
+        tabAll: 'Todos',
+        tabEn: '🇺🇸 Inglês',
+        tabEs: '🇪🇸 Espanhol',
+        tabBluesky: '📡 Bluesky',
+        tabDissident: '✊ Dissidente',
+        artLoading: 'Carregando artigos...',
+        artEmpty: 'Nenhum artigo nesta categoria.',
+
+        footerBrand: 'Índice de Estabilidade de Cuba v2.1.0',
+        footerFreq: 'Atualiza a cada 12 horas · Atualização manual:',
+        footerForce: 'forçar varredura',
+        footerDisclaimer: 'Agregação de sinais OSINT. Não reflete inteligência classificada. Marco analítico de três perguntas é metodologia específica da Asifah e não deve ser citado como avaliação oficial.',
+
+        rcFirm: 'Controle Firme',
+        rcMaintained: 'Controle Mantido',
+        rcStrained: 'Tensionado',
+        rcFragile: 'Frágil',
+        rcFracture: 'Risco de Fratura',
+        epRegimeChange: 'Postura de Mudança de Regime',
+        epActiveConfront: 'Confrontação Ativa',
+        epElevated: 'Pressão Elevada',
+        epIncreased: 'Postura Aumentada',
+        epBaseline: 'Diplomática Base',
+
+        levelBaseline: 'Base',
+        levelRhetoric: 'Retórica',
+        levelWarning: 'Alerta',
+        levelConfrontation: 'Confrontação',
+        levelActive: 'Ameaça Ativa',
+        levelStrike: 'Ataque Iminente',
+
+        cpStable: 'Estável',
+        cpBackgroundStrain: 'Tensão de Fundo',
+        cpVisibleStrain: 'Tensão Visível',
+        cpActiveCrisis: 'Crise Ativa',
+        cpSevereCrisis: 'Crise Severa',
+        cpCatastrophic: 'Catastrófica',
+
+        mnQuiet: 'Tranquilo',
+        mnBackground: 'Movimento de Fundo',
+        mnReturn: 'Atividade de Retorno',
+        mnOutbound: 'Pressão de Saída',
+        mnMixed: 'Fluxos Mistos',
+
+        pressure: 'pressão',
     }
 };
-var currentLang = 'en';
 
-function switchLang(lang, btn) {
-    currentLang = lang;
-    document.querySelectorAll('.lang-btn').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
-    applyTranslations();
-}
+var CURRENT_LANG = 'en';
 
-function applyTranslations() {
-    var t = TRANSLATIONS[currentLang] || TRANSLATIONS['en'];
-    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+function applyLang(lang) {
+    CURRENT_LANG = lang;
+    var dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
         var key = el.getAttribute('data-i18n');
-        if (t[key] !== undefined) {
-            el.innerHTML = t[key];
+        if (dict[key] !== undefined) {
+            el.innerHTML = dict[key];
         }
     });
+    try { localStorage.setItem('asifah-cuba-lang', lang); } catch(e){}
+    // Re-render dynamic data with new language
+    if (window._lastCubaData) {
+        renderAll(window._lastCubaData);
+    }
 }
 
-// ========================================
-// THEME
-// ========================================
-function initTheme() {
-    var saved = localStorage.getItem('asifah-theme') || 'light';
-    document.documentElement.setAttribute('data-theme', saved);
-    document.getElementById('themeToggle').checked = (saved === 'dark');
+function switchLang(lang, btn) {
+    document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    applyLang(lang);
 }
+
+function t(key) {
+    var dict = TRANSLATIONS[CURRENT_LANG] || TRANSLATIONS.en;
+    return dict[key] !== undefined ? dict[key] : (TRANSLATIONS.en[key] || key);
+}
+
+// ════════════════════════════════════════════════════════════════
+// THEME / TAB UTILITIES
+// ════════════════════════════════════════════════════════════════
 function toggleTheme() {
-    var current = document.documentElement.getAttribute('data-theme');
-    var next = current === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    localStorage.setItem('asifah-theme', next);
+    var th = document.getElementById('themeToggle').checked ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', th);
+    try { localStorage.setItem('asifah-theme', th); } catch(e){}
 }
-initTheme();
+(function(){
+    try {
+        var saved = localStorage.getItem('asifah-theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        var tg = document.getElementById('themeToggle');
+        if (tg) tg.checked = (saved === 'light');
+    } catch(e){}
+})();
 
-// ========================================
-// KNOWLEDGE CARDS
-// ========================================
 function toggleCard(id) {
     var card = document.getElementById('card-' + id);
     if (card) card.classList.toggle('collapsed');
 }
 
-// ========================================
-// MAP
-// ========================================
-function initMap() {
-    var map = L.map('cuba-map', { zoomControl: true, scrollWheelZoom: false }).setView([22.0, -79.5], 7);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        maxZoom: 10
-    }).addTo(map);
-
-    // Key markers
-    var markers = [
-        { lat: 23.13, lng: -82.38, label: 'Havana (Government)', color: 'orange' },
-        { lat: 20.02, lng: -75.82, label: 'Santiago de Cuba', color: 'blue' },
-        { lat: 22.41, lng: -79.97, label: 'Santa Clara (2021 Protests)', color: 'red' },
-        { lat: 22.15, lng: -80.44, label: 'Cienfuegos (Blackout Zone)', color: 'red' },
-        { lat: 19.97, lng: -75.21, label: 'Guantanamo Bay (U.S. Base)', color: 'green' },
-    ];
-
-    var colorMap = { red: '#ef4444', orange: '#f97316', blue: '#3b82f6', green: '#22c55e' };
-
-    markers.forEach(function(m) {
-        var circle = L.circleMarker([m.lat, m.lng], {
-            radius: 8, fillColor: colorMap[m.color] || '#6b7280',
-            color: '#fff', weight: 2, opacity: 1, fillOpacity: 0.85
-        }).addTo(map);
-        circle.bindPopup('<strong>' + m.label + '</strong>');
-    });
-
-    // Legend
-    var legend = L.control({ position: 'bottomright' });
-    legend.onAdd = function() {
-        var div = L.DomUtil.create('div');
-        div.style.cssText = 'background:white;padding:10px;border-radius:6px;font-size:12px;font-family:Times New Roman,serif;line-height:1.8;box-shadow:0 2px 6px rgba(0,0,0,0.2);';
-        div.innerHTML =
-            '<strong>Map Legend</strong><br><span style="color:#ef4444;">●</span> Unrest/Blackout Zone<br><span style="color:#f97316;">●</span> Government Center<br><span style="color:#3b82f6;">●</span> Major City<br><span style="color:#22c55e;">●</span> U.S. Installation';
-        return div;
-    };
-    legend.addTo(map);
+function switchTab(name, btn) {
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+    if (btn) btn.classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(function(c){ c.classList.remove('active'); });
+    var target = document.getElementById('tab-' + name);
+    if (target) target.classList.add('active');
 }
 
-// ========================================
-// ARTICLES
-// ========================================
-async function loadArticles() {
+// ════════════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════════════
+function fmtTimeAgo(iso) {
+    if (!iso) return 'unknown';
     try {
-        var r = await fetch(WHA_API + '/api/wha/threat/cuba');
-        if (!r.ok) throw new Error('HTTP ' + r.status);
-        var d = await r.json();
-        var articles = d.top_scoring_articles || d.articles || [];
-        if (articles.length > 0) {
-            displayArticles(articles);
-        } else {
-            displayFallback();
+        var ago = Math.round((Date.now() - new Date(iso).getTime()) / 60000);
+        if (ago < 60) return ago + 'm';
+        var h = Math.round(ago / 60);
+        if (h < 24) return h + 'h';
+        return Math.round(h / 24) + 'd';
+    } catch(e) { return 'unknown'; }
+}
+
+function levelColor(lvl) {
+    if (lvl >= 4) return '#dc2626';
+    if (lvl === 3) return '#f97316';
+    if (lvl === 2) return '#f59e0b';
+    if (lvl === 1) return '#3b82f6';
+    return '#6b7280';
+}
+
+function levelLabel(lvl) {
+    var keys = ['levelBaseline','levelRhetoric','levelWarning','levelConfrontation','levelActive','levelStrike'];
+    return t(keys[lvl] || 'levelBaseline');
+}
+
+function escHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+}
+
+// ════════════════════════════════════════════════════════════════
+// STABILITY SCORE COMPUTATION
+// ════════════════════════════════════════════════════════════════
+function computeStabilityScores(rhetoric) {
+    var fracture = rhetoric.regime_fracture || 0;
+    var us_press = rhetoric.us_pressure || 0;
+    var civ_press = rhetoric.civilian_pressure_level || 0;
+    var mig_out = rhetoric.migration_out_level || 0;
+    var us_mil = (rhetoric.actors && rhetoric.actors.us_military_posture) ?
+                 rhetoric.actors.us_military_posture.escalation_level : 0;
+
+    var regime_control = 100 - (fracture * 15) - (civ_press * 8) + (mig_out * 4);
+    regime_control = Math.max(0, Math.min(100, regime_control));
+
+    var external_pressure = us_press * 18;
+    if (us_press >= 3) external_pressure += us_mil * 6;
+    external_pressure = Math.max(0, Math.min(100, external_pressure));
+
+    return { regime_control: Math.round(regime_control), external_pressure: Math.round(external_pressure) };
+}
+
+function regimeControlBand(score) {
+    if (score >= 75) return { key: 'rcFirm',       color: '#16a34a' };
+    if (score >= 55) return { key: 'rcMaintained', color: '#0ea5e9' };
+    if (score >= 35) return { key: 'rcStrained',   color: '#f59e0b' };
+    if (score >= 15) return { key: 'rcFragile',    color: '#f97316' };
+    return                  { key: 'rcFracture',   color: '#dc2626' };
+}
+
+function externalPressureBand(score) {
+    if (score >= 70) return { key: 'epRegimeChange',   color: '#dc2626' };
+    if (score >= 45) return { key: 'epActiveConfront', color: '#f97316' };
+    if (score >= 25) return { key: 'epElevated',       color: '#f59e0b' };
+    if (score >= 10) return { key: 'epIncreased',      color: '#0ea5e9' };
+    return                  { key: 'epBaseline',       color: '#16a34a' };
+}
+
+function civPressLabel(lvl) {
+    var keys = ['cpStable','cpBackgroundStrain','cpVisibleStrain','cpActiveCrisis','cpSevereCrisis','cpCatastrophic'];
+    return t(keys[lvl] || 'cpStable');
+}
+
+function migNetLabel(rhetoric) {
+    var outLvl = rhetoric.migration_out_level || 0;
+    var retLvl = rhetoric.migration_return_level || 0;
+    if (outLvl >= 3 && retLvl >= 3) return t('mnMixed');
+    if (outLvl >= 3) return t('mnOutbound');
+    if (retLvl >= 3) return t('mnReturn');
+    if (outLvl >= 1 || retLvl >= 1) return t('mnBackground');
+    return t('mnQuiet');
+}
+
+// ════════════════════════════════════════════════════════════════
+// RENDERERS
+// ════════════════════════════════════════════════════════════════
+function renderStabilityHeadline(rhetoric) {
+    var scores = computeStabilityScores(rhetoric);
+    var rcBand = regimeControlBand(scores.regime_control);
+    var epBand = externalPressureBand(scores.external_pressure);
+
+    var rc = document.getElementById('regimeControlScore');
+    rc.textContent = scores.regime_control;
+    rc.style.color = rcBand.color;
+    document.getElementById('regimeControlBand').textContent = t(rcBand.key);
+    var rcPill = document.getElementById('regimeControlPill');
+    rcPill.textContent = t(rcBand.key);
+    rcPill.style.background = rcBand.color;
+
+    var ep = document.getElementById('externalPressureScore');
+    ep.textContent = scores.external_pressure;
+    ep.style.color = epBand.color;
+    document.getElementById('externalPressureBand').textContent = t(epBand.key);
+    var epPill = document.getElementById('externalPressurePill');
+    epPill.textContent = t(epBand.key);
+    epPill.style.background = epBand.color;
+}
+
+function renderRhetoricLink(rhetoric) {
+    var lvl = rhetoric.theatre_level || 0;
+    var pill = document.getElementById('rhetoricLevelPill');
+    pill.textContent = 'L' + lvl + ' — ' + levelLabel(lvl);
+    pill.style.color = levelColor(lvl);
+    pill.style.background = 'rgba(56,189,248,0.15)';
+}
+
+function renderCivilianPressure(rhetoric) {
+    var lvl = rhetoric.civilian_pressure_level || 0;
+    var score = rhetoric.civilian_pressure_score || 0;
+    var signals = rhetoric.civilian_pressure_signals || [];
+
+    var color = lvl >= 4 ? '#dc2626' : lvl === 3 ? '#f97316' : lvl === 2 ? '#f59e0b' : lvl === 1 ? '#3b82f6' : '#64748b';
+    var badge = document.getElementById('civPressBadge');
+    badge.textContent = 'L' + lvl + ' — ' + civPressLabel(lvl);
+    badge.style.background = color;
+
+    var num = document.getElementById('civPressScoreNum');
+    num.textContent = score;
+    num.style.color = color;
+
+    var list = document.getElementById('civPressSignalsList');
+    if (!signals.length) {
+        list.innerHTML = '<div class="civ-press-empty">' + t('cpEmpty') + '</div>';
+        return;
+    }
+    list.innerHTML = signals.slice(0, 8).map(function(s){
+        return '<div class="civ-press-signal-item">' +
+            '<span class="civ-press-signal-phrase">L' + (s.level || 0) + ' · ' + escHtml(s.phrase) + '</span>' +
+            escHtml(s.article || '') +
+            '</div>';
+    }).join('');
+}
+
+function renderOilTanker(rhetoric) {
+    var lvl = rhetoric.oil_tanker_level || 0;
+    var signals = rhetoric.oil_tanker_signals || [];
+
+    var badge = document.getElementById('oilTankerBadge');
+    badge.textContent = 'L' + lvl + ' — ' + levelLabel(lvl);
+
+    var c = document.getElementById('oilTankerSignalsContainer');
+    if (!signals.length) {
+        c.innerHTML = '<div class="oil-tanker-empty">' + t('otEmpty') + '</div>';
+        return;
+    }
+    c.innerHTML = signals.slice(0, 6).map(function(s){
+        return '<div class="oil-tanker-signal">' +
+            '<div class="oil-tanker-signal-meta">' +
+            '<span class="oil-tanker-level-pill">L' + (s.level || 0) + '</span>' +
+            '<span style="font-family:Courier New,monospace;font-size:0.7rem;color:var(--text-muted);">' + escHtml(s.phrase || '') + '</span>' +
+            '</div>' +
+            '<div>' + escHtml(s.article || '') + '</div>' +
+            '</div>';
+    }).join('');
+}
+
+function renderMigration(rhetoric) {
+    var outLvl = rhetoric.migration_out_level || 0;
+    var retLvl = rhetoric.migration_return_level || 0;
+    var netMod = rhetoric.migration_net_modifier || 0;
+
+    document.getElementById('migOutLevel').textContent = 'L' + outLvl;
+    document.getElementById('migOutText').textContent = levelLabel(outLvl);
+    document.getElementById('migReturnLevel').textContent = 'L' + retLvl;
+    document.getElementById('migReturnText').textContent = levelLabel(retLvl);
+
+    var netColor = netMod >= 4 ? '#dc2626' :
+                   netMod >= 1 ? '#f97316' :
+                   netMod === 0 ? '#64748b' :
+                   netMod >= -3 ? '#10b981' : '#16a34a';
+    var sign = netMod > 0 ? '+' : '';
+    var badge = document.getElementById('migrationNetBadge');
+    badge.textContent = sign + netMod + ' ' + t('pressure') + ' · ' + migNetLabel(rhetoric);
+    badge.style.background = netColor;
+}
+
+function renderVectorSnapshot(rhetoric) {
+    var us = rhetoric.us_pressure || 0;
+    var rf = rhetoric.regime_fracture || 0;
+    var aa = rhetoric.adversary_access || 0;
+
+    var usEl = document.getElementById('vecUsPressureLevel');
+    usEl.textContent = 'L' + us;
+    usEl.style.color = levelColor(us);
+    document.getElementById('vecUsPressureStatus').textContent = levelLabel(us);
+
+    var rfEl = document.getElementById('vecRegimeFractureLevel');
+    rfEl.textContent = 'L' + rf;
+    rfEl.style.color = levelColor(rf);
+    document.getElementById('vecRegimeFractureStatus').textContent = levelLabel(rf);
+
+    var aaEl = document.getElementById('vecAdversaryAccessLevel');
+    aaEl.textContent = 'L' + aa;
+    aaEl.style.color = levelColor(aa);
+    document.getElementById('vecAdversaryAccessStatus').textContent = levelLabel(aa);
+}
+
+function renderRedLines(rhetoric) {
+    var redLines = rhetoric.red_lines || [];
+    var card = document.getElementById('redLinesCardStab');
+    if (!redLines.length) {
+        card.style.display = 'none';
+        return;
+    }
+    card.style.display = 'block';
+    var html = redLines.slice(0, 6).map(function(rl){
+        return '<div class="red-line-item-stab"><strong>' + escHtml(rl.name || rl.title || 'Red Line') + '</strong><br>' +
+            '<span style="font-size:0.78rem;color:var(--text-muted);">' + escHtml(rl.description || rl.evidence || '') + '</span></div>';
+    }).join('');
+    document.getElementById('redLineItemsStab').innerHTML = html;
+}
+
+function renderArticles(rhetoric) {
+    var actors = rhetoric.actors || {};
+    var allArticles = [];
+    Object.keys(actors).forEach(function(k){
+        var arts = actors[k].top_articles || [];
+        arts.forEach(function(a){
+            allArticles.push({
+                title: a.title || a.description || '',
+                url: a.url || '#',
+                source: (a.source && a.source.name) || a.source || '',
+                published: a.publishedAt || a.published || '',
+                language: a.language || 'en',
+                feed_type: a.feed_type || 'rss',
+            });
+        });
+    });
+
+    var seen = {};
+    allArticles = allArticles.filter(function(a){
+        if (seen[a.url]) return false;
+        seen[a.url] = true;
+        return true;
+    });
+
+    allArticles.sort(function(a,b){
+        return new Date(b.published).getTime() - new Date(a.published).getTime();
+    });
+
+    var byTab = {
+        all: allArticles,
+        en: allArticles.filter(function(a){ return a.language === 'en' && a.feed_type !== 'bluesky'; }),
+        es: allArticles.filter(function(a){ return a.language === 'es'; }),
+        bluesky: allArticles.filter(function(a){ return a.feed_type === 'bluesky'; }),
+        dissident: allArticles.filter(function(a){
+            var s = (a.source || '').toLowerCase();
+            return s.indexOf('14ymedio') >= 0 || s.indexOf('cubanet') >= 0 || s.indexOf('diario de cuba') >= 0 || s.indexOf('dissident') >= 0;
+        }),
+    };
+
+    Object.keys(byTab).forEach(function(tab){
+        var c = document.getElementById('tab-' + tab);
+        if (!c) return;
+        var arts = byTab[tab];
+        if (!arts.length) {
+            c.innerHTML = '<div class="articles-empty">' + t('artEmpty') + '</div>';
+            return;
         }
-    } catch(e) {
-        displayFallback();
+        c.innerHTML = arts.slice(0, 25).map(function(a){
+            return '<div class="article-item">' +
+                '<a href="' + escHtml(a.url) + '" target="_blank" class="article-title">' + escHtml(a.title) + '</a>' +
+                '<div class="article-meta">' + escHtml(a.source) + ' · ' + fmtTimeAgo(a.published) + ' · ' + escHtml(a.language.toUpperCase()) + '</div>' +
+                '</div>';
+        }).join('');
+    });
+}
+
+function renderAll(data) {
+    renderStabilityHeadline(data);
+    renderRhetoricLink(data);
+    renderCivilianPressure(data);
+    renderOilTanker(data);
+    renderMigration(data);
+    renderVectorSnapshot(data);
+    renderRedLines(data);
+    renderArticles(data);
+    var lastUpd = document.getElementById('lastUpdated');
+    if (lastUpd && data.scanned_at) {
+        var prefix = CURRENT_LANG === 'es' ? 'Última actualización:' : CURRENT_LANG === 'pt' ? 'Última atualização:' : 'Last updated:';
+        lastUpd.textContent = prefix + ' ' + new Date(data.scanned_at).toLocaleString() +
+            ' · ' + (data.total_articles || 0) + ' · v' + (data.version || '2.1');
     }
 }
 
-function displayArticles(articles) {
-    var html = articles.slice(0, 20).map(function(a) {
-        var title = a.title || a.article_title || 'Untitled';
-        var source = a.source || a.source_name || '';
-        var pub = a.published || a.publishedAt || '';
-        var url = a.url || '#';
-        var dateStr = 'Recent';
-        if (pub) { try { dateStr = new Date(pub).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) {} }
-        return '<div class="article-item">' +
-            '<div class="article-title">' + title + '</div>' +
-            '<div class="article-meta">' + source + (source && dateStr ? ' &bull; ' : '') + dateStr + '</div>' +
-            (url !== '#' ? '<a href="' + url + '" target="_blank" rel="noopener" class="article-link">Read &rarr;</a>' : '') +
-            '</div>';
-    }).join('');
-    document.getElementById('articlesContainer').innerHTML = html;
-}
-
-function displayFallback() {
-    document.getElementById('articlesContainer').innerHTML =
-        '<div style="text-align:center; padding:30px; color:var(--text-secondary);">&#x1F4E1; Live article feed loading — check back shortly or run a manual scan.</div>';
-}
-
-// ========================================
-// RHETORIC TRACKER — fetch + render summary card
-// ========================================
-async function loadRhetoricData() {
+// ════════════════════════════════════════════════════════════════
+// MAP
+// ════════════════════════════════════════════════════════════════
+function initMap() {
+    if (typeof L === 'undefined') return;
     try {
-        const r = await fetch('https://asifah-wha-backend.onrender.com/api/rhetoric/cuba/summary', {
-            cache: 'no-store'
+        var map = L.map('cuba-map').setView([21.5, -78.5], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap',
+            maxZoom: 12,
+        }).addTo(map);
+
+        var markers = [
+            { lat: 23.135, lng: -82.359, name: 'Havana — Capital' },
+            { lat: 22.985, lng: -82.768, name: 'Mariel Port — Strategic deep-water terminal' },
+            { lat: 22.250, lng: -80.738, name: 'Cienfuegos — Oil terminal (RU/IR tankers)' },
+            { lat: 23.045, lng: -81.572, name: 'Matanzas — Oil terminal' },
+            { lat: 19.905, lng: -75.115, name: 'GTMO — US Naval Base' },
+            { lat: 22.945, lng: -82.397, name: 'Lourdes (Bejucal) — Former Soviet SIGINT site' },
+        ];
+        markers.forEach(function(m){
+            L.marker([m.lat, m.lng]).addTo(map).bindPopup(m.name);
         });
-        const data = await r.json();
-        if (!data || !data.success) {
-            console.warn('[Cuba Rhetoric] Summary unavailable');
+    } catch(e) {
+        console.error('[Cuba Stability] Map init error:', e);
+    }
+}
+
+// ════════════════════════════════════════════════════════════════
+// MAIN LOAD
+// ════════════════════════════════════════════════════════════════
+async function loadCubaData() {
+    try {
+        var resp = await fetch(WHA_API + '/api/rhetoric/cuba');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var data = await resp.json();
+
+        if (data.scan_in_progress) {
+            document.getElementById('loadingText').textContent = t('loadingText');
+            setTimeout(loadCubaData, 90000);
             return;
         }
 
-        const LEVEL_COLORS = {
-            0: '#6b7280', 1: '#3b82f6', 2: '#f59e0b',
-            3: '#f97316', 4: '#ef4444', 5: '#dc2626'
-        };
-        const LEVEL_LABELS = {
-            0: 'Baseline', 1: 'Rhetoric',    2: 'Warning',
-            3: 'Confrontation', 4: 'Coercion', 5: 'Active Conflict'
-        };
-
-        const theatreLevel = data.theatre_level || 0;
-        const color = LEVEL_COLORS[Math.min(theatreLevel, 5)] || '#6b7280';
-        const label = LEVEL_LABELS[Math.min(theatreLevel, 5)] || '--';
-
-        // Banner badge
-        const badge = document.getElementById('rhetoricLevelBadge');
-        if (badge) {
-            badge.style.background = color;
-            badge.textContent = `⚡ Level ${theatreLevel} — ${label}`;
-        }
-
-        // Scenario line
-        const scenario = data.scenario || '';
-        if (scenario) {
-            const sLine = document.getElementById('rhetoricScenarioLine');
-            const sText = document.getElementById('rhetoricScenarioText');
-            const sIcon = document.getElementById('rhetoricScenarioIcon');
-            // Pick icon from first few chars of scenario (the interpreter emits these)
-            const icons = { 'CRITICAL': '🔴', 'ELEVATED': '🟠', 'WARNING': '🟡',
-                            'MONITORING': '🔵', 'BASELINE': '⚪' };
-            let icon = '⚪';
-            for (const k of Object.keys(icons)) {
-                if (scenario.toUpperCase().includes(k)) { icon = icons[k]; break; }
-            }
-            if (sIcon) sIcon.textContent = icon;
-            if (sText) sText.textContent = scenario;
-            if (sLine) sLine.style.display = 'block';
-        }
-
-        // Three composite vectors
-        const vMap = [
-            ['rhetVecUsPressure',      data.us_pressure      || 0],
-            ['rhetVecRegimeFracture',  data.regime_fracture  || 0],
-            ['rhetVecAdversaryAccess', data.adversary_access || 0],
-        ];
-        vMap.forEach(([id, lvl]) => {
-            const el = document.getElementById(id);
-            if (el) {
-                el.textContent = 'L' + lvl;
-                el.style.color = LEVEL_COLORS[Math.min(lvl, 5)] || '#6b7280';
-            }
-        });
-
-        // Actor breakdown (9 actors grouped into 3 rows of 3)
-        const actorEl = document.getElementById('rhetoricActorList');
-        if (actorEl) {
-            const actors = [
-                { label: '🏛️ US Gov',          level: data.us_government_level    || 0 },
-                { label: '⚖️ US Sanctions',     level: data.us_sanctions_level     || 0 },
-                { label: '⚓ US Military',       level: data.us_military_level      || 0 },
-                { label: '🏛️ Cuban Gov',        level: data.cuban_government_level || 0 },
-                { label: '🪖 Cuban Military',   level: data.cuban_military_level   || 0 },
-                { label: '✊ Cuban Dissidents', level: data.cuban_dissidents_level || 0 },
-                { label: '🤝 Russia Axis',      level: data.russia_cuba_level      || 0 },
-                { label: '🤝 China Axis',       level: data.china_cuba_level       || 0 },
-                { label: '🤝 Iran Axis',        level: data.iran_cuba_level        || 0 },
-            ];
-            actorEl.innerHTML = actors.map(a =>
-                `<div class="rhetoric-actor-row">
-                    <span>${a.label}</span>
-                    <span style="font-weight:700; color:${LEVEL_COLORS[Math.min(a.level, 5)]};">L${a.level}</span>
-                </div>`
-            ).join('');
-        }
-
-        // Red lines summary
-        const rlCount = data.red_lines_count || 0;
-        const rlBox = document.getElementById('rhetoricRedLines');
-        const rlText = document.getElementById('rhetoricRedLinesText');
-        if (rlCount > 0 && rlBox && rlText) {
-            rlText.textContent = `${rlCount} red line${rlCount === 1 ? '' : 's'} triggered`;
-            rlBox.style.display = 'block';
-        }
-
-        // Scan info
-        const scanEl = document.getElementById('rhetoricScanInfo');
-        if (scanEl && data.scanned_at) {
-            const mins = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
-            const ago = mins < 60 ? `${mins}m` : `${Math.round(mins/60)}h`;
-            scanEl.textContent = `Last scan: ${ago} ago`;
-        }
-
-    } catch (e) {
-        console.warn('[Cuba Rhetoric] Load failed:', e);
+        window._lastCubaData = data;
+        renderAll(data);
+        document.getElementById('loadingOverlay').style.display = 'none';
+    } catch(e) {
+        console.error('[Cuba Stability] Load error:', e);
+        setTimeout(loadCubaData, 30000);
     }
 }
 
-// ========================================
-// INIT
-// ========================================
-document.addEventListener('DOMContentLoaded', function() {
-    applyTranslations();
+// ════════════════════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', function(){
+    var savedLang = 'en';
+    try { savedLang = localStorage.getItem('asifah-cuba-lang') || 'en'; } catch(e){}
+    applyLang(savedLang);
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+        b.classList.remove('active');
+        if (b.textContent.toLowerCase() === savedLang) b.classList.add('active');
+    });
+
     initMap();
-    loadArticles();
-    loadRhetoricData();
-    document.getElementById('lastUpdated').textContent =
-        (TRANSLATIONS[currentLang] || TRANSLATIONS['en']).lastUpdated.replace('Loading...', new Date().toUTCString());
+    loadCubaData();
 });
 </script>
+
 </body>
 </html>
