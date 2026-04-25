@@ -1,362 +1,1295 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Oman Stability Index v1.0.0 -->
-<html lang="en">
+<!-- Asifah Analytics — Oman Stability Index v2.0 — April 2026 -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<html lang="en" data-theme="dark">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Z9114D1Z5C');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Z9114D1Z5C');
     </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>Oman Stability Index | Asifah Analytics v1.0.0</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <title>Oman Stability Index — Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"/>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* ── ARCTIC PALETTE (canonical Oman + Greenland + Russia + Cuba) ── */
         :root {
-            --bg-color: #f5f5f5; --container-bg: #ffffff; --card-bg: #ffffff;
-            --card-border: #e1e8ed; --text-primary: #2c3e50; --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6; --header-gradient-start: #1e3a5f; --header-gradient-end: #2c5282;
-            --header-text: #ffffff; --metric-bg: #ffffff; --article-bg: #f8f9fa;
-            --article-hover: #e8f4f8; --accent: #6495ED;
+            --bg-color:       #e8f0f8;
+            --container-bg:   #ffffff;
+            --card-bg:        #ffffff;
+            --card-border:    #b0c8e0;
+            --text-primary:   #0a1628;
+            --text-secondary: #1e3a5f;
+            --text-muted:     #4a6080;
+            --article-bg:     #f0f6fc;
+            --article-hover:  #e0eef9;
+            --accent:         #0ea5e9;
+            --accent-glow:    rgba(14,165,233,0.2);
+            --header-gradient-start: #1e3a5f;
+            --header-gradient-end:   #2c5282;
+            --header-text:    #ffffff;
         }
         [data-theme="dark"] {
-            --bg-color: #1a1a1a; --container-bg: #2d2d2d; --card-bg: #2d2d2d;
-            --card-border: #404040; --text-primary: #e0e0e0; --text-secondary: #b0b0b0;
-            --text-muted: #808080; --header-gradient-start: #1e3a5f; --header-gradient-end: #2c5282;
-            --header-text: #ffffff; --metric-bg: #2d2d2d; --article-bg: #333333;
-            --article-hover: #3a3a3a; --accent: #6495ED;
+            --bg-color:       #060d1a;
+            --container-bg:   #0d1b2e;
+            --card-bg:        #0d1b2e;
+            --card-border:    #1e3a5f;
+            --text-primary:   #e2f0fb;
+            --text-secondary: #93c5fd;
+            --text-muted:     #4a7090;
+            --article-bg:     #0a1525;
+            --article-hover:  #142339;
+            --accent:         #38bdf8;
+            --accent-glow:    rgba(56,189,248,0.18);
+            --header-gradient-start: #0a1525;
+            --header-gradient-end:   #1e3a5f;
+            --header-text:    #e2f0fb;
         }
-        body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-color); color: var(--text-primary); line-height: 1.6; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        body::before {
+            content: '';
+            position: fixed; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.07;
+            pointer-events: none;
+            z-index: 0;
+        }
+        [data-theme="dark"] body::before {
+            opacity: 0.18;
+            filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+        }
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HEADER ── */
         header {
             background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
-            color: var(--header-text); padding: 30px; border-radius: 12px; margin-bottom: 10px;
-            text-align: center; position: relative;
+            color: var(--header-text);
+            padding: 24px 30px;
+            border-radius: 12px;
+            margin-bottom: 14px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
-        header h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 2px; }
-        .subtitle { font-size: 16px; opacity: 0.95; }
-        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
-        .header-controls { position: absolute; top: 15px; right: 20px; display: flex; gap: 8px; align-items: center; }
-        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
-        .lang-btn:hover { background: rgba(255,255,255,0.3); }
-        .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
-        .home-btn { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; position: absolute; top: 15px; left: 20px; }
-        .home-btn:hover { background: rgba(255,255,255,0.3); }
-        .theme-toggle { display: flex; align-items: center; gap: 6px; color: white; font-size: 12px; cursor: pointer; }
-        .theme-toggle input { width: 36px; height: 20px; appearance: none; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; cursor: pointer; }
-        .theme-toggle input::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .theme-toggle input:checked::after { left: 18px; }
-        .map-section, .knowledge-library, .articles-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
-        .map-section h2, .knowledge-library h2 { font-size: 20px; margin-bottom: 15px; color: var(--text-primary); }
-        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
-        .knowledge-categories { display: grid; gap: 12px; }
-        .knowledge-card { border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
-        .knowledge-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; background: var(--article-bg); }
+        .header-logo { width: 60px; height: 60px; flex-shrink: 0; }
+        .header-center { flex: 1; text-align: center; }
+        .header-title { font-size: 24px; letter-spacing: 1.5px; margin-bottom: 6px; font-weight: bold; }
+        .header-subtitle { font-size: 14px; opacity: 0.92; }
+        .last-updated { font-size: 12px; opacity: 0.85; margin-top: 8px; }
+        .header-controls { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+        .lang-group { display: flex; gap: 4px; }
+        .lang-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-family: inherit;
+        }
+        .lang-btn:hover { background: rgba(255,255,255,0.25); }
+        .lang-btn.active { background: rgba(255,255,255,0.35); border-color: white; font-weight: bold; }
+        .home-btn {
+            display: inline-block;
+            padding: 7px 14px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .home-btn:hover { background: rgba(255,255,255,0.25); }
+        .theme-row { display: flex; align-items: center; gap: 6px; color: white; font-size: 11px; }
+        .theme-toggle-input {
+            width: 36px; height: 20px;
+            appearance: none;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            border: none;
+        }
+        .theme-toggle-input::after {
+            content: '';
+            position: absolute;
+            width: 16px; height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px; left: 2px;
+            transition: 0.3s;
+        }
+        .theme-toggle-input:checked::after { left: 18px; }
+
+        /* ── PAGE WITH SIDEBAR ── */
+        .page-with-sidebar {
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+        .nav-sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 14px;
+            position: sticky;
+            top: 20px;
+        }
+        .nav-sidebar-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            margin: 6px 4px 8px;
+            font-weight: bold;
+        }
+        .nav-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 9px 12px;
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 7px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 12px;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover { background: var(--article-hover); border-color: var(--accent); }
+        .nav-btn-label { font-weight: 600; }
+        .nav-btn-status { font-size: 9px; color: var(--text-muted); white-space: nowrap; }
+        .nav-btn.active-nav { border-color: #6495ED; }
+        .nav-btn.rhetoric-btn { border-color: #16a34a; }
+        .nav-btn.military-btn { border-color: #dc2626; }
+        .nav-btn.current-page {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+            font-weight: bold;
+        }
+        .nav-btn.inactive-nav { opacity: 0.5; }
+        .nav-divider {
+            height: 1px;
+            background: var(--card-border);
+            margin: 10px 0;
+        }
+
+        /* ── MAIN CONTENT ── */
+        .main-content { flex: 1; min-width: 0; }
+
+        /* ── ALERT/ADVISORY BANNERS ── */
+        .alert-banner {
+            border-radius: 10px;
+            padding: 12px 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .alert-banner-icon { font-size: 22px; flex-shrink: 0; }
+        .alert-banner-body { flex: 1; }
+        .alert-banner-label {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            margin-bottom: 3px;
+        }
+        .alert-banner-text { font-size: 12px; line-height: 1.4; }
+        .alert-banner-link {
+            flex-shrink: 0;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 6px;
+            color: white;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .alert-banner-link:hover { background: rgba(255,255,255,0.3); }
+
+        .ww-caution {
+            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+            border: 2px solid #ef4444;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            color: #fde8e8;
+        }
+        .ww-caution .alert-banner-label { color: #fca5a5; }
+
+        .travel-advisory {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+            border: 2px solid #f59e0b;
+            color: #e2e8f0;
+        }
+        .travel-advisory .alert-banner-label { color: #fde68a; }
+        .badge-l2 {
+            background: #f59e0b;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 3px;
+            letter-spacing: 1px;
+            margin-left: 8px;
+        }
+
+        /* ── RHETORIC BANNER (LIVE FROM API) ── */
+        .rhetoric-banner {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+        }
+        .rhetoric-banner.threat-mode { border-color: #ea580c; box-shadow: 0 0 18px rgba(234,88,12,0.25); }
+        .rhetoric-banner.influence-mode { border-color: #7c3aed; box-shadow: 0 0 18px rgba(124,58,237,0.25); }
+        .rhetoric-banner.monitoring-mode { border-color: #0ea5e9; }
+        .rhetoric-banner.quiet-mode { border-color: #16a34a; }
+        .rhetoric-icon { font-size: 28px; flex-shrink: 0; }
+        .rhetoric-body { flex: 1; }
+        .rhetoric-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .rhetoric-mode {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .rhetoric-detail { font-size: 13px; color: var(--text-secondary); }
+        .rhetoric-stats {
+            display: flex;
+            gap: 14px;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .rhetoric-stat-num {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--accent);
+        }
+        .rhetoric-stat-label {
+            font-size: 9px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .rhetoric-cta {
+            flex-shrink: 0;
+            padding: 8px 14px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .rhetoric-cta:hover { background: #0284c7; }
+
+        /* ── METRIC CARDS ROW (Brent + Sultan + Salalah + Mediation) ── */
+        .metric-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+        .metric-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 16px;
+            position: relative;
+        }
+        .metric-card-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+        .metric-card-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+        .metric-card-detail {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        .metric-card.brent .metric-card-value { color: #16a34a; }
+        .metric-card.sultan .metric-card-value { color: #7c2d12; }
+        .metric-card.salalah .metric-card-value { color: #ea580c; }
+        .metric-card.mediation .metric-card-value { color: #7c3aed; }
+
+        /* ── GENERIC CARDS ── */
+        .map-section, .knowledge-library, .articles-section {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+        }
+        h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+        .map-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 14px;
+            font-style: italic;
+        }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .knowledge-categories { display: grid; gap: 10px; }
+        .knowledge-card {
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .knowledge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 17px;
+            cursor: pointer;
+            background: var(--article-bg);
+        }
         .knowledge-header:hover { background: var(--article-hover); }
-        .knowledge-header-title { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-        .category-icon { font-size: 20px; }
-        .collapse-icon { font-size: 12px; color: var(--text-muted); transition: transform 0.3s; }
+        .knowledge-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        .category-icon { font-size: 18px; }
+        .collapse-icon { font-size: 11px; color: var(--text-muted); transition: transform 0.3s; }
         .knowledge-card.collapsed .knowledge-content { display: none; }
         .knowledge-card:not(.collapsed) .collapse-icon { transform: rotate(180deg); }
-        .knowledge-content { padding: 18px; line-height: 1.8; }
-        .knowledge-content p { margin-bottom: 12px; }
-        .knowledge-content ul { margin: 10px 0 15px 20px; }
-        .knowledge-content li { margin-bottom: 6px; }
-        .report-links-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-        .report-link { display: inline-block; padding: 6px 14px; background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 6px; color: var(--accent); text-decoration: none; font-size: 12px; font-weight: bold; }
+        .knowledge-content { padding: 18px; line-height: 1.75; font-size: 13px; }
+        .knowledge-content p { margin-bottom: 11px; }
+        .knowledge-content ul { margin: 8px 0 14px 22px; }
+        .knowledge-content li { margin-bottom: 5px; }
+        .report-links-grid { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .report-link {
+            display: inline-block;
+            padding: 5px 12px;
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: bold;
+        }
         .report-link:hover { background: var(--article-hover); }
-        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px; }
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
-        .article-item { padding: 15px; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 10px; background: var(--article-bg); }
+        .open-source-disclaimer {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        /* ── ARTICLES ── */
+        .articles-section .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 14px;
+        }
+        .article-item {
+            padding: 13px;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: var(--article-bg);
+        }
         .article-item:hover { background: var(--article-hover); }
-        .article-title { font-weight: bold; margin-bottom: 5px; }
-        .article-meta { font-size: 12px; color: var(--text-muted); }
-        .article-link { display: inline-block; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 13px; }
-        footer { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; margin-top: 30px; margin-bottom: 30px; text-align: center; font-size: 13px; color: var(--text-secondary); }
-        @media (max-width: 768px) {
-            header h1 { font-size: 20px; }
-            .home-btn { position: static; margin-bottom: 10px; }
-            .header-controls { position: static; justify-content: center; margin-top: 10px; }
+        .article-title { font-weight: bold; margin-bottom: 4px; font-size: 13px; }
+        .article-meta { font-size: 11px; color: var(--text-muted); }
+        .article-link {
+            display: inline-block;
+            margin-top: 6px;
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        /* ── FOOTER (GOLD STANDARD) ── */
+        footer {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 26px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        footer .footer-coffee {
+            margin-top: 18px;
+            padding: 12px;
+            background: rgba(56,189,248,0.08);
+            border-radius: 8px;
+        }
+        footer .footer-version {
+            margin-top: 18px;
+            padding: 12px;
+            background: var(--article-bg);
+            border-radius: 8px;
+        }
+        footer .footer-copyright {
+            margin-top: 18px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .page-with-sidebar { flex-direction: column; }
+            .nav-sidebar { width: 100%; position: relative; top: 0; }
+            header { flex-direction: column; gap: 10px; text-align: center; }
+            .rhetoric-banner { flex-wrap: wrap; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="middle-east.html" class="home-btn">&larr; Back to Dashboard</a>
-            <div class="header-controls">
-                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
-                <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
-                <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
-                <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
-                <label class="theme-toggle">
-                    <span>Theme</span>
-                    <input type="checkbox" onchange="toggleTheme()">
-                </label>
-            </div>
-            <h1>🇴🇲 OMAN STABILITY INDEX</h1>
-            <div class="subtitle">Multi-Factor Analysis: Strait of Hormuz, Diplomatic Mediation, Iran Proximity & Maritime Security</div>
-            <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
-        </header>
+<div class="container">
 
-        <!-- U.S. STATE DEPARTMENT — WORLDWIDE CAUTION -->
-        <div style="
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">&#x1F6A8;</div>
-            <div style="flex: 1;">
-                <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;">&#x26A0;&#xFE0F; U.S. State Department — Worldwide Caution</div>
-                <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
-            </div>
-            <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW CAUTION &rarr;</a>
-        </div>
-
-        <!-- OMAN TRAVEL ADVISORY -->
-        <div style="
-            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-            border: 2px solid #f59e0b; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">🇴🇲</div>
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 11px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px;">U.S. State Department — Oman Travel Advisory</span>
-                    <span style="background: #f59e0b; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px;">LEVEL 2</span>
-                </div>
-                <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;"><strong style="color: #f59e0b;">Exercise Increased Caution in Oman</strong> due to the ongoing regional security situation. Oman shares a maritime border with Iran across the Strait of Hormuz and Gulf of Oman.</div>
-            </div>
-            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/oman-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY &rarr;</a>
-        </div>
-
-        <!-- MAP SECTION -->
-        <div class="map-section">
-            <h2>&#x1F5FA;&#xFE0F; Oman — Strategic Overview</h2>
-            <div class="map-subtitle">Interactive map centered on Oman. Strait of Hormuz, naval base locations, and maritime zones coming soon.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe 
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=52.0%2C16.6%2C59.8%2C26.4&layer=mapnik&marker=23.59%2C58.54"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
-                </iframe>
-            </div>
-        </div>
-
-        <!-- KNOWLEDGE LIBRARY -->
-        <div class="knowledge-library">
-            <h2>
-                <span class="library-icon">&#x1F4DA;</span>
-                Knowledge Library
-            </h2>
-            <p class="open-source-disclaimer">
-                Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
-            </p>
-            <div class="knowledge-categories">
-
-                <!-- Strait of Hormuz & Maritime Security -->
-                <div class="knowledge-card collapsed" id="card-hormuz">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('hormuz')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🚢</span>
-                            <span>Strait of Hormuz & Maritime Security</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Oman controls the southern shore of the Strait of Hormuz</strong>, the world's most critical oil chokepoint through which approximately 20% of global oil supply transits daily. The Musandam exclave sits directly on the strait. Any closure or conflict in the strait would have catastrophic global economic consequences.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.eia.gov/todayinenergy/" target="_blank" class="report-link">📑 EIA - Hormuz Chokepoint</a>
-                            <a href="https://ukmto.org/" target="_blank" class="report-link">📑 UKMTO - Maritime</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Oman's Mediation Role -->
-                <div class="knowledge-card collapsed" id="card-mediation">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('mediation')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🕊️</span>
-                            <span>Oman's Mediation Role</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Oman has a long tradition of quiet diplomacy</strong> and has served as a mediator in numerous regional disputes. Muscat facilitated the back-channel talks that led to the 2015 Iran nuclear deal (JCPOA) and has mediated between Saudi Arabia and the Houthis in Yemen. Oman maintains cordial relations with both Iran and Western nations.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.chathamhouse.org/" target="_blank" class="report-link">📑 Chatham House</a>
-                            <a href="https://www.crisisgroup.org/" target="_blank" class="report-link">📑 Crisis Group</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Military & Defense -->
-                <div class="knowledge-card collapsed" id="card-military">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('military')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🎖️</span>
-                            <span>Military & Defense</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Oman hosts U.S. and UK military facilities</strong> including Duqm Naval Base, Thumrait Air Base, and Masirah Island. These installations provide critical logistics and staging capabilities for operations in the Indian Ocean and Persian Gulf. Oman's own military, while modest, is well-trained and equipped.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.defense.gov/" target="_blank" class="report-link">📑 U.S. DoD</a>
-                            <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Succession & Governance -->
-                <div class="knowledge-card collapsed" id="card-succession">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('succession')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">👑</span>
-                            <span>Succession & Governance</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Sultan Haitham bin Tariq</strong> succeeded Sultan Qaboos in January 2020, maintaining Oman's traditional policy of neutrality and quiet diplomacy. The transition has been smooth, though Oman faces economic challenges including oil dependency, youth unemployment, and the need for economic diversification under Vision 2040.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.worldbank.org/en/country/gcc" target="_blank" class="report-link">📑 World Bank - GCC</a>
-                            <a href="https://www.imf.org/en/Countries/OMN" target="_blank" class="report-link">📑 IMF - Oman</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- RECENT ARTICLES -->
-        <div class="articles-section">
-            <div class="section-title">&#x1F4F0; Recent Oman, Hormuz & Maritime Security Articles (Last 7 Days)</div>
-            <div id="articlesContainer">
-                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
-            </div>
-        </div>
-
-        <footer>
-            <div>Data Sources: NewsAPI, GDELT, IMO, UKMTO, and OSINT sources</div>
-            <div style="margin-top:15px; font-size:0.85em;">
-                Multilingual content from Arabic, Hebrew, and Farsi feeds via GDELT.
-            </div>
-            <div style="margin-top:15px;">For inquiries, contact: asifahanalytics@gmail.com</div>
-            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em;">Asifah Analytics v1.0.0</div>
-                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
-            </div>
-            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
-                <span style="font-size:0.9em;">
-                    If you find Asifah Analytics useful, you can 
-                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
-                </span>
-            </div>
-            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
-                &copy; 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
-                Unauthorized use, reproduction, or distribution prohibited.
-            </div>
-        </footer>
+<!-- HEADER -->
+<header>
+    <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+    <div class="header-center">
+        <div class="header-title" data-i18n="pageTitle">🇴🇲 OMAN STABILITY INDEX</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Strait of Hormuz · Diplomatic Mediation · Sultan Watch · Salalah/Duqm Strategic Geography</div>
+        <div class="last-updated" id="lastUpdated"><span data-i18n="lastUpdatedLabel">Last updated:</span> Loading...</div>
     </div>
+    <div class="header-controls">
+        <a href="middle-east.html" class="home-btn" data-i18n="backLink">← Back to Middle East</a>
+        <div class="lang-group">
+            <button class="lang-btn active" onclick="setLanguage('en', this)">EN</button>
+            <button class="lang-btn" onclick="setLanguage('ar', this)">عربي</button>
+            <button class="lang-btn" onclick="setLanguage('he', this)">עב</button>
+            <button class="lang-btn" onclick="setLanguage('fa', this)">فا</button>
+        </div>
+        <div class="theme-row">
+            <span data-i18n="themeLabel">THEME</span>
+            <input type="checkbox" id="themeToggle" class="theme-toggle-input" onchange="toggleTheme()" checked/>
+        </div>
+    </div>
+</header>
 
-    <script>
-        const BACKEND_URL = 'https://asifah-backend.onrender.com';
+<!-- PAGE WITH SIDEBAR -->
+<div class="page-with-sidebar">
 
-        function initTheme() {
-            const saved = localStorage.getItem('asifah-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', saved);
+<!-- NAV SIDEBAR -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label" data-i18n="navDashboards">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status" data-i18n="navFuture">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label" data-i18n="navMERhetoric">ME Rhetoric</div>
+    <a href="rhetoric-iran.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇮🇷 Iran Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="rhetoric-israel.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇮🇱 Israel Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="rhetoric-lebanon.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇱🇧 Lebanon Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="rhetoric-yemen.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇾🇪 Yemen Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="rhetoric-oman.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇴🇲 Oman Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="oman-stability.html" class="nav-btn current-page">
+        <span class="nav-btn-label">📊 Oman Stability</span>
+        <span class="nav-btn-status" data-i18n="navYouAreHere">◉ You are here</span>
+    </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+<!-- WORLDWIDE CAUTION -->
+<div class="alert-banner ww-caution">
+    <div class="alert-banner-icon">🚨</div>
+    <div class="alert-banner-body">
+        <div class="alert-banner-label" data-i18n="wwCautionLabel">⚠️ U.S. State Department — Worldwide Caution</div>
+        <div class="alert-banner-text" data-i18n="wwCautionText">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
+    </div>
+    <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" class="alert-banner-link" data-i18n="viewLink">VIEW CAUTION →</a>
+</div>
+
+<!-- TRAVEL ADVISORY -->
+<div class="alert-banner travel-advisory">
+    <div class="alert-banner-icon">🇴🇲</div>
+    <div class="alert-banner-body">
+        <div class="alert-banner-label">
+            <span data-i18n="travelAdvisoryLabel">U.S. State Department — Oman Travel Advisory</span>
+            <span class="badge-l2" data-i18n="level2Badge">LEVEL 2</span>
+        </div>
+        <div class="alert-banner-text" data-i18n="travelAdvisoryText"><strong style="color:#fde68a;">Exercise Increased Caution in Oman</strong> due to the ongoing regional security situation. Oman shares a maritime border with Iran across the Strait of Hormuz and Gulf of Oman.</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/oman-travel-advisory.html" target="_blank" rel="noopener" class="alert-banner-link" data-i18n="viewAdvisoryLink">VIEW ADVISORY →</a>
+</div>
+
+<!-- LIVE RHETORIC BANNER (from /api/rhetoric/oman) -->
+<div class="rhetoric-banner quiet-mode" id="rhetoricBanner">
+    <div class="rhetoric-icon" id="rhetoricIcon">🟢</div>
+    <div class="rhetoric-body">
+        <div class="rhetoric-label" data-i18n="rhetoricBannerLabel">OMAN RHETORIC TRACKER — LIVE</div>
+        <div class="rhetoric-mode" id="rhetoricMode" data-i18n="rhetoricLoading">Loading rhetoric scan...</div>
+        <div class="rhetoric-detail" id="rhetoricDetail">—</div>
+    </div>
+    <div class="rhetoric-stats">
+        <div>
+            <div class="rhetoric-stat-num" id="rhetoricThreat">--</div>
+            <div class="rhetoric-stat-label" data-i18n="threatStatLabel">Threat</div>
+        </div>
+        <div>
+            <div class="rhetoric-stat-num" id="rhetoricInfluence">--</div>
+            <div class="rhetoric-stat-label" data-i18n="influenceStatLabel">Influence</div>
+        </div>
+    </div>
+    <a href="rhetoric-oman.html" class="rhetoric-cta" data-i18n="viewTrackerLink">VIEW TRACKER →</a>
+</div>
+
+<!-- METRIC CARDS ROW -->
+<div class="metric-row">
+    <div class="metric-card brent">
+        <div class="metric-card-label" data-i18n="brentLabel">⛽ BRENT CRUDE</div>
+        <div class="metric-card-value" id="brentValue">$104</div>
+        <div class="metric-card-detail" data-i18n="brentDetail">Oman fiscal breakeven ~$70/bbl. Current price = healthy treasury, reduced domestic stress.</div>
+    </div>
+    <div class="metric-card sultan">
+        <div class="metric-card-label" data-i18n="sultanLabel">👑 SULTAN STATUS</div>
+        <div class="metric-card-value" id="sultanValue" data-i18n="sultanValue">Visible</div>
+        <div class="metric-card-detail" data-i18n="sultanDetail">Sultan Haitham public engagement tracked. Crown Prince Theyazin as designated heir.</div>
+    </div>
+    <div class="metric-card salalah">
+        <div class="metric-card-label" data-i18n="salalahLabel">🚢 SALALAH/DUQM</div>
+        <div class="metric-card-value" id="salalahValue" data-i18n="salalahValue">Quiet</div>
+        <div class="metric-card-detail" data-i18n="salalahDetail">Strategic ports outside Strait of Hormuz. Iran rhetoric naming Salalah/Duqm tracked via Iran fingerprints.</div>
+    </div>
+    <div class="metric-card mediation">
+        <div class="metric-card-label" data-i18n="mediationLabel">🕊️ MEDIATION</div>
+        <div class="metric-card-value" id="mediationValue" data-i18n="mediationValue">Standby</div>
+        <div class="metric-card-detail" data-i18n="mediationDetail">Iran-US back-channel, Yemen mediation, Hamas indirect contacts. Activity boosts Influence Vector.</div>
+    </div>
+</div>
+
+<!-- MAP SECTION -->
+<div class="map-section">
+    <h2 data-i18n="mapTitle">🗺️ Oman — Strategic Overview</h2>
+    <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Muscat. Strait of Hormuz, Salalah container port, Duqm UK base, and Dhofar/Yemen border.</div>
+    <div style="width:100%;height:430px;border:2px solid var(--card-border);border-radius:8px;overflow:hidden;">
+        <iframe
+            src="https://www.openstreetmap.org/export/embed.html?bbox=52.0%2C16.6%2C59.8%2C26.4&layer=mapnik&marker=23.59%2C58.54"
+            width="100%" height="100%" frameborder="0" scrolling="no" style="border:none;">
+        </iframe>
+    </div>
+</div>
+
+<!-- KNOWLEDGE LIBRARY -->
+<div class="knowledge-library">
+    <h2>📚 <span data-i18n="kbTitle">Knowledge Library</span></h2>
+    <p class="open-source-disclaimer" data-i18n="kbDisclaimer">Note: Background information compiled from open-source research and analysis. Asifah methodology not for operational decision-making.</p>
+    <div class="knowledge-categories">
+
+        <!-- Sultan Haitham & Succession Architecture -->
+        <div class="knowledge-card collapsed" id="card-succession">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('succession')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">👑</span>
+                    <span data-i18n="kbSuccessionTitle">Sultan Haitham &amp; Succession Architecture</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbSuccessionP1"><strong>Sultan Haitham bin Tariq</strong> succeeded Sultan Qaboos in January 2020 after a 50-year reign. Unlike Qaboos, who left a sealed succession letter (opened the day he died), Haitham is the first Sultan to publicly designate an heir: <strong>Crown Prince Theyazin bin Haitham</strong> (eldest son, named Crown Prince in January 2021).</p>
+                <p data-i18n="kbSuccessionP2"><strong>Asad bin Tariq</strong>, Sultan Haitham's elder cousin, was historically seen as a dynastic alternative; his current profile is monitored as a forward indicator. <strong>Sayyida Mona bint Fahd</strong> (wife of Theyazin) appearance frequency is also tracked.</p>
+                <p data-i18n="kbSuccessionP3"><strong>What we watch:</strong> Sultan public absence patterns &gt; 7 days, Crown Prince profile elevation/eclipse, royal decree volume drops (silence pattern), Asad bin Tariq mentions, official anniversary visibility.</p>
+                <div class="open-source-disclaimer" data-i18n="kbDisclaimerLine">* Open-source detection of Sultan health is inherently weak — Omani state media will not report illness. Asifah uses absence patterns and Crown Prince profile movements as forward indicators.</div>
+                <div class="report-links-grid">
+                    <a href="https://www.chathamhouse.org/" target="_blank" class="report-link">📑 Chatham House</a>
+                    <a href="https://www.crisisgroup.org/" target="_blank" class="report-link">📑 Crisis Group</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- The Diplomatic Hub -->
+        <div class="knowledge-card collapsed" id="card-mediation">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('mediation')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🕊️</span>
+                    <span data-i18n="kbMediationTitle">The Diplomatic Hub — Iran/US, Yemen, Hamas Channels</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbMediationP1"><strong>Oman is the Gulf's diplomatic back-channel.</strong> Muscat hosts US-Iran indirect talks (Witkoff–Araghchi pattern, 2024-2025), brokers Houthi hostage releases, maintains channels to Hamas, and historically facilitated the 2015 JCPOA back-channel.</p>
+                <p data-i18n="kbMediationP2"><strong>Inverse polarity:</strong> Unlike standard rhetoric trackers where high signals = alarm, high mediation activity in Oman is a <em>stability</em> signal. Oman's value to both Washington and Tehran rises proportionally. The Iran tracker reads <code>oman:mediation_active</code> as a de-escalation modifier.</p>
+                <p data-i18n="kbMediationP3"><strong>What we watch:</strong> Witkoff or US envoy visits to Muscat, Iranian delegation arrivals, Houthi hostage release announcements, Hamas indirect contact signals, Sayyid Badr al-Busaidi (Foreign Minister) public engagements.</p>
+                <div class="report-links-grid">
+                    <a href="https://www.chathamhouse.org/" target="_blank" class="report-link">📑 Chatham House</a>
+                    <a href="https://www.al-monitor.com/" target="_blank" class="report-link">📑 Al-Monitor</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Salalah & Duqm Strategic Geography -->
+        <div class="knowledge-card collapsed" id="card-ports">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('ports')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🚢</span>
+                    <span data-i18n="kbPortsTitle">Salalah &amp; Duqm — Strategic Geography</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbPortsP1"><strong>Salalah container port</strong> (Dhofar governorate, south coast) is a US/UK logistics hub on the Indian Ocean, geographically <strong>outside the Strait of Hormuz</strong> — making it a strategic alternative if Hormuz closes. Iran has previously fired missiles toward Salalah and limpet-mined tankers nearby (May 2022).</p>
+                <p data-i18n="kbPortsP2"><strong>Duqm port</strong> (central east coast) hosts an expanding UK military base, deep-water dry dock, and Indian Ocean logistics infrastructure. Its strategic profile is rising as Western navies seek Hormuz alternatives. Iran rhetoric naming Duqm as a UK/British base is an Asifah-tracked signal.</p>
+                <p data-i18n="kbPortsP3"><strong>Strait of Hormuz:</strong> Oman controls the southern shore including the <strong>Musandam exclave</strong>. Approximately 20% of global oil transits Hormuz daily. Any closure has catastrophic global economic consequences — and would trigger immediate activation of Salalah/Duqm as strategic alternatives.</p>
+                <div class="report-links-grid">
+                    <a href="https://www.eia.gov/todayinenergy/" target="_blank" class="report-link">📑 EIA Hormuz</a>
+                    <a href="https://ukmto.org/" target="_blank" class="report-link">📑 UKMTO</a>
+                    <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Brent Crude & Oman Fiscal Position -->
+        <div class="knowledge-card collapsed" id="card-brent">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('brent')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">⛽</span>
+                    <span data-i18n="kbBrentTitle">Brent Crude &amp; Oman Fiscal Position</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbBrentP1"><strong>Oman's fiscal breakeven is approximately $70/barrel.</strong> Brent crude currently trades around $104-106/bbl due to Iran war and Strait of Hormuz disruptions — meaning Oman is generating significant surplus revenue. <strong>This is itself a stability signal:</strong> a healthy treasury reduces domestic economic pressure, supports Vision 2040 diversification investment, and gives the regime fiscal latitude.</p>
+                <p data-i18n="kbBrentP2"><strong>Risk asymmetry:</strong> Oman benefits from Iran-related price spikes only if Salalah and Duqm remain operational. A direct strike on Omani port infrastructure would simultaneously raise oil prices AND remove Oman's ability to capture revenue from them.</p>
+                <p data-i18n="kbBrentP3"><strong>Vision 2040:</strong> Oman's economic diversification strategy aims to reduce oil dependence to 8% of GDP by 2040. Current high oil prices accelerate the timeline by funding non-oil investment.</p>
+                <div class="report-links-grid">
+                    <a href="https://www.eia.gov/" target="_blank" class="report-link">📑 EIA</a>
+                    <a href="https://www.imf.org/en/Countries/OMN" target="_blank" class="report-link">📑 IMF Oman</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Yemen Border (Dhofar) -->
+        <div class="knowledge-card collapsed" id="card-dhofar">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('dhofar')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🌏</span>
+                    <span data-i18n="kbDhofarTitle">Yemen Border (Dhofar) — Refugees &amp; Spillover</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbDhofarP1"><strong>Dhofar governorate</strong> shares Oman's only land border with Yemen — specifically with Yemen's Mahra and Hadramawt governorates. Historically, this border has seen periodic refugee flows, smuggling, and (rarely) Houthi spillover.</p>
+                <p data-i18n="kbDhofarP2"><strong>Dhofar tribal management</strong> is managed by Royal Oman Police and ISS with minimal kinetic posture in normal times. The Dhofar Rebellion (1962-1976) is the historical baseline; modern conditions are far more stable.</p>
+                <p data-i18n="kbDhofarP3"><strong>What we watch:</strong> Yemeni refugee flows (cross-theater fingerprint <code>yemen:dhofar_refugee_pressure</code>), Houthi missile or drone spillover, Mahra Yemen-Oman crossing activity, Al Ghaydah border tempo.</p>
+                <div class="report-links-grid">
+                    <a href="https://www.unhcr.org/" target="_blank" class="report-link">📑 UNHCR</a>
+                    <a href="https://reliefweb.int/" target="_blank" class="report-link">📑 ReliefWeb</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Balochistan Connections -->
+        <div class="knowledge-card collapsed" id="card-baloch">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('baloch')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🤝</span>
+                    <span data-i18n="kbBalochTitle">Balochistan Connections — Pakistan Ties</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbBalochP1"><strong>Oman has deep, historic ties to Balochistan</strong> (Pakistan's southwestern province). Significant Baloch communities live in Oman, particularly in coastal regions, dating back centuries. The connection runs through trade, intermarriage, and labor migration.</p>
+                <p data-i18n="kbBalochP2"><strong>Baloch insurgency dynamics</strong> in Pakistan (Baloch Liberation Army / BLA, recurring CPEC and Gwadar-related attacks) can spill into Omani Baloch communities — primarily as humanitarian/refugee concerns rather than kinetic threats. Oman's neutral posture has historically insulated it.</p>
+                <p data-i18n="kbBalochP3"><strong>What we watch:</strong> Pakistan tracker fingerprint <code>pakistan:balochistan_unrest</code>, BLA-claimed attacks on CPEC/Gwadar infrastructure, Baloch refugee flows toward Oman, Omani-Baloch community sentiment.</p>
+                <div class="report-links-grid">
+                    <a href="https://www.crisisgroup.org/asia/south-asia/pakistan" target="_blank" class="report-link">📑 ICG Pakistan</a>
+                    <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zanzibar & East Africa Historic Ties -->
+        <div class="knowledge-card collapsed" id="card-zanzibar">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('zanzibar')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🌍</span>
+                    <span data-i18n="kbZanzibarTitle">Zanzibar &amp; East Africa Historic Ties</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbZanzibarP1"><strong>The Sultanate of Zanzibar</strong> was formally an Omani possession from 1698 until the 1856 split that created the Sultanate of Zanzibar as a separate dynasty. The relationship runs deep through language (Swahili-Arabic linguistic crossover), trade routes, dynastic intermarriage, and large diaspora communities — Zanzibari-origin Omanis remain a distinct community in Oman today.</p>
+                <p data-i18n="kbZanzibarP2"><strong>Modern political relevance:</strong> Although Zanzibar is now part of Tanzania, the cultural and family ties remain, and Oman maintains diplomatic interest in Zanzibar's stability. Asifah includes <code>zanzibar:unrest</code> as a placeholder fingerprint for future Africa backend integration.</p>
+                <p data-i18n="kbZanzibarP3"><strong>Awareness, not active tracking:</strong> Zanzibar instability is not currently a primary signal vector. The ties are noted for analytical context.</p>
+            </div>
+        </div>
+
+        <!-- UK & Portugal Historic Ties -->
+        <div class="knowledge-card collapsed" id="card-historic">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('historic')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🏛️</span>
+                    <span data-i18n="kbHistoricTitle">Historic Ties — UK &amp; Portugal</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbHistoricP1"><strong>Portugal (1507-1650):</strong> Portuguese forces controlled Hormuz, Muscat, and the Omani coast for ~140 years before Omani forces under Imam Sultan bin Saif expelled them in 1650. Portuguese forts (notably Fort Mirani and Fort Jalali in Muscat) remain visible today.</p>
+                <p data-i18n="kbHistoricP2"><strong>United Kingdom (1798-present):</strong> The 1798 Treaty of Friendship established a long-running British alliance, formalized through subsequent treaties. UK military presence remains substantial: <strong>Duqm naval base, Thumrait Air Base, Masirah Island staging.</strong> The UK-Oman Joint Defence Agreement (2017) deepened this further.</p>
+                <p data-i18n="kbHistoricP3"><strong>Awareness item:</strong> These are <em>historical/contextual</em> ties relevant for understanding Oman's strategic positioning. They are not signal-tracked in the rhetoric tracker but inform interpretation when UK-Oman defense cooperation appears in the news cycle.</p>
+                <div class="report-links-grid">
+                    <a href="https://www.gov.uk/world/oman" target="_blank" class="report-link">📑 UK Gov Oman</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Asifah Methodology -->
+        <div class="knowledge-card collapsed" id="card-method">
+            <div class="knowledge-header" onclick="toggleKnowledgeCard('method')">
+                <div class="knowledge-header-title">
+                    <span class="category-icon">🧭</span>
+                    <span data-i18n="kbMethodTitle">Asifah Methodology — Oman as Stability Anchor</span>
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p data-i18n="kbMethodP1"><strong>Dual-axis architecture:</strong> Unlike standard pressure trackers (Iran, Yemen, Lebanon) that score escalation 0-5 along a single threat dimension, the Oman tracker uses <strong>two independent vectors</strong> — Threat (instability signals) and Influence (diplomatic activity). Both score 0-5. The banner color follows the dominant axis: green = quiet, blue = monitoring, purple = influence active, orange/red = threat active.</p>
+                <p data-i18n="kbMethodP2"><strong>Cross-theater fingerprint architecture:</strong> Oman <em>reads</em> from Iran (Salalah/Duqm/Muscat targeting), Yemen (Dhofar pressure), Pakistan (Balochistan), and Zanzibar (placeholder). Oman <em>writes</em> its own fingerprints — most importantly <code>oman:mediation_active</code>, which the Iran tracker reads as a de-escalation modifier.</p>
+                <p data-i18n="kbMethodP3"><strong>Sultan health caveat:</strong> Open-source detection of Sultan illness is inherently weak — Omani state media will not report illness. Asifah uses absence patterns, Crown Prince profile movements, and royal decree volume changes as forward indicators. Confidence is appropriately calibrated.</p>
+                <p data-i18n="kbMethodP4"><strong>Source coverage:</strong> RSS (12 feeds: EN/AR/FA/HE), GDELT (4 languages), NewsAPI (English fallback), Brave Search (multi-language tertiary fallback when primary sources are starving). 12-hour background refresh cycle.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ARTICLES -->
+<div class="articles-section">
+    <div class="section-title" data-i18n="articlesTitle">📰 Recent Oman, Hormuz &amp; Maritime Security Articles (Last 7 Days)</div>
+    <div id="articlesContainer">
+        <div style="text-align:center;color:var(--text-secondary);padding:30px;" data-i18n="articlesLoading">Loading articles...</div>
+    </div>
+</div>
+
+</div> <!-- /main-content -->
+</div> <!-- /page-with-sidebar -->
+
+<!-- FOOTER (GOLD STANDARD) -->
+<footer>
+    <div data-i18n="footerSources">Data Sources: NewsAPI, GDELT, RSS (EN/AR/FA/HE), Brave Search (multi-language), Cross-theater fingerprints from Iran/Yemen/Pakistan trackers</div>
+    <div style="margin-top:8px;font-size:0.85em;" data-i18n="footerMethodology">Methodology: Dual-axis stability anchor frame (Threat + Influence) · Cross-theater fingerprints · 12-hour background refresh · Sultan health detection via absence pattern analysis</div>
+    <div style="margin-top:14px;font-size:0.9em;">For inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
+    <div class="footer-version">
+        <div style="font-size:0.95em;font-weight:bold;">Asifah Analytics — Oman Stability Index v2.0</div>
+        <div style="font-size:0.82em;margin-top:4px;" data-i18n="footerCadence">Updated every 30 minutes · Not for operational decision-making</div>
+    </div>
+    <div class="footer-coffee">
+        <span style="font-size:0.92em;" data-i18n="footerCoffee">If you find Asifah Analytics useful, you can </span>
+        <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);font-weight:bold;">☕ buy me a coffee</a>
+    </div>
+    <div class="footer-copyright" data-i18n="footerCopyright">
+        © 2025-2026 Asifah Analytics · Research &amp; Educational Use Only · Unauthorized reproduction prohibited
+    </div>
+</footer>
+
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════════════════════
+const BACKEND_URL = 'https://asifah-backend.onrender.com';
+const RHETORIC_ENDPOINT = BACKEND_URL + '/api/rhetoric/oman';
+
+// ════════════════════════════════════════════════════════
+// TRANSLATIONS (EN / AR / HE / FA) — Stability page
+// ════════════════════════════════════════════════════════
+const T = {
+    en: {
+        pageTitle:             '🇴🇲 OMAN STABILITY INDEX',
+        pageSubtitle:          'Strait of Hormuz · Diplomatic Mediation · Sultan Watch · Salalah/Duqm Strategic Geography',
+        lastUpdatedLabel:      'Last updated:',
+        themeLabel:            'THEME',
+        backLink:              '← Back to Middle East',
+        navDashboards:         'Dashboards',
+        navMERhetoric:         'ME Rhetoric',
+        navLive:               '● Live',
+        navFuture:             '🔒 Future',
+        navYouAreHere:         '◉ You are here',
+        wwCautionLabel:        '⚠️ U.S. State Department — Worldwide Caution',
+        wwCautionText:         'Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.',
+        viewLink:              'VIEW CAUTION →',
+        travelAdvisoryLabel:   'U.S. State Department — Oman Travel Advisory',
+        level2Badge:           'LEVEL 2',
+        travelAdvisoryText:    'Exercise Increased Caution in Oman due to the ongoing regional security situation.',
+        viewAdvisoryLink:      'VIEW ADVISORY →',
+        rhetoricBannerLabel:   'OMAN RHETORIC TRACKER — LIVE',
+        rhetoricLoading:       'Loading rhetoric scan...',
+        threatStatLabel:       'Threat',
+        influenceStatLabel:    'Influence',
+        viewTrackerLink:       'VIEW TRACKER →',
+        brentLabel:            '⛽ BRENT CRUDE',
+        brentDetail:           'Oman fiscal breakeven ~$70/bbl. Current price = healthy treasury, reduced domestic stress.',
+        sultanLabel:           '👑 SULTAN STATUS',
+        sultanValue:           'Visible',
+        sultanDetail:          'Sultan Haitham public engagement tracked. Crown Prince Theyazin as designated heir.',
+        salalahLabel:          '🚢 SALALAH/DUQM',
+        salalahValue:          'Quiet',
+        salalahDetail:         'Strategic ports outside Strait of Hormuz. Iran rhetoric naming Salalah/Duqm tracked via Iran fingerprints.',
+        mediationLabel:        '🕊️ MEDIATION',
+        mediationValue:        'Standby',
+        mediationDetail:       'Iran-US back-channel, Yemen mediation, Hamas indirect contacts. Activity boosts Influence Vector.',
+        mapTitle:              '🗺️ Oman — Strategic Overview',
+        mapSubtitle:           'Interactive map centered on Muscat. Strait of Hormuz, Salalah container port, Duqm UK base, and Dhofar/Yemen border.',
+        kbTitle:               'Knowledge Library',
+        kbDisclaimer:          'Background information compiled from open-source research and analysis. Asifah methodology not for operational decision-making.',
+        kbDisclaimerLine:      '* Open-source detection of Sultan health is inherently weak — Omani state media will not report illness.',
+        kbSuccessionTitle:     'Sultan Haitham & Succession Architecture',
+        kbMediationTitle:      'The Diplomatic Hub — Iran/US, Yemen, Hamas Channels',
+        kbPortsTitle:          'Salalah & Duqm — Strategic Geography',
+        kbBrentTitle:          'Brent Crude & Oman Fiscal Position',
+        kbDhofarTitle:         'Yemen Border (Dhofar) — Refugees & Spillover',
+        kbBalochTitle:         'Balochistan Connections — Pakistan Ties',
+        kbZanzibarTitle:       'Zanzibar & East Africa Historic Ties',
+        kbHistoricTitle:       'Historic Ties — UK & Portugal',
+        kbMethodTitle:         'Asifah Methodology — Oman as Stability Anchor',
+        articlesTitle:         '📰 Recent Oman, Hormuz & Maritime Security Articles (Last 7 Days)',
+        articlesLoading:       'Loading articles...',
+        footerSources:         'Data Sources: NewsAPI, GDELT, RSS (EN/AR/FA/HE), Brave Search (multi-language), Cross-theater fingerprints',
+        footerMethodology:     'Methodology: Dual-axis stability anchor frame · Cross-theater fingerprints · 12-hour background refresh',
+        footerCadence:         'Updated every 30 minutes · Not for operational decision-making',
+        footerCoffee:          'If you find Asifah Analytics useful, you can ',
+        footerCopyright:       '© 2025-2026 Asifah Analytics · Research & Educational Use Only · Unauthorized reproduction prohibited',
+    },
+    ar: {
+        pageTitle:             '🇴🇲 مؤشر استقرار عُمان',
+        pageSubtitle:          'مضيق هرمز · الوساطة الدبلوماسية · مراقبة السلطان · جغرافيا صلالة/الدقم الاستراتيجية',
+        lastUpdatedLabel:      'آخر تحديث:',
+        themeLabel:            'السمة',
+        backLink:              '← العودة إلى الشرق الأوسط',
+        navDashboards:         'لوحات المعلومات',
+        navMERhetoric:         'خطاب الشرق الأوسط',
+        navLive:               '● مباشر',
+        navFuture:             '🔒 مستقبلي',
+        navYouAreHere:         '◉ أنت هنا',
+        wwCautionLabel:        '⚠️ وزارة الخارجية الأمريكية — تحذير عالمي',
+        wwCautionText:         'في أعقاب انطلاق العمليات القتالية الأمريكية في إيران، يتعين على الأمريكيين في جميع أنحاء العالم وخاصة في الشرق الأوسط اتباع توجيهات أقرب سفارة أو قنصلية أمريكية.',
+        viewLink:              'عرض التحذير ←',
+        travelAdvisoryLabel:   'وزارة الخارجية الأمريكية — توصيات سفر إلى عُمان',
+        level2Badge:           'المستوى 2',
+        travelAdvisoryText:    'توخّ الحذر المتزايد في عُمان بسبب الوضع الأمني الإقليمي الراهن.',
+        viewAdvisoryLink:      'عرض التوصية ←',
+        rhetoricBannerLabel:   'متعقب الخطاب العماني — مباشر',
+        rhetoricLoading:       'جارٍ تحميل المسح…',
+        threatStatLabel:       'تهديد',
+        influenceStatLabel:    'نفوذ',
+        viewTrackerLink:       'عرض المتعقب ←',
+        brentLabel:            '⛽ خام برنت',
+        brentDetail:           'نقطة التعادل المالي العمانية ~70 دولاراً للبرميل. السعر الحالي = خزينة صحية وضغط محلي أقل.',
+        sultanLabel:           '👑 حالة السلطان',
+        sultanValue:           'ظاهر',
+        sultanDetail:          'تتم متابعة الظهور العام للسلطان هيثم. ولي العهد ذي يزن وريث معيّن.',
+        salalahLabel:          '🚢 صلالة/الدقم',
+        salalahValue:          'هادئ',
+        salalahDetail:         'موانئ استراتيجية خارج مضيق هرمز. يتم تتبع خطاب إيران الذي يسمي صلالة/الدقم عبر بصمات متعقب إيران.',
+        mediationLabel:        '🕊️ الوساطة',
+        mediationValue:        'استعداد',
+        mediationDetail:       'القناة الخلفية إيران-أمريكا، وساطة اليمن، اتصالات حماس غير المباشرة. النشاط يعزز متجه النفوذ.',
+        mapTitle:              '🗺️ عُمان — نظرة استراتيجية',
+        mapSubtitle:           'خريطة تفاعلية تتمركز في مسقط. مضيق هرمز، ميناء صلالة، قاعدة الدقم البريطانية، وحدود ظفار/اليمن.',
+        kbTitle:               'مكتبة المعرفة',
+        kbDisclaimer:          'تم تجميع المعلومات الخلفية من البحث والتحليل مفتوحَي المصدر. منهجية أسيفة ليست لاتخاذ القرارات التشغيلية.',
+        kbDisclaimerLine:      '* الرصد مفتوح المصدر لصحة السلطان ضعيف بطبيعته — لن تنشر وسائل الإعلام الرسمية أخبار المرض.',
+        kbSuccessionTitle:     'السلطان هيثم وهيكلية الخلافة',
+        kbMediationTitle:      'المركز الدبلوماسي — قنوات إيران/الولايات المتحدة، اليمن، حماس',
+        kbPortsTitle:          'صلالة والدقم — الجغرافيا الاستراتيجية',
+        kbBrentTitle:          'خام برنت والوضع المالي لعُمان',
+        kbDhofarTitle:         'الحدود اليمنية (ظفار) — اللاجئون والامتدادات',
+        kbBalochTitle:         'روابط بلوشستان — العلاقات مع باكستان',
+        kbZanzibarTitle:       'زنجبار وروابط شرق أفريقيا التاريخية',
+        kbHistoricTitle:       'الروابط التاريخية — المملكة المتحدة والبرتغال',
+        kbMethodTitle:         'منهجية أسيفة — عُمان كمرساة استقرار',
+        articlesTitle:         '📰 آخر مقالات عُمان وهرمز والأمن البحري (آخر 7 أيام)',
+        articlesLoading:       'جارٍ تحميل المقالات…',
+        footerSources:         'مصادر البيانات: NewsAPI، GDELT، RSS (إنجليزي/عربي/فارسي/عبري)، Brave Search (متعدد اللغات)، بصمات متعددة المسارح',
+        footerMethodology:     'المنهجية: إطار مرساة الاستقرار ثنائي المحور · بصمات متعددة المسارح · تحديث كل 12 ساعة',
+        footerCadence:         'تحديث كل 30 دقيقة · ليس لاتخاذ القرارات التشغيلية',
+        footerCoffee:          'إذا وجدت تحليلات أسيفة مفيدة، يمكنك ',
+        footerCopyright:       '© 2025-2026 أسيفة للتحليلات · للأبحاث والاستخدام التعليمي فقط · ممنوع النسخ غير المصرح به',
+    },
+    he: {
+        pageTitle:             '🇴🇲 מדד יציבות עומאן',
+        pageSubtitle:          'מצרי הורמוז · תיווך דיפלומטי · מעקב סולטן · גאוגרפיה אסטרטגית סלאלה/דוקם',
+        lastUpdatedLabel:      'עודכן לאחרונה:',
+        themeLabel:            'ערכת נושא',
+        backLink:              '← חזרה למזרח התיכון',
+        navDashboards:         'לוחות בקרה',
+        navMERhetoric:         'רטוריקת המזה"ת',
+        navLive:               '● פעיל',
+        navFuture:             '🔒 עתידי',
+        navYouAreHere:         '◉ אתה כאן',
+        wwCautionLabel:        '⚠️ מחלקת המדינה — אזהרה כלל-עולמית',
+        wwCautionText:         'בעקבות פתיחת מבצעי הלחימה האמריקאיים באיראן, אזרחים אמריקאים ברחבי העולם ובמיוחד במזרח התיכון מתבקשים לפעול לפי הנחיות השגרירות או הקונסוליה האמריקאית הקרובה.',
+        viewLink:              'הצג אזהרה ←',
+        travelAdvisoryLabel:   'מחלקת המדינה — ייעוץ נסיעות לעומאן',
+        level2Badge:           'רמה 2',
+        travelAdvisoryText:    'נהג בזהירות מוגברת בעומאן בשל המצב הביטחוני האזורי המתמשך.',
+        viewAdvisoryLink:      'הצג ייעוץ ←',
+        rhetoricBannerLabel:   'מעקב רטוריקת עומאן — חי',
+        rhetoricLoading:       'טוען סריקה…',
+        threatStatLabel:       'איום',
+        influenceStatLabel:    'השפעה',
+        viewTrackerLink:       'הצג מעקב ←',
+        brentLabel:            '⛽ ברנט',
+        brentDetail:           'נקודת איזון פיסקלית של עומאן ~70$ לחבית. המחיר הנוכחי = אוצר בריא, פחות לחץ פנימי.',
+        sultanLabel:           '👑 מצב הסולטן',
+        sultanValue:           'נראה',
+        sultanDetail:          'הופעות פומביות של הסולטן הית׳אם נמצאות במעקב. נסיך הכתר ת׳ייאזין כיורש הוגדר רשמית.',
+        salalahLabel:          '🚢 סלאלה/דוקם',
+        salalahValue:          'שקט',
+        salalahDetail:         'נמלים אסטרטגיים מחוץ למצרי הורמוז. רטוריקה איראנית הנוקבת בסלאלה/דוקם נמדדת דרך טביעות אצבע של מעקב איראן.',
+        mediationLabel:        '🕊️ תיווך',
+        mediationValue:        'בכוננות',
+        mediationDetail:       'ערוץ אחורי איראן-ארה"ב, תיווך תימן, מגעים עקיפים עם חמאס. פעילות מגבירה את וקטור ההשפעה.',
+        mapTitle:              '🗺️ עומאן — סקירה אסטרטגית',
+        mapSubtitle:           'מפה אינטראקטיבית במרכז מוסקט. מצרי הורמוז, נמל סלאלה, בסיס בריטי בדוקם, וגבול דהופאר/תימן.',
+        kbTitle:               'ספריית ידע',
+        kbDisclaimer:          'מידע רקע נלקט ממחקר וניתוח קוד פתוח. מתודולוגיית אסיפה אינה מיועדת לקבלת החלטות מבצעיות.',
+        kbDisclaimerLine:      '* גילוי קוד פתוח של בריאות הסולטן הוא חלש מטבעו — תקשורת ממסדית לא תדווח על מחלה.',
+        kbSuccessionTitle:     'הסולטן הית׳אם וארכיטקטורת הירושה',
+        kbMediationTitle:      'מרכז דיפלומטי — ערוצי איראן/ארה"ב, תימן, חמאס',
+        kbPortsTitle:          'סלאלה ודוקם — גאוגרפיה אסטרטגית',
+        kbBrentTitle:          'ברנט והמצב הפיסקלי של עומאן',
+        kbDhofarTitle:         'גבול תימן (דהופאר) — פליטים וגלישה',
+        kbBalochTitle:         'קשרי בלוצ׳יסטן — קשרים עם פקיסטן',
+        kbZanzibarTitle:       'זנזיבר וקשרים היסטוריים עם מזרח אפריקה',
+        kbHistoricTitle:       'קשרים היסטוריים — בריטניה ופורטוגל',
+        kbMethodTitle:         'מתודולוגיית אסיפה — עומאן כעוגן יציבות',
+        articlesTitle:         '📰 כתבות אחרונות על עומאן, הורמוז וביטחון ימי (7 ימים אחרונים)',
+        articlesLoading:       'טוען כתבות…',
+        footerSources:         'מקורות נתונים: NewsAPI, GDELT, RSS (אנגלית/ערבית/פרסית/עברית), Brave Search, טביעות אצבע בין-זירתיות',
+        footerMethodology:     'מתודולוגיה: מסגרת עוגן יציבות דו-צירית · טביעות אצבע בין-זירתיות · רענון רקע כל 12 שעות',
+        footerCadence:         'מתעדכן כל 30 דקות · לא לקבלת החלטות מבצעיות',
+        footerCoffee:          'אם אסיפה אנליטיקס שימושית עבורך, באפשרותך ',
+        footerCopyright:       '© 2025-2026 אסיפה אנליטיקס · למחקר ולשימוש חינוכי בלבד · אסור שכפול ללא רשות',
+    },
+    fa: {
+        pageTitle:             '🇴🇲 شاخص ثبات عُمان',
+        pageSubtitle:          'تنگه هرمز · میانجیگری دیپلماتیک · رصد سلطان · جغرافیای راهبردی صلاله/الدقم',
+        lastUpdatedLabel:      'آخرین به‌روزرسانی:',
+        themeLabel:            'تم',
+        backLink:              '← بازگشت به خاورمیانه',
+        navDashboards:         'داشبوردها',
+        navMERhetoric:         'لفاظی خاورمیانه',
+        navLive:               '● زنده',
+        navFuture:             '🔒 آینده',
+        navYouAreHere:         '◉ شما اینجا هستید',
+        wwCautionLabel:        '⚠️ وزارت امور خارجه آمریکا — هشدار جهانی',
+        wwCautionText:         'به دنبال آغاز عملیات نظامی آمریکا در ایران، آمریکایی‌ها در سراسر جهان به‌ویژه در خاورمیانه باید از راهنمایی نزدیک‌ترین سفارت یا کنسولگری آمریکا پیروی کنند.',
+        viewLink:              'مشاهده هشدار ←',
+        travelAdvisoryLabel:   'وزارت امور خارجه آمریکا — توصیه سفر به عُمان',
+        level2Badge:           'سطح ۲',
+        travelAdvisoryText:    'به دلیل وضعیت امنیتی منطقه‌ای، در عُمان احتیاط بیشتری به خرج دهید.',
+        viewAdvisoryLink:      'مشاهده توصیه ←',
+        rhetoricBannerLabel:   'رصد لفاظی عُمان — زنده',
+        rhetoricLoading:       'در حال بارگذاری…',
+        threatStatLabel:       'تهدید',
+        influenceStatLabel:    'نفوذ',
+        viewTrackerLink:       'مشاهده رصد ←',
+        brentLabel:            '⛽ نفت برنت',
+        brentDetail:           'نقطه سر به سر بودجه عُمان ~۷۰ دلار در هر بشکه. قیمت کنونی = خزانه سالم، فشار داخلی کمتر.',
+        sultanLabel:           '👑 وضعیت سلطان',
+        sultanValue:           'فعال',
+        sultanDetail:          'حضور عمومی سلطان هیثم رصد می‌شود. ولیعهد ذی یزن به عنوان وارث منصوب شده است.',
+        salalahLabel:          '🚢 صلاله/الدقم',
+        salalahValue:          'آرام',
+        salalahDetail:         'بنادر راهبردی خارج از تنگه هرمز. لفاظی ایران درباره صلاله/الدقم از طریق اثرانگشت‌های ایران رصد می‌شود.',
+        mediationLabel:        '🕊️ میانجیگری',
+        mediationValue:        'آماده‌باش',
+        mediationDetail:       'کانال غیرمستقیم ایران-آمریکا، میانجیگری یمن، تماس‌های غیرمستقیم با حماس. فعالیت بردار نفوذ را تقویت می‌کند.',
+        mapTitle:              '🗺️ عُمان — نمای راهبردی',
+        mapSubtitle:           'نقشه تعاملی متمرکز بر مسقط. تنگه هرمز، بندر صلاله، پایگاه بریتانیایی الدقم و مرز ظفار/یمن.',
+        kbTitle:               'کتابخانه دانش',
+        kbDisclaimer:          'اطلاعات پس‌زمینه از پژوهش و تحلیل متن‌باز جمع‌آوری شده است. روش‌شناسی اسیفه برای تصمیم‌گیری عملیاتی نیست.',
+        kbDisclaimerLine:      '* تشخیص متن‌باز سلامت سلطان ذاتاً ضعیف است — رسانه‌های دولتی عُمان بیماری را گزارش نخواهند کرد.',
+        kbSuccessionTitle:     'سلطان هیثم و ساختار جانشینی',
+        kbMediationTitle:      'مرکز دیپلماتیک — کانال‌های ایران/آمریکا، یمن، حماس',
+        kbPortsTitle:          'صلاله و الدقم — جغرافیای راهبردی',
+        kbBrentTitle:          'برنت و موقعیت مالی عُمان',
+        kbDhofarTitle:         'مرز یمن (ظفار) — پناهندگان و سرریز',
+        kbBalochTitle:         'پیوندهای بلوچستان — روابط با پاکستان',
+        kbZanzibarTitle:       'زنگبار و پیوندهای تاریخی شرق آفریقا',
+        kbHistoricTitle:       'پیوندهای تاریخی — بریتانیا و پرتغال',
+        kbMethodTitle:         'روش‌شناسی اسیفه — عُمان به‌مثابه لنگر ثبات',
+        articlesTitle:         '📰 مقالات اخیر درباره عُمان، هرمز و امنیت دریایی (۷ روز گذشته)',
+        articlesLoading:       'در حال بارگذاری مقالات…',
+        footerSources:         'منابع داده: NewsAPI، GDELT، RSS (انگلیسی/عربی/فارسی/عبری)، Brave Search (چندزبانه)، اثرانگشت‌های بین‌تئاتری',
+        footerMethodology:     'روش‌شناسی: چارچوب لنگر ثبات دومحوری · اثرانگشت‌های بین‌تئاتری · بازخوانی هر ۱۲ ساعت',
+        footerCadence:         'هر ۳۰ دقیقه به‌روزرسانی · نه برای تصمیم‌گیری عملیاتی',
+        footerCoffee:          'اگر اسیفه آنالیتیکس برایتان مفید است، می‌توانید ',
+        footerCopyright:       '© ۲۰۲۵-۲۰۲۶ اسیفه آنالیتیکس · تنها برای پژوهش و استفاده آموزشی · بازتولید بدون اجازه ممنوع است',
+    },
+};
+
+let currentLang = localStorage.getItem('asifah-lang-oman-stab') || 'en';
+
+function applyTranslations() {
+    const tr = T[currentLang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (tr[key]) el.textContent = tr[key];
+    });
+    const isRTL = ['ar', 'he', 'fa'].includes(currentLang);
+    document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', currentLang);
+}
+
+function setLanguage(lang, btn) {
+    currentLang = lang;
+    localStorage.setItem('asifah-lang-oman-stab', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyTranslations();
+    if (window._lastRhetoricData) renderRhetoricBanner(window._lastRhetoricData);
+}
+
+// ════════════════════════════════════════════════════════
+// THEME
+// ════════════════════════════════════════════════════════
+function loadTheme() {
+    const saved = localStorage.getItem('asifah-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    const cb = document.getElementById('themeToggle');
+    if (cb) cb.checked = saved === 'dark';
+}
+function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const nxt = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', nxt);
+    localStorage.setItem('asifah-theme', nxt);
+}
+
+// ════════════════════════════════════════════════════════
+// KNOWLEDGE LIBRARY TOGGLE
+// ════════════════════════════════════════════════════════
+function toggleKnowledgeCard(cardId) {
+    const card = document.getElementById('card-' + cardId);
+    if (card) card.classList.toggle('collapsed');
+}
+
+// ════════════════════════════════════════════════════════
+// RHETORIC BANNER (LIVE FROM /api/rhetoric/oman)
+// ════════════════════════════════════════════════════════
+function renderRhetoricBanner(data) {
+    const tr = T[currentLang] || T.en;
+    const banner = document.getElementById('rhetoricBanner');
+    const mode = (data.banner_mode || 'QUIET').toLowerCase();
+
+    // Reset banner mode classes
+    banner.className = 'rhetoric-banner ' + mode + '-mode';
+
+    // Icon based on mode
+    const icons = { quiet: '🟢', monitoring: '🔵', influence: '🟣', threat: '🟠' };
+    document.getElementById('rhetoricIcon').textContent = icons[mode] || '⚪';
+
+    // Mode label (use backend's banner_label or fallback)
+    document.getElementById('rhetoricMode').textContent =
+        data.banner_label || (data.banner_mode + ' MODE');
+
+    // Detail line — pull from so_what.scenario or fallback
+    const scenario = (data.so_what && data.so_what.scenario) || '';
+    document.getElementById('rhetoricDetail').textContent =
+        scenario || `T:${data.threat_level || 0} · I:${data.influence_level || 0}`;
+
+    // Threat / Influence numeric
+    document.getElementById('rhetoricThreat').textContent = data.threat_level || 0;
+    document.getElementById('rhetoricInfluence').textContent = data.influence_level || 0;
+
+    // Update Salalah / Mediation cards based on actor levels
+    const actors = data.actors || {};
+    const salalahLevel = (actors.external_threats_inbound || {}).escalation_level || 0;
+    const mediationLevel = (actors.mediation_activity || {}).escalation_level || 0;
+    const salEl = document.getElementById('salalahValue');
+    const medEl = document.getElementById('mediationValue');
+    if (salEl) {
+        if (salalahLevel >= 3)      salEl.textContent = currentLang === 'en' ? 'ALERT' : (currentLang === 'ar' ? 'تأهب' : (currentLang === 'he' ? 'אזעקה' : 'هشدار'));
+        else if (salalahLevel >= 1) salEl.textContent = currentLang === 'en' ? 'Watch' : (currentLang === 'ar' ? 'مراقبة' : (currentLang === 'he' ? 'מעקב' : 'رصد'));
+        else                        salEl.textContent = tr.salalahValue;
+    }
+    if (medEl) {
+        if (mediationLevel >= 3)      medEl.textContent = currentLang === 'en' ? 'ACTIVE' : (currentLang === 'ar' ? 'نشط' : (currentLang === 'he' ? 'פעיל' : 'فعال'));
+        else if (mediationLevel >= 1) medEl.textContent = currentLang === 'en' ? 'Engaged' : (currentLang === 'ar' ? 'منخرط' : (currentLang === 'he' ? 'מעורב' : 'درگیر'));
+        else                          medEl.textContent = tr.mediationValue;
+    }
+}
+
+async function loadRhetoricBanner() {
+    try {
+        const resp = await fetch(RHETORIC_ENDPOINT, { cache: 'no-store' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        if (!data || !data.success) throw new Error('invalid response');
+        window._lastRhetoricData = data;
+        renderRhetoricBanner(data);
+    } catch (e) {
+        console.warn('[Oman Stability] Rhetoric banner load failed:', e.message);
+    }
+}
+
+// ════════════════════════════════════════════════════════
+// ARTICLES (from existing /api/threat/oman endpoint)
+// ════════════════════════════════════════════════════════
+async function loadArticles() {
+    try {
+        const resp = await fetch(BACKEND_URL + '/api/threat/oman?days=7');
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        const articles = data.top_scoring_articles || data.articles || data.recent_headlines || [];
+        if (articles.length > 0) displayArticles(articles);
+        else displayFallback();
+    } catch (e) {
+        console.warn('[Oman Stability] Article load failed:', e.message);
+        displayFallback();
+    }
+}
+function displayArticles(articles) {
+    const container = document.getElementById('articlesContainer');
+    container.innerHTML = articles.slice(0, 20).map(a => {
+        const title = a.title || a.article_title || 'Untitled';
+        const source = a.source || a.source_name || '';
+        const published = a.published || a.publishedAt || '';
+        const url = a.url || '#';
+        let dateStr = 'Recent';
+        if (published) {
+            try { dateStr = new Date(published).toLocaleDateString(); } catch(e) {}
         }
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('asifah-theme', next);
-        }
-        initTheme();
+        return `<div class="article-item">
+            <div class="article-title">${title}</div>
+            <div class="article-meta">${source} • ${dateStr}</div>
+            ${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}
+        </div>`;
+    }).join('');
+}
+function displayFallback() {
+    const container = document.getElementById('articlesContainer');
+    container.innerHTML = `
+        <div style="text-align:center;padding:30px;color:var(--text-secondary);">
+            <p style="font-size:15px;margin-bottom:14px;">📡 Live article feed unavailable. Curated OSINT sources:</p>
+            <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px;">
+                <a href="https://www.aljazeera.com/tag/oman/" target="_blank" style="padding:8px 14px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">Al Jazeera — Oman</a>
+                <a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:8px 14px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">Reuters — Middle East</a>
+                <a href="https://timesofoman.com" target="_blank" style="padding:8px 14px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">Times of Oman</a>
+                <a href="https://ukmto.org/" target="_blank" style="padding:8px 14px;background:var(--accent);color:white;border-radius:6px;text-decoration:none;font-size:12px;font-weight:bold;">UKMTO Maritime</a>
+            </div>
+        </div>`;
+}
 
-        function toggleKnowledgeCard(cardId) {
-            const card = document.getElementById('card-' + cardId);
-            if (card) card.classList.toggle('collapsed');
-        }
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+loadTheme();
+const activeBtn = document.querySelector(`.lang-btn[onclick*="'${currentLang}'"]`);
+if (activeBtn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    activeBtn.classList.add('active');
+}
+applyTranslations();
 
-        // Load articles
-        async function loadArticles() {
-            try {
-                const response = await fetch(BACKEND_URL + '/api/threat/oman?days=7');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                const articles = data.top_scoring_articles || data.articles || data.recent_headlines || [];
-                if (articles.length > 0) {
-                    displayArticles(articles);
-                } else {
-                    displayFallback();
-                }
-            } catch (error) {
-                console.warn('Article load failed:', error.message);
-                displayFallback();
-            }
-        }
-
-        function displayArticles(articles) {
-            const container = document.getElementById('articlesContainer');
-            container.innerHTML = articles.slice(0, 20).map(a => {
-                const title = a.title || a.article_title || 'Untitled';
-                const source = a.source || a.source_name || '';
-                const published = a.published || a.publishedAt || '';
-                const url = a.url || '#';
-                let dateStr = 'Recent';
-                if (published) { try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch(e) {} }
-                return '<div class="article-item">' +
-                    '<div class="article-title">' + title + '</div>' +
-                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
-                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        function displayFallback() {
-            const container = document.getElementById('articlesContainer');
-            container.innerHTML = 
-                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
-                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading...</p>' +
-                '<p style="font-size:13px; margin-bottom:20px;">Check these curated OSINT sources:</p>' +
-                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
-                '<a href="https://www.aljazeera.com/tag/oman/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Oman</a>' +
-                '<a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - Middle East</a>' +
-                '<a href="https://ukmto.org/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">UKMTO Maritime</a>' +
-                '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
-                "'</div>' +" +
-                "'</div>';";
-        }
-
-        function switchLanguage(lang, button) {
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
-                document.documentElement.setAttribute('dir', 'rtl');
-            } else {
-                document.documentElement.setAttribute('dir', 'ltr');
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('lastUpdated').textContent = 
-                'Last updated: ' + new Date().toLocaleString('en-US', { 
-                    month: 'short', day: 'numeric', year: 'numeric', 
-                    hour: 'numeric', minute: '2-digit', hour12: true 
-                });
-            loadArticles();
-        });
-    </script>
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('lastUpdated').innerHTML =
+        `<span data-i18n="lastUpdatedLabel">${(T[currentLang]||T.en).lastUpdatedLabel}</span> ` +
+        new Date().toLocaleString();
+    loadRhetoricBanner();
+    loadArticles();
+    // Refresh rhetoric banner every 5 min
+    setInterval(loadRhetoricBanner, 5 * 60 * 1000);
+});
+</script>
 </body>
 </html>
