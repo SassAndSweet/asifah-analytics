@@ -308,6 +308,115 @@
                 transform: translateY(0);
             }
         }
+
+        /* ── GLOBAL PRESSURE INDEX BUTTON ── */
+        .gpi-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+            padding: 0 24px;
+            width: 100%;
+            animation: fadeUp 0.6s ease-out 1.4s both;
+        }
+        .gpi-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            width: 100%;
+            max-width: 720px;
+            padding: 22px 30px;
+            border-radius: 12px;
+            text-decoration: none;
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.18) 0%, rgba(0, 130, 220, 0.12) 100%);
+            border: 1.5px solid rgba(0, 200, 255, 0.5);
+            color: #ffffff;
+            box-shadow: 0 0 25px rgba(0, 180, 255, 0.18), inset 0 0 30px rgba(0, 180, 255, 0.05);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+        .gpi-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.10), transparent);
+            pointer-events: none;
+        }
+        .gpi-btn:hover {
+            border-color: rgba(0, 220, 255, 0.85);
+            box-shadow: 0 0 40px rgba(0, 180, 255, 0.35), 0 0 90px rgba(0, 180, 255, 0.12);
+            transform: translateY(-3px);
+        }
+        .gpi-btn-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 2;
+        }
+        .gpi-btn-icon {
+            font-size: 36px;
+            text-shadow: 0 0 14px rgba(100, 220, 255, 0.5);
+        }
+        .gpi-btn-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+        .gpi-btn-label {
+            font-family: 'Cinzel', serif;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+        }
+        .gpi-btn-tagline {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 12px;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: rgba(100, 220, 255, 0.7);
+        }
+        .gpi-btn-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+            position: relative;
+            z-index: 2;
+        }
+        .gpi-btn-level {
+            font-family: 'Cinzel', serif;
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -1px;
+            text-shadow: 0 0 16px currentColor;
+        }
+        .gpi-btn-status {
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: #ffffff;
+        }
+        @media (max-width: 768px) {
+            .gpi-btn {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 14px;
+                padding: 18px;
+            }
+            .gpi-btn-right { align-items: flex-start; flex-direction: row; gap: 14px; }
+            .gpi-btn-level { font-size: 26px; }
+        }
     </style>
 </head>
 <body>
@@ -355,6 +464,23 @@
 
             </div>
 
+            <!-- ── GLOBAL PRESSURE INDEX BANNER BUTTON ── -->
+            <div class="gpi-section">
+                <a href="gpi.html" class="gpi-btn" id="gpiButton">
+                    <div class="gpi-btn-left">
+                        <span class="gpi-btn-icon">🌐</span>
+                        <div class="gpi-btn-text">
+                            <span class="gpi-btn-label">Global Pressure Index</span>
+                            <span class="gpi-btn-tagline">Cross-theater convergence synthesis</span>
+                        </div>
+                    </div>
+                    <div class="gpi-btn-right">
+                        <span class="gpi-btn-level" id="gpiBtnLevel" style="color:#64dcff;">L--</span>
+                        <span class="gpi-btn-status" id="gpiBtnStatus" style="background:rgba(100,220,255,0.15);">LOADING</span>
+                    </div>
+                </a>
+            </div>
+
             <div class="landing-footer">
                 <p>ASIFAH ANALYTICS provides open-source intelligence monitoring and conflict probability assessments across global regions. Data is aggregated from multilingual news sources, prediction markets, and community intelligence feeds.</p>
                 <div class="footer-links" style="margin-top: 16px; margin-bottom: 12px;">
@@ -369,5 +495,37 @@
 
         </div>
     </div>
+
+    <script>
+        // ── GPI BUTTON DYNAMIC LEVEL ──
+        // Fetches the current global level from ME backend and updates the GPI button.
+        // Lightweight payload (~150 bytes); cached on backend (12h TTL).
+        (async function loadGpiLevel() {
+            const ME_BACKEND = 'https://asifah-backend.onrender.com';
+            try {
+                const resp = await fetch(ME_BACKEND + '/api/gpi/level');
+                if (!resp.ok) return;
+                const data = await resp.json();
+
+                const lvlEl = document.getElementById('gpiBtnLevel');
+                const stEl  = document.getElementById('gpiBtnStatus');
+                if (lvlEl && data.global_level !== undefined) {
+                    lvlEl.textContent = `L${data.global_level}`;
+                    if (data.global_color) lvlEl.style.color = data.global_color;
+                }
+                if (stEl && data.global_label) {
+                    stEl.textContent = data.global_label;
+                    if (data.global_color) {
+                        // Soft tinted background based on level color
+                        stEl.style.background = data.global_color;
+                        stEl.style.color = '#ffffff';
+                    }
+                }
+            } catch (e) {
+                console.warn('GPI level fetch failed:', e);
+                // Silently leave button in default state — page still works.
+            }
+        })();
+    </script>
 </body>
 </html>
