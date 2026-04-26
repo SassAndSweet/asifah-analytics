@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Poland Stability Index v1.1.0 — April 2026 (Arctic scheme update) -->
+<!-- Asifah Analytics - Hungary Stability Index v1.0.0 — April 2026 -->
 <html lang="en">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -11,7 +11,7 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Poland Stability Index | Asifah Analytics</title>
+    <title>Hungary Stability Index | Asifah Analytics</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -43,30 +43,54 @@
 
         body {
             font-family: 'Times New Roman', Times, serif;
-            background: var(--bg); color: var(--text);
-            min-height: 100vh; padding: 20px;
-            position: relative; line-height: 1.6;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            line-height: 1.6;
             transition: background 0.3s, color 0.3s;
         }
         body::before {
-            content: ''; position: fixed;
+            content: '';
+            position: fixed;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 110vmin; height: 110vmin;
             min-width: 800px; min-height: 800px;
             max-width: 1400px; max-height: 1400px;
             background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-            background-size: contain; background-repeat: no-repeat; background-position: center;
-            opacity: 0.22; filter: var(--wm-filter); z-index: 0; pointer-events: none;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.22;
+            filter: var(--wm-filter);
+            z-index: 0;
+            pointer-events: none;
         }
         [data-theme="light"] body::before { opacity: 0.06; }
 
         .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
 
         /* ── LOADING ── */
-        .loading-overlay { position: fixed; inset: 0; background: rgba(6,13,26,0.97); backdrop-filter: blur(10px); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; transition: opacity 0.5s, visibility 0.5s; }
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(6,13,26,0.97);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
         .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-        .loading-spinner { width: 56px; height: 56px; border: 4px solid rgba(56,189,248,0.2); border-top-color: #38bdf8; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 28px; }
+        .loading-spinner {
+            width: 56px; height: 56px;
+            border: 4px solid rgba(56,189,248,0.2);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 28px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-title { font-size: 20px; font-weight: 700; color: #38bdf8; margin-bottom: 18px; letter-spacing: 2px; }
         .loading-step { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px; font-size: 13px; color: var(--text-2); }
@@ -76,7 +100,16 @@
         .loading-error { color: #f87171; font-size: 13px; margin-top: 14px; padding: 10px 14px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; display: none; }
 
         /* ── HEADER ── */
-        header { background: linear-gradient(135deg, #060d1a, #0d1b2e); border: 1px solid var(--border); border-radius: 12px; padding: 26px 30px; margin-bottom: 18px; display: flex; align-items: center; gap: 22px; flex-wrap: wrap; box-shadow: 0 0 40px rgba(56,189,248,0.07); position: relative; }
+        header {
+            background: linear-gradient(135deg, #060d1a, #0d1b2e);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px 30px;
+            margin-bottom: 18px;
+            display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+            box-shadow: 0 0 40px rgba(56,189,248,0.07);
+            position: relative;
+        }
         [data-theme="light"] header { background: linear-gradient(135deg, #1c3a5c, #2a5080); }
         .header-logo { width: 68px; height: 68px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.35); flex-shrink: 0; }
         .header-center { flex: 1; text-align: center; }
@@ -85,10 +118,24 @@
         .header-subtitle { font-size: 0.73rem; color: var(--text-muted); letter-spacing: 1px; }
         .header-ts { font-size: 0.63rem; color: var(--text-muted); margin-top: 4px; }
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-        .back-link { display: inline-flex; align-items: center; gap: 6px; padding: 6px 13px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.3); color: var(--accent); font-size: 0.68rem; font-weight: 700; letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: all 0.2s; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 13px; border-radius: 8px;
+            border: 1px solid rgba(56,189,248,0.3);
+            color: var(--accent); font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 1px; text-decoration: none; text-transform: uppercase;
+            transition: all 0.2s;
+        }
         .back-link:hover { border-color: var(--accent); background: rgba(56,189,248,0.08); }
         .lang-group { display: flex; gap: 4px; }
-        .lang-btn { font-family: 'Times New Roman', serif; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 0.68rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .lang-btn {
+            font-family: 'Times New Roman', serif;
+            padding: 4px 10px; border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            font-size: 0.68rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
         .lang-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
         .theme-row { display: flex; align-items: center; gap: 7px; }
         .theme-label { font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
@@ -100,29 +147,73 @@
         [data-theme="light"] .theme-slider::before { content: '🌙'; margin-left: 22px; }
 
         /* ── BANNERS ── */
-        .banner-red { background: linear-gradient(135deg, #1a0000, #2a0000); border: 1px solid rgba(239,68,68,0.5); border-radius: 12px; padding: 15px 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-        .banner-orange { background: linear-gradient(135deg, #1a0800, #2a1200); border: 1px solid rgba(249,115,22,0.5); border-radius: 12px; padding: 15px 18px; margin-bottom: 18px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-        .level-badge { display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.58rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: white; }
+        .banner-red {
+            background: linear-gradient(135deg, #1a0000, #2a0000);
+            border: 1px solid rgba(239,68,68,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .banner-amber {
+            background: linear-gradient(135deg, #1a0e00, #2a1800);
+            border: 1px solid rgba(245,158,11,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .level-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 4px;
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: white;
+        }
 
         /* ── CARDS ── */
-        .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: 0 0 6px rgba(30,58,95,0.25); transition: background 0.3s, border-color 0.3s; }
-        .card-title { font-size: 0.63rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; padding-bottom: 9px; border-bottom: 1px solid var(--border); }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 6px rgba(30,58,95,0.25);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .card-title {
+            font-size: 0.63rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 14px;
+            padding-bottom: 9px; border-bottom: 1px solid var(--border);
+        }
 
         /* ── MAP ── */
-        .map-frame { width: 100%; height: 420px; border-radius: 8px; border: 1px solid var(--border); overflow: hidden; }
+        .map-frame {
+            width: 100%; height: 420px;
+            border-radius: 8px; border: 1px solid var(--border);
+            overflow: hidden;
+        }
 
         /* ── KNOWLEDGE LIBRARY ── */
         .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-        .knowledge-card { background: rgba(6,13,26,0.6); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all 0.3s; }
+        .knowledge-card {
+            background: rgba(6,13,26,0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+            transition: all 0.3s;
+        }
         [data-theme="light"] .knowledge-card { background: #f8fbfe; }
         .knowledge-card:hover { border-color: rgba(56,189,248,0.35); }
-        .knowledge-header { padding: 14px 17px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: rgba(30,58,95,0.2); transition: background 0.3s; }
+        .knowledge-header {
+            padding: 14px 17px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(30,58,95,0.2);
+            transition: background 0.3s;
+        }
         [data-theme="light"] .knowledge-header { background: rgba(56,189,248,0.06); }
         .knowledge-header:hover { background: rgba(30,58,95,0.32); }
         .knowledge-header-title { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 700; color: var(--text); }
         .collapse-icon { font-size: 14px; color: var(--accent); transition: transform 0.3s; }
         .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
-        .knowledge-content { padding: 15px 17px; max-height: 520px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s; }
+        .knowledge-content {
+            padding: 15px 17px;
+            max-height: 520px; overflow-y: auto;
+            transition: max-height 0.3s ease, padding 0.3s;
+        }
         .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 17px; overflow: hidden; }
         .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 9px; }
         .knowledge-content ul { margin-left: 17px; margin-bottom: 9px; }
@@ -130,11 +221,24 @@
         .knowledge-content strong { color: var(--text); }
         .kl-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border); }
         .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 7px; margin-top: 10px; }
-        .report-link { display: inline-flex; align-items: center; gap: 5px; padding: 7px 11px; background: rgba(56,189,248,0.1); color: var(--accent); text-decoration: none; border-radius: 6px; font-size: 11px; font-weight: 700; border: 1px solid rgba(56,189,248,0.22); transition: all 0.2s; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 7px 11px;
+            background: rgba(56,189,248,0.1); color: var(--accent);
+            text-decoration: none; border-radius: 6px;
+            font-size: 11px; font-weight: 700;
+            border: 1px solid rgba(56,189,248,0.22);
+            transition: all 0.2s;
+        }
         .report-link:hover { background: rgba(56,189,248,0.18); }
 
         /* ── ARTICLES ── */
-        .article-item { background: rgba(6,13,26,0.6); padding: 13px; border-radius: 8px; margin-bottom: 9px; border-left: 3px solid var(--accent); transition: all 0.2s; }
+        .article-item {
+            background: rgba(6,13,26,0.6);
+            padding: 13px; border-radius: 8px; margin-bottom: 9px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.2s;
+        }
         [data-theme="light"] .article-item { background: #f8fbfe; }
         .article-item:hover { transform: translateX(4px); }
         .article-title { color: var(--text); font-size: 13px; margin-bottom: 3px; font-weight: 500; line-height: 1.4; }
@@ -143,13 +247,39 @@
         .article-link:hover { text-decoration: underline; }
 
         /* ── FOOTER ── */
-        .page-footer { text-align: center; padding: 22px 0 30px; font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1px; }
+        .page-footer {
+            text-align: center; padding: 22px 0 30px;
+            font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1px;
+        }
 
         @media (max-width: 768px) {
             header { flex-direction: column; align-items: center; text-align: center; }
             .header-right { align-items: center; }
             .knowledge-categories { grid-template-columns: 1fr; }
         }
+    
+        /* ── CANONICAL SIDEBAR ── */
+        .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
+        .nav-sidebar { width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+        .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+        .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(56,189,248,0.2); background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.04) 100%); color: rgba(255,255,255,0.7); }
+        [data-theme="light"] .nav-btn, :root:not([data-theme="dark"]) .nav-btn { color: var(--text-secondary); }
+        .nav-btn .nav-btn-label { position: relative; z-index: 2; font-size: 12px; line-height: 1.3; }
+        .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #38bdf8; }
+        .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); border-color: rgba(56,189,248,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(56,189,248,0.12); }
+        [data-theme="light"] .nav-btn.active-nav, :root:not([data-theme="dark"]) .nav-btn.active-nav { color: var(--text-primary, #0a1628); }
+        .nav-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); border-color: rgba(34,197,94,0.6); color: #ffffff; box-shadow: 0 0 18px rgba(34,197,94,0.2); }
+        [data-theme="light"] .nav-btn.current-page, :root:not([data-theme="dark"]) .nav-btn.current-page { color: var(--text-primary, #0a1628); }
+        .nav-btn.current-page .nav-btn-status { color: #4ade80; }
+        .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
+        [data-theme="light"] .nav-btn.inactive-nav, :root:not([data-theme="dark"]) .nav-btn.inactive-nav { color: rgba(0,0,0,0.3); border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02); }
+        .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
+        .nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 4px 0; }
+        .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+        .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+        .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+        .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+        @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
     </style>
 </head>
 <body>
@@ -158,11 +288,11 @@
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-spinner"></div>
     <div style="text-align:center;">
-        <div class="loading-title">Loading Poland Stability Data</div>
+        <div class="loading-title">Loading Hungary Stability Data</div>
         <div>
-            <div class="loading-step active" id="step1"><span class="step-icon">⏳</span> Fetching OSINT articles on Poland...</div>
-            <div class="loading-step" id="step2"><span class="step-icon">⏳</span> Scanning NATO eastern flank &amp; defense data...</div>
-            <div class="loading-step" id="step3"><span class="step-icon">⏳</span> Analyzing border security &amp; EU dynamics...</div>
+            <div class="loading-step active" id="step1"><span class="step-icon">⏳</span> Fetching OSINT articles on Hungary...</div>
+            <div class="loading-step" id="step2"><span class="step-icon">⏳</span> Scanning democratic transition signals...</div>
+            <div class="loading-step" id="step3"><span class="step-icon">⏳</span> Analyzing EU dynamics &amp; Russian reaction...</div>
             <div class="loading-step" id="step4"><span class="step-icon">⏳</span> Rendering dashboard...</div>
         </div>
         <div style="margin-top:18px;font-size:11px;color:var(--text-muted);font-style:italic;">This may take 20–40 seconds...</div>
@@ -179,9 +309,9 @@
         <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe</a>
     </div>
     <div class="header-center">
-        <div class="header-flag">🇵🇱 <span data-i18n="pageFlag">POLAND</span></div>
-        <div class="header-title" data-i18n="pageTitle">POLAND STABILITY INDEX</div>
-        <div class="header-subtitle" data-i18n="pageSubtitle">NATO Eastern Flank · Defense Modernization · Border Security · EU-Poland Dynamics</div>
+        <div class="header-flag">🇭🇺 <span data-i18n="pageFlag">HUNGARY</span></div>
+        <div class="header-title" data-i18n="pageTitle">HUNGARY STABILITY INDEX</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Democratic Transition · EU Re-integration · Fidesz Opposition · Magyar/Tisza Government</div>
         <div class="header-ts">Last updated: <span id="lastUpdated">Loading...</span></div>
     </div>
     <div class="header-right">
@@ -190,6 +320,7 @@
             <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
             <button class="lang-btn" onclick="setLang('ru',this)">RU</button>
             <button class="lang-btn" onclick="setLang('de',this)">DE</button>
+            <button class="lang-btn" onclick="setLang('hu',this)">HU</button>
         </div>
         <div class="theme-row">
             <span class="theme-label">THEME</span>
@@ -201,6 +332,60 @@
     </div>
 </header>
 
+<div class="page-with-sidebar">
+
+<!-- CANONICAL NAV SIDEBAR -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div style="flex:1; min-width:0;">
+
+
 <!-- WORLDWIDE CAUTION -->
 <div class="banner-red">
     <div style="font-size:1.6rem;">🏛️</div>
@@ -211,25 +396,38 @@
     <a href="https://travel.state.gov/content/travel/en/traveladvisories/ea/worldwide-caution.html" target="_blank" style="padding:7px 14px;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.45);border-radius:6px;color:#fca5a5;text-decoration:none;font-size:0.63rem;font-weight:700;white-space:nowrap;" data-i18n="viewCaution">VIEW CAUTION →</a>
 </div>
 
-<!-- POLAND TRAVEL ADVISORY -->
-<div class="banner-orange">
-    <div style="font-size:1.3rem;font-weight:900;color:#fed7aa;">PL</div>
+<!-- HUNGARY TRAVEL ADVISORY -->
+<div class="banner-amber">
+    <div style="font-size:1.3rem;font-weight:900;color:#fde68a;">HU</div>
     <div style="flex:1;">
         <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap;">
-            <span style="font-size:0.58rem;font-weight:700;letter-spacing:2px;color:#fed7aa;text-transform:uppercase;" data-i18n="advisoryLabel">U.S. STATE DEPARTMENT — POLAND TRAVEL ADVISORY</span>
-            <span class="level-badge" style="background:#f97316;" data-i18n="advisoryLevel">LEVEL 2</span>
+            <span style="font-size:0.58rem;font-weight:700;letter-spacing:2px;color:#fde68a;text-transform:uppercase;" data-i18n="advisoryLabel">U.S. STATE DEPARTMENT — HUNGARY TRAVEL ADVISORY</span>
+            <span class="level-badge" style="background:#f59e0b;" data-i18n="advisoryLevel">LEVEL 1</span>
         </div>
-        <div style="font-size:0.72rem;color:#fdba74;" data-i18n="advisoryText"><strong>Exercise Increased Caution</strong> in Poland due to the proximity to the Russia-Ukraine war. Remain alert to Russian drone and missile incidents near Polish airspace. Monitor official guidance from Polish authorities and U.S. Embassy Warsaw.</div>
+        <div style="font-size:0.72rem;color:#fde68a;" data-i18n="advisoryText"><strong>Exercise Normal Precautions</strong> in Hungary. Following the April 2026 parliamentary elections, Hungary is undergoing a significant democratic transition. The Tisza party under Péter Magyar won a constitutional supermajority. Monitor local developments and check for any updates to this advisory during the transition period.</div>
     </div>
-    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/poland-travel-advisory.html" target="_blank" style="padding:7px 14px;background:rgba(249,115,22,0.18);border:1px solid rgba(249,115,22,0.45);border-radius:6px;color:#fed7aa;text-decoration:none;font-size:0.63rem;font-weight:700;white-space:nowrap;" data-i18n="viewAdvisory">VIEW ADVISORY →</a>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/hungary-travel-advisory.html" target="_blank" style="padding:7px 14px;background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.45);border-radius:6px;color:#fde68a;text-decoration:none;font-size:0.63rem;font-weight:700;white-space:nowrap;" data-i18n="viewAdvisory">VIEW ADVISORY →</a>
+</div>
+
+<!-- ELECTION CONTEXT BANNER -->
+<div style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div>
+        <div style="font-size:0.63rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;">📊 APRIL 12, 2026 — ELECTION RESULT</div>
+        <div style="font-size:0.82rem;color:var(--text);font-weight:700;">Magyar / Tisza: 138 seats (53.6%) — Constitutional Supermajority</div>
+        <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px;">Orbán / Fidesz: 55 seats (37.8%) · Turnout: 77% (record) · Orbán conceded</div>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:1px;">Von der Leyen:</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-style:italic;">"Hungary has chosen Europe."</div>
+    </div>
 </div>
 
 <!-- MAP -->
 <div class="card">
-    <div class="card-title">🗺️ <span data-i18n="mapTitle">POLAND — STRATEGIC OVERVIEW</span></div>
-    <div style="font-size:12px;color:var(--text-muted);margin-bottom:11px;font-style:italic;" data-i18n="mapSubtitle">NATO's primary eastern frontier state — bordering Russia (Kaliningrad), Belarus, Ukraine, and Lithuania. Home to the Suwalki Gap, V Corps HQ, and Aegis Ashore Redzikowo.</div>
+    <div class="card-title">🗺️ <span data-i18n="mapTitle">HUNGARY — STRATEGIC OVERVIEW</span></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:11px;font-style:italic;" data-i18n="mapSubtitle">Hungary's strategic position at the crossroads of Central Europe — bordered by Austria, Slovakia, Ukraine, Romania, Serbia, Croatia, and Slovenia.</div>
     <iframe class="map-frame"
-        src="https://www.openstreetmap.org/export/embed.html?bbox=14.1%2C49.0%2C24.2%2C55.0&layer=mapnik&marker=52.23%2C21.01"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=15.8%2C45.7%2C23.0%2C48.6&layer=mapnik&marker=47.49%2C19.04"
         frameborder="0" scrolling="no">
     </iframe>
 </div>
@@ -237,151 +435,160 @@
 <!-- KNOWLEDGE LIBRARY -->
 <div class="card">
     <div class="card-title">📚 <span data-i18n="knowledgeTitle">KNOWLEDGE LIBRARY</span></div>
-    <p style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;">Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
+    <p style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;" data-i18n="knowledgeDisclaimer">Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
 
     <div class="knowledge-categories">
 
-        <!-- Government & Politics -->
-        <div class="knowledge-card collapsed" id="card-government">
-            <div class="knowledge-header" onclick="toggleCard('government')">
-                <div class="knowledge-header-title"><span>🏛️</span> <span data-i18n="catGovernment">Government &amp; Political Dynamics</span></div>
+        <!-- Democratic Transition -->
+        <div class="knowledge-card collapsed" id="card-transition">
+            <div class="knowledge-header" onclick="toggleCard('transition')">
+                <div class="knowledge-header-title"><span>🗳️</span> <span data-i18n="catTransition">Democratic Transition — April 2026</span></div>
                 <span class="collapse-icon">▼</span>
             </div>
             <div class="knowledge-content">
-                <p><strong>Poland is a parliamentary republic and the largest country in Central Europe</strong> with a population of approximately 38 million. It occupies a pivotal position as NATO's eastern frontier state, directly bordering Russia (Kaliningrad exclave), Belarus, Ukraine, and Lithuania.</p>
+                <p><strong>On April 12, 2026, Hungary held parliamentary elections that ended 16 years of Viktor Orbán and Fidesz rule</strong> — the most significant democratic transfer of power in Hungary since the post-communist transition of 1990.</p>
                 <ul>
-                    <li><strong>Government (2023–present):</strong> Prime Minister Donald Tusk leads a coalition government formed in December 2023 after defeating the Law and Justice (PiS) party. The coalition includes Civic Platform (KO), Third Way, and the New Left — united primarily by opposition to PiS's democratic backsliding.</li>
-                    <li><strong>PiS Legacy &amp; Tensions:</strong> The previous PiS government pursued judicial reforms the EU deemed a threat to rule of law, triggering Article 7 proceedings and freezing approximately €36 billion in EU recovery funds. President Duda (PiS-aligned) used veto power to block several Tusk government initiatives.</li>
-                    <li><strong>Media &amp; Civil Society:</strong> PiS transformed public media into a state propaganda outlet during its tenure. The Tusk government moved to restore independence to public broadcasting. Civil society organizations remain active and resilient.</li>
+                    <li><strong>Result:</strong> Péter Magyar's Tisza party won 138 of 199 parliamentary seats (53.6% of the vote), securing a constitutional supermajority that allows amendment of Hungary's Basic Law. Fidesz received 37.8% and 55 seats.</li>
+                    <li><strong>Turnout:</strong> Nearly 80% — the highest in any Hungarian election since the end of communist rule. Record-breaking civic participation reflected the historic stakes of the vote.</li>
+                    <li><strong>Orbán Concedes:</strong> The 16-year prime minister called the result "painful but clear" and pledged to lead Fidesz from the opposition. A peaceful democratic transfer of power was confirmed.</li>
+                    <li><strong>Electoral Integrity:</strong> Both parties filed reports of violations during the campaign. International observers and EU officials monitored proceedings. Independent watchdogs noted Fidesz's structural advantages — state media domination, gerrymandered districts — but confirmed the result reflected the popular will.</li>
+                    <li><strong>Péter Magyar:</strong> A 45-year-old lawyer and former Fidesz insider, Magyar emerged as a national figure in 2024 after breaking with the party following a presidential pardoning scandal. He built Tisza from a minor party into Hungary's dominant political force in under two years.</li>
+                    <li><strong>Supermajority Risk:</strong> Analysts note that Magyar's unconstrained constitutional majority replicates the structural conditions that allowed Orbán to consolidate power in 2010. The absence of meaningful parliamentary opposition raises governance accountability questions.</li>
                 </ul>
-                <div class="kl-note">* Based on European Commission, Freedom House, Sejm official records, and Politico Europe</div>
+                <div class="kl-note">* Based on Al Jazeera, BBC, CBC, CBS News, and CNN live election reporting · April 12, 2026</div>
                 <div class="report-links-grid">
-                    <a href="https://www.sejm.gov.pl/english.html" target="_blank" class="report-link">📑 Sejm (Parliament)</a>
-                    <a href="https://freedomhouse.org/country/poland" target="_blank" class="report-link">📑 Freedom House</a>
-                    <a href="https://ec.europa.eu/commission/presscorner/home/en" target="_blank" class="report-link">📑 EU Commission</a>
-                    <a href="https://www.amnesty.org/en/location/europe-and-central-asia/poland/" target="_blank" class="report-link">📑 Amnesty</a>
+                    <a href="https://freedomhouse.org/country/hungary" target="_blank" class="report-link">📑 Freedom House</a>
+                    <a href="https://www.osce.org/odihr/elections" target="_blank" class="report-link">📑 OSCE/ODIHR</a>
+                    <a href="https://ec.europa.eu/info/law/law-topic/eu-charter-fundamental-rights_en" target="_blank" class="report-link">📑 EU Rule of Law</a>
+                    <a href="https://verfassungsblog.de/" target="_blank" class="report-link">📑 Verfassungsblog</a>
                 </div>
             </div>
         </div>
 
-        <!-- Military & NATO -->
-        <div class="knowledge-card collapsed" id="card-military">
-            <div class="knowledge-header" onclick="toggleCard('military')">
-                <div class="knowledge-header-title"><span>⚔️</span> <span data-i18n="catMilitary">Military Modernization &amp; NATO Eastern Flank</span></div>
+        <!-- Orbán Era & Fidesz Legacy -->
+        <div class="knowledge-card collapsed" id="card-fidesz">
+            <div class="knowledge-header" onclick="toggleCard('fidesz')">
+                <div class="knowledge-header-title"><span>🏛️</span> <span data-i18n="catFidesz">Orbán Era & Fidesz Legacy (2010–2026)</span></div>
                 <span class="collapse-icon">▼</span>
             </div>
             <div class="knowledge-content">
-                <p><strong>Poland is undertaking the most ambitious military modernization in Europe</strong>, driven by proximity to Russia and the Ukraine war. It is on track to field the largest conventional ground force in the EU.</p>
+                <p><strong>Viktor Orbán governed Hungary for 16 years</strong>, transforming it from a liberal democracy into what he termed an "illiberal democracy" — a model that inspired far-right movements globally while generating sustained conflict with the EU.</p>
                 <ul>
-                    <li><strong>Defense Spending:</strong> Poland committed to spending 4% of GDP on defense — the highest in NATO. Total defense budget exceeds $35 billion annually.</li>
-                    <li><strong>Troop Strength:</strong> Aiming to expand armed forces from ~150,000 to 300,000 active-duty — potentially the largest land army in the EU.</li>
-                    <li><strong>NATO Forward Presence:</strong> Poland hosts the V Corps forward HQ, rotational U.S. armored brigades, and the NATO Force Integration Unit.</li>
-                    <li><strong>Suwalki Gap:</strong> The 65-km corridor between Poland and Lithuania — bordered by Kaliningrad and Belarus — is NATO's most vulnerable point.</li>
-                    <li><strong>Aegis Ashore Redzikowo:</strong> U.S. ballistic missile defense installation — operational since 2024 — provides BMD coverage for NATO's eastern flank.</li>
-                    <li><strong>Arms Procurement:</strong> Abrams tanks, Apaches, HIMARS, Patriot, F-35s — one of the largest FMS portfolios in Europe, exceeding $30 billion committed.</li>
+                    <li><strong>Constitutional Rewrite:</strong> Fidesz used its 2010 two-thirds supermajority to rewrite Hungary's constitution, restructure the judiciary, redraw electoral districts, and install loyalists in independent institutions — cementing structural advantages that persisted even as electoral support declined.</li>
+                    <li><strong>Media Control:</strong> Orbán consolidated control over Hungary's media landscape through a network of oligarch-owned outlets and the transformation of public broadcasting into a state propaganda arm. Independent media operated under sustained pressure.</li>
+                    <li><strong>EU Rule of Law Conflict:</strong> The European Commission launched Article 7 proceedings against Hungary in 2018 over rule-of-law concerns. Approximately €21.7 billion in EU cohesion funds were frozen as conditionality measures. Orbán repeatedly blocked EU consensus positions on Ukraine, migration, and enlargement.</li>
+                    <li><strong>Russia Alignment:</strong> Orbán cultivated close ties with Vladimir Putin — maintaining energy dependence on Russia, blocking EU military support packages for Ukraine, and refusing to allow weapons transit through Hungarian territory. This made Hungary Putin's primary EU ally.</li>
+                    <li><strong>Trump Alliance:</strong> Orbán became a model figure for the global far right and a close ally of Donald Trump. JD Vance visited Hungary days before the election to shore up support. Orbán hosted CPAC in Budapest and positioned Hungary as a laboratory for right-wing governance.</li>
+                    <li><strong>Frozen EU Funds:</strong> As of April 2026, approximately €21.7B in EU funds remained frozen over rule-of-law concerns. Magyar's election is expected to unlock these funds as Hungary re-engages with EU conditionality requirements.</li>
                 </ul>
-                <div class="kl-note">* Based on Polish MOD, IISS Military Balance, CSIS, and NATO official statements</div>
+                <div class="kl-note">* Based on European Commission, Politico Europe, Carnegie Europe, and Freedom House reporting</div>
                 <div class="report-links-grid">
-                    <a href="https://www.gov.pl/web/national-defence" target="_blank" class="report-link">📑 Polish MOD</a>
+                    <a href="https://carnegieeurope.eu/" target="_blank" class="report-link">📑 Carnegie Europe</a>
+                    <a href="https://ecfr.eu/topic/hungary/" target="_blank" class="report-link">📑 ECFR — Hungary</a>
+                    <a href="https://rsf.org/en/country/hungary" target="_blank" class="report-link">📑 RSF Press Freedom</a>
+                    <a href="https://www.transparency.org/en/countries/hungary" target="_blank" class="report-link">📑 Transparency Intl</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- EU Re-integration -->
+        <div class="knowledge-card collapsed" id="card-eu">
+            <div class="knowledge-header" onclick="toggleCard('eu')">
+                <div class="knowledge-header-title"><span>🇪🇺</span> <span data-i18n="catEU">EU Re-integration & Rule of Law Reform</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Magyar's election is expected to dramatically alter Hungary's relationship with the European Union</strong> — ending years of institutional conflict and unlocking significant frozen funding while requiring substantial democratic reform.</p>
+                <ul>
+                    <li><strong>Frozen Funds:</strong> Approximately €21.7 billion in EU cohesion and recovery funds were suspended over rule-of-law concerns. Magyar's government is expected to meet EU conditionality requirements — restoring judicial independence, media freedom, and anti-corruption mechanisms — unlocking the funds progressively.</li>
+                    <li><strong>Ukraine Aid Unblocked:</strong> Orbán repeatedly blocked or delayed EU military and financial support packages for Ukraine, and blocked a €90 billion EU loan to Ukraine. Magyar's government is expected to end Hungary's veto on Ukraine-related EU decisions — a significant shift in the EU's ability to act collectively.</li>
+                    <li><strong>Article 7 Proceedings:</strong> The European Commission's rule-of-law proceedings against Hungary, suspended in a political compromise under Orbán, are expected to be formally closed as Magyar demonstrates credible reform commitments.</li>
+                    <li><strong>Judicial Independence:</strong> Restoring the independence of Hungary's courts — packed with Fidesz loyalists — will be among Magyar's most complex reform challenges. Constitutional amendment (which his supermajority enables) will be required for some institutional changes.</li>
+                    <li><strong>Media Landscape:</strong> The Fidesz-aligned media oligarchy controls a majority of Hungary's national media. Magyar faces the challenge of restoring public broadcasting independence without replicating state control under a different political banner.</li>
+                    <li><strong>Von der Leyen Statement:</strong> European Commission President von der Leyen hailed Magyar's victory: "Hungary has chosen Europe. A country reclaims its European path. The Union grows stronger."</li>
+                </ul>
+                <div class="kl-note">* Based on European Commission, Politico Europe, and ECFR reporting · April 2026</div>
+                <div class="report-links-grid">
+                    <a href="https://ec.europa.eu/info/law/law-topic/eu-charter-fundamental-rights_en" target="_blank" class="report-link">📑 EU Commission</a>
+                    <a href="https://www.europarl.europa.eu/news/en/focus/20220128FCS22518/rule-of-law-in-hungary" target="_blank" class="report-link">📑 European Parliament</a>
+                    <a href="https://ecfr.eu/" target="_blank" class="report-link">📑 ECFR</a>
+                    <a href="https://www.politico.eu/europe-pulse/hungary/" target="_blank" class="report-link">📑 Politico Europe</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Russia & Geopolitical Realignment -->
+        <div class="knowledge-card collapsed" id="card-russia">
+            <div class="knowledge-header" onclick="toggleCard('russia')">
+                <div class="knowledge-header-title"><span>🌐</span> <span data-i18n="catRussia">Russia Relations & Geopolitical Realignment</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Hungary's election removes Putin's primary EU ally</strong> — a development with significant implications for Russia's ability to use Hungary as a blocking mechanism within EU decision-making on Ukraine, sanctions, and energy policy.</p>
+                <ul>
+                    <li><strong>Energy Dependence:</strong> Hungary remains heavily dependent on Russian gas and oil via the TurkStream pipeline and the Druzhba pipeline. Magyar's government will need to navigate energy security carefully — accelerating diversification while managing short-term supply risks.</li>
+                    <li><strong>Paks Nuclear Plant:</strong> Hungary's Paks II nuclear expansion was contracted with Russia's Rosatom — a €12.5 billion project that created deep financial and technical entanglement with Russian state interests. Magyar's government faces difficult decisions on this contract.</li>
+                    <li><strong>Russian Interference:</strong> Multiple media reports including the Washington Post documented Russian intelligence efforts to tip the election in Orbán's favor. EU vs. Disinfo tracked sustained disinformation campaigns targeting Magyar. The attempted interference — and its failure — is itself a significant intelligence signal.</li>
+                    <li><strong>NATO Posture:</strong> Under Orbán, Hungary blocked NATO consensus on several Ukraine-related decisions and refused weapons transit. Magyar has pledged to restore Hungary as "a strong NATO ally" — a commitment Zelenskyy welcomed immediately after the result.</li>
+                    <li><strong>Orbán's International Network:</strong> Orbán's relationships with Trump, Meloni, and other far-right leaders will continue from the opposition — potentially providing a platform for Fidesz to maintain international relevance and complicate Magyar's foreign policy positioning.</li>
+                </ul>
+                <div class="kl-note">* Based on Washington Post, IISS, Carnegie, and NATO official statements · April 2026</div>
+                <div class="report-links-grid">
+                    <a href="https://www.nato.int/" target="_blank" class="report-link">📑 NATO</a>
+                    <a href="https://euvsdisinfo.eu/" target="_blank" class="report-link">📑 EU vs Disinfo</a>
                     <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
-                    <a href="https://www.nato.int/cps/en/natohq/topics_136388.htm" target="_blank" class="report-link">📑 NATO Enhanced FP</a>
-                    <a href="https://www.csis.org/" target="_blank" class="report-link">📑 CSIS</a>
-                    <a href="https://www.rand.org/" target="_blank" class="report-link">📑 RAND</a>
+                    <a href="https://carnegieeurope.eu/" target="_blank" class="report-link">📑 Carnegie Europe</a>
                 </div>
             </div>
         </div>
 
-        <!-- Border Security -->
-        <div class="knowledge-card collapsed" id="card-border">
-            <div class="knowledge-header" onclick="toggleCard('border')">
-                <div class="knowledge-header-title"><span>🛡️</span> <span data-i18n="catBorder">Border Security &amp; Belarus Migration Crisis</span></div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Poland's eastern border is simultaneously the EU's external frontier and a NATO boundary</strong>. Since 2021, Belarus (under Lukashenko, with Russian backing) has weaponized migration flows as hybrid warfare.</p>
-                <ul>
-                    <li><strong>Belarus Hybrid Campaign:</strong> The Lukashenko regime deliberately facilitated transport of migrants to the Polish-Belarusian border, creating a humanitarian and security crisis beginning 2021.</li>
-                    <li><strong>Border Wall:</strong> Poland constructed a 186-km steel barrier along the Belarus border (completed mid-2022), approximately €350 million, including surveillance systems and thermal cameras.</li>
-                    <li><strong>Pushback Controversy:</strong> Human rights organizations documented systematic pushbacks of asylum seekers, including cases where individuals were denied access to asylum procedures in dangerous conditions. Multiple deaths were reported in the border forest zone.</li>
-                    <li><strong>Ukraine Border:</strong> The Polish-Ukrainian border became Europe's largest refugee corridor in 2022 — over 1.5 million Ukrainians initially hosted in Poland.</li>
-                </ul>
-                <div class="kl-note">* Based on Frontex, UNHCR, Amnesty International, Human Rights Watch</div>
-                <div class="report-links-grid">
-                    <a href="https://www.amnesty.org/en/" target="_blank" class="report-link">📑 Amnesty International</a>
-                    <a href="https://www.hrw.org/europe/central-asia/poland" target="_blank" class="report-link">📑 Human Rights Watch</a>
-                    <a href="https://www.unhcr.org/" target="_blank" class="report-link">📑 UNHCR</a>
-                    <a href="https://frontex.europa.eu/" target="_blank" class="report-link">📑 Frontex</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Economy & EU -->
+        <!-- Economy & Forint -->
         <div class="knowledge-card collapsed" id="card-economy">
             <div class="knowledge-header" onclick="toggleCard('economy')">
-                <div class="knowledge-header-title"><span>📊</span> <span data-i18n="catEconomy">Economy &amp; EU Relations</span></div>
+                <div class="knowledge-header-title"><span>📊</span> <span data-i18n="catEconomy">Economy, Forint & EU Funds</span></div>
                 <span class="collapse-icon">▼</span>
             </div>
             <div class="knowledge-content">
-                <p><strong>Poland has been Europe's economic success story</strong> — the only EU member state to avoid recession during the 2008 financial crisis and one of the fastest-growing economies in the bloc for three decades. GDP has more than tripled since EU accession in 2004.</p>
+                <p><strong>Hungary's economy has shown significant stress under Orbán's later years</strong> — with high inflation, a weakened forint, and the structural drag of frozen EU funds contributing to stagnation that Magyar campaigned heavily on.</p>
                 <ul>
-                    <li><strong>GDP:</strong> ~$750 billion (PPP) — EU's 6th-largest economy. Per capita income has risen from 49% of EU average at accession to over 80%.</li>
-                    <li><strong>EU Funds:</strong> Poland is the largest net recipient of EU structural funds. Frozen €36B in recovery funds under PiS progressively unlocked under Tusk as rule-of-law conditions are addressed.</li>
-                    <li><strong>Energy Transition:</strong> ~70% of electricity from coal — an outlier in EU climate policy. LNG terminals, nuclear power plans (~2033–2035, Westinghouse), and growing renewable capacity underway.</li>
-                    <li><strong>Labor Market:</strong> Very low unemployment (~5%), growing labor shortages partially offset by Ukrainian refugee workforce integration.</li>
+                    <li><strong>GDP:</strong> Approximately $200 billion (nominal). Hungary is a mid-sized Central European economy, highly integrated with Germany's supply chains and automotive sector. GDP growth has lagged regional peers in recent years.</li>
+                    <li><strong>Forint:</strong> The Hungarian forint has been among the weakest Central European currencies, depreciating significantly against the euro over the past decade. The National Bank of Hungary (MNB) has managed high interest rates in response to inflation.</li>
+                    <li><strong>Inflation:</strong> Hungary experienced some of Europe's highest inflation — peaking above 25% in early 2023 — driven by energy costs, supply chain disruptions, and fiscal stimulus. Inflation has since declined but left significant cost-of-living pressure on households.</li>
+                    <li><strong>EU Funds Unlock:</strong> The progressive unlocking of ~€21.7B in frozen EU funds is expected to be a major economic stimulus for the Magyar government — providing funding for infrastructure, digital transformation, and regional development. Markets reacted positively to the election result.</li>
+                    <li><strong>Corruption:</strong> Transparency International consistently ranks Hungary among the most corrupt EU member states. Oligarchs with Fidesz connections amassed significant wealth through EU-funded public procurement. Anti-corruption reform is both an economic and governance priority for Magyar.</li>
+                    <li><strong>Automotive/Germany Exposure:</strong> Hungary is deeply integrated into German auto supply chains — making it highly sensitive to Germany's automotive sector challenges and the EV transition. BMW, Audi, Mercedes, and other manufacturers operate major facilities in Hungary.</li>
                 </ul>
-                <div class="kl-note">* Based on European Commission, World Bank, IMF, and NBP reporting</div>
+                <div class="kl-note">* Based on IMF, World Bank, European Commission, Transparency International reporting</div>
                 <div class="report-links-grid">
-                    <a href="https://www.worldbank.org/en/country/poland" target="_blank" class="report-link">📑 World Bank</a>
-                    <a href="https://www.imf.org/en/Countries/POL" target="_blank" class="report-link">📑 IMF — Poland</a>
-                    <a href="https://www.nbp.pl/homen.aspx" target="_blank" class="report-link">📑 NBP Central Bank</a>
-                    <a href="https://ec.europa.eu/" target="_blank" class="report-link">📑 EU Commission</a>
+                    <a href="https://www.imf.org/en/Countries/HUN" target="_blank" class="report-link">📑 IMF — Hungary</a>
+                    <a href="https://www.worldbank.org/en/country/hungary" target="_blank" class="report-link">📑 World Bank</a>
+                    <a href="https://www.transparency.org/en/countries/hungary" target="_blank" class="report-link">📑 Transparency Intl</a>
+                    <a href="https://www.mnb.hu/en" target="_blank" class="report-link">📑 MNB (Central Bank)</a>
                 </div>
             </div>
         </div>
 
-        <!-- Ukraine Refugees -->
-        <div class="knowledge-card collapsed" id="card-refugees">
-            <div class="knowledge-header" onclick="toggleCard('refugees')">
-                <div class="knowledge-header-title"><span>🕊️</span> <span data-i18n="catRefugees">Ukraine Refugee Integration</span></div>
+        <!-- Regional & Minority Issues -->
+        <div class="knowledge-card collapsed" id="card-regional">
+            <div class="knowledge-header" onclick="toggleCard('regional')">
+                <div class="knowledge-header-title"><span>🗺️</span> <span data-i18n="catRegional">Regional Dynamics & Ethnic Hungarian Minorities</span></div>
                 <span class="collapse-icon">▼</span>
             </div>
             <div class="knowledge-content">
-                <p><strong>Poland has hosted the largest number of Ukrainian refugees in Europe</strong> — approximately 950,000–1 million as of early 2026, the largest refugee intake by any single European country since World War II.</p>
+                <p><strong>Hungary's regional relationships are shaped by significant ethnic Hungarian minority populations in neighboring states</strong> — a legacy of the 1920 Treaty of Trianon that remains politically sensitive and is frequently instrumentalized in domestic politics.</p>
                 <ul>
-                    <li><strong>EU Temporary Protection:</strong> Ukrainian refugees received automatic temporary protection — granting work permits, healthcare, and school enrollment. Poland's implementation was swift.</li>
-                    <li><strong>Labor Integration:</strong> A significant majority of working-age Ukrainian refugees found employment in construction, logistics, healthcare, and services — partially offsetting fiscal hosting costs.</li>
-                    <li><strong>Social Tensions:</strong> Initial solidarity has been tested by competition for housing, public services, and social benefits. Far-right parties have sought to exploit refugee fatigue.</li>
-                    <li><strong>Historical Context:</strong> The Polish-Ukrainian relationship carries deep historical complexity, including the Volhynia massacres of WWII. Despite this, wartime solidarity has generally strengthened bilateral relations.</li>
+                    <li><strong>Ethnic Hungarians Abroad:</strong> Approximately 2 million ethnic Hungarians live outside Hungary's borders — predominantly in Romania (Transylvania, ~1.2M), Slovakia (~450,000), Serbia (Vojvodina, ~250,000), and Ukraine (Transcarpathia, ~150,000). These communities hold Hungarian citizenship and vote in Hungarian elections — traditionally overwhelmingly for Fidesz.</li>
+                    <li><strong>Slovakia Tensions:</strong> Magyar adopted a hard line toward Slovakia over the Beneš decree amendment, threatening to expel the Slovak ambassador if Bratislava did not change its position. This signals that Magyar's foreign policy will not be uniformly accommodating — ethnic Hungarian minority rights remain a priority.</li>
+                    <li><strong>Romania Relations:</strong> Transylvania's ethnic Hungarian community (represented by RMDSZ/UDMR) has been a key political actor in Romania. Magyar's election may shift the political dynamics of this community, which had aligned with Orbán's political network.</li>
+                    <li><strong>Ukraine's Transcarpathia:</strong> Ukraine's ethnic Hungarian minority in Transcarpathia was a point of friction under Orbán, who used minority rights concerns to justify blocking Ukraine's NATO aspirations. Zelenskyy's immediate congratulations to Magyar signal an expectation that this bilateral tension will be resolved.</li>
+                    <li><strong>Trianon Centenary Politics:</strong> Orbán systematically used the Trianon trauma — Hungary lost two-thirds of its pre-WWI territory in 1920 — as a mobilizing political narrative. Magyar will need to navigate continued sensitivity around this history without the nationalist instrumentalization Fidesz employed.</li>
                 </ul>
-                <div class="kl-note">* Based on UNHCR, IOM, Polish Office for Foreigners, and OSW Centre for Eastern Studies</div>
+                <div class="kl-note">* Based on ECFR, International Crisis Group, and academic regional studies</div>
                 <div class="report-links-grid">
-                    <a href="https://www.unhcr.org/emergencies/ukraine-emergency" target="_blank" class="report-link">📑 UNHCR Ukraine</a>
-                    <a href="https://www.iom.int/" target="_blank" class="report-link">📑 IOM</a>
-                    <a href="https://www.osw.waw.pl/en" target="_blank" class="report-link">📑 OSW Eastern Studies</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- U.S.-Poland Defense -->
-        <div class="knowledge-card collapsed" id="card-us">
-            <div class="knowledge-header" onclick="toggleCard('us')">
-                <div class="knowledge-header-title"><span>🤝</span> <span data-i18n="catUS">U.S.-Poland Defense Partnership</span></div>
-                <span class="collapse-icon">▼</span>
-            </div>
-            <div class="knowledge-content">
-                <p><strong>Poland has become the United States' most important bilateral defense partner in continental Europe</strong> — a transformation driven by Russia's invasion of Ukraine and Poland's massive defense spending.</p>
-                <ul>
-                    <li><strong>U.S. Force Posture:</strong> ~10,000 U.S. troops permanently or rotationally based in Poland — the largest sustained U.S. military presence in Central-Eastern Europe. Includes V Corps forward HQ in Poznań.</li>
-                    <li><strong>EDCA:</strong> The 2020 Enhanced Defense Cooperation Agreement formalized expanded U.S. presence — establishing division-level HQ, rotational forces, and infrastructure investments.</li>
-                    <li><strong>Arms Sales:</strong> Poland's FMS portfolio: Abrams, Apaches, HIMARS, Patriot, F-35s. Total committed value exceeds $30 billion.</li>
-                    <li><strong>Ukraine Support Hub:</strong> Poland serves as the primary corridor for Western military equipment into Ukraine — a massive logistics operation through rail, road, and air corridors.</li>
-                </ul>
-                <div class="kl-note">* Based on U.S. DoD, State Department, DSCA, CRS, and Polish MOD</div>
-                <div class="report-links-grid">
-                    <a href="https://www.state.gov/u-s-relations-with-poland/" target="_blank" class="report-link">📑 State Dept — Poland</a>
-                    <a href="https://www.dsca.mil/" target="_blank" class="report-link">📑 DSCA Arms Sales</a>
-                    <a href="https://www.eucom.mil/" target="_blank" class="report-link">📑 EUCOM</a>
-                    <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                    <a href="https://www.crisisgroup.org/europe-central-asia" target="_blank" class="report-link">📑 Crisis Group</a>
+                    <a href="https://ecfr.eu/" target="_blank" class="report-link">📑 ECFR</a>
+                    <a href="https://minority-rights.org/" target="_blank" class="report-link">📑 Minority Rights</a>
+                    <a href="https://www.osce.org/hcnm" target="_blank" class="report-link">📑 OSCE HCNM</a>
                 </div>
             </div>
         </div>
@@ -391,24 +598,54 @@
 
 <!-- ARTICLES -->
 <div class="card">
-    <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT POLAND SECURITY &amp; STABILITY ARTICLES</span></div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">NewsAPI + GDELT · Last 7 days</div>
+    <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT HUNGARY STABILITY & TRANSITION ARTICLES</span></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">NewsAPI + GDELT · Last 7 days · English + Hungarian (hun)</div>
     <div id="articlesContainer">
         <div style="text-align:center;color:var(--text-muted);padding:26px;font-style:italic;">Loading articles...</div>
     </div>
 </div>
 
+</div><!-- end main content -->
+</div><!-- end page-with-sidebar -->
+
 <!-- FOOTER -->
-<div class="page-footer">
-    © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.1.0-poland-stability |
-    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#38bdf8;text-decoration:none;">☕ buy me a coffee</a>
-</div>
+<footer style="background:var(--card-bg, var(--card, #0d1b2e));border:1px solid var(--card-border, var(--border, #1e3a5f));border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;">NewsAPI, GDELT, RSS Feeds, Reddit, OSINT aggregators, and travel.state.gov travel advisory data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;">Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;">Contact</h4>
+            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
+        </div>
+    </div>
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;">⚠️ DISCLAIMER</strong> &mdash; This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.
+    </div>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;">buy me a coffee</a>
+    </div>
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, var(--border, #1e3a5f));font-size:12px;">
+        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. All Rights Reserved. Hungary Stability Index v1.0.0 — Proprietary and Confidential.
+    </div>
+</footer>
 
 </div><!-- /container -->
 
 <script>
-const API_BASE = 'https://asifa-europe-backend.onrender.com';
+const API_BASE = 'https://asifah-europe-backend.onrender.com';
 
+// ── THEME ──
 function initTheme() {
     const s = localStorage.getItem('asifah-theme') || 'dark';
     document.documentElement.setAttribute('data-theme', s);
@@ -421,8 +658,13 @@ function toggleTheme() {
 }
 initTheme();
 
-function toggleCard(id) { const c = document.getElementById('card-' + id); if (c) c.classList.toggle('collapsed'); }
+// ── KNOWLEDGE CARDS ──
+function toggleCard(id) {
+    const c = document.getElementById('card-' + id);
+    if (c) c.classList.toggle('collapsed');
+}
 
+// ── LOADING ──
 let _step = 0, _loadInt = null;
 function startLoading() {
     const steps = ['step1','step2','step3','step4'];
@@ -438,19 +680,26 @@ function startLoading() {
 }
 function hideLoading() {
     if (_loadInt) clearInterval(_loadInt);
-    document.querySelectorAll('.loading-step').forEach(s => { s.classList.remove('active'); s.classList.add('complete'); s.querySelector('.step-icon').textContent = '✓'; });
-    setTimeout(() => { const o = document.getElementById('loadingOverlay'); if (o) o.classList.add('hidden'); }, 500);
+    document.querySelectorAll('.loading-step').forEach(s => {
+        s.classList.remove('active'); s.classList.add('complete');
+        s.querySelector('.step-icon').textContent = '✓';
+    });
+    setTimeout(() => {
+        const o = document.getElementById('loadingOverlay');
+        if (o) o.classList.add('hidden');
+    }, 500);
 }
 
+// ── ARTICLES ──
 async function loadArticles() {
     try {
-        const r = await fetch(`${API_BASE}/api/europe/articles/poland`);
+        const r = await fetch(`${API_BASE}/api/europe/articles/hungary`);
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const d = await r.json();
         const articles = d.articles || d.recent_headlines || [];
         if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
     } catch(e) {
-        console.warn('[Poland] Articles failed:', e.message);
+        console.warn('[Hungary] Articles failed:', e.message);
         displayFallback();
     } finally {
         hideLoading();
@@ -477,20 +726,134 @@ function displayArticles(articles) {
 }
 function displayFallback() {
     document.getElementById('articlesContainer').innerHTML =
-        '<div style="text-align:center;padding:22px;color:var(--text-muted);"><p style="font-size:14px;margin-bottom:10px;">📡 Live article feed loading. Check these sources:</p>' +
+        '<div style="text-align:center;padding:22px;color:var(--text-muted);">' +
+        '<p style="font-size:14px;margin-bottom:10px;">📡 Live feed loading. Check these curated sources:</p>' +
         '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:10px;">' +
-        ['Notes from Poland|https://notesfrompoland.com/','OSW|https://www.osw.waw.pl/en','Reuters Europe|https://www.reuters.com/world/europe/']
+        ['444.hu|https://444.hu','Telex|https://telex.hu/english','Politico EU|https://www.politico.eu/','ECFR|https://ecfr.eu/','Euractiv|https://www.euractiv.com/']
             .map(s => { const [l,u] = s.split('|'); return `<a href="${u}" target="_blank" style="padding:7px 14px;background:rgba(56,189,248,0.14);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,0.28);">${l}</a>`; })
             .join('') +
         '</div></div>';
 }
 
+// ── TRANSLATIONS ──
 const T = {
-    en: { pageFlag:'POLAND', pageTitle:'POLAND STABILITY INDEX', pageSubtitle:'NATO Eastern Flank · Defense Modernization · Border Security · EU-Poland Dynamics', backLink:'← Back to Europe', cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION', cautionText:'U.S. citizens worldwide should remain vigilant. Monitor local media and enroll in STEP.', viewCaution:'VIEW CAUTION →', advisoryLabel:'U.S. STATE DEPARTMENT — POLAND TRAVEL ADVISORY', advisoryLevel:'LEVEL 2', viewAdvisory:'VIEW ADVISORY →', advisoryText:'Exercise Increased Caution in Poland due to proximity to the Russia-Ukraine war.', mapTitle:'POLAND — STRATEGIC OVERVIEW', mapSubtitle:"NATO's primary eastern frontier — bordering Russia (Kaliningrad), Belarus, Ukraine, and Lithuania.", knowledgeTitle:'KNOWLEDGE LIBRARY', catGovernment:'Government & Political Dynamics', catMilitary:'Military Modernization & NATO Eastern Flank', catBorder:'Border Security & Belarus Migration Crisis', catEconomy:'Economy & EU Relations', catRefugees:'Ukraine Refugee Integration', catUS:'U.S.-Poland Defense Partnership', articlesTitle:'RECENT POLAND SECURITY & STABILITY ARTICLES', articlesDesc:'NewsAPI + GDELT · Last 7 days' },
-    fr: { pageFlag:'POLOGNE', pageTitle:'INDICE DE STABILITÉ — POLOGNE', pageSubtitle:'Flanc est OTAN · Modernisation militaire · Sécurité frontalière · Dynamiques UE-Pologne', backLink:'← Retour à l\'Europe', cautionLabel:'DÉPARTEMENT D\'ÉTAT — MISE EN GARDE MONDIALE', cautionText:'Les citoyens américains doivent rester vigilants.', viewCaution:'VOIR →', advisoryLabel:'DÉPARTEMENT D\'ÉTAT — AVIS POLOGNE', advisoryLevel:'NIVEAU 2', viewAdvisory:'VOIR →', advisoryText:'Précautions renforcées en Pologne en raison de la proximité de la guerre.', mapTitle:'POLOGNE — VUE STRATÉGIQUE', mapSubtitle:'Frontière orientale principale de l\'OTAN.', knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES', catGovernment:'Gouvernement et dynamiques politiques', catMilitary:'Modernisation militaire et flanc est OTAN', catBorder:'Sécurité frontalière et crise migratoire', catEconomy:'Économie et relations UE', catRefugees:'Intégration des réfugiés ukrainiens', catUS:'Partenariat de défense É.-U.-Pologne', articlesTitle:'ARTICLES RÉCENTS — POLOGNE', articlesDesc:'NewsAPI + GDELT · 7 derniers jours' },
-    ru: { pageFlag:'ПОЛЬША', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ ПОЛЬШИ', pageSubtitle:'Восточный фланг НАТО · Модернизация обороны · Безопасность границ · Динамика ЕС-Польша', backLink:'← Назад к Европе', cautionLabel:'ГОСДЕПАРТАМЕНТ — МИРОВОЕ ПРЕДУПРЕЖДЕНИЕ', cautionText:'Гражданам США следует сохранять бдительность.', viewCaution:'СМОТРЕТЬ →', advisoryLabel:'ГОСДЕПАРТАМЕНТ — ПРЕДУПРЕЖДЕНИЕ ПО ПОЛЬШЕ', advisoryLevel:'УРОВЕНЬ 2', viewAdvisory:'СМОТРЕТЬ →', advisoryText:'Повышенная осторожность в Польше из-за близости к войне.', mapTitle:'ПОЛЬША — СТРАТЕГИЧЕСКИЙ ОБЗОР', mapSubtitle:'Главный восточный рубеж НАТО.', knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ', catGovernment:'Правительство и политическая динамика', catMilitary:'Военная модернизация и восточный фланг НАТО', catBorder:'Безопасность границ и миграционный кризис', catEconomy:'Экономика и отношения с ЕС', catRefugees:'Интеграция украинских беженцев', catUS:'Оборонное партнёрство США-Польша', articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ О ПОЛЬШЕ', articlesDesc:'NewsAPI + GDELT · Последние 7 дней' },
-    de: { pageFlag:'POLEN', pageTitle:'POLEN-STABILITÄTSINDEX', pageSubtitle:'NATO-Ostflanke · Verteidigungsmodernisierung · Grenzsicherheit · EU-Polen-Dynamik', backLink:'← Zurück zu Europa', cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG', cautionText:'US-Bürger weltweit sollten wachsam bleiben.', viewCaution:'WARNUNG ANZEIGEN →', advisoryLabel:'AUSSENMINISTERIUM — POLEN-REISEWARNUNG', advisoryLevel:'STUFE 2', viewAdvisory:'WARNUNG ANZEIGEN →', advisoryText:'Erhöhte Vorsicht in Polen wegen der Nähe zum Krieg.', mapTitle:'POLEN — STRATEGISCHER ÜBERBLICK', mapSubtitle:'NATO\'s wichtigste Ostgrenze.', knowledgeTitle:'WISSENSBIBLIOTHEK', catGovernment:'Regierung und politische Dynamik', catMilitary:'Militärmodernisierung und NATO-Ostflanke', catBorder:'Grenzsicherheit und Belarus-Migrationskrise', catEconomy:'Wirtschaft und EU-Beziehungen', catRefugees:'Integration ukrainischer Flüchtlinge', catUS:'Verteidigungspartnerschaft USA-Polen', articlesTitle:'AKTUELLE ARTIKEL — POLEN', articlesDesc:'NewsAPI + GDELT · Letzte 7 Tage' }
+    en: {
+        pageFlag:'HUNGARY', pageTitle:'HUNGARY STABILITY INDEX',
+        pageSubtitle:'Democratic Transition · EU Re-integration · Fidesz Opposition · Magyar/Tisza Government',
+        backLink:'← Back to Europe',
+        cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
+        cautionText:'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in STEP.',
+        viewCaution:'VIEW CAUTION →',
+        advisoryLabel:'U.S. STATE DEPARTMENT — HUNGARY TRAVEL ADVISORY',
+        advisoryLevel:'LEVEL 1', viewAdvisory:'VIEW ADVISORY →',
+        advisoryText:'Exercise Normal Precautions in Hungary. Following the April 2026 elections, monitor local developments during the democratic transition period.',
+        mapTitle:'HUNGARY — STRATEGIC OVERVIEW',
+        mapSubtitle:"Hungary's strategic position at the crossroads of Central Europe — bordered by Austria, Slovakia, Ukraine, Romania, Serbia, Croatia, and Slovenia.",
+        knowledgeTitle:'KNOWLEDGE LIBRARY',
+        knowledgeDisclaimer:'Background information compiled from open-source research, think tank analyses, and public government reporting.',
+        catTransition:'Democratic Transition — April 2026',
+        catFidesz:'Orbán Era & Fidesz Legacy (2010–2026)',
+        catEU:'EU Re-integration & Rule of Law Reform',
+        catRussia:'Russia Relations & Geopolitical Realignment',
+        catEconomy:'Economy, Forint & EU Funds',
+        catRegional:'Regional Dynamics & Ethnic Hungarian Minorities',
+        articlesTitle:'RECENT HUNGARY STABILITY & TRANSITION ARTICLES',
+        articlesDesc:'NewsAPI + GDELT · Last 7 days · English + Hungarian (hun)',
+    },
+    fr: {
+        pageFlag:'HONGRIE', pageTitle:'INDICE DE STABILITÉ — HONGRIE',
+        pageSubtitle:'Transition démocratique · Réintégration UE · Opposition Fidesz · Gouvernement Magyar/Tisza',
+        backLink:'← Retour à l\'Europe',
+        cautionLabel:'DÉPARTEMENT D\'ÉTAT — MISE EN GARDE MONDIALE',
+        cautionText:'Les citoyens américains dans le monde entier doivent rester vigilants.',
+        viewCaution:'VOIR LA MISE EN GARDE →',
+        advisoryLabel:'DÉPARTEMENT D\'ÉTAT — AVIS HONGRIE',
+        advisoryLevel:'NIVEAU 1', viewAdvisory:'VOIR L\'AVIS →',
+        advisoryText:'Précautions normales en Hongrie. Surveiller les développements pendant la transition démocratique d\'avril 2026.',
+        mapTitle:'HONGRIE — VUE STRATÉGIQUE',
+        mapSubtitle:'Position stratégique de la Hongrie au carrefour de l\'Europe centrale.',
+        knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES',
+        knowledgeDisclaimer:'Informations compilées à partir de recherches en sources ouvertes.',
+        catTransition:'Transition démocratique — Avril 2026',
+        catFidesz:'Ère Orbán & Héritage Fidesz (2010–2026)',
+        catEU:'Réintégration UE & Réforme de l\'État de droit',
+        catRussia:'Relations avec la Russie & Réalignement géopolitique',
+        catEconomy:'Économie, Forint & Fonds UE',
+        catRegional:'Dynamiques régionales & Minorités hongroises',
+        articlesTitle:'ARTICLES RÉCENTS — HONGRIE',
+        articlesDesc:'NewsAPI + GDELT · 7 derniers jours · Anglais + Hongrois',
+    },
+    ru: {
+        pageFlag:'ВЕНГРИЯ', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ ВЕНГРИИ',
+        pageSubtitle:'Демократический переход · Реинтеграция в ЕС · Оппозиция Фидес · Правительство Мадьяра/Тисза',
+        backLink:'← Назад к Европе',
+        cautionLabel:'ГОСДЕПАРТАМЕНТ — МИРОВОЕ ПРЕДУПРЕЖДЕНИЕ',
+        cautionText:'Гражданам США во всем мире следует сохранять бдительность.',
+        viewCaution:'СМОТРЕТЬ →',
+        advisoryLabel:'ГОСДЕПАРТАМЕНТ — ПРЕДУПРЕЖДЕНИЕ О ВЕНГРИИ',
+        advisoryLevel:'УРОВЕНЬ 1', viewAdvisory:'СМОТРЕТЬ →',
+        advisoryText:'Обычные меры предосторожности в Венгрии. Следить за развитием событий в период перехода после выборов 2026 года.',
+        mapTitle:'ВЕНГРИЯ — СТРАТЕГИЧЕСКИЙ ОБЗОР',
+        mapSubtitle:'Стратегическое положение Венгрии на перекрёстке Центральной Европы.',
+        knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ',
+        knowledgeDisclaimer:'Информация составлена из открытых источников.',
+        catTransition:'Демократический переход — Апрель 2026',
+        catFidesz:'Эпоха Орбана и наследие Фидес (2010–2026)',
+        catEU:'Реинтеграция в ЕС и реформа верховенства права',
+        catRussia:'Отношения с Россией и геополитическое перестроение',
+        catEconomy:'Экономика, форинт и фонды ЕС',
+        catRegional:'Региональная динамика и венгерские меньшинства',
+        articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ О ВЕНГРИИ',
+        articlesDesc:'NewsAPI + GDELT · Последние 7 дней · Английский + Венгерский',
+    },
+    de: {
+        pageFlag:'UNGARN', pageTitle:'UNGARN-STABILITÄTSINDEX',
+        pageSubtitle:'Demokratischer Übergang · EU-Wiedereingliederung · Fidesz-Opposition · Magyar/Tisza-Regierung',
+        backLink:'← Zurück zu Europa',
+        cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG',
+        cautionText:'US-Bürger weltweit sollten wachsam bleiben.',
+        viewCaution:'WARNUNG ANZEIGEN →',
+        advisoryLabel:'AUSSENMINISTERIUM — UNGARN-REISEWARNUNG',
+        advisoryLevel:'STUFE 1', viewAdvisory:'WARNUNG ANZEIGEN →',
+        advisoryText:'Normale Vorsichtsmaßnahmen in Ungarn. Entwicklungen während des demokratischen Übergangs nach den Wahlen 2026 beobachten.',
+        mapTitle:'UNGARN — STRATEGISCHER ÜBERBLICK',
+        mapSubtitle:'Ungarns strategische Lage an der Kreuzung Mitteleuropas.',
+        knowledgeTitle:'WISSENSBIBLIOTHEK',
+        knowledgeDisclaimer:'Informationen aus Open-Source-Forschung und Think-Tank-Analysen.',
+        catTransition:'Demokratischer Übergang — April 2026',
+        catFidesz:'Orbán-Ära & Fidesz-Erbe (2010–2026)',
+        catEU:'EU-Wiedereingliederung & Rechtsstaatsreform',
+        catRussia:'Russland-Beziehungen & Geopolitische Neuausrichtung',
+        catEconomy:'Wirtschaft, Forint & EU-Fonds',
+        catRegional:'Regionale Dynamik & Ungarische Minderheiten',
+        articlesTitle:'AKTUELLE ARTIKEL — UNGARN',
+        articlesDesc:'NewsAPI + GDELT · Letzte 7 Tage · Englisch + Ungarisch',
+    },
+    hu: {
+        pageFlag:'MAGYARORSZÁG', pageTitle:'MAGYARORSZÁG STABILITÁSI INDEXE',
+        pageSubtitle:'Demokratikus átmenet · EU-visszaintegráció · Fidesz ellenzék · Magyar/Tisza kormány',
+        backLink:'← Vissza Európához',
+        cautionLabel:'U.S. KÜLÜGYMINISZTÉRIUM — GLOBÁLIS FIGYELMEZTETÉS',
+        cautionText:'Az amerikaiak világszerte maradjanak éberek. Kövessék a helyi médiát és a hatósági iránymutatásokat.',
+        viewCaution:'FIGYELMEZTETÉS MEGTEKINTÉSE →',
+        advisoryLabel:'U.S. KÜLÜGYMINISZTÉRIUM — MAGYARORSZÁGI UTAZÁSI TANÁCSADÁS',
+        advisoryLevel:'1. SZINT', viewAdvisory:'TANÁCSADÁS MEGTEKINTÉSE →',
+        advisoryText:'Normális óvintézkedések Magyarországon. A 2026-os választások utáni demokratikus átmenet időszakában kövesse a helyi fejleményeket.',
+        mapTitle:'MAGYARORSZÁG — STRATÉGIAI ÁTTEKINTÉS',
+        mapSubtitle:'Magyarország stratégiai helyzete Közép-Európa keresztútján.',
+        knowledgeTitle:'TUDÁSTÁR',
+        knowledgeDisclaimer:'Háttérinformációk nyílt forrású kutatásokból és elemzőintézetek jelentéseiből.',
+        catTransition:'Demokratikus átmenet — 2026. április',
+        catFidesz:'Az Orbán-korszak és a Fidesz öröksége (2010–2026)',
+        catEU:'EU-visszaintegráció és jogállamisági reform',
+        catRussia:'Oroszország-kapcsolatok és geopolitikai átrendeződés',
+        catEconomy:'Gazdaság, forint és uniós alapok',
+        catRegional:'Regionális dinamika és határon túli magyarok',
+        articlesTitle:'LEGÚJABB MAGYARORSZÁG-CIKKEK',
+        articlesDesc:'NewsAPI + GDELT · Utolsó 7 nap · Angol + Magyar',
+    }
 };
+
 function setLang(lang, btn) {
     document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
     if (btn) btn.classList.add('active');
@@ -501,6 +864,7 @@ function setLang(lang, btn) {
     });
 }
 
+// ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
     startLoading();
     loadArticles();
