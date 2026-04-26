@@ -355,6 +355,10 @@
     <div style="margin-top:6px;font-size:0.85em;" data-i18n="footerMethodology">
         Methodology: Three-question analytical frame (U.S. pressure · Regime fracture · Adversary access) · Red Lines · So What factor · Cross-theater fingerprints
     </div>
+    <div style="margin-top:14px;padding:10px;background:rgba(56,189,248,0.07);border-radius:8px;">
+        <span style="font-size:0.92em;" data-i18n="footerCoffee">If you find Asifah Analytics useful, you can </span>
+        <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--cyber-cyan);font-weight:bold;text-decoration:none;">☕ <span data-i18n="footerCoffeeLink">buy me a coffee</span></a>
+    </div>
     <div style="margin-top:10px;font-size:0.85em;opacity:0.7;">
         © 2025-2026 Asifah Analytics · <span data-i18n="footerDisclaimer">Research & Educational Use Only. Not for operational decision-making.</span>
     </div>
@@ -414,6 +418,8 @@
             footerSources:      'Data Sources: RSS (EN/ES/PT), GDELT, NewsAPI, Telegram OSINT channels, Bluesky mirrors',
             footerMethodology:  'Methodology: Three-question analytical frame (U.S. pressure · Regime fracture · Adversary access) · Red Lines · So What factor · Cross-theater fingerprints',
             footerDisclaimer:   'Research & Educational Use Only. Not for operational decision-making.',
+            footerCoffee:       'If you find Asifah Analytics useful, you can ',
+            footerCoffeeLink:   'buy me a coffee',
             peakLevel:          'Peak Level',
             avgScore:           'Avg Score',
             theatersL3:         'Theaters L3+',
@@ -446,6 +452,8 @@
             footerSources:      'Fuentes de Datos: RSS (EN/ES/PT), GDELT, NewsAPI, canales OSINT de Telegram, espejos de Bluesky',
             footerMethodology:  'Metodología: Marco analítico de tres preguntas (Presión EE.UU. · Fractura del régimen · Acceso adversario) · Líneas Rojas · Factor Significado · Huellas multi-teatro',
             footerDisclaimer:   'Solo para Investigación y Uso Educativo. No para decisiones operativas.',
+            footerCoffee:       'Si Asifah Analytics te resulta útil, puedes ',
+            footerCoffeeLink:   'invitarme un café',
             peakLevel:          'Nivel Máximo',
             avgScore:           'Puntuación Media',
             theatersL3:         'Teatros L3+',
@@ -478,6 +486,8 @@
             footerSources:      'Fontes de Dados: RSS (EN/ES/PT), GDELT, NewsAPI, canais OSINT do Telegram, espelhos do Bluesky',
             footerMethodology:  'Metodologia: Estrutura analítica de três perguntas (Pressão EUA · Fratura do regime · Acesso de adversários) · Linhas Vermelhas · Fator Significado · Impressões multi-teatro',
             footerDisclaimer:   'Apenas para Pesquisa e Uso Educacional. Não para decisões operacionais.',
+            footerCoffee:       'Se Asifah Analytics for útil, você pode ',
+            footerCoffeeLink:   'me pagar um café',
             peakLevel:          'Nível Máximo',
             avgScore:           'Pontuação Média',
             theatersL3:         'Teatros L3+',
@@ -572,25 +582,54 @@
     }
 
     // ── REGIONAL POSTURE ──
-    function updatePosture(resolved) {
+    // ── POSTURE — driven by regional BLUF endpoint (server-side synthesis) ──
+    function updatePosture(blufData, resolvedTrackers) {
         const T = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
-        const loaded = resolved.filter(r => r.data);
-        if (loaded.length === 0) return;
+        const loadedCount = resolvedTrackers.filter(r => r.data).length;
 
-        const levels  = loaded.map(r => r.data.theatre_level ?? r.data.theatre_escalation_level ?? 0);
-        const maxLevel = Math.max(...levels);
-        const avgLevel = Math.round(
-            loaded.reduce((s, r) => s + (r.data.theatre_level || 0), 0) / loaded.length * 10
-        ) / 10;
-        const elevated = levels.filter(l => l >= 3).length;
+        // Fallback if BLUF endpoint failed: derive from tracker summaries (legacy behavior)
+        if (!blufData || !blufData.success) {
+            const loaded = resolvedTrackers.filter(r => r.data);
+            if (loaded.length === 0) return;
+            const levels = loaded.map(r => r.data.theatre_level ?? r.data.theatre_escalation_level ?? 0);
+            const maxLevel = Math.max(...levels);
+            const elevated = levels.filter(l => l >= 3).length;
+            let postureLabel = 'BASELINE', postureColor = '#6b7280';
+            if (maxLevel >= 5)      { postureLabel = 'ACTIVE CONFLICT';      postureColor = '#dc2626'; }
+            else if (maxLevel >= 4) { postureLabel = 'ELEVATED — COERCION';   postureColor = '#ef4444'; }
+            else if (maxLevel >= 3) { postureLabel = 'ELEVATED — CONFRONTATION'; postureColor = '#f97316'; }
+            else if (maxLevel >= 2) { postureLabel = 'WARNING';               postureColor = '#f59e0b'; }
+            else if (maxLevel >= 1) { postureLabel = 'MONITORING — RHETORIC'; postureColor = '#3b82f6'; }
+            document.getElementById('postureValue').innerHTML =
+                `<span style="color:${postureColor};">${postureLabel}</span>`;
+            const cyanColor = document.documentElement.getAttribute('data-theme') === 'dark' ? '#38bdf8' : '#0284c7';
+            document.getElementById('postureStats').innerHTML = `
+                <div class="posture-stat">
+                    <div class="posture-stat-num" style="color:${(ESCALATION_LEVELS[Math.min(maxLevel,5)] || ESCALATION_LEVELS[0]).color};">${maxLevel}</div>
+                    <div class="posture-stat-label">${T.peakLevel}</div>
+                </div>
+                <div class="posture-stat">
+                    <div class="posture-stat-num" style="color:${elevated > 0 ? '#ef4444' : cyanColor};">${elevated}</div>
+                    <div class="posture-stat-label">${T.theatersL3}</div>
+                </div>
+                <div class="posture-stat">
+                    <div class="posture-stat-num" style="color:${cyanColor};">${loaded.length}/${resolvedTrackers.length}</div>
+                    <div class="posture-stat-label">${T.trackersLive}</div>
+                </div>
+            `;
+            document.getElementById('lastUpdated').textContent =
+                `Last updated: ${new Date().toLocaleString()} · ${loaded.length} of ${resolvedTrackers.length} trackers live (BLUF unavailable)`;
+            return;
+        }
 
-        let postureLabel, postureColor;
-        if (maxLevel >= 5)      { postureLabel = 'ACTIVE CONFLICT';      postureColor = '#dc2626'; }
-        else if (maxLevel >= 4) { postureLabel = 'ELEVATED — COERCION';   postureColor = '#ef4444'; }
-        else if (maxLevel >= 3) { postureLabel = 'ELEVATED — CONFRONTATION'; postureColor = '#f97316'; }
-        else if (maxLevel >= 2) { postureLabel = 'WARNING';               postureColor = '#f59e0b'; }
-        else if (maxLevel >= 1) { postureLabel = 'MONITORING — RHETORIC'; postureColor = '#3b82f6'; }
-        else                    { postureLabel = 'BASELINE';              postureColor = '#6b7280'; }
+        // ── Server-side BLUF data path ──
+        const maxLevel       = blufData.max_level ?? blufData.peak_level ?? 0;
+        const avgScore       = blufData.avg_score ?? 0;
+        const theatresAtL3   = blufData.theatres_at_l3plus ?? 0;
+        const theatresLive   = blufData.theatres_live ?? blufData.trackers_live ?? loadedCount;
+        const theatresTotal  = blufData.trackers_total ?? resolvedTrackers.length;
+        const postureLabel   = blufData.posture_label ?? 'BASELINE';
+        const postureColor   = blufData.posture_color ?? '#6b7280';
 
         document.getElementById('postureValue').innerHTML =
             `<span style="color:${postureColor};">${postureLabel}</span>`;
@@ -603,113 +642,111 @@
                 <div class="posture-stat-label">${T.peakLevel}</div>
             </div>
             <div class="posture-stat">
-                <div class="posture-stat-num" style="color:${postureColor};">${avgLevel}</div>
+                <div class="posture-stat-num" style="color:${postureColor};">${avgScore}</div>
                 <div class="posture-stat-label">${T.avgScore}</div>
             </div>
             <div class="posture-stat">
-                <div class="posture-stat-num" style="color:${elevated > 0 ? '#ef4444' : cyanColor};">${elevated}</div>
+                <div class="posture-stat-num" style="color:${theatresAtL3 > 0 ? '#ef4444' : cyanColor};">${theatresAtL3}</div>
                 <div class="posture-stat-label">${T.theatersL3}</div>
             </div>
             <div class="posture-stat">
-                <div class="posture-stat-num" style="color:${cyanColor};">${loaded.length}/${resolved.length}</div>
+                <div class="posture-stat-num" style="color:${cyanColor};">${theatresLive}/${theatresTotal}</div>
                 <div class="posture-stat-label">${T.trackersLive}</div>
             </div>
         `;
 
-        document.getElementById('lastUpdated').textContent =
-            `Last updated: ${new Date().toLocaleString()} · ${loaded.length} of ${resolved.length} trackers live`;
+        let updatedStr = `Last updated: ${new Date().toLocaleString()}`;
+        if (blufData.from_cache) updatedStr += ' · cached';
+        updatedStr += ` · ${theatresLive} of ${theatresTotal} trackers live`;
+        document.getElementById('lastUpdated').textContent = updatedStr;
     }
 
     // ── BLUF — regional synthesis ──
-    function updateBluf(resolved) {
+    // ── BLUF — server-side regional synthesis (canonical schema) ──
+    function updateBluf(blufData, resolvedTrackers) {
         const T = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
-        const loaded = resolved.filter(r => r.data);
-        if (!loaded.length) {
-            document.getElementById('blufProse').textContent = T.noData;
+        const blufProseEl     = document.getElementById('blufProse');
+        const pillEl          = document.getElementById('blufPosturePill');
+        const signalsEl       = document.getElementById('blufSignals');
+        const timestampEl     = document.getElementById('blufTimestamp');
+
+        // Server BLUF unavailable — fall back to client-side synthesis from tracker summaries
+        if (!blufData || !blufData.success) {
+            const loaded = resolvedTrackers.filter(r => r.data);
+            if (!loaded.length) {
+                blufProseEl.textContent = T.noData;
+                pillEl.textContent = 'NO DATA';
+                pillEl.style.background = '#6b7280';
+                signalsEl.innerHTML = '';
+                return;
+            }
+            // Cuba-centric legacy fallback
+            const cubaData = loaded.find(r => r.tracker.id === 'cuba')?.data;
+            const cu_level = cubaData ? (cubaData.theatre_level ?? 0) : 0;
+            const cu_label = cubaData ? (ESCALATION_LEVELS[Math.min(cu_level, 5)].label) : 'Baseline';
+            const cu_color = cubaData ? (ESCALATION_LEVELS[Math.min(cu_level, 5)].color) : '#6b7280';
+            pillEl.textContent = (cu_label || 'BASELINE').toUpperCase();
+            pillEl.style.background = cu_color;
+            blufProseEl.textContent = `WHA Rhetoric Monitor (server BLUF unavailable, fallback view): ${loaded.length} tracker live — Cuba posture at L${cu_level} (${cu_label}). Mexico, Venezuela, Colombia, Brazil, Haiti, Panama, US trackers in development.`;
+            signalsEl.innerHTML = '';
+            timestampEl.textContent = `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
             return;
         }
 
-        // Cuba-centric for now; will expand as other WHA trackers come online
-        const cubaData = loaded.find(r => r.tracker.id === 'cuba')?.data;
-        const cu_level = cubaData ? (cubaData.theatre_level ?? 0) : 0;
-        const cu_label = cubaData
-            ? (ESCALATION_LEVELS[Math.min(cu_level, 5)].label)
-            : 'Baseline';
-        const cu_color = cubaData
-            ? (ESCALATION_LEVELS[Math.min(cu_level, 5)].color)
-            : '#6b7280';
-        const cu_usp    = cubaData?.us_pressure      ?? 0;
-        const cu_frac   = cubaData?.regime_fracture  ?? 0;
-        const cu_adv    = cubaData?.adversary_access ?? 0;
-        const cu_scen   = cubaData?.scenario || '';
-        const cu_rl     = cubaData?.red_lines_count ?? 0;
+        // ── Server BLUF available — render canonical schema ──
 
         // Posture pill
-        const pill = document.getElementById('blufPosturePill');
-        pill.textContent = cu_label.toUpperCase();
-        pill.style.background = cu_color;
+        const postureLabel = blufData.posture_label || 'BASELINE';
+        const postureColor = blufData.posture_color || '#6b7280';
+        // Strip "WHA -- " or "WESTERN HEMISPHERE -- " prefix if present (already implied by page header)
+        let pillText = postureLabel.toUpperCase()
+            .replace(/^WHA\s*[-—]+\s*/i, '')
+            .replace(/^WESTERN HEMISPHERE\s*[-—]+\s*/i, '')
+            .trim();
+        pillEl.textContent = pillText;
+        pillEl.style.background = postureColor;
 
-        // Prose synthesis
-        let prose = `WHA Rhetoric Monitor (${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}): `;
-        prose += `${loaded.length} tracker live — Cuba posture at L${cu_level} (${cu_label}). `;
+        // Prose
+        blufProseEl.textContent = blufData.bluf || 'No BLUF prose available.';
 
-        if (cu_frac >= 3) {
-            prose += `Regime fracture vector leading at L${cu_frac} — dissident activity exceeds suppression capacity, 11J 2021 pattern warrants close watch. `;
-        } else if (cu_frac >= 2) {
-            prose += `Regime fracture signal elevated (L${cu_frac}) — economic collapse indicators rising. `;
-        }
-        if (cu_usp >= 3) {
-            prose += `U.S. pressure at L${cu_usp} — approaching coercion threshold. `;
-        } else if (cu_usp >= 1) {
-            prose += `U.S. pressure at L${cu_usp}, below confrontation threshold. `;
-        }
-        if (cu_adv >= 3) {
-            prose += `Adversary access elevated (L${cu_adv}) — Russia/China/Iran exploitation signals active. `;
-        } else if (cu_adv >= 1) {
-            prose += `Adversary access at L${cu_adv}, monitoring. `;
-        }
-        if (cu_rl > 0) {
-            prose += `${cu_rl} red line${cu_rl === 1 ? '' : 's'} triggered. `;
-        }
-        prose += `Mexico, Venezuela, Colombia, Brazil, Haiti, Panama, US trackers in development — full WHA synthesis coming soon.`;
-
-        document.getElementById('blufProse').textContent = prose;
-
-        // Signals
-        const signalsEl = document.getElementById('blufSignals');
+        // Top signals — render canonical {priority, category, theatre, level, icon, color, short_text, long_text}
         signalsEl.innerHTML = '';
-        const signals = [];
-        if (cu_frac >= 3) signals.push({
-            icon: '✊', color: '#f97316',
-            text: `CUBA L${cu_level}: Regime fracture L${cu_frac} — dissident activity elevated, 11J pattern active`
-        });
-        if (cu_usp >= 3) signals.push({
-            icon: '🦅', color: '#ef4444',
-            text: `CUBA: U.S. pressure L${cu_usp} — approaching coercion, Rubio/Trump policy vector active`
-        });
-        if (cu_adv >= 3) signals.push({
-            icon: '🐻', color: '#7c3aed',
-            text: `CUBA: Adversary access L${cu_adv} — Russia/China/Iran exploitation, watch Lourdes/Mariel signals`
-        });
-        if (cu_rl > 0) signals.push({
-            icon: '🚨', color: '#dc2626',
-            text: `CUBA: ${cu_rl} red line${cu_rl === 1 ? '' : 's'} triggered — see full tracker for breach details`
-        });
-        if (!signals.length) signals.push({
-            icon: '🌎', color: '#6b7280',
-            text: T.baselinePosture
-        });
-        signals.forEach(sig => {
+        const signals = blufData.top_signals || blufData.signals || [];
+        if (!signals.length) {
             const div = document.createElement('div');
             div.className = 'bluf-signal-item';
-            div.style.borderLeftColor = sig.color;
-            div.innerHTML = `<span class="bluf-signal-icon">${sig.icon}</span>
-                <span class="bluf-signal-text" style="color:${sig.color};">${sig.text}</span>`;
+            div.style.borderLeftColor = '#6b7280';
+            div.innerHTML = `<span class="bluf-signal-icon">🌎</span>
+                <span class="bluf-signal-text" style="color:#6b7280;">${T.baselinePosture || 'All theaters at baseline.'}</span>`;
             signalsEl.appendChild(div);
-        });
+        } else {
+            signals.forEach(sig => {
+                const div = document.createElement('div');
+                div.className = 'bluf-signal-item';
+                div.style.borderLeftColor = sig.color || '#6b7280';
+                // Prefer short_text (canonical v2.0+) over text (legacy)
+                const text = sig.short_text || sig.text || '';
+                const longText = sig.long_text || '';
+                div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '•'}</span>
+                    <span class="bluf-signal-text" style="color:${sig.color || '#6b7280'};" title="${longText.replace(/"/g, '&quot;')}">${text}</span>`;
+                signalsEl.appendChild(div);
+            });
+        }
 
-        document.getElementById('blufTimestamp').textContent =
-            `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
+        // Timestamp
+        let tsText;
+        if (blufData.generated_at) {
+            try {
+                const d = new Date(blufData.generated_at);
+                tsText = `Generated: ${d.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
+                if (blufData.from_cache) tsText += ' (cached)';
+            } catch(e) {
+                tsText = `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
+            }
+        } else {
+            tsText = `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
+        }
+        timestampEl.textContent = tsText;
     }
 
     // ── MAIN LOAD ──
@@ -724,7 +761,18 @@
             list.appendChild(el);
         });
 
-        // Fetch all summaries in parallel
+        // Fetch BLUF endpoint AND all tracker summaries in parallel
+        const blufPromise = (async () => {
+            try {
+                const resp = await fetch(WHA_BACKEND + '/api/rhetoric/wha/bluf', { cache: 'no-store' });
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                return await resp.json();
+            } catch(e) {
+                console.warn('[WHA BLUF] fetch error:', e);
+                return null;
+            }
+        })();
+
         const settled = await Promise.allSettled(
             TRACKERS.map(async tracker => {
                 try {
@@ -752,8 +800,10 @@
             if (old) old.replaceWith(newEl);
         });
 
-        updatePosture(resolved);
-        updateBluf(resolved);
+        // Wait for BLUF + update synthesis blocks
+        const blufData = await blufPromise;
+        updatePosture(blufData, resolved);
+        updateBluf(blufData, resolved);
     }
 
     // ── INIT ──
