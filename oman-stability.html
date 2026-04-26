@@ -384,8 +384,15 @@
             font-style: italic;
         }
 
-        /* ── KNOWLEDGE LIBRARY ── */
-        .knowledge-categories { display: grid; gap: 10px; }
+        /* ── KNOWLEDGE LIBRARY (Lebanon-style 2-col responsive) ── */
+        .knowledge-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
         .knowledge-card {
             border: 1px solid var(--card-border);
             border-radius: 8px;
@@ -441,6 +448,70 @@
             font-weight: bold;
             margin-bottom: 14px;
         }
+        /* Article language/source tabs (Oman dual-axis pattern) */
+        .article-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--card-border);
+            flex-wrap: wrap;
+        }
+        .article-tab {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 9px 16px;
+            font-size: 12px;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 6px 6px 0 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            position: relative;
+            top: 2px;
+        }
+        .article-tab:hover { background: var(--article-hover); color: var(--text-primary); }
+        .article-tab.tab-active {
+            background: var(--card-bg);
+            color: var(--accent);
+            border: 2px solid var(--card-border);
+            border-bottom: 2px solid var(--card-bg);
+        }
+        .article-tab-count {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 1px 7px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .article-tab.tab-active .article-tab-count {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .article-source-pill {
+            display: inline-block;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+        .pill-rss      { background: #1e40af; color: #dbeafe; }
+        .pill-gdelt    { background: #6b21a8; color: #ede9fe; }
+        .pill-newsapi  { background: #0e7490; color: #cffafe; }
+        .pill-brave    { background: #ea580c; color: #ffedd5; }
+        .pill-telegram { background: #0284c7; color: #e0f2fe; }
+        .pill-bluesky  { background: #0ea5e9; color: #e0f7ff; }
+        .pill-reddit   { background: #b45309; color: #fef3c7; }
         .article-item {
             padding: 13px;
             border: 1px solid var(--card-border);
@@ -547,7 +618,7 @@
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
     <a href="wha.html" class="nav-btn active-nav">
-        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-label">🌎 Western Hemisphere</span>
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
     <div class="nav-divider"></div>
@@ -556,25 +627,26 @@
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
     <div class="nav-divider"></div>
-    <div class="nav-sidebar-label" data-i18n="navMERhetoric">ME Rhetoric</div>
-    <a href="rhetoric-iran.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🇮🇷 Iran Tracker</span>
+    <div class="nav-sidebar-label" data-i18n="navRegionalRhetoric">Regional Rhetoric</div>
+    <div class="nav-btn rhetoric-btn inactive-nav">
+        <span class="nav-btn-label">📡 ME Rhetoric</span>
+        <span class="nav-btn-status" data-i18n="navInDev">🔧 In Dev</span>
+    </div>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">📡 Asia Rhetoric</span>
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
-    <a href="rhetoric-israel.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🇮🇱 Israel Tracker</span>
+    <div class="nav-btn rhetoric-btn inactive-nav">
+        <span class="nav-btn-label">📡 Europe Rhetoric</span>
+        <span class="nav-btn-status" data-i18n="navInDev">🔧 In Dev</span>
+    </div>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">📡 Western Hemisphere Rhetoric</span>
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
-    <a href="rhetoric-lebanon.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🇱🇧 Lebanon Tracker</span>
-        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
-    </a>
-    <a href="rhetoric-yemen.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🇾🇪 Yemen Tracker</span>
-        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
-    </a>
+    <div class="nav-divider"></div>
     <a href="rhetoric-oman.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🇴🇲 Oman Tracker</span>
+        <span class="nav-btn-label">🇴🇲 Oman Rhetoric Tracker</span>
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
     <a href="oman-stability.html" class="nav-btn current-page">
@@ -852,6 +924,28 @@
 <!-- ARTICLES -->
 <div class="articles-section">
     <div class="section-title" data-i18n="articlesTitle">📰 Recent Oman, Hormuz &amp; Maritime Security Articles (Last 7 Days)</div>
+    <div class="article-tabs" id="articleTabs">
+        <button class="article-tab tab-active" onclick="switchArticleTab('en', this)">
+            🇬🇧 <span data-i18n="tabEnglish">English</span>
+            <span class="article-tab-count" id="tabCount-en">0</span>
+        </button>
+        <button class="article-tab" onclick="switchArticleTab('ar', this)">
+            🇸🇦 <span data-i18n="tabArabic">عربي</span>
+            <span class="article-tab-count" id="tabCount-ar">0</span>
+        </button>
+        <button class="article-tab" onclick="switchArticleTab('he', this)">
+            🇮🇱 <span data-i18n="tabHebrew">עברית</span>
+            <span class="article-tab-count" id="tabCount-he">0</span>
+        </button>
+        <button class="article-tab" onclick="switchArticleTab('fa', this)">
+            🇮🇷 <span data-i18n="tabFarsi">فارسی</span>
+            <span class="article-tab-count" id="tabCount-fa">0</span>
+        </button>
+        <button class="article-tab" onclick="switchArticleTab('social', this)">
+            📱 <span data-i18n="tabSocial">Social</span>
+            <span class="article-tab-count" id="tabCount-social">0</span>
+        </button>
+    </div>
     <div id="articlesContainer">
         <div style="text-align:center;color:var(--text-secondary);padding:30px;" data-i18n="articlesLoading">Loading articles...</div>
     </div>
@@ -941,6 +1035,14 @@ const T = {
         kbMethodTitle:         'Asifah Methodology — Oman as Stability Anchor',
         articlesTitle:         '📰 Recent Oman, Hormuz & Maritime Security Articles (Last 7 Days)',
         articlesLoading:       'Loading articles...',
+        tabEnglish:            'English',
+        tabArabic:             'عربي',
+        tabHebrew:             'עברית',
+        tabFarsi:              'فارسی',
+        tabSocial:             'Social',
+        noArticles:            'No articles in this category yet.',
+        navRegionalRhetoric:   'Regional Rhetoric',
+        navInDev:              '🔧 In Dev',
         footerSources:         'Data Sources: NewsAPI, GDELT, RSS (EN/AR/FA/HE), Brave Search (multi-language), Cross-theater fingerprints',
         footerMethodology:     'Methodology: Dual-axis stability anchor frame · Cross-theater fingerprints · 12-hour background refresh',
         footerCadence:         'Updated every 30 minutes · Not for operational decision-making',
@@ -997,6 +1099,14 @@ const T = {
         kbMethodTitle:         'منهجية أسيفة — عُمان كمرساة استقرار',
         articlesTitle:         '📰 آخر مقالات عُمان وهرمز والأمن البحري (آخر 7 أيام)',
         articlesLoading:       'جارٍ تحميل المقالات…',
+        tabEnglish:            'إنجليزي',
+        tabArabic:             'عربي',
+        tabHebrew:             'عبري',
+        tabFarsi:              'فارسي',
+        tabSocial:             'وسائل التواصل',
+        noArticles:            'لا توجد مقالات في هذه الفئة بعد.',
+        navRegionalRhetoric:   'الخطاب الإقليمي',
+        navInDev:              '🔧 قيد التطوير',
         footerSources:         'مصادر البيانات: NewsAPI، GDELT، RSS (إنجليزي/عربي/فارسي/عبري)، Brave Search (متعدد اللغات)، بصمات متعددة المسارح',
         footerMethodology:     'المنهجية: إطار مرساة الاستقرار ثنائي المحور · بصمات متعددة المسارح · تحديث كل 12 ساعة',
         footerCadence:         'تحديث كل 30 دقيقة · ليس لاتخاذ القرارات التشغيلية',
@@ -1053,6 +1163,14 @@ const T = {
         kbMethodTitle:         'מתודולוגיית אסיפה — עומאן כעוגן יציבות',
         articlesTitle:         '📰 כתבות אחרונות על עומאן, הורמוז וביטחון ימי (7 ימים אחרונים)',
         articlesLoading:       'טוען כתבות…',
+        tabEnglish:            'אנגלית',
+        tabArabic:             'ערבית',
+        tabHebrew:             'עברית',
+        tabFarsi:              'פרסית',
+        tabSocial:             'רשתות',
+        noArticles:            'אין כתבות בקטגוריה זו עדיין.',
+        navRegionalRhetoric:   'רטוריקה אזורית',
+        navInDev:              '🔧 בפיתוח',
         footerSources:         'מקורות נתונים: NewsAPI, GDELT, RSS (אנגלית/ערבית/פרסית/עברית), Brave Search, טביעות אצבע בין-זירתיות',
         footerMethodology:     'מתודולוגיה: מסגרת עוגן יציבות דו-צירית · טביעות אצבע בין-זירתיות · רענון רקע כל 12 שעות',
         footerCadence:         'מתעדכן כל 30 דקות · לא לקבלת החלטות מבצעיות',
@@ -1109,6 +1227,14 @@ const T = {
         kbMethodTitle:         'روش‌شناسی اسیفه — عُمان به‌مثابه لنگر ثبات',
         articlesTitle:         '📰 مقالات اخیر درباره عُمان، هرمز و امنیت دریایی (۷ روز گذشته)',
         articlesLoading:       'در حال بارگذاری مقالات…',
+        tabEnglish:            'انگلیسی',
+        tabArabic:             'عربی',
+        tabHebrew:             'عبری',
+        tabFarsi:              'فارسی',
+        tabSocial:             'شبکه‌های اجتماعی',
+        noArticles:            'هنوز مقاله‌ای در این دسته نیست.',
+        navRegionalRhetoric:   'لفاظی منطقه‌ای',
+        navInDev:              '🔧 در حال توسعه',
         footerSources:         'منابع داده: NewsAPI، GDELT، RSS (انگلیسی/عربی/فارسی/عبری)، Brave Search (چندزبانه)، اثرانگشت‌های بین‌تئاتری',
         footerMethodology:     'روش‌شناسی: چارچوب لنگر ثبات دومحوری · اثرانگشت‌های بین‌تئاتری · بازخوانی هر ۱۲ ساعت',
         footerCadence:         'هر ۳۰ دقیقه به‌روزرسانی · نه برای تصمیم‌گیری عملیاتی',
@@ -1223,38 +1349,112 @@ async function loadRhetoricBanner() {
 }
 
 // ════════════════════════════════════════════════════════
-// ARTICLES (from existing /api/threat/oman endpoint)
+// ARTICLES (aggregated from /api/rhetoric/oman across all 6 actors)
 // ════════════════════════════════════════════════════════
+let _allArticles = { en: [], ar: [], he: [], fa: [], social: [] };
+let _activeTab = 'en';
+
+function _classifySource(art) {
+    // Returns object: { sourceType: 'rss'|'gdelt'|'newsapi'|'brave'|'telegram'|'bluesky'|'reddit', isSocial: bool }
+    const feedType = (art.feed_type || '').toLowerCase();
+    const sourceName = ((art.source && art.source.name) || art.source_name || '').toLowerCase();
+    if (feedType === 'telegram' || sourceName.includes('telegram')) return { sourceType: 'telegram', isSocial: true };
+    if (feedType === 'bluesky'  || sourceName.includes('bluesky'))  return { sourceType: 'bluesky',  isSocial: true };
+    if (feedType === 'reddit'   || sourceName.startsWith('r/'))     return { sourceType: 'reddit',   isSocial: true };
+    if (feedType === 'brave')   return { sourceType: 'brave',   isSocial: false };
+    if (feedType === 'gdelt')   return { sourceType: 'gdelt',   isSocial: false };
+    if (feedType === 'newsapi') return { sourceType: 'newsapi', isSocial: false };
+    return { sourceType: 'rss', isSocial: false };
+}
+
 async function loadArticles() {
     try {
-        const resp = await fetch(BACKEND_URL + '/api/threat/oman?days=7');
+        const resp = await fetch(RHETORIC_ENDPOINT, { cache: 'no-store' });
         if (!resp.ok) throw new Error('HTTP ' + resp.status);
         const data = await resp.json();
-        const articles = data.top_scoring_articles || data.articles || data.recent_headlines || [];
-        if (articles.length > 0) displayArticles(articles);
-        else displayFallback();
+        if (!data || !data.success) throw new Error('invalid response');
+
+        // Aggregate top_articles across all actors, dedupe by URL
+        const seen = new Set();
+        const aggregated = [];
+        const actors = data.actors || {};
+        Object.keys(actors).forEach(actorKey => {
+            const actor = actors[actorKey] || {};
+            (actor.top_articles || []).forEach(art => {
+                const key = (art.url || '').trim();
+                if (!key || seen.has(key)) return;
+                seen.add(key);
+                aggregated.push({ ...art, _actor: actorKey });
+            });
+        });
+
+        // Sort by published date (newest first)
+        aggregated.sort((a, b) => {
+            const dA = new Date(a.publishedAt || a.published || 0).getTime() || 0;
+            const dB = new Date(b.publishedAt || b.published || 0).getTime() || 0;
+            return dB - dA;
+        });
+
+        // Bucket by language + social flag
+        _allArticles = { en: [], ar: [], he: [], fa: [], social: [] };
+        aggregated.forEach(art => {
+            const cls = _classifySource(art);
+            if (cls.isSocial) {
+                _allArticles.social.push({ ...art, _sourceType: cls.sourceType });
+            } else {
+                const lang = (art.language || 'en').toLowerCase();
+                const bucket = ['ar', 'he', 'fa'].includes(lang) ? lang : 'en';
+                _allArticles[bucket].push({ ...art, _sourceType: cls.sourceType });
+            }
+        });
+
+        // Update tab counts
+        ['en','ar','he','fa','social'].forEach(t => {
+            const el = document.getElementById('tabCount-' + t);
+            if (el) el.textContent = _allArticles[t].length;
+        });
+
+        // Render active tab
+        renderArticleTab(_activeTab);
     } catch (e) {
         console.warn('[Oman Stability] Article load failed:', e.message);
         displayFallback();
     }
 }
-function displayArticles(articles) {
+
+function renderArticleTab(tab) {
+    _activeTab = tab;
+    const articles = _allArticles[tab] || [];
     const container = document.getElementById('articlesContainer');
-    container.innerHTML = articles.slice(0, 20).map(a => {
+    if (!articles.length) {
+        const tr = T[currentLang] || T.en;
+        container.innerHTML = `<div style="text-align:center;color:var(--text-secondary);padding:30px;">${tr.noArticles || 'No articles in this category yet.'}</div>`;
+        return;
+    }
+    container.innerHTML = articles.slice(0, 30).map(a => {
         const title = a.title || a.article_title || 'Untitled';
-        const source = a.source || a.source_name || '';
-        const published = a.published || a.publishedAt || '';
+        const sourceName = (a.source && a.source.name) || a.source_name || a._sourceType || '';
+        const published = a.publishedAt || a.published || '';
         const url = a.url || '#';
+        const sourceType = a._sourceType || 'rss';
         let dateStr = 'Recent';
         if (published) {
             try { dateStr = new Date(published).toLocaleDateString(); } catch(e) {}
         }
-        return `<div class="article-item">
-            <div class="article-title">${title}</div>
-            <div class="article-meta">${source} • ${dateStr}</div>
+        const isRTL = ['ar','he','fa'].includes(tab);
+        const dirAttr = isRTL ? 'dir="rtl"' : '';
+        return `<div class="article-item" ${dirAttr}>
+            <div class="article-title">${title}<span class="article-source-pill pill-${sourceType}">${sourceType}</span></div>
+            <div class="article-meta">${sourceName} • ${dateStr}</div>
             ${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}
         </div>`;
     }).join('');
+}
+
+function switchArticleTab(tab, btn) {
+    document.querySelectorAll('.article-tab').forEach(b => b.classList.remove('tab-active'));
+    if (btn) btn.classList.add('tab-active');
+    renderArticleTab(tab);
 }
 function displayFallback() {
     const container = document.getElementById('articlesContainer');
