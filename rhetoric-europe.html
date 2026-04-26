@@ -443,7 +443,7 @@
 </div><!-- end container -->
 
 <script>
-    const EUROPE_BACKEND = 'https://asifa-europe-backend.onrender.com';
+    const EUROPE_BACKEND = 'https://asifah-europe-backend.onrender.com';
 
     const ESCALATION_LEVELS = {
         0: { label:'Baseline',      color:'#6b7280' },
@@ -592,78 +592,54 @@
             `Last updated: ${new Date().toLocaleString()} · ${loaded.length} of ${resolved.length} trackers live`;
     }
 
-    // ── BLUF — build from Greenland summary until europe_regional_bluf.py exists ──
-    function updateBluf(resolved) {
-        const loaded = resolved.filter(r => r.data);
-        if (!loaded.length) {
-            document.getElementById('blufProse').textContent = 'No tracker data available yet — check back after first scan.';
-            return;
+    // ── BLUF — consumes /api/rhetoric/europe/bluf (canonical schema) ──
+    // v1.0 (Apr 2026): switched from client-side synthesis to backend BLUF.
+    // Pattern matches rhetoric-asia.html, rhetoric-index.html (ME), rhetoric-wha.html.
+    async function updateBluf(resolved) {
+        try {
+            const resp = await fetch(EUROPE_BACKEND + '/api/rhetoric/europe/bluf');
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const data = await resp.json();
+
+            if (!data.success) {
+                document.getElementById('blufProse').textContent =
+                    data.bluf || 'BLUF temporarily unavailable.';
+                return;
+            }
+
+            // Posture pill
+            const pill = document.getElementById('blufPosturePill');
+            pill.textContent = (data.posture_label || 'BASELINE').toUpperCase();
+            pill.style.background = data.posture_color || '#6b7280';
+
+            // Prose
+            document.getElementById('blufProse').textContent = data.bluf || '';
+
+            // Signals (canonical schema with backward-compat fallback)
+            const signalsEl = document.getElementById('blufSignals');
+            signalsEl.innerHTML = '';
+            (data.top_signals || data.signals || []).forEach(sig => {
+                const div = document.createElement('div');
+                div.className = 'bluf-signal-item';
+                div.style.borderLeftColor = sig.color || '#6b7280';
+                const text     = sig.short_text || sig.text || '';
+                const longText = (sig.long_text || '').replace(/"/g, '&quot;');
+                div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
+                    <span class="bluf-signal-text" style="color:${sig.color || 'var(--text-secondary)'};" title="${longText}">${text}</span>`;
+                signalsEl.appendChild(div);
+            });
+
+            // Timestamp
+            if (data.generated_at) {
+                const dt = new Date(data.generated_at);
+                document.getElementById('blufTimestamp').textContent =
+                    `Generated: ${dt.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}${data.from_cache?' (cached)':''}`;
+            }
+        } catch (e) {
+            console.error('Europe BLUF load error:', e);
+            document.getElementById('blufProse').textContent =
+                'BLUF temporarily unavailable — refresh in a moment.';
         }
-
-        // Synthesize a simple prose sentence from available data
-        const greenlandData = loaded.find(r => r.tracker.id === 'greenland')?.data;
-        const gl_level      = greenlandData ? (greenlandData.theatre_level ?? 0) : 0;
-        const gl_label      = greenlandData ? (greenlandData.theatre_label || 'Baseline') : 'Baseline';
-        const gl_color      = greenlandData ? (greenlandData.theatre_color || '#6b7280') : '#6b7280';
-        const gl_us         = greenlandData?.us_pressure_level ?? 0;
-        const gl_russia     = greenlandData?.russia_level ?? 0;
-        const gl_conv       = greenlandData?.convergence_signal || '';
-
-        // Posture pill
-        const pill = document.getElementById('blufPosturePill');
-        pill.textContent = gl_label.toUpperCase();
-        pill.style.background = gl_color;
-
-        // Prose
-        let prose = `Europe Rhetoric Monitor (${new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}): `;
-        prose += `Regional posture at ${gl_label.toUpperCase()} with 1 tracker live. `;
-        prose += `Greenland sovereignty pressure at L${gl_level} — `;
-        prose += gl_us >= 2
-            ? `U.S. coercion signals active (L${gl_us}). `
-            : `U.S. pressure monitoring-level, no operational signals. `;
-        prose += gl_russia >= 2
-            ? `Russia Arctic opportunism elevated (L${gl_russia}) — GIUK Gap watch active. `
-            : `Russia Arctic signals at baseline. `;
-        if (gl_conv) prose += `Convergence signal: ${gl_conv}. `;
-        const russiaData  = loaded.find(r => r.tracker.id === 'russia')?.data;
-        const ru_level    = russiaData ? (russiaData.theatre_level ?? 0) : null;
-        const ru_nuclear  = russiaData?.nuclear_level ?? 0;
-        const ru_arctic   = russiaData?.arctic_level  ?? 0;
-
-        if (ru_level !== null) {
-            prose += ru_level >= 3
-                ? `Russia pressure at L${ru_level} — multi-vector escalation signals present. `
-                : ru_level >= 1
-                ? `Russia pressure at L${ru_level} — monitoring. `
-                : `Russia pressure at baseline. `;
-            if (ru_nuclear >= 2) prose += `Nuclear rhetoric above baseline (L${ru_nuclear}). `;
-            if (ru_arctic  >= 2) prose += `Arctic signals elevated (L${ru_arctic}) — GIUK Gap watch. `;
-        } else {
-            prose += 'Ukraine and Poland trackers in development — full Europe synthesis coming soon.';
-        }
-
-        document.getElementById('blufProse').textContent = prose;
-
-        // Signals
-        const signalsEl = document.getElementById('blufSignals');
-        signalsEl.innerHTML = '';
-        const signals = [];
-        if (gl_us >= 2) signals.push({ icon:'🦅', color:'#3b82f6', text:`GREENLAND L${gl_level}: U.S. pressure at L${gl_us} — coercion signals beyond baseline rhetoric` });
-        if (gl_russia >= 2) signals.push({ icon:'🐻', color:'#ef4444', text:`GREENLAND: Russia Arctic L${gl_russia} — opportunism signals, GIUK chokepoint watch` });
-        if (ru_level >= 3)  signals.push({ icon:'☢️', color:'#dc2626', text:`RUSSIA L${ru_level}: Multi-vector pressure — nuclear L${ru_nuclear}, arctic L${ru_arctic}` });
-        else if (ru_level >= 1) signals.push({ icon:'🇷🇺', color:'#3b82f6', text:`RUSSIA L${ru_level}: Monitoring — rhetoric level, below escalation threshold` });
-        if (!signals.length) signals.push({ icon:'🧊', color:'#6b7280', text:'All Europe theatres at baseline — monitoring for sovereignty and alliance signals' });
-        signals.forEach(sig => {
-            const div = document.createElement('div');
-            div.className = 'bluf-signal-item';
-            div.style.borderLeftColor = sig.color;
-            div.innerHTML = `<span class="bluf-signal-icon">${sig.icon}</span>
-                <span class="bluf-signal-text" style="color:${sig.color};">${sig.text}</span>`;
-            signalsEl.appendChild(div);
-        });
-
-        document.getElementById('blufTimestamp').textContent =
-            `Generated: ${new Date().toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true})}`;
     }
 
     // ── MAIN LOAD ──
