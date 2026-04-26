@@ -605,12 +605,16 @@
             document.getElementById('blufProse').textContent = data.bluf || '';
             const signalsEl = document.getElementById('blufSignals');
             signalsEl.innerHTML = '';
-            (data.signals || []).forEach(sig => {
+            // v2.1+ canonical: top_signals[] with short_text/long_text/category/priority
+            // v1.x legacy:    signals[] with text only
+            (data.top_signals || data.signals || []).forEach(sig => {
                 const div = document.createElement('div');
                 div.className = 'bluf-signal-item';
                 div.style.borderLeftColor = sig.color || '#6b7280';
+                const text     = sig.short_text || sig.text || '';
+                const longText = (sig.long_text || '').replace(/"/g, '&quot;');
                 div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
-                    <span class="bluf-signal-text" style="color:${sig.color || 'var(--text-secondary)'};">${sig.text}</span>`;
+                    <span class="bluf-signal-text" style="color:${sig.color || 'var(--text-secondary)'};" title="${longText}">${text}</span>`;
                 signalsEl.appendChild(div);
             });
             if (data.generated_at) {
