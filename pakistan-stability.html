@@ -1,729 +1,941 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Pakistan Stability Index v1.0.0 -->
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-Z9114D1Z5C');
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>Pakistan Stability Index | Asifah Analytics v1.0.0</title>
-    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan Stability Tracker — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://www.asifahanalytics.com/asifahlogo.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+    :root {
+        --bg-color:       #e8f0f8;
+        --container-bg:   #ffffff;
+        --card-bg:        #ffffff;
+        --card-border:    #b0c8e0;
+        --text-primary:   #0a1628;
+        --text-secondary: #1e3a5f;
+        --text-muted:     #4a6080;
+        --article-bg:     #f0f6fc;
+        --article-hover:  #e1ecf7;
+        --header-gradient-start: #1e3a5f;
+        --header-gradient-end:   #0ea5e9;
+        --header-text:    #ffffff;
+        --accent:         #0ea5e9;
+        --card-glow:      none;
+        --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
+        --watermark-opacity: 0.08;
+        --watermark-filter: none;
+        --pakistan-green: #16a34a;
+    }
+    [data-theme="dark"] {
+        --bg-color:       #060d1a;
+        --container-bg:   #0d1b2e;
+        --card-bg:        #0d1b2e;
+        --card-border:    #1e3a5f;
+        --text-primary:   #e2f0fb;
+        --text-secondary: #93c5fd;
+        --text-muted:     #4a7090;
+        --article-bg:     #0a1525;
+        --article-hover:  #112038;
+        --header-gradient-start: #060d1a;
+        --header-gradient-end:   #1e3a5f;
+        --accent:         #38bdf8;
+        --card-glow:      0 0 6px rgba(56,189,248,0.12), 0 0 1px rgba(56,189,248,0.25);
+        --card-hover-glow: 0 0 22px rgba(56,189,248,0.28), 0 8px 25px rgba(0,0,0,0.5);
+        --watermark-opacity: 0.22;
+        --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+        --pakistan-green: #22c55e;
+    }
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        background: var(--bg-color); color: var(--text-primary);
+        margin: 0; padding: 0; line-height: 1.6;
+        transition: background 0.3s, color 0.3s;
+    }
+    .container { max-width: 1800px; margin: 0 auto; padding: 24px; }
+    .page-with-sidebar { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+    .main-content { min-width: 0; }
 
-        :root {
-            --bg-color: #f5f5f5;
-            --container-bg: #ffffff;
-            --card-bg: #ffffff;
-            --card-border: #e1e8ed;
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
-            --header-text: #ffffff;
-            --metric-bg: #ffffff;
-            --metric-hover-shadow: rgba(0,0,0,0.15);
-            --article-bg: #f8f9fa;
-            --article-hover: #e8f4f8;
-            --watermark-opacity: 0.03;
-            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
-            --accent: #6495ED;
-        }
+    /* SIDEBAR */
+    .nav-sidebar { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 48px); overflow-y: auto; }
+    .nav-sidebar-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); padding: 8px 4px 4px 4px; }
+    .nav-divider { height: 1px; background: var(--card-border); margin: 6px 0; }
+    .nav-btn { display: flex; flex-direction: column; padding: 8px 10px; border: 1px solid var(--card-border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); text-decoration: none; transition: all 0.2s; cursor: pointer; }
+    .nav-btn:hover { border-color: var(--accent); box-shadow: var(--card-hover-glow); }
+    .nav-btn-label { font-size: 12px; font-weight: 600; line-height: 1.3; }
+    .nav-btn-status { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; opacity: 0.7; color: var(--accent); }
+    .nav-btn.active-nav { border-color: rgba(56,189,248,0.5); }
+    [data-theme="dark"] .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); color: #ffffff; }
+    .nav-btn.current-page { border-color: rgba(34,197,94,0.6); background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); }
+    .nav-btn.current-page .nav-btn-status { color: #16a34a; }
+    [data-theme="dark"] .nav-btn.current-page { color: #ffffff; }
+    [data-theme="dark"] .nav-btn.current-page .nav-btn-status { color: #4ade80; }
+    .nav-btn.inactive-nav { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.02); color: rgba(0,0,0,0.3); cursor: default; }
+    [data-theme="dark"] .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); }
+    .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+    .nav-btn.rhetoric-btn .nav-btn-status { color: #16a34a; }
+    [data-theme="dark"] .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+    .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+    .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+    @media (max-width: 1099px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
 
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --container-bg: #2d2d2d;
-            --card-bg: #2d2d2d;
-            --card-border: #404040;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
-            --header-text: #ffffff;
-            --metric-bg: #2d2d2d;
-            --metric-hover-shadow: rgba(255,255,255,0.1);
-            --article-bg: #353535;
-            --article-hover: #404040;
-            --watermark-opacity: 0.02;
-            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
-        }
+    /* HEADER */
+    header { background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end)); color: var(--header-text); padding: 28px 24px; border-radius: 12px; position: relative; overflow: hidden; margin-bottom: 24px; }
+    header::before { content: ""; position: absolute; inset: 0; background: url('https://www.asifahanalytics.com/asifahlogo.png') center/contain no-repeat; opacity: var(--watermark-opacity); filter: var(--watermark-filter); z-index: 0; }
+    .header-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .header-flag { font-size: 1rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.85; }
+    .header-title { font-size: 2.2rem; font-weight: 700; margin-top: 4px; line-height: 1.1; }
+    .header-subtitle { font-size: 0.95rem; opacity: 0.85; margin-top: 6px; max-width: 700px; }
+    .back-link { display: inline-flex; align-items: center; padding: 6px 12px; background: rgba(255,255,255,0.15); border-radius: 6px; color: var(--header-text); text-decoration: none; font-size: 0.85em; margin-bottom: 8px; }
+    .back-link:hover { background: rgba(255,255,255,0.25); }
+    .header-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .lang-btn { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: var(--header-text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85em; transition: all 0.2s; }
+    .lang-btn:hover { background: rgba(255,255,255,0.25); }
+    .lang-btn.active { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.6); }
+    .theme-toggle-wrap { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.3); }
+    .theme-label { font-size: 0.75em; font-weight: 700; letter-spacing: 1px; }
+    .theme-switch { position: relative; display: inline-block; width: 36px; height: 18px; }
+    .theme-switch input { opacity: 0; width: 0; height: 0; }
+    .theme-slider { position: absolute; cursor: pointer; inset: 0; background: rgba(0,0,0,0.4); border-radius: 18px; transition: 0.3s; }
+    .theme-slider::before { content: "🌙"; position: absolute; height: 14px; width: 14px; left: 2px; top: 2px; border-radius: 50%; transition: 0.3s; font-size: 10px; line-height: 14px; text-align: center; }
+    .theme-switch input:checked + .theme-slider::before { transform: translateX(18px); content: "☀️"; }
 
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            position: relative;
-        }
+    /* TRAVEL ADVISORY BANNER */
+    .advisory-banner {
+        display: flex; align-items: center; gap: 12px;
+        background: linear-gradient(135deg, rgba(245,158,11,0.12), rgba(220,38,38,0.08));
+        border: 1px solid rgba(245,158,11,0.4); border-radius: 10px;
+        padding: 14px 18px; margin-bottom: 16px;
+    }
+    .advisory-banner.do-not-travel {
+        background: linear-gradient(135deg, rgba(220,38,38,0.15), rgba(127,29,29,0.10));
+        border-color: rgba(220,38,38,0.5);
+    }
+    .advisory-icon { font-size: 1.6rem; }
+    .advisory-text { flex: 1; font-size: 0.88em; line-height: 1.5; color: var(--text-secondary); }
+    .advisory-label { display: block; font-size: 11px; font-weight: 700; color: #f59e0b; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+    .advisory-banner.do-not-travel .advisory-label { color: #fca5a5; }
+    .advisory-link { padding: 8px 14px; background: var(--accent); color: white; border-radius: 6px; text-decoration: none; font-size: 0.85em; font-weight: 600; white-space: nowrap; }
+    .advisory-link:hover { opacity: 0.9; }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: var(--watermark-opacity);
-            z-index: 0;
-            pointer-events: none;
-            user-select: none;
-        }
+    /* RHETORIC GREEN BANNER */
+    .rhetoric-banner {
+        display: flex; align-items: center; gap: 14px;
+        background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.10) 100%);
+        border: 1px solid rgba(34,197,94,0.5); border-radius: 10px;
+        padding: 14px 18px; margin-bottom: 20px;
+        text-decoration: none; color: var(--text-primary);
+        transition: all 0.2s;
+    }
+    .rhetoric-banner:hover { box-shadow: 0 0 18px rgba(34,197,94,0.25); transform: translateX(2px); }
+    .rhetoric-banner-icon { font-size: 1.8rem; }
+    .rhetoric-banner-text { flex: 1; }
+    .rhetoric-banner-label { display: block; font-size: 11px; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+    [data-theme="dark"] .rhetoric-banner-label { color: #4ade80; }
+    .rhetoric-banner-title { font-size: 1.05em; font-weight: 700; }
+    .rhetoric-banner-arrow { font-size: 1.4em; color: #16a34a; }
+    [data-theme="dark"] .rhetoric-banner-arrow { color: #4ade80; }
 
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--loading-overlay-bg);
-            backdrop-filter: blur(10px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
-        .loading-spinner {
-            width: 60px; height: 60px;
-            border: 5px solid var(--loading-spinner-bg);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 30px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
-        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
-        .loading-steps { margin-top: 20px; }
-        .loading-step {
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease;
-        }
-        .loading-step.active { color: var(--accent); font-weight: bold; }
-        .loading-step.complete { color: #4ade80; }
-        .step-icon { font-size: 18px; min-width: 20px; }
-        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
-        .loading-error {
-            color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px;
-            background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 8px;
-        }
+    /* RHETORIC SUMMARY CARD */
+    .rhetoric-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-left: 4px solid var(--pakistan-green);
+        border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;
+        box-shadow: var(--card-glow);
+    }
+    .rhetoric-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 10px; }
+    .rhetoric-card-title { font-size: 1.05em; font-weight: 700; color: var(--accent); }
+    .rhetoric-card-level-badge { padding: 6px 14px; border-radius: 6px; color: white; font-weight: 700; letter-spacing: 1px; font-size: 0.85em; text-transform: uppercase; }
+    .rhetoric-card-summary { font-size: 0.92em; line-height: 1.6; color: var(--text-secondary); }
+    .rhetoric-card-axes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .axis-mini-pill { display: inline-flex; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--article-bg); border: 1px solid var(--card-border); font-size: 0.75em; }
+    .axis-mini-pill.active { background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05)); border-color: #7c3aed; color: #7c3aed; }
+    [data-theme="dark"] .axis-mini-pill.active { color: #a78bfa; }
 
-        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+    /* SECTIONS */
+    .section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: var(--card-glow); }
+    .section-heading { font-size: 1.15em; font-weight: 700; color: var(--accent); margin: 0 0 14px 0; }
 
-        header {
-            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
-            color: var(--header-text);
-            padding: 35px; border-radius: 12px; margin-bottom: 30px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            position: relative; display: flex; align-items: center; gap: 30px;
-        }
-        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
-        .header-content { flex: 1; text-align: center; }
-        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
-        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+    /* COMPOSITE STABILITY BANNER */
+    .stab-banner { display: grid; grid-template-columns: auto 1fr auto; gap: 20px; align-items: center; }
+    .stab-score { font-size: 3rem; font-weight: 700; line-height: 1; }
+    .stab-score-label { font-size: 0.7rem; letter-spacing: 1.5px; color: var(--text-muted); margin-top: 4px; }
+    .stab-info-block { display: flex; flex-direction: column; gap: 6px; }
+    .stab-label-text { font-size: 0.7rem; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; }
+    .stab-label-display { font-size: 1.3rem; font-weight: 700; }
+    .stab-badge { display: inline-block; padding: 6px 14px; border-radius: 6px; font-weight: 700; letter-spacing: 1px; color: white; text-transform: uppercase; font-size: 0.85em; }
 
-        .header-controls {
-            position: absolute; top: 35px; right: 35px;
-            display: flex; flex-direction: column; gap: 10px; z-index: 1000;
-        }
-        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+    /* VECTORS GRID */
+    .vectors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .vector-card { padding: 14px 16px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--article-bg); border-left: 4px solid var(--text-muted); }
+    .vector-card-name { font-weight: 700; font-size: 0.95em; }
+    .vector-card-score-row { display: flex; align-items: baseline; gap: 12px; margin: 6px 0; }
+    .vector-card-score { font-size: 1.7rem; font-weight: 700; }
+    .vector-card-weight { font-size: 0.75em; color: var(--text-muted); }
+    .vector-card-desc { font-size: 0.78em; color: var(--text-muted); line-height: 1.4; }
 
-        .language-switcher {
-            display: flex; gap: 8px;
-            background: rgba(255,255,255,0.15); padding: 8px 12px;
-            border-radius: 8px; backdrop-filter: blur(10px);
-        }
-        .theme-toggle {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: rgba(255,255,255,0.15); padding: 8px 12px;
-            border-radius: 8px; backdrop-filter: blur(10px);
-        }
-        .theme-toggle-label {
-            font-size: 11px; color: rgba(255,255,255,0.9); margin-right: 8px;
-            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
-        }
-        .theme-toggle-switch {
-            position: relative; width: 50px; height: 26px;
-            background: rgba(255,255,255,0.2); border-radius: 13px; cursor: pointer;
-            transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3);
-        }
-        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .theme-toggle-slider {
-            position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
-            background: white; border-radius: 50%; transition: transform 0.3s ease;
-            display: flex; align-items: center; justify-content: center; font-size: 10px;
-        }
-        .theme-toggle-slider::before { content: '\2600\FE0F'; }
-        [data-theme="dark"] .theme-toggle-slider { transform: translateX(24px); }
-        [data-theme="dark"] .theme-toggle-slider::before { content: '\1F319'; }
+    /* MAP */
+    #pakMap { height: 380px; border-radius: 8px; }
 
-        .lang-btn {
-            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
-            color: white; padding: 6px 14px; font-family: 'Times New Roman', Times, serif;
-            font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+    /* KNOWLEDGE LIBRARY */
+    .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+    .kb-card { padding: 14px 16px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--article-bg); }
+    .kb-card-title { font-weight: 700; color: var(--accent); margin-bottom: 6px; font-size: 0.95em; }
+    .kb-card-text { font-size: 0.85em; color: var(--text-secondary); line-height: 1.55; }
 
-        .back-link {
-            display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0;
-            padding: 12px 24px; background: rgba(255,255,255,0.2); color: white;
-            text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.2s ease; font-size: 14px; font-weight: bold;
-        }
-        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+    /* ARTICLE TABS */
+    .article-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--card-border); margin-bottom: 14px; overflow-x: auto; }
+    .article-tab {
+        padding: 8px 14px; border: none; background: transparent;
+        cursor: pointer; font-family: inherit; font-size: 0.88em;
+        color: var(--text-muted); border-bottom: 2px solid transparent;
+        margin-bottom: -2px; white-space: nowrap;
+        transition: all 0.2s;
+    }
+    .article-tab:hover { color: var(--text-primary); }
+    .article-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+    .article-tab .tab-count { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--article-bg); font-size: 0.75em; font-weight: 600; }
+    .article-tab.active .tab-count { background: rgba(56,189,248,0.18); color: var(--accent); }
+    .article-list { max-height: 600px; overflow-y: auto; }
+    .article-row { display: block; padding: 10px 12px; border-bottom: 1px solid var(--card-border); text-decoration: none; color: var(--text-primary); transition: background 0.15s; }
+    .article-row:hover { background: var(--article-hover); }
+    .article-row-title { display: block; font-weight: 500; font-size: 0.92em; }
+    .article-row-meta { display: flex; gap: 8px; align-items: center; margin-top: 4px; font-size: 0.75em; color: var(--text-muted); }
+    .source-pill { padding: 1px 8px; border-radius: 4px; font-size: 0.92em; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; }
+    .source-pill.rss      { background: rgba(34,197,94,0.15);  color: #16a34a; }
+    .source-pill.gdelt    { background: rgba(56,189,248,0.15); color: #0ea5e9; }
+    .source-pill.newsapi  { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .source-pill.brave    { background: rgba(249,115,22,0.15); color: #f97316; }
+    .source-pill.telegram { background: rgba(37,99,235,0.15);  color: #2563eb; }
+    .source-pill.bluesky  { background: rgba(14,165,233,0.18); color: #0284c7; }
+    .source-pill.reddit   { background: rgba(220,38,38,0.15);  color: #dc2626; }
+    .source-pill.unknown  { background: rgba(107,114,128,0.18); color: var(--text-muted); }
 
-        .map-section {
-            background: var(--container-bg); border: 2px solid var(--card-border);
-            border-radius: 12px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
-        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+    /* FOOTER */
+    footer { margin-top: 40px; padding: 30px 24px 20px; border-top: 1px solid var(--card-border); color: var(--text-secondary); text-align: center; }
+    footer a { color: var(--accent); }
 
-        .knowledge-library {
-            background: var(--container-bg); border: 2px solid var(--card-border);
-            border-radius: 12px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
-        .library-icon { font-size: 28px; }
-        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
-        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
-        .knowledge-header {
-            background: linear-gradient(135deg, rgba(100, 149, 237, 0.1) 0%, rgba(30, 82, 130, 0.1) 100%);
-            padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between;
-            align-items: center; transition: background 0.3s ease;
-        }
-        .knowledge-header:hover { background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 82, 130, 0.15) 100%); }
-        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
-        .category-icon { font-size: 22px; }
-        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
-        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
-        .knowledge-content { padding: 20px; max-height: 500px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
-        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
-        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
-        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
-        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
-        .knowledge-content strong { color: var(--text-primary); }
-        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
-        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
-        .report-link {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 16px; background: var(--accent); color: white;
-            text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .report-link:hover { background: #4169E1; transform: translateX(3px); box-shadow: 0 4px 12px rgba(100, 149, 237, 0.3); }
-        [dir="rtl"] .report-link:hover { transform: translateX(-3px); }
-        .knowledge-content::-webkit-scrollbar { width: 8px; }
-        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
-        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
-        .knowledge-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+    .loading-dot { animation: pulse 1.5s infinite; opacity: 0.4; }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
 
-        .articles-section {
-            background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
-        .article-item {
-            background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px;
-            transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #1e3a5f;
-        }
-        [dir="rtl"] .article-item { border-left: none; border-right: 4px solid #1e3a5f; }
-        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
-        [dir="rtl"] .article-item:hover { transform: translateX(-4px); }
-        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
-        .article-meta { font-size: 12px; color: var(--text-secondary); }
-        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
-        .article-link:hover { text-decoration: underline; }
-
-        footer {
-            background: var(--container-bg); padding: 25px; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
-            font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
-            .header-logo { width: 60px; height: 60px; }
-            .header-content { text-align: center; }
-            .header-controls { position: static; align-items: center; }
-            h1 { font-size: 24px; }
-            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
-            .knowledge-categories { grid-template-columns: 1fr; }
-        }
-    </style>
+    .refresh-btn { padding: 8px 16px; background: var(--accent); color: white; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85em; }
+    .refresh-btn:hover { opacity: 0.9; }
+    .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
 </head>
+
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-status">
-            <div class="loading-title">Loading Pakistan Stability Data</div>
-            <div class="loading-steps" id="loadingSteps">
-                <div class="loading-step active" id="step1">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Fetching OSINT articles on Pakistan...</span>
-                </div>
-                <div class="loading-step" id="step2">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Scanning TTP and militant activity...</span>
-                </div>
-                <div class="loading-step" id="step3">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Analyzing Iran border incidents...</span>
-                </div>
-                <div class="loading-step" id="step4">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Compiling India-Pakistan tension indicators...</span>
-                </div>
-                <div class="loading-step" id="step5">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Rendering dashboard...</span>
-                </div>
-            </div>
-            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
-            <div class="loading-error" id="loadingError" style="display: none;"></div>
+<div class="container">
+<div class="page-with-sidebar">
+
+<!-- SIDEBAR -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label">Dashboards</div>
+    <div class="nav-btn inactive-nav"><span class="nav-btn-label">🌍 Africa</span><span class="nav-btn-status">🔒 Future</span></div>
+    <a href="asia.html" class="nav-btn active-nav"><span class="nav-btn-label">🌏 Asia &amp; Pacific</span><span class="nav-btn-status">● Live</span></a>
+    <a href="europe.html" class="nav-btn active-nav"><span class="nav-btn-label">🌍 Europe</span><span class="nav-btn-status">● Live</span></a>
+    <a href="middle-east.html" class="nav-btn active-nav"><span class="nav-btn-label">🕌 Middle East</span><span class="nav-btn-status">● Live</span></a>
+    <a href="wha.html" class="nav-btn active-nav"><span class="nav-btn-label">🌎 W. Hemisphere</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn"><span class="nav-btn-label">🎖️ Military Tracker</span><span class="nav-btn-status">● Live</span></a>
+    <a href="gpi.html" class="nav-btn military-btn"><span class="nav-btn-label">🌐 Global Pressure</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label">🕌 Middle East</span><span class="nav-btn-status">● Live</span></a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label">🌏 Asia</span><span class="nav-btn-status">● Live</span></a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label">🌍 Europe</span><span class="nav-btn-status">● Live</span></a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label">🌎 W. Hemisphere</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-divider"></div>
+    <a href="rhetoric-pakistan.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label">🇵🇰 Pakistan Rhetoric</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-btn current-page"><span class="nav-btn-label">🇵🇰 Pakistan Stability</span><span class="nav-btn-status">◉ You are here</span></div>
+</nav>
+
+<!-- MAIN -->
+<div class="main-content">
+
+<!-- HEADER -->
+<header>
+    <div class="header-content">
+        <div>
+            <a href="asia.html" class="back-link" data-i18n="backLink">← Back to Asia &amp; Pacific</a>
+            <div class="header-flag">🇵🇰 <span data-i18n="pageFlag">PAKISTAN</span></div>
+            <div class="header-title" data-i18n="pageTitle">PAKISTAN STABILITY TRACKER</div>
+            <div class="header-subtitle" data-i18n="pageSubtitle">Sectarian · Karachi · Balochistan · Economic · Climate · Civil-Military</div>
         </div>
-    </div>
-
-    <div class="container">
-        <header>
-            <a href="asia.html" class="back-link" data-i18n="backLink">&#8592; Back to Dashboard</a>
-            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
-            <div class="header-content">
-                <h1 data-i18n="pageTitle">🇵🇰 PAKISTAN STABILITY INDEX</h1>
-                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: TTP Insurgency, Iran Border Tensions, India-Pakistan Rivalry &amp; Nuclear Posture</div>
-                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
-            </div>
-            <div class="header-controls">
-                <div class="language-switcher">
-                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
-                    <button class="lang-btn" onclick="switchLanguage('ur', this)">اردو</button>
-                    <button class="lang-btn" onclick="switchLanguage('ar', this)">ع</button>
-                    <button class="lang-btn" onclick="switchLanguage('fa', this)">فا</button>
-                </div>
-                <div class="theme-toggle">
-                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
-                    <div class="theme-toggle-switch" onclick="toggleTheme()">
-                        <div class="theme-toggle-slider"></div>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <!-- U.S. STATE DEPARTMENT — WORLDWIDE CAUTION -->
-        <div style="
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">🚨</div>
-            <div style="flex: 1;">
-                <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;">⚠️ U.S. State Department — Worldwide Caution</div>
-                <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
-            </div>
-            <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW CAUTION →</a>
-        </div>
-
-        <!-- PAKISTAN TRAVEL ADVISORY — Level 3 -->
-        <div style="
-            background: linear-gradient(135deg, #431407 0%, #7c2d12 50%, #431407 100%);
-            border: 2px solid #f97316; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">🇵🇰</div>
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 11px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px;">U.S. State Department — Pakistan Travel Advisory</span>
-                    <span style="background: #f97316; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px;">LEVEL 3</span>
-                </div>
-                <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;"><strong style='color: #f97316;'>Reconsider Travel to Pakistan</strong> due to terrorism and kidnapping. Terrorist groups continue to conduct attacks throughout Pakistan, including near major cities and transportation hubs. Balochistan and Khyber Pakhtunkhwa provinces carry heightened risk.</div>
-            </div>
-            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/pakistan-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY →</a>
-        </div>
-
-        <!-- MAP SECTION -->
-        <div class="map-section">
-            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">Pakistan &#8212; Regional Overview</span></h2>
-            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on Islamabad. Khyber Pakhtunkhwa, FATA, and Balochistan are key monitoring zones.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=60.8%2C23.6%2C77.8%2C37.1&layer=mapnik&marker=33.72%2C73.04"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
-                </iframe>
-            </div>
-        </div>
-
-        <!-- KNOWLEDGE LIBRARY -->
-        <div class="knowledge-library">
-            <h2>
-                <span class="library-icon">&#x1F4DA;</span>
-                <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
-            </h2>
-            <p class="open-source-disclaimer">
-                Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
-            </p>
-
-            <div class="knowledge-categories">
-
-                <!-- TTP &amp; Internal Insurgency -->
-                <div class="knowledge-card collapsed" id="card-ttp">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('ttp')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">💣</span>
-                            <span>TTP &amp; Internal Insurgency</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Tehrik-i-Taliban Pakistan (TTP)</strong>, or the Pakistani Taliban, has dramatically escalated attacks since its 2022 ceasefire breakdown, constituting Pakistan's gravest internal security threat.</p>
-                        <p><strong>Operational Profile:</strong></p>
-                        <ul>
-                            <li><strong>Sanctuary:</strong> TTP leadership and fighters operate from Afghan territory under Taliban protection; Pakistan's demands for crackdown have been rebuffed</li>
-                            <li><strong>Attack Tempo:</strong> 2023-2024 saw the highest attack rates since the 2014 Army Public School massacre; security forces bear the brunt of casualties</li>
-                            <li><strong>Geographic Reach:</strong> TTP operates in Khyber Pakhtunkhwa, FATA, Balochistan, and has conducted high-profile attacks in Karachi and Lahore</li>
-                            <li><strong>Pakistan Airstrikes:</strong> Pakistan has conducted multiple cross-border airstrikes into Afghanistan targeting TTP positions, raising bilateral tensions</li>
-                            <li><strong>Splinter Groups:</strong> TTP is an umbrella; Hafiz Gul Bahadur Group and others operate semi-independently</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.longwarjournal.org/" target="_blank" class="report-link">&#x1F4D1; Long War Journal</a>
-<a href="https://www.satp.org/" target="_blank" class="report-link">&#x1F4D1; SATP - Pakistan</a>
-<a href="https://www.crisisgroup.org/asia/south-asia/pakistan" target="_blank" class="report-link">&#x1F4D1; Crisis Group - Pakistan</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Iran Border &amp; Regional Tensions -->
-                <div class="knowledge-card collapsed" id="card-iran_border">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('iran_border')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🗺️</span>
-                            <span>Iran Border &amp; Regional Tensions</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>The Pakistan-Iran border</strong> emerged as a major flashpoint in January 2024 when both countries exchanged missile and drone strikes — a rare direct confrontation between two nominally non-hostile states.</p>
-                        <p><strong>Key Dynamics:</strong></p>
-                        <ul>
-                            <li><strong>January 2024 Strikes:</strong> Iran fired missiles into Balochistan targeting Jaish al-Adl (Sunni militant group); Pakistan retaliated with strikes inside Iran's Sistan-Baluchestan province</li>
-                            <li><strong>Jaish al-Adl:</strong> Sunni Baloch militant group operates from Pakistani territory, conducting attacks on Iranian security forces; designated terrorist organization by both countries</li>
-                            <li><strong>BLA:</strong> Balochistan Liberation Army conducts attacks on Chinese interests (CPEC projects) and Pakistani security forces; some Iranian sympathy for Baloch grievances</li>
-                            <li><strong>CPEC:</strong> China-Pakistan Economic Corridor projects (Gwadar port, roads, energy) are targets for both TTP and BLA attacks</li>
-                            <li><strong>Drug Trafficking:</strong> Major narcotics transit route; fuels militant financing</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.crisisgroup.org/" target="_blank" class="report-link">&#x1F4D1; Crisis Group</a>
-<a href="https://gandhara.rferl.org/" target="_blank" class="report-link">&#x1F4D1; RFE/RL Gandhara</a>
-<a href="https://www.brookings.edu/" target="_blank" class="report-link">&#x1F4D1; Brookings</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- India-Pakistan Rivalry &amp; Nuclear -->
-                <div class="knowledge-card collapsed" id="card-india_rivalry">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('india_rivalry')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">⚔️</span>
-                            <span>India-Pakistan Rivalry &amp; Nuclear</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>India and Pakistan</strong> have fought four wars and remain locked in one of the world's most dangerous nuclear rivalries, with Kashmir at the center of their dispute.</p>
-                        <p><strong>Current State:</strong></p>
-                        <ul>
-                            <li><strong>2025 Escalation:</strong> Following the Pahalgam tourist attack in Indian-administered Kashmir (26 killed), India launched Operation Sindoor — strikes on Pakistani territory targeting militant infrastructure; most significant cross-border escalation in decades</li>
-                            <li><strong>Nuclear Posture:</strong> Pakistan has ~170 warheads; Pakistan's nuclear doctrine emphasizes first use against conventional Indian military advance</li>
-                            <li><strong>Army Dominance:</strong> Pakistan Army remains the dominant political institution; civilian governments operate within military-defined limits</li>
-                            <li><strong>IMF Dependence:</strong> Pakistan has required multiple IMF bailouts; economic fragility limits strategic options</li>
-                            <li><strong>China Alignment:</strong> Pakistan-China "iron brotherhood" includes CPEC, arms transfers (JF-17 jets, Type 054A frigates), and diplomatic support at UNSC</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.stimson.org/" target="_blank" class="report-link">&#x1F4D1; Stimson Center - South Asia</a>
-<a href="https://www.cfr.org/backgrounder/pakistan" target="_blank" class="report-link">&#x1F4D1; CFR - Pakistan</a>
-<a href="https://www.nti.org/countries/pakistan/" target="_blank" class="report-link">&#x1F4D1; NTI - Pakistan Nuclear</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Political Instability &amp; Governance -->
-                <div class="knowledge-card collapsed" id="card-political">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('political')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🏛️</span>
-                            <span>Political Instability &amp; Governance</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Pakistan's political system</strong> has been characterized by chronic instability, with repeated cycles of military rule, civilian governments, and judicial crises.</p>
-                        <p><strong>Current Situation:</strong></p>
-                        <ul>
-                            <li><strong>Imran Khan:</strong> Former PM imprisoned since August 2023; his PTI party remains the most popular political force despite systematic suppression; mass protests</li>
-                            <li><strong>Shahbaz Sharif:</strong> Current PM; PML-N government backed by military establishment; contested 2024 elections gave PTI plurality but coalition excluded them</li>
-                            <li><strong>Judiciary:</strong> Constitutional courts used as political weapons; judges face pressure; rule of law concerns</li>
-                            <li><strong>Economy:</strong> Persistent current account deficits; near-default avoided through IMF program; inflation has exceeded 30% at peak</li>
-                            <li><strong>Internet/Media:</strong> X (Twitter) and VPNs blocked; journalists targeted; Pakistan ranks poorly on press freedom</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.dawn.com/" target="_blank" class="report-link">&#x1F4D1; Dawn - Pakistan</a>
-<a href="https://www.geo.tv/" target="_blank" class="report-link">&#x1F4D1; Geo News - Pakistan</a>
-<a href="https://www.freedomhouse.org/country/pakistan" target="_blank" class="report-link">&#x1F4D1; Freedom House - Pakistan</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RECENT ARTICLES -->
-        <div class="articles-section">
-            <div class="section-title" data-i18n="recentArticles">&#x1F4F0; Recent Pakistan, TTP &amp; Regional Security Articles (Last 7 Days)</div>
-            <div id="articlesContainer">
-                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
-            </div>
-        </div>
-
-        <footer>
-            <div>Data Sources: NewsAPI, GDELT, SATP, Long War Journal, ACLED, and OSINT sources</div>
-            <div style="margin-top:15px; font-size:0.85em;">
-                Urdu and Arabic feeds via GDELT. Reddit intelligence from r/pakistan, r/Pashtun, r/geopolitics.
-            </div>
-            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
-
-            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v1.0.0</div>
-                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
-            </div>
-
-            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
-                <span style="font-size:0.9em;">
-                    If you find Asifah Analytics useful and want to support ongoing development, you can
-                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
+        <div class="header-controls">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('zh')">中文</button>
+            <button class="lang-btn" onclick="setLanguage('ja')">日本語</button>
+            <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+            <button class="refresh-btn" onclick="refreshAll()" id="refreshBtn" data-i18n="refreshScan">Refresh</button>
+            <label class="theme-toggle-wrap">
+                <span class="theme-label" data-i18n="themeLabel">THEME</span>
+                <span class="theme-switch">
+                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                    <span class="theme-slider"></span>
                 </span>
-            </div>
-
-            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
-                &copy; 2026 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
-                Unauthorized use, reproduction, or distribution prohibited.
-            </div>
-        </footer>
+            </label>
+        </div>
     </div>
+</header>
 
-    <script>
-        const BACKEND_URL = 'https://asifah-asia-backend.onrender.com';
-        const RTL_LANGS = ["ur", "ar", "fa"];
+<!-- TRAVEL ADVISORY BANNER (single, links to advisory) -->
+<div class="advisory-banner do-not-travel">
+    <span class="advisory-icon">⚠️</span>
+    <div class="advisory-text">
+        <span class="advisory-label" data-i18n="taLabel">U.S. State Department — Pakistan Travel Advisory</span>
+        <span data-i18n="taText">Reconsider travel due to terrorism. Do Not Travel to Balochistan, Khyber Pakhtunkhwa (KP), and the immediate vicinity of the India-Pakistan border. Review the full advisory before any travel planning.</span>
+    </div>
+    <a class="advisory-link" data-i18n="taLink"
+       href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/pakistan-travel-advisory.html"
+       target="_blank" rel="noopener">View Advisory →</a>
+</div>
 
-        // Theme
-        function initTheme() {
-            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
-        }
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('asifah-theme', next);
-        }
-        initTheme();
+<!-- RHETORIC GREEN BANNER (links to rhetoric-pakistan.html) -->
+<a href="rhetoric-pakistan.html" class="rhetoric-banner">
+    <span class="rhetoric-banner-icon">🎯</span>
+    <div class="rhetoric-banner-text">
+        <span class="rhetoric-banner-label" data-i18n="rhetoricLabel">PAKISTAN RHETORIC TRACKER</span>
+        <span class="rhetoric-banner-title" data-i18n="rhetoricTitle">9-actor / 7-vector matrix · Cross-axis fingerprints to Iran, China, India</span>
+    </div>
+    <span class="rhetoric-banner-arrow">→</span>
+</a>
 
-        // Knowledge Library Toggle
-        function toggleKnowledgeCard(cardId) {
-            const card = document.getElementById('card-' + cardId);
-            if (card) card.classList.toggle('collapsed');
-        }
+<!-- RHETORIC SUMMARY CARD -->
+<div class="rhetoric-card" id="rhetoricCard">
+    <div class="rhetoric-card-header">
+        <div class="rhetoric-card-title">📡 <span data-i18n="rhetoricCardTitle">Rhetoric Snapshot</span></div>
+        <span id="rhetoricLevelBadge" class="rhetoric-card-level-badge" style="background:#374151;" data-i18n="loading">LOADING</span>
+    </div>
+    <div class="rhetoric-card-summary" id="rhetoricSummary"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>
+    <div class="rhetoric-card-axes" id="rhetoricAxes"></div>
+</div>
 
-        // Loading Overlay
-        let loadingStepIndex = 0;
-        let loadingInterval = null;
-        let loadingTimeout = null;
-        const STEP_COUNT = 5;
+<!-- COMPOSITE STABILITY BANNER -->
+<div class="section">
+    <h2 class="section-heading">📊 <span data-i18n="stabTitle">Composite Stability Index</span></h2>
+    <div class="stab-banner">
+        <div>
+            <div class="stab-score" id="stabScore" style="color:var(--text-muted);">--</div>
+            <div class="stab-score-label" data-i18n="stabScoreLabel">INSTABILITY / 100</div>
+        </div>
+        <div class="stab-info-block">
+            <div class="stab-label-text" data-i18n="stabClassLabel">STABILITY CLASSIFICATION</div>
+            <div class="stab-label-display" id="stabLabel" style="color:var(--text-muted);">
+                <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+            </div>
+            <div style="font-size:0.8em;color:var(--text-muted);" data-i18n="stabSubLabel">Weighted average across 6 vectors</div>
+        </div>
+        <div>
+            <div id="stabBadge" class="stab-badge" style="background:#374151;" data-i18n="loading">LOADING</div>
+        </div>
+    </div>
+</div>
 
-        function startLoadingProgress() {
-            const steps = Array.from({length: STEP_COUNT}, (_, i) => 'step' + (i + 1));
-            loadingInterval = setInterval(() => {
-                if (loadingStepIndex < steps.length - 1) {
-                    const cur = document.getElementById(steps[loadingStepIndex]);
-                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '\u2713'; }
-                    loadingStepIndex++;
-                    const next = document.getElementById(steps[loadingStepIndex]);
-                    if (next) next.classList.add('active');
-                }
-            }, 5000);
-            loadingTimeout = setTimeout(() => {
-                document.getElementById('loadingError').style.display = 'block';
-                document.getElementById('loadingError').textContent = '\u26A0\uFE0F Loading is taking longer than expected. Please wait or refresh.';
-            }, 60000);
-        }
+<!-- VECTORS GRID -->
+<div class="section">
+    <h2 class="section-heading">🧭 <span data-i18n="vectorsTitle">Stability Vectors</span></h2>
+    <div class="vectors-grid" id="vectorsGrid">
+        <div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:30px;">
+            <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+        </div>
+    </div>
+</div>
 
-        function hideLoadingOverlay() {
-            if (loadingInterval) clearInterval(loadingInterval);
-            if (loadingTimeout) clearTimeout(loadingTimeout);
-            document.querySelectorAll('.loading-step').forEach(step => {
-                step.classList.remove('active');
-                step.classList.add('complete');
-                step.querySelector('.step-icon').textContent = '\u2713';
-            });
-            setTimeout(() => {
-                const overlay = document.getElementById('loadingOverlay');
-                if (overlay) overlay.classList.add('hidden');
-            }, 500);
-        }
+<!-- MAP -->
+<div class="section">
+    <h2 class="section-heading">🗺️ <span data-i18n="mapTitle">Pakistan — Vector Geography</span></h2>
+    <div id="pakMap"></div>
+    <div style="font-size:0.78em;color:var(--text-muted);margin-top:8px;" data-i18n="mapNote">
+        Color-coded markers indicate where each stability vector concentrates geographically.
+    </div>
+</div>
 
-        // Fetch articles from backend
-        async function loadArticles() {
-            try {
-                const response = await fetch(BACKEND_URL + '/scan-pakistan');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                if (data.success && data.articles && data.articles.length > 0) {
-                    displayArticles(data.articles);
-                } else {
-                    await loadArticlesFallback();
-                }
-            } catch (error) {
-                console.warn('Primary endpoint failed:', error.message);
-                await loadArticlesFallback();
-            }
-        }
+<!-- KNOWLEDGE LIBRARY -->
+<div class="section">
+    <h2 class="section-heading">📚 <span data-i18n="kbTitle">Knowledge Library</span></h2>
+    <div class="kb-grid">
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbArmyTitle">Pakistan Army & ISPR</div>
+            <div class="kb-card-text" data-i18n="kbArmyText">Inter-Services Public Relations is the public-information arm of the Pakistan Armed Forces. The Chief of Army Staff (COAS) is widely considered the most influential political figure in Pakistan, irrespective of which civilian government is in power. ISPR press conferences are read globally as strategic signals.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbISITitle">Inter-Services Intelligence (ISI)</div>
+            <div class="kb-card-text" data-i18n="kbISIText">Pakistan's premier intelligence agency, with significant influence over national security policy, particularly regarding India, Afghanistan, and counter-terrorism. Public mentions are rare and analytically significant — silence is the baseline.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbCPECTitle">CPEC & Gwadar</div>
+            <div class="kb-card-text" data-i18n="kbCPECText">The China-Pakistan Economic Corridor is a flagship Belt and Road project: ~$62B in announced infrastructure investment connecting Xinjiang to the Arabian Sea via Gwadar deep-water port. CPEC site security drives the Balochistan vector — the BLA (Baloch Liberation Army) has repeatedly targeted Chinese workers and project sites.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbTTPTitle">Tehrik-i-Taliban Pakistan (TTP)</div>
+            <div class="kb-card-text" data-i18n="kbTTPText">The Pakistani Taliban — a separate organization from the Afghan Taliban — shelters in Afghanistan and conducts cross-border attacks into Khyber Pakhtunkhwa (KP) and Balochistan. TTP attacks accelerated dramatically following the August 2021 U.S. withdrawal from Afghanistan.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbNuclearTitle">Nuclear Posture</div>
+            <div class="kb-card-text" data-i18n="kbNuclearText">Pakistan is the only nuclear-armed Muslim-majority state. Its declared doctrine is "Full Spectrum Deterrence," and unlike India it has no formal "no first use" policy. The Nasr (Hatf-IX) tactical nuclear missile is designed for battlefield use against Indian armored thrusts. The National Command Authority (NCA) oversees strategic forces.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbIMFTitle">IMF & Economic Stress</div>
+            <div class="kb-card-text" data-i18n="kbIMFText">Pakistan has cycled through more than two dozen IMF programs since the 1980s. Economic stress (low foreign reserves, currency crashes, fuel/food inflation) is a structural constant and a major driver of civil-military friction. Saudi Arabia, the UAE, and China have repeatedly provided emergency deposit rollovers.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbKashmirTitle">Kashmir & the Line of Control</div>
+            <div class="kb-card-text" data-i18n="kbKashmirText">The disputed Kashmir region is divided by the Line of Control (LoC), the de facto border between Indian-administered and Pakistani-administered Kashmir. India revoked Article 370 — Kashmir's special autonomous status — in August 2019. Cross-LoC firing, infiltration accusations, and Indus Waters Treaty disputes are recurring flashpoints.</div>
+        </div>
+        <div class="kb-card">
+            <div class="kb-card-title" data-i18n="kbSectarianTitle">Sectarian Violence</div>
+            <div class="kb-card-text" data-i18n="kbSectarianText">Pakistan's religious minorities — Christians, Ahmadis, Hindus, and Shia Muslims — face periodic episodes of mob violence, blasphemy law abuses, and targeted attacks. ISIS-K (Islamic State Khorasan Province) and certain TTP factions specifically target Shia mosques and processions. Ahmadis face state-codified discrimination under Pakistan's constitution.</div>
+        </div>
+    </div>
+</div>
 
-        async function loadArticlesFallback() {
-            try {
-                const q = encodeURIComponent('Pakistan');
-                const response = await fetch(BACKEND_URL + '/scan-osint?q=' + q);
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                if (data.articles && data.articles.length > 0) {
-                    displayArticles(data.articles);
-                } else {
-                    displayArticlesFallbackStatic();
-                }
-            } catch (error) {
-                console.warn('Fallback also failed:', error.message);
-                displayArticlesFallbackStatic();
-            }
-        }
+<!-- ARTICLES (LANGUAGE TABS + SOCIAL) -->
+<div class="section">
+    <h2 class="section-heading">📰 <span data-i18n="articlesTitle">Articles by Source</span></h2>
+    <div class="article-tabs" id="articleTabs">
+        <button class="article-tab active" data-tab="all" onclick="setArticleTab('all')"><span data-i18n="tabAll">All</span> <span class="tab-count" id="countAll">0</span></button>
+        <button class="article-tab" data-tab="en" onclick="setArticleTab('en')"><span data-i18n="tabEn">English</span> <span class="tab-count" id="countEn">0</span></button>
+        <button class="article-tab" data-tab="hi" onclick="setArticleTab('hi')"><span data-i18n="tabHi">Hindi</span> <span class="tab-count" id="countHi">0</span></button>
+        <button class="article-tab" data-tab="social" onclick="setArticleTab('social')"><span data-i18n="tabSocial">Social</span> <span class="tab-count" id="countSocial">0</span></button>
+    </div>
+    <div class="article-list" id="articleList">
+        <div style="text-align:center;color:var(--text-muted);padding:30px;">
+            <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+        </div>
+    </div>
+</div>
 
-        function displayArticles(articles) {
-            const container = document.getElementById('articlesContainer');
-            if (!articles || articles.length === 0) { displayArticlesFallbackStatic(); return; }
-            container.innerHTML = articles.slice(0, 20).map(article => {
-                const title = article.title || 'Untitled';
-                const source = article.source || article.source_name || '';
-                const published = article.published || article.publishedAt || article.date || '';
-                const url = article.url || article.link || '#';
-                const description = article.description || '';
-                let dateStr = 'Recent';
-                if (published) {
-                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
-                    catch(e) { dateStr = published; }
-                }
-                return '<div class="article-item">' +
-                    '<div class="article-title">' + title + '</div>' +
-                    (description ? '<div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; line-height:1.5;">' + description.substring(0, 200) + (description.length > 200 ? '...' : '') + '</div>' : '') +
-                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
-                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
-                    '</div>';
-            }).join('');
-        }
+<!-- FOOTER -->
+<footer>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; margin-bottom:24px; text-align:left; max-width:1200px; margin-left:auto; margin-right:auto;">
+        <div>
+            <div style="font-weight:700; color:var(--accent); margin-bottom:8px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">📡 <span data-i18n="footDataTitle">Data Sources</span></div>
+            <div style="font-size:0.78em; line-height:1.6; color:var(--text-secondary);" data-i18n="footDataText">
+                Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times,
+                Reuters, FT, GDELT, NewsAPI, plus curated Telegram and Bluesky channels covering ISPR
+                (Pakistan Army public affairs), KP / Balochistan OSINT, and Kashmir LoC monitoring.
+            </div>
+        </div>
+        <div>
+            <div style="font-weight:700; color:var(--accent); margin-bottom:8px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">🔬 <span data-i18n="footMethodTitle">Methodology</span></div>
+            <div style="font-size:0.78em; line-height:1.6; color:var(--text-secondary);" data-i18n="footMethodText">
+                Six-vector stability index — sectarian violence, Karachi crime, Balochistan insurgency, economic
+                crisis, climate disaster, and civil-military legitimacy — weighted-averaged into a composite
+                instability score (0–100). Three vectors cross-read from the rhetoric tracker; three are
+                independently scored from direct article fetch. Refresh every 12 hours.
+            </div>
+        </div>
+        <div>
+            <div style="font-weight:700; color:var(--accent); margin-bottom:8px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">✉️ <span data-i18n="footContactTitle">Contact</span></div>
+            <div style="font-size:0.78em; line-height:1.6; color:var(--text-secondary);">
+                <span data-i18n="footContactText">Questions, corrections, or research collaboration:</span><br>
+                <a href="mailto:contact@asifahanalytics.com">contact@asifahanalytics.com</a><br><br>
+                <a href="https://www.asifahanalytics.com/privacy.html" data-i18n="footPrivacy">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+    <div style="max-width:1200px; margin:20px auto 0; padding:14px; background:rgba(220,38,38,0.08); border-left:3px solid #dc2626; border-radius:6px; font-size:0.78em; line-height:1.55; color:var(--text-secondary); text-align:left;">
+        <strong style="color:#dc2626;">⚠️ <span data-i18n="footDisclaimerLabel">Disclaimer:</span></strong>
+        <span data-i18n="footDisclaimerText">Asifah Analytics is a personal-time open-source OSINT project. Analysis reflects open-source signal aggregation only — does NOT reflect classified intelligence and is NOT an official U.S. Government product. Asifah methodology is proprietary and should not be cited as official assessment. Not for operational use.</span>
+    </div>
+    <div style="max-width:1200px; margin:18px auto 0; padding:14px; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:8px; text-align:left;">
+        <span style="font-size:0.88em; color:var(--text-secondary);">
+            <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span>
+            <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="font-weight:700;">☕ <span data-i18n="footBmacButton">buy me a coffee</span></a>
+        </span>
+    </div>
+    <div style="max-width:1200px; margin:22px auto 0; padding-top:18px; border-top:1px solid var(--card-border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:0.74em; color:var(--text-muted);">
+        <span>Asifah Analytics v1.2.0 · <span data-i18n="footRefreshNote">Updated every 12 hours</span></span>
+        <span>© 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Proprietary and Confidential.</span></span>
+    </div>
+</footer>
 
-        function displayArticlesFallbackStatic() {
-            const container = document.getElementById('articlesContainer');
-            container.innerHTML =
-                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
-                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading for Pakistan.</p>' +
-                '<p style="font-size:13px; margin-bottom:20px;">Check these curated OSINT sources:</p>' +
-                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
-                '<a href="https://www.reuters.com/world/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - World</a>' +
-                '<a href="https://www.aljazeera.com/asia-pacific/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Asia</a>' +
-                '<a href="https://thediplomat.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">The Diplomat</a>' +
-                '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
-                '</div>' +
-                '</div>';
-        }
+</div></div></div>
 
-        // Translation system
-        const translations = {
-            en: {"pageTitle": "🇵🇰 PAKISTAN STABILITY INDEX", "pageSubtitle": "Multi-Factor Analysis: TTP Insurgency, Iran Border Tensions, India-Pakistan Rivalry & Nuclear Posture", "backLink": "← Back to Dashboard", "themeToggle": "Theme", "lastUpdated": "Last updated: ", "mapTitle": "Pakistan — Regional Overview", "mapSubtitle": "Interactive map centered on Islamabad. KPK, FATA, and Balochistan are key monitoring zones.", "knowledgeLibraryTitle": "Knowledge Library", "recentArticles": "📰 Recent Pakistan, TTP & Regional Security Articles (Last 7 Days)"},
-            ur: {"pageTitle": "🇵🇰 پاکستان استحکام اشاریہ", "pageSubtitle": "کثیر عوامل تجزیہ: ٹی ٹی پی بغاوت، ایران سرحد کشیدگی، بھارت-پاکستان دشمنی", "backLink": "→ ڈیش بورڈ پر واپس", "themeToggle": "تھیم", "lastUpdated": "آخری تازہ کاری: ", "mapTitle": "پاکستان — علاقائی جائزہ", "mapSubtitle": "اسلام آباد مرکوز نقشہ۔", "knowledgeLibraryTitle": "علم کتب خانہ", "recentArticles": "📰 پاکستان پر حالیہ مضامین"},
-            ar: {"pageTitle": "🇵🇰 مؤشر استقرار باكستان", "pageSubtitle": "تحليل متعدد العوامل: تمرد طالبان باكستان، توترات الحدود الإيرانية، التنافس الهندي الباكستاني", "backLink": "→ العودة إلى لوحة التحكم", "themeToggle": "السمة", "lastUpdated": "آخر تحديث: ", "mapTitle": "باكستان — نظرة إقليمية", "mapSubtitle": "خريطة تفاعلية مركزها إسلام آباد.", "knowledgeLibraryTitle": "مكتبة المعرفة", "recentArticles": "📰 أحدث المقالات عن باكستان"},
-            fa: {"pageTitle": "🇵🇰 شاخص ثبات پاکستان", "pageSubtitle": "تحلیل چندعاملی: شورش TTP، تنش‌های مرزی ایران، رقابت هند-پاکستان", "backLink": "→ بازگشت به داشبورد", "themeToggle": "پوسته", "lastUpdated": "آخرین به‌روزرسانی: ", "mapTitle": "پاکستان — نمای منطقه‌ای", "mapSubtitle": "نقشه تعاملی. مرکز اسلام‌آباد.", "knowledgeLibraryTitle": "کتابخانه دانش", "recentArticles": "📰 جدیدترین مقالات درباره پاکستان"}
-        };
+<script>
+    const API_BASE = 'https://asifah-asia-backend.onrender.com';
 
-        function switchLanguage(lang, button) {
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
+    const STABILITY_PALETTE = {
+        'Resilient':            '#16a34a',
+        'Stressed':             '#f59e0b',
+        'Fractured':            '#f97316',
+        'Crisis Mode':          '#dc2626',
+        'Constitutional Crisis':'#7f1d1d',
+    };
 
-            if (RTL_LANGS.includes(lang)) {
-                document.documentElement.setAttribute('dir', 'rtl');
-            } else {
-                document.documentElement.setAttribute('dir', 'ltr');
-            }
+    const ESCALATION_LEVELS = {
+        0: { color: '#6b7280', label: 'Monitoring' },
+        1: { color: '#16a34a', label: 'Routine' },
+        2: { color: '#facc15', label: 'Elevated' },
+        3: { color: '#f59e0b', label: 'Heightened' },
+        4: { color: '#f97316', label: 'Active Signaling' },
+        5: { color: '#dc2626', label: 'Active Conflict' },
+    };
 
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
-                        const currentText = element.textContent;
-                        if (currentText.includes(':')) {
-                            const timestamp = currentText.split(': ').slice(1).join(': ');
-                            element.textContent = translations[lang][key] + timestamp;
-                        } else {
-                            element.textContent = translations[lang][key] + 'Loading...';
-                        }
-                    } else {
-                        element.textContent = translations[lang][key];
-                    }
-                }
-            });
-        }
+    const VECTOR_DESCRIPTIONS = {
+        sectarian_violence:        'Attacks on religious minorities, blasphemy mob events, ISIS-K / TTP sectarian targeting.',
+        karachi_crime:             'Karachi street crime, target killings, kidnapping for ransom, MQM violence.',
+        balochistan_insurgency:    'BLA / BLF attacks, CPEC site incidents, Gwadar tensions, missing-persons protests.',
+        economic_crisis:           'IMF program status, foreign reserves, rupee, fuel/food inflation, default risk.',
+        climate_disaster:          'Floods (2022 precedent: 33M displaced), heat waves, glacial lake outburst floods.',
+        civil_military_legitimacy: 'Imran Khan / PTI suppression, judicial-military clashes, election legitimacy.',
+    };
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            startLoadingProgress();
-            document.getElementById('lastUpdated').textContent =
-                'Last updated: ' + new Date().toLocaleString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric',
-                    hour: 'numeric', minute: '2-digit', hour12: true
-                });
-            loadArticles().then(() => {
-                hideLoadingOverlay();
-            }).catch(err => {
-                console.error('Error loading Pakistan data:', err);
-                hideLoadingOverlay();
+    // ── TRANSLATIONS ──
+    const T = {
+        en: {
+            backLink: '← Back to Asia & Pacific',
+            pageFlag: 'PAKISTAN', pageTitle: 'PAKISTAN STABILITY TRACKER',
+            pageSubtitle: 'Sectarian · Karachi · Balochistan · Economic · Climate · Civil-Military',
+            refreshScan: 'Refresh', themeLabel: 'THEME', loading: 'Loading...',
+            taLabel: 'U.S. State Department — Pakistan Travel Advisory',
+            taText: 'Reconsider travel due to terrorism. Do Not Travel to Balochistan, Khyber Pakhtunkhwa (KP), and the immediate vicinity of the India-Pakistan border. Review the full advisory before any travel planning.',
+            taLink: 'View Advisory →',
+            rhetoricLabel: 'PAKISTAN RHETORIC TRACKER',
+            rhetoricTitle: '9-actor / 7-vector matrix · Cross-axis fingerprints to Iran, China, India',
+            rhetoricCardTitle: 'Rhetoric Snapshot',
+            stabTitle: 'Composite Stability Index',
+            stabScoreLabel: 'INSTABILITY / 100',
+            stabClassLabel: 'STABILITY CLASSIFICATION',
+            stabSubLabel: 'Weighted average across 6 vectors',
+            vectorsTitle: 'Stability Vectors',
+            mapTitle: 'Pakistan — Vector Geography',
+            mapNote: 'Color-coded markers indicate where each stability vector concentrates geographically.',
+            kbTitle: 'Knowledge Library',
+            kbArmyTitle: 'Pakistan Army & ISPR',
+            kbArmyText: 'Inter-Services Public Relations is the public-information arm of the Pakistan Armed Forces. The Chief of Army Staff (COAS) is widely considered the most influential political figure in Pakistan, irrespective of which civilian government is in power. ISPR press conferences are read globally as strategic signals.',
+            kbISITitle: 'Inter-Services Intelligence (ISI)',
+            kbISIText: "Pakistan's premier intelligence agency, with significant influence over national security policy, particularly regarding India, Afghanistan, and counter-terrorism. Public mentions are rare and analytically significant — silence is the baseline.",
+            kbCPECTitle: 'CPEC & Gwadar',
+            kbCPECText: 'The China-Pakistan Economic Corridor is a flagship Belt and Road project: ~$62B in announced infrastructure investment connecting Xinjiang to the Arabian Sea via Gwadar deep-water port. CPEC site security drives the Balochistan vector — the BLA (Baloch Liberation Army) has repeatedly targeted Chinese workers and project sites.',
+            kbTTPTitle: 'Tehrik-i-Taliban Pakistan (TTP)',
+            kbTTPText: 'The Pakistani Taliban — a separate organization from the Afghan Taliban — shelters in Afghanistan and conducts cross-border attacks into Khyber Pakhtunkhwa (KP) and Balochistan. TTP attacks accelerated dramatically following the August 2021 U.S. withdrawal from Afghanistan.',
+            kbNuclearTitle: 'Nuclear Posture',
+            kbNuclearText: 'Pakistan is the only nuclear-armed Muslim-majority state. Its declared doctrine is "Full Spectrum Deterrence," and unlike India it has no formal "no first use" policy. The Nasr (Hatf-IX) tactical nuclear missile is designed for battlefield use against Indian armored thrusts. The National Command Authority (NCA) oversees strategic forces.',
+            kbIMFTitle: 'IMF & Economic Stress',
+            kbIMFText: 'Pakistan has cycled through more than two dozen IMF programs since the 1980s. Economic stress (low foreign reserves, currency crashes, fuel/food inflation) is a structural constant and a major driver of civil-military friction. Saudi Arabia, the UAE, and China have repeatedly provided emergency deposit rollovers.',
+            kbKashmirTitle: 'Kashmir & the Line of Control',
+            kbKashmirText: 'The disputed Kashmir region is divided by the Line of Control (LoC), the de facto border between Indian-administered and Pakistani-administered Kashmir. India revoked Article 370 — Kashmir\'s special autonomous status — in August 2019. Cross-LoC firing, infiltration accusations, and Indus Waters Treaty disputes are recurring flashpoints.',
+            kbSectarianTitle: 'Sectarian Violence',
+            kbSectarianText: "Pakistan's religious minorities — Christians, Ahmadis, Hindus, and Shia Muslims — face periodic episodes of mob violence, blasphemy law abuses, and targeted attacks. ISIS-K (Islamic State Khorasan Province) and certain TTP factions specifically target Shia mosques and processions. Ahmadis face state-codified discrimination under Pakistan's constitution.",
+            articlesTitle: 'Articles by Source',
+            tabAll: 'All', tabEn: 'English', tabHi: 'Hindi', tabSocial: 'Social',
+            footDataTitle: 'Data Sources',
+            footDataText: 'Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times, Reuters, FT, GDELT, NewsAPI, plus curated Telegram and Bluesky channels covering ISPR (Pakistan Army public affairs), KP / Balochistan OSINT, and Kashmir LoC monitoring.',
+            footMethodTitle: 'Methodology',
+            footMethodText: 'Six-vector stability index — sectarian violence, Karachi crime, Balochistan insurgency, economic crisis, climate disaster, and civil-military legitimacy — weighted-averaged into a composite instability score (0–100). Three vectors cross-read from the rhetoric tracker; three are independently scored from direct article fetch. Refresh every 12 hours.',
+            footContactTitle: 'Contact',
+            footContactText: 'Questions, corrections, or research collaboration:',
+            footPrivacy: 'Privacy Policy',
+            footDisclaimerLabel: 'Disclaimer:',
+            footDisclaimerText: 'Asifah Analytics is a personal-time open-source OSINT project. Analysis reflects open-source signal aggregation only — does NOT reflect classified intelligence and is NOT an official U.S. Government product. Asifah methodology is proprietary and should not be cited as official assessment. Not for operational use.',
+            footBmacText: 'If you find Asifah Analytics useful and want to support ongoing development, you can',
+            footBmacButton: 'buy me a coffee',
+            footRefreshNote: 'Updated every 12 hours',
+            footCopy: 'All Rights Reserved. Proprietary and Confidential.',
+        },
+        zh: {
+            backLink: '← 返回亚太地区',
+            pageFlag: '巴基斯坦', pageTitle: '巴基斯坦稳定追踪器',
+            pageSubtitle: '宗派 · 卡拉奇 · 俾路支 · 经济 · 气候 · 军民关系',
+            refreshScan: '刷新', themeLabel: '主题', loading: '加载中...',
+            taLabel: '美国国务院 — 巴基斯坦旅行警示',
+            taText: '由于恐怖主义,请重新考虑旅行计划。请勿前往俾路支省、开伯尔-普赫图赫瓦省 (KP) 以及印巴边境邻近地区。在制定任何旅行计划前,请查阅完整警示。',
+            taLink: '查看警示 →',
+            rhetoricLabel: '巴基斯坦修辞追踪器',
+            rhetoricTitle: '9 行为者 / 7 向量矩阵 · 跨轴指纹至伊朗、中国、印度',
+            rhetoricCardTitle: '修辞快照',
+            stabTitle: '综合稳定指数',
+            stabScoreLabel: '不稳定指数 / 100',
+            stabClassLabel: '稳定性分类',
+            stabSubLabel: '6 个向量加权平均',
+            vectorsTitle: '稳定向量',
+            mapTitle: '巴基斯坦 — 向量地理',
+            mapNote: '彩色标记表示每个稳定向量在地理上的集中位置。',
+            kbTitle: '知识库',
+            kbArmyTitle: '巴基斯坦陆军与 ISPR',
+            kbArmyText: 'Inter-Services Public Relations 是巴基斯坦武装部队的公共信息部门。陆军参谋长 (COAS) 被广泛认为是巴基斯坦最具影响力的政治人物,无论哪个民选政府执政。ISPR 新闻发布会被全球视为战略信号。',
+            kbISITitle: '三军情报局 (ISI)',
+            kbISIText: '巴基斯坦的主要情报机构,在国家安全政策方面具有重大影响力,特别是涉及印度、阿富汗和反恐方面。公开提及很少,具有重要分析意义 — 沉默是常态。',
+            kbCPECTitle: '中巴经济走廊 (CPEC) 与瓜达尔',
+            kbCPECText: '中巴经济走廊是一带一路的旗舰项目:已宣布约 620 亿美元基础设施投资,通过瓜达尔深水港连接新疆与阿拉伯海。CPEC 项目安全推动俾路支向量 — BLA (俾路支解放军) 多次袭击中国工人和项目现场。',
+            kbTTPTitle: '巴基斯坦塔利班运动 (TTP)',
+            kbTTPText: '巴基斯坦塔利班 — 与阿富汗塔利班是不同组织 — 在阿富汗境内庇护并对开伯尔-普赫图赫瓦省 (KP) 和俾路支省进行跨境袭击。2021 年 8 月美军撤出阿富汗后,TTP 袭击急剧加速。',
+            kbNuclearTitle: '核态势',
+            kbNuclearText: '巴基斯坦是唯一拥有核武器的穆斯林占多数的国家。其宣布的理论是"全方位威慑",与印度不同,巴基斯坦没有正式的"不首先使用"政策。Nasr (Hatf-IX) 战术核导弹专为对抗印度装甲推进的战场使用而设计。National Command Authority (NCA) 监督战略力量。',
+            kbIMFTitle: 'IMF 与经济压力',
+            kbIMFText: '自 1980 年代以来,巴基斯坦经历了 20 多个 IMF 项目。经济压力 (外汇储备低、货币崩溃、燃料/食品通胀) 是结构性常态,也是军民摩擦的主要驱动因素。沙特阿拉伯、阿联酋和中国多次提供紧急存款展期。',
+            kbKashmirTitle: '克什米尔与实控线',
+            kbKashmirText: '争议中的克什米尔地区由实控线 (LoC) 划分,这是印控克什米尔与巴控克什米尔之间事实上的边界。印度于 2019 年 8 月废除了第 370 条 — 克什米尔的特殊自治地位。跨实控线交火、渗透指控和印度河水域条约争端是反复出现的导火索。',
+            kbSectarianTitle: '宗派暴力',
+            kbSectarianText: '巴基斯坦的宗教少数群体 — 基督徒、艾哈迈迪派、印度教徒和什叶派穆斯林 — 周期性遭遇暴民暴力、亵渎法滥用和定向袭击。ISIS-K (伊斯兰国呼罗珊省) 和某些 TTP 派系专门针对什叶派清真寺和游行队伍。艾哈迈迪派根据巴基斯坦宪法面临国家成文歧视。',
+            articlesTitle: '按来源分类的文章',
+            tabAll: '全部', tabEn: '英语', tabHi: '印地语', tabSocial: '社交',
+            footDataTitle: '数据来源',
+            footDataText: 'Dawn、The News International、Express Tribune、Geo News、ARY News、The Hindu、Hindustan Times、Reuters、FT、GDELT、NewsAPI 以及涵盖 ISPR (巴基斯坦陆军公关)、KP / 俾路支 OSINT 以及克什米尔实控线监测的精选 Telegram 和 Bluesky 频道。',
+            footMethodTitle: '方法论',
+            footMethodText: '六向量稳定指数 — 宗派暴力、卡拉奇犯罪、俾路支叛乱、经济危机、气候灾害和军民合法性 — 加权平均为综合不稳定评分 (0-100)。三个向量从修辞追踪器交叉读取;三个由直接文章获取独立评分。每 12 小时刷新。',
+            footContactTitle: '联系',
+            footContactText: '问题、更正或研究合作:',
+            footPrivacy: '隐私政策',
+            footDisclaimerLabel: '免责声明:',
+            footDisclaimerText: 'Asifah Analytics 是一个个人时间的开源 OSINT 项目。分析仅反映开源信号汇总,不反映机密情报,也不是美国政府的官方产品。Asifah 方法论是专有的,不应被引用为官方评估。不用于行动用途。',
+            footBmacText: '如果您觉得 Asifah Analytics 有用并想支持持续开发,您可以',
+            footBmacButton: '请我喝咖啡',
+            footRefreshNote: '每 12 小时更新',
+            footCopy: '保留所有权利。专有且机密。',
+        },
+        ja: {
+            backLink: '← アジア太平洋へ戻る',
+            pageFlag: 'パキスタン', pageTitle: 'パキスタン安定性トラッカー',
+            pageSubtitle: '宗派 · カラチ · バロチスタン · 経済 · 気候 · 文民-軍関係',
+            refreshScan: '更新', themeLabel: 'テーマ', loading: '読み込み中...',
+            taLabel: '米国国務省 — パキスタン渡航勧告',
+            taText: 'テロのため渡航再考。バロチスタン州、カイバル・パクトゥンクワ州 (KP)、印パ国境付近への渡航は禁止。渡航計画前に必ず勧告全文を確認のこと。',
+            taLink: '勧告を確認 →',
+            rhetoricLabel: 'パキスタン修辞トラッカー',
+            rhetoricTitle: '9 アクター / 7 ベクトル行列 · クロス軸指紋をイラン、中国、インドへ',
+            rhetoricCardTitle: '修辞スナップショット',
+            stabTitle: '総合安定性指数',
+            stabScoreLabel: '不安定性 / 100',
+            stabClassLabel: '安定性分類',
+            stabSubLabel: '6 ベクトルにわたる加重平均',
+            vectorsTitle: '安定性ベクトル',
+            mapTitle: 'パキスタン — ベクトル地理',
+            mapNote: '色分けされたマーカーは、各安定性ベクトルが地理的に集中する場所を示しています。',
+            kbTitle: 'ナレッジライブラリ',
+            kbArmyTitle: 'パキスタン陸軍と ISPR',
+            kbArmyText: 'Inter-Services Public Relations はパキスタン軍の広報部門である。陸軍参謀長 (COAS) は、どの民間政府が政権を握っているかにかかわらず、パキスタンで最も影響力のある政治的人物と広く考えられている。ISPR の記者会見は世界的に戦略的シグナルとして読まれる。',
+            kbISITitle: '三軍統合情報部 (ISI)',
+            kbISIText: 'パキスタンの主要諜報機関。インド、アフガニスタン、テロ対策に関する国家安全保障政策に多大な影響力を持つ。公的言及はまれで、分析的に重要 — 沈黙が基準となる。',
+            kbCPECTitle: 'CPEC とグワーダル',
+            kbCPECText: '中国-パキスタン経済回廊は一帯一路の旗艦プロジェクト:新疆をグワーダル深水港経由でアラビア海と接続する約 620 億ドルのインフラ投資が発表されている。CPEC 拠点のセキュリティはバロチスタン・ベクトルを駆動 — BLA (バロチ解放軍) は中国人労働者とプロジェクト拠点を繰り返し標的にしている。',
+            kbTTPTitle: 'パキスタン・タリバン運動 (TTP)',
+            kbTTPText: 'パキスタン・タリバン — アフガン・タリバンとは別組織 — はアフガニスタンに匿われ、カイバル・パクトゥンクワ州 (KP) とバロチスタン州への越境攻撃を行う。2021 年 8 月の米軍アフガン撤退後、TTP の攻撃は劇的に加速した。',
+            kbNuclearTitle: '核態勢',
+            kbNuclearText: 'パキスタンは唯一の核武装イスラム教徒多数派国家。宣言ドクトリンは「フル・スペクトラム抑止」で、インドとは異なり正式な「先制不使用」政策はない。Nasr (Hatf-IX) 戦術核ミサイルは、インドの装甲突進に対する戦場使用のために設計されている。National Command Authority (NCA) が戦略部隊を監督。',
+            kbIMFTitle: 'IMF と経済ストレス',
+            kbIMFText: 'パキスタンは 1980 年代以降 20 を超える IMF プログラムを循環してきた。経済ストレス (低い外貨準備、通貨暴落、燃料/食料インフレ) は構造的恒常で、文民-軍摩擦の主要な駆動要因。サウジアラビア、UAE、中国が緊急預金ロールオーバーを繰り返し提供してきた。',
+            kbKashmirTitle: 'カシミールと実効支配線',
+            kbKashmirText: '係争カシミール地域は実効支配線 (LoC) で分割されており、これがインド統治カシミールとパキスタン統治カシミール間の事実上の境界となる。インドは 2019 年 8 月に第 370 条 — カシミールの特別自治地位 — を廃止した。LoC 越え発砲、浸透の主張、インダス水資源条約紛争が繰り返される発火点。',
+            kbSectarianTitle: '宗派暴力',
+            kbSectarianText: 'パキスタンの宗教的少数派 — キリスト教徒、アフマディーヤ派、ヒンドゥー教徒、シーア派ムスリム — は定期的に暴徒的暴力、冒涜法乱用、標的型攻撃に直面する。ISIS-K (イスラム国ホラサン州) と特定の TTP 派閥はシーア派モスクと行進を特に標的にする。アフマディーヤ派はパキスタン憲法下で国家成文化された差別に直面する。',
+            articlesTitle: 'ソース別記事',
+            tabAll: '全て', tabEn: '英語', tabHi: 'ヒンディー語', tabSocial: 'ソーシャル',
+            footDataTitle: 'データソース',
+            footDataText: 'Dawn、The News International、Express Tribune、Geo News、ARY News、The Hindu、Hindustan Times、Reuters、FT、GDELT、NewsAPI、および ISPR (パキスタン陸軍広報)、KP / バロチスタン OSINT、カシミール LoC 監視を扱う厳選 Telegram および Bluesky チャンネル。',
+            footMethodTitle: '方法論',
+            footMethodText: '6 ベクトル安定性指数 — 宗派暴力、カラチ犯罪、バロチスタン反乱、経済危機、気候災害、文民-軍正当性 — を加重平均して総合不安定スコア (0-100) を算出。3 ベクトルは修辞トラッカーから相互参照、3 ベクトルは直接記事取得から独立採点。12 時間ごとに更新。',
+            footContactTitle: '連絡先',
+            footContactText: '質問、訂正、または研究協力:',
+            footPrivacy: 'プライバシーポリシー',
+            footDisclaimerLabel: '免責事項:',
+            footDisclaimerText: 'Asifah Analytics は個人時間のオープンソース OSINT プロジェクトです。分析はオープンソース信号集約のみを反映し、機密情報を反映するものではなく、米国政府の公式製品ではありません。Asifah の方法論は専有であり、公式評価として引用されるべきではありません。運用目的では使用しないでください。',
+            footBmacText: 'Asifah Analytics が役立つと感じ、継続的な開発を支援したい場合は、',
+            footBmacButton: 'コーヒーをおごる',
+            footRefreshNote: '12 時間ごとに更新',
+            footCopy: 'All Rights Reserved. Proprietary and Confidential.',
+        },
+        ko: {
+            backLink: '← 아시아 태평양으로 돌아가기',
+            pageFlag: '파키스탄', pageTitle: '파키스탄 안정성 추적기',
+            pageSubtitle: '종파 · 카라치 · 발루치스탄 · 경제 · 기후 · 문민-군부',
+            refreshScan: '새로고침', themeLabel: '테마', loading: '로딩 중...',
+            taLabel: '미국 국무부 — 파키스탄 여행 경보',
+            taText: '테러로 인해 여행을 재고하시기 바랍니다. 발루치스탄, 카이베르 파크툰크와 (KP) 그리고 인도-파키스탄 국경 근처는 여행 금지. 여행 계획 전 전체 경보를 검토하시기 바랍니다.',
+            taLink: '경보 보기 →',
+            rhetoricLabel: '파키스탄 수사 추적기',
+            rhetoricTitle: '9 행위자 / 7 벡터 매트릭스 · 이란, 중국, 인도로의 교차축 지문',
+            rhetoricCardTitle: '수사 스냅샷',
+            stabTitle: '복합 안정성 지수',
+            stabScoreLabel: '불안정성 / 100',
+            stabClassLabel: '안정성 분류',
+            stabSubLabel: '6 개 벡터에 대한 가중 평균',
+            vectorsTitle: '안정성 벡터',
+            mapTitle: '파키스탄 — 벡터 지리',
+            mapNote: '색상으로 구분된 마커는 각 안정성 벡터가 지리적으로 집중된 위치를 나타냅니다.',
+            kbTitle: '지식 라이브러리',
+            kbArmyTitle: '파키스탄 육군 및 ISPR',
+            kbArmyText: 'Inter-Services Public Relations 는 파키스탄군의 공보 부서이다. 어느 민간 정부가 권력을 잡든 상관없이 육군 참모총장 (COAS) 은 파키스탄에서 가장 영향력 있는 정치 인물로 널리 간주된다. ISPR 기자회견은 세계적으로 전략적 신호로 읽힌다.',
+            kbISITitle: '3 군 합동 정보부 (ISI)',
+            kbISIText: '파키스탄의 주요 정보 기관으로, 특히 인도, 아프가니스탄, 대테러와 관련된 국가 안보 정책에 상당한 영향력을 갖고 있다. 공개 언급은 드물고 분석적으로 중요하다 — 침묵이 기준선이다.',
+            kbCPECTitle: 'CPEC 와 과다르',
+            kbCPECText: '중국-파키스탄 경제 회랑은 일대일로의 기함 프로젝트로, 신장과 과다르 심해항을 통해 아라비아해를 연결하는 약 620 억 달러의 인프라 투자가 발표되었다. CPEC 현장 보안이 발루치스탄 벡터를 추진한다 — BLA (발루치 해방군) 는 중국인 노동자와 프로젝트 현장을 반복적으로 표적으로 삼아 왔다.',
+            kbTTPTitle: '파키스탄 탈레반 운동 (TTP)',
+            kbTTPText: '파키스탄 탈레반 — 아프간 탈레반과는 별개의 조직 — 은 아프가니스탄에 숨어 카이베르 파크툰크와 (KP) 와 발루치스탄으로 국경 너머 공격을 수행한다. 2021 년 8 월 미군의 아프가니스탄 철수 이후 TTP 공격이 극적으로 가속화되었다.',
+            kbNuclearTitle: '핵 태세',
+            kbNuclearText: '파키스탄은 유일한 핵무장 무슬림 다수 국가이다. 선언된 독트린은 "전 스펙트럼 억제"이며, 인도와 달리 공식적인 "선제 불사용" 정책이 없다. Nasr (Hatf-IX) 전술 핵미사일은 인도 기갑 추진에 대한 전장 사용을 위해 설계되었다. National Command Authority (NCA) 가 전략군을 감독한다.',
+            kbIMFTitle: 'IMF 와 경제 스트레스',
+            kbIMFText: '파키스탄은 1980 년대 이후 20 개 이상의 IMF 프로그램을 거쳤다. 경제 스트레스 (낮은 외환 보유고, 통화 폭락, 연료/식품 인플레이션) 는 구조적 상수이며 문민-군부 마찰의 주요 동인이다. 사우디아라비아, UAE, 중국이 긴급 예금 롤오버를 반복적으로 제공해 왔다.',
+            kbKashmirTitle: '카슈미르와 실제 통제선',
+            kbKashmirText: '분쟁 카슈미르 지역은 실제 통제선 (LoC) 으로 분할되어 있으며, 이것이 인도 통치 카슈미르와 파키스탄 통치 카슈미르 사이의 사실상의 국경이다. 인도는 2019 년 8 월에 370 조 — 카슈미르의 특별 자치 지위 — 를 폐지했다. LoC 너머 발포, 침투 주장, 인더스 강 수자원 조약 분쟁은 반복되는 발화점이다.',
+            kbSectarianTitle: '종파 폭력',
+            kbSectarianText: '파키스탄의 종교적 소수자 — 기독교인, 아마디파, 힌두교도, 시아파 무슬림 — 는 주기적으로 폭도 폭력, 신성 모독법 남용, 표적 공격을 직면한다. ISIS-K (이슬람 국가 호라산 주) 와 특정 TTP 분파는 시아파 모스크와 행렬을 특히 표적으로 삼는다. 아마디파는 파키스탄 헌법 하에서 국가 성문화된 차별을 직면한다.',
+            articlesTitle: '소스별 기사',
+            tabAll: '전체', tabEn: '영어', tabHi: '힌디어', tabSocial: '소셜',
+            footDataTitle: '데이터 출처',
+            footDataText: 'Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times, Reuters, FT, GDELT, NewsAPI, 그리고 ISPR (파키스탄 육군 공보), KP / 발루치스탄 OSINT, 카슈미르 LoC 모니터링을 다루는 엄선된 Telegram 및 Bluesky 채널.',
+            footMethodTitle: '방법론',
+            footMethodText: '6 벡터 안정성 지수 — 종파 폭력, 카라치 범죄, 발루치스탄 반란, 경제 위기, 기후 재해, 문민-군부 정당성 — 가 가중 평균되어 복합 불안정 점수 (0-100) 가 산출된다. 세 개 벡터는 수사 추적기에서 교차 읽기되고, 세 개는 직접 기사 가져오기에서 독립적으로 점수가 매겨진다. 12 시간마다 새로고침.',
+            footContactTitle: '연락처',
+            footContactText: '질문, 수정 또는 연구 협력:',
+            footPrivacy: '개인정보 정책',
+            footDisclaimerLabel: '면책 조항:',
+            footDisclaimerText: 'Asifah Analytics 는 개인 시간 오픈소스 OSINT 프로젝트입니다. 분석은 오픈소스 신호 집계만을 반영하며 기밀 정보를 반영하지 않고 미국 정부의 공식 제품이 아닙니다. Asifah 방법론은 독점적이며 공식 평가로 인용되어서는 안 됩니다. 운영 용도로 사용하지 마십시오.',
+            footBmacText: 'Asifah Analytics 가 유용하다고 느끼고 지속적인 개발을 지원하고 싶다면',
+            footBmacButton: '커피 한 잔',
+            footRefreshNote: '12 시간마다 업데이트',
+            footCopy: '모든 권리 보유. 독점 및 기밀.',
+        },
+    };
+
+    let currentLang = 'en';
+    let currentStability = null;
+    let currentRhetoric = null;
+    let articleStore = { all: [], en: [], hi: [], social: [] };
+
+    // ── LANGUAGE / THEME ──
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        const t = T[lang] || T.en;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) el.textContent = t[key];
+        });
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            const labels = { en:'EN', zh:'中文', ja:'日本語', ko:'한국어' };
+            btn.classList.toggle('active', btn.textContent.trim() === labels[lang]);
+        });
+        if (currentStability) renderStability(currentStability);
+        if (currentRhetoric)  renderRhetoricCard(currentRhetoric);
+    }
+    function toggleTheme() {
+        const isDark = document.getElementById('themeToggle').checked;
+        document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
+        localStorage.setItem('pk_stab_theme', isDark?'light':'dark');
+    }
+    function loadTheme() {
+        const saved = localStorage.getItem('pk_stab_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('themeToggle').checked = saved==='light';
+    }
+
+    // ── DATA LOAD ──
+    async function loadStability(force=false) {
+        try {
+            const url = API_BASE + '/api/stability/pakistan' + (force ? '?force=true' : '');
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (!data.success) return;
+            currentStability = data;
+            renderStability(data);
+        } catch (e) { console.error('[Pakistan Stability] fetch error', e); }
+    }
+    async function loadRhetoric(force=false) {
+        try {
+            const url = API_BASE + '/api/rhetoric/pakistan' + (force ? '?force=true' : '');
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (!data.success) return;
+            currentRhetoric = data;
+            renderRhetoricCard(data);
+            renderArticles(data);
+        } catch (e) { console.error('[Pakistan Rhetoric] fetch error', e); }
+    }
+    async function refreshAll() {
+        const btn = document.getElementById('refreshBtn');
+        btn.disabled = true; btn.textContent = '...';
+        await Promise.all([loadStability(true), loadRhetoric(true)]);
+        btn.disabled = false; setLanguage(currentLang);
+    }
+
+    // ── RENDER STABILITY ──
+    function renderStability(data) {
+        const score = data.composite_score || 0;
+        const label = data.composite_label || 'Resilient';
+        const color = STABILITY_PALETTE[label] || data.composite_color || '#6b7280';
+
+        document.getElementById('stabScore').textContent = score;
+        document.getElementById('stabScore').style.color = color;
+        document.getElementById('stabLabel').textContent = label;
+        document.getElementById('stabLabel').style.color = color;
+        const badge = document.getElementById('stabBadge');
+        badge.textContent = label.toUpperCase();
+        badge.style.background = color;
+
+        const grid = document.getElementById('vectorsGrid');
+        grid.innerHTML = '';
+        const vectors = data.vectors || {};
+        Object.entries(vectors).forEach(([id, vec]) => {
+            const sLabel = scoreToLabel(vec.score);
+            const sColor = STABILITY_PALETTE[sLabel] || '#6b7280';
+            const card = document.createElement('div');
+            card.className = 'vector-card';
+            card.style.borderLeftColor = sColor;
+            card.innerHTML = `
+                <div class="vector-card-name">${vec.name || id}</div>
+                <div class="vector-card-score-row">
+                    <span class="vector-card-score" style="color:${sColor};">${vec.score || 0}</span>
+                    <span class="vector-card-weight">weight ×${vec.weight || 1.0}</span>
+                </div>
+                <div class="vector-card-desc">${VECTOR_DESCRIPTIONS[id] || ''}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+    function scoreToLabel(s) {
+        if (s >= 80) return 'Constitutional Crisis';
+        if (s >= 60) return 'Crisis Mode';
+        if (s >= 40) return 'Fractured';
+        if (s >= 20) return 'Stressed';
+        return 'Resilient';
+    }
+
+    // ── RENDER RHETORIC CARD ──
+    function renderRhetoricCard(data) {
+        const lvl = data.theatre_level || 0;
+        const elv = ESCALATION_LEVELS[Math.min(lvl, 5)] || ESCALATION_LEVELS[0];
+        const badge = document.getElementById('rhetoricLevelBadge');
+        badge.textContent = `L${lvl} — ${elv.label}`;
+        badge.style.background = elv.color;
+
+        const interp  = data.interpretation || {};
+        const so_what = interp.so_what || {};
+        const summary = (so_what.implications && so_what.implications.length)
+            ? so_what.implications[0]
+            : (so_what.scenario || 'Pakistan currently at routine baseline — monitor for cross-theater spillover.');
+        document.getElementById('rhetoricSummary').textContent = summary;
+
+        const axesEl = document.getElementById('rhetoricAxes');
+        axesEl.innerHTML = '';
+        const axes = [
+            ['🇮🇷 Iran',     data.pakistan_iran_active],
+            ['🇨🇳 China',    data.pakistan_china_active],
+            ['🇮🇳 India',    data.pakistan_india_active],
+            ['🤝 Mediation', data.pakistan_mediating_iran_us],
+            ['☢️ Nuclear',   data.pakistan_nuclear_signaling],
+        ];
+        axes.forEach(([label, active]) => {
+            const span = document.createElement('span');
+            span.className = 'axis-mini-pill' + (active ? ' active' : '');
+            span.textContent = label;
+            axesEl.appendChild(span);
+        });
+    }
+
+    // ── RENDER ARTICLES ──
+    // Aggregate from rhetoric scan's actor.top_articles[], dedupe by URL,
+    // sort by published date desc, classify into language tabs by source.
+    function renderArticles(data) {
+        const seen = new Set();
+        const all = [], en = [], hi = [], social = [];
+        const actors = data.actors || {};
+        Object.values(actors).forEach(actor => {
+            (actor.top_articles || []).forEach(art => {
+                if (!art.url || seen.has(art.url)) return;
+                seen.add(art.url);
+                const source = (art.source || '').toLowerCase();
+                const lang   = (art.language || art.lang || '').toLowerCase();
+                const isSocial = source.includes('telegram') || source.includes('bluesky') ||
+                                 source.includes('reddit')   || source.includes('twitter') ||
+                                 source.includes('x.com');
+                const isHindi  = lang === 'hi' || source.includes('hindu') || source.includes('hindustan');
+                const norm = {
+                    title:     art.title || '(no title)',
+                    url:       art.url,
+                    source:    art.source || 'Unknown',
+                    published: art.published || art.date || '',
+                    sourceClass: classifySource(source),
+                    actorName: actor.name || '',
+                };
+                all.push(norm);
+                if (isSocial)      social.push(norm);
+                else if (isHindi)  hi.push(norm);
+                else               en.push(norm);
             });
         });
-    </script>
+        const byDate = (a, b) => (b.published || '').localeCompare(a.published || '');
+        articleStore = { all: all.sort(byDate), en: en.sort(byDate), hi: hi.sort(byDate), social: social.sort(byDate) };
+
+        document.getElementById('countAll').textContent    = articleStore.all.length;
+        document.getElementById('countEn').textContent     = articleStore.en.length;
+        document.getElementById('countHi').textContent     = articleStore.hi.length;
+        document.getElementById('countSocial').textContent = articleStore.social.length;
+        setArticleTab('all');
+    }
+    function classifySource(source) {
+        if (source.includes('telegram')) return 'telegram';
+        if (source.includes('bluesky'))  return 'bluesky';
+        if (source.includes('reddit'))   return 'reddit';
+        if (source.includes('gdelt'))    return 'gdelt';
+        if (source.includes('newsapi'))  return 'newsapi';
+        if (source.includes('brave'))    return 'brave';
+        if (source.includes('rss'))      return 'rss';
+        return 'rss';   // default for named publications
+    }
+    function setArticleTab(tab) {
+        document.querySelectorAll('.article-tab').forEach(b =>
+            b.classList.toggle('active', b.dataset.tab === tab));
+        const list = document.getElementById('articleList');
+        list.innerHTML = '';
+        const articles = articleStore[tab] || [];
+        if (!articles.length) {
+            list.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:30px;">No articles in this category.</div>`;
+            return;
+        }
+        articles.forEach(art => {
+            const a = document.createElement('a');
+            a.className = 'article-row';
+            a.href = art.url; a.target = '_blank'; a.rel = 'noopener';
+            a.innerHTML = `
+                <span class="article-row-title">${art.title}</span>
+                <span class="article-row-meta">
+                    <span class="source-pill ${art.sourceClass}">${art.sourceClass}</span>
+                    <span>${art.source}</span>
+                    <span>·</span>
+                    <span>${art.actorName}</span>
+                </span>
+            `;
+            list.appendChild(a);
+        });
+    }
+
+    // ── MAP ──
+    function buildMap() {
+        const map = L.map('pakMap').setView([30.0, 70.0], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18,
+        }).addTo(map);
+        const markers = [
+            { lat: 24.86, lng: 67.00, color:'#dc2626', title:'Karachi — urban crime / sectarian violence' },
+            { lat: 28.50, lng: 65.50, color:'#f97316', title:'Balochistan — BLA insurgency / CPEC stress' },
+            { lat: 25.13, lng: 62.32, color:'#dc2626', title:'Gwadar — CPEC port (China-Pakistan strategic)' },
+            { lat: 34.53, lng: 73.81, color:'#f59e0b', title:'Kashmir / LoC — India-Pakistan disputed' },
+            { lat: 33.99, lng: 71.50, color:'#dc2626', title:'KP (Khyber Pakhtunkhwa) — TTP attacks' },
+            { lat: 33.69, lng: 73.05, color:'#0ea5e9', title:'Islamabad — civil-military / mediation hub' },
+        ];
+        markers.forEach(m => {
+            L.circleMarker([m.lat, m.lng], {
+                radius: 9, fillColor: m.color, color: '#ffffff', weight: 2,
+                fillOpacity: 0.85,
+            }).addTo(map).bindPopup(`<strong>${m.title}</strong>`);
+        });
+    }
+
+    // ── INIT ──
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTheme();
+        buildMap();
+        loadStability();
+        loadRhetoric();
+    });
+</script>
 </body>
 </html>
