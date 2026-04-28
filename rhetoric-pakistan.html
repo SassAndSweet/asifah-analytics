@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pakistan South Asia Tracker — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://www.asifahanalytics.com/asifahlogo.png">
+<style>
+    :root {
+        --bg-color:       #e8f0f8;
+        --container-bg:   #ffffff;
+        --card-bg:        #ffffff;
+        --card-border:    #b0c8e0;
+        --text-primary:   #0a1628;
+        --text-secondary: #1e3a5f;
+        --text-muted:     #4a6080;
+        --article-bg:     #f0f6fc;
+        --article-hover:  #e1ecf7;
+        --header-gradient-start: #1e3a5f;
+        --header-gradient-end:   #0ea5e9;
+        --header-text:    #ffffff;
+        --accent:         #0ea5e9;
+        --accent-glow:    rgba(14,165,233,0.2);
+        --card-glow:      none;
+        --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
+        --watermark-opacity: 0.08;
+        --watermark-filter: none;
+        --command-color:  #16a34a;     /* Pakistan green */
+        --proxy-color:    #7c3aed;
+    }
+    [data-theme="dark"] {
+        --bg-color:       #060d1a;
+        --container-bg:   #0d1b2e;
+        --card-bg:        #0d1b2e;
+        --card-border:    #1e3a5f;
+        --text-primary:   #e2f0fb;
+        --text-secondary: #93c5fd;
+        --text-muted:     #4a7090;
+        --article-bg:     #0a1525;
+        --article-hover:  #112038;
+        --header-gradient-start: #060d1a;
+        --header-gradient-end:   #1e3a5f;
+        --header-text:    #e2f0fb;
+        --accent:         #38bdf8;
+        --accent-glow:    rgba(56,189,248,0.2);
+        --card-glow:      0 0 6px rgba(56,189,248,0.12), 0 0 1px rgba(56,189,248,0.25);
+        --card-hover-glow: 0 0 22px rgba(56,189,248,0.28), 0 8px 25px rgba(0,0,0,0.5);
+        --watermark-opacity: 0.22;
+        --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+        --command-color:  #22c55e;
+        --proxy-color:    #a78bfa;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        background: var(--bg-color);
+        color: var(--text-primary);
+        margin: 0; padding: 0;
+        line-height: 1.6;
+        transition: background 0.3s, color 0.3s;
+    }
+    .container { max-width: 1800px; margin: 0 auto; padding: 24px; }
+    .page-with-sidebar { display: grid; grid-template-columns: 200px 1fr; gap: 24px; }
+    .main-content { min-width: 0; }
+
+    /* ── SIDEBAR ── */
+    .nav-sidebar {
+        position: sticky; top: 24px; align-self: start;
+        display: flex; flex-direction: column; gap: 4px;
+        max-height: calc(100vh - 48px); overflow-y: auto;
+    }
+    .nav-sidebar-label {
+        font-size: 9px; font-weight: 700; text-transform: uppercase;
+        letter-spacing: 1.5px; color: var(--text-muted);
+        padding: 8px 4px 4px 4px;
+    }
+    .nav-divider { height: 1px; background: var(--card-border); margin: 6px 0; }
+    .nav-btn {
+        display: flex; flex-direction: column;
+        padding: 8px 10px; border: 1px solid var(--card-border);
+        border-radius: 6px; background: var(--card-bg);
+        color: var(--text-primary); text-decoration: none;
+        transition: all 0.2s; cursor: pointer;
+    }
+    .nav-btn:hover { border-color: var(--accent); box-shadow: var(--card-hover-glow); }
+    .nav-btn-label { font-size: 12px; font-weight: 600; line-height: 1.3; }
+    .nav-btn-status {
+        font-family: 'Courier New', monospace; font-size: 9px;
+        letter-spacing: 1px; text-transform: uppercase;
+        margin-top: 4px; opacity: 0.7; color: var(--accent);
+    }
+    .nav-btn.active-nav { border-color: rgba(56,189,248,0.5); }
+    [data-theme="dark"] .nav-btn.active-nav {
+        background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%);
+        color: #ffffff;
+    }
+    .nav-btn.current-page {
+        border-color: rgba(34,197,94,0.6);
+        background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%);
+        color: var(--text-primary);
+    }
+    .nav-btn.current-page .nav-btn-status { color: #16a34a; }
+    [data-theme="dark"] .nav-btn.current-page { color: #ffffff; }
+    [data-theme="dark"] .nav-btn.current-page .nav-btn-status { color: #4ade80; }
+    .nav-btn.inactive-nav {
+        border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.02);
+        color: rgba(0,0,0,0.3); cursor: default;
+    }
+    [data-theme="dark"] .nav-btn.inactive-nav {
+        border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02);
+        color: rgba(255,255,255,0.25);
+    }
+    .nav-btn.rhetoric-btn {
+        border-color: rgba(34,197,94,0.35);
+        background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%);
+    }
+    .nav-btn.rhetoric-btn .nav-btn-status { color: #16a34a; }
+    [data-theme="dark"] .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+    .nav-btn.military-btn {
+        border-color: rgba(100,116,139,0.4);
+        background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%);
+    }
+    .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+    @media (max-width: 1099px) {
+        .nav-sidebar { display: none; }
+        .page-with-sidebar { display: block; }
+    }
+
+    /* ── HEADER ── */
+    header {
+        background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+        color: var(--header-text); padding: 28px 24px; border-radius: 12px;
+        position: relative; overflow: hidden; margin-bottom: 24px;
+    }
+    header::before {
+        content: ""; position: absolute; inset: 0;
+        background: url('https://www.asifahanalytics.com/asifahlogo.png') center/contain no-repeat;
+        opacity: var(--watermark-opacity); filter: var(--watermark-filter); z-index: 0;
+    }
+    .header-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .header-flag { font-size: 1rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.85; }
+    .header-title { font-size: 2.2rem; font-weight: 700; margin-top: 4px; line-height: 1.1; }
+    .header-subtitle { font-size: 0.95rem; opacity: 0.85; margin-top: 6px; max-width: 700px; }
+    .header-timestamp { font-size: 0.85em; opacity: 0.75; margin-top: 8px; }
+    .back-link {
+        display: inline-flex; align-items: center; padding: 6px 12px;
+        background: rgba(255,255,255,0.15); border-radius: 6px;
+        color: var(--header-text); text-decoration: none; font-size: 0.85em;
+        margin-bottom: 8px; transition: background 0.2s;
+    }
+    .back-link:hover { background: rgba(255,255,255,0.25); }
+
+    /* ── LANGUAGE BUTTONS ── */
+    .header-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    .lang-btn {
+        background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+        color: var(--header-text); padding: 6px 12px; border-radius: 6px;
+        cursor: pointer; font-family: inherit; font-size: 0.85em;
+        transition: all 0.2s;
+    }
+    .lang-btn:hover { background: rgba(255,255,255,0.25); }
+    .lang-btn.active { background: rgba(255,255,255,0.35); border-color: rgba(255,255,255,0.6); }
+    .theme-toggle-wrap {
+        display: flex; align-items: center; gap: 8px;
+        background: rgba(255,255,255,0.15); padding: 6px 12px;
+        border-radius: 6px; border: 1px solid rgba(255,255,255,0.3);
+    }
+    .theme-label { font-size: 0.75em; font-weight: 700; letter-spacing: 1px; }
+    .theme-switch { position: relative; display: inline-block; width: 36px; height: 18px; }
+    .theme-switch input { opacity: 0; width: 0; height: 0; }
+    .theme-slider {
+        position: absolute; cursor: pointer; inset: 0;
+        background: rgba(0,0,0,0.4); border-radius: 18px; transition: 0.3s;
+    }
+    .theme-slider::before {
+        content: "🌙"; position: absolute; height: 14px; width: 14px;
+        left: 2px; top: 2px; border-radius: 50%; transition: 0.3s;
+        font-size: 10px; line-height: 14px; text-align: center;
+    }
+    .theme-switch input:checked + .theme-slider::before {
+        transform: translateX(18px); content: "☀️";
+    }
+
+    /* ── THEATRE SCORE BANNER ── */
+    .theatre-banner {
+        background: var(--card-bg); border: 2px solid var(--card-border);
+        border-radius: 12px; padding: 20px 24px; margin-bottom: 20px;
+        display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center;
+        box-shadow: var(--card-glow);
+    }
+    .theatre-score { font-size: 3rem; font-weight: 700; line-height: 1; }
+    .theatre-score-label { font-size: 0.7rem; letter-spacing: 1.5px; color: var(--text-muted); margin-top: 4px; }
+    .theatre-info-block { display: flex; flex-direction: column; gap: 8px; }
+    .theatre-escalation-label-text { font-size: 0.7rem; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; }
+    .theatre-level-display { font-size: 1.4rem; font-weight: 700; }
+    .theatre-scan-info { font-size: 0.8em; color: var(--text-muted); }
+    .theatre-badge {
+        display: inline-block; padding: 6px 14px; border-radius: 6px;
+        font-weight: 700; letter-spacing: 1px; color: white; text-transform: uppercase; font-size: 0.85em;
+    }
+
+    /* ── CROSS-AXIS PILLS ── */
+    .axis-banner {
+        background: var(--card-bg); border: 2px solid var(--card-border);
+        border-radius: 12px; padding: 16px 20px; margin-bottom: 20px;
+        box-shadow: var(--card-glow);
+    }
+    .axis-title { font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px;
+        color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px; }
+    .axis-pills { display: flex; gap: 10px; flex-wrap: wrap; }
+    .axis-pill {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 8px 14px; border-radius: 999px;
+        background: var(--article-bg); border: 1px solid var(--card-border);
+        font-size: 0.85em; font-weight: 600;
+        transition: all 0.2s;
+    }
+    .axis-pill.active {
+        background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(124,58,237,0.05));
+        border-color: var(--proxy-color); color: var(--proxy-color);
+        box-shadow: 0 0 12px rgba(124,58,237,0.2);
+    }
+    .axis-pill.active.mediation {
+        background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(16,185,129,0.05));
+        border-color: #10b981; color: #10b981;
+        box-shadow: 0 0 12px rgba(16,185,129,0.2);
+    }
+    .axis-pill.active.nuclear {
+        background: linear-gradient(135deg, rgba(220,38,38,0.15), rgba(220,38,38,0.05));
+        border-color: #dc2626; color: #dc2626;
+        box-shadow: 0 0 12px rgba(220,38,38,0.2);
+    }
+    .axis-pill .axis-status { font-family: 'Courier New', monospace; font-size: 0.75em; opacity: 0.8; }
+
+    /* ── VECTOR LADDER ── */
+    .vector-section {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 12px; padding: 20px; margin-bottom: 20px;
+        box-shadow: var(--card-glow);
+    }
+    .section-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 14px; letter-spacing: 0.5px; }
+    .vectors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .vector-tab {
+        padding: 12px 14px; border: 1px solid var(--card-border);
+        border-radius: 8px; background: var(--article-bg);
+        transition: all 0.2s;
+    }
+    .vector-tab:hover { background: var(--article-hover); }
+    .vector-tab-label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-secondary); }
+    .vector-tab-level { font-size: 1.6rem; font-weight: 700; margin-top: 4px; }
+    .vector-tab-text { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── ACTORS ── */
+    .actors-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px, 1fr)); gap: 16px; }
+    .actor-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-left: 4px solid var(--text-muted); border-radius: 10px;
+        padding: 16px; transition: all 0.2s;
+        box-shadow: var(--card-glow);
+    }
+    .actor-card:hover { box-shadow: var(--card-hover-glow); }
+    .actor-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+    .actor-name { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+    .actor-flag { font-size: 1.2em; }
+    .actor-level-badge { padding: 4px 10px; border-radius: 6px; color: white; font-size: 0.75em; font-weight: 700; letter-spacing: 0.5px; }
+    .actor-role { font-size: 0.75em; color: var(--text-muted); margin-bottom: 6px; }
+    .actor-stats {
+        display: flex; gap: 14px; font-size: 0.78em; color: var(--text-muted);
+        margin: 6px 0 10px 0; padding: 6px 10px;
+        background: var(--article-bg); border-radius: 6px;
+    }
+    .silence-badge {
+        display: inline-block; padding: 2px 8px; border-radius: 4px;
+        background: rgba(245,158,11,0.15); color: #f59e0b;
+        font-size: 0.7em; font-weight: 700; letter-spacing: 0.5px; margin-left: 6px;
+    }
+    .top-articles { font-size: 0.82em; }
+    .top-article {
+        padding: 6px 0; border-bottom: 1px solid var(--card-border); display: block;
+        color: var(--text-secondary); text-decoration: none;
+    }
+    .top-article:last-child { border-bottom: none; }
+    .top-article:hover { color: var(--accent); }
+    .article-title { display: block; font-weight: 500; }
+    .article-meta { display: block; font-size: 0.7em; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── SO WHAT / RED LINES / HISTORICAL ── */
+    .interp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); gap: 16px; }
+    .interp-card {
+        background: var(--card-bg); border: 1px solid var(--card-border);
+        border-radius: 10px; padding: 18px;
+        box-shadow: var(--card-glow);
+    }
+    .interp-card-title { font-size: 1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+    .interp-card-subtitle { font-size: 0.78em; color: var(--text-muted); margin-bottom: 12px; }
+    .red-line-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 8px 0; border-bottom: 1px solid var(--card-border); font-size: 0.85em;
+    }
+    .red-line-row:last-child { border-bottom: none; }
+    .red-line-status {
+        padding: 2px 8px; border-radius: 4px; font-size: 0.75em;
+        font-weight: 700; letter-spacing: 0.5px;
+    }
+    .status-clear { background: rgba(34,197,94,0.15); color: #16a34a; }
+    .status-approaching { background: rgba(245,158,11,0.15); color: #f59e0b; }
+    .status-breached { background: rgba(220,38,38,0.18); color: #dc2626; }
+    .so-what-implications { padding-left: 18px; margin: 8px 0; }
+    .so-what-implications li { margin-bottom: 6px; font-size: 0.88em; }
+    .hist-match { padding: 10px 0; border-bottom: 1px solid var(--card-border); }
+    .hist-match:last-child { border-bottom: none; }
+    .hist-match-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 6px; }
+    .hist-match-event { font-weight: 700; font-size: 0.92em; }
+    .hist-match-meta { font-size: 0.75em; color: var(--text-muted); }
+    .hist-match-similarity {
+        padding: 2px 8px; border-radius: 4px; font-size: 0.72em; font-weight: 700;
+        background: var(--article-bg); color: var(--text-secondary);
+    }
+    .hist-match-lesson { font-size: 0.85em; color: var(--text-secondary); margin-top: 6px; line-height: 1.5; }
+
+    /* ── FOOTER ── */
+    footer {
+        margin-top: 40px; padding: 30px 24px 20px;
+        border-top: 1px solid var(--card-border);
+        color: var(--text-secondary); text-align: center;
+    }
+    footer a { color: var(--accent); }
+
+    /* ── LOADING ── */
+    .loading-dot { animation: pulse 1.5s infinite; opacity: 0.4; }
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes pulse { 0%,100%{opacity:0.4;} 50%{opacity:1;} }
+
+    /* Refresh button */
+    .refresh-btn {
+        padding: 8px 16px; background: var(--accent);
+        color: white; border: none; border-radius: 6px;
+        cursor: pointer; font-family: inherit; font-size: 0.85em;
+        transition: all 0.2s;
+    }
+    .refresh-btn:hover { opacity: 0.9; box-shadow: 0 0 12px rgba(56,189,248,0.4); }
+    .refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="page-with-sidebar">
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<!-- SIDEBAR                                                          -->
+<!-- ────────────────────────────────────────────────────────────── -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label">Dashboards</div>
+
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status">🔒 Future</span>
+    </div>
+
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <div class="nav-divider"></div>
+
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="gpi.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🌐 Global Pressure</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-btn rhetoric-btn current-page">
+        <span class="nav-btn-label">🇵🇰 Pakistan Rhetoric</span>
+        <span class="nav-btn-status">◉ You are here</span>
+    </div>
+
+    <a href="pakistan-stability.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🇵🇰 Pakistan Stability</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+</nav>
+
+<!-- ────────────────────────────────────────────────────────────── -->
+<!-- MAIN CONTENT                                                     -->
+<!-- ────────────────────────────────────────────────────────────── -->
+<div class="main-content">
+
+<!-- HEADER -->
+<header>
+    <div class="header-content">
+        <div>
+            <a href="rhetoric-asia.html" class="back-link" data-i18n="backLink">← Back to Asia Rhetoric</a>
+            <div class="header-flag">🇵🇰 <span data-i18n="pageFlag">PAKISTAN</span></div>
+            <div class="header-title" data-i18n="pageTitle">PAKISTAN SOUTH ASIA TRACKER</div>
+            <div class="header-subtitle" data-i18n="pageSubtitle">Army/COAS · ISI · India-Inbound · Afghan/TTP · Iran ↔ Mediation · China/CPEC · GCC · US</div>
+            <div class="header-timestamp"><span data-i18n="lastUpdated">Last updated:</span> <span id="lastUpdated" data-i18n="loading">Loading...</span></div>
+        </div>
+        <div class="header-controls">
+            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn" onclick="setLanguage('zh')">中文</button>
+            <button class="lang-btn" onclick="setLanguage('ja')">日本語</button>
+            <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+            <button class="refresh-btn" onclick="loadRhetoricData(true)" id="refreshBtn" data-i18n="refreshScan">Refresh Scan</button>
+            <label class="theme-toggle-wrap">
+                <span class="theme-label" data-i18n="themeLabel">THEME</span>
+                <span class="theme-switch">
+                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                    <span class="theme-slider"></span>
+                </span>
+            </label>
+        </div>
+    </div>
+</header>
+
+<!-- THEATRE SCORE BANNER -->
+<div class="theatre-banner">
+    <div>
+        <div class="theatre-score" id="theatreScore" style="color:var(--text-muted);">--</div>
+        <div class="theatre-score-label" data-i18n="scoreLabel">RHETORIC SCORE / 100</div>
+    </div>
+    <div class="theatre-info-block">
+        <div class="theatre-escalation-label-text" data-i18n="escalationLabel">THEATRE ESCALATION LEVEL</div>
+        <div class="theatre-level-display" id="theatreLevelDisplay" style="color:var(--text-muted);">
+            <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+        </div>
+        <div class="theatre-scan-info" id="theatreScanInfo" data-i18n="loading">Loading...</div>
+    </div>
+    <div>
+        <div id="theatreBadge" class="theatre-badge" style="background:#374151;" data-i18n="loading">LOADING</div>
+    </div>
+</div>
+
+<!-- CROSS-AXIS PILLS -->
+<div class="axis-banner">
+    <div class="axis-title">🔗 <span data-i18n="axisTitle">CROSS-THEATER AXIS ACTIVATIONS</span></div>
+    <div class="axis-pills" id="axisPills">
+        <span class="axis-pill" id="axisIran"><span>🇮🇷</span> <span data-i18n="axisIran">Iran-axis</span> <span class="axis-status">--</span></span>
+        <span class="axis-pill" id="axisChina"><span>🇨🇳</span> <span data-i18n="axisChina">China-axis (CPEC)</span> <span class="axis-status">--</span></span>
+        <span class="axis-pill" id="axisIndia"><span>🇮🇳</span> <span data-i18n="axisIndia">India-axis (Kashmir)</span> <span class="axis-status">--</span></span>
+        <span class="axis-pill" id="axisMediation"><span>🤝</span> <span data-i18n="axisMediation">Mediating Iran-US</span> <span class="axis-status">--</span></span>
+        <span class="axis-pill" id="axisNuclear"><span>☢️</span> <span data-i18n="axisNuclear">Nuclear signaling</span> <span class="axis-status">--</span></span>
+    </div>
+</div>
+
+<!-- VECTOR LADDER -->
+<div class="vector-section">
+    <div class="section-title">⚡ <span data-i18n="vectorTitle">ESCALATION VECTORS</span></div>
+    <div class="vectors-grid">
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecKashmir">Kashmir / LoC</div>
+            <div class="vector-tab-level" id="vecKashmirLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecKashmirDesc">Line of Control · Indus · Infiltration</div>
+        </div>
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecAfghan">Afghan Border</div>
+            <div class="vector-tab-level" id="vecAfghanLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecAfghanDesc">TTP · Durand Line · Cross-border</div>
+        </div>
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecNuclear">Nuclear Doctrine</div>
+            <div class="vector-tab-level" id="vecNuclearLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecNuclearDesc">NCA · Nasr · Missile Tests · Doctrine</div>
+        </div>
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecMediation">Diplomatic Mediation</div>
+            <div class="vector-tab-level" id="vecMediationLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecMediationDesc">Pakistan AS Iran-US Mediator</div>
+        </div>
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecBaloch">Balochistan / CPEC</div>
+            <div class="vector-tab-level" id="vecBalochLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecBalochDesc">BLA · Gwadar · CPEC sites</div>
+        </div>
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecCivMil">Civil-Military</div>
+            <div class="vector-tab-level" id="vecCivMilLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecCivMilDesc">PTI · Imran · Judicial · Coup risk</div>
+        </div>
+        <div class="vector-tab">
+            <div class="vector-tab-label" data-i18n="vecEconomic">Economic Stress</div>
+            <div class="vector-tab-level" id="vecEconomicLevel" style="color:var(--text-muted);">--</div>
+            <div class="vector-tab-text" data-i18n="vecEconomicDesc">IMF · Reserves · Rupee · Default risk</div>
+        </div>
+    </div>
+</div>
+
+<!-- ACTORS GRID -->
+<div class="vector-section">
+    <div class="section-title">👥 <span data-i18n="actorsTitle">ACTORS · 9-NODE MATRIX</span></div>
+    <div class="actors-grid" id="actorsGrid">
+        <div style="grid-column: 1/-1; text-align:center; color:var(--text-muted); padding:40px;">
+            <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+        </div>
+    </div>
+</div>
+
+<!-- INTERPRETATION SECTION (So What / Red Lines / Historical) -->
+<div class="interp-grid">
+    <!-- So What -->
+    <div class="interp-card">
+        <div class="interp-card-title">💡 <span data-i18n="soWhatTitle">SO WHAT — Analyst Take</span></div>
+        <div class="interp-card-subtitle" data-i18n="soWhatSubtitle">Strategic implications across vectors</div>
+        <div id="soWhatScenario" style="font-weight:700; margin-bottom:10px;">--</div>
+        <ul class="so-what-implications" id="soWhatImplications">
+            <li style="color:var(--text-muted);"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></li>
+        </ul>
+    </div>
+
+    <!-- Red Lines -->
+    <div class="interp-card">
+        <div class="interp-card-title">🚨 <span data-i18n="redLinesTitle">RED LINES STATUS</span></div>
+        <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Severity-3 thresholds across all 6 vectors</div>
+        <div id="redLinesGrid">
+            <div style="text-align:center; color:var(--text-muted); padding:20px;">
+                <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historical Patterns -->
+    <div class="interp-card">
+        <div class="interp-card-title">📜 <span data-i18n="historyTitle">HISTORICAL PATTERN MATCH</span></div>
+        <div class="interp-card-subtitle" data-i18n="historySubtitle">Similarity vs. major Pakistan crisis precedents</div>
+        <div id="historicalGrid">
+            <div style="text-align:center; color:var(--text-muted); padding:20px;">
+                <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:24px; margin-bottom:24px; text-align:left; max-width:1200px; margin-left:auto; margin-right:auto;">
+
+        <div>
+            <div style="font-weight:700; color:var(--accent); margin-bottom:8px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">📡 <span data-i18n="footDataTitle">Data Sources</span></div>
+            <div style="font-size:0.78em; line-height:1.6; color:var(--text-secondary);" data-i18n="footDataText">
+                Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times,
+                Al-Monitor, Reuters, FT, GDELT, NewsAPI, plus curated Telegram channels covering Pakistan Army
+                / ISPR, KP / Balochistan OSINT, and Kashmir LoC monitoring.
+            </div>
+        </div>
+
+        <div>
+            <div style="font-weight:700; color:var(--accent); margin-bottom:8px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">🔬 <span data-i18n="footMethodTitle">Methodology</span></div>
+            <div style="font-size:0.78em; line-height:1.6; color:var(--text-secondary);" data-i18n="footMethodText">
+                Multi-language OSINT (English, Hindi) classified into a seven-vector matrix: Kashmir / LoC,
+                Afghan border, nuclear doctrine, diplomatic mediation, Balochistan / CPEC, civil-military
+                friction, and economic stress. 9-actor model centers Pakistan Army (the actual power broker)
+                rather than the civilian government. Cross-theater fingerprints feed Iran, China, future India,
+                and ME mediation_substitution narratives. Refresh every 12 hours.
+            </div>
+        </div>
+
+        <div>
+            <div style="font-weight:700; color:var(--accent); margin-bottom:8px; font-size:0.85em; text-transform:uppercase; letter-spacing:1px;">✉️ <span data-i18n="footContactTitle">Contact</span></div>
+            <div style="font-size:0.78em; line-height:1.6; color:var(--text-secondary);">
+                <span data-i18n="footContactText">Questions, corrections, or research collaboration:</span><br>
+                <a href="mailto:contact@asifahanalytics.com">contact@asifahanalytics.com</a><br><br>
+                <a href="https://www.asifahanalytics.com/privacy.html" data-i18n="footPrivacy">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+
+    <div style="max-width:1200px; margin:20px auto 0; padding:14px; background:rgba(220,38,38,0.08); border-left:3px solid #dc2626; border-radius:6px; font-size:0.78em; line-height:1.55; color:var(--text-secondary); text-align:left;">
+        <strong style="color:#dc2626;">⚠️ <span data-i18n="footDisclaimerLabel">Disclaimer:</span></strong>
+        <span data-i18n="footDisclaimerText">Asifah Analytics is a personal-time open-source OSINT project. Analysis reflects open-source signal aggregation only — does NOT reflect classified intelligence and is NOT an official U.S. Government product. Asifah methodology is proprietary and should not be cited as official assessment. Not for operational use.</span>
+    </div>
+
+    <div style="max-width:1200px; margin:18px auto 0; padding:14px; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:8px; text-align:left;">
+        <span style="font-size:0.88em; color:var(--text-secondary);">
+            <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span>
+            <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="font-weight:700;">☕ <span data-i18n="footBmacButton">buy me a coffee</span></a>
+        </span>
+    </div>
+
+    <div style="max-width:1200px; margin:22px auto 0; padding-top:18px; border-top:1px solid var(--card-border); display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:0.74em; color:var(--text-muted);">
+        <span>Asifah Analytics v1.2.0 · <span data-i18n="footRefreshNote">Updated every 12 hours</span></span>
+        <span>© 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Proprietary and Confidential.</span></span>
+    </div>
+</footer>
+
+</div><!-- end main content -->
+</div><!-- end page-with-sidebar -->
+</div><!-- /container -->
+
+<script>
+    const API_BASE = 'https://asifah-asia-backend.onrender.com';
+
+    // ── ESCALATION LEVELS ──
+    const ESCALATION_LEVELS = {
+        0: { color: '#6b7280', label: 'Monitoring',         description: 'Routine OSINT activity, baseline rhetoric.' },
+        1: { color: '#16a34a', label: 'Routine',             description: 'Standard tempo across vectors.' },
+        2: { color: '#facc15', label: 'Elevated Rhetoric',   description: 'Heightened language without operational signal.' },
+        3: { color: '#f59e0b', label: 'Heightened Posture',  description: 'Multi-actor signaling above baseline.' },
+        4: { color: '#f97316', label: 'Active Signaling',    description: 'Red lines approaching or breached; mobilization language present.' },
+        5: { color: '#dc2626', label: 'Active Conflict',     description: 'Conflict ongoing or imminent; multiple breach thresholds crossed.' },
+    };
+
+    // ── TRANSLATIONS (English / Mandarin / Japanese / Korean) ──
+    const T = {
+        en: {
+            backLink: '← Back to Asia Rhetoric',
+            pageFlag: 'PAKISTAN',
+            pageTitle: 'PAKISTAN SOUTH ASIA TRACKER',
+            pageSubtitle: 'Army/COAS · ISI · India-Inbound · Afghan/TTP · Iran ↔ Mediation · China/CPEC · GCC · US',
+            lastUpdated: 'Last updated:',
+            loading: 'Loading...',
+            refreshScan: 'Refresh Scan',
+            themeLabel: 'THEME',
+            scoreLabel: 'RHETORIC SCORE / 100',
+            escalationLabel: 'THEATRE ESCALATION LEVEL',
+            axisTitle: 'CROSS-THEATER AXIS ACTIVATIONS',
+            axisIran: 'Iran-axis',
+            axisChina: 'China-axis (CPEC)',
+            axisIndia: 'India-axis (Kashmir)',
+            axisMediation: 'Mediating Iran-US',
+            axisNuclear: 'Nuclear signaling',
+            vectorTitle: 'ESCALATION VECTORS',
+            vecKashmir: 'Kashmir / LoC',
+            vecKashmirDesc: 'Line of Control · Indus · Infiltration',
+            vecAfghan: 'Afghan Border',
+            vecAfghanDesc: 'TTP · Durand Line · Cross-border',
+            vecNuclear: 'Nuclear Doctrine',
+            vecNuclearDesc: 'NCA · Nasr · Missile Tests · Doctrine',
+            vecMediation: 'Diplomatic Mediation',
+            vecMediationDesc: 'Pakistan AS Iran-US Mediator',
+            vecBaloch: 'Balochistan / CPEC',
+            vecBalochDesc: 'BLA · Gwadar · CPEC sites',
+            vecCivMil: 'Civil-Military',
+            vecCivMilDesc: 'PTI · Imran · Judicial · Coup risk',
+            vecEconomic: 'Economic Stress',
+            vecEconomicDesc: 'IMF · Reserves · Rupee · Default risk',
+            actorsTitle: 'ACTORS · 9-NODE MATRIX',
+            soWhatTitle: 'SO WHAT — Analyst Take',
+            soWhatSubtitle: 'Strategic implications across vectors',
+            redLinesTitle: 'RED LINES STATUS',
+            redLinesSubtitle: 'Severity-3 thresholds across all 6 vectors',
+            historyTitle: 'HISTORICAL PATTERN MATCH',
+            historySubtitle: 'Similarity vs. major Pakistan crisis precedents',
+            footDataTitle: 'Data Sources',
+            footDataText: 'Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times, Al-Monitor, Reuters, FT, GDELT, NewsAPI, plus curated Telegram channels covering Pakistan Army / ISPR, KP / Balochistan OSINT, and Kashmir LoC monitoring.',
+            footMethodTitle: 'Methodology',
+            footMethodText: 'Multi-language OSINT (English, Hindi) classified into a seven-vector matrix: Kashmir / LoC, Afghan border, nuclear doctrine, diplomatic mediation, Balochistan / CPEC, civil-military friction, and economic stress. 9-actor model centers Pakistan Army (the actual power broker) rather than the civilian government. Cross-theater fingerprints feed Iran, China, future India, and ME mediation_substitution narratives. Refresh every 12 hours.',
+            footContactTitle: 'Contact',
+            footContactText: 'Questions, corrections, or research collaboration:',
+            footPrivacy: 'Privacy Policy',
+            footDisclaimerLabel: 'Disclaimer:',
+            footDisclaimerText: 'Asifah Analytics is a personal-time open-source OSINT project. Analysis reflects open-source signal aggregation only — does NOT reflect classified intelligence and is NOT an official U.S. Government product. Asifah methodology is proprietary and should not be cited as official assessment. Not for operational use.',
+            footBmacText: 'If you find Asifah Analytics useful and want to support ongoing development, you can',
+            footBmacButton: 'buy me a coffee',
+            footRefreshNote: 'Updated every 12 hours',
+            footCopy: 'All Rights Reserved. Proprietary and Confidential.',
+            axisActive: 'ACTIVE', axisInactive: 'BASELINE',
+        },
+        zh: {
+            backLink: '← 返回亚洲修辞',
+            pageFlag: '巴基斯坦',
+            pageTitle: '巴基斯坦南亚追踪器',
+            pageSubtitle: '陆军/参谋长 · ISI · 印度信号 · 阿富汗/TTP · 伊朗 ↔ 调解 · 中国/CPEC · 海湾 · 美国',
+            lastUpdated: '最后更新:',
+            loading: '加载中...',
+            refreshScan: '刷新扫描',
+            themeLabel: '主题',
+            scoreLabel: '修辞评分 / 100',
+            escalationLabel: '战区升级级别',
+            axisTitle: '跨战区轴线激活',
+            axisIran: '伊朗轴线',
+            axisChina: '中国轴线 (CPEC)',
+            axisIndia: '印度轴线 (克什米尔)',
+            axisMediation: '调解伊朗-美国',
+            axisNuclear: '核信号传递',
+            vectorTitle: '升级向量',
+            vecKashmir: '克什米尔 / 实控线',
+            vecKashmirDesc: '实控线 · 印度河 · 渗透',
+            vecAfghan: '阿富汗边境',
+            vecAfghanDesc: 'TTP · 杜兰线 · 跨境',
+            vecNuclear: '核理论',
+            vecNuclearDesc: 'NCA · Nasr · 导弹试射 · 理论',
+            vecMediation: '外交调解',
+            vecMediationDesc: '巴基斯坦作为伊朗-美国调解者',
+            vecBaloch: '俾路支 / CPEC',
+            vecBalochDesc: 'BLA · 瓜达尔 · CPEC 项目',
+            vecCivMil: '军民关系',
+            vecCivMilDesc: 'PTI · 伊姆兰 · 司法 · 政变风险',
+            vecEconomic: '经济压力',
+            vecEconomicDesc: 'IMF · 储备 · 卢比 · 违约风险',
+            actorsTitle: '行为者 · 9 节点矩阵',
+            soWhatTitle: '所以呢 — 分析师观点',
+            soWhatSubtitle: '跨向量战略影响',
+            redLinesTitle: '红线状态',
+            redLinesSubtitle: '所有 6 个向量的严重性 3 阈值',
+            historyTitle: '历史模式匹配',
+            historySubtitle: '与主要巴基斯坦危机先例的相似性',
+            footDataTitle: '数据来源',
+            footDataText: 'Dawn、The News International、Express Tribune、Geo News、ARY News、The Hindu、Hindustan Times、Al-Monitor、Reuters、FT、GDELT、NewsAPI 以及涵盖 ISPR (巴基斯坦陆军公关)、KP / 俾路支 OSINT 以及克什米尔实控线监测的精选 Telegram 频道。',
+            footMethodTitle: '方法论',
+            footMethodText: '多语言 OSINT(英语、印地语)分类为七向量矩阵:克什米尔 / 实控线、阿富汗边境、核理论、外交调解、俾路支 / CPEC、军民摩擦和经济压力。9 行为者模型以巴基斯坦陆军 (实际权力中心) 而非民选政府为中心。跨战区指纹进入伊朗、中国、未来的印度以及中东调解替代叙事。每 12 小时刷新。',
+            footContactTitle: '联系',
+            footContactText: '问题、更正或研究合作:',
+            footPrivacy: '隐私政策',
+            footDisclaimerLabel: '免责声明:',
+            footDisclaimerText: 'Asifah Analytics 是一个个人时间的开源 OSINT 项目。分析仅反映开源信号汇总,不反映机密情报,也不是美国政府的官方产品。Asifah 方法论是专有的,不应被引用为官方评估。不用于行动用途。',
+            footBmacText: '如果您觉得 Asifah Analytics 有用并想支持持续开发,您可以',
+            footBmacButton: '请我喝咖啡',
+            footRefreshNote: '每 12 小时更新',
+            footCopy: '保留所有权利。专有且机密。',
+            axisActive: '激活', axisInactive: '基线',
+        },
+        ja: {
+            backLink: '← アジア修辞へ戻る',
+            pageFlag: 'パキスタン',
+            pageTitle: 'パキスタン 南アジア・トラッカー',
+            pageSubtitle: '陸軍/COAS · ISI · インド信号 · アフガン/TTP · イラン ↔ 仲介 · 中国/CPEC · 湾岸 · 米国',
+            lastUpdated: '最終更新:',
+            loading: '読み込み中...',
+            refreshScan: 'スキャンを更新',
+            themeLabel: 'テーマ',
+            scoreLabel: '修辞スコア / 100',
+            escalationLabel: '戦域エスカレーションレベル',
+            axisTitle: 'クロス戦域 軸の活性化',
+            axisIran: 'イラン軸',
+            axisChina: '中国軸 (CPEC)',
+            axisIndia: 'インド軸 (カシミール)',
+            axisMediation: 'イラン-米国仲介',
+            axisNuclear: '核シグナリング',
+            vectorTitle: 'エスカレーションベクトル',
+            vecKashmir: 'カシミール / LoC',
+            vecKashmirDesc: '実効支配線 · インダス · 浸透',
+            vecAfghan: 'アフガン国境',
+            vecAfghanDesc: 'TTP · デュランド線 · 越境',
+            vecNuclear: '核ドクトリン',
+            vecNuclearDesc: 'NCA · Nasr · ミサイル試験 · ドクトリン',
+            vecMediation: '外交仲介',
+            vecMediationDesc: 'パキスタンによるイラン-米国仲介',
+            vecBaloch: 'バロチスタン / CPEC',
+            vecBalochDesc: 'BLA · グワーダル · CPEC 拠点',
+            vecCivMil: '文民-軍関係',
+            vecCivMilDesc: 'PTI · イムラン · 司法 · クーデターリスク',
+            vecEconomic: '経済ストレス',
+            vecEconomicDesc: 'IMF · 外貨準備 · ルピー · デフォルトリスク',
+            actorsTitle: 'アクター · 9 ノード行列',
+            soWhatTitle: 'それで何が — アナリストの見解',
+            soWhatSubtitle: 'ベクトル横断的な戦略的含意',
+            redLinesTitle: 'レッドライン状態',
+            redLinesSubtitle: '全 6 ベクトルにおける深刻度 3 の閾値',
+            historyTitle: '歴史的パターン一致',
+            historySubtitle: '主要なパキスタン危機の前例との類似性',
+            footDataTitle: 'データソース',
+            footDataText: 'Dawn、The News International、Express Tribune、Geo News、ARY News、The Hindu、Hindustan Times、Al-Monitor、Reuters、FT、GDELT、NewsAPI、および ISPR (パキスタン陸軍広報)、KP / バロチスタン OSINT、カシミール LoC 監視を扱う厳選 Telegram チャンネル。',
+            footMethodTitle: '方法論',
+            footMethodText: '多言語 OSINT (英語、ヒンディー語) を 7 ベクトル行列で分類:カシミール / LoC、アフガン国境、核ドクトリン、外交仲介、バロチスタン / CPEC、文民-軍摩擦、経済ストレス。9 アクターモデルは民間政府ではなくパキスタン陸軍 (実際の権力者) を中心に据えている。クロス戦域指紋はイラン、中国、将来のインド、ME mediation_substitution ナラティブに供給。12 時間ごとに更新。',
+            footContactTitle: '連絡先',
+            footContactText: '質問、訂正、または研究協力:',
+            footPrivacy: 'プライバシーポリシー',
+            footDisclaimerLabel: '免責事項:',
+            footDisclaimerText: 'Asifah Analytics は個人時間のオープンソース OSINT プロジェクトです。分析はオープンソース信号集約のみを反映し、機密情報を反映するものではなく、米国政府の公式製品ではありません。Asifah の方法論は専有であり、公式評価として引用されるべきではありません。運用目的では使用しないでください。',
+            footBmacText: 'Asifah Analytics が役立つと感じ、継続的な開発を支援したい場合は、',
+            footBmacButton: 'コーヒーをおごる',
+            footRefreshNote: '12 時間ごとに更新',
+            footCopy: 'All Rights Reserved. Proprietary and Confidential.',
+            axisActive: 'アクティブ', axisInactive: 'ベースライン',
+        },
+        ko: {
+            backLink: '← 아시아 수사로 돌아가기',
+            pageFlag: '파키스탄',
+            pageTitle: '파키스탄 남아시아 추적기',
+            pageSubtitle: '육군/COAS · ISI · 인도 인바운드 · 아프간/TTP · 이란 ↔ 중재 · 중국/CPEC · GCC · 미국',
+            lastUpdated: '최종 업데이트:',
+            loading: '로딩 중...',
+            refreshScan: '스캔 새로고침',
+            themeLabel: '테마',
+            scoreLabel: '수사 점수 / 100',
+            escalationLabel: '전구 격상 단계',
+            axisTitle: '교차 전구 축선 활성화',
+            axisIran: '이란 축',
+            axisChina: '중국 축 (CPEC)',
+            axisIndia: '인도 축 (카슈미르)',
+            axisMediation: '이란-미국 중재',
+            axisNuclear: '핵 시그널링',
+            vectorTitle: '격상 벡터',
+            vecKashmir: '카슈미르 / LoC',
+            vecKashmirDesc: '실질통제선 · 인더스 · 침투',
+            vecAfghan: '아프간 국경',
+            vecAfghanDesc: 'TTP · 듀란드선 · 국경 너머',
+            vecNuclear: '핵 독트린',
+            vecNuclearDesc: 'NCA · Nasr · 미사일 시험 · 독트린',
+            vecMediation: '외교 중재',
+            vecMediationDesc: '이란-미국 중재자로서의 파키스탄',
+            vecBaloch: '발루치스탄 / CPEC',
+            vecBalochDesc: 'BLA · 과다르 · CPEC 현장',
+            vecCivMil: '문민-군부 관계',
+            vecCivMilDesc: 'PTI · 임란 · 사법 · 쿠데타 위험',
+            vecEconomic: '경제 스트레스',
+            vecEconomicDesc: 'IMF · 외환보유 · 루피 · 디폴트 위험',
+            actorsTitle: '행위자 · 9 노드 매트릭스',
+            soWhatTitle: '그래서 — 분석가 관점',
+            soWhatSubtitle: '벡터 횡단 전략적 함의',
+            redLinesTitle: '레드 라인 상태',
+            redLinesSubtitle: '6 개 벡터 전체의 심각도 3 임계값',
+            historyTitle: '역사적 패턴 일치',
+            historySubtitle: '주요 파키스탄 위기 선례와의 유사성',
+            footDataTitle: '데이터 출처',
+            footDataText: 'Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times, Al-Monitor, Reuters, FT, GDELT, NewsAPI, 그리고 ISPR (파키스탄 육군 공보), KP / 발루치스탄 OSINT, 카슈미르 LoC 모니터링을 다루는 엄선된 Telegram 채널.',
+            footMethodTitle: '방법론',
+            footMethodText: '다국어 OSINT (영어, 힌디어) 를 7 벡터 매트릭스로 분류:카슈미르 / LoC, 아프간 국경, 핵 독트린, 외교 중재, 발루치스탄 / CPEC, 문민-군부 마찰, 경제 스트레스. 9 행위자 모델은 민간 정부가 아닌 파키스탄 육군 (실질적 권력자) 을 중심으로 한다. 교차 전구 지문은 이란, 중국, 미래의 인도, 그리고 ME mediation_substitution 내러티브에 공급된다. 12 시간마다 새로고침.',
+            footContactTitle: '연락처',
+            footContactText: '질문, 수정 또는 연구 협력:',
+            footPrivacy: '개인정보 정책',
+            footDisclaimerLabel: '면책 조항:',
+            footDisclaimerText: 'Asifah Analytics 는 개인 시간 오픈소스 OSINT 프로젝트입니다. 분석은 오픈소스 신호 집계만을 반영하며 기밀 정보를 반영하지 않고 미국 정부의 공식 제품이 아닙니다. Asifah 방법론은 독점적이며 공식 평가로 인용되어서는 안 됩니다. 운영 용도로 사용하지 마십시오.',
+            footBmacText: 'Asifah Analytics 가 유용하다고 느끼고 지속적인 개발을 지원하고 싶다면',
+            footBmacButton: '커피 한 잔',
+            footRefreshNote: '12 시간마다 업데이트',
+            footCopy: '모든 권리 보유. 독점 및 기밀.',
+            axisActive: '활성', axisInactive: '기준선',
+        },
+    };
+
+    let currentLang = 'en';
+    let currentData = null;
+
+    // ── LANGUAGE ──
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        const t = T[lang] || T.en;
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key] !== undefined) el.textContent = t[key];
+        });
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            const labels = { en:'EN', zh:'中文', ja:'日本語', ko:'한국어' };
+            btn.classList.toggle('active', btn.textContent.trim() === labels[lang]);
+        });
+        if (currentData) renderAll(currentData);
+    }
+
+    // ── THEME ──
+    function toggleTheme() {
+        const isDark = document.getElementById('themeToggle').checked;
+        document.documentElement.setAttribute('data-theme', isDark?'light':'dark');
+        localStorage.setItem('pk_rhetoric_theme', isDark?'light':'dark');
+    }
+    function loadTheme() {
+        const saved = localStorage.getItem('pk_rhetoric_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+        document.getElementById('themeToggle').checked = saved==='light';
+    }
+
+    // ── DATA LOAD ──
+    async function loadRhetoricData(force=false) {
+        const btn = document.getElementById('refreshBtn');
+        if (force) { btn.disabled = true; btn.textContent = '...'; }
+        try {
+            const url = API_BASE + '/api/rhetoric/pakistan' + (force ? '?force=true' : '');
+            const resp = await fetch(url);
+            const data = await resp.json();
+            if (!data.success) {
+                console.error('[Pakistan]', data.error);
+                return;
+            }
+            currentData = data;
+            renderAll(data);
+        } catch (e) {
+            console.error('[Pakistan] fetch error:', e);
+        } finally {
+            if (force) { btn.disabled = false; setLanguage(currentLang); }
+        }
+    }
+
+    // ── RENDER MASTER ──
+    function renderAll(data) {
+        renderTheatreBanner(data);
+        renderAxisPills(data);
+        renderVectors(data);
+        renderActors(data);
+        renderInterpretation(data);
+        renderTimestamp(data);
+    }
+
+    function renderTheatreBanner(data) {
+        const score = data.theatre_score || data.rhetoric_score || 0;
+        const level = data.theatre_level || 0;
+        const lv = ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0];
+
+        const t = T[currentLang] || T.en;
+        const labels = { en: lv.label, zh: lv.label, ja: lv.label, ko: lv.label };  // English labels in all langs (analyst convention)
+
+        document.getElementById('theatreScore').textContent = score;
+        document.getElementById('theatreScore').style.color = lv.color;
+        const badge = document.getElementById('theatreBadge');
+        badge.textContent = lv.label.toUpperCase();
+        badge.style.background = lv.color;
+        document.getElementById('theatreLevelDisplay').textContent = `L${level} — ${lv.label}`;
+        document.getElementById('theatreLevelDisplay').style.color = lv.color;
+        document.getElementById('theatreScanInfo').textContent = `${data.total_articles || 0} articles scanned`;
+    }
+
+    function renderAxisPills(data) {
+        const t = T[currentLang] || T.en;
+        const set = (id, active, classExtra) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const status = el.querySelector('.axis-status');
+            if (active) {
+                el.classList.add('active');
+                if (classExtra) el.classList.add(classExtra);
+                if (status) status.textContent = t.axisActive;
+            } else {
+                el.classList.remove('active', 'mediation', 'nuclear');
+                if (status) status.textContent = t.axisInactive;
+            }
+        };
+        set('axisIran',      data.pakistan_iran_active);
+        set('axisChina',     data.pakistan_china_active);
+        set('axisIndia',     data.pakistan_india_active);
+        set('axisMediation', data.pakistan_mediating_iran_us, 'mediation');
+        set('axisNuclear',   data.pakistan_nuclear_signaling, 'nuclear');
+    }
+
+    function renderVectors(data) {
+        const setVec = (id, level) => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const lv = ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0];
+            el.textContent = `L${level || 0}`;
+            el.style.color = lv.color;
+        };
+        setVec('vecKashmirLevel',   data.kashmir_loc_level);
+        setVec('vecAfghanLevel',    data.afghan_border_level);
+        setVec('vecNuclearLevel',   data.nuclear_doctrine_level);
+        setVec('vecMediationLevel', data.proxy_mediation_level);
+        setVec('vecBalochLevel',    data.balochistan_insurgency_level);
+        setVec('vecCivMilLevel',    data.civil_military_friction_level);
+        setVec('vecEconomicLevel',  data.economic_stress_level);
+    }
+
+    const ACTOR_ORDER = [
+        'pakistan_army', 'pakistan_civilian_gov', 'pakistan_isi',
+        'india_pakistan', 'afghanistan_pakistan', 'iran_pakistan',
+        'china_pakistan_axis', 'gcc_pakistan', 'us_pakistan'
+    ];
+
+    function renderActors(data) {
+        const grid = document.getElementById('actorsGrid');
+        grid.innerHTML = '';
+        const actors = data.actors || {};
+
+        ACTOR_ORDER.forEach(actorId => {
+            const a = actors[actorId];
+            if (!a) return;
+            const lv = ESCALATION_LEVELS[Math.min(a.escalation_level || 0, 5)] || ESCALATION_LEVELS[0];
+
+            const articlesHtml = (a.top_articles || []).slice(0, 3).map(art => `
+                <a class="top-article" href="${art.url || '#'}" target="_blank" rel="noopener">
+                    <span class="article-title">${art.title || '(no title)'}</span>
+                    <span class="article-meta">${art.source || ''} · ${art.published || ''}</span>
+                </a>
+            `).join('') || `<div style="color:var(--text-muted);font-size:0.85em;padding:6px 0;">No articles in current scan window.</div>`;
+
+            const silence = a.silence_alert
+                ? `<span class="silence-badge">🔇 SILENCE</span>` : '';
+
+            const card = document.createElement('div');
+            card.className = 'actor-card';
+            card.style.borderLeftColor = a.color || lv.color;
+            card.innerHTML = `
+                <div class="actor-header">
+                    <div class="actor-name">
+                        <span class="actor-flag">${a.flag || ''}</span>
+                        ${a.icon || ''} ${a.name || actorId}
+                        ${silence}
+                    </div>
+                    <span class="actor-level-badge" style="background:${lv.color};">L${a.escalation_level || 0}</span>
+                </div>
+                <div class="actor-role">${a.role || ''}</div>
+                <div class="actor-stats">
+                    <span>📰 ${a.statement_count || 0} statements</span>
+                    <span>📊 Max L${a.max_level || 0}</span>
+                </div>
+                <div class="top-articles">${articlesHtml}</div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    function renderInterpretation(data) {
+        const interp = data.interpretation || {};
+        const so_what = interp.so_what || {};
+        const red_lines = interp.red_lines || {};
+        const historical = interp.historical_matches || [];
+
+        // So What
+        document.getElementById('soWhatScenario').textContent =
+            so_what.scenario || '--';
+        const implUl = document.getElementById('soWhatImplications');
+        implUl.innerHTML = '';
+        (so_what.implications || []).forEach(imp => {
+            const li = document.createElement('li');
+            li.textContent = imp;
+            implUl.appendChild(li);
+        });
+
+        // Red lines
+        const rlGrid = document.getElementById('redLinesGrid');
+        rlGrid.innerHTML = '';
+        const triggered = red_lines.triggered || [];
+        triggered.forEach(rl => {
+            const status = rl.status || 'CLEAR';
+            const cssClass = status === 'BREACHED' ? 'status-breached' :
+                             status === 'APPROACHING' ? 'status-approaching' : 'status-clear';
+            const row = document.createElement('div');
+            row.className = 'red-line-row';
+            row.innerHTML = `
+                <span>${rl.icon || '🚨'} ${rl.label || ''}</span>
+                <span class="red-line-status ${cssClass}">${status}</span>
+            `;
+            rlGrid.appendChild(row);
+        });
+
+        // Historical matches
+        const hGrid = document.getElementById('historicalGrid');
+        hGrid.innerHTML = '';
+        historical.forEach(m => {
+            const div = document.createElement('div');
+            div.className = 'hist-match';
+            div.innerHTML = `
+                <div class="hist-match-header">
+                    <span class="hist-match-event">${m.event || ''}</span>
+                    <span class="hist-match-similarity">${m.similarity || 0}%</span>
+                </div>
+                <div class="hist-match-meta">${m.date || ''}</div>
+                <div class="hist-match-lesson">${m.lesson || ''}</div>
+            `;
+            hGrid.appendChild(div);
+        });
+    }
+
+    function renderTimestamp(data) {
+        if (data.generated_at) {
+            try {
+                const d = new Date(data.generated_at);
+                document.getElementById('lastUpdated').textContent = d.toLocaleString();
+            } catch (e) {
+                document.getElementById('lastUpdated').textContent = data.generated_at;
+            }
+        }
+    }
+
+    // ── INIT ──
+    document.addEventListener('DOMContentLoaded', function() {
+        loadTheme();
+        loadRhetoricData();
+    });
+</script>
+</body>
+</html>
