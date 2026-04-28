@@ -342,22 +342,26 @@
         <span class="nav-btn-label">🎖️ Military Tracker</span>
         <span class="nav-btn-status">● Live</span>
     </a>
+    <a href="gpi.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🌐 Global Pressure</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
     <div class="nav-divider"></div>
-    <div class="nav-sidebar-label">Rhetoric Monitors</div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
     <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🕌 ME Rhetoric</span>
+        <span class="nav-btn-label">🕌 Middle East</span>
         <span class="nav-btn-status">● Live</span>
     </a>
     <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn current-page">
-        <span class="nav-btn-label">🌏 Asia Rhetoric</span>
+        <span class="nav-btn-label">🌏 Asia</span>
         <span class="nav-btn-status">◉ You are here</span>
     </a>
     <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🌍 Europe Rhetoric</span>
+        <span class="nav-btn-label">🌍 Europe</span>
         <span class="nav-btn-status">● Live</span>
     </a>
     <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
-        <span class="nav-btn-label">🌎 WHA Rhetoric</span>
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
         <span class="nav-btn-status">● Live</span>
     </a>
 </nav>
@@ -469,6 +473,15 @@
             summaryUrl: API_BASE + '/api/rhetoric/taiwan/summary',
             url:        'rhetoric-taiwan.html',
         },
+        {
+            id:         'pakistan',
+            name:       'Pakistan South Asia Tracker',
+            flag:       '🇵🇰',
+            actors:     'Army/COAS/ISPR · Civilian Gov · ISI · India-Inbound · Afghanistan/TTP · Iran ↔ Mediation · China/CPEC · GCC · US',
+            vectors:    ['Kashmir/LoC', 'Afghan Border', 'Nuclear', 'Mediation', 'Balochistan/CPEC', 'Civil-Military', 'Economic'],
+            summaryUrl: API_BASE + '/api/rhetoric/pakistan/summary',
+            url:        'rhetoric-pakistan.html',
+        },
     ];
 
     // ── THEME ──
@@ -488,7 +501,8 @@
         let level = 0, color = '#6b7280', label = '---';
 
         if (data && data.success) {
-            level = data.overall_level ?? 0;
+            // Pakistan emits theatre_level (canonical ME naming); China/Taiwan use overall_level
+            level = data.overall_level ?? data.theatre_level ?? 0;
             const lv = ESCALATION_LEVELS[Math.min(level, 5)] || ESCALATION_LEVELS[0];
             color = data.overall_color || lv.color;
             label = data.overall_label || lv.label;
@@ -509,6 +523,17 @@
                 const out = data.outbound_score ?? 0;
                 const inb = data.inbound_score ?? 0;
                 scoreLine = `<span style="font-size:10px;color:var(--text-muted);">Outbound ${out}/100 · China Pressure ${inb}/100 · ${data.total_articles ?? 0} articles</span>`;
+            } else if (tracker.id === 'pakistan') {
+                // Pakistan score line — includes axis activations
+                const score = data.theatre_score ?? 0;
+                const axes = [];
+                if (data.pakistan_iran_active)  axes.push('🇮🇷');
+                if (data.pakistan_china_active) axes.push('🇨🇳');
+                if (data.pakistan_india_active) axes.push('🇮🇳');
+                if (data.pakistan_mediating_iran_us) axes.push('🤝');
+                if (data.pakistan_nuclear_signaling) axes.push('☢️');
+                const axisStr = axes.length ? ' · Axes: ' + axes.join(' ') : '';
+                scoreLine = `<span style="font-size:10px;color:var(--text-muted);">Composite ${score}/100${axisStr}</span>`;
             }
         }
 
