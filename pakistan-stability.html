@@ -179,11 +179,54 @@
     /* MAP */
     #pakMap { height: 380px; border-radius: 8px; }
 
-    /* KNOWLEDGE LIBRARY */
-    .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
-    .kb-card { padding: 14px 16px; border: 1px solid var(--card-border); border-radius: 8px; background: var(--article-bg); }
-    .kb-card-title { font-weight: 700; color: var(--accent); margin-bottom: 6px; font-size: 0.95em; }
-    .kb-card-text { font-size: 0.85em; color: var(--text-secondary); line-height: 1.55; }
+    /* KNOWLEDGE LIBRARY (v2.1.0 — expanding cards, matches Israel pattern) */
+    .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+    .kb-card {
+        background: var(--card-bg);
+        border: 1.5px solid var(--card-border);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .kb-card:hover { transform: translateY(-2px); box-shadow: var(--card-hover-glow); }
+    [data-theme="dark"] .kb-card:hover { border-color: rgba(56,189,248,0.4); }
+    .kb-card-header {
+        padding: 14px 18px;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(135deg, rgba(14,165,233,0.06) 0%, rgba(30,58,95,0.06) 100%);
+        transition: background 0.3s ease;
+    }
+    [data-theme="dark"] .kb-card-header { background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(30,58,95,0.10) 100%); }
+    .kb-card-header:hover { background: linear-gradient(135deg, rgba(14,165,233,0.12) 0%, rgba(30,58,95,0.12) 100%); }
+    [data-theme="dark"] .kb-card-header:hover { background: linear-gradient(135deg, rgba(56,189,248,0.12) 0%, rgba(30,58,95,0.18) 100%); }
+    .kb-card-title { font-weight: 700; color: var(--accent); font-size: 0.95em; flex: 1; }
+    .kb-card-icon { font-size: 1.3em; }
+    .kb-collapse-icon {
+        font-size: 1em;
+        color: var(--accent);
+        transition: transform 0.3s ease;
+        flex-shrink: 0;
+    }
+    .kb-card.collapsed .kb-collapse-icon { transform: rotate(-90deg); }
+    .kb-card-content {
+        padding: 16px 18px;
+        max-height: 600px;
+        overflow-y: auto;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+        border-top: 1px solid var(--card-border);
+    }
+    .kb-card.collapsed .kb-card-content {
+        max-height: 0;
+        padding: 0 18px;
+        overflow: hidden;
+        border-top-color: transparent;
+    }
+    .kb-card-text { font-size: 0.88em; color: var(--text-secondary); line-height: 1.6; }
+    .kb-card-text strong { color: var(--text-primary); }
 
     /* ARTICLE TABS */
     .article-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--card-border); margin-bottom: 14px; overflow-x: auto; }
@@ -383,37 +426,92 @@
 <div class="section">
     <h2 class="section-heading">📚 <span data-i18n="kbTitle">Knowledge Library</span></h2>
     <div class="kb-grid">
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbArmyTitle">Pakistan Army & ISPR</div>
-            <div class="kb-card-text" data-i18n="kbArmyText">Inter-Services Public Relations is the public-information arm of the Pakistan Armed Forces. The Chief of Army Staff (COAS) is widely considered the most influential political figure in Pakistan, irrespective of which civilian government is in power. ISPR press conferences are read globally as strategic signals.</div>
+        <div class="kb-card collapsed" id="kb-card-army">
+            <div class="kb-card-header" onclick="toggleKbCard('army')">
+                <span class="kb-card-icon">🎖️</span>
+                <div class="kb-card-title" data-i18n="kbArmyTitle">Pakistan Army & ISPR</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbArmyText">Inter-Services Public Relations is the public-information arm of the Pakistan Armed Forces. The Chief of Army Staff (COAS) is widely considered the most influential political figure in Pakistan, irrespective of which civilian government is in power. ISPR press conferences are read globally as strategic signals.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbISITitle">Inter-Services Intelligence (ISI)</div>
-            <div class="kb-card-text" data-i18n="kbISIText">Pakistan's premier intelligence agency, with significant influence over national security policy, particularly regarding India, Afghanistan, and counter-terrorism. Public mentions are rare and analytically significant — silence is the baseline.</div>
+
+        <div class="kb-card collapsed" id="kb-card-isi">
+            <div class="kb-card-header" onclick="toggleKbCard('isi')">
+                <span class="kb-card-icon">🕵️</span>
+                <div class="kb-card-title" data-i18n="kbISITitle">Inter-Services Intelligence (ISI)</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbISIText">Pakistan's premier intelligence agency, with significant influence over national security policy, particularly regarding India, Afghanistan, and counter-terrorism. Public mentions are rare and analytically significant — silence is the baseline.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbCPECTitle">CPEC & Gwadar</div>
-            <div class="kb-card-text" data-i18n="kbCPECText">The China-Pakistan Economic Corridor is a flagship Belt and Road project: ~$62B in announced infrastructure investment connecting Xinjiang to the Arabian Sea via Gwadar deep-water port. CPEC site security drives the Balochistan vector — the BLA (Baloch Liberation Army) has repeatedly targeted Chinese workers and project sites.</div>
+
+        <div class="kb-card collapsed" id="kb-card-cpec">
+            <div class="kb-card-header" onclick="toggleKbCard('cpec')">
+                <span class="kb-card-icon">🛤️</span>
+                <div class="kb-card-title" data-i18n="kbCPECTitle">CPEC & Gwadar</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbCPECText">The China-Pakistan Economic Corridor is a flagship Belt and Road project: ~$62B in announced infrastructure investment connecting Xinjiang to the Arabian Sea via Gwadar deep-water port. CPEC site security drives the Balochistan vector — the BLA (Baloch Liberation Army) has repeatedly targeted Chinese workers and project sites.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbTTPTitle">Tehrik-i-Taliban Pakistan (TTP)</div>
-            <div class="kb-card-text" data-i18n="kbTTPText">The Pakistani Taliban — a separate organization from the Afghan Taliban — shelters in Afghanistan and conducts cross-border attacks into Khyber Pakhtunkhwa (KP) and Balochistan. TTP attacks accelerated dramatically following the August 2021 U.S. withdrawal from Afghanistan.</div>
+
+        <div class="kb-card collapsed" id="kb-card-ttp">
+            <div class="kb-card-header" onclick="toggleKbCard('ttp')">
+                <span class="kb-card-icon">⚠️</span>
+                <div class="kb-card-title" data-i18n="kbTTPTitle">Tehrik-i-Taliban Pakistan (TTP)</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbTTPText">The Pakistani Taliban — a separate organization from the Afghan Taliban — shelters in Afghanistan and conducts cross-border attacks into Khyber Pakhtunkhwa (KP) and Balochistan. TTP attacks accelerated dramatically following the August 2021 U.S. withdrawal from Afghanistan.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbNuclearTitle">Nuclear Posture</div>
-            <div class="kb-card-text" data-i18n="kbNuclearText">Pakistan is the only nuclear-armed Muslim-majority state. Its declared doctrine is "Full Spectrum Deterrence," and unlike India it has no formal "no first use" policy. The Nasr (Hatf-IX) tactical nuclear missile is designed for battlefield use against Indian armored thrusts. The National Command Authority (NCA) oversees strategic forces.</div>
+
+        <div class="kb-card collapsed" id="kb-card-nuclear">
+            <div class="kb-card-header" onclick="toggleKbCard('nuclear')">
+                <span class="kb-card-icon">☢️</span>
+                <div class="kb-card-title" data-i18n="kbNuclearTitle">Nuclear Posture</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbNuclearText">Pakistan is the only nuclear-armed Muslim-majority state. Its declared doctrine is "Full Spectrum Deterrence," and unlike India it has no formal "no first use" policy. The Nasr (Hatf-IX) tactical nuclear missile is designed for battlefield use against Indian armored thrusts. The National Command Authority (NCA) oversees strategic forces.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbIMFTitle">IMF & Economic Stress</div>
-            <div class="kb-card-text" data-i18n="kbIMFText">Pakistan has cycled through more than two dozen IMF programs since the 1980s. Economic stress (low foreign reserves, currency crashes, fuel/food inflation) is a structural constant and a major driver of civil-military friction. Saudi Arabia, the UAE, and China have repeatedly provided emergency deposit rollovers.</div>
+
+        <div class="kb-card collapsed" id="kb-card-imf">
+            <div class="kb-card-header" onclick="toggleKbCard('imf')">
+                <span class="kb-card-icon">💸</span>
+                <div class="kb-card-title" data-i18n="kbIMFTitle">IMF & Economic Stress</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbIMFText">Pakistan has cycled through more than two dozen IMF programs since the 1980s. Economic stress (low foreign reserves, currency crashes, fuel/food inflation) is a structural constant and a major driver of civil-military friction. Saudi Arabia, the UAE, and China have repeatedly provided emergency deposit rollovers.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbKashmirTitle">Kashmir & the Line of Control</div>
-            <div class="kb-card-text" data-i18n="kbKashmirText">The disputed Kashmir region is divided by the Line of Control (LoC), the de facto border between Indian-administered and Pakistani-administered Kashmir. India revoked Article 370 — Kashmir's special autonomous status — in August 2019. Cross-LoC firing, infiltration accusations, and Indus Waters Treaty disputes are recurring flashpoints.</div>
+
+        <div class="kb-card collapsed" id="kb-card-kashmir">
+            <div class="kb-card-header" onclick="toggleKbCard('kashmir')">
+                <span class="kb-card-icon">🗺️</span>
+                <div class="kb-card-title" data-i18n="kbKashmirTitle">Kashmir & the Line of Control</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbKashmirText">The disputed Kashmir region is divided by the Line of Control (LoC), the de facto border between Indian-administered and Pakistani-administered Kashmir. India revoked Article 370 — Kashmir's special autonomous status — in August 2019. Cross-LoC firing, infiltration accusations, and Indus Waters Treaty disputes are recurring flashpoints.</div>
+            </div>
         </div>
-        <div class="kb-card">
-            <div class="kb-card-title" data-i18n="kbSectarianTitle">Sectarian Violence</div>
-            <div class="kb-card-text" data-i18n="kbSectarianText">Pakistan's religious minorities — Christians, Ahmadis, Hindus, and Shia Muslims — face periodic episodes of mob violence, blasphemy law abuses, and targeted attacks. ISIS-K (Islamic State Khorasan Province) and certain TTP factions specifically target Shia mosques and processions. Ahmadis face state-codified discrimination under Pakistan's constitution.</div>
+
+        <div class="kb-card collapsed" id="kb-card-sectarian">
+            <div class="kb-card-header" onclick="toggleKbCard('sectarian')">
+                <span class="kb-card-icon">🕌</span>
+                <div class="kb-card-title" data-i18n="kbSectarianTitle">Sectarian Violence</div>
+                <span class="kb-collapse-icon">▼</span>
+            </div>
+            <div class="kb-card-content">
+                <div class="kb-card-text" data-i18n="kbSectarianText">Pakistan's religious minorities — Christians, Ahmadis, Hindus, and Shia Muslims — face periodic episodes of mob violence, blasphemy law abuses, and targeted attacks. ISIS-K (Islamic State Khorasan Province) and certain TTP factions specifically target Shia mosques and processions. Ahmadis face state-codified discrimination under Pakistan's constitution.</div>
+            </div>
         </div>
     </div>
 </div>
@@ -963,6 +1061,12 @@
         document.getElementById('countSocial').textContent   = articleStore.social.length;
         setArticleTab('all');
     }
+    // ── KNOWLEDGE LIBRARY (v2.1.0 — expanding-card pattern, matches Israel canon) ──
+    function toggleKbCard(cardId) {
+        const card = document.getElementById(`kb-card-${cardId}`);
+        if (card) card.classList.toggle('collapsed');
+    }
+
     function classifySource(source) {
         if (source.includes('telegram')) return 'telegram';
         if (source.includes('bluesky'))  return 'bluesky';
