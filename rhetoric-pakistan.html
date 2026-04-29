@@ -127,32 +127,48 @@
         .page-with-sidebar { display: block; }
     }
 
-    /* ── HEADER ── */
+    /* ── HEADER (v2.1.0 — Israel canon: logo + centered title + absolute controls) ── */
     header {
         background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
         color: var(--header-text); padding: 28px 24px; border-radius: 12px;
         position: relative; overflow: hidden; margin-bottom: 24px;
+        display: flex; align-items: center; gap: 24px;
     }
     header::before {
         content: ""; position: absolute; inset: 0;
         background: url('https://www.asifahanalytics.com/asifahlogo.png') center/contain no-repeat;
         opacity: var(--watermark-opacity); filter: var(--watermark-filter); z-index: 0;
     }
-    .header-content { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .header-logo {
+        width: 80px; height: 80px; flex-shrink: 0;
+        border-radius: 50%; position: relative; z-index: 1;
+    }
+    .header-content {
+        position: relative; z-index: 1;
+        flex: 1; text-align: center;
+    }
     .header-flag { font-size: 1rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; opacity: 0.85; }
-    .header-title { font-size: 2.2rem; font-weight: 700; margin-top: 4px; line-height: 1.1; }
-    .header-subtitle { font-size: 0.95rem; opacity: 0.85; margin-top: 6px; max-width: 700px; }
+    .header-title { font-size: 2.2rem; font-weight: 700; margin-top: 4px; line-height: 1.1; letter-spacing: 1.5px; }
+    .header-subtitle { font-size: 0.95rem; opacity: 0.85; margin-top: 6px; max-width: 800px; margin-left: auto; margin-right: auto; }
     .header-timestamp { font-size: 0.85em; opacity: 0.75; margin-top: 8px; }
     .back-link {
         display: inline-flex; align-items: center; padding: 6px 12px;
         background: rgba(255,255,255,0.15); border-radius: 6px;
         color: var(--header-text); text-decoration: none; font-size: 0.85em;
-        margin-bottom: 8px; transition: background 0.2s;
+        margin-bottom: 12px; transition: background 0.2s;
     }
     .back-link:hover { background: rgba(255,255,255,0.25); }
 
-    /* ── LANGUAGE BUTTONS ── */
-    .header-controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    /* ── LANGUAGE BUTTONS / CONTROLS (absolute positioned upper-right) ── */
+    .header-controls {
+        position: absolute; top: 24px; right: 24px;
+        display: flex; gap: 8px; flex-wrap: wrap; z-index: 2;
+    }
+    @media (max-width: 768px) {
+        header { flex-direction: column; padding: 20px 16px; gap: 12px; }
+        .header-controls { position: static; justify-content: center; }
+        .header-logo { width: 60px; height: 60px; margin-top: 0; }
+    }
     .lang-btn {
         background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
         color: var(--header-text); padding: 6px 12px; border-radius: 6px;
@@ -435,28 +451,27 @@
 
 <!-- HEADER -->
 <header>
+    <img src="https://www.asifahanalytics.com/asifahlogo.png" alt="Asifah Analytics" class="header-logo">
     <div class="header-content">
-        <div>
-            <a href="rhetoric-asia.html" class="back-link" data-i18n="backLink">← Back to Asia Rhetoric</a>
-            <div class="header-flag">🇵🇰 <span data-i18n="pageFlag">PAKISTAN</span></div>
-            <div class="header-title" data-i18n="pageTitle">PAKISTAN SOUTH ASIA TRACKER</div>
-            <div class="header-subtitle" data-i18n="pageSubtitle">Army/COAS · ISI · India-Inbound · Afghan/TTP · Iran ↔ Mediation · China/CPEC · GCC · US</div>
-            <div class="header-timestamp"><span data-i18n="lastUpdated">Last updated:</span> <span id="lastUpdated" data-i18n="loading">Loading...</span></div>
-        </div>
-        <div class="header-controls">
-            <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
-            <button class="lang-btn" onclick="setLanguage('zh')">中文</button>
-            <button class="lang-btn" onclick="setLanguage('ja')">日本語</button>
-            <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
-            <button class="refresh-btn" onclick="loadRhetoricData(true)" id="refreshBtn" data-i18n="refreshScan">Refresh Scan</button>
-            <label class="theme-toggle-wrap">
-                <span class="theme-label" data-i18n="themeLabel">THEME</span>
-                <span class="theme-switch">
-                    <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
-                    <span class="theme-slider"></span>
-                </span>
-            </label>
-        </div>
+        <a href="pakistan-stability.html" class="back-link" data-i18n="backLink">← Back to Pakistan Stability</a>
+        <div class="header-flag">🇵🇰 <span data-i18n="pageFlag">PAKISTAN</span></div>
+        <div class="header-title" data-i18n="pageTitle">Pakistan Rhetoric Tracker</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Army/COAS · ISI · India-Inbound · Afghan/TTP · Iran ↔ Mediation · China/CPEC · GCC · US</div>
+        <div class="header-timestamp"><span data-i18n="lastUpdated">Last updated:</span> <span id="lastUpdated" data-i18n="loading">Loading...</span></div>
+    </div>
+    <div class="header-controls">
+        <button class="lang-btn active" onclick="setLanguage('en')">EN</button>
+        <button class="lang-btn" onclick="setLanguage('zh')">中文</button>
+        <button class="lang-btn" onclick="setLanguage('ja')">日本語</button>
+        <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+        <button class="refresh-btn" onclick="loadRhetoricData(true)" id="refreshBtn" data-i18n="refreshScan">Refresh Scan</button>
+        <label class="theme-toggle-wrap">
+            <span class="theme-label" data-i18n="themeLabel">THEME</span>
+            <span class="theme-switch">
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()">
+                <span class="theme-slider"></span>
+            </span>
+        </label>
     </div>
 </header>
 
@@ -475,6 +490,30 @@
     </div>
     <div>
         <div id="theatreBadge" class="theatre-badge" style="background:#374151;" data-i18n="loading">LOADING</div>
+    </div>
+</div>
+
+<!-- ANALYSIS LAYER — So What + Red Lines (v2.1.0: front and center) -->
+<div class="interp-grid" style="grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));">
+    <!-- So What -->
+    <div class="interp-card">
+        <div class="interp-card-title">💡 <span data-i18n="soWhatTitle">SO WHAT — Analyst Take</span></div>
+        <div class="interp-card-subtitle" data-i18n="soWhatSubtitle">Strategic implications across vectors</div>
+        <div id="soWhatScenario" style="font-weight:700; margin-bottom:10px;">--</div>
+        <ul class="so-what-implications" id="soWhatImplications">
+            <li style="color:var(--text-muted);"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></li>
+        </ul>
+    </div>
+
+    <!-- Red Lines -->
+    <div class="interp-card">
+        <div class="interp-card-title">🚨 <span data-i18n="redLinesTitle">RED LINES STATUS</span></div>
+        <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Severity-3 thresholds across all 6 vectors</div>
+        <div id="redLinesGrid">
+            <div style="text-align:center; color:var(--text-muted); padding:20px;">
+                <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -542,30 +581,8 @@
     </div>
 </div>
 
-<!-- INTERPRETATION SECTION (So What / Red Lines / Historical) -->
-<div class="interp-grid">
-    <!-- So What -->
-    <div class="interp-card">
-        <div class="interp-card-title">💡 <span data-i18n="soWhatTitle">SO WHAT — Analyst Take</span></div>
-        <div class="interp-card-subtitle" data-i18n="soWhatSubtitle">Strategic implications across vectors</div>
-        <div id="soWhatScenario" style="font-weight:700; margin-bottom:10px;">--</div>
-        <ul class="so-what-implications" id="soWhatImplications">
-            <li style="color:var(--text-muted);"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></li>
-        </ul>
-    </div>
-
-    <!-- Red Lines -->
-    <div class="interp-card">
-        <div class="interp-card-title">🚨 <span data-i18n="redLinesTitle">RED LINES STATUS</span></div>
-        <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Severity-3 thresholds across all 6 vectors</div>
-        <div id="redLinesGrid">
-            <div style="text-align:center; color:var(--text-muted); padding:20px;">
-                <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- Historical Patterns -->
+<!-- HISTORICAL PATTERN MATCH (moved below actors — analytical depth, not headline) -->
+<div class="interp-grid" style="grid-template-columns: 1fr;">
     <div class="interp-card">
         <div class="interp-card-title">📜 <span data-i18n="historyTitle">HISTORICAL PATTERN MATCH</span></div>
         <div class="interp-card-subtitle" data-i18n="historySubtitle">Similarity vs. major Pakistan crisis precedents</div>
@@ -649,9 +666,9 @@
     // ── TRANSLATIONS (English / Mandarin / Japanese / Korean) ──
     const T = {
         en: {
-            backLink: '← Back to Asia Rhetoric',
+            backLink: '← Back to Pakistan Stability',
             pageFlag: 'PAKISTAN',
-            pageTitle: 'PAKISTAN SOUTH ASIA TRACKER',
+            pageTitle: 'Pakistan Rhetoric Tracker',
             pageSubtitle: 'Army/COAS · ISI · India-Inbound · Afghan/TTP · Iran ↔ Mediation · China/CPEC · GCC · US',
             lastUpdated: 'Last updated:',
             loading: 'Loading...',
@@ -703,9 +720,9 @@
             axisActive: 'ACTIVE', axisInactive: 'BASELINE',
         },
         zh: {
-            backLink: '← 返回亚洲修辞',
+            backLink: '← 返回巴基斯坦稳定页',
             pageFlag: '巴基斯坦',
-            pageTitle: '巴基斯坦南亚追踪器',
+            pageTitle: '巴基斯坦修辞追踪器',
             pageSubtitle: '陆军/参谋长 · ISI · 印度信号 · 阿富汗/TTP · 伊朗 ↔ 调解 · 中国/CPEC · 海湾 · 美国',
             lastUpdated: '最后更新:',
             loading: '加载中...',
@@ -757,9 +774,9 @@
             axisActive: '激活', axisInactive: '基线',
         },
         ja: {
-            backLink: '← アジア修辞へ戻る',
+            backLink: '← パキスタン安定ページへ戻る',
             pageFlag: 'パキスタン',
-            pageTitle: 'パキスタン 南アジア・トラッカー',
+            pageTitle: 'パキスタン修辞トラッカー',
             pageSubtitle: '陸軍/COAS · ISI · インド信号 · アフガン/TTP · イラン ↔ 仲介 · 中国/CPEC · 湾岸 · 米国',
             lastUpdated: '最終更新:',
             loading: '読み込み中...',
@@ -811,9 +828,9 @@
             axisActive: 'アクティブ', axisInactive: 'ベースライン',
         },
         ko: {
-            backLink: '← 아시아 수사로 돌아가기',
+            backLink: '← 파키스탄 안정 페이지로',
             pageFlag: '파키스탄',
-            pageTitle: '파키스탄 남아시아 추적기',
+            pageTitle: '파키스탄 수사 추적기',
             pageSubtitle: '육군/COAS · ISI · 인도 인바운드 · 아프간/TTP · 이란 ↔ 중재 · 중국/CPEC · GCC · 미국',
             lastUpdated: '최종 업데이트:',
             loading: '로딩 중...',
