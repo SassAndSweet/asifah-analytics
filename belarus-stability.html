@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Belarus Stability Index v1.0.0 — April 2026 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belarus Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── ARCTIC / ICE COLOR SCHEME ── */
+        :root {
+            --bg:           #060d1a;
+            --card:         #0d1b2e;
+            --border:       #1e3a5f;
+            --accent:       #38bdf8;
+            --accent-glow:  rgba(56,189,248,0.18);
+            --text:         #e2f0fb;
+            --text-2:       #93c5fd;
+            --text-muted:   #4a7fa5;
+            --red:          #ef4444;
+            --amber:        #f59e0b;
+            --green:        #22c55e;
+            --wm-filter:    saturate(3) brightness(0.8) hue-rotate(185deg);
+        }
+        [data-theme="light"] {
+            --bg:           #f0f5fa;
+            --card:         #ffffff;
+            --border:       #c8daea;
+            --text:         #1a2a3a;
+            --text-2:       #2c4a6e;
+            --text-muted:   #7a9ab8;
+            --wm-filter:    none;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            min-width: 800px; min-height: 800px;
+            max-width: 1400px; max-height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.22;
+            filter: var(--wm-filter);
+            z-index: 0;
+            pointer-events: none;
+        }
+        [data-theme="light"] body::before { opacity: 0.06; }
+
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ── LOADING ── */
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(6,13,26,0.97);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loading-spinner {
+            width: 56px; height: 56px;
+            border: 4px solid rgba(56,189,248,0.2);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 28px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-title { font-size: 20px; font-weight: 700; color: #38bdf8; margin-bottom: 18px; letter-spacing: 2px; }
+        .loading-step { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px; font-size: 13px; color: var(--text-2); }
+        .loading-step.active { color: #38bdf8; font-weight: 700; }
+        .loading-step.complete { color: #22c55e; }
+        .step-icon { font-size: 15px; min-width: 18px; }
+        .loading-error { color: #f87171; font-size: 13px; margin-top: 14px; padding: 10px 14px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; display: none; }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #060d1a, #0d1b2e);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px 30px;
+            margin-bottom: 18px;
+            display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+            box-shadow: 0 0 40px rgba(56,189,248,0.07);
+            position: relative;
+        }
+        [data-theme="light"] header { background: linear-gradient(135deg, #1c3a5c, #2a5080); }
+        .header-logo { width: 68px; height: 68px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.35); flex-shrink: 0; }
+        .header-center { flex: 1; text-align: center; }
+        .header-flag { font-size: 0.68rem; font-weight: 700; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
+        .header-title { font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; margin: 4px 0; }
+        .header-subtitle { font-size: 0.73rem; color: var(--text-muted); letter-spacing: 1px; }
+        .header-ts { font-size: 0.63rem; color: var(--text-muted); margin-top: 4px; }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 13px; border-radius: 8px;
+            border: 1px solid rgba(56,189,248,0.3);
+            color: var(--accent); font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 1px; text-decoration: none; text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .back-link:hover { border-color: var(--accent); background: rgba(56,189,248,0.08); }
+        .lang-group { display: flex; gap: 4px; }
+        .lang-btn {
+            font-family: 'Times New Roman', serif;
+            padding: 4px 10px; border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            font-size: 0.68rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .theme-row { display: flex; align-items: center; gap: 7px; }
+        .theme-label { font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+        .theme-toggle { position: relative; width: 44px; height: 22px; cursor: pointer; }
+        .theme-toggle input { opacity: 0; width: 0; height: 0; }
+        .theme-slider { position: absolute; inset: 0; border-radius: 11px; background: var(--border); transition: 0.3s; display: flex; align-items: center; padding: 2px; }
+        .theme-slider::before { content: '☀️'; width: 18px; height: 18px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: 0.3s; }
+        [data-theme="light"] .theme-slider { background: var(--accent); }
+        [data-theme="light"] .theme-slider::before { content: '🌙'; margin-left: 22px; }
+
+        /* ── BANNERS ── */
+        .banner-red {
+            background: linear-gradient(135deg, #1a0000, #2a0000);
+            border: 1px solid rgba(239,68,68,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .banner-amber {
+            background: linear-gradient(135deg, #1a0e00, #2a1800);
+            border: 1px solid rgba(245,158,11,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .level-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 4px;
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: white;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 6px rgba(30,58,95,0.25);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .card-title {
+            font-size: 0.63rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 14px;
+            padding-bottom: 9px; border-bottom: 1px solid var(--border);
+        }
+
+        /* ── MAP ── */
+        .map-frame {
+            width: 100%; height: 420px;
+            border-radius: 8px; border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+        .knowledge-card {
+            background: rgba(6,13,26,0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+            transition: all 0.3s;
+        }
+        [data-theme="light"] .knowledge-card { background: #f8fbfe; }
+        .knowledge-card:hover { border-color: rgba(56,189,248,0.35); }
+        .knowledge-header {
+            padding: 14px 17px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(30,58,95,0.2);
+            transition: background 0.3s;
+        }
+        [data-theme="light"] .knowledge-header { background: rgba(56,189,248,0.06); }
+        .knowledge-header:hover { background: rgba(30,58,95,0.32); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 700; color: var(--text); }
+        .collapse-icon { font-size: 14px; color: var(--accent); transition: transform 0.3s; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content {
+            padding: 15px 17px;
+            max-height: 520px; overflow-y: auto;
+            transition: max-height 0.3s ease, padding 0.3s;
+        }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 17px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 9px; }
+        .knowledge-content ul { margin-left: 17px; margin-bottom: 9px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 5px; }
+        .knowledge-content strong { color: var(--text); }
+        .kl-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 7px; margin-top: 10px; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 7px 11px;
+            background: rgba(56,189,248,0.1); color: var(--accent);
+            text-decoration: none; border-radius: 6px;
+            font-size: 11px; font-weight: 700;
+            border: 1px solid rgba(56,189,248,0.22);
+            transition: all 0.2s;
+        }
+        .report-link:hover { background: rgba(56,189,248,0.18); }
+
+        /* ── ARTICLES ── */
+        .article-item {
+            background: rgba(6,13,26,0.6);
+            padding: 13px; border-radius: 8px; margin-bottom: 9px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.2s;
+        }
+        [data-theme="light"] .article-item { background: #f8fbfe; }
+        .article-item:hover { transform: translateX(4px); }
+        .article-title { color: var(--text); font-size: 13px; margin-bottom: 3px; font-weight: 500; line-height: 1.4; }
+        .article-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 12px; }
+        .article-link:hover { text-decoration: underline; }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            text-align: center; padding: 22px 0 30px;
+            font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: center; text-align: center; }
+            .header-right { align-items: center; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div style="text-align:center;">
+        <div class="loading-title">Loading Belarus Stability Data</div>
+        <div>
+            <div class="loading-step active" id="step1"><span class="step-icon">⏳</span> Fetching OSINT articles on Belarus...</div>
+            <div class="loading-step" id="step2"><span class="step-icon">⏳</span> Scanning Russia-axis &amp; NATO border signals...</div>
+            <div class="loading-step" id="step3"><span class="step-icon">⏳</span> Analyzing succession &amp; Iran-cooperation dynamics...</div>
+            <div class="loading-step" id="step4"><span class="step-icon">⏳</span> Rendering dashboard...</div>
+        </div>
+        <div style="margin-top:18px;font-size:11px;color:var(--text-muted);font-style:italic;">This may take 20–40 seconds...</div>
+        <div class="loading-error" id="loadingError"></div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- HEADER -->
+<header>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+        <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe</a>
+    </div>
+    <div class="header-center">
+        <div class="header-flag">🇧🇾 <span data-i18n="pageFlag">BELARUS</span></div>
+        <div class="header-title" data-i18n="pageTitle">BELARUS STABILITY INDEX</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Russian Client State · Nuclear Sharing · NATO Border · Iran Cooperation · Lukashenko Succession</div>
+        <div class="header-ts">Last updated: <span id="lastUpdated">Loading...</span></div>
+    </div>
+    <div class="header-right">
+        <div class="lang-group">
+            <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+            <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
+            <button class="lang-btn" onclick="setLang('ru',this)">RU</button>
+            <button class="lang-btn" onclick="setLang('de',this)">DE</button>
+        </div>
+        <div class="theme-row">
+            <span class="theme-label">THEME</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
+                <span class="theme-slider"></span>
+            </label>
+        </div>
+    </div>
+</header>
+
+<!-- WORLDWIDE CAUTION -->
+<div class="banner-red">
+    <div style="font-size:1.6rem;">🏛️</div>
+    <div style="flex:1;">
+        <div style="font-size:0.58rem;font-weight:700;letter-spacing:2px;color:#fca5a5;text-transform:uppercase;" data-i18n="cautionLabel">U.S. STATE DEPARTMENT — WORLDWIDE CAUTION</div>
+        <div style="font-size:0.72rem;color:#fecaca;margin-top:3px;" data-i18n="cautionText">U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in the Smart Traveler Enrollment Program (STEP).</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/ea/worldwide-caution.html" target="_blank" style="padding:7px 14px;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.45);border-radius:6px;color:#fca5a5;text-decoration:none;font-size:0.63rem;font-weight:700;white-space:nowrap;" data-i18n="viewCaution">VIEW CAUTION →</a>
+</div>
+
+<!-- BELARUS TRAVEL ADVISORY -->
+<div class="banner-red">
+    <div style="font-size:1.3rem;font-weight:900;color:#fca5a5;">BY</div>
+    <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:3px;flex-wrap:wrap;">
+            <span style="font-size:0.58rem;font-weight:700;letter-spacing:2px;color:#fca5a5;text-transform:uppercase;" data-i18n="advisoryLabel">U.S. STATE DEPARTMENT — BELARUS TRAVEL ADVISORY</span>
+            <span class="level-badge" style="background:#dc2626;" data-i18n="advisoryLevel">LEVEL 4</span>
+        </div>
+        <div style="font-size:0.72rem;color:#fecaca;" data-i18n="advisoryText"><strong>Do Not Travel</strong> to Belarus due to the Belarusian authorities' continued facilitation of Russia's invasion of Ukraine, the buildup of Russian forces in Belarus, the arbitrary enforcement of local laws, the potential of civil unrest, the risk of detention, and the limited ability of the U.S. Embassy to assist U.S. citizens in Belarus.</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/belarus-travel-advisory.html" target="_blank" style="padding:7px 14px;background:rgba(239,68,68,0.18);border:1px solid rgba(239,68,68,0.45);border-radius:6px;color:#fca5a5;text-decoration:none;font-size:0.63rem;font-weight:700;white-space:nowrap;" data-i18n="viewAdvisory">VIEW ADVISORY →</a>
+</div>
+
+<!-- BELARUS STRATEGIC CONTEXT BANNER -->
+<div style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div>
+        <div style="font-size:0.63rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;" data-i18n="contextLabel">📡 APRIL 27, 2026 — STRATEGIC SIGNAL</div>
+        <div style="font-size:0.82rem;color:var(--text);font-weight:700;" data-i18n="contextHeadline">IR-RU-BY Trilateral · SCO Defense Ministers · Kyrgyzstan</div>
+        <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px;" data-i18n="contextSub">Belarus DM Khrenin met Iran Deputy DM Talaei-Nik · "Mutual interest of Minsk and Tehran for further deepening of joint interaction" · Russian nuclear weapons stationed in Belarus since 2023</div>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:1px;" data-i18n="contextTagLabel">Belarus MOD:</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-style:italic;" data-i18n="contextQuote">"Political-diplomatic settlement"</div>
+    </div>
+</div>
+
+<!-- MAP -->
+<div class="card">
+    <div class="card-title">🗺️ <span data-i18n="mapTitle">BELARUS — STRATEGIC OVERVIEW</span></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:11px;font-style:italic;" data-i18n="mapSubtitle">Belarus's strategic position on Europe's eastern frontier — bordered by Russia (east), Ukraine (south), Poland and Lithuania (NATO members, west/north), and Latvia (NATO, north). Hosts Russian tactical nuclear weapons since 2023.</div>
+    <iframe class="map-frame"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=23.0%2C51.0%2C33.0%2C57.0&layer=mapnik&marker=53.90%2C27.57"
+        frameborder="0" scrolling="no">
+    </iframe>
+</div>
+
+<!-- KNOWLEDGE LIBRARY -->
+<div class="card">
+    <div class="card-title">📚 <span data-i18n="knowledgeTitle">KNOWLEDGE LIBRARY</span></div>
+    <p style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;" data-i18n="knowledgeDisclaimer">Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
+
+    <div class="knowledge-categories">
+
+        <!-- Lukashenko Regime & 2020 Crisis -->
+        <div class="knowledge-card collapsed" id="card-lukashenko">
+            <div class="knowledge-header" onclick="toggleCard('lukashenko')">
+                <div class="knowledge-header-title"><span>👤</span> <span data-i18n="catLukashenko">Lukashenko Regime & 2020 Crisis</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Aleksandr Lukashenko has ruled Belarus since 1994</strong> — the longest-tenured leader in the post-Soviet space and one of Europe's most entrenched autocrats. His government's response to the disputed 2020 presidential election triggered Belarus's most severe political crisis since independence.</p>
+                <ul>
+                    <li><strong>2020 Election:</strong> Official results declared Lukashenko the winner with 80%+ of the vote. Independent observers, the EU, and the United States rejected the result as falsified. Sviatlana Tsikhanouskaya — running in place of her imprisoned husband Siarhei — was widely viewed as the actual winner.</li>
+                    <li><strong>Mass Protests:</strong> Hundreds of thousands of Belarusians took to the streets in the largest demonstrations in the country's history. The regime responded with mass arrests, beatings, and torture. The crackdown produced thousands of political prisoners and forced opposition figures into exile.</li>
+                    <li><strong>Health & Succession Question:</strong> Lukashenko, born 1954, has experienced periodic public health concerns. Analysts watch closely for succession signals — there is no clear heir apparent, and the security services (KGB, internal troops) would likely play a decisive role in any transition.</li>
+                    <li><strong>2022 Constitutional Referendum:</strong> Lukashenko amended the constitution to extend term limits and renounced Belarus's non-nuclear status — clearing the legal path for Russian nuclear weapons deployment to Belarusian territory in 2023.</li>
+                    <li><strong>Sanctions Regime:</strong> The EU, UK, US, and Canada have imposed extensive sanctions on Belarusian officials, state-owned enterprises, and economic sectors (potash, petrochemicals, banking). Belarus is one of the most-sanctioned states in Europe.</li>
+                    <li><strong>RYANAIR Hijacking (2021):</strong> Belarus forced down a passenger airliner over its airspace to arrest journalist Roman Protasevich, prompting EU airspace closures and an unprecedented escalation in diplomatic isolation.</li>
+                </ul>
+                <div class="kl-note">* Sources: HRW, Amnesty International, OSCE/ODIHR, Viasna Human Rights Centre, Freedom House</div>
+                <div class="report-links-grid">
+                    <a href="https://freedomhouse.org/country/belarus" target="_blank" class="report-link">📑 Freedom House</a>
+                    <a href="https://www.osce.org/odihr/elections/belarus" target="_blank" class="report-link">📑 OSCE/ODIHR</a>
+                    <a href="https://prisoners.spring96.org/en" target="_blank" class="report-link">📑 Viasna (Political Prisoners)</a>
+                    <a href="https://www.hrw.org/europe/central-asia/belarus" target="_blank" class="report-link">📑 Human Rights Watch</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Russia Client State & Union State -->
+        <div class="knowledge-card collapsed" id="card-russia">
+            <div class="knowledge-header" onclick="toggleCard('russia')">
+                <div class="knowledge-header-title"><span>🇷🇺</span> <span data-i18n="catRussiaClient">Russia Client State & Union State</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Belarus is the most strategically dependent state in Russia's near-abroad</strong> — economically, militarily, and politically subordinate to Moscow. The "Union State" framework, formalized in 1999, has steadily deepened, accelerating sharply after the 2020 protest crackdown forced Lukashenko into deeper Kremlin reliance.</p>
+                <ul>
+                    <li><strong>Union State (1999):</strong> Bilateral framework providing for shared currency, customs union, defense coordination, and progressive political integration. Most provisions remained aspirational until 2020-2022, when implementation accelerated dramatically.</li>
+                    <li><strong>Ukraine War Facilitation:</strong> Belarus permitted Russian forces to launch the February 2022 invasion of Ukraine from Belarusian territory, including the failed northern thrust toward Kyiv. Russian forces continue to operate from Belarus, conducting training, logistics, and missile launches.</li>
+                    <li><strong>CSTO Membership:</strong> Belarus is a founding member of the Collective Security Treaty Organization, Russia's NATO analog. CSTO troops were deployed to Kazakhstan during the January 2022 unrest, demonstrating bloc utility.</li>
+                    <li><strong>Economic Dependence:</strong> Russia is Belarus's largest trade partner, primary energy supplier (oil and gas at subsidized rates), and lender of last resort. Belarusian potash and refined petroleum exports were redirected through Russian ports after EU sanctions.</li>
+                    <li><strong>Military Integration:</strong> Joint Belarusian-Russian regional grouping of forces formalized 2022. Russian instructors, equipment, and command structures are embedded in Belarusian military exercises (Zapad series).</li>
+                    <li><strong>Wagner Episode (2023):</strong> After Wagner's June 2023 mutiny, some elements of the group relocated to Belarus under a Lukashenko-brokered arrangement. Wagner's residual presence has been a recurring point of NATO concern, particularly regarding Suwałki Gap scenarios.</li>
+                </ul>
+                <div class="kl-note">* Sources: ISW, RUSI, Carnegie, CEPA, Russian and Belarusian official statements</div>
+                <div class="report-links-grid">
+                    <a href="https://www.understandingwar.org/" target="_blank" class="report-link">📑 ISW</a>
+                    <a href="https://cepa.org/" target="_blank" class="report-link">📑 CEPA</a>
+                    <a href="https://carnegieendowment.org/" target="_blank" class="report-link">📑 Carnegie</a>
+                    <a href="https://rusi.org/" target="_blank" class="report-link">📑 RUSI</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nuclear Sharing & Strategic Forces -->
+        <div class="knowledge-card collapsed" id="card-nuclear">
+            <div class="knowledge-header" onclick="toggleCard('nuclear')">
+                <div class="knowledge-header-title"><span>☢️</span> <span data-i18n="catNuclear">Nuclear Sharing & Strategic Forces</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>In 2023, Russia became the first nuclear power since the Cold War to formally station nuclear weapons on the territory of another sovereign state.</strong> Belarus's hosting of Russian tactical nuclear systems represents a strategic shift in European security architecture and a direct challenge to NATO's eastern flank.</p>
+                <ul>
+                    <li><strong>2022 Constitutional Change:</strong> A national referendum formally renounced Belarus's non-nuclear status — language inherited from its 1994 Budapest Memorandum commitments. This cleared the legal path for Russian deployment.</li>
+                    <li><strong>Iskander-M Systems:</strong> Russia transferred Iskander-M short-range ballistic missile systems to Belarus, capable of delivering both conventional and nuclear warheads with ~500 km range. Modernized Belarusian Su-25 aircraft were certified for nuclear strike roles.</li>
+                    <li><strong>Tactical Nuclear Stockpile:</strong> Russia has confirmed deployment of tactical nuclear warheads to Belarus, though exact numbers remain classified. Estimates from open-source analysts range from dozens to over 100 weapons. Storage facilities have been observed at sites including Asipovichy.</li>
+                    <li><strong>Command Authority:</strong> Russia has stated that warhead control remains exclusively Russian — analogous to NATO nuclear-sharing arrangements with Belgium, Germany, Italy, the Netherlands, and Turkey. However, Belarusian delivery systems and aircrews are dual-key participants.</li>
+                    <li><strong>NATO Implications:</strong> Nuclear weapons in Belarus are within range of Warsaw, Vilnius, Riga, and Berlin. The deployment compresses NATO decision-making timelines and complicates conventional escalation calculations along the entire eastern flank.</li>
+                    <li><strong>Arms Control Impact:</strong> The deployment further damages the New START framework (suspended by Russia 2023) and removes Belarus from any future European nuclear-free-zone discussions. Belarus is now a permanent fixture in nuclear strategic planning.</li>
+                </ul>
+                <div class="kl-note">* Sources: FAS, SIPRI, Bulletin of the Atomic Scientists, Nuclear Threat Initiative</div>
+                <div class="report-links-grid">
+                    <a href="https://fas.org/issues/nuclear-weapons/" target="_blank" class="report-link">📑 FAS Nuclear</a>
+                    <a href="https://www.sipri.org/" target="_blank" class="report-link">📑 SIPRI</a>
+                    <a href="https://thebulletin.org/" target="_blank" class="report-link">📑 Atomic Scientists</a>
+                    <a href="https://www.nti.org/" target="_blank" class="report-link">📑 NTI</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- NATO Border & Suwałki Gap -->
+        <div class="knowledge-card collapsed" id="card-nato">
+            <div class="knowledge-header" onclick="toggleCard('nato')">
+                <div class="knowledge-header-title"><span>🛡️</span> <span data-i18n="catNATO">NATO Border & Suwałki Gap</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Belarus shares a 1,250 km land border with three NATO members</strong> — Poland, Lithuania, and Latvia — and sits on the most strategically sensitive geography on the alliance's eastern flank. The Suwałki Gap, the narrow 65-mile corridor between Belarus and Russia's Kaliningrad exclave, is widely considered NATO's most vulnerable point.</p>
+                <ul>
+                    <li><strong>Suwałki Gap:</strong> The land bridge connecting Poland to Lithuania (and onward to Latvia and Estonia) runs only ~65 miles between Belarus and Kaliningrad. A coordinated Russian-Belarusian seizure of this corridor would sever NATO's overland connection to the Baltic states.</li>
+                    <li><strong>2021 Migrant Weaponization:</strong> Belarus deliberately funneled tens of thousands of migrants — primarily from the Middle East — to its borders with Poland, Lithuania, and Latvia in what EU officials labeled a hybrid attack. Border barriers, emergency declarations, and ongoing pushbacks remain in effect.</li>
+                    <li><strong>NATO Response Posture:</strong> Following the 2022 invasion of Ukraine, NATO accelerated forward deployments along the eastern flank. Multinational battlegroups in Poland, Lithuania, and Latvia were upgraded to brigade strength. Polish defense spending has reached over 4% of GDP.</li>
+                    <li><strong>Polish-Lithuanian Border Closures:</strong> Both NATO neighbors have closed multiple border crossings with Belarus citing security concerns, including suspected Wagner reconnaissance and migrant pressure. Cross-border traffic is heavily restricted.</li>
+                    <li><strong>Ukraine Border:</strong> Belarus's southern border with Ukraine remains a recurring concern for Kyiv. While Belarusian forces have not directly entered combat, Russian troops continue to use Belarusian territory for staging, missile launches, and rest-and-refit cycles.</li>
+                    <li><strong>Air Defense Integration:</strong> Belarusian air defense is integrated with Russia's western military district. Joint exercises (Zapad-2021, Zapad-2025) have rehearsed combined operations. Russian S-400 systems have been observed deployed to Belarus.</li>
+                </ul>
+                <div class="kl-note">* Sources: NATO, ISW, Polish/Lithuanian/Latvian MoD reports, Atlantic Council</div>
+                <div class="report-links-grid">
+                    <a href="https://www.nato.int/cps/en/natohq/topics_136388.htm" target="_blank" class="report-link">📑 NATO Eastern Flank</a>
+                    <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                    <a href="https://www.understandingwar.org/" target="_blank" class="report-link">📑 ISW</a>
+                    <a href="https://icds.ee/" target="_blank" class="report-link">📑 ICDS Estonia</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Iran Cooperation & SCO Trilateral -->
+        <div class="knowledge-card collapsed" id="card-iran">
+            <div class="knowledge-header" onclick="toggleCard('iran')">
+                <div class="knowledge-header-title"><span>🤝</span> <span data-i18n="catIran">Iran Cooperation & SCO Trilateral</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Belarus's defense cooperation with Iran moved from quiet bilateral exchanges to formalized signaling in April 2026</strong>, when Belarusian Defense Minister Viktor Khrenin met Iran's Deputy Defense Minister Reza Talaei-Nik at the Shanghai Cooperation Organization defense ministers' meeting in Kyrgyzstan.</p>
+                <ul>
+                    <li><strong>April 27, 2026 Trilateral:</strong> Iran Deputy DM Talaei-Nik met first with Russian DM Andrei Belousov, then traveled to Belarus for talks with DM Khrenin. The Belarusian Ministry of Defense statement confirmed "mutual interest of Minsk and Tehran for further deepening of joint interaction."</li>
+                    <li><strong>SCO Framework:</strong> Belarus joined the Shanghai Cooperation Organization as a full member in 2024 — the first European state to do so. The SCO provides a multilateral framework for Belarus-Iran-Russia coordination outside Western institutions.</li>
+                    <li><strong>"America's Defeat" Narrative:</strong> At the SCO defense meeting, Talaei-Nik publicly offered to share Iran's "experiences of America's defeat" with SCO partners — referencing the February-April 2026 US-Israel-Iran war. This positioned Iran as a defense knowledge exporter within the bloc.</li>
+                    <li><strong>Geographic Implication:</strong> Iranian defense cooperation reaching Belarus represents the first formal Iran defense relationship with a state on NATO's perimeter. Capabilities tracked previously as Middle East-only could now appear on the Polish, Lithuanian, or Latvian frontier.</li>
+                    <li><strong>Drone Technology Pathway:</strong> Russia has used Iranian Shahed-series drones extensively against Ukraine. The Belarus inclusion creates a potential second deployment node, simplifying logistics for any expanded use of Iranian systems against NATO targets.</li>
+                    <li><strong>Diplomatic Cover:</strong> Both Russia and Belarus characterized the talks as supporting "a return to political-diplomatic settlement" — a framing that pairs hard cooperation signals with peace-process language, consistent with the "war and talk" pattern observed elsewhere in the axis.</li>
+                </ul>
+                <div class="kl-note">* Sources: Reuters (Apr 27 2026), TASS, BelTA, Iranian state media, Al-Monitor</div>
+                <div class="report-links-grid">
+                    <a href="https://www.reuters.com/world/europe/" target="_blank" class="report-link">📑 Reuters Europe</a>
+                    <a href="https://www.al-monitor.com/" target="_blank" class="report-link">📑 Al-Monitor</a>
+                    <a href="https://www.iranintl.com/en" target="_blank" class="report-link">📑 Iran International</a>
+                    <a href="https://www.rferl.org/" target="_blank" class="report-link">📑 RFE/RL</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Opposition in Exile & Political Prisoners -->
+        <div class="knowledge-card collapsed" id="card-opposition">
+            <div class="knowledge-header" onclick="toggleCard('opposition')">
+                <div class="knowledge-header-title"><span>✊</span> <span data-i18n="catOpposition">Opposition in Exile & Political Prisoners</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Belarus's democratic opposition operates almost entirely in exile</strong>, primarily from Vilnius, Warsaw, and Berlin. The 2020 crackdown produced one of Europe's largest political-prisoner populations and forced an entire civil-society infrastructure to relocate abroad.</p>
+                <ul>
+                    <li><strong>Sviatlana Tsikhanouskaya:</strong> The widely recognized winner of the 2020 election, Tsikhanouskaya leads the United Transitional Cabinet from Vilnius. She is the principal interlocutor for Western governments engaging the Belarusian democratic movement and meets regularly with EU leaders, the State Department, and parliamentarians.</li>
+                    <li><strong>United Transitional Cabinet:</strong> A government-in-waiting structure formed 2022, organized into ministerial portfolios including foreign affairs, security, and economic recovery. It coordinates with the Coordination Council, the broader civil-society umbrella body.</li>
+                    <li><strong>Political Prisoners:</strong> Viasna Human Rights Centre tracks over 1,400 recognized political prisoners as of 2026 — including Viasna founder and Nobel Peace Prize laureate Ales Bialiatski (sentenced 2023). Conditions are reported as severe; multiple prisoners have died in custody.</li>
+                    <li><strong>Kalinouski Regiment:</strong> Belarusian volunteer formation fighting alongside Ukrainian forces against Russia. The regiment serves dual purposes — combat contribution to Ukraine, and trained cadre for any future democratic transition in Belarus.</li>
+                    <li><strong>NEXTA & Independent Media:</strong> Once Belarus's largest Telegram opposition channel, NEXTA continues to operate from Poland. Its 2021 Ryanair-related arrest of co-founder Roman Protasevich became a major flashpoint. The independent media ecosystem now operates almost entirely from Vilnius, Warsaw, and Prague.</li>
+                    <li><strong>Cross-border Repression:</strong> The Belarusian regime has targeted exiled opposition through INTERPOL abuse attempts, family hostage-taking inside Belarus, and online harassment campaigns. Multiple opposition figures have reported assassination plots.</li>
+                </ul>
+                <div class="kl-note">* Sources: Viasna, Tsikhanouskaya office, OSCE Moscow Mechanism reports, RFE/RL Belarus Service</div>
+                <div class="report-links-grid">
+                    <a href="https://prisoners.spring96.org/en" target="_blank" class="report-link">📑 Viasna Prisoners DB</a>
+                    <a href="https://tsikhanouskaya.org/en/" target="_blank" class="report-link">📑 Tsikhanouskaya Office</a>
+                    <a href="https://www.rferl.org/z/2305" target="_blank" class="report-link">📑 RFE/RL Belarus</a>
+                    <a href="https://www.osce.org/odihr/425899" target="_blank" class="report-link">📑 OSCE Moscow Mechanism</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ARTICLES -->
+<div class="card">
+    <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT BELARUS STABILITY & STRATEGIC ARTICLES</span></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">NewsAPI + GDELT · Last 7 days · English + Russian (rus)</div>
+    <div id="articlesContainer">
+        <div style="text-align:center;color:var(--text-muted);padding:26px;font-style:italic;">Loading articles...</div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+    © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0-hungary-stability |
+    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#38bdf8;text-decoration:none;">☕ buy me a coffee</a>
+</div>
+
+</div><!-- /container -->
+
+<script>
+const API_BASE = 'https://asifa-europe-backend.onrender.com';
+
+// ── THEME ──
+function initTheme() {
+    const s = localStorage.getItem('asifah-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', s);
+    document.getElementById('themeToggle').checked = (s === 'light');
+}
+function toggleTheme() {
+    const n = document.getElementById('themeToggle').checked ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('asifah-theme', n);
+}
+initTheme();
+
+// ── KNOWLEDGE CARDS ──
+function toggleCard(id) {
+    const c = document.getElementById('card-' + id);
+    if (c) c.classList.toggle('collapsed');
+}
+
+// ── LOADING ──
+let _step = 0, _loadInt = null;
+function startLoading() {
+    const steps = ['step1','step2','step3','step4'];
+    _loadInt = setInterval(() => {
+        if (_step < steps.length - 1) {
+            const c = document.getElementById(steps[_step]);
+            if (c) { c.classList.remove('active'); c.classList.add('complete'); c.querySelector('.step-icon').textContent = '✓'; }
+            _step++;
+            const n = document.getElementById(steps[_step]);
+            if (n) n.classList.add('active');
+        }
+    }, 4000);
+}
+function hideLoading() {
+    if (_loadInt) clearInterval(_loadInt);
+    document.querySelectorAll('.loading-step').forEach(s => {
+        s.classList.remove('active'); s.classList.add('complete');
+        s.querySelector('.step-icon').textContent = '✓';
+    });
+    setTimeout(() => {
+        const o = document.getElementById('loadingOverlay');
+        if (o) o.classList.add('hidden');
+    }, 500);
+}
+
+// ── ARTICLES ──
+async function loadArticles() {
+    try {
+        const r = await fetch(`${API_BASE}/api/europe/articles/belarus`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        const articles = d.articles || d.recent_headlines || [];
+        if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
+    } catch(e) {
+        console.warn('[Belarus] Articles failed:', e.message);
+        displayFallback();
+    } finally {
+        hideLoading();
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+    }
+}
+function displayArticles(articles) {
+    const c = document.getElementById('articlesContainer');
+    c.innerHTML = articles.slice(0, 20).map(a => {
+        const title = a.title || 'Untitled';
+        const source = typeof a.source === 'object' ? (a.source?.name || '') : (a.source || '');
+        const pub = a.published || a.publishedAt || '';
+        const url = a.url || '#';
+        const desc = a.description || '';
+        let ds = '';
+        if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
+        return `<div class="article-item">
+            <div class="article-title">${title}</div>
+            ${desc ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:5px;line-height:1.5;">${desc.substring(0,180)}${desc.length>180?'...':''}</div>` : ''}
+            <div class="article-meta">${source}${ds?' · '+ds:''}</div>
+            ${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}
+        </div>`;
+    }).join('');
+}
+function displayFallback() {
+    document.getElementById('articlesContainer').innerHTML =
+        '<div style="text-align:center;padding:22px;color:var(--text-muted);">' +
+        '<p style="font-size:14px;margin-bottom:10px;">📡 Live feed loading. Check these curated sources:</p>' +
+        '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:10px;">' +
+        ['NEXTA|https://nexta.tv/en/','Meduza|https://meduza.io/en','RFE/RL Belarus|https://www.rferl.org/z/2305','Viasna|https://spring96.org/en','Tsikhanouskaya|https://tsikhanouskaya.org/en/']
+            .map(s => { const [l,u] = s.split('|'); return `<a href="${u}" target="_blank" style="padding:7px 14px;background:rgba(56,189,248,0.14);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,0.28);">${l}</a>`; })
+            .join('') +
+        '</div></div>';
+}
+
+// ── TRANSLATIONS ──
+const T = {
+    en: {
+        pageFlag:'BELARUS', pageTitle:'BELARUS STABILITY INDEX',
+        pageSubtitle:'Russian Client State · Nuclear Sharing · NATO Border · Iran Cooperation · Lukashenko Succession',
+        backLink:'← Back to Europe',
+        cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
+        cautionText:'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in STEP.',
+        viewCaution:'VIEW CAUTION →',
+        advisoryLabel:'U.S. STATE DEPARTMENT — BELARUS TRAVEL ADVISORY',
+        advisoryLevel:'LEVEL 4', viewAdvisory:'VIEW ADVISORY →',
+        advisoryText:'Do Not Travel to Belarus due to the Belarusian authorities\' continued facilitation of Russia\'s invasion of Ukraine, the buildup of Russian forces in Belarus, the arbitrary enforcement of local laws, the potential of civil unrest, the risk of detention, and the limited ability of the U.S. Embassy to assist U.S. citizens in Belarus.',
+        contextLabel:'📡 APRIL 27, 2026 — STRATEGIC SIGNAL',
+        contextHeadline:'IR-RU-BY Trilateral · SCO Defense Ministers · Kyrgyzstan',
+        contextSub:'Belarus DM Khrenin met Iran Deputy DM Talaei-Nik · "Mutual interest of Minsk and Tehran for further deepening of joint interaction" · Russian nuclear weapons stationed in Belarus since 2023',
+        contextTagLabel:'Belarus MOD:',
+        contextQuote:'"Political-diplomatic settlement"',
+        mapTitle:'BELARUS — STRATEGIC OVERVIEW',
+        mapSubtitle:"Belarus's strategic position on Europe's eastern frontier — bordered by Russia (east), Ukraine (south), Poland and Lithuania (NATO members, west/north), and Latvia (NATO, north). Hosts Russian tactical nuclear weapons since 2023.",
+        knowledgeTitle:'KNOWLEDGE LIBRARY',
+        knowledgeDisclaimer:'Background information compiled from open-source research, think tank analyses, and public government reporting.',
+        catLukashenko:'Lukashenko Regime & 2020 Crisis',
+        catRussiaClient:'Russia Client State & Union State',
+        catNuclear:'Nuclear Sharing & Strategic Forces',
+        catNATO:'NATO Border & Suwałki Gap',
+        catIran:'Iran Cooperation & SCO Trilateral',
+        catOpposition:'Opposition in Exile & Political Prisoners',
+        articlesTitle:'RECENT BELARUS STABILITY & STRATEGIC ARTICLES',
+        articlesDesc:'NewsAPI + GDELT · Last 7 days · English + Russian (rus)',
+    },
+    fr: {
+        pageFlag:'BIÉLORUSSIE', pageTitle:'INDICE DE STABILITÉ — BIÉLORUSSIE',
+        pageSubtitle:'État client de la Russie · Partage nucléaire · Frontière OTAN · Coopération iranienne · Succession Loukachenko',
+        backLink:'← Retour à l\'Europe',
+        cautionLabel:'DÉPARTEMENT D\'ÉTAT — MISE EN GARDE MONDIALE',
+        cautionText:'Les citoyens américains dans le monde entier doivent rester vigilants face aux menaces terroristes et à la violence.',
+        viewCaution:'VOIR LA MISE EN GARDE →',
+        advisoryLabel:'DÉPARTEMENT D\'ÉTAT — AVIS BIÉLORUSSIE',
+        advisoryLevel:'NIVEAU 4', viewAdvisory:'VOIR L\'AVIS →',
+        advisoryText:'Ne pas voyager en Biélorussie en raison de la facilitation continue par les autorités biélorusses de l\'invasion russe de l\'Ukraine, du renforcement des forces russes en Biélorussie, de l\'application arbitraire des lois locales, du risque de troubles civils, du risque de détention, et de la capacité limitée de l\'Ambassade américaine à aider les citoyens américains.',
+        contextLabel:'📡 27 AVRIL 2026 — SIGNAL STRATÉGIQUE',
+        contextHeadline:'Trilatérale IR-RU-BY · Ministres OCS de la Défense · Kirghizistan',
+        contextSub:'Le ministre biélorusse Khrenin a rencontré le vice-ministre iranien Talaei-Nik · "Intérêt mutuel de Minsk et Téhéran pour approfondir l\'interaction conjointe" · Armes nucléaires russes stationnées en Biélorussie depuis 2023',
+        contextTagLabel:'Min. Défense biélorusse :',
+        contextQuote:'« Règlement politico-diplomatique »',
+        mapTitle:'BIÉLORUSSIE — VUE STRATÉGIQUE',
+        mapSubtitle:'Position stratégique de la Biélorussie sur la frontière orientale de l\'Europe — bordée par la Russie (est), l\'Ukraine (sud), la Pologne et la Lituanie (OTAN, ouest/nord), et la Lettonie (OTAN, nord). Accueille des armes nucléaires tactiques russes depuis 2023.',
+        knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES',
+        knowledgeDisclaimer:'Informations compilées à partir de recherches en sources ouvertes, d\'analyses de groupes de réflexion et de rapports gouvernementaux publics.',
+        catLukashenko:'Régime Loukachenko & Crise 2020',
+        catRussiaClient:'État client russe & État de l\'Union',
+        catNuclear:'Partage nucléaire & Forces stratégiques',
+        catNATO:'Frontière OTAN & Couloir de Suwałki',
+        catIran:'Coopération iranienne & Trilatérale OCS',
+        catOpposition:'Opposition en exil & Prisonniers politiques',
+        articlesTitle:'ARTICLES RÉCENTS — BIÉLORUSSIE',
+        articlesDesc:'NewsAPI + GDELT · 7 derniers jours · Anglais + Russe',
+    },
+    ru: {
+        pageFlag:'БЕЛАРУСЬ', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ БЕЛАРУСИ',
+        pageSubtitle:'Российское клиентское государство · Ядерное распределение · Граница НАТО · Сотрудничество с Ираном · Преемственность Лукашенко',
+        backLink:'← Назад к Европе',
+        cautionLabel:'ГОСДЕПАРТАМЕНТ США — ВСЕМИРНОЕ ПРЕДУПРЕЖДЕНИЕ',
+        cautionText:'Гражданам США во всём мире следует сохранять бдительность. Террористические группы и насильственные субъекты продолжают планировать атаки глобально.',
+        viewCaution:'СМОТРЕТЬ ПРЕДУПРЕЖДЕНИЕ →',
+        advisoryLabel:'ГОСДЕПАРТАМЕНТ США — ПРЕДУПРЕЖДЕНИЕ ПО БЕЛАРУСИ',
+        advisoryLevel:'УРОВЕНЬ 4', viewAdvisory:'СМОТРЕТЬ ПРЕДУПРЕЖДЕНИЕ →',
+        advisoryText:'Не ездите в Беларусь из-за продолжающегося содействия белорусских властей вторжению России в Украину, наращивания российских сил в Беларуси, произвольного применения местных законов, риска гражданских беспорядков, риска задержания и ограниченных возможностей посольства США оказывать помощь гражданам США в Беларуси.',
+        contextLabel:'📡 27 АПРЕЛЯ 2026 — СТРАТЕГИЧЕСКИЙ СИГНАЛ',
+        contextHeadline:'Трёхсторонняя встреча Иран-Россия-Беларусь · Министры обороны ШОС · Кыргызстан',
+        contextSub:'Министр обороны Беларуси Хренин встретился с заместителем министра обороны Ирана Талаи-Ник · «Взаимный интерес Минска и Тегерана к углублению совместного взаимодействия» · Российское ядерное оружие размещено в Беларуси с 2023 года',
+        contextTagLabel:'Минобороны Беларуси:',
+        contextQuote:'«Политико-дипломатическое урегулирование»',
+        mapTitle:'БЕЛАРУСЬ — СТРАТЕГИЧЕСКИЙ ОБЗОР',
+        mapSubtitle:'Стратегическое положение Беларуси на восточной границе Европы — граничит с Россией (восток), Украиной (юг), Польшей и Литвой (члены НАТО, запад/север) и Латвией (НАТО, север). С 2023 года размещает российское тактическое ядерное оружие.',
+        knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ',
+        knowledgeDisclaimer:'Справочная информация составлена из открытых источников, аналитических работ исследовательских центров и публичных правительственных отчётов.',
+        catLukashenko:'Режим Лукашенко и кризис 2020 года',
+        catRussiaClient:'Клиентское государство России и Союзное государство',
+        catNuclear:'Ядерное распределение и стратегические силы',
+        catNATO:'Граница НАТО и Сувалкский коридор',
+        catIran:'Сотрудничество с Ираном и трёхсторонняя встреча ШОС',
+        catOpposition:'Оппозиция в изгнании и политические заключённые',
+        articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ О БЕЛАРУСИ',
+        articlesDesc:'NewsAPI + GDELT · Последние 7 дней · Английский + Русский',
+    },
+    de: {
+        pageFlag:'BELARUS', pageTitle:'BELARUS-STABILITÄTSINDEX',
+        pageSubtitle:'Russischer Klientelstaat · Nukleare Teilhabe · NATO-Grenze · Iran-Kooperation · Lukaschenko-Nachfolge',
+        backLink:'← Zurück zu Europa',
+        cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG',
+        cautionText:'US-Bürger weltweit sollten wachsam bleiben. Terrorgruppen und gewalttätige Akteure planen weiterhin Angriffe weltweit.',
+        viewCaution:'WARNUNG ANZEIGEN →',
+        advisoryLabel:'AUSSENMINISTERIUM — BELARUS-REISEWARNUNG',
+        advisoryLevel:'STUFE 4', viewAdvisory:'WARNUNG ANZEIGEN →',
+        advisoryText:'Reisen Sie nicht nach Belarus aufgrund der anhaltenden Unterstützung der russischen Invasion in der Ukraine durch die belarussischen Behörden, des Aufbaus russischer Streitkräfte in Belarus, der willkürlichen Durchsetzung örtlicher Gesetze, des Risikos ziviler Unruhen, des Inhaftierungsrisikos und der begrenzten Möglichkeit der US-Botschaft, US-Bürgern in Belarus zu helfen.',
+        contextLabel:'📡 27. APRIL 2026 — STRATEGISCHES SIGNAL',
+        contextHeadline:'IR-RU-BY-Trilaterale · SOZ-Verteidigungsminister · Kirgisistan',
+        contextSub:'Belarussischer Verteidigungsminister Chrenin traf den iranischen Vize-Verteidigungsminister Talaei-Nik · „Gegenseitiges Interesse von Minsk und Teheran an einer weiteren Vertiefung der gemeinsamen Interaktion" · Russische Atomwaffen seit 2023 in Belarus stationiert',
+        contextTagLabel:'Belarus-Verteidigungsmin.:',
+        contextQuote:'„Politisch-diplomatische Lösung"',
+        mapTitle:'BELARUS — STRATEGISCHER ÜBERBLICK',
+        mapSubtitle:'Belarus\' strategische Lage an der Ostgrenze Europas — grenzt an Russland (Osten), die Ukraine (Süden), Polen und Litauen (NATO-Mitglieder, Westen/Norden) und Lettland (NATO, Norden). Beherbergt seit 2023 russische taktische Atomwaffen.',
+        knowledgeTitle:'WISSENSBIBLIOTHEK',
+        knowledgeDisclaimer:'Hintergrundinformationen aus Open-Source-Forschung, Think-Tank-Analysen und öffentlichen Regierungsberichten zusammengestellt.',
+        catLukashenko:'Lukaschenko-Regime & 2020er Krise',
+        catRussiaClient:'Russischer Klientelstaat & Unionsstaat',
+        catNuclear:'Nukleare Teilhabe & Strategische Streitkräfte',
+        catNATO:'NATO-Grenze & Suwałki-Lücke',
+        catIran:'Iran-Kooperation & SOZ-Trilaterale',
+        catOpposition:'Opposition im Exil & Politische Gefangene',
+        articlesTitle:'AKTUELLE ARTIKEL — BELARUS',
+        articlesDesc:'NewsAPI + GDELT · Letzte 7 Tage · Englisch + Russisch',
+    }
+};
+
+function setLang(lang, btn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const t = T[lang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (t[k] !== undefined) el.textContent = t[k];
+    });
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    startLoading();
+    loadArticles();
+});
+</script>
+</body>
+</html>
