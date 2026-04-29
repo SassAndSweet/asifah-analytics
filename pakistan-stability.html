@@ -283,23 +283,47 @@
     </div>
 </header>
 
-<!-- TRAVEL ADVISORY BANNER (single, links to advisory) -->
-<div class="advisory-banner do-not-travel">
-    <span class="advisory-icon">⚠️</span>
-    <div class="advisory-text">
-        <span class="advisory-label" data-i18n="taLabel">U.S. State Department — Pakistan Travel Advisory</span>
-        <span data-i18n="taText">Reconsider travel due to terrorism. Do Not Travel to Balochistan, Khyber Pakhtunkhwa (KP), and the immediate vicinity of the India-Pakistan border. Review the full advisory before any travel planning.</span>
+<!-- WORLDWIDE CAUTION BANNER (canonical red top-banner — matches Israel pattern) -->
+<div style="
+    background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
+    border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
+    margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+">
+    <div style="font-size: 24px; flex-shrink: 0;">🚨</div>
+    <div style="flex: 1;">
+        <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;" data-i18n="wcLabel">⚠️ U.S. State Department — Worldwide Caution</div>
+        <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;" data-i18n="wcText">Americans abroad should follow guidance from the nearest U.S. embassy or consulate and monitor travel.state.gov for updates on increased risk of terrorist attacks, demonstrations, and violence against U.S. citizens worldwide.</div>
     </div>
-    <a class="advisory-link" data-i18n="taLink"
-       href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/pakistan-travel-advisory.html"
-       target="_blank" rel="noopener">View Advisory →</a>
+    <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="wcLink">VIEW CAUTION →</a>
+</div>
+
+<!-- PAKISTAN TRAVEL ADVISORY — Level 3: Reconsider Travel (canonical blue + red border) -->
+<div style="
+    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+    border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
+    margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+">
+    <div style="font-size: 24px; flex-shrink: 0;">🇵🇰</div>
+    <div style="flex: 1;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px; flex-wrap: wrap;">
+            <span style="font-size: 11px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px;" data-i18n="taLabel">U.S. State Department — Pakistan Travel Advisory</span>
+            <span style="background: #f97316; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px;" data-i18n="taLevelBadge">LEVEL 3</span>
+        </div>
+        <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;" data-i18n="taText"><strong style="color: #fca5a5;">Reconsider travel due to terrorism.</strong> Do Not Travel to Balochistan, Khyber Pakhtunkhwa (KP), and the immediate vicinity of the India-Pakistan border. Review the full advisory before any travel planning.</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/pakistan-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="taLink">VIEW ADVISORY →</a>
 </div>
 
 <!-- RHETORIC GREEN BANNER (links to rhetoric-pakistan.html) -->
 <a href="rhetoric-pakistan.html" class="rhetoric-banner">
     <span class="rhetoric-banner-icon">🎯</span>
     <div class="rhetoric-banner-text">
-        <span class="rhetoric-banner-label" data-i18n="rhetoricLabel">PAKISTAN RHETORIC TRACKER</span>
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px; flex-wrap:wrap;">
+            <span class="rhetoric-banner-label" data-i18n="rhetoricLabel">PAKISTAN RHETORIC TRACKER — LIVE</span>
+            <span id="rhetoricBannerLevel" style="font-size:11px; font-weight:bold; padding:2px 10px; border-radius:4px; background:#374151; color:white; letter-spacing:0.5px;" data-i18n="loading">LOADING</span>
+        </div>
         <span class="rhetoric-banner-title" data-i18n="rhetoricTitle">9-actor / 7-vector matrix · Cross-axis fingerprints to Iran, China, India</span>
     </div>
     <span class="rhetoric-banner-arrow">→</span>
@@ -400,7 +424,8 @@
     <div class="article-tabs" id="articleTabs">
         <button class="article-tab active" data-tab="all" onclick="setArticleTab('all')"><span data-i18n="tabAll">All</span> <span class="tab-count" id="countAll">0</span></button>
         <button class="article-tab" data-tab="en" onclick="setArticleTab('en')"><span data-i18n="tabEn">English</span> <span class="tab-count" id="countEn">0</span></button>
-        <button class="article-tab" data-tab="hi" onclick="setArticleTab('hi')"><span data-i18n="tabHi">Hindi</span> <span class="tab-count" id="countHi">0</span></button>
+        <button class="article-tab" data-tab="ur" onclick="setArticleTab('ur')"><span data-i18n="tabUr">Urdu</span> <span class="tab-count" id="countUr">0</span></button>
+        <button class="article-tab" data-tab="regional" onclick="setArticleTab('regional')"><span data-i18n="tabRegional">Regional</span> <span class="tab-count" id="countRegional">0</span></button>
         <button class="article-tab" data-tab="social" onclick="setArticleTab('social')"><span data-i18n="tabSocial">Social</span> <span class="tab-count" id="countSocial">0</span></button>
     </div>
     <div class="article-list" id="articleList">
@@ -496,7 +521,11 @@
             taLabel: 'U.S. State Department — Pakistan Travel Advisory',
             taText: 'Reconsider travel due to terrorism. Do Not Travel to Balochistan, Khyber Pakhtunkhwa (KP), and the immediate vicinity of the India-Pakistan border. Review the full advisory before any travel planning.',
             taLink: 'View Advisory →',
-            rhetoricLabel: 'PAKISTAN RHETORIC TRACKER',
+            taLevelBadge: 'LEVEL 3',
+            wcLabel: '⚠️ U.S. State Department — Worldwide Caution',
+            wcText: 'Americans abroad should follow guidance from the nearest U.S. embassy or consulate and monitor travel.state.gov for updates on increased risk of terrorist attacks, demonstrations, and violence against U.S. citizens worldwide.',
+            wcLink: 'View Caution →',
+            rhetoricLabel: 'PAKISTAN RHETORIC TRACKER — LIVE',
             rhetoricTitle: '9-actor / 7-vector matrix · Cross-axis fingerprints to Iran, China, India',
             rhetoricCardTitle: 'Rhetoric Snapshot',
             stabTitle: 'Composite Stability Index',
@@ -524,7 +553,7 @@
             kbSectarianTitle: 'Sectarian Violence',
             kbSectarianText: "Pakistan's religious minorities — Christians, Ahmadis, Hindus, and Shia Muslims — face periodic episodes of mob violence, blasphemy law abuses, and targeted attacks. ISIS-K (Islamic State Khorasan Province) and certain TTP factions specifically target Shia mosques and processions. Ahmadis face state-codified discrimination under Pakistan's constitution.",
             articlesTitle: 'Articles by Source',
-            tabAll: 'All', tabEn: 'English', tabHi: 'Hindi', tabSocial: 'Social',
+            tabAll: 'All', tabEn: 'English', tabUr: 'Urdu', tabRegional: 'Regional', tabSocial: 'Social',
             footDataTitle: 'Data Sources',
             footDataText: 'Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times, Reuters, FT, GDELT, NewsAPI, plus curated Telegram and Bluesky channels covering ISPR (Pakistan Army public affairs), KP / Balochistan OSINT, and Kashmir LoC monitoring.',
             footMethodTitle: 'Methodology',
@@ -547,7 +576,11 @@
             taLabel: '美国国务院 — 巴基斯坦旅行警示',
             taText: '由于恐怖主义,请重新考虑旅行计划。请勿前往俾路支省、开伯尔-普赫图赫瓦省 (KP) 以及印巴边境邻近地区。在制定任何旅行计划前,请查阅完整警示。',
             taLink: '查看警示 →',
-            rhetoricLabel: '巴基斯坦修辞追踪器',
+            taLevelBadge: '三级',
+            wcLabel: '⚠️ 美国国务院 — 全球警示',
+            wcText: '海外美国公民应遵循最近的美国大使馆或领事馆的指导,并通过 travel.state.gov 监控有关恐怖袭击、示威活动和针对美国公民的暴力风险增加的最新信息。',
+            wcLink: '查看警示 →',
+            rhetoricLabel: '巴基斯坦修辞追踪器 — 实时',
             rhetoricTitle: '9 行为者 / 7 向量矩阵 · 跨轴指纹至伊朗、中国、印度',
             rhetoricCardTitle: '修辞快照',
             stabTitle: '综合稳定指数',
@@ -575,7 +608,7 @@
             kbSectarianTitle: '宗派暴力',
             kbSectarianText: '巴基斯坦的宗教少数群体 — 基督徒、艾哈迈迪派、印度教徒和什叶派穆斯林 — 周期性遭遇暴民暴力、亵渎法滥用和定向袭击。ISIS-K (伊斯兰国呼罗珊省) 和某些 TTP 派系专门针对什叶派清真寺和游行队伍。艾哈迈迪派根据巴基斯坦宪法面临国家成文歧视。',
             articlesTitle: '按来源分类的文章',
-            tabAll: '全部', tabEn: '英语', tabHi: '印地语', tabSocial: '社交',
+            tabAll: '全部', tabEn: '英语', tabUr: '乌尔都语', tabRegional: '地区', tabSocial: '社交',
             footDataTitle: '数据来源',
             footDataText: 'Dawn、The News International、Express Tribune、Geo News、ARY News、The Hindu、Hindustan Times、Reuters、FT、GDELT、NewsAPI 以及涵盖 ISPR (巴基斯坦陆军公关)、KP / 俾路支 OSINT 以及克什米尔实控线监测的精选 Telegram 和 Bluesky 频道。',
             footMethodTitle: '方法论',
@@ -598,7 +631,11 @@
             taLabel: '米国国務省 — パキスタン渡航勧告',
             taText: 'テロのため渡航再考。バロチスタン州、カイバル・パクトゥンクワ州 (KP)、印パ国境付近への渡航は禁止。渡航計画前に必ず勧告全文を確認のこと。',
             taLink: '勧告を確認 →',
-            rhetoricLabel: 'パキスタン修辞トラッカー',
+            taLevelBadge: 'レベル3',
+            wcLabel: '⚠️ 米国国務省 — 世界的警告',
+            wcText: '海外の米国市民は、最寄りの米国大使館または領事館の指導に従い、テロ攻撃、デモ、米国市民への暴力のリスク増加に関する最新情報をtravel.state.govで確認してください。',
+            wcLink: '警告を確認 →',
+            rhetoricLabel: 'パキスタン修辞トラッカー — ライブ',
             rhetoricTitle: '9 アクター / 7 ベクトル行列 · クロス軸指紋をイラン、中国、インドへ',
             rhetoricCardTitle: '修辞スナップショット',
             stabTitle: '総合安定性指数',
@@ -626,7 +663,7 @@
             kbSectarianTitle: '宗派暴力',
             kbSectarianText: 'パキスタンの宗教的少数派 — キリスト教徒、アフマディーヤ派、ヒンドゥー教徒、シーア派ムスリム — は定期的に暴徒的暴力、冒涜法乱用、標的型攻撃に直面する。ISIS-K (イスラム国ホラサン州) と特定の TTP 派閥はシーア派モスクと行進を特に標的にする。アフマディーヤ派はパキスタン憲法下で国家成文化された差別に直面する。',
             articlesTitle: 'ソース別記事',
-            tabAll: '全て', tabEn: '英語', tabHi: 'ヒンディー語', tabSocial: 'ソーシャル',
+            tabAll: '全て', tabEn: '英語', tabUr: 'ウルドゥー語', tabRegional: '地域', tabSocial: 'ソーシャル',
             footDataTitle: 'データソース',
             footDataText: 'Dawn、The News International、Express Tribune、Geo News、ARY News、The Hindu、Hindustan Times、Reuters、FT、GDELT、NewsAPI、および ISPR (パキスタン陸軍広報)、KP / バロチスタン OSINT、カシミール LoC 監視を扱う厳選 Telegram および Bluesky チャンネル。',
             footMethodTitle: '方法論',
@@ -649,7 +686,11 @@
             taLabel: '미국 국무부 — 파키스탄 여행 경보',
             taText: '테러로 인해 여행을 재고하시기 바랍니다. 발루치스탄, 카이베르 파크툰크와 (KP) 그리고 인도-파키스탄 국경 근처는 여행 금지. 여행 계획 전 전체 경보를 검토하시기 바랍니다.',
             taLink: '경보 보기 →',
-            rhetoricLabel: '파키스탄 수사 추적기',
+            taLevelBadge: '레벨 3',
+            wcLabel: '⚠️ 미국 국무부 — 세계 주의보',
+            wcText: '해외 미국 시민은 가장 가까운 미국 대사관 또는 영사관의 지침을 따르고 travel.state.gov에서 테러 공격, 시위, 미국 시민에 대한 폭력 위험 증가에 관한 업데이트를 모니터링하시기 바랍니다.',
+            wcLink: '주의보 보기 →',
+            rhetoricLabel: '파키스탄 수사 추적기 — 라이브',
             rhetoricTitle: '9 행위자 / 7 벡터 매트릭스 · 이란, 중국, 인도로의 교차축 지문',
             rhetoricCardTitle: '수사 스냅샷',
             stabTitle: '복합 안정성 지수',
@@ -677,7 +718,7 @@
             kbSectarianTitle: '종파 폭력',
             kbSectarianText: '파키스탄의 종교적 소수자 — 기독교인, 아마디파, 힌두교도, 시아파 무슬림 — 는 주기적으로 폭도 폭력, 신성 모독법 남용, 표적 공격을 직면한다. ISIS-K (이슬람 국가 호라산 주) 와 특정 TTP 분파는 시아파 모스크와 행렬을 특히 표적으로 삼는다. 아마디파는 파키스탄 헌법 하에서 국가 성문화된 차별을 직면한다.',
             articlesTitle: '소스별 기사',
-            tabAll: '전체', tabEn: '영어', tabHi: '힌디어', tabSocial: '소셜',
+            tabAll: '전체', tabEn: '영어', tabUr: '우르두어', tabRegional: '지역', tabSocial: '소셜',
             footDataTitle: '데이터 출처',
             footDataText: 'Dawn, The News International, Express Tribune, Geo News, ARY News, The Hindu, Hindustan Times, Reuters, FT, GDELT, NewsAPI, 그리고 ISPR (파키스탄 육군 공보), KP / 발루치스탄 OSINT, 카슈미르 LoC 모니터링을 다루는 엄선된 Telegram 및 Bluesky 채널.',
             footMethodTitle: '방법론',
@@ -697,7 +738,7 @@
     let currentLang = 'en';
     let currentStability = null;
     let currentRhetoric = null;
-    let articleStore = { all: [], en: [], hi: [], social: [] };
+    let articleStore = { all: [], en: [], ur: [], regional: [], social: [] };
 
     // ── LANGUAGE / THEME ──
     function setLanguage(lang) {
@@ -805,12 +846,33 @@
         badge.textContent = `L${lvl} — ${elv.label}`;
         badge.style.background = elv.color;
 
+        // v2.1.0 — Also update the banner badge above to match (Israel pattern)
+        const bannerBadge = document.getElementById('rhetoricBannerLevel');
+        if (bannerBadge) {
+            bannerBadge.textContent = `L${lvl} — ${elv.label}`;
+            bannerBadge.style.background = elv.color;
+        }
+
         const interp  = data.interpretation || {};
         const so_what = interp.so_what || {};
-        const summary = (so_what.implications && so_what.implications.length)
-            ? so_what.implications[0]
-            : (so_what.scenario || 'Pakistan currently at routine baseline — monitor for cross-theater spillover.');
-        document.getElementById('rhetoricSummary').textContent = summary;
+        const summaryEl = document.getElementById('rhetoricSummary');
+
+        // v2.1.0 (Apr 28 2026) — Render ALL implications as a bulleted list,
+        // not just implications[0]. The Pakistan interpreter emits up to 7
+        // implications depending on conditions (Kashmir / Afghan / nuclear /
+        // mediation / China-CPEC / civmil / economic). Showing only the first
+        // discarded analytically-meaningful signals.
+        const implications = (so_what.implications || []).filter(s => s);
+        const scenario     = so_what.scenario || '';
+        if (implications.length > 0) {
+            const headline = scenario ? `<div style="font-weight:600; margin-bottom:8px; color:var(--text-primary);">${scenario}</div>` : '';
+            const bullets = implications.map(im =>
+                `<li style="margin-bottom:6px; line-height:1.5;">${im}</li>`
+            ).join('');
+            summaryEl.innerHTML = `${headline}<ul style="margin:0; padding-left:20px; list-style-type:disc;">${bullets}</ul>`;
+        } else {
+            summaryEl.textContent = scenario || 'Pakistan currently at routine baseline — monitor for cross-theater spillover.';
+        }
 
         const axesEl = document.getElementById('rhetoricAxes');
         axesEl.innerHTML = '';
@@ -831,21 +893,45 @@
 
     // ── RENDER ARTICLES ──
     // Aggregate from rhetoric scan's actor.top_articles[], dedupe by URL,
-    // sort by published date desc, classify into language tabs by source.
+    // sort by published date desc, classify into 5 tabs by source/language.
+    //
+    // BUCKETS:
+    //   en       → English-language Pakistani press (Dawn, Tribune, Geo, ARY, etc.) + Western press
+    //   ur       → Urdu-language scans (GDELT lang='ur'/'urd' OR Urdu source names)
+    //   regional → Non-Pakistani regional press: Indian (The Hindu, HT, Times of India, NDTV, Indian Express, Tribune India)
+    //              and Afghan (TOLO, Khaama, Pajhwok). Critical for cross-axis perspective.
+    //   social   → Telegram + Bluesky + Reddit + X
+    //   all      → everything (deduped)
     function renderArticles(data) {
         const seen = new Set();
-        const all = [], en = [], hi = [], social = [];
+        const all = [], en = [], ur = [], regional = [], social = [];
         const actors = data.actors || {};
+
+        // Indian press domains/labels — used to bucket as 'regional'
+        const indianSources = ['hindu', 'hindustan', 'times of india', 'india today', 'tribune india',
+                               'indian express', 'ndtv', 'wire india', 'firstpost', 'wion', 'rediff'];
+        // Afghan press
+        const afghanSources = ['tolo', 'khaama', 'pajhwok', 'afghan', 'kabulnow', 'afghanistan international'];
+        // Urdu publication labels (when source name itself indicates Urdu)
+        const urduSources = ['jang', 'urdu', 'aaj news', 'samaa urdu', 'dawn urdu', 'geo urdu', 'ary urdu'];
+
         Object.values(actors).forEach(actor => {
             (actor.top_articles || []).forEach(art => {
                 if (!art.url || seen.has(art.url)) return;
                 seen.add(art.url);
                 const source = (art.source || '').toLowerCase();
                 const lang   = (art.language || art.lang || '').toLowerCase();
-                const isSocial = source.includes('telegram') || source.includes('bluesky') ||
-                                 source.includes('reddit')   || source.includes('twitter') ||
-                                 source.includes('x.com');
-                const isHindi  = lang === 'hi' || source.includes('hindu') || source.includes('hindustan');
+
+                const isSocial   = source.includes('telegram') || source.includes('bluesky') ||
+                                   source.includes('reddit')   || source.includes('twitter') ||
+                                   source.includes('x.com');
+                const isUrdu     = lang === 'ur' || lang === 'urd' ||
+                                   urduSources.some(s => source.includes(s));
+                const isRegional = indianSources.some(s => source.includes(s)) ||
+                                   afghanSources.some(s => source.includes(s)) ||
+                                   lang === 'hi' || lang === 'hin' ||  // Hindi articles → regional
+                                   lang === 'ps' || lang === 'pus';     // Pashto articles → regional
+
                 const norm = {
                     title:     art.title || '(no title)',
                     url:       art.url,
@@ -855,18 +941,26 @@
                     actorName: actor.name || '',
                 };
                 all.push(norm);
-                if (isSocial)      social.push(norm);
-                else if (isHindi)  hi.push(norm);
-                else               en.push(norm);
+                if (isSocial)        social.push(norm);
+                else if (isUrdu)     ur.push(norm);
+                else if (isRegional) regional.push(norm);
+                else                 en.push(norm);
             });
         });
         const byDate = (a, b) => (b.published || '').localeCompare(a.published || '');
-        articleStore = { all: all.sort(byDate), en: en.sort(byDate), hi: hi.sort(byDate), social: social.sort(byDate) };
+        articleStore = {
+            all:      all.sort(byDate),
+            en:       en.sort(byDate),
+            ur:       ur.sort(byDate),
+            regional: regional.sort(byDate),
+            social:   social.sort(byDate),
+        };
 
-        document.getElementById('countAll').textContent    = articleStore.all.length;
-        document.getElementById('countEn').textContent     = articleStore.en.length;
-        document.getElementById('countHi').textContent     = articleStore.hi.length;
-        document.getElementById('countSocial').textContent = articleStore.social.length;
+        document.getElementById('countAll').textContent      = articleStore.all.length;
+        document.getElementById('countEn').textContent       = articleStore.en.length;
+        document.getElementById('countUr').textContent       = articleStore.ur.length;
+        document.getElementById('countRegional').textContent = articleStore.regional.length;
+        document.getElementById('countSocial').textContent   = articleStore.social.length;
         setArticleTab('all');
     }
     function classifySource(source) {
