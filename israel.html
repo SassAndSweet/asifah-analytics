@@ -23,45 +23,48 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --bg-color: #f5f5f5;
+            --bg-color: #e8f0f8;
             --container-bg: #ffffff;
             --card-bg: #ffffff;
-            --card-border: #e1e8ed;
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6;
+            --card-border: #b0c8e0;
+            --text-primary: #0a1628;
+            --text-secondary: #1e3a5f;
+            --text-muted: #4a6080;
             --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
+            --header-gradient-end: #0ea5e9;
             --header-text: #ffffff;
             --metric-bg: #ffffff;
-            --article-bg: #f8f9fa;
-            --article-hover: #e8f4f8;
-            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
-            --accent: #6495ED;
+            --article-bg: #f0f6fc;
+            --article-hover: #e1ecf7;
+            --loading-overlay-bg: rgba(232, 240, 248, 0.98);
+            --loading-spinner-bg: rgba(14, 165, 233, 0.2);
+            --accent: #0ea5e9;
             --card-glow: none;
             --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
-            --watermark-opacity: 0.50;
+            --watermark-opacity: 0.08;
+            --watermark-filter: none;
         }
 
         [data-theme="dark"] {
-            --bg-color: #0a0e1a;
-            --container-bg: #111827;
-            --card-bg: #111827;
+            --bg-color: #060d1a;
+            --container-bg: #0d1b2e;
+            --card-bg: #0d1b2e;
             --card-border: #1e3a5f;
-            --text-primary: #e2e8f0;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --header-gradient-start: #0f1a2e;
+            --text-primary: #e2f0fb;
+            --text-secondary: #93c5fd;
+            --text-muted: #4a7090;
+            --header-gradient-start: #060d1a;
             --header-gradient-end: #1e3a5f;
-            --metric-bg: #111827;
-            --article-bg: #1a2332;
-            --article-hover: #243447;
-            --loading-overlay-bg: rgba(10, 14, 26, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.4);
-            --card-glow: 0 0 1px rgba(100, 149, 237, 0.1);
-            --card-hover-glow: 0 0 20px rgba(100, 149, 237, 0.2), 0 8px 25px rgba(0,0,0,0.3);
-            --watermark-opacity: 0.85;
+            --metric-bg: #0d1b2e;
+            --article-bg: #0a1525;
+            --article-hover: #112038;
+            --loading-overlay-bg: rgba(6, 13, 26, 0.98);
+            --loading-spinner-bg: rgba(56, 189, 248, 0.4);
+            --accent: #38bdf8;
+            --card-glow: 0 0 6px rgba(56,189,248,0.12), 0 0 1px rgba(56,189,248,0.25);
+            --card-hover-glow: 0 0 22px rgba(56,189,248,0.28), 0 8px 25px rgba(0,0,0,0.5);
+            --watermark-opacity: 0.22;
+            --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
         }
 
         body {
@@ -388,6 +391,45 @@
             .knowledge-categories { grid-template-columns: 1fr; }
             .activity-grid { grid-template-columns: 1fr; }
         }
+        /* ── CANONICAL SIDEBAR (v2.1.0) ── */
+        .page-with-sidebar { display: grid; grid-template-columns: 200px 1fr; gap: 24px; align-items: start; }
+        .main-content { min-width: 0; }
+        .nav-sidebar { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 48px); overflow-y: auto; }
+        .nav-sidebar-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); padding: 8px 4px 4px 4px; }
+        .nav-divider { height: 1px; background: var(--card-border); margin: 6px 0; }
+        .nav-btn { display: flex; flex-direction: column; padding: 8px 10px; border: 1px solid var(--card-border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary); text-decoration: none; transition: all 0.2s; cursor: pointer; }
+        .nav-btn:hover { border-color: var(--accent); box-shadow: var(--card-hover-glow); }
+        .nav-btn-label { font-size: 12px; font-weight: 600; line-height: 1.3; }
+        .nav-btn-status { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; opacity: 0.7; color: var(--accent); }
+        .nav-btn.active-nav { border-color: rgba(56,189,248,0.5); }
+        [data-theme="dark"] .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); color: #ffffff; }
+        .nav-btn.current-page { border-color: rgba(34,197,94,0.6); background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); }
+        .nav-btn.current-page .nav-btn-status { color: #16a34a; }
+        [data-theme="dark"] .nav-btn.current-page { color: #ffffff; }
+        [data-theme="dark"] .nav-btn.current-page .nav-btn-status { color: #4ade80; }
+        .nav-btn.inactive-nav { border-color: rgba(0,0,0,0.1); background: rgba(0,0,0,0.02); color: rgba(0,0,0,0.3); cursor: default; }
+        [data-theme="dark"] .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); }
+        .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+        .nav-btn.rhetoric-btn .nav-btn-status { color: #16a34a; }
+        [data-theme="dark"] .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+        .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+        .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+        @media (max-width: 1099px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+        /* RTL support for Hebrew/Arabic/Farsi */
+        [dir="rtl"] .nav-sidebar-label { text-align: right; }
+        [dir="rtl"] .page-with-sidebar { grid-template-columns: 1fr 200px; }
+        [dir="rtl"] .nav-btn { text-align: right; }
+
+        /* Canonical footer */
+        .asifah-footer { margin-top: 40px; padding: 30px 24px 20px; border-top: 1px solid var(--card-border); color: var(--text-secondary); }
+        .asifah-footer a { color: var(--accent); }
+        .asifah-footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 24px; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .asifah-footer-col-title { font-weight: 700; color: var(--accent); margin-bottom: 8px; font-size: 0.85em; text-transform: uppercase; letter-spacing: 1px; }
+        .asifah-footer-col-text { font-size: 0.78em; line-height: 1.6; color: var(--text-secondary); }
+        .asifah-disclaimer { max-width: 1200px; margin: 20px auto 0; padding: 14px; background: rgba(220,38,38,0.08); border-left: 3px solid #dc2626; border-radius: 6px; font-size: 0.78em; line-height: 1.55; color: var(--text-secondary); }
+        .asifah-bmac { max-width: 1200px; margin: 18px auto 0; padding: 14px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.25); border-radius: 8px; font-size: 0.88em; color: var(--text-secondary); }
+        .asifah-copy { max-width: 1200px; margin: 22px auto 0; padding-top: 18px; border-top: 1px solid var(--card-border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 0.74em; color: var(--text-muted); }
     </style>
 </head>
 <body>
@@ -409,6 +451,31 @@
     </div>
 
     <div class="container">
+    <div class="page-with-sidebar">
+
+    <!-- CANONICAL SIDEBAR -->
+    <nav class="nav-sidebar">
+        <div class="nav-sidebar-label" data-i18n="navDashboards">Dashboards</div>
+        <div class="nav-btn inactive-nav"><span class="nav-btn-label" data-i18n="navAfrica">🌍 Africa</span><span class="nav-btn-status" data-i18n="navFuture">🔒 Future</span></div>
+        <a href="asia.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navAsia">🌏 Asia &amp; Pacific</span><span class="nav-btn-status" data-i18n="navLive">● Live</span></a>
+        <a href="europe.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navEurope">🌍 Europe</span><span class="nav-btn-status" data-i18n="navLive2">● Live</span></a>
+        <a href="middle-east.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navME">🕌 Middle East</span><span class="nav-btn-status" data-i18n="navLive3">● Live</span></a>
+        <a href="wha.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navWHA">🌎 W. Hemisphere</span><span class="nav-btn-status" data-i18n="navLive4">● Live</span></a>
+        <div class="nav-divider"></div>
+        <a href="military.html" class="nav-btn military-btn"><span class="nav-btn-label" data-i18n="navMilitary">🎖️ Military Tracker</span><span class="nav-btn-status" data-i18n="navLive5">● Live</span></a>
+        <a href="gpi.html" class="nav-btn military-btn"><span class="nav-btn-label" data-i18n="navGPI">🌐 Global Pressure</span><span class="nav-btn-status" data-i18n="navLive6">● Live</span></a>
+        <div class="nav-divider"></div>
+        <div class="nav-sidebar-label" data-i18n="navRegionalRhetoric">Regional Rhetoric</div>
+        <a href="rhetoric-index.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navMERhet">🕌 Middle East</span><span class="nav-btn-status" data-i18n="navLive7">● Live</span></a>
+        <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navAsiaRhet">🌏 Asia</span><span class="nav-btn-status" data-i18n="navLive8">● Live</span></a>
+        <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navEuropeRhet">🌍 Europe</span><span class="nav-btn-status" data-i18n="navLive9">● Live</span></a>
+        <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navWHARhet">🌎 W. Hemisphere</span><span class="nav-btn-status" data-i18n="navLive10">● Live</span></a>
+        <div class="nav-divider"></div>
+        <a href="rhetoric-israel.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navIsraelRhet">🇮🇱 Israel Rhetoric</span><span class="nav-btn-status" data-i18n="navLive11">● Live</span></a>
+        <div class="nav-btn current-page"><span class="nav-btn-label" data-i18n="navIsraelStab">🇮🇱 Israel Stability</span><span class="nav-btn-status" data-i18n="navYouAreHere">◉ You are here</span></div>
+    </nav>
+
+    <div class="main-content">
         <header>
             <a href="middle-east.html" class="back-link" data-i18n="backLink">← Back to Dashboard</a>
             <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
@@ -559,6 +626,11 @@
                         <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:6px; font-weight:600;">📊 TASE TA-35</div>
                         <div style="font-size:20px; font-weight:bold; color:var(--text-primary);" id="taseValue">--</div>
                         <div style="font-size:12px; color:var(--text-secondary);" id="taseChange">--</div>
+                        <!-- v2.1.0 — TASE intraday sparkline (backend was already returning this; now rendered) -->
+                        <div class="sparkline-container" id="taseSparklineContainer" style="display:none; margin-top:10px;">
+                            <span class="sparkline-label" data-i18n="taseIntradayLabel">Intraday:</span>
+                            <canvas id="taseSparkline" class="sparkline-canvas"></canvas>
+                        </div>
                     </div>
                 </div>
 
@@ -614,14 +686,68 @@
                     <div id="strikeArticlesList" style="margin-top:12px; font-size:12px;"></div>
                 </div>
 
-                <!-- Bennett Watch -->
+                <!-- Opposition Watch (v2.1.0 — replaces Bennett-only card with full anti-Netanyahu bloc tracker) -->
                 <div class="metric-card">
-                    <div class="metric-title">🌟 BENNETT WATCH</div>
-                    <div class="metric-value" id="bennettMentions">--</div>
-                    <div class="metric-subtitle">Mentions (7d) — dark horse PM candidate</div>
-                    <div id="bennettArticlesList" style="margin-top:12px; font-size:12px;"></div>
-                    <div style="margin-top:10px; padding:8px; background:var(--article-bg); border-radius:6px; font-size:11px; color:var(--text-secondary);">
-                        Naftali Bennett (New Right/ind.) — vocal critic of war management and Netanyahu coalition. Potential challenger in any early election scenario.
+                    <div class="metric-title">🌟 <span data-i18n="oppWatchTitle">OPPOSITION WATCH</span></div>
+                    <div class="metric-value" id="oppositionMentions">--</div>
+                    <div class="metric-subtitle" data-i18n="oppWatchSubtitle">Mentions (7d) — anti-Netanyahu bloc</div>
+
+                    <!-- Mini-scorecard: latest published poll from major Israeli outlets -->
+                    <div style="margin-top:14px; padding:10px; background:var(--article-bg); border-radius:6px;">
+                        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                            <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; font-weight:600;" data-i18n="oppPollHeader">📊 Latest Knesset Poll Snapshot</div>
+                            <div style="font-size:9px; color:var(--text-muted); font-style:italic;" data-i18n="oppPollAsOf">As of: April 28, 2026 (manual)</div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; font-size:11px;">
+                            <div>
+                                <div style="font-weight:600; color:var(--text-primary);" data-i18n="oppTogether">Together (Bennett+Lapid)</div>
+                                <div style="font-size:18px; font-weight:700; color:#fbbf24;" id="oppTogetherSeats">26-27</div>
+                                <div style="color:var(--text-muted);" data-i18n="oppSeats">seats</div>
+                            </div>
+                            <div>
+                                <div style="font-weight:600; color:var(--text-primary);" data-i18n="oppLikud">Likud</div>
+                                <div style="font-size:18px; font-weight:700; color:#60a5fa;" id="oppLikudSeats">28</div>
+                                <div style="color:var(--text-muted);" data-i18n="oppSeats2">seats</div>
+                            </div>
+                            <div>
+                                <div style="font-weight:600; color:var(--text-primary);" data-i18n="oppYashar">Yashar (Eisenkot)</div>
+                                <div style="font-size:18px; font-weight:700; color:#a78bfa;" id="oppYasharSeats">12-15</div>
+                                <div style="color:var(--text-muted);" data-i18n="oppSeats3">seats</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:10px; padding-top:8px; border-top:1px solid var(--card-border); font-size:10px; color:var(--text-muted);" data-i18n="oppPollNote">
+                            Coalition: 51-57 · Opposition (Zionist): 52-60 · Arab parties: 9-11 · Threshold: 61 to govern
+                        </div>
+                    </div>
+
+                    <div id="oppositionArticlesList" style="margin-top:12px; font-size:12px;"></div>
+
+                    <div style="margin-top:10px; padding:8px; background:var(--article-bg); border-radius:6px; font-size:11px; color:var(--text-secondary);" data-i18n="oppWatchNote">
+                        Bennett & Lapid merged into "Together" (April 26, 2026) — Bennett to lead. Eisenkot's Yashar! courted to join. Anti-Netanyahu bloc consolidating; elections expected by October 2026.
+                    </div>
+                </div>
+
+                <!-- Elections Vector (v2.1.0 — new card tracking electoral pressure proximity) -->
+                <div class="metric-card">
+                    <div class="metric-title">🗳️ <span data-i18n="electionsTitle">ELECTIONS VECTOR</span></div>
+                    <div class="metric-value" id="electionsProximityScore">--</div>
+                    <div class="metric-subtitle" data-i18n="electionsSubtitle">Electoral pressure proximity (0–100)</div>
+
+                    <div style="margin-top:10px; display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        <div style="padding:8px; background:var(--article-bg); border-radius:6px;">
+                            <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;" data-i18n="electionsScheduled">Scheduled by</div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-primary);" data-i18n="electionsByOctober">Oct 2026</div>
+                        </div>
+                        <div style="padding:8px; background:var(--article-bg); border-radius:6px;">
+                            <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;" data-i18n="electionsMentions">Election mentions (7d)</div>
+                            <div style="font-size:14px; font-weight:600; color:var(--text-primary);" id="electionsMentions7d">--</div>
+                        </div>
+                    </div>
+
+                    <div id="electionsArticlesList" style="margin-top:12px; font-size:12px;"></div>
+
+                    <div style="margin-top:10px; padding:8px; background:var(--article-bg); border-radius:6px; font-size:11px; color:var(--text-secondary);" data-i18n="electionsNote">
+                        Elections must take place by end of October 2026. Higher score = more public discussion of dissolution / no-confidence votes / snap elections / caretaker scenarios.
                     </div>
                 </div>
 
@@ -742,23 +868,52 @@
 
         </div><!-- end #content -->
 
-        <footer>
-            <div>Data Sources: Yahoo Finance (NIS/USD), NewsAPI, GDELT, ACLED, IDF Spokesperson, Knesset records</div>
-            <div style="margin-top:15px; font-size:0.85em;">Multilingual content from Arabic, Hebrew, and Farsi feeds via GDELT. Not for operational use.</div>
-            <div style="margin-top:15px;">For inquiries: <a href="/cdn-cgi/l/email-protection#5736243e31363f3639363b2e233e342417303a363e3b7934383a" style="color:var(--accent);"><span class="__cf_email__" data-cfemail="20415349464148414e414c595449435360474d41494c0e434f4d">[email&#160;protected]</span></a></div>
-            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v2.0.0</div>
-                <div style="font-size:0.8em;">Updated on demand | Not for operational use</div>
+        <!-- CANONICAL FOOTER (v2.1.0) -->
+        <footer class="asifah-footer">
+            <div class="asifah-footer-grid">
+                <div>
+                    <div class="asifah-footer-col-title">📡 <span data-i18n="footDataTitle">Data Sources</span></div>
+                    <div class="asifah-footer-col-text" data-i18n="footDataText">
+                        Times of Israel, Jerusalem Post, Haaretz, Ynet, Yahoo Finance (NIS/USD),
+                        TASE Data Hub (TA-35 intraday), NewsAPI, GDELT, ACLED, IDF Spokesperson,
+                        Knesset records. Multilingual content via Arabic, Hebrew, and Farsi feeds.
+                    </div>
+                </div>
+                <div>
+                    <div class="asifah-footer-col-title">🔬 <span data-i18n="footMethodTitle">Methodology</span></div>
+                    <div class="asifah-footer-col-text" data-i18n="footMethodText">
+                        Composite stability index (0–100) blending economic indicators (NIS/TASE),
+                        active war intensity, coalition fragility, opposition consolidation, regional
+                        threat posture, and rhetoric tracker penalties (inbound threat / outbound
+                        posture / Pikud HaOref alerts). Refreshed every 12 hours; trends backed by
+                        a 90-day rolling history.
+                    </div>
+                </div>
+                <div>
+                    <div class="asifah-footer-col-title">✉️ <span data-i18n="footContactTitle">Contact</span></div>
+                    <div class="asifah-footer-col-text">
+                        <span data-i18n="footContactText">Questions, corrections, or research collaboration:</span><br>
+                        <a href="mailto:contact@asifahanalytics.com">contact@asifahanalytics.com</a><br><br>
+                        <a href="https://www.asifahanalytics.com/privacy.html" data-i18n="footPrivacy">Privacy Policy</a>
+                    </div>
+                </div>
             </div>
-            <div style="margin-top:20px; padding:15px; background:rgba(100,149,237,0.1); border-radius:8px;">
-                <span style="font-size:0.9em;">If you find Asifah Analytics useful: <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">☕ buy me a coffee</a></span>
+            <div class="asifah-disclaimer">
+                <strong style="color:#dc2626;">⚠️ <span data-i18n="footDisclaimerLabel">Disclaimer:</span></strong>
+                <span data-i18n="footDisclaimerText">Asifah Analytics is a personal-time open-source OSINT project. Analysis reflects open-source signal aggregation only — does NOT reflect classified intelligence and is NOT an official U.S. Government product. Asifah methodology is proprietary and should not be cited as official assessment. Not for operational use.</span>
             </div>
-            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
-                © 2026 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
-                Unauthorized use, reproduction, or distribution prohibited.
+            <div class="asifah-bmac">
+                <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span>
+                <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="font-weight:700;">☕ <span data-i18n="footBmacButton">buy me a coffee</span></a>
+            </div>
+            <div class="asifah-copy">
+                <span>Asifah Analytics v2.1.0 · <span data-i18n="footRefreshNote">Updated every 12 hours</span></span>
+                <span>© 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Proprietary and Confidential.</span></span>
             </div>
         </footer>
-    </div>
+    </div><!-- end .main-content -->
+    </div><!-- end .page-with-sidebar -->
+    </div><!-- end .container -->
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
@@ -947,12 +1102,33 @@
                     </div>`;
             }).join('');
 
-            // Bennett mentions
-            document.getElementById('bennettMentions').textContent = conflict.bennett_mentions || 0;
-            const bennettArts = (conflict.bennett_articles || []).slice(0, 3);
-            document.getElementById('bennettArticlesList').innerHTML = bennettArts.map(a =>
-                `<div style="margin-bottom:6px;"><a href="${a.url}" target="_blank" style="color:var(--accent); text-decoration:none;">→ ${(a.title || 'Article').substring(0, 65)}${(a.title||'').length > 65 ? '...' : ''}</a></div>`
-            ).join('') || '<div style="color:var(--text-secondary); font-style:italic;">No Bennett articles this week</div>';
+            // v2.1.0 — Opposition Watch (replaces Bennett-only)
+            const oppMentions = conflict.opposition_mentions ?? conflict.bennett_mentions ?? 0;
+            document.getElementById('oppositionMentions').textContent = oppMentions;
+            const oppArts = (conflict.opposition_articles || conflict.bennett_articles || []).slice(0, 4);
+            document.getElementById('oppositionArticlesList').innerHTML = oppArts.map(a =>
+                `<div style="margin-bottom:6px;"><a href="${a.url}" target="_blank" style="color:var(--accent); text-decoration:none;">→ ${(a.title || 'Article').substring(0, 70)}${(a.title||'').length > 70 ? '...' : ''}</a></div>`
+            ).join('') || '<div style="color:var(--text-secondary); font-style:italic;" data-i18n="oppNoneNote">No opposition articles in this scan window</div>';
+
+            // v2.1.0 — Elections Vector
+            const electionsScore = conflict.elections_proximity_score ?? 0;
+            document.getElementById('electionsProximityScore').textContent = `${electionsScore}/100`;
+            document.getElementById('electionsMentions7d').textContent = conflict.elections_mentions ?? 0;
+            const electionsArts = (conflict.elections_articles || []).slice(0, 3);
+            document.getElementById('electionsArticlesList').innerHTML = electionsArts.map(a =>
+                `<div style="margin-bottom:6px;"><a href="${a.url}" target="_blank" style="color:var(--accent); text-decoration:none;">→ ${(a.title || 'Article').substring(0, 70)}${(a.title||'').length > 70 ? '...' : ''}</a></div>`
+            ).join('') || '<div style="color:var(--text-secondary); font-style:italic;" data-i18n="electionsNoneNote">No election-proximity signals in this scan window</div>';
+
+            // v2.1.0 — Fresh-data sparklines (Yahoo 5-day NIS + TASE intraday)
+            // These render IMMEDIATELY from the main scan response, while the
+            // 30-day history sparklines from /api/israel-trends overlay them
+            // as soon as that endpoint returns.
+            try {
+                const nisSpark = (data.economic && data.economic.nis && data.economic.nis.sparkline) || [];
+                if (nisSpark.length > 0) buildFreshNisSparkline(nisSpark);
+                const taseSpark = (data.economic && data.economic.tase && data.economic.tase.sparkline) || [];
+                if (taseSpark.length > 0) buildTaseSparkline(taseSpark);
+            } catch(e) { console.warn('[Sparklines] fresh-data render error:', e); }
 
             // Articles feed
             const allArts = (data.all_articles || []);
@@ -980,6 +1156,73 @@
             } catch(e) { console.error('Trend data error:', e); }
         }
 
+        // v2.1.0 — Build sparkline from fresh Yahoo 5-day NIS series.
+        // Used as fallback when 30-day history isn't available yet (early days
+        // after deploy, or if Redis history was wiped). Same canvas, same chart.
+        function buildFreshNisSparkline(sparkArr) {
+            if (!Array.isArray(sparkArr) || sparkArr.length < 2) return;
+            const values = sparkArr.map(p => p.value);
+            const commonOptions = {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                scales: { x: { display: false }, y: { display: false } },
+                elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
+            };
+            ['nisSparklineContainer', 'nisCardSparklineContainer'].forEach(containerId => {
+                const canvasId = containerId === 'nisSparklineContainer' ? 'nisSparkline' : 'nisCardSparkline';
+                const statusId = containerId === 'nisSparklineContainer' ? 'nisSparklineStatus' : 'nisCardSparklineStatus';
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+                // Destroy any existing chart on this canvas to avoid Chart.js stack
+                if (ctx._chartInstance) { try { ctx._chartInstance.destroy(); } catch(e){} }
+                ctx._chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: sparkArr.map(p => p.time || ''),
+                        datasets: [{ data: values, borderColor: '#6495ED',
+                                     backgroundColor: 'rgba(100,149,237,0.15)', fill: true }]
+                    },
+                    options: commonOptions
+                });
+                const latest = values[values.length - 1];
+                const first  = values[0];
+                const chg    = ((latest - first) / first * 100).toFixed(2);
+                const arrow  = chg > 0 ? '↑' : chg < 0 ? '↓' : '→';
+                // For NIS, lower = stronger shekel
+                const color  = chg < 0 ? '#4ade80' : chg > 0 ? '#f87171' : '#7a9ab8';
+                const stEl   = document.getElementById(statusId);
+                if (stEl) stEl.innerHTML = `<span style="color:${color}">${arrow} ${Math.abs(chg)}% (5d)</span>`;
+                document.getElementById(containerId).style.display = 'flex';
+            });
+        }
+
+        // v2.1.0 — Build TASE intraday sparkline from backend's `sparkline` array.
+        // The backend was already returning intraday TASE points but the frontend
+        // was discarding them. Now they render in a small canvas next to the value.
+        function buildTaseSparkline(sparkArr) {
+            if (!Array.isArray(sparkArr) || sparkArr.length < 2) return;
+            const ctx = document.getElementById('taseSparkline');
+            if (!ctx) return;
+            const values = sparkArr.map(p => p.value);
+            if (ctx._chartInstance) { try { ctx._chartInstance.destroy(); } catch(e){} }
+            ctx._chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sparkArr.map(p => p.time || ''),
+                    datasets: [{ data: values, borderColor: '#fbbf24',
+                                 backgroundColor: 'rgba(251,191,36,0.15)', fill: true }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                    scales: { x: { display: false }, y: { display: false } },
+                    elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
+                }
+            });
+            const cont = document.getElementById('taseSparklineContainer');
+            if (cont) cont.style.display = 'flex';
+        }
+
         function buildNisSparklines(trends, dates) {
             const commonOptions = {
                 responsive: true, maintainAspectRatio: false,
@@ -988,28 +1231,32 @@
                 elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 2 } }
             };
 
-            // NIS sparkline in stability card
-            if (trends.nis_usd && trends.nis_usd.length > 0) {
+            // v2.1.0 — Fix: backend returns trends.nis_rate (was: trends.nis_usd)
+            // The old field name caused this entire block to never execute, hiding
+            // the sparkline even when 30-day history existed. Now it renders.
+            const nisSeries = trends.nis_rate || trends.nis_usd || [];
+            if (nisSeries.length > 0) {
                 ['nisSparklineContainer', 'nisCardSparklineContainer'].forEach(containerId => {
                     const canvasId = containerId === 'nisSparklineContainer' ? 'nisSparkline' : 'nisCardSparkline';
                     const statusId = containerId === 'nisSparklineContainer' ? 'nisSparklineStatus' : 'nisCardSparklineStatus';
                     const ctx = document.getElementById(canvasId);
                     if (!ctx) return;
-                    new Chart(ctx, {
+                    if (ctx._chartInstance) { try { ctx._chartInstance.destroy(); } catch(e){} }
+                    ctx._chartInstance = new Chart(ctx, {
                         type: 'line',
                         data: {
                             labels: dates,
-                            datasets: [{ data: trends.nis_usd, borderColor: '#6495ED', backgroundColor: 'rgba(100,149,237,0.1)', fill: true }]
+                            datasets: [{ data: nisSeries, borderColor: '#6495ED', backgroundColor: 'rgba(100,149,237,0.1)', fill: true }]
                         },
                         options: commonOptions
                     });
-                    const latest = trends.nis_usd[trends.nis_usd.length - 1];
-                    const prev = trends.nis_usd[trends.nis_usd.length - 2] || latest;
+                    const latest = nisSeries[nisSeries.length - 1];
+                    const prev = nisSeries[nisSeries.length - 2] || latest;
                     const chg = ((latest - prev) / prev * 100).toFixed(2);
                     const arrow = chg > 0 ? '↑' : chg < 0 ? '↓' : '→';
                     // For NIS, lower = stronger shekel
                     const color = chg < 0 ? '#4ade80' : chg > 0 ? '#f87171' : '#7a9ab8';
-                    document.getElementById(statusId).innerHTML = `<span style="color:${color}">${arrow} ${Math.abs(chg)}%</span>`;
+                    document.getElementById(statusId).innerHTML = `<span style="color:${color}">${arrow} ${Math.abs(chg)}% (30d)</span>`;
                     document.getElementById(containerId).style.display = 'flex';
                 });
             }
@@ -1057,6 +1304,7 @@
             stabilityLegend: "100 = Stable | 0 = Crisis / Active War",
             nisRate: "💵 NIS / USD RATE",
             taseLabel: "📊 TASE TA-35",
+            taseIntradayLabel: "Intraday:",
             warConflict: "⚔️ WAR & CONFLICT",
             conflictSubtitle: "Conflict intensity (0–100)",
             highSeverityLabel: "High-Severity Events (7d)",
@@ -1064,13 +1312,37 @@
             coalitionStatus: "🏛️ COALITION STATUS",
             coalitionSubtitle: "Knesset seats (61 needed)",
             coalitionTrial: "⚠️ On trial: bribery, fraud, breach of trust",
-            coalitionElection: "🗓️ Election due by Nov 2026",
+            coalitionElection: "🗓️ Election due by October 2026",
             keyFigures: "👥 KEY FIGURES",
             strikeActivity: "🎯 RECENT STRIKE ACTIVITY",
             strikeSubtitle: "Events (ACLED/RSS, 30d)",
-            bennettWatch: "🌟 BENNETT WATCH",
-            bennettSubtitle: "Mentions (7d) — dark horse PM candidate",
-            bennettNote: "Naftali Bennett (New Right/ind.) — vocal critic of war management and Netanyahu coalition. Potential challenger in any early election scenario.",
+            // Legacy keys (kept for backward compat)
+            bennettWatch: "🌟 OPPOSITION WATCH",
+            bennettSubtitle: "Mentions (7d) — anti-Netanyahu bloc",
+            bennettNote: "Bennett & Lapid merged into 'Together' (April 26, 2026) — Bennett to lead. Eisenkot's Yashar! courted to join. Anti-Netanyahu bloc consolidating; elections expected by October 2026.",
+            // v2.1.0 — Opposition Watch
+            oppWatchTitle: "OPPOSITION WATCH",
+            oppWatchSubtitle: "Mentions (7d) — anti-Netanyahu bloc",
+            oppPollHeader: "📊 Latest Knesset Poll Snapshot",
+            oppPollAsOf: "As of: April 28, 2026 (manual)",
+            oppTogether: "Together (Bennett+Lapid)",
+            oppLikud: "Likud",
+            oppYashar: "Yashar (Eisenkot)",
+            oppSeats: "seats",
+            oppSeats2: "seats",
+            oppSeats3: "seats",
+            oppPollNote: "Coalition: 51-57 · Opposition (Zionist): 52-60 · Arab parties: 9-11 · Threshold: 61 to govern",
+            oppNoneNote: "No opposition articles in this scan window",
+            oppWatchNote: "Bennett & Lapid merged into 'Together' (April 26, 2026) — Bennett to lead. Eisenkot's Yashar! courted to join. Anti-Netanyahu bloc consolidating; elections expected by October 2026.",
+            // v2.1.0 — Elections Vector
+            electionsTitle: "ELECTIONS VECTOR",
+            electionsSubtitle: "Electoral pressure proximity (0–100)",
+            electionsScheduled: "Scheduled by",
+            electionsByOctober: "Oct 2026",
+            electionsMentions: "Election mentions (7d)",
+            electionsNoneNote: "No election-proximity signals in this scan window",
+            electionsNote: "Elections must take place by end of October 2026. Higher score = more public discussion of dissolution / no-confidence votes / snap elections / caretaker scenarios.",
+            // Map / Knowledge / Articles
             mapTitle: "🗺️ Israel & Surrounding Territories — Strategic Overview",
             knowledgeLibraryTitle: "Knowledge Library",
             knowledgeDisclaimer: "Background information compiled from open-source research, think tank analyses, and public government reporting.",
@@ -1087,6 +1359,36 @@
             ceasefireInactive: "🔴 Active war operations — No ceasefire in effect",
             electionSignalSuffix: "early election signal detected",
             electionSignalSuffixPlural: "early election signals detected",
+            // v2.1.0 — Canonical sidebar
+            navDashboards: "Dashboards",
+            navAfrica: "🌍 Africa", navFuture: "🔒 Future",
+            navAsia: "🌏 Asia & Pacific", navLive: "● Live",
+            navEurope: "🌍 Europe", navLive2: "● Live",
+            navME: "🕌 Middle East", navLive3: "● Live",
+            navWHA: "🌎 W. Hemisphere", navLive4: "● Live",
+            navMilitary: "🎖️ Military Tracker", navLive5: "● Live",
+            navGPI: "🌐 Global Pressure", navLive6: "● Live",
+            navRegionalRhetoric: "Regional Rhetoric",
+            navMERhet: "🕌 Middle East", navLive7: "● Live",
+            navAsiaRhet: "🌏 Asia", navLive8: "● Live",
+            navEuropeRhet: "🌍 Europe", navLive9: "● Live",
+            navWHARhet: "🌎 W. Hemisphere", navLive10: "● Live",
+            navIsraelRhet: "🇮🇱 Israel Rhetoric", navLive11: "● Live",
+            navIsraelStab: "🇮🇱 Israel Stability", navYouAreHere: "◉ You are here",
+            // v2.1.0 — Canonical footer
+            footDataTitle: "Data Sources",
+            footDataText: "Times of Israel, Jerusalem Post, Haaretz, Ynet, Yahoo Finance (NIS/USD), TASE Data Hub (TA-35 intraday), NewsAPI, GDELT, ACLED, IDF Spokesperson, Knesset records. Multilingual content via Arabic, Hebrew, and Farsi feeds.",
+            footMethodTitle: "Methodology",
+            footMethodText: "Composite stability index (0–100) blending economic indicators (NIS/TASE), active war intensity, coalition fragility, opposition consolidation, regional threat posture, and rhetoric tracker penalties (inbound threat / outbound posture / Pikud HaOref alerts). Refreshed every 12 hours; trends backed by a 90-day rolling history.",
+            footContactTitle: "Contact",
+            footContactText: "Questions, corrections, or research collaboration:",
+            footPrivacy: "Privacy Policy",
+            footDisclaimerLabel: "Disclaimer:",
+            footDisclaimerText: "Asifah Analytics is a personal-time open-source OSINT project. Analysis reflects open-source signal aggregation only — does NOT reflect classified intelligence and is NOT an official U.S. Government product. Asifah methodology is proprietary and should not be cited as official assessment. Not for operational use.",
+            footBmacText: "If you find Asifah Analytics useful and want to support ongoing development, you can",
+            footBmacButton: "buy me a coffee",
+            footRefreshNote: "Updated every 12 hours",
+            footCopy: "All Rights Reserved. Proprietary and Confidential.",
           },
           he: {
             pageTitle: "🇮🇱 מדד יציבות ישראל",
@@ -1098,6 +1400,7 @@
             stabilityLegend: "100 = יציב | 0 = משבר / מלחמה פעילה",
             nisRate: "💵 שקל / דולר",
             taseLabel: "📊 ת״א 35",
+            taseIntradayLabel: "תוך־יומי:",
             warConflict: "⚔️ מלחמה ועימות",
             conflictSubtitle: "עוצמת העימות (0–100)",
             highSeverityLabel: "אירועים חמורים (7 ימים)",
@@ -1105,13 +1408,35 @@
             coalitionStatus: "🏛️ מצב הקואליציה",
             coalitionSubtitle: "מושבים בכנסת (נדרשים 61)",
             coalitionTrial: "⚠️ עומד לדין: שוחד, מרמה והפרת אמונים",
-            coalitionElection: "🗓️ בחירות עד נובמבר 2026",
+            coalitionElection: "🗓️ בחירות עד אוקטובר 2026",
             keyFigures: "👥 דמויות מרכזיות",
             strikeActivity: "🎯 פעילות תקיפה אחרונה",
             strikeSubtitle: "אירועים (ACLED/RSS, 30 ימים)",
-            bennettWatch: "🌟 מעקב בנט",
-            bennettSubtitle: "אזכורים (7 ימים) — מועמד אפשרי לראשות הממשלה",
-            bennettNote: "נפתלי בנט (ימין חדש/עצמאי) — מבקר בולט של ניהול המלחמה ושל קואליציית נתניהו. מועמד אפשרי בתרחיש של בחירות מוקדמות.",
+            bennettWatch: "🌟 מעקב אופוזיציה",
+            bennettSubtitle: "אזכורים (7 ימים) — הגוש האנטי־נתניהו",
+            bennettNote: "בנט ולפיד התאחדו במפלגת 'יחד' (26 באפריל 2026) — בראשות בנט. מחזרים אחרי איזנקוט (ישר!). הגוש האנטי־נתניהו מתגבש; בחירות צפויות עד אוקטובר 2026.",
+            // v2.1.0 — Opposition Watch (Hebrew)
+            oppWatchTitle: "מעקב אופוזיציה",
+            oppWatchSubtitle: "אזכורים (7 ימים) — הגוש האנטי־נתניהו",
+            oppPollHeader: "📊 תמונת מצב סקרים — כנסת",
+            oppPollAsOf: "נכון ל־: 28 באפריל 2026 (ידני)",
+            oppTogether: "יחד (בנט+לפיד)",
+            oppLikud: "ליכוד",
+            oppYashar: "ישר! (איזנקוט)",
+            oppSeats: "מנדטים",
+            oppSeats2: "מנדטים",
+            oppSeats3: "מנדטים",
+            oppPollNote: "קואליציה: 51-57 · אופוזיציה (ציונית): 52-60 · מפלגות ערביות: 9-11 · סף: 61 להקמת ממשלה",
+            oppNoneNote: "לא נמצאו כתבות אופוזיציה בחלון הסריקה",
+            oppWatchNote: "בנט ולפיד התאחדו ב'יחד' (26 באפריל 2026), בראשות בנט. מחזרים אחרי ישר! של איזנקוט. הגוש האנטי־נתניהו מתגבש; בחירות צפויות עד אוקטובר 2026.",
+            // v2.1.0 — Elections Vector (Hebrew)
+            electionsTitle: "וקטור בחירות",
+            electionsSubtitle: "קרבת לחץ אלקטורלי (0–100)",
+            electionsScheduled: "מתוכננות עד",
+            electionsByOctober: "אוקטובר 2026",
+            electionsMentions: "אזכורי בחירות (7 ימים)",
+            electionsNoneNote: "לא זוהו סימני קרבת בחירות בחלון הסריקה",
+            electionsNote: "הבחירות חייבות להתקיים עד סוף אוקטובר 2026. ציון גבוה יותר = יותר דיון פומבי בפיזור הכנסת, הצבעות אי־אמון, בחירות חטופות או ממשלת מעבר.",
             mapTitle: "🗺️ ישראל והאזור — סקירה אסטרטגית",
             knowledgeLibraryTitle: "ספריית ידע",
             knowledgeDisclaimer: "מידע רקע מבוסס על מקורות פתוחים, ניתוחי מכוני מחקר ודיווחים ממשלתיים פומביים.",
@@ -1128,6 +1453,36 @@
             ceasefireInactive: "🔴 לחימה פעילה — אין הפסקת אש",
             electionSignalSuffix: "זוהה סימן לבחירות מוקדמות",
             electionSignalSuffixPlural: "זוהו סימנים לבחירות מוקדמות",
+            // Sidebar (Hebrew)
+            navDashboards: "לוחות בקרה",
+            navAfrica: "🌍 אפריקה", navFuture: "🔒 עתידי",
+            navAsia: "🌏 אסיה והפסיפיק", navLive: "● פעיל",
+            navEurope: "🌍 אירופה", navLive2: "● פעיל",
+            navME: "🕌 המזרח התיכון", navLive3: "● פעיל",
+            navWHA: "🌎 חצי הכדור המערבי", navLive4: "● פעיל",
+            navMilitary: "🎖️ מעקב צבאי", navLive5: "● פעיל",
+            navGPI: "🌐 לחץ גלובלי", navLive6: "● פעיל",
+            navRegionalRhetoric: "רטוריקה אזורית",
+            navMERhet: "🕌 המזרח התיכון", navLive7: "● פעיל",
+            navAsiaRhet: "🌏 אסיה", navLive8: "● פעיל",
+            navEuropeRhet: "🌍 אירופה", navLive9: "● פעיל",
+            navWHARhet: "🌎 חצי הכדור המערבי", navLive10: "● פעיל",
+            navIsraelRhet: "🇮🇱 רטוריקת ישראל", navLive11: "● פעיל",
+            navIsraelStab: "🇮🇱 יציבות ישראל", navYouAreHere: "◉ אתה כאן",
+            // Footer (Hebrew)
+            footDataTitle: "מקורות נתונים",
+            footDataText: "טיימס אוף ישראל, ג׳רוזלם פוסט, הארץ, Ynet, Yahoo Finance (שקל/דולר), TASE Data Hub (ת״א 35 תוך־יומי), NewsAPI, GDELT, ACLED, דובר צה״ל, רישומי הכנסת. תוכן רב־לשוני באמצעות פידים בערבית, עברית ופרסית.",
+            footMethodTitle: "מתודולוגיה",
+            footMethodText: "מדד יציבות מורכב (0–100) המשלב אינדיקטורים כלכליים (שקל/ת״א 35), עוצמת מלחמה פעילה, שבריריות הקואליציה, התגבשות האופוזיציה, מצב איומים אזורי, וקנסות של עוקב הרטוריקה (איום נכנס / עמדה יוצאת / התרעות פיקוד העורף). מתעדכן כל 12 שעות; המגמות מבוססות על היסטוריית 90 ימים מתגלגלת.",
+            footContactTitle: "יצירת קשר",
+            footContactText: "שאלות, תיקונים או שיתוף פעולה במחקר:",
+            footPrivacy: "מדיניות פרטיות",
+            footDisclaimerLabel: "כתב ויתור:",
+            footDisclaimerText: "Asifah Analytics הוא מיזם OSINT קוד פתוח שנעשה בזמן פנוי. הניתוח משקף איגוד אותות ממקורות פתוחים בלבד — אינו משקף מודיעין מסווג ואינו מוצר רשמי של ממשלת ארה״ב. המתודולוגיה של Asifah היא קניינית ואין לצטטה כהערכה רשמית. אינו לשימוש מבצעי.",
+            footBmacText: "אם Asifah Analytics שימושי לכם ואתם רוצים לתמוך בפיתוח המתמשך, תוכלו",
+            footBmacButton: "להזמין לי קפה",
+            footRefreshNote: "מתעדכן כל 12 שעות",
+            footCopy: "כל הזכויות שמורות. קנייני וסודי.",
           },
           ar: {
             pageTitle: "🇮🇱 مؤشر استقرار إسرائيل",
@@ -1139,6 +1494,7 @@
             stabilityLegend: "100 = مستقر | 0 = أزمة / حرب نشطة",
             nisRate: "💵 الشيكل / الدولار",
             taseLabel: "📊 مؤشر تل أبيب 35",
+            taseIntradayLabel: "خلال اليوم:",
             warConflict: "⚔️ الحرب والصراع",
             conflictSubtitle: "شدة الصراع (0–100)",
             highSeverityLabel: "أحداث عالية الخطورة (7 أيام)",
@@ -1146,13 +1502,35 @@
             coalitionStatus: "🏛️ حالة الائتلاف",
             coalitionSubtitle: "مقاعد الكنيست (61 مطلوبة)",
             coalitionTrial: "⚠️ قيد المحاكمة: رشوة، احتيال، خيانة أمانة",
-            coalitionElection: "🗓️ انتخابات بحلول نوفمبر 2026",
+            coalitionElection: "🗓️ انتخابات بحلول أكتوبر 2026",
             keyFigures: "👥 شخصيات رئيسية",
             strikeActivity: "🎯 نشاط الضربات الأخيرة",
             strikeSubtitle: "الأحداث (ACLED/RSS، 30 يومًا)",
-            bennettWatch: "🌟 متابعة بينيت",
-            bennettSubtitle: "الإشارات (7 أيام) — مرشح محتمل لرئاسة الوزراء",
-            bennettNote: "نفتالي بينيت (اليمين الجديد/مستقل) — منتقد بارز لإدارة الحرب وائتلاف نتنياهو. منافس محتمل في حال إجراء انتخابات مبكرة.",
+            bennettWatch: "🌟 مراقبة المعارضة",
+            bennettSubtitle: "الإشارات (7 أيام) — الكتلة المعارضة لنتنياهو",
+            bennettNote: "بينيت ولابيد دمجا حزبيهما تحت اسم 'معًا' (26 أبريل 2026) — بقيادة بينيت. يسعون لانضمام إيزنكوت (يَشار!). الكتلة المعارضة لنتنياهو تتوحد؛ الانتخابات متوقعة بحلول أكتوبر 2026.",
+            // Opposition Watch (Arabic)
+            oppWatchTitle: "مراقبة المعارضة",
+            oppWatchSubtitle: "الإشارات (7 أيام) — الكتلة المعارضة لنتنياهو",
+            oppPollHeader: "📊 لقطة استطلاع الكنيست الأخيرة",
+            oppPollAsOf: "حتى: 28 أبريل 2026 (يدوي)",
+            oppTogether: "معًا (بينيت+لابيد)",
+            oppLikud: "الليكود",
+            oppYashar: "يَشار (إيزنكوت)",
+            oppSeats: "مقاعد",
+            oppSeats2: "مقاعد",
+            oppSeats3: "مقاعد",
+            oppPollNote: "الائتلاف: 51-57 · المعارضة (الصهيونية): 52-60 · الأحزاب العربية: 9-11 · العتبة: 61 لتشكيل حكومة",
+            oppNoneNote: "لا توجد مقالات معارضة في نافذة الفحص",
+            oppWatchNote: "بينيت ولابيد توحدا في 'معًا' (26 أبريل 2026)، بقيادة بينيت. يسعون لضم إيزنكوت (يَشار!). الكتلة المعارضة لنتنياهو تتوحد؛ الانتخابات متوقعة بحلول أكتوبر 2026.",
+            // Elections Vector (Arabic)
+            electionsTitle: "متجه الانتخابات",
+            electionsSubtitle: "قرب الضغط الانتخابي (0–100)",
+            electionsScheduled: "مقررة بحلول",
+            electionsByOctober: "أكتوبر 2026",
+            electionsMentions: "ذكر الانتخابات (7 أيام)",
+            electionsNoneNote: "لم تُرصد إشارات قرب انتخابات في نافذة الفحص",
+            electionsNote: "يجب أن تجرى الانتخابات بحلول نهاية أكتوبر 2026. كلما زاد الرقم زاد النقاش العام حول حل الكنيست أو سحب الثقة أو الانتخابات المبكرة أو سيناريوهات حكومة تصريف الأعمال.",
             mapTitle: "🗺️ إسرائيل والمنطقة — نظرة استراتيجية",
             knowledgeLibraryTitle: "مكتبة المعرفة",
             knowledgeDisclaimer: "معلومات خلفية من مصادر مفتوحة وتحليلات مراكز أبحاث وتقارير حكومية علنية.",
@@ -1169,6 +1547,36 @@
             ceasefireInactive: "🔴 عمليات عسكرية نشطة — لا يوجد وقف إطلاق نار",
             electionSignalSuffix: "تم رصد إشارة لانتخابات مبكرة",
             electionSignalSuffixPlural: "تم رصد إشارات لانتخابات مبكرة",
+            // Sidebar (Arabic)
+            navDashboards: "لوحات البيانات",
+            navAfrica: "🌍 أفريقيا", navFuture: "🔒 مستقبلي",
+            navAsia: "🌏 آسيا والمحيط الهادئ", navLive: "● مباشر",
+            navEurope: "🌍 أوروبا", navLive2: "● مباشر",
+            navME: "🕌 الشرق الأوسط", navLive3: "● مباشر",
+            navWHA: "🌎 نصف الكرة الغربي", navLive4: "● مباشر",
+            navMilitary: "🎖️ متعقب عسكري", navLive5: "● مباشر",
+            navGPI: "🌐 الضغط العالمي", navLive6: "● مباشر",
+            navRegionalRhetoric: "الخطاب الإقليمي",
+            navMERhet: "🕌 الشرق الأوسط", navLive7: "● مباشر",
+            navAsiaRhet: "🌏 آسيا", navLive8: "● مباشر",
+            navEuropeRhet: "🌍 أوروبا", navLive9: "● مباشر",
+            navWHARhet: "🌎 نصف الكرة الغربي", navLive10: "● مباشر",
+            navIsraelRhet: "🇮🇱 خطاب إسرائيل", navLive11: "● مباشر",
+            navIsraelStab: "🇮🇱 استقرار إسرائيل", navYouAreHere: "◉ أنت هنا",
+            // Footer (Arabic)
+            footDataTitle: "مصادر البيانات",
+            footDataText: "تايمز أوف إسرائيل، جيروزاليم بوست، هآرتس، Ynet، Yahoo Finance (الشيكل/الدولار)، TASE Data Hub (تل أبيب 35 خلال اليوم)، NewsAPI، GDELT، ACLED، الناطق العسكري الإسرائيلي، سجلات الكنيست. محتوى متعدد اللغات عبر تغذيات بالعربية والعبرية والفارسية.",
+            footMethodTitle: "المنهجية",
+            footMethodText: "مؤشر استقرار مركّب (0–100) يدمج مؤشرات اقتصادية (الشيكل/تل أبيب 35)، شدة الحرب الفعلية، هشاشة الائتلاف، توحد المعارضة، وضع التهديد الإقليمي، وعقوبات متعقب الخطاب (تهديد وارد / موقف صادر / تنبيهات قيادة الجبهة الداخلية). يُحدَّث كل 12 ساعة؛ الاتجاهات مستندة إلى تاريخ متجدد لمدة 90 يومًا.",
+            footContactTitle: "اتصل بنا",
+            footContactText: "للأسئلة أو التصحيحات أو التعاون البحثي:",
+            footPrivacy: "سياسة الخصوصية",
+            footDisclaimerLabel: "إخلاء مسؤولية:",
+            footDisclaimerText: "Asifah Analytics مشروع OSINT مفتوح المصدر يُنفَّذ في الوقت الشخصي. التحليل يعكس تجميع إشارات من مصادر مفتوحة فقط — لا يعكس استخبارات سرية وليس منتجًا رسميًا للحكومة الأمريكية. منهجية Asifah ملكية خاصة ولا ينبغي الاستشهاد بها كتقييم رسمي. ليست للاستخدام التشغيلي.",
+            footBmacText: "إذا وجدت Asifah Analytics مفيدًا وأردت دعم التطوير المستمر، يمكنك",
+            footBmacButton: "اشترِ لي قهوة",
+            footRefreshNote: "يُحدَّث كل 12 ساعة",
+            footCopy: "جميع الحقوق محفوظة. ملكية وسرية.",
           },
           fa: {
             pageTitle: "🇮🇱 شاخص ثبات اسرائیل",
@@ -1180,6 +1588,7 @@
             stabilityLegend: "100 = پایدار | 0 = بحران / جنگ فعال",
             nisRate: "💵 شکل / دلار",
             taseLabel: "📊 شاخص تل‌آویو 35",
+            taseIntradayLabel: "روزانه:",
             warConflict: "⚔️ جنگ و درگیری",
             conflictSubtitle: "شدت درگیری (0–100)",
             highSeverityLabel: "رویدادهای شدید (7 روز)",
@@ -1187,13 +1596,35 @@
             coalitionStatus: "🏛️ وضعیت ائتلاف",
             coalitionSubtitle: "کرسی‌های کنست (61 مورد نیاز)",
             coalitionTrial: "⚠️ در حال محاکمه: رشوه، کلاهبرداری، سوءاستفاده از اعتماد",
-            coalitionElection: "🗓️ انتخابات تا نوامبر 2026",
+            coalitionElection: "🗓️ انتخابات تا اکتبر 2026",
             keyFigures: "👥 چهره‌های کلیدی",
             strikeActivity: "🎯 فعالیت حملات اخیر",
             strikeSubtitle: "رویدادها (ACLED/RSS، 30 روز)",
-            bennettWatch: "🌟 پایش بنت",
-            bennettSubtitle: "اشاره‌ها (7 روز) — گزینه احتمالی نخست‌وزیری",
-            bennettNote: "نفتالی بنت (راست جدید/مستقل) — منتقد برجسته مدیریت جنگ و ائتلاف نتانیاهو. گزینه احتمالی در سناریوی انتخابات زودهنگام.",
+            bennettWatch: "🌟 پایش اپوزیسیون",
+            bennettSubtitle: "اشاره‌ها (7 روز) — جبهه ضد نتانیاهو",
+            bennettNote: "بنت و لاپید در حزب 'با هم' (26 آوریل 2026) ادغام شدند — به رهبری بنت. در حال جذب ایزنکات (یشار!). جبهه ضد نتانیاهو در حال تثبیت است؛ انتخابات تا اکتبر 2026 پیش‌بینی می‌شود.",
+            // Opposition Watch (Farsi)
+            oppWatchTitle: "پایش اپوزیسیون",
+            oppWatchSubtitle: "اشاره‌ها (7 روز) — جبهه ضد نتانیاهو",
+            oppPollHeader: "📊 آخرین تصویر نظرسنجی کنست",
+            oppPollAsOf: "تا تاریخ: 28 آوریل 2026 (دستی)",
+            oppTogether: "با هم (بنت+لاپید)",
+            oppLikud: "لیکود",
+            oppYashar: "یشار (ایزنکات)",
+            oppSeats: "کرسی",
+            oppSeats2: "کرسی",
+            oppSeats3: "کرسی",
+            oppPollNote: "ائتلاف: 51-57 · اپوزیسیون (صهیونیستی): 52-60 · احزاب عربی: 9-11 · آستانه: 61 برای تشکیل دولت",
+            oppNoneNote: "هیچ مقاله اپوزیسیونی در پنجره اسکن یافت نشد",
+            oppWatchNote: "بنت و لاپید در 'با هم' ادغام شدند (26 آوریل 2026)، به رهبری بنت. در حال جذب یشار! ایزنکات. جبهه ضد نتانیاهو در حال تثبیت است؛ انتخابات تا اکتبر 2026.",
+            // Elections Vector (Farsi)
+            electionsTitle: "بُردار انتخابات",
+            electionsSubtitle: "نزدیکی فشار انتخاباتی (0–100)",
+            electionsScheduled: "زمان‌بندی شده تا",
+            electionsByOctober: "اکتبر 2026",
+            electionsMentions: "اشاره‌های انتخاباتی (7 روز)",
+            electionsNoneNote: "نشانه‌ای از نزدیکی انتخابات در پنجره اسکن یافت نشد",
+            electionsNote: "انتخابات باید تا پایان اکتبر 2026 برگزار شود. امتیاز بالاتر = بحث عمومی بیشتر در مورد انحلال کنست، رأی عدم اعتماد، انتخابات زودهنگام یا دولت موقت.",
             mapTitle: "🗺️ اسرائیل و منطقه — نمای کلی راهبردی",
             knowledgeLibraryTitle: "کتابخانه دانش",
             knowledgeDisclaimer: "اطلاعات پس‌زمینه از منابع باز، تحلیل اندیشکده‌ها و گزارش‌های دولتی عمومی گردآوری شده است.",
@@ -1210,6 +1641,36 @@
             ceasefireInactive: "🔴 عملیات نظامی فعال — آتش‌بس برقرار نیست",
             electionSignalSuffix: "نشانه‌ای از انتخابات زودهنگام شناسایی شد",
             electionSignalSuffixPlural: "نشانه‌هایی از انتخابات زودهنگام شناسایی شدند",
+            // Sidebar (Farsi)
+            navDashboards: "داشبوردها",
+            navAfrica: "🌍 آفریقا", navFuture: "🔒 آینده",
+            navAsia: "🌏 آسیا و اقیانوسیه", navLive: "● زنده",
+            navEurope: "🌍 اروپا", navLive2: "● زنده",
+            navME: "🕌 خاورمیانه", navLive3: "● زنده",
+            navWHA: "🌎 نیمکره غربی", navLive4: "● زنده",
+            navMilitary: "🎖️ ردیاب نظامی", navLive5: "● زنده",
+            navGPI: "🌐 فشار جهانی", navLive6: "● زنده",
+            navRegionalRhetoric: "گفتمان منطقه‌ای",
+            navMERhet: "🕌 خاورمیانه", navLive7: "● زنده",
+            navAsiaRhet: "🌏 آسیا", navLive8: "● زنده",
+            navEuropeRhet: "🌍 اروپا", navLive9: "● زنده",
+            navWHARhet: "🌎 نیمکره غربی", navLive10: "● زنده",
+            navIsraelRhet: "🇮🇱 گفتمان اسرائیل", navLive11: "● زنده",
+            navIsraelStab: "🇮🇱 ثبات اسرائیل", navYouAreHere: "◉ اینجا هستید",
+            // Footer (Farsi)
+            footDataTitle: "منابع داده",
+            footDataText: "تایمز آو اسرائیل، جروزالم پست، هاآرتص، Ynet، Yahoo Finance (شکل/دلار)، TASE Data Hub (تل‌آویو 35 روزانه)، NewsAPI، GDELT، ACLED، سخنگوی ارتش اسرائیل، اسناد کنست. محتوای چندزبانه از طریق فیدهای عربی، عبری و فارسی.",
+            footMethodTitle: "روش‌شناسی",
+            footMethodText: "شاخص ثبات ترکیبی (0–100) ترکیبی از شاخص‌های اقتصادی (شکل/تل‌آویو 35)، شدت جنگ فعال، شکنندگی ائتلاف، تثبیت اپوزیسیون، وضعیت تهدید منطقه‌ای، و جریمه‌های ردیاب گفتمان (تهدید ورودی / موضع خروجی / هشدارهای پیکود هاوریف). هر 12 ساعت به‌روزرسانی می‌شود؛ روندها بر اساس تاریخچه 90 روزه پشتیبانی می‌شوند.",
+            footContactTitle: "تماس",
+            footContactText: "برای سؤال، تصحیح یا همکاری پژوهشی:",
+            footPrivacy: "سیاست حریم خصوصی",
+            footDisclaimerLabel: "سلب مسئولیت:",
+            footDisclaimerText: "Asifah Analytics یک پروژه OSINT متن‌باز شخصی است. تحلیل فقط جمع‌آوری سیگنال‌های منبع باز را منعکس می‌کند — منعکس‌کننده اطلاعات طبقه‌بندی‌شده نیست و محصول رسمی دولت ایالات متحده نیست. روش‌شناسی Asifah اختصاصی است و نباید به‌عنوان ارزیابی رسمی نقل شود. برای استفاده عملیاتی نیست.",
+            footBmacText: "اگر Asifah Analytics برای شما مفید است و می‌خواهید از توسعه مستمر حمایت کنید، می‌توانید",
+            footBmacButton: "یک قهوه برایم بخرید",
+            footRefreshNote: "هر 12 ساعت به‌روزرسانی می‌شود",
+            footCopy: "کلیه حقوق محفوظ است. اختصاصی و محرمانه.",
           },
         };
         // ============================================
