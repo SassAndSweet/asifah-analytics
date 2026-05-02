@@ -714,11 +714,11 @@
 <!-- ARTICLES — TABBED -->
 <div class="card">
     <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT AZERBAIJAN STABILITY & STRATEGIC ARTICLES</span></div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">English · Russian · Azerbaijani · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">English · Russian · French · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit</div>
     <div class="tab-row">
         <button class="tab-btn active" id="tab-en" onclick="switchArticleTab('en')" data-i18n="tabEN">🇬🇧 English <span class="tab-count" id="tabCountEN">0</span></button>
         <button class="tab-btn" id="tab-ru" onclick="switchArticleTab('ru')" data-i18n="tabRU">🇷🇺 Russian <span class="tab-count" id="tabCountRU">0</span></button>
-        <button class="tab-btn" id="tab-az" onclick="switchArticleTab('az')" data-i18n="tabAZ">🇦🇿 Azerbaijani <span class="tab-count" id="tabCountAZ">0</span></button>
+        <button class="tab-btn" id="tab-fr" onclick="switchArticleTab('fr')" data-i18n="tabFR">🇫🇷 French <span class="tab-count" id="tabCountFR">0</span></button>
         <button class="tab-btn" id="tab-social" onclick="switchArticleTab('social')" data-i18n="tabSocial">📡 Social <span class="tab-count" id="tabCountSocial">0</span></button>
     </div>
     <div id="articlesContainer">
@@ -812,39 +812,38 @@ function hideLoading() {
 }
 
 // ── ARTICLES ──
-// ── ARTICLES (tabbed: EN / RU / AZ / Social) ──
-let _articleCache = { en: [], ru: [], az: [], social: [] };
+// ── ARTICLES (tabbed: EN / RU / FR / Social) ──
+let _articleCache = { en: [], ru: [], fr: [], social: [] };
 
 async function loadArticles() {
     try {
-        const r = await fetch(`${API_BASE}/api/rhetoric/azerbaijan`);
+        const r = await fetch(`${API_BASE}/api/europe/threat/azerbaijan`);
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const d = await r.json();
 
+        // Stash raw payload for rhetoric loader (avoid double-fetch — same endpoint)
+        window._threatPayload = d;
+
         _articleCache.en = (d.articles_en || []).map(a => ({ ...a, _lang: 'en' }));
         _articleCache.ru = (d.articles_ru || []).map(a => ({ ...a, _lang: 'ru' }));
-        _articleCache.az = (d.articles_az || []).map(a => ({ ...a, _lang: 'az' }));
+        _articleCache.fr = (d.articles_fr || []).map(a => ({ ...a, _lang: 'fr' }));
 
-        // Social: combine telegram + bluesky + reddit signals into a unified list, tag origin
-        const tg     = (d.telegram_signals || []).map(p => ({ ...p, _origin: 'telegram' }));
-        const bsky   = (d.bluesky_signals  || []).map(p => ({ ...p, _origin: 'bluesky'  }));
-        const reddit = (d.reddit_signals   || []).map(p => ({ ...p, _origin: 'reddit'   }));
-        _articleCache.social = [...tg, ...bsky, ...reddit];
+        // Social: reddit articles from generic threat endpoint
+        const reddit = (d.articles_reddit || []).map(p => ({ ...p, _origin: 'reddit' }));
+        _articleCache.social = [...reddit];
 
-        // Update tab counts — prefer count fields if signal arrays not yet exposed (backward compat)
         document.getElementById('tabCountEN').textContent = _articleCache.en.length;
         document.getElementById('tabCountRU').textContent = _articleCache.ru.length;
-        document.getElementById('tabCountAZ').textContent = _articleCache.az.length;
-        const socialCount = _articleCache.social.length || ((d.telegram_count||0) + (d.bluesky_count||0) + (d.reddit_count||0));
-        document.getElementById('tabCountSocial').textContent = socialCount;
+        document.getElementById('tabCountFR').textContent = _articleCache.fr.length;
+        document.getElementById('tabCountSocial').textContent = _articleCache.social.length;
 
         // Default to EN; auto-switch to first tab with content
         if (_articleCache.en.length) {
             switchArticleTab('en');
         } else if (_articleCache.ru.length) {
             switchArticleTab('ru');
-        } else if (_articleCache.az.length) {
-            switchArticleTab('az');
+        } else if (_articleCache.fr.length) {
+            switchArticleTab('fr');
         } else {
             switchArticleTab('en');
         }
@@ -858,7 +857,7 @@ async function loadArticles() {
 }
 
 function switchArticleTab(tab) {
-    ['en','ru','az','social'].forEach(t => {
+    ['en','ru','fr','social'].forEach(t => {
         const b = document.getElementById('tab-'+t);
         if (b) b.classList.toggle('active', t === tab);
     });
@@ -867,10 +866,9 @@ function switchArticleTab(tab) {
     if (tab === 'social') {
         const posts = _articleCache.social;
         if (!posts.length) {
-            c.innerHTML = '<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No social signals captured this scan. Backend may still be aggregating Telegram / Bluesky / Reddit feeds.</div>';
+            c.innerHTML = '<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No social signals captured this scan. Backend may still be aggregating Reddit feeds.</div>';
             return;
         }
-        // Origin colors + emojis
         const ORIGINS = {
             telegram: { color: '#38bdf8', label: '📨 Telegram', bg: 'rgba(56,189,248,0.07)', border: 'rgba(56,189,248,0.25)' },
             bluesky:  { color: '#60a5fa', label: '🦋 Bluesky',  bg: 'rgba(96,165,250,0.07)', border: 'rgba(96,165,250,0.25)' },
@@ -878,8 +876,8 @@ function switchArticleTab(tab) {
         };
         c.innerHTML = posts.slice(0, 30).map(p => {
             const o = ORIGINS[p._origin] || { color: '#94a3b8', label: '📡 Signal', bg: 'rgba(148,163,184,0.07)', border: 'rgba(148,163,184,0.25)' };
-            const text = p.text || p.title || p.content || p.message || '';
-            const author = p.author || p.handle || p.channel || p.subreddit || p.source || '';
+            const text = p.title || p.text || p.content || p.message || '';
+            const author = (typeof p.source === 'object' ? p.source?.name : p.source) || p.author || p.subreddit || '';
             const url = p.url || p.link || '#';
             const pub = p.published || p.publishedAt || p.date || p.timestamp || '';
             let ds = '';
@@ -897,9 +895,8 @@ function switchArticleTab(tab) {
         return;
     }
 
-    // EN, RU, or AZ tab
     const list = _articleCache[tab] || [];
-    const langName = { en: 'English', ru: 'Russian', az: 'Azerbaijani' }[tab] || tab;
+    const langName = { en: 'English', ru: 'Russian', fr: 'French' }[tab] || tab;
     if (!list.length) {
         c.innerHTML = `<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No ${langName} articles in current scan.</div>`;
         return;
@@ -932,216 +929,6 @@ function displayFallback() {
         '</div></div>';
 }
 
-// ── TRANSLATIONS ──
-const T = {
-    en: {
-        pageFlag:'AZERBAIJAN', pageTitle:'AZERBAIJAN STABILITY INDEX',
-        pageSubtitle:'Caspian Energy Hub · Iran Transit Corridor · Israel Defense Partner · Armenia Tensions · SOCAR & BTC Pipeline',
-        backLink:'← Back to Europe',
-        cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
-        cautionText:'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in STEP.',
-        viewCaution:'VIEW CAUTION →',
-        advisoryLabel:'U.S. STATE DEPARTMENT — AZERBAIJAN TRAVEL ADVISORY',
-        advisoryLevel:'LEVEL 3', viewAdvisory:'VIEW ADVISORY →',
-        advisoryText:'Reconsider Travel to Azerbaijan due to terrorism, armed conflict, and risk of landmines. Advisory level raised to 3 following the February 28, 2026 onset of US-Iran hostilities. Do not travel to: the southern border region (Iranian drone/missile threat — March 5, 2026 strike on Nakhchivan International Airport), the Armenian border (landmines), or former Nagorno-Karabakh territories.',
-        rhetoricLabel:'AZERBAIJAN RHETORIC TRACKER — LIVE',
-        rhetoricLink:'Open Tracker →',
-        contextLabel:'📡 APRIL 28, 2026 — STRATEGIC SIGNAL',
-        contextHeadline:'Iran Transit Corridor · Caspian Shipping Surge · WSJ Reporting',
-        contextSub:'Iran routing rail and road shipments via Azerbaijan, Armenia, and Turkey amid economic death spiral · 11+ vessels arrived at Iranian Caspian ports from Russia, Kazakhstan, Turkmenistan · 67% inflation, $270B reconstruction estimate vs $341B GDP',
-        contextTagLabel:'Source:',
-        contextQuote:'"WSJ — Iran\u2019s economic death spiral"',
-        rhetoricCardTitle:'AZERBAIJAN PRESSURE TRACKER',
-        rhetoricCardDesc:'Multi-vector pressure score — Iran Border · Armenia Tensions · Israel Defense Axis · Caspian Shipping · SOCAR Energy Politics · Updated every 6h',
-        loading:'Loading…', viewFullTracker:'View Full Pressure Analysis →',
-        commodityTitle:'COMMODITY EXPOSURE — AZERBAIJAN',
-        commodityFullLink:'View Full Commodity Tracker →',
-        commoditySubtitle:'Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.',
-        commodityLinkage:'Strategic Linkage: Azerbaijan produces ~700K bbl/day of Caspian crude (BTC pipeline — the only major non-Russian, non-Iranian westbound oil corridor from the Caspian basin). The TANAP–TAP gas system carries Azerbaijani natural gas to Europe via Turkey. Sangachal Terminal at Baku is the sole export node for both. Iran sanctions-circumvention transit adds a transit-hub vector beyond pure production exposure.',
-        mapTitle:'AZERBAIJAN — STRATEGIC OVERVIEW',
-        mapSubtitle:"Azerbaijan's strategic position on the Caspian's western shore — bordered by Russia (north), Georgia (northwest), Armenia (west), Iran (south), and the Caspian Sea (east). The exclave of Nakhchivan abuts Iran, Armenia, and Turkey. BTC pipeline carries crude from Sangachal (Baku) to Ceyhan; TANAP feeds gas to Turkey and onward to Europe. NATO partner; quiet but consequential security relationship with Israel.",
-        knowledgeTitle:'KNOWLEDGE LIBRARY',
-        knowledgeDisclaimer:'Background information compiled from open-source research, think tank analyses, and public government reporting.',
-        catIranTransit:'Iran Transit Corridor — April 2026',
-        catCaspian:'Caspian Sea & Maritime Strategic Position',
-        catSocar:'SOCAR, BTC Pipeline & Iran Border',
-        catArmenia:'Armenia Tensions & Nagorno-Karabakh Aftermath',
-        catIsrael:'Israel-Azerbaijan Defense Relationship',
-        articlesTitle:'RECENT AZERBAIJAN STABILITY & STRATEGIC ARTICLES',
-        articlesDesc:'English · Russian · Azerbaijani · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
-        tabEN:'🇬🇧 English', tabRU:'🇷🇺 Russian', tabAZ:'🇦🇿 Azerbaijani', tabSocial:'📡 Social',
-        articlesLoading:'Loading articles...',
-        footSourcesTitle:'Data Sources',
-        footSourcesText:'NewsAPI, GDELT, RSS Feeds (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.',
-        footMethodTitle:'Methodology',
-        footMethodText:'Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.',
-        footContactTitle:'Contact',
-        footDisclaimerLabel:'⚠️ DISCLAIMER',
-        footDisclaimerText:'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.',
-        footBmacText:'If you find Asifah Analytics useful and want to support ongoing development, you can',
-        footBmacButton:'buy me a coffee',
-        footPrivacy:'Privacy Policy', footContact:'Contact',
-        footCopy:'All Rights Reserved. Azerbaijan Stability Index v1.1.0 — Proprietary and Confidential.',
-    },
-    fr: {
-        pageFlag:'AZERBAÏDJAN', pageTitle:'INDICE DE STABILITÉ — AZERBAÏDJAN',
-        pageSubtitle:'Carrefour énergétique caspien · Corridor de transit iranien · Partenaire défense israélien · Tensions Arménie · SOCAR & oléoduc BTC',
-        backLink:'← Retour à l\u2019Europe',
-        cautionLabel:'DÉPARTEMENT D\u2019ÉTAT — MISE EN GARDE MONDIALE',
-        cautionText:'Les citoyens américains dans le monde entier doivent rester vigilants face aux menaces terroristes et à la violence.',
-        viewCaution:'VOIR LA MISE EN GARDE →',
-        advisoryLabel:'DÉPARTEMENT D\u2019ÉTAT — AVIS AZERBAÏDJAN',
-        advisoryLevel:'NIVEAU 3', viewAdvisory:'VOIR L\u2019AVIS →',
-        advisoryText:'Reconsidérer le voyage en Azerbaïdjan en raison du terrorisme, des conflits armés et du risque de mines. Le niveau d\u2019avis a été relevé au niveau 3 suite au début des hostilités américano-iraniennes le 28 février 2026. Ne pas voyager dans la région frontalière sud (menace de drones/missiles iraniens — frappe du 5 mars 2026 sur l\u2019aéroport international de Nakhitchevan), à la frontière arménienne (mines), ni dans les anciens territoires du Haut-Karabakh.',
-        rhetoricLabel:'TRACKER RHÉTORIQUE AZERBAÏDJAN — EN DIRECT',
-        rhetoricLink:'Ouvrir le tracker →',
-        contextLabel:'📡 28 AVRIL 2026 — SIGNAL STRATÉGIQUE',
-        contextHeadline:'Corridor de transit iranien · Surge maritime caspien · Reportage WSJ',
-        contextSub:'L\u2019Iran achemine ses expéditions ferroviaires et routières via l\u2019Azerbaïdjan, l\u2019Arménie et la Turquie au milieu d\u2019une spirale économique mortelle · 11+ navires sont arrivés dans les ports caspiens iraniens depuis la Russie, le Kazakhstan, le Turkménistan · Inflation de 67 %, estimation de reconstruction de 270 G$ contre PIB de 341 G$',
-        contextTagLabel:'Source :',
-        contextQuote:'« WSJ — la spirale économique mortelle de l\u2019Iran »',
-        rhetoricCardTitle:'TRACKER DE PRESSION AZERBAÏDJAN',
-        rhetoricCardDesc:'Score de pression multi-vecteurs — Frontière iranienne · Tensions Arménie · Axe défense Israël · Trafic caspien · Politique énergétique SOCAR · Mis à jour toutes les 6 h',
-        loading:'Chargement…', viewFullTracker:'Voir l\u2019analyse complète →',
-        commodityTitle:'EXPOSITION AUX MATIÈRES PREMIÈRES — AZERBAÏDJAN',
-        commodityFullLink:'Voir le tracker complet →',
-        commoditySubtitle:'Exposition stratégique aux matières premières avec comptage de signaux médiatiques en direct. Cliquez sur une ligne pour explorer.',
-        commodityLinkage:'Lien stratégique : L\u2019Azerbaïdjan produit environ 700 000 b/j de pétrole brut caspien (oléoduc BTC — le seul corridor pétrolier majeur non-russe et non-iranien vers l\u2019ouest depuis le bassin caspien). Le système gazier TANAP–TAP transporte le gaz azerbaïdjanais vers l\u2019Europe via la Turquie. Le terminal de Sangachal à Bakou est le seul nœud d\u2019exportation pour les deux. Le transit de contournement des sanctions iraniennes ajoute un vecteur de plaque tournante.',
-        mapTitle:'AZERBAÏDJAN — VUE STRATÉGIQUE',
-        mapSubtitle:'Position stratégique de l\u2019Azerbaïdjan sur la rive ouest de la Caspienne — bordé par la Russie (nord), la Géorgie (nord-ouest), l\u2019Arménie (ouest), l\u2019Iran (sud) et la mer Caspienne (est). L\u2019exclave du Nakhitchevan jouxte l\u2019Iran, l\u2019Arménie et la Turquie. L\u2019oléoduc BTC achemine le brut de Sangachal (Bakou) à Ceyhan ; TANAP alimente la Turquie puis l\u2019Europe en gaz. Partenaire de l\u2019OTAN ; relation sécuritaire discrète mais conséquente avec Israël.',
-        knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES',
-        knowledgeDisclaimer:'Informations compilées à partir de recherches en sources ouvertes, d\u2019analyses de groupes de réflexion et de rapports gouvernementaux publics.',
-        catIranTransit:'Corridor de transit iranien — avril 2026',
-        catCaspian:'Mer Caspienne & position maritime stratégique',
-        catSocar:'SOCAR, oléoduc BTC & frontière iranienne',
-        catArmenia:'Tensions Arménie & héritage du Haut-Karabakh',
-        catIsrael:'Relation défense Israël-Azerbaïdjan',
-        articlesTitle:'ARTICLES RÉCENTS — AZERBAÏDJAN',
-        articlesDesc:'Anglais · Russe · Azerbaïdjanais · Signaux sociaux · 7 derniers jours · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
-        tabEN:'🇬🇧 Anglais', tabRU:'🇷🇺 Russe', tabAZ:'🇦🇿 Azerbaïdjanais', tabSocial:'📡 Social',
-        articlesLoading:'Chargement des articles...',
-        footSourcesTitle:'Sources de données',
-        footSourcesText:'NewsAPI, GDELT, flux RSS (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit et données du Département d\u2019État.',
-        footMethodTitle:'Méthodologie',
-        footMethodText:'Agrégation OSINT pondérée par source avec score de décroissance temporelle. Sources ouvertes uniquement — aucune donnée classifiée.',
-        footContactTitle:'Contact',
-        footDisclaimerLabel:'⚠️ AVERTISSEMENT',
-        footDisclaimerText:'Cette page fournit des estimations analytiques basées sur l\u2019agrégation de renseignements open-source. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires pour la prise de décision. Non destiné à un usage opérationnel.',
-        footBmacText:'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez',
-        footBmacButton:'m\u2019offrir un café',
-        footPrivacy:'Politique de confidentialité', footContact:'Contact',
-        footCopy:'Tous droits réservés. Indice de stabilité Azerbaïdjan v1.1.0 — Propriétaire et Confidentiel.',
-    },
-    ru: {
-        pageFlag:'АЗЕРБАЙДЖАН', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ АЗЕРБАЙДЖАНА',
-        pageSubtitle:'Каспийский энергетический хаб · Иранский транзитный коридор · Партнёр Израиля по обороне · Напряжённость с Арменией · SOCAR и трубопровод БТД',
-        backLink:'← Назад к Европе',
-        cautionLabel:'ГОСДЕПАРТАМЕНТ США — ВСЕМИРНОЕ ПРЕДУПРЕЖДЕНИЕ',
-        cautionText:'Гражданам США во всём мире следует сохранять бдительность. Террористические группы и насильственные субъекты продолжают планировать атаки глобально.',
-        viewCaution:'СМОТРЕТЬ ПРЕДУПРЕЖДЕНИЕ →',
-        advisoryLabel:'ГОСДЕПАРТАМЕНТ США — РЕКОМЕНДАЦИИ ПО АЗЕРБАЙДЖАНУ',
-        advisoryLevel:'УРОВЕНЬ 3', viewAdvisory:'СМОТРЕТЬ РЕКОМЕНДАЦИЮ →',
-        advisoryText:'Пересмотрите поездки в Азербайджан из-за терроризма, вооружённого конфликта и риска противопехотных мин. Уровень рекомендации повышен до 3 после начала американо-иранских боевых действий 28 февраля 2026 года. Не ездите в южный приграничный регион (угроза иранских беспилотников и ракет — удар 5 марта 2026 года по международному аэропорту Нахичевани), к армянской границе (мины), а также в бывшие территории Нагорного Карабаха.',
-        rhetoricLabel:'ТРЕКЕР РИТОРИКИ АЗЕРБАЙДЖАНА — В РЕАЛЬНОМ ВРЕМЕНИ',
-        rhetoricLink:'Открыть трекер →',
-        contextLabel:'📡 28 АПРЕЛЯ 2026 — СТРАТЕГИЧЕСКИЙ СИГНАЛ',
-        contextHeadline:'Иранский транзитный коридор · Всплеск каспийского судоходства · Репортаж WSJ',
-        contextSub:'Иран направляет железнодорожные и автомобильные перевозки через Азербайджан, Армению и Турцию на фоне экономической смертельной спирали · 11+ судов прибыли в иранские каспийские порты из России, Казахстана, Туркменистана · Инфляция 67%, оценка восстановления $270 млрд против ВВП $341 млрд',
-        contextTagLabel:'Источник:',
-        contextQuote:'«WSJ — экономическая смертельная спираль Ирана»',
-        rhetoricCardTitle:'ТРЕКЕР ДАВЛЕНИЯ АЗЕРБАЙДЖАНА',
-        rhetoricCardDesc:'Многовекторная оценка давления — Иранская граница · Армянская напряжённость · Израильская оборонная ось · Каспийское судоходство · Энергетическая политика SOCAR · Обновляется каждые 6 ч',
-        loading:'Загрузка…', viewFullTracker:'Посмотреть полный анализ →',
-        commodityTitle:'СЫРЬЕВАЯ ЭКСПОЗИЦИЯ — АЗЕРБАЙДЖАН',
-        commodityFullLink:'Полный трекер сырья →',
-        commoditySubtitle:'Стратегическая сырьевая экспозиция с подсчётом новостных сигналов в реальном времени. Нажмите на строку для перехода.',
-        commodityLinkage:'Стратегическая связь: Азербайджан добывает ~700 тыс. барр/сутки каспийской нефти (трубопровод БТД — единственный крупный нероссийский, неиранский западный нефтяной коридор из каспийского бассейна). Газовая система ТАНАП–ТАП доставляет азербайджанский газ в Европу через Турцию. Терминал Сангачал в Баку — единственный экспортный узел для обеих систем. Иранский обход санкций добавляет вектор транзитного хаба.',
-        mapTitle:'АЗЕРБАЙДЖАН — СТРАТЕГИЧЕСКИЙ ОБЗОР',
-        mapSubtitle:'Стратегическое положение Азербайджана на западном побережье Каспия — граничит с Россией (север), Грузией (северо-запад), Арменией (запад), Ираном (юг) и Каспийским морем (восток). Эксклав Нахичевань граничит с Ираном, Арменией и Турцией. Трубопровод БТД доставляет нефть от Сангачала (Баку) до Джейхана; ТАНАП поставляет газ в Турцию и далее в Европу. Партнёр НАТО; тихие, но значимые отношения безопасности с Израилем.',
-        knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ',
-        knowledgeDisclaimer:'Справочная информация составлена из открытых источников, аналитических работ исследовательских центров и публичных правительственных отчётов.',
-        catIranTransit:'Иранский транзитный коридор — апрель 2026',
-        catCaspian:'Каспийское море и морская стратегическая позиция',
-        catSocar:'SOCAR, трубопровод БТД и иранская граница',
-        catArmenia:'Напряжённость с Арменией и наследие Карабаха',
-        catIsrael:'Оборонные отношения Израиль–Азербайджан',
-        articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ ОБ АЗЕРБАЙДЖАНЕ',
-        articlesDesc:'Английский · Русский · Азербайджанский · Социальные сигналы · Последние 7 дней · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
-        tabEN:'🇬🇧 Английский', tabRU:'🇷🇺 Русский', tabAZ:'🇦🇿 Азербайджанский', tabSocial:'📡 Социальные',
-        articlesLoading:'Загрузка статей...',
-        footSourcesTitle:'Источники данных',
-        footSourcesText:'NewsAPI, GDELT, RSS-каналы (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit и данные travel.state.gov.',
-        footMethodTitle:'Методология',
-        footMethodText:'Взвешенная по источникам OSINT-агрегация с временным затуханием. Только открытые источники — никаких засекреченных данных.',
-        footContactTitle:'Контакт',
-        footDisclaimerLabel:'⚠️ ДИСКЛЕЙМЕР',
-        footDisclaimerText:'Эта страница предоставляет аналитические оценки на основе агрегации разведданных из открытых источников. Она не представляет собой разведывательных оценок, военных советов или политических рекомендаций. Всегда консультируйтесь с авторитетными источниками при принятии решений. Не для оперативного использования.',
-        footBmacText:'Если Asifah Analytics полезен вам и вы хотите поддержать развитие, вы можете',
-        footBmacButton:'купить мне кофе',
-        footPrivacy:'Политика конфиденциальности', footContact:'Контакт',
-        footCopy:'Все права защищены. Индекс стабильности Азербайджана v1.1.0 — Собственность и конфиденциально.',
-    },
-    de: {
-        pageFlag:'ASERBAIDSCHAN', pageTitle:'ASERBAIDSCHAN-STABILITÄTSINDEX',
-        pageSubtitle:'Kaspischer Energieknotenpunkt · Iranischer Transitkorridor · Israelischer Verteidigungspartner · Armenien-Spannungen · SOCAR & BTC-Pipeline',
-        backLink:'← Zurück zu Europa',
-        cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG',
-        cautionText:'US-Bürger weltweit sollten wachsam bleiben. Terrorgruppen und gewalttätige Akteure planen weiterhin Angriffe weltweit.',
-        viewCaution:'WARNUNG ANZEIGEN →',
-        advisoryLabel:'AUSSENMINISTERIUM — ASERBAIDSCHAN-REISEHINWEIS',
-        advisoryLevel:'STUFE 3', viewAdvisory:'WARNUNG ANZEIGEN →',
-        advisoryText:'Reisen nach Aserbaidschan überdenken aufgrund von Terrorismus, bewaffneten Konflikten und Minenrisiko. Stufe nach Beginn der US-iranischen Feindseligkeiten am 28. Februar 2026 auf 3 angehoben. Nicht reisen in: die südliche Grenzregion (iranische Drohnen- und Raketenbedrohung — Angriff vom 5. März 2026 auf den Internationalen Flughafen Nachitschewan), die armenische Grenze (Minen) oder die ehemaligen Berg-Karabach-Gebiete.',
-        rhetoricLabel:'ASERBAIDSCHAN-RHETORIK-TRACKER — LIVE',
-        rhetoricLink:'Tracker öffnen →',
-        contextLabel:'📡 28. APRIL 2026 — STRATEGISCHES SIGNAL',
-        contextHeadline:'Iranischer Transitkorridor · Kaspische Schiffsfahrt-Welle · WSJ-Berichterstattung',
-        contextSub:'Iran leitet Bahn- und Straßentransporte über Aserbaidschan, Armenien und die Türkei inmitten einer wirtschaftlichen Todesspirale · 11+ Schiffe trafen aus Russland, Kasachstan, Turkmenistan in iranischen kaspischen Häfen ein · 67 % Inflation, Wiederaufbauschätzung 270 Mrd. $ gegenüber BIP 341 Mrd. $',
-        contextTagLabel:'Quelle:',
-        contextQuote:'„WSJ — Irans wirtschaftliche Todesspirale"',
-        rhetoricCardTitle:'ASERBAIDSCHAN-DRUCKTRACKER',
-        rhetoricCardDesc:'Multi-Vektor-Druck-Score — Iranische Grenze · Armenien-Spannungen · Israel-Verteidigungsachse · Kaspische Schifffahrt · SOCAR-Energiepolitik · Aktualisiert alle 6 h',
-        loading:'Lade…', viewFullTracker:'Vollständige Druckanalyse anzeigen →',
-        commodityTitle:'ROHSTOFF-EXPOSITION — ASERBAIDSCHAN',
-        commodityFullLink:'Vollständigen Rohstoff-Tracker anzeigen →',
-        commoditySubtitle:'Strategische Rohstoff-Exposition mit Live-Nachrichtensignalzählung. Klicken Sie auf eine Zeile, um zu vertiefen.',
-        commodityLinkage:'Strategische Verknüpfung: Aserbaidschan produziert ca. 700.000 Barrel/Tag kaspisches Rohöl (BTC-Pipeline — der einzige bedeutende nicht-russische, nicht-iranische westwärts gerichtete Ölkorridor aus dem kaspischen Becken). Das TANAP–TAP-Gassystem transportiert aserbaidschanisches Gas über die Türkei nach Europa. Das Sangachal-Terminal in Baku ist der einzige Exportknoten für beide. Iran-Sanktionsumgehungstransit fügt einen Transit-Hub-Vektor hinzu.',
-        mapTitle:'ASERBAIDSCHAN — STRATEGISCHER ÜBERBLICK',
-        mapSubtitle:'Aserbaidschans strategische Lage am Westufer des Kaspischen Meeres — grenzt an Russland (Norden), Georgien (Nordwesten), Armenien (Westen), Iran (Süden) und das Kaspische Meer (Osten). Die Exklave Nachitschewan grenzt an Iran, Armenien und die Türkei. Die BTC-Pipeline transportiert Rohöl von Sangachal (Baku) nach Ceyhan; TANAP versorgt die Türkei und weiter Europa mit Gas. NATO-Partner; ruhige, aber konsequente Sicherheitsbeziehung mit Israel.',
-        knowledgeTitle:'WISSENSBIBLIOTHEK',
-        knowledgeDisclaimer:'Hintergrundinformationen aus Open-Source-Forschung, Think-Tank-Analysen und öffentlichen Regierungsberichten zusammengestellt.',
-        catIranTransit:'Iranischer Transitkorridor — April 2026',
-        catCaspian:'Kaspisches Meer & maritime strategische Position',
-        catSocar:'SOCAR, BTC-Pipeline & iranische Grenze',
-        catArmenia:'Armenien-Spannungen & Berg-Karabach-Nachwirkungen',
-        catIsrael:'Israel-Aserbaidschan-Verteidigungsbeziehung',
-        articlesTitle:'AKTUELLE ARTIKEL — ASERBAIDSCHAN',
-        articlesDesc:'Englisch · Russisch · Aserbaidschanisch · Soziale Signale · Letzte 7 Tage · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
-        tabEN:'🇬🇧 Englisch', tabRU:'🇷🇺 Russisch', tabAZ:'🇦🇿 Aserbaidschanisch', tabSocial:'📡 Sozial',
-        articlesLoading:'Lade Artikel...',
-        footSourcesTitle:'Datenquellen',
-        footSourcesText:'NewsAPI, GDELT, RSS-Feeds (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit und travel.state.gov-Reisehinweise.',
-        footMethodTitle:'Methodik',
-        footMethodText:'Quellengewichtete OSINT-Aggregation mit zeitlich abnehmender Bewertung. Nur quelloffene Signale — keine klassifizierten Daten.',
-        footContactTitle:'Kontakt',
-        footDisclaimerLabel:'⚠️ HAFTUNGSAUSSCHLUSS',
-        footDisclaimerText:'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Sie stellt keine nachrichtendienstlichen Bewertungen, militärischen Ratschläge oder politischen Empfehlungen dar. Konsultieren Sie für Entscheidungen stets autoritative Quellen. Nicht für den operativen Einsatz bestimmt.',
-        footBmacText:'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie',
-        footBmacButton:'mir einen Kaffee spendieren',
-        footPrivacy:'Datenschutzrichtlinie', footContact:'Kontakt',
-        footCopy:'Alle Rechte vorbehalten. Aserbaidschan-Stabilitätsindex v1.1.0 — Eigentum und vertraulich.',
-    }
-};
-
-function setLang(lang, btn) {
-    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-    if (btn) btn.classList.add('active');
-    const t = T[lang] || T.en;
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const k = el.getAttribute('data-i18n');
-        if (t[k] !== undefined) el.textContent = t[k];
-    });
-}
-
 // ── COMMODITY EXPOSURE LOADER (calls Europe backend proxy with 12hr Redis cache) ──
 async function loadCommodity() {
     const COUNTRY_KEY = 'azerbaijan';
@@ -1153,18 +940,104 @@ async function loadCommodity() {
             renderCommodityCard(d);
             document.getElementById('commodityCard').style.display = 'block';
         } else if (d.message) {
-            // Awaiting first scan — show card with placeholder so user knows it's coming
             renderCommodityPlaceholder(d.message);
             document.getElementById('commodityCard').style.display = 'block';
         }
     } catch(e) {
         console.warn('[Azerbaijan] Commodity fetch failed:', e.message);
-        // Silent fail — card stays hidden, no broken UI
     }
 }
 
+// ── RHETORIC PRESSURE — adapter for /api/europe/threat/<target> ──
+// Maps generic threat-scan output (probability, momentum, top_scoring_articles)
+// onto the canonical rhetoric banner + pressure detail card.
+async function loadRhetoric() {
+    // Reuse payload fetched by loadArticles to avoid double-call
+    let d = window._threatPayload;
+    if (!d) {
+        try {
+            const r = await fetch(`${API_BASE}/api/europe/threat/azerbaijan`);
+            if (!r.ok) return;
+            d = await r.json();
+        } catch(e) { console.warn('[Azerbaijan] Rhetoric pressure fetch failed:', e.message); return; }
+    }
+
+    // Awaiting first scan — show nothing; loadCommodity placeholder logic handles UI
+    if (d.pending_scan || d.probability === null || d.probability === undefined) return;
+
+    const score = d.probability || 0;
+
+    // Map momentum → alert level + color
+    const momentum = (d.momentum || 'stable').toLowerCase();
+    let alert, alertColor;
+    if (momentum === 'increasing' && score > 60) { alert = 'critical'; alertColor = '#dc2626'; }
+    else if (momentum === 'increasing')          { alert = 'high';     alertColor = '#f59e0b'; }
+    else if (momentum === 'decreasing')          { alert = 'normal';   alertColor = '#22c55e'; }
+    else                                         { alert = 'elevated'; alertColor = '#3b82f6'; }
+
+    // Map probability band → level label
+    let levelLabel;
+    if      (score >= 85) levelLabel = 'Critical';
+    else if (score >= 70) levelLabel = 'Elevated';
+    else if (score >= 50) levelLabel = 'Warning';
+    else if (score >= 30) levelLabel = 'Watch';
+    else                  levelLabel = 'Baseline';
+
+    // ── Green banner (top) ──
+    const card = document.getElementById('rhetoricPressureCard');
+    if (card) {
+        card.style.display = 'flex';
+        document.getElementById('rhetoricScore').textContent = `Score: ${score}`;
+        const pill = document.getElementById('rhetoricPill');
+        pill.textContent = alert.toUpperCase();
+        pill.style.background = alertColor;
+        document.getElementById('rhetoricHeadline').textContent =
+            `${levelLabel} pressure level · ${d.timeline || 'Timeline pending'} · momentum ${momentum}`;
+        document.getElementById('rhetoricDetail').textContent =
+            `${d.total_articles || 0} articles analyzed · ${d.recent_articles_48h || 0} in last 48h · ${d.deescalation_count || 0} de-escalation signals · Confidence: ${d.confidence || 'Unknown'}`;
+    }
+
+    // ── Armenia pressure tracker detail card ──
+    const detailCard = document.getElementById('azerbaijanRhetoricCard');
+    if (detailCard) {
+        detailCard.style.display = 'block';
+        const scoreEl = document.getElementById('azerbaijanRhetoricScoreFull');
+        if (scoreEl) { scoreEl.textContent = score + '/100'; scoreEl.style.color = alertColor; }
+        const lvlEl = document.getElementById('azerbaijanRhetoricLevelLabel');
+        if (lvlEl) { lvlEl.textContent = levelLabel; lvlEl.style.background = alertColor; }
+
+        // Body: top scoring article titles → signal rows
+        const signalEl = document.getElementById('azerbaijanRhetoricSignalList');
+        if (signalEl) {
+            const top = (d.top_scoring_articles || []).slice(0, 5);
+            if (top.length) {
+                signalEl.innerHTML = top.map(a => {
+                    const title = a.title || 'Untitled';
+                    const src = (typeof a.source === 'object' ? a.source?.name : a.source) || '';
+                    return `<div class="rhetoric-signal-row">${src ? `<span class="rhetoric-signal-label">${src}</span>` : ''}${title}</div>`;
+                }).join('');
+            } else {
+                // Fallback: scoring breakdown summary
+                const rows = [
+                    { label: '📈 Momentum',           val: momentum, color: alertColor },
+                    { label: '📊 Recent (48h)',       val: d.recent_articles_48h || 0, color: '#38bdf8' },
+                    { label: '📰 Total Articles',     val: d.total_articles || 0, color: '#38bdf8' },
+                    { label: '🕊️ De-escalation Hits', val: d.deescalation_count || 0, color: '#22c55e' },
+                ];
+                signalEl.innerHTML = rows.map(r => `<div class="rhetoric-actor-row"><span>${r.label}</span><span style="font-weight:700;color:${r.color};">${r.val}</span></div>`).join('');
+            }
+        }
+
+        // Scan info footer
+        const scanEl = document.getElementById('azerbaijanRhetoricScanInfo');
+        if (scanEl) {
+            const ageStr = d.cache_age_human || (d.cached ? 'cached' : 'fresh scan');
+            scanEl.textContent = `${ageStr} · ${d.total_articles || 0} articles analyzed · ${d.confidence || 'Unknown'} confidence`;
+        }
+    }
+}
+// ── COMMODITY HELPER RENDERERS ──
 function renderCommodityCard(d) {
-    // Pressure summary strip
     const pressure = d.commodity_pressure || 0;
     const alert = (d.alert_level || 'normal').toLowerCase();
     const alertLabel = alert.toUpperCase();
@@ -1177,7 +1050,6 @@ function renderCommodityCard(d) {
     `;
     document.getElementById('commodityPressureStrip').innerHTML = stripHtml;
 
-    // Per-commodity rows
     const rowsContainer = document.getElementById('commodityRows');
     rowsContainer.innerHTML = '';
     (d.commodity_summaries || []).forEach(c => {
@@ -1206,7 +1078,6 @@ function renderCommodityCard(d) {
         rowsContainer.appendChild(row);
     });
 
-    // Cache freshness note
     const cacheStatus = d.cache_status || 'unknown';
     const cachedAt = d.proxy_cached_at || d.last_updated;
     let cacheText = '';
@@ -1226,7 +1097,6 @@ function renderCommodityPlaceholder(msg) {
     `;
 }
 
-// Inline ASCII sparkline from a numeric array (or sparkline.values shape).
 function renderSparkline(spark) {
     if (!spark) return '';
     let values = [];
@@ -1244,88 +1114,217 @@ function renderSparkline(spark) {
     return `${sparkStr} <span style="color:${arrowColor};font-weight:700;">${arrow}</span>`;
 }
 
-// ── RHETORIC PRESSURE (live tracker — banner + detail card) ──
-async function loadRhetoric() {
-    const ALERT_COLORS = { normal: '#6b7280', elevated: '#3b82f6', high: '#f59e0b', critical: '#dc2626', surge: '#ef4444' };
-    const ALERT_TO_LEVEL = { normal: 0, elevated: 1, high: 2, surge: 3, critical: 4 };
-    const LEVEL_LABELS = { 0: 'Baseline', 1: 'Rhetoric', 2: 'Warning', 3: 'Confrontation', 4: 'Coercion', 5: 'Active Conflict' };
-    try {
-        const r = await fetch(`${API_BASE}/api/rhetoric/azerbaijan`);
-        if (!r.ok) return;
-        const d = await r.json();
-        const score = d.theatre_score || d.pressure_score || 0;
-        const alert = (d.alert_level || 'normal').toLowerCase();
-        const alertColor = ALERT_COLORS[alert] || '#6b7280';
-        const level = ALERT_TO_LEVEL[alert] !== undefined ? ALERT_TO_LEVEL[alert] : 0;
-        const levelLabel = LEVEL_LABELS[level] || 'Baseline';
 
-        // ── Green banner (top) ──
-        const card = document.getElementById('rhetoricPressureCard');
-        if (card) {
-            card.style.display = 'flex';
-            document.getElementById('rhetoricScore').textContent = `Score: ${score}`;
-            const pill = document.getElementById('rhetoricPill');
-            pill.textContent = alert.toUpperCase();
-            pill.style.background = alertColor;
-            const sw = d.so_what || {};
-            document.getElementById('rhetoricHeadline').textContent = sw.scenario || 'Azerbaijan Pressure Tracker — Live';
-            const rl = d.red_lines || {};
-            const dt = d.diplomatic_track || {};
-            const breached = rl.breached_count || 0;
-            const approaching = rl.approaching_count || 0;
-            const greenActive = (d.green_lines || {}).active_count || 0;
-            document.getElementById('rhetoricDetail').textContent =
-                `${breached} breached · ${approaching} approaching · ${greenActive} active diplomatic signals · Diplomatic momentum: ${dt.score || 0}/100. ${sw.assessment || ''}`;
-        }
 
-        // ── Azerbaijan pressure tracker detail card ──
-        const detailCard = document.getElementById('azerbaijanRhetoricCard');
-        if (detailCard) {
-            detailCard.style.display = 'block';
-            const scoreEl = document.getElementById('azerbaijanRhetoricScoreFull');
-            if (scoreEl) { scoreEl.textContent = score + '/100'; scoreEl.style.color = alertColor; }
-            const lvlEl = document.getElementById('azerbaijanRhetoricLevelLabel');
-            if (lvlEl) { lvlEl.textContent = levelLabel; lvlEl.style.background = alertColor; }
+// ── TRANSLATIONS ──
+const T = {
+    en: {
+        pageFlag:'AZERBAIJAN', pageTitle:'AZERBAIJAN STABILITY INDEX',
+        pageSubtitle:'Caspian Energy Hub · Iran Transit Corridor · Israel Defense Partner · Armenia Tensions · SOCAR & BTC Pipeline',
+        backLink:'← Back to Europe',
+        cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
+        cautionText:'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in STEP.',
+        viewCaution:'VIEW CAUTION →',
+        advisoryLabel:'U.S. STATE DEPARTMENT — AZERBAIJAN TRAVEL ADVISORY',
+        advisoryLevel:'LEVEL 3', viewAdvisory:'VIEW ADVISORY →',
+        advisoryText:'Reconsider Travel to Azerbaijan due to terrorism, armed conflict, and risk of landmines. Advisory level raised to 3 following the February 28, 2026 onset of US-Iran hostilities. Do not travel to: the southern border region (Iranian drone/missile threat — March 5, 2026 strike on Nakhchivan International Airport), the Armenian border (landmines), or former Nagorno-Karabakh territories (Aghdam, Lachın, Shusha and 9 others — landmines).',
+        rhetoricLabel:'AZERBAIJAN RHETORIC TRACKER — LIVE',
+        rhetoricLink:'Open Tracker →',
+        contextLabel:'📡 APRIL 28, 2026 — STRATEGIC SIGNAL',
+        contextHeadline:'Iran Transit Corridor · Caspian Shipping Surge · WSJ Reporting',
+        contextSub:'Iran routing rail and road shipments via Azerbaijan, Armenia, and Turkey amid economic death spiral · 11+ vessels arrived at Iranian Caspian ports from Russia, Kazakhstan, Turkmenistan · 67% inflation, $270B reconstruction estimate vs $341B GDP',
+        contextTagLabel:'Source:',
+        contextQuote:'"WSJ — Iran\u2019s economic death spiral"',
+        rhetoricCardTitle:'AZERBAIJAN PRESSURE TRACKER',
+        rhetoricCardDesc:'Multi-vector pressure score — Iran Border · Armenia Tensions · Israel Defense Axis · Caspian Shipping · SOCAR Energy Politics · Updated every 6h',
+        loading:'Loading…', viewFullTracker:'View Full Pressure Analysis →',
+        commodityTitle:'COMMODITY EXPOSURE — AZERBAIJAN',
+        commodityFullLink:'View Full Commodity Tracker →',
+        commoditySubtitle:'Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.',
+        commodityLinkage:'Strategic Linkage: Azerbaijan produces ~700K bbl/day of Caspian crude (BTC pipeline — the only major non-Russian, non-Iranian westbound oil corridor from the Caspian basin). The TANAP–TAP gas system carries Azerbaijani natural gas to Europe via Turkey (Southern Gas Corridor). Sangachal Terminal at Baku is the sole export node for both. Iran sanctions-circumvention transit — Caspian shipping plus rail through Astara — adds a transit-hub vector beyond pure production exposure.',
+        mapTitle:'AZERBAIJAN — STRATEGIC OVERVIEW',
+        mapSubtitle:"Azerbaijan's strategic position on the Caspian's western shore — bordered by Russia (north), Georgia (northwest), Armenia (west), Iran (south), and the Caspian Sea (east). The exclave of Nakhchivan abuts Iran, Armenia, and Turkey. BTC pipeline carries crude from Sangachal (Baku) to Ceyhan; TANAP feeds gas to Turkey and onward to Europe. NATO partner; quiet but consequential security relationship with Israel.",
+        knowledgeTitle:'KNOWLEDGE LIBRARY',
+        knowledgeDisclaimer:'Background information compiled from open-source research, think tank analyses, and public government reporting.',
+        catIranTransit:'Iran Transit Corridor — April 2026',
+        catCaspian:'Caspian Sea & Maritime Strategic Position',
+        catSocar:'SOCAR, BTC Pipeline & Iran Border',
+        catArmenia:'Armenia Tensions & Nagorno-Karabakh Aftermath',
+        catIsrael:'Israel-Azerbaijan Defense Relationship',
+        articlesTitle:'RECENT AZERBAIJAN STABILITY & STRATEGIC ARTICLES',
+        articlesDesc:'English · Russian · French · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 English', tabRU:'🇷🇺 Russian', tabFR:'🇫🇷 French', tabSocial:'📡 Social',
+        articlesLoading:'Loading articles...',
+        footSourcesTitle:'Data Sources',
+        footSourcesText:'NewsAPI, GDELT, RSS Feeds (EN, RU, FR), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.',
+        footMethodTitle:'Methodology',
+        footMethodText:'Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.',
+        footContactTitle:'Contact',
+        footDisclaimerLabel:'⚠️ DISCLAIMER',
+        footDisclaimerText:'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.',
+        footBmacText:'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footBmacButton:'buy me a coffee',
+        footPrivacy:'Privacy Policy', footContact:'Contact',
+        footCopy:'All Rights Reserved. Azerbaijan Stability Index v1.1.0 — Proprietary and Confidential.',
+    },
+    fr: {
+        pageFlag:'AZERBAÏDJAN', pageTitle:'INDICE DE STABILITÉ — AZERBAÏDJAN',
+        pageSubtitle:'Pôle énergétique caspien · Carrefour de transit iranien · Partenaire défense Israël · Tensions Arménie · SOCAR et oléoduc BTC',
+        backLink:'← Retour à l\u2019Europe',
+        cautionLabel:'DÉPARTEMENT D\u2019ÉTAT — MISE EN GARDE MONDIALE',
+        cautionText:'Les citoyens américains dans le monde entier doivent rester vigilants face aux menaces terroristes et à la violence.',
+        viewCaution:'VOIR LA MISE EN GARDE →',
+        advisoryLabel:'DÉPARTEMENT D\u2019ÉTAT — AVIS AZERBAÏDJAN',
+        advisoryLevel:'NIVEAU 3', viewAdvisory:'VOIR L\u2019AVIS →',
+        advisoryText:'Reconsidérer les voyages en Azerbaïdjan en raison du terrorisme, du conflit armé et du risque de mines terrestres. Niveau d\u2019alerte porté à 3 suite au début des hostilités américano-iraniennes le 28 février 2026. Ne pas voyager : région frontalière sud (menace de drones/missiles iraniens — frappe du 5 mars 2026 sur l\u2019aéroport international de Nakhitchevan), frontière arménienne (mines), anciens territoires du Haut-Karabakh.',
+        rhetoricLabel:'TRACKER RHÉTORIQUE AZERBAÏDJAN — EN DIRECT',
+        rhetoricLink:'Ouvrir le tracker →',
+        contextLabel:'📡 28 AVRIL 2026 — SIGNAL STRATÉGIQUE',
+        contextHeadline:'Corridor de transit iranien · Pic du fret caspien · Reportage WSJ',
+        contextSub:'L\u2019Iran achemine ses expéditions ferroviaires et routières via l\u2019Azerbaïdjan, l\u2019Arménie et la Turquie face à une spirale économique mortelle · 11+ navires sont arrivés dans les ports caspiens iraniens en provenance de Russie, du Kazakhstan, du Turkménistan · Inflation 67%, estimation reconstruction 270 G$ vs PIB 341 G$',
+        contextTagLabel:'Source :',
+        contextQuote:'« WSJ — Spirale économique mortelle de l\u2019Iran »',
+        rhetoricCardTitle:'TRACKER DE PRESSION AZERBAÏDJAN',
+        rhetoricCardDesc:'Score de pression multi-vecteurs — Frontière iranienne · Tensions Arménie · Axe défense Israël · Fret caspien · Politique énergétique SOCAR · Mis à jour toutes les 6 h',
+        loading:'Chargement…', viewFullTracker:'Voir l\u2019analyse complète →',
+        commodityTitle:'EXPOSITION AUX MATIÈRES PREMIÈRES — AZERBAÏDJAN',
+        commodityFullLink:'Voir le tracker complet →',
+        commoditySubtitle:'Exposition stratégique aux matières premières avec comptage de signaux médiatiques en direct. Cliquez sur une ligne pour explorer.',
+        commodityLinkage:'Lien stratégique : L\u2019Azerbaïdjan produit ~700 000 b/j de brut caspien (oléoduc BTC — seul corridor pétrolier majeur ouest non russe et non iranien du bassin caspien). Le système TANAP–TAP achemine le gaz naturel azerbaïdjanais vers l\u2019Europe via la Turquie (Corridor Gazier Sud). Le terminal de Sangachal à Bakou est l\u2019unique nœud d\u2019exportation pour les deux. Le transit de contournement des sanctions iraniennes — fret caspien plus rail via Astara — ajoute un vecteur de plaque tournante au-delà de la pure exposition de production.',
+        mapTitle:'AZERBAÏDJAN — VUE STRATÉGIQUE',
+        mapSubtitle:"Position stratégique de l\u2019Azerbaïdjan sur la rive ouest de la Caspienne — bordé par la Russie (nord), la Géorgie (nord-ouest), l\u2019Arménie (ouest), l\u2019Iran (sud), et la mer Caspienne (est). L\u2019enclave du Nakhitchevan jouxte l\u2019Iran, l\u2019Arménie et la Turquie. L\u2019oléoduc BTC achemine le brut de Sangachal (Bakou) à Ceyhan ; le TANAP alimente la Turquie en gaz puis l\u2019Europe. Partenaire de l\u2019OTAN ; relation sécuritaire discrète mais conséquente avec Israël.",
+        knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES',
+        knowledgeDisclaimer:'Informations compilées à partir de recherches en sources ouvertes, d\u2019analyses de groupes de réflexion et de rapports gouvernementaux publics.',
+        catIranTransit:'Corridor de transit iranien — avril 2026',
+        catCaspian:'Mer Caspienne et position stratégique maritime',
+        catSocar:'SOCAR, oléoduc BTC et frontière iranienne',
+        catArmenia:'Tensions arméniennes et héritage du Haut-Karabakh',
+        catIsrael:'Relation défense Israël-Azerbaïdjan',
+        articlesTitle:'ARTICLES RÉCENTS — AZERBAÏDJAN',
+        articlesDesc:'Anglais · Russe · Français · Signaux sociaux · 7 derniers jours · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Anglais', tabRU:'🇷🇺 Russe', tabFR:'🇫🇷 Français', tabSocial:'📡 Social',
+        articlesLoading:'Chargement des articles...',
+        footSourcesTitle:'Sources de données',
+        footSourcesText:'NewsAPI, GDELT, flux RSS (EN, RU, FR), Telegram OSINT, Bluesky, Reddit et données du Département d\u2019État.',
+        footMethodTitle:'Méthodologie',
+        footMethodText:'Agrégation OSINT pondérée par source avec score de décroissance temporelle. Sources ouvertes uniquement — aucune donnée classifiée.',
+        footContactTitle:'Contact',
+        footDisclaimerLabel:'⚠️ AVERTISSEMENT',
+        footDisclaimerText:'Cette page fournit des estimations analytiques basées sur l\u2019agrégation de renseignements open-source. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires. Non destiné à un usage opérationnel.',
+        footBmacText:'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez',
+        footBmacButton:'m\u2019offrir un café',
+        footPrivacy:'Politique de confidentialité', footContact:'Contact',
+        footCopy:'Tous droits réservés. Indice de stabilité Azerbaïdjan v1.1.0 — Propriétaire et Confidentiel.',
+    },
+    ru: {
+        pageFlag:'АЗЕРБАЙДЖАН', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ АЗЕРБАЙДЖАНА',
+        pageSubtitle:'Каспийский энергетический хаб · Иранский транзитный коридор · Партнёр Израиля по обороне · Армянские противоречия · SOCAR и нефтепровод БТД',
+        backLink:'← Назад к Европе',
+        cautionLabel:'ГОСДЕПАРТАМЕНТ США — ВСЕМИРНОЕ ПРЕДУПРЕЖДЕНИЕ',
+        cautionText:'Гражданам США во всём мире следует сохранять бдительность. Террористические группы и насильственные субъекты продолжают планировать атаки.',
+        viewCaution:'СМОТРЕТЬ ПРЕДУПРЕЖДЕНИЕ →',
+        advisoryLabel:'ГОСДЕПАРТАМЕНТ США — РЕКОМЕНДАЦИИ ПО АЗЕРБАЙДЖАНУ',
+        advisoryLevel:'УРОВЕНЬ 3', viewAdvisory:'СМОТРЕТЬ РЕКОМЕНДАЦИЮ →',
+        advisoryText:'Пересмотреть поездки в Азербайджан из-за терроризма, вооружённого конфликта и риска мин. Уровень повышен до 3 после начала американо-иранских боевых действий 28 февраля 2026 года. Не ездить: южный приграничный регион (угроза иранских дронов/ракет — удар 5 марта 2026 по Международному аэропорту Нахичевани), армянская граница (мины), бывшие территории Нагорного Карабаха.',
+        rhetoricLabel:'ТРЕКЕР РИТОРИКИ АЗЕРБАЙДЖАНА — В РЕАЛЬНОМ ВРЕМЕНИ',
+        rhetoricLink:'Открыть трекер →',
+        contextLabel:'📡 28 АПРЕЛЯ 2026 — СТРАТЕГИЧЕСКИЙ СИГНАЛ',
+        contextHeadline:'Иранский транзитный коридор · Всплеск каспийских поставок · Сообщения WSJ',
+        contextSub:'Иран направляет железнодорожные и автомобильные поставки через Азербайджан, Армению и Турцию на фоне экономической смертельной спирали · 11+ судов прибыли в иранские каспийские порты из России, Казахстана, Туркменистана · Инфляция 67%, оценка восстановления $270 млрд против ВВП $341 млрд',
+        contextTagLabel:'Источник:',
+        contextQuote:'«WSJ — Экономическая смертельная спираль Ирана»',
+        rhetoricCardTitle:'ТРЕКЕР ДАВЛЕНИЯ АЗЕРБАЙДЖАНА',
+        rhetoricCardDesc:'Многовекторная оценка давления — Иранская граница · Армянские противоречия · Ось защиты Израиля · Каспийские поставки · Энергетическая политика SOCAR · Обновляется каждые 6 ч',
+        loading:'Загрузка…', viewFullTracker:'Посмотреть полный анализ →',
+        commodityTitle:'СЫРЬЕВАЯ ЭКСПОЗИЦИЯ — АЗЕРБАЙДЖАН',
+        commodityFullLink:'Полный трекер сырья →',
+        commoditySubtitle:'Стратегическая сырьевая экспозиция с подсчётом новостных сигналов в реальном времени.',
+        commodityLinkage:'Стратегическая связь: Азербайджан добывает ~700 тыс. барр./день каспийской нефти (нефтепровод БТД — единственный крупный нероссийский, неиранский западный нефтяной коридор Каспийского бассейна). Система TANAP–TAP доставляет азербайджанский природный газ в Европу через Турцию (Южный газовый коридор). Терминал Сангачал в Баку — единственный экспортный узел для обоих. Транзит обхода санкций Ирана — каспийские суда плюс железная дорога через Астару — добавляет вектор хаба сверх чистой производственной экспозиции.',
+        mapTitle:'АЗЕРБАЙДЖАН — СТРАТЕГИЧЕСКИЙ ОБЗОР',
+        mapSubtitle:'Стратегическое положение Азербайджана на западном побережье Каспия — граничит с Россией (север), Грузией (северо-запад), Арменией (запад), Ираном (юг) и Каспийским морем (восток). Анклав Нахичевань соседствует с Ираном, Арменией и Турцией. Нефтепровод БТД доставляет нефть из Сангачала (Баку) в Джейхан; TANAP подаёт газ в Турцию и далее в Европу. Партнёр НАТО; тихие, но значимые отношения безопасности с Израилем.',
+        knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ',
+        knowledgeDisclaimer:'Справочная информация составлена из открытых источников, аналитических работ исследовательских центров и публичных правительственных отчётов.',
+        catIranTransit:'Иранский транзитный коридор — апрель 2026',
+        catCaspian:'Каспийское море и морская стратегическая позиция',
+        catSocar:'SOCAR, нефтепровод БТД и иранская граница',
+        catArmenia:'Армянские противоречия и наследие Нагорного Карабаха',
+        catIsrael:'Оборонные отношения Израиля и Азербайджана',
+        articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ ОБ АЗЕРБАЙДЖАНЕ',
+        articlesDesc:'Английский · Русский · Французский · Социальные сигналы · Последние 7 дней · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Английский', tabRU:'🇷🇺 Русский', tabFR:'🇫🇷 Французский', tabSocial:'📡 Социальные',
+        articlesLoading:'Загрузка статей...',
+        footSourcesTitle:'Источники данных',
+        footSourcesText:'NewsAPI, GDELT, RSS-каналы (EN, RU, FR), Telegram OSINT, Bluesky, Reddit и данные travel.state.gov.',
+        footMethodTitle:'Методология',
+        footMethodText:'Взвешенная по источникам OSINT-агрегация с временным затуханием. Только открытые источники — никаких засекреченных данных.',
+        footContactTitle:'Контакт',
+        footDisclaimerLabel:'⚠️ ДИСКЛЕЙМЕР',
+        footDisclaimerText:'Эта страница предоставляет аналитические оценки на основе агрегации разведданных из открытых источников. Не для оперативного использования.',
+        footBmacText:'Если Asifah Analytics полезен вам и вы хотите поддержать развитие, вы можете',
+        footBmacButton:'купить мне кофе',
+        footPrivacy:'Политика конфиденциальности', footContact:'Контакт',
+        footCopy:'Все права защищены. Индекс стабильности Азербайджана v1.1.0 — Собственность и конфиденциально.',
+    },
+    de: {
+        pageFlag:'ASERBAIDSCHAN', pageTitle:'ASERBAIDSCHAN-STABILITÄTSINDEX',
+        pageSubtitle:'Kaspischer Energie-Hub · Iran-Transitkorridor · Israel-Verteidigungspartner · Armenien-Spannungen · SOCAR und BTC-Pipeline',
+        backLink:'← Zurück zu Europa',
+        cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG',
+        cautionText:'US-Bürger weltweit sollten wachsam bleiben. Terrorgruppen und gewalttätige Akteure planen weiterhin Angriffe.',
+        viewCaution:'WARNUNG ANZEIGEN →',
+        advisoryLabel:'AUSSENMINISTERIUM — ASERBAIDSCHAN-REISEHINWEIS',
+        advisoryLevel:'STUFE 3', viewAdvisory:'WARNUNG ANZEIGEN →',
+        advisoryText:'Reisen nach Aserbaidschan überdenken aufgrund von Terrorismus, bewaffnetem Konflikt und Minenrisiko. Stufe auf 3 erhöht nach Beginn der US-iranischen Feindseligkeiten am 28. Februar 2026. Nicht reisen: südliche Grenzregion (iranische Drohnen-/Raketen-Bedrohung — Angriff am 5. März 2026 auf den Internationalen Flughafen Nachitschewan), armenische Grenze (Minen), ehemalige Bergkarabach-Gebiete.',
+        rhetoricLabel:'ASERBAIDSCHAN-RHETORIK-TRACKER — LIVE',
+        rhetoricLink:'Tracker öffnen →',
+        contextLabel:'📡 28. APRIL 2026 — STRATEGISCHES SIGNAL',
+        contextHeadline:'Iran-Transitkorridor · Anstieg kaspischer Schifffahrt · WSJ-Berichterstattung',
+        contextSub:'Iran leitet Bahn- und Straßenfracht über Aserbaidschan, Armenien und die Türkei inmitten einer wirtschaftlichen Todesspirale · 11+ Schiffe in iranischen kaspischen Häfen aus Russland, Kasachstan, Turkmenistan eingetroffen · Inflation 67%, Wiederaufbauschätzung 270 Mrd. $ gegenüber BIP 341 Mrd. $',
+        contextTagLabel:'Quelle:',
+        contextQuote:'„WSJ — Irans wirtschaftliche Todesspirale"',
+        rhetoricCardTitle:'ASERBAIDSCHAN-DRUCKTRACKER',
+        rhetoricCardDesc:'Multi-Vektor-Druck-Score — Iran-Grenze · Armenien-Spannungen · Israel-Verteidigungsachse · Kaspische Schifffahrt · SOCAR-Energiepolitik · Aktualisiert alle 6 h',
+        loading:'Lade…', viewFullTracker:'Vollständige Druckanalyse anzeigen →',
+        commodityTitle:'ROHSTOFF-EXPOSITION — ASERBAIDSCHAN',
+        commodityFullLink:'Vollständigen Rohstoff-Tracker anzeigen →',
+        commoditySubtitle:'Strategische Rohstoff-Exposition mit Live-Nachrichtensignalzählung.',
+        commodityLinkage:'Strategische Verknüpfung: Aserbaidschan produziert ~700.000 b/d kaspisches Rohöl (BTC-Pipeline — der einzige bedeutende nicht-russische, nicht-iranische westwärts gerichtete Ölkorridor des Kaspischen Beckens). Das TANAP–TAP-System transportiert aserbaidschanisches Erdgas über die Türkei nach Europa (Südlicher Gaskorridor). Sangachal Terminal in Baku ist der einzige Exportknoten für beide. Iran-Sanktions-Umgehungstransit — kaspische Schifffahrt plus Schiene über Astara — fügt einen Hub-Vektor hinzu.',
+        mapTitle:'ASERBAIDSCHAN — STRATEGISCHER ÜBERBLICK',
+        mapSubtitle:'Aserbaidschans strategische Lage am Westufer des Kaspischen Meeres — grenzt an Russland (Norden), Georgien (Nordwesten), Armenien (Westen), Iran (Süden) und das Kaspische Meer (Osten). Die Exklave Nachitschewan grenzt an Iran, Armenien und die Türkei. Die BTC-Pipeline transportiert Rohöl von Sangachal (Baku) nach Ceyhan; TANAP versorgt die Türkei und weiter Europa mit Gas. NATO-Partner; stille, aber bedeutende Sicherheitsbeziehung zu Israel.',
+        knowledgeTitle:'WISSENSBIBLIOTHEK',
+        knowledgeDisclaimer:'Hintergrundinformationen aus Open-Source-Forschung, Think-Tank-Analysen und öffentlichen Regierungsberichten zusammengestellt.',
+        catIranTransit:'Iran-Transitkorridor — April 2026',
+        catCaspian:'Kaspisches Meer und maritime strategische Position',
+        catSocar:'SOCAR, BTC-Pipeline und Iran-Grenze',
+        catArmenia:'Armenien-Spannungen und Bergkarabach-Nachwirkungen',
+        catIsrael:'Israel-Aserbaidschan-Verteidigungsbeziehung',
+        articlesTitle:'AKTUELLE ARTIKEL — ASERBAIDSCHAN',
+        articlesDesc:'Englisch · Russisch · Französisch · Soziale Signale · Letzte 7 Tage · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Englisch', tabRU:'🇷🇺 Russisch', tabFR:'🇫🇷 Französisch', tabSocial:'📡 Sozial',
+        articlesLoading:'Lade Artikel...',
+        footSourcesTitle:'Datenquellen',
+        footSourcesText:'NewsAPI, GDELT, RSS-Feeds (EN, RU, FR), Telegram OSINT, Bluesky, Reddit und travel.state.gov-Reisehinweise.',
+        footMethodTitle:'Methodik',
+        footMethodText:'Quellengewichtete OSINT-Aggregation mit zeitlich abnehmender Bewertung. Nur quelloffene Signale — keine klassifizierten Daten.',
+        footContactTitle:'Kontakt',
+        footDisclaimerLabel:'⚠️ HAFTUNGSAUSSCHLUSS',
+        footDisclaimerText:'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Nicht für den operativen Einsatz bestimmt.',
+        footBmacText:'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie',
+        footBmacButton:'mir einen Kaffee spendieren',
+        footPrivacy:'Datenschutzrichtlinie', footContact:'Kontakt',
+        footCopy:'Alle Rechte vorbehalten. Aserbaidschan-Stabilitätsindex v1.1.0 — Eigentum und vertraulich.',
+    }
+};
 
-            // Body: top_signals (preferred) or fallback to so_what + counts
-            const signalEl = document.getElementById('azerbaijanRhetoricSignalList');
-            if (signalEl) {
-                const signals = (d.top_signals || []).slice(0, 5);
-                if (signals.length) {
-                    signalEl.innerHTML = signals.map(s => {
-                        const txt = s.short_text || s.text || s.long_text || '';
-                        const cat = s.category ? s.category.toUpperCase().replace(/_/g, ' ') : '';
-                        return `<div class="rhetoric-signal-row">${cat ? `<span class="rhetoric-signal-label">${cat}</span>` : ''}${txt}</div>`;
-                    }).join('');
-                } else {
-                    // Fallback: show red-line + green-line counts as actor-row entries
-                    const rl = d.red_lines || {};
-                    const gl = d.green_lines || {};
-                    const dt = d.diplomatic_track || {};
-                    const sw = d.so_what || {};
-                    const rows = [
-                        { label: '🚨 Red Lines Breached',     val: rl.breached_count || 0,   color: '#dc2626' },
-                        { label: '⚠️ Red Lines Approaching',  val: rl.approaching_count || 0, color: '#f59e0b' },
-                        { label: '🕊️ Active Diplomatic',      val: gl.active_count || 0,     color: '#10b981' },
-                        { label: '📊 Diplomatic Momentum',    val: (dt.score || 0) + '/100', color: '#38bdf8' },
-                    ];
-                    let html = rows.map(r => `<div class="rhetoric-actor-row"><span>${r.label}</span><span style="font-weight:700;color:${r.color};">${r.val}</span></div>`).join('');
-                    if (sw.scenario) html += `<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--card-border);font-style:italic;color:var(--text-muted);font-size:11px;line-height:1.5;">${sw.scenario}</div>`;
-                    signalEl.innerHTML = html;
-                }
-            }
-
-            // Scan info footer
-            const scanEl = document.getElementById('azerbaijanRhetoricScanInfo');
-            if (scanEl && d.cached_at) {
-                const ago = Math.round((Date.now() - new Date(d.cached_at)) / 60000);
-                const agoStr = ago < 60 ? `${ago}m` : `${Math.round(ago / 60)}h`;
-                scanEl.textContent = `Last scan: ${agoStr} ago · ${d.total_articles || 0} articles analyzed`;
-            }
-        }
-    } catch(e) { console.warn('[Azerbaijan] Rhetoric pressure fetch failed:', e.message); }
+function setLang(lang, btn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const t = T[lang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (t[k] !== undefined) el.textContent = t[k];
+    });
 }
-
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', () => {
     startLoading();
