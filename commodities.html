@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Global Cross-Cutting Commodities Tracker v1.0.0 - April 29, 2026 -->
+<!-- Asifah Analytics - Global Cross-Cutting Commodities Tracker v1.2.0 - May 2, 2026 -->
 <!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
-<!-- Cross-cutting tracker for 11 strategic commodities + 5 country exposure layer -->
-<!-- Sister tracker to military.html — same architectural pattern -->
+<!-- Cross-cutting tracker for 14 strategic commodities + regional country exposure layer -->
+<!-- v1.2.0: Regional collapsible exposure matrix + signal-type pills + Silver/Nickel/Cobalt + canonical footer + API_BASE fix -->
 <html lang="en" dir="ltr">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -510,6 +510,70 @@
             border-radius: 3px;
         }
 
+        /* ========== REGIONAL EXPOSURE BLOCKS (collapsible) ========== */
+        .region-block {
+            background: rgba(13,27,46,0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        .region-block.expanded { border-color: rgba(56,189,248,0.25); }
+        .region-block.collapsed { opacity: 0.85; }
+        .region-block.collapsed:hover { opacity: 1; border-color: rgba(56,189,248,0.4); }
+        .region-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            cursor: pointer;
+            background: rgba(56,189,248,0.04);
+            border-bottom: 1px solid transparent;
+            transition: background 0.15s;
+            user-select: none;
+        }
+        .region-block.expanded .region-header {
+            border-bottom-color: var(--border-color);
+            background: rgba(56,189,248,0.08);
+        }
+        .region-header:hover { background: rgba(56,189,248,0.12); }
+        .region-icon { font-size: 1.2rem; flex-shrink: 0; }
+        .region-name {
+            font-family: 'Times New Roman', serif;
+            font-weight: 800;
+            font-size: 1rem;
+            color: var(--text-primary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            flex: 1;
+        }
+        .region-count {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .region-toggle {
+            color: #38bdf8;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-left: 6px;
+            flex-shrink: 0;
+        }
+        .region-body {
+            padding: 14px 16px 18px;
+        }
+        .region-empty {
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 18px;
+            font-size: 0.85rem;
+            font-family: 'Times New Roman', serif;
+        }
+
         /* ========== COMMODITY GRID ========== */
         .commodity-grid {
             display: grid;
@@ -723,6 +787,34 @@
             color: var(--text-secondary);
             font-weight: 700;
         }
+
+        /* Signal-type pills (Phase 2 classifier output) */
+        .card-signal-types {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+        }
+        .signal-type-pill {
+            font-size: 0.55rem;
+            font-family: 'Courier New', monospace;
+            padding: 2px 7px;
+            border-radius: 3px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            white-space: nowrap;
+            border: 1px solid;
+        }
+        .signal-type-pill.st-supply_disruption     { background: rgba(239,68,68,0.10); color: #fca5a5; border-color: rgba(239,68,68,0.30); }
+        .signal-type-pill.st-demand_surge          { background: rgba(245,158,11,0.10); color: #fcd34d; border-color: rgba(245,158,11,0.30); }
+        .signal-type-pill.st-cost_structure        { background: rgba(56,189,248,0.10); color: #7dd3fc; border-color: rgba(56,189,248,0.30); }
+        .signal-type-pill.st-cross_commodity       { background: rgba(167,139,250,0.10); color: #c4b5fd; border-color: rgba(167,139,250,0.30); }
+        .signal-type-pill.st-market_regime         { background: rgba(16,185,129,0.10); color: #6ee7b7; border-color: rgba(16,185,129,0.30); }
+        .signal-type-pill.st-geopolitical_coupling { background: rgba(220,38,38,0.10); color: #fca5a5; border-color: rgba(220,38,38,0.40); }
+        .signal-type-pill.st-consolidation         { background: rgba(100,116,139,0.10); color: #cbd5e1; border-color: rgba(100,116,139,0.30); }
 
         /* Alert level highlight */
         .commodity-card.alert-elevated { box-shadow: var(--shadow-sm), inset 0 0 0 1px var(--alert-elevated-border); }
@@ -1034,7 +1126,7 @@
         <div class="section-header">
             <span class="section-icon">🗺️</span>
             <span class="section-title">Country Exposure Matrix</span>
-            <span class="section-desc">Roles &amp; positions of each country across the 11 strategic commodities</span>
+            <span class="section-desc">Roles &amp; positions of each country across the 14 strategic commodities — grouped by region</span>
         </div>
 
         <div class="exposure-matrix" id="exposureMatrix">
@@ -1073,37 +1165,42 @@
     </main>
 </div>
 
-<!-- ========== FOOTER ========== -->
-<footer class="page-footer">
-    <div class="footer-section">
-        <div class="footer-section-title">About This Tracker</div>
-        <ul>
-            <li>Cross-cutting commodity intelligence for the 5 actors most exposed to strategic resource pressure: Belarus, Russia, China, Israel, Ukraine.</li>
-            <li>Sparklines pulled from Yahoo Finance via yfinance. News signals from GDELT (6 languages), NewsAPI, RSS, Reddit, and Brave Search fallback.</li>
-            <li>Potash has no public spot price — tracked via production volume + sanctions cycle.</li>
-        </ul>
+<!-- ========== FOOTER (canonical Asifah pattern) ========== -->
+<footer style="background:var(--card-bg, var(--container-bg, #0d1b2e));border:1px solid var(--card-border, var(--border-color, #1e3a5f));border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, #93c5fd);">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent-cyan, #38bdf8);margin-bottom:8px;">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;">Yahoo Finance (sparklines via yfinance), GDELT (6 languages), NewsAPI, Mining.com Direct RSS, Reuters/Bloomberg/FT (Google News), USGS, USDA, Reddit, Brave Search fallback. 14 strategic commodities tracked across 5 regions.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent-cyan, #38bdf8);margin-bottom:8px;">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;">Tier-weighted signal scoring (Tier 1 = 1.0, Tier 2 = 0.7, Tier 3 = 0.5). 7-pattern analytical classifier: supply disruption, demand surge, cost structure, cross-commodity, market regime, geopolitical coupling, consolidation. News scan every 12h; sparklines refresh hourly.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent-cyan, #38bdf8);margin-bottom:8px;">Connected Trackers</h4>
+            <p style="font-size:12px;line-height:1.5;">
+                <a href="https://www.asifahanalytics.com/military.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">🪖 Military Posture</a> ·
+                <a href="https://www.asifahanalytics.com/gpi.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">🌐 Global Pressure Index</a> ·
+                <a href="https://www.asifahanalytics.com/middle-east.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">🕌 Middle East</a> ·
+                <a href="https://www.asifahanalytics.com/asia.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">🌏 Asia-Pacific</a> ·
+                <a href="https://www.asifahanalytics.com/europe.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">🌍 Europe</a> ·
+                <a href="https://www.asifahanalytics.com/wha.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">🌎 Western Hemisphere</a>
+            </p>
+        </div>
     </div>
-    <div class="footer-section">
-        <div class="footer-section-title">Methodology</div>
-        <ul>
-            <li>Tier-1 commodities (oil, gas, wheat, potash) carry the highest signal weight.</li>
-            <li>Country pressure scores apply per-commodity exposure weighting (producer vs consumer vs transit).</li>
-            <li>News scan runs every 12 hours; sparklines refresh hourly.</li>
-            <li>"Top Signal" pill on each card reflects the highest-weighted news entry from the last scan.</li>
-        </ul>
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;">⚠️ DISCLAIMER</strong> &mdash; This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute investment advice, intelligence assessments, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.
     </div>
-    <div class="footer-section">
-        <div class="footer-section-title">Connected Trackers</div>
-        <ul>
-            <li><a href="military.html">🪖 Military Posture Tracker</a></li>
-            <li><a href="gpi.html">🌐 Global Pressure Index</a></li>
-            <li><a href="middle-east.html">🌍 Middle East Theatre</a></li>
-            <li><a href="asia.html">🌏 Asia-Pacific Theatre</a></li>
-            <li><a href="europe.html">🌍 Europe Theatre</a></li>
-        </ul>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;">buy me a coffee</a>
     </div>
-    <div class="footer-copyright">
-        © 2025–2026 Asifah Analytics · OSINT Geopolitical Intelligence · Sources cited where data permits
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, var(--border-color, #1e3a5f));font-size:12px;">
+        <a href="https://www.asifahanalytics.com/privacy.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="https://www.asifahanalytics.com/contact.html" style="color:var(--accent-cyan, #38bdf8);text-decoration:none;">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. All Rights Reserved. Asifah Commodities Tracker v1.2.0 — Proprietary and Confidential.
     </div>
 </footer>
 
@@ -1111,7 +1208,7 @@
 // ============================================================
 // CONFIGURATION
 // ============================================================
-const API_BASE = 'https://asifah-backend.onrender.com';
+const API_BASE = 'https://asifa-europe-backend.onrender.com';
 const ENDPOINT_PRESSURE = `${API_BASE}/api/commodity-pressure`;
 const ENDPOINT_PRICES = `${API_BASE}/api/commodity-prices`;
 
@@ -1129,11 +1226,23 @@ const COUNTRY_META = {
 
 const COUNTRY_ORDER = ['belarus', 'russia', 'china', 'israel', 'ukraine'];
 
+// Frontend regional grouping (mirrors backend COUNTRY_REGIONS)
+// If backend doesn't return country_regions yet, this provides the fallback default.
+// Order = Africa → Asia-Pacific → Europe → Middle East → Western Hemisphere (alphabetical)
+const REGION_DEFAULTS = {
+    africa:       { name: 'Africa',              icon: '🌍', order: 1, countries: [] },
+    asia_pacific: { name: 'Asia-Pacific',        icon: '🌏', order: 2, countries: ['china'] },
+    europe:       { name: 'Europe',              icon: '🌍', order: 3, countries: ['belarus', 'russia', 'ukraine'] },
+    middle_east:  { name: 'Middle East',         icon: '🕌', order: 4, countries: ['israel'] },
+    wha:          { name: 'Western Hemisphere',  icon: '🌎', order: 5, countries: [] },
+};
+
 // Commodity display order — Tier 1 first, then Tier 2, then Tier 3
 const COMMODITY_ORDER = [
-    'oil', 'natural_gas', 'wheat', 'potash',                        // Tier 1
-    'corn', 'soybeans', 'uranium', 'rare_earths', 'lithium', 'gold', // Tier 2
-    'copper'                                                         // Tier 3
+    'oil', 'natural_gas', 'wheat', 'potash', 'cobalt',               // Tier 1 (cobalt: critical battery + DRC concentration)
+    'corn', 'soybeans', 'uranium', 'rare_earths', 'lithium',         // Tier 2
+    'gold', 'silver', 'nickel',                                      // Tier 2 (precious + battery)
+    'copper'                                                         // Tier 3 (industrial bellwether)
 ];
 
 // ============================================================
@@ -1287,42 +1396,90 @@ function renderExposureMatrix() {
     const meta = (pricesData && pricesData.commodity_meta) || {};
     const cs = pressureData.country_summaries;
 
-    let html = `<table class="exposure-table"><thead><tr><th class="country-name">Country</th>`;
-    COMMODITY_ORDER.forEach(cid => {
-        const m = meta[cid] || pressureData.commodity_summaries[cid] || {};
-        const icon = m.icon || '📊';
-        const name = (m.name || cid).split(' ')[0];   // first word for compact header
-        html += `<th title="${escapeHtml(m.name || cid)}">${icon}<br><span style="font-size:0.55rem">${escapeHtml(name)}</span></th>`;
-    });
-    html += `</tr></thead><tbody>`;
+    // Pull region structure from backend if available, else fall back to defaults
+    const regions = pressureData.country_regions || REGION_DEFAULTS;
 
-    COUNTRY_ORDER.forEach(country => {
-        const cmeta = COUNTRY_META[country];
-        const country_obj = cs[country] || {};
-        const exposures = country_obj.commodity_signals || {};
-
-        html += `<tr><td><div class="country-flag-name"><span class="flag">${cmeta.flag}</span><span class="name">${cmeta.name}</span></div></td>`;
-        COMMODITY_ORDER.forEach(cid => {
-            const exp = exposures[cid];
-            if (!exp || !exp.role) {
-                html += `<td><span class="exposure-cell role-none" title="No mapped exposure">·</span></td>`;
-            } else {
-                const role = exp.role.toLowerCase();
-                const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
-                const rankSuffix = exp.rank ? ` (#${exp.rank} globally)` : '';
-                const noteAttr = `${roleLabel}${rankSuffix}${exp.note ? ' — ' + exp.note : ''}`;
-                const roleClass = ['producer','consumer','transit','sanctions_target','mediator'].includes(role)
-                    ? `role-${role.replace('sanctions_target', 'sanctions')}`
-                    : 'role-none';
-                const initial = roleLabel.charAt(0);
-                const rankBadge = exp.rank ? `<span class="exposure-rank">#${exp.rank}</span>` : '';
-                html += `<td><span class="exposure-cell ${roleClass}" title="${escapeHtml(noteAttr)}">${initial}</span>${rankBadge ? '<br>' + rankBadge : ''}</td>`;
-            }
+    // Build expand/collapse state: default = expanded for any region with mapped countries
+    if (!window._regionExpanded) {
+        window._regionExpanded = {};
+        Object.entries(regions).forEach(([rid, rdata]) => {
+            window._regionExpanded[rid] = (rdata.countries || []).length > 0;
         });
-        html += `</tr>`;
+    }
+
+    // Helper: build a single region's matrix (header + table)
+    function buildRegionBlock(regionId, regionData) {
+        const countries = (regionData.countries || []).slice().sort();   // alphabetical within region
+        const isExpanded = window._regionExpanded[regionId] !== false;
+        const countryCount = countries.length;
+        const countLabel = countryCount === 0 ? 'No countries mapped yet' :
+                           countryCount === 1 ? '1 country' : `${countryCount} countries`;
+
+        let inner = '';
+        if (countryCount === 0) {
+            inner = `<div class="region-empty">Coming soon — no country exposure mapped for this region in Phase 1.</div>`;
+        } else {
+            inner = `<table class="exposure-table"><thead><tr><th class="country-name">Country</th>`;
+            COMMODITY_ORDER.forEach(cid => {
+                const m = meta[cid] || pressureData.commodity_summaries[cid] || {};
+                const icon = m.icon || '📊';
+                const name = (m.name || cid).split(' ')[0];
+                inner += `<th title="${escapeHtml(m.name || cid)}">${icon}<br><span style="font-size:0.55rem">${escapeHtml(name)}</span></th>`;
+            });
+            inner += `</tr></thead><tbody>`;
+
+            countries.forEach(country => {
+                const cmeta = COUNTRY_META[country] || { flag: '🏳️', name: country };
+                const country_obj = cs[country] || {};
+                const exposures = country_obj.commodity_signals || {};
+
+                inner += `<tr><td><div class="country-flag-name"><span class="flag">${cmeta.flag}</span><span class="name">${cmeta.name}</span></div></td>`;
+                COMMODITY_ORDER.forEach(cid => {
+                    const exp = exposures[cid];
+                    if (!exp || !exp.role) {
+                        inner += `<td><span class="exposure-cell role-none" title="No mapped exposure">·</span></td>`;
+                    } else {
+                        const role = exp.role.toLowerCase();
+                        const roleLabel = role.charAt(0).toUpperCase() + role.slice(1);
+                        const rankSuffix = exp.rank ? ` (#${exp.rank} globally)` : '';
+                        const noteAttr = `${roleLabel}${rankSuffix}${exp.note ? ' — ' + exp.note : ''}`;
+                        const roleClass = ['producer','consumer','transit','sanctions_target','mediator'].includes(role)
+                            ? `role-${role.replace('sanctions_target', 'sanctions')}`
+                            : 'role-none';
+                        const initial = roleLabel.charAt(0);
+                        const rankBadge = exp.rank ? `<span class="exposure-rank">#${exp.rank}</span>` : '';
+                        inner += `<td><span class="exposure-cell ${roleClass}" title="${escapeHtml(noteAttr)}">${initial}</span>${rankBadge ? '<br>' + rankBadge : ''}</td>`;
+                    }
+                });
+                inner += `</tr>`;
+            });
+            inner += `</tbody></table>`;
+        }
+
+        return `
+        <div class="region-block ${isExpanded ? 'expanded' : 'collapsed'}" data-region="${regionId}">
+            <div class="region-header" onclick="toggleRegion('${regionId}')">
+                <span class="region-icon">${regionData.icon || '🌐'}</span>
+                <span class="region-name">${escapeHtml(regionData.name || regionId)}</span>
+                <span class="region-count">${countLabel}</span>
+                <span class="region-toggle">${isExpanded ? '▼' : '▶'}</span>
+            </div>
+            <div class="region-body" style="${isExpanded ? '' : 'display:none;'}">
+                ${inner}
+            </div>
+        </div>`;
+    }
+
+    // Sort regions by their `order` field
+    const sortedRegions = Object.entries(regions)
+        .sort((a, b) => (a[1].order || 99) - (b[1].order || 99));
+
+    let html = '';
+    sortedRegions.forEach(([rid, rdata]) => {
+        html += buildRegionBlock(rid, rdata);
     });
 
-    html += `</tbody></table>`;
+    // Single shared legend below all regions
     html += `<div class="exposure-legend">
         <div class="legend-item"><span class="legend-dot" style="background:rgba(16,185,129,0.6)"></span> P · Producer</div>
         <div class="legend-item"><span class="legend-dot" style="background:rgba(249,115,22,0.6)"></span> C · Consumer</div>
@@ -1331,7 +1488,15 @@ function renderExposureMatrix() {
         <div class="legend-item"><span class="legend-dot" style="background:rgba(167,139,250,0.6)"></span> M · Mediator</div>
         <div class="legend-item"><span class="legend-dot" style="background:#1e3a5f"></span> · No Mapped Exposure (Phase 1)</div>
     </div>`;
+
     container.innerHTML = html;
+}
+
+// Toggle a region's expanded/collapsed state and re-render
+function toggleRegion(regionId) {
+    if (!window._regionExpanded) window._regionExpanded = {};
+    window._regionExpanded[regionId] = !window._regionExpanded[regionId];
+    renderExposureMatrix();
 }
 
 // ============================================================
@@ -1469,6 +1634,19 @@ function buildCommodityCard(cid, m, sp, summary) {
         <div>ALERT: <span class="meta-value" style="color: var(--alert-${alertLevel}-border, var(--text-secondary))">${alertLevel.toUpperCase()}</span></div>
     `;
     card.appendChild(metaStrip);
+
+    // Signal-type pills (Phase 2 classifier — what KIND of stories are these?)
+    const stCounts = summary.signal_type_counts || {};
+    const stEntries = Object.entries(stCounts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+    if (stEntries.length > 0) {
+        const stStrip = document.createElement('div');
+        stStrip.className = 'card-signal-types';
+        stStrip.innerHTML = stEntries.map(([type, count]) => {
+            const label = type.replace(/_/g, ' ');
+            return `<span class="signal-type-pill st-${type}" title="${escapeHtml(label)} signals">${count} ${escapeHtml(label)}</span>`;
+        }).join('');
+        card.appendChild(stStrip);
+    }
 
     return card;
 }
