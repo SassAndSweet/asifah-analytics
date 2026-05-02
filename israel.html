@@ -360,6 +360,33 @@
         .article-link:hover { text-decoration: underline; }
         [data-theme="dark"] .article-link { color: #7dabf8; }
 
+        /* ===== ARTICLE TABS (canonical v2.1.0) ===== */
+        .article-tabs { display: flex; gap: 4px; border-bottom: 2px solid var(--card-border); margin-bottom: 14px; overflow-x: auto; flex-wrap: wrap; }
+        .article-tab {
+            padding: 8px 14px; border: none; background: transparent;
+            cursor: pointer; font-family: inherit; font-size: 0.88em;
+            color: var(--text-secondary); border-bottom: 2px solid transparent;
+            margin-bottom: -2px; white-space: nowrap;
+            transition: all 0.2s;
+        }
+        .article-tab:hover { color: var(--text-primary); }
+        .article-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 700; }
+        .article-tab .tab-count { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--article-bg); font-size: 0.75em; font-weight: 600; }
+        .article-tab.active .tab-count { background: rgba(0,200,212,0.18); color: var(--accent); }
+        [data-theme="dark"] .article-tab.active .tab-count { background: rgba(0,200,212,0.22); }
+        .article-list { max-height: 700px; overflow-y: auto; }
+        /* Source pill styling — canonical color codes */
+        .source-pill { padding: 1px 8px; border-radius: 4px; font-size: 0.72em; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; display: inline-block; }
+        .source-pill.rss      { background: rgba(34,197,94,0.15);  color: #16a34a; }
+        .source-pill.gdelt    { background: rgba(56,189,248,0.15); color: #0ea5e9; }
+        .source-pill.newsapi  { background: rgba(245,158,11,0.15); color: #f59e0b; }
+        .source-pill.brave    { background: rgba(249,115,22,0.15); color: #f97316; }
+        .source-pill.telegram { background: rgba(37,99,235,0.15);  color: #2563eb; }
+        .source-pill.bluesky  { background: rgba(14,165,233,0.18); color: #0284c7; }
+        .source-pill.reddit   { background: rgba(239,68,68,0.15);  color: #dc2626; }
+        .source-pill.thinktank{ background: rgba(168,85,247,0.18); color: #9333ea; }
+        [data-theme="dark"] .source-pill.thinktank { color: #c084fc; }
+
         /* ===== FOOTER ===== */
         footer { background: var(--container-bg); padding: 25px; border-radius: 12px; box-shadow: var(--card-glow); border: 2px solid var(--card-border); font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary); transition: background 0.3s ease; }
 
@@ -473,6 +500,9 @@
         <div class="nav-divider"></div>
         <a href="rhetoric-israel.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navIsraelRhet">🇮🇱 Israel Rhetoric</span><span class="nav-btn-status" data-i18n="navLive11">● Live</span></a>
         <div class="nav-btn current-page"><span class="nav-btn-label" data-i18n="navIsraelStab">🇮🇱 Israel Stability</span><span class="nav-btn-status" data-i18n="navYouAreHere">◉ You are here</span></div>
+        <div class="nav-divider"></div>
+        <a href="lebanon-stability.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navLebStab">🇱🇧 Lebanon Stability</span><span class="nav-btn-status" data-i18n="navLive12">● Live</span></a>
+        <a href="syria-conflicts.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navSyrStab">🇸🇾 Syria Stability</span><span class="nav-btn-status" data-i18n="navLive13">● Live</span></a>
     </nav>
 
     <div class="main-content">
@@ -855,14 +885,43 @@
                         </div>
                     </div>
 
+                    <div class="knowledge-card collapsed" id="card-thinktanks">
+                        <div class="knowledge-header" onclick="toggleKnowledgeCard('thinktanks')">
+                            <div class="knowledge-header-title"><span class="category-icon">🧠</span><span>Regional Think Tanks & Policy Analysis</span></div>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                        <div class="knowledge-content">
+                            <p><strong>Regional Perspectives Matter:</strong> Stability assessment of Israel benefits from understanding how regional analysts read Israeli posture, Lebanese leverage, and Syrian repositioning. Below are policy institutes whose long-form analysis is surfaced live in the <strong>🧠 Think Tank — Regional</strong> tab in the Articles section above.</p>
+                            <p><strong>🇱🇧 Badil — The Alternative Policy Institute (Beirut):</strong> Lebanese policy institute publishing rigorous long-form analysis on Lebanon-Israel dynamics, Hezbollah's military posture, ceasefire arithmetic, and regional escalation patterns. Their reporting on Hezbollah's reconstitution and Israeli target-bank dynamics is among the most analytically careful work in the region.</p>
+                            <p><strong>Israeli Think Tanks (Hebrew & English):</strong> INSS, Jerusalem Institute for Strategy and Security, Mitvim, IDI provide complementary Israeli-side analysis cited throughout the Knowledge Library above.</p>
+                            <p style="font-size:0.85em; opacity:0.85;">⚠️ Think Tank tab content reflects regional policy analysis perspectives — NOT Israeli government positions. Useful for stability assessment, not endorsement.</p>
+                            <div class="report-links-grid">
+                                <a href="https://thebadil.com" target="_blank" class="report-link">🧠 Badil (Lebanon)</a>
+                                <a href="https://www.inss.org.il/" target="_blank" class="report-link">📑 INSS (Israel)</a>
+                                <a href="https://jiss.org.il/en/" target="_blank" class="report-link">📑 JISS (Israel)</a>
+                                <a href="https://mitvim.org.il/en/" target="_blank" class="report-link">📑 Mitvim (Israel)</a>
+                                <a href="https://en.idi.org.il/" target="_blank" class="report-link">📑 IDI (Israel)</a>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
             <!-- Articles -->
             <div class="articles-section">
-                <div class="section-title">📰 Recent Israel War & Stability Articles (Last 7 Days)</div>
-                <div id="articlesContainer">
-                    <div style="text-align:center; color:var(--text-secondary); padding:30px;">Loading articles...</div>
+                <div class="section-title">📰 <span data-i18n="articlesTitle">Recent Israel War & Stability Articles</span></div>
+                <div class="article-tabs" id="articleTabs">
+                    <button class="article-tab active" data-tab="all" onclick="setArticleTab('all')"><span data-i18n="tabAll">All</span> <span class="tab-count" id="countAll">0</span></button>
+                    <button class="article-tab" data-tab="en" onclick="setArticleTab('en')"><span data-i18n="tabEn">English</span> <span class="tab-count" id="countEn">0</span></button>
+                    <button class="article-tab" data-tab="he" onclick="setArticleTab('he')"><span data-i18n="tabHe">Hebrew</span> <span class="tab-count" id="countHe">0</span></button>
+                    <button class="article-tab" data-tab="ar" onclick="setArticleTab('ar')"><span data-i18n="tabAr">Arabic</span> <span class="tab-count" id="countAr">0</span></button>
+                    <button class="article-tab" data-tab="fa" onclick="setArticleTab('fa')"><span data-i18n="tabFa">Farsi</span> <span class="tab-count" id="countFa">0</span></button>
+                    <button class="article-tab" data-tab="social" onclick="setArticleTab('social')"><span data-i18n="tabSocial">Social</span> <span class="tab-count" id="countSocial">0</span></button>
+                    <button class="article-tab" data-tab="thinktank" onclick="setArticleTab('thinktank')">🧠 <span data-i18n="tabThinkTank">Think Tank — Regional</span> <span class="tab-count" id="countThinkTank">0</span></button>
+                </div>
+                <div id="articlesContainer" class="article-list">
+                    <div style="text-align:center; color:var(--text-secondary); padding:30px;" data-i18n="loadingArticles">Loading articles...</div>
                 </div>
             </div>
 
@@ -1130,19 +1189,122 @@
                 if (taseSpark.length > 0) buildTaseSparkline(taseSpark);
             } catch(e) { console.warn('[Sparklines] fresh-data render error:', e); }
 
-            // Articles feed
+            // Articles feed — populate tabbed buckets
             const allArts = (data.all_articles || []);
-            const container = document.getElementById('articlesContainer');
-            if (allArts.length === 0) {
-                container.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding:20px;">No recent articles found</div>';
-            } else {
-                container.innerHTML = allArts.slice(0, 25).map(a => `
-                    <div class="article-item">
-                        <div class="article-title">${a.title || 'Untitled'}</div>
-                        <div class="article-meta">${a.source || ''} • ${a.published ? new Date(a.published).toLocaleDateString() : 'Recent'}</div>
-                        ${a.url ? `<a href="${a.url}" target="_blank" class="article-link">Read article →</a>` : ''}
-                    </div>`).join('');
+            renderTabbedArticles(allArts);
+            // Also fetch Think Tank feed in parallel — non-blocking
+            loadThinkTankArticles();
+        }
+
+        // ===== TABBED ARTICLES (canonical v2.1.0) =====
+        let articleStore = { all: [], en: [], he: [], ar: [], fa: [], social: [], thinktank: [] };
+
+        function classifySource(source) {
+            const s = (source || '').toLowerCase();
+            if (s.includes('telegram')) return 'telegram';
+            if (s.includes('bluesky'))  return 'bluesky';
+            if (s.includes('reddit'))   return 'reddit';
+            if (s.includes('gdelt'))    return 'gdelt';
+            if (s.includes('newsapi'))  return 'newsapi';
+            if (s.includes('brave'))    return 'brave';
+            if (s.includes('badil') || s.includes('think tank') || s.includes('thinktank')) return 'thinktank';
+            return 'rss';
+        }
+
+        function renderTabbedArticles(allArts) {
+            const seen = new Set();
+            const all = [], en = [], he = [], ar = [], fa = [], social = [];
+            (allArts || []).forEach(a => {
+                if (!a.url || seen.has(a.url)) return;
+                seen.add(a.url);
+                const source = (a.source || '').toLowerCase();
+                const lang = (a.language || a.lang || '').toLowerCase();
+                const isSocial = source.includes('telegram') || source.includes('bluesky') ||
+                                 source.includes('reddit')   || source.includes('twitter') ||
+                                 source.includes('x.com');
+                const norm = {
+                    title: a.title || '(no title)',
+                    url: a.url,
+                    source: a.source || 'Unknown',
+                    published: a.published || a.date || '',
+                    sourceClass: classifySource(source),
+                    description: a.description || '',
+                };
+                all.push(norm);
+                if (isSocial)         social.push(norm);
+                else if (lang === 'he' || lang === 'heb') he.push(norm);
+                else if (lang === 'ar' || lang === 'ara') ar.push(norm);
+                else if (lang === 'fa' || lang === 'fas' || lang === 'per') fa.push(norm);
+                else                  en.push(norm);  // default bucket
+            });
+            const byDate = (a, b) => (b.published || '').localeCompare(a.published || '');
+            articleStore.all      = all.sort(byDate);
+            articleStore.en       = en.sort(byDate);
+            articleStore.he       = he.sort(byDate);
+            articleStore.ar       = ar.sort(byDate);
+            articleStore.fa       = fa.sort(byDate);
+            articleStore.social   = social.sort(byDate);
+            // articleStore.thinktank populated separately via loadThinkTankArticles()
+            updateTabCounts();
+            setArticleTab('all');
+        }
+
+        function updateTabCounts() {
+            const ids = { all: 'countAll', en: 'countEn', he: 'countHe',
+                          ar: 'countAr', fa: 'countFa', social: 'countSocial',
+                          thinktank: 'countThinkTank' };
+            Object.entries(ids).forEach(([k, id]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = (articleStore[k] || []).length;
+            });
+        }
+
+        async function loadThinkTankArticles() {
+            try {
+                const resp = await fetch(`${BACKEND_URL}/api/think-tank/israel`);
+                if (!resp.ok) return;
+                const data = await resp.json();
+                const arts = (data.articles || []).map(a => ({
+                    title: a.title,
+                    url: a.url,
+                    source: a.source,
+                    published: a.published || '',
+                    sourceClass: 'thinktank',
+                    description: a.description || '',
+                }));
+                articleStore.thinktank = arts;
+                updateTabCounts();
+            } catch(e) {
+                console.warn('[ThinkTank] Israel load error:', e);
             }
+        }
+
+        function setArticleTab(tab) {
+            document.querySelectorAll('.article-tab').forEach(b =>
+                b.classList.toggle('active', b.dataset.tab === tab));
+            const container = document.getElementById('articlesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            const articles = articleStore[tab] || [];
+            if (!articles.length) {
+                container.innerHTML = `<div style="text-align:center; color:var(--text-secondary); padding:30px;" data-i18n="noArticles">No articles in this category.</div>`;
+                return;
+            }
+            articles.forEach(art => {
+                const dateStr = art.published ? new Date(art.published).toLocaleDateString() : '';
+                const div = document.createElement('div');
+                div.className = 'article-item';
+                div.innerHTML = `
+                    <div class="article-title">${art.title}</div>
+                    <div class="article-meta" style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin:6px 0;">
+                        <span class="source-pill ${art.sourceClass}">${art.sourceClass}</span>
+                        <span>${art.source}</span>
+                        ${dateStr ? `<span>· ${dateStr}</span>` : ''}
+                    </div>
+                    ${art.url ? `<a href="${art.url}" target="_blank" rel="noopener" class="article-link">Read article →</a>` : ''}
+                `;
+                container.appendChild(div);
+            });
         }
 
         // ===== TREND DATA & SPARKLINES =====
@@ -1389,6 +1551,10 @@
             footBmacButton: "buy me a coffee",
             footRefreshNote: "Updated every 12 hours",
             footCopy: "All Rights Reserved. Proprietary and Confidential.",
+            // v2.2.0 — Article tabs
+            articlesTitle: "Recent Israel War & Stability Articles",
+            tabAll: "All", tabEn: "English", tabHe: "Hebrew", tabAr: "Arabic", tabFa: "Farsi", tabSocial: "Social", tabThinkTank: "Think Tank — Regional",
+            loadingArticles: "Loading articles...", noArticles: "No articles in this category.",
           },
           he: {
             pageTitle: "🇮🇱 מדד יציבות ישראל",
@@ -1483,6 +1649,10 @@
             footBmacButton: "להזמין לי קפה",
             footRefreshNote: "מתעדכן כל 12 שעות",
             footCopy: "כל הזכויות שמורות. קנייני וסודי.",
+            // v2.2.0 — Article tabs
+            articlesTitle: "כתבות עדכניות על מלחמה ויציבות בישראל",
+            tabAll: "הכל", tabEn: "אנגלית", tabHe: "עברית", tabAr: "ערבית", tabFa: "פרסית", tabSocial: "רשתות", tabThinkTank: "מכוני חשיבה — אזורי",
+            loadingArticles: "טוען כתבות...", noArticles: "אין כתבות בקטגוריה זו.",
           },
           ar: {
             pageTitle: "🇮🇱 مؤشر استقرار إسرائيل",
@@ -1577,6 +1747,10 @@
             footBmacButton: "اشترِ لي قهوة",
             footRefreshNote: "يُحدَّث كل 12 ساعة",
             footCopy: "جميع الحقوق محفوظة. ملكية وسرية.",
+            // v2.2.0 — Article tabs
+            articlesTitle: "أحدث المقالات حول الحرب والاستقرار في إسرائيل",
+            tabAll: "الكل", tabEn: "الإنجليزية", tabHe: "العبرية", tabAr: "العربية", tabFa: "الفارسية", tabSocial: "اجتماعي", tabThinkTank: "مراكز الأبحاث — إقليمي",
+            loadingArticles: "جارٍ تحميل المقالات...", noArticles: "لا توجد مقالات في هذه الفئة.",
           },
           fa: {
             pageTitle: "🇮🇱 شاخص ثبات اسرائیل",
@@ -1671,6 +1845,10 @@
             footBmacButton: "یک قهوه برایم بخرید",
             footRefreshNote: "هر 12 ساعت به‌روزرسانی می‌شود",
             footCopy: "کلیه حقوق محفوظ است. اختصاصی و محرمانه.",
+            // v2.2.0 — Article tabs
+            articlesTitle: "آخرین مقالات جنگ و ثبات اسرائیل",
+            tabAll: "همه", tabEn: "انگلیسی", tabHe: "عبری", tabAr: "عربی", tabFa: "فارسی", tabSocial: "اجتماعی", tabThinkTank: "اندیشکده — منطقه‌ای",
+            loadingArticles: "در حال بارگذاری مقالات...", noArticles: "هیچ مقاله‌ای در این دسته نیست.",
           },
         };
         // ============================================
