@@ -229,6 +229,29 @@
     .green-line-status-badge.active   { background: #10b981; }
     .green-line-status-badge.signaled { background: #84cc16; color: #052e16; }
     .green-line-status-badge.dormant  { background: #64748b; }
+
+    /* ── SCROLLABLE SIGNAL LISTS (cap at ~5 visible, scroll for more) ── */
+    .signal-list-scroll {
+        max-height: 340px;
+        overflow-y: auto;
+        padding-right: 6px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(56,189,248,0.4) rgba(56,189,248,0.08);
+    }
+    .signal-list-scroll::-webkit-scrollbar { width: 8px; }
+    .signal-list-scroll::-webkit-scrollbar-track { background: rgba(56,189,248,0.05); border-radius: 4px; }
+    .signal-list-scroll::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.35); border-radius: 4px; }
+    .signal-list-scroll::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.55); }
+    .signal-list-scroll-hint {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 6px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-style: italic;
+    }
     .diplomatic-score-bar { height: 8px; background: rgba(100,116,139,0.2); border-radius: 4px; overflow: hidden; margin: 4px 0 8px; }
     .diplomatic-score-fill { height: 100%; background: linear-gradient(90deg, #10b981, #84cc16); transition: width 0.5s ease; }
     .max-pressure-alert { background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.3); border-left: 3px solid #dc2626; border-radius: 8px; padding: 10px 14px; margin-bottom: 10px; display: flex; gap: 10px; align-items: flex-start; }
@@ -260,19 +283,6 @@
     .article-list-source-pill.telegram { background: #2dd4bf; color: #042f2e; }
     .article-list-source-pill.bluesky  { background: #60a5fa; color: white; }
     .article-list-source-pill.reddit   { background: #fb923c; color: white; }
-
-    /* ── KNOWLEDGE LIBRARY ── */
-    .knowledge-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 16px 20px; margin-bottom: 18px; box-shadow: var(--card-glow); }
-    .knowledge-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 10px; }
-    .kb-tile { background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: all 0.2s; }
-    .kb-tile:hover { border-color: #38bdf8; background: rgba(56,189,248,0.04); }
-    .kb-tile-header { display: flex; align-items: center; gap: 8px; }
-    .kb-tile-icon { font-size: 1.05rem; }
-    .kb-tile-title { font-size: 0.78rem; font-weight: 700; color: var(--text-primary); flex: 1; font-family: 'Times New Roman', serif; }
-    .kb-tile-arrow { font-size: 0.85rem; color: #38bdf8; transition: transform 0.3s; }
-    .kb-tile.expanded .kb-tile-arrow { transform: rotate(90deg); }
-    .kb-tile-body { display: none; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(56,189,248,0.15); font-size: 0.74rem; line-height: 1.55; color: var(--text-secondary); font-family: 'Times New Roman', serif; }
-    .kb-tile.expanded .kb-tile-body { display: block; }
 
     /* ── ESCALATION LADDER ── */
     .ladder-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; }
@@ -313,7 +323,7 @@
 <header>
     <div class="header-left">
         <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
-        <a href="rhetoric-europe.html" class="back-link" data-i18n="backLink">← Back to Europe</a>
+        <a href="ukraine.html" class="back-link" data-i18n="backLink">← Back to Ukraine Stability</a>
     </div>
     <div class="header-center">
         <div class="header-flag">🇺🇦 <span data-i18n="pageFlag">UKRAINE</span></div>
@@ -507,6 +517,18 @@
     <div class="interp-confidence-note" id="soWhatNote"></div>
 </div>
 
+<!-- ESCALATION LADDER -->
+<div class="section-card">
+    <div class="section-title" data-i18n="ladderTitle">🪜 PRESSURE LADDER</div>
+    <div class="ladder-row" id="ladderRow"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassified">Articles classified: --</div>
+        <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
+            🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+        </button>
+    </div>
+</div>
+
 <!-- RED LINES CARD -->
 <div class="red-lines-card" id="redLinesCard" style="display:none;">
     <div class="interp-card-header">
@@ -526,7 +548,8 @@
             </div>
         </div>
     </div>
-    <div id="redLineItems"></div>
+    <div id="redLineItems" class="signal-list-scroll"></div>
+    <div class="signal-list-scroll-hint" id="redLineScrollHint" style="display:none;" data-i18n="scrollHint">↕ scroll for full list</div>
 </div>
 
 <!-- DIPLOMATIC TRACK / GREEN LINES -->
@@ -567,21 +590,10 @@
             </div>
         </div>
     </div>
-    <div id="greenLineItems"></div>
+    <div id="greenLineItems" class="signal-list-scroll"></div>
+    <div class="signal-list-scroll-hint" id="greenLineScrollHint" style="display:none;" data-i18n="scrollHint">↕ scroll for full list</div>
     <div style="font-size:0.62rem;color:#065f46;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;" data-i18n="greenLinesNote">
         Green lines track diplomatic off-ramp signals. ACTIVE = confirmed in current scan. SIGNALED = contextual signal present.
-    </div>
-</div>
-
-<!-- ESCALATION LADDER -->
-<div class="section-card">
-    <div class="section-title" data-i18n="ladderTitle">🪜 PRESSURE LADDER</div>
-    <div class="ladder-row" id="ladderRow"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
-        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassified">Articles classified: --</div>
-        <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
-            🔄 <span data-i18n="refreshScan">Refresh Scan</span>
-        </button>
     </div>
 </div>
 
@@ -614,81 +626,37 @@
     <div class="history-legend" id="historyLegend"></div>
 </div>
 
-<!-- KNOWLEDGE LIBRARY -->
-<div class="knowledge-card">
-    <div class="section-title" data-i18n="kbTitle">📚 KNOWLEDGE LIBRARY — UKRAINE CONTEXT</div>
-    <div class="knowledge-grid">
-        <div class="kb-tile" onclick="this.classList.toggle('expanded')">
-            <div class="kb-tile-header">
-                <span class="kb-tile-icon">⚔️</span>
-                <span class="kb-tile-title" data-i18n="kb1Title">Frontline Status &amp; Russian Operational Tempo</span>
-                <span class="kb-tile-arrow">›</span>
-            </div>
-            <div class="kb-tile-body" data-i18n="kb1Body">The active frontline runs roughly 1,200 km from Kharkiv oblast through Donetsk, Zaporizhzhia, and Kherson. Major contested axes include Pokrovsk, Kupiansk, Toretsk, and Vovchansk. Russian operational tempo has emphasized attritional pressure with massed infantry assaults supported by glide bombs, drones, and artillery. Watch for: any Russian strategic breakthrough beyond ~10 km depth, collapse of fortified Ukrainian belts, or unexpected concentration shifts (e.g., Sumy/Kharkiv re-targeting).</div>
-        </div>
-        <div class="kb-tile" onclick="this.classList.toggle('expanded')">
-            <div class="kb-tile-header">
-                <span class="kb-tile-icon">🇺🇸</span>
-                <span class="kb-tile-title" data-i18n="kb2Title">US Aid Pipeline &amp; Congressional Dynamics</span>
-                <span class="kb-tile-arrow">›</span>
-            </div>
-            <div class="kb-tile-body" data-i18n="kb2Body">U.S. military aid to Ukraine has flowed via Presidential Drawdown Authority (PDA), Foreign Military Financing (FMF), and Ukraine Security Assistance Initiative (USAI) since 2022. Aid pauses in late 2023 and again in 2025 created frontline ammunition shortages with measurable battlefield impact. Watch for: supplemental authorization debates, conditioning language in NDAA, suspension of specific systems (Patriot, ATACMS, F-16 sustainment), and any conditioning of aid on negotiated settlement.</div>
-        </div>
-        <div class="kb-tile" onclick="this.classList.toggle('expanded')">
-            <div class="kb-tile-header">
-                <span class="kb-tile-icon">🛩️</span>
-                <span class="kb-tile-title" data-i18n="kb3Title">Long-Range Strike Campaign — ATACMS, Storm Shadow, Native Drones</span>
-                <span class="kb-tile-arrow">›</span>
-            </div>
-            <div class="kb-tile-body" data-i18n="kb3Body">Ukraine has steadily extended its long-range strike envelope: Storm Shadow/SCALP (UK/France) at ~250 km, ATACMS (US) at ~300 km, and indigenous deep-strike drones (Liutyi, Bober, FP-1) reaching 1,000+ km into Russian territory. Targets have included Russian air bases, oil refineries, command nodes, and Black Sea Fleet vessels. Watch for: new permission grants for Western systems, Russian retaliation thresholds, and Ukrainian cruise missile (Neptune-MD, Trembita) production scaling.</div>
-        </div>
-        <div class="kb-tile" onclick="this.classList.toggle('expanded')">
-            <div class="kb-tile-header">
-                <span class="kb-tile-icon">🏭</span>
-                <span class="kb-tile-title" data-i18n="kb4Title">Defense Industrial Base &amp; Drone Advisor Exports</span>
-                <span class="kb-tile-arrow">›</span>
-            </div>
-            <div class="kb-tile-body" data-i18n="kb4Body">Ukraine's defense industrial base has scaled dramatically since 2022: Ukrainian-made FPV drones, naval drones (MAGURA), and one-way attack drones now dominate frontline tactical innovation. Beyond domestic use, Ukraine has begun exporting drone advisors and battlefield-tested doctrine to GCC states (UAE, Saudi Arabia) and other partners — a reverse-flow relationship from Cold War-era patterns. This monetizes Ukrainian combat experience and creates new strategic dependencies. Watch for: named export deals, advisor deployments, and Russian response to Ukrainian arms-export normalization.</div>
-        </div>
-        <div class="kb-tile" onclick="this.classList.toggle('expanded')">
-            <div class="kb-tile-header">
-                <span class="kb-tile-icon">🌾</span>
-                <span class="kb-tile-title" data-i18n="kb5Title">Black Sea Grain Corridor &amp; Food Security</span>
-                <span class="kb-tile-arrow">›</span>
-            </div>
-            <div class="kb-tile-body" data-i18n="kb5Body">Ukraine produces roughly 10% of global wheat exports, 15% of corn, and dominates sunflower oil. The Black Sea grain corridor — from Odesa, Chornomorsk, and Pivdennyi ports — was reopened unilaterally by Ukraine in late 2023 after the collapse of the original UN-Turkey-brokered Black Sea Grain Initiative. Russian missile and drone strikes on Ukrainian port infrastructure have continued sporadically. Watch for: targeted strikes on grain storage/loading, insurance market reactions, MV (vessel) hits, and any blockade attempt.</div>
-        </div>
-        <div class="kb-tile" onclick="this.classList.toggle('expanded')">
-            <div class="kb-tile-header">
-                <span class="kb-tile-icon">🤝</span>
-                <span class="kb-tile-title" data-i18n="kb6Title">NATO Membership Trajectory &amp; Bilateral Security Agreements</span>
-                <span class="kb-tile-arrow">›</span>
-            </div>
-            <div class="kb-tile-body" data-i18n="kb6Body">Ukraine's NATO membership trajectory remains aspirational rather than scheduled. The 2023 Vilnius and 2024 Washington summits provided language about an "irreversible path" but no MAP or accession timeline. In parallel, Ukraine has signed 25+ bilateral 10-year security agreements with G7 and European partners providing weapons, training, intelligence, and reconstruction commitments. Watch for: any MAP-equivalent framework, Article 5-like commitments, or — the harder signal — formal abandonment of NATO membership as a war-termination concession.</div>
-        </div>
-    </div>
-</div>
-
-<!-- FOOTER -->
-<div class="page-footer" style="border-top:1px solid rgba(56,189,248,0.15);padding-top:18px;">
-    <div class="footer-grid">
+<!-- FOOTER (canonical Asifah pattern) -->
+<footer style="background:var(--card-bg, var(--container-bg, #0d1b2e));border:1px solid var(--card-border, #1e3a5f);border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
         <div>
-            <div class="footer-col-title" data-i18n="footerSourcesTitle">DATA SOURCES</div>
-            <div class="footer-col-list" data-i18n="footerSources">RSS (EN, UK, RU, PL) · GDELT · NewsAPI · Brave Search · Telegram OSINT (Zelensky channels, OSINTtechnical, Ukrainian MoD, Russian milblogger mirrors) · Bluesky (state department mirrors, war-translated, Ukrainian MFA) · Reddit (r/UkraineWarVideoReport, r/europe)</div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footSourcesTitle">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footSourcesText">RSS (Ukrainska Pravda, UNIAN, Kyiv Independent, ZN.UA, Euromaidan Press, Meduza, ISW, Politico Europe), Telegram OSINT (@V_Zelenskiy_official, @ZelenskiyOfficial, OSINTtechnical, Ukrainian MoD), GDELT (EN/UK/RU), Bluesky (war-translated, state-department mirrors), Reddit. NewsAPI + Brave fallback when GDELT rate-limits.</p>
         </div>
         <div>
-            <div class="footer-col-title" data-i18n="footerScanTitle">SCAN CADENCE</div>
-            <div class="footer-col-list" data-i18n="footerScan">Background refresh every 6 hours · Manual scans available via Refresh button · Cache served from Upstash Redis</div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footMethodTitle">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footMethodText">Pressure score = sum of actor escalation × source weight. 7-actor framework. 9 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.</p>
         </div>
         <div>
-            <div class="footer-col-title" data-i18n="footerCaveatTitle">USE NOTE</div>
-            <div class="footer-col-list" data-i18n="footerCaveat">Open-source signals only · Not a prediction · Not for operational use · Verify through official channels</div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footContactTitle">Contact</h4>
+            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
         </div>
     </div>
-    <div style="text-align:center;padding:14px 16px;">
-        Asifah Analytics · Ukraine Pressure Tracker v1.0.0 · <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" class="coffee-link">☕ Buy me a coffee</a> · © 2025-2026
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;" data-i18n="footDisclaimerLabel">⚠️ DISCLAIMER</strong> &mdash; <span data-i18n="footDisclaimerText">This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.</span>
     </div>
-</div>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;" data-i18n="footBmacButton">buy me a coffee</a>
+    </div>
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, #1e3a5f);font-size:12px;">
+        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footPrivacy">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footContact">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Ukraine Pressure Tracker v1.0.0 — Proprietary and Confidential.</span>
+    </div>
+</footer>
 
 </div><!-- end main content -->
 </div><!-- end page-with-sidebar -->
@@ -721,7 +689,7 @@ const INBOUND_ACTORS  = ['russian_forces_in_ukraine', 'us_government', 'nato_wes
 // ══════════════════════════════════════════════════════════════
 const T = {
     en: {
-        backLink: '← Back to Europe', pageFlag: 'UKRAINE', pageTitle: 'UKRAINE PRESSURE TRACKER',
+        backLink: '← Back to Ukraine Stability', pageFlag: 'UKRAINE', pageTitle: 'UKRAINE PRESSURE TRACKER',
         pageSubtitle: 'Zelensky Government · Armed Forces · Russian Forces · US Aid · NATO Support · Defense Industrial Base · Occupied Territories',
         lastUpdated: 'Last updated:', badgeLabel: '⚡ MULTI-VECTOR PRESSURE', themeLabel: 'THEME',
         scoreLabel: 'PRESSURE SCORE / 100', theatreLevel: 'THEATRE LEVEL',
@@ -752,28 +720,22 @@ const T = {
         articlesTitle: '📰 RHETORIC SIGNALS — ARTICLES',
         trendTitle: '📈 PRESSURE TREND',
         historyEmpty: '📡 Collecting data — first snapshot saves on next scan cycle',
-        kbTitle: '📚 KNOWLEDGE LIBRARY — UKRAINE CONTEXT',
-        kb1Title: 'Frontline Status & Russian Operational Tempo',
-        kb1Body: 'The active frontline runs roughly 1,200 km from Kharkiv oblast through Donetsk, Zaporizhzhia, and Kherson. Major contested axes include Pokrovsk, Kupiansk, Toretsk, and Vovchansk. Russian operational tempo has emphasized attritional pressure with massed infantry assaults supported by glide bombs, drones, and artillery. Watch for: any Russian strategic breakthrough beyond ~10 km depth, collapse of fortified Ukrainian belts, or unexpected concentration shifts (e.g., Sumy/Kharkiv re-targeting).',
-        kb2Title: 'US Aid Pipeline & Congressional Dynamics',
-        kb2Body: 'U.S. military aid to Ukraine has flowed via Presidential Drawdown Authority (PDA), Foreign Military Financing (FMF), and Ukraine Security Assistance Initiative (USAI) since 2022. Aid pauses in late 2023 and again in 2025 created frontline ammunition shortages with measurable battlefield impact. Watch for: supplemental authorization debates, conditioning language in NDAA, suspension of specific systems (Patriot, ATACMS, F-16 sustainment), and any conditioning of aid on negotiated settlement.',
-        kb3Title: 'Long-Range Strike Campaign — ATACMS, Storm Shadow, Native Drones',
-        kb3Body: "Ukraine has steadily extended its long-range strike envelope: Storm Shadow/SCALP (UK/France) at ~250 km, ATACMS (US) at ~300 km, and indigenous deep-strike drones (Liutyi, Bober, FP-1) reaching 1,000+ km into Russian territory. Targets have included Russian air bases, oil refineries, command nodes, and Black Sea Fleet vessels. Watch for: new permission grants for Western systems, Russian retaliation thresholds, and Ukrainian cruise missile (Neptune-MD, Trembita) production scaling.",
-        kb4Title: 'Defense Industrial Base & Drone Advisor Exports',
-        kb4Body: "Ukraine's defense industrial base has scaled dramatically since 2022: Ukrainian-made FPV drones, naval drones (MAGURA), and one-way attack drones now dominate frontline tactical innovation. Beyond domestic use, Ukraine has begun exporting drone advisors and battlefield-tested doctrine to GCC states (UAE, Saudi Arabia) and other partners — a reverse-flow relationship from Cold War-era patterns. This monetizes Ukrainian combat experience and creates new strategic dependencies. Watch for: named export deals, advisor deployments, and Russian response to Ukrainian arms-export normalization.",
-        kb5Title: 'Black Sea Grain Corridor & Food Security',
-        kb5Body: 'Ukraine produces roughly 10% of global wheat exports, 15% of corn, and dominates sunflower oil. The Black Sea grain corridor — from Odesa, Chornomorsk, and Pivdennyi ports — was reopened unilaterally by Ukraine in late 2023 after the collapse of the original UN-Turkey-brokered Black Sea Grain Initiative. Russian missile and drone strikes on Ukrainian port infrastructure have continued sporadically. Watch for: targeted strikes on grain storage/loading, insurance market reactions, MV (vessel) hits, and any blockade attempt.',
-        kb6Title: 'NATO Membership Trajectory & Bilateral Security Agreements',
-        kb6Body: "Ukraine's NATO membership trajectory remains aspirational rather than scheduled. The 2023 Vilnius and 2024 Washington summits provided language about an \"irreversible path\" but no MAP or accession timeline. In parallel, Ukraine has signed 25+ bilateral 10-year security agreements with G7 and European partners providing weapons, training, intelligence, and reconstruction commitments. Watch for: any MAP-equivalent framework, Article 5-like commitments, or — the harder signal — formal abandonment of NATO membership as a war-termination concession.",
-        footerSourcesTitle: 'DATA SOURCES',
-        footerSources: 'RSS (EN, UK, RU, PL) · GDELT · NewsAPI · Brave Search · Telegram OSINT (Zelensky channels, OSINTtechnical, Ukrainian MoD, Russian milblogger mirrors) · Bluesky (state department mirrors, war-translated, Ukrainian MFA) · Reddit (r/UkraineWarVideoReport, r/europe)',
-        footerScanTitle: 'SCAN CADENCE',
-        footerScan: 'Background refresh every 6 hours · Manual scans available via Refresh button · Cache served from Upstash Redis',
-        footerCaveatTitle: 'USE NOTE',
-        footerCaveat: 'Open-source signals only · Not a prediction · Not for operational use · Verify through official channels',
+        footSourcesTitle: 'Data Sources',
+        footSourcesText: 'RSS (Ukrainska Pravda, UNIAN, Kyiv Independent, ZN.UA, Euromaidan Press, Meduza, ISW, Politico Europe), Telegram OSINT (@V_Zelenskiy_official, @ZelenskiyOfficial, OSINTtechnical, Ukrainian MoD), GDELT (EN/UK/RU), Bluesky (war-translated, state-department mirrors), Reddit. NewsAPI + Brave fallback when GDELT rate-limits.',
+        footMethodTitle: 'Methodology',
+        footMethodText: 'Pressure score = sum of actor escalation × source weight. 7-actor framework. 9 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.',
+        footContactTitle: 'Contact',
+        footDisclaimerLabel: '⚠️ DISCLAIMER',
+        footDisclaimerText: 'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.',
+        footBmacText: 'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footBmacButton: 'buy me a coffee',
+        footPrivacy: 'Privacy Policy',
+        footContact: 'Contact',
+        footCopy: 'All Rights Reserved. Ukraine Pressure Tracker v1.0.0 — Proprietary and Confidential.',
+        scrollHint: '↕ scroll for full list',
     },
     fr: {
-        backLink: "← Retour à l'Europe", pageFlag: 'UKRAINE', pageTitle: 'SUIVI DE PRESSION UKRAINIEN',
+        backLink: "← Retour à la stabilité Ukraine", pageFlag: 'UKRAINE', pageTitle: 'SUIVI DE PRESSION UKRAINIEN',
         pageSubtitle: 'Gouvernement Zelensky · Forces armées · Forces russes · Aide américaine · Soutien OTAN · Base industrielle de défense · Territoires occupés',
         lastUpdated: 'Dernière mise à jour :', badgeLabel: '⚡ PRESSION MULTI-VECTEURS', themeLabel: 'THÈME',
         scoreLabel: 'SCORE DE PRESSION / 100', theatreLevel: 'NIVEAU DU THÉÂTRE',
@@ -804,28 +766,22 @@ const T = {
         articlesTitle: '📰 SIGNAUX RHÉTORIQUES — ARTICLES',
         trendTitle: '📈 TENDANCE DE PRESSION',
         historyEmpty: '📡 Collecte de données — premier instantané au prochain cycle',
-        kbTitle: '📚 BIBLIOTHÈQUE — CONTEXTE UKRAINIEN',
-        kb1Title: 'État de la ligne de front et tempo opérationnel russe',
-        kb1Body: 'La ligne de front active s\'étend sur environ 1 200 km depuis l\'oblast de Kharkiv à travers Donetsk, Zaporijjia et Kherson. Les axes contestés majeurs incluent Pokrovsk, Koupiansk, Toretsk et Vovtchansk. Le tempo opérationnel russe privilégie la pression d\'attrition avec des assauts d\'infanterie massifs soutenus par des bombes planantes, drones et artillerie. À surveiller : toute percée stratégique russe au-delà de ~10 km, effondrement des ceintures fortifiées ukrainiennes, ou changements de concentration inattendus.',
-        kb2Title: 'Pipeline d\'aide US et dynamique du Congrès',
-        kb2Body: 'L\'aide militaire américaine à l\'Ukraine transite via la Presidential Drawdown Authority (PDA), le Foreign Military Financing (FMF) et l\'Ukraine Security Assistance Initiative (USAI) depuis 2022. Les pauses d\'aide fin 2023 et 2025 ont créé des pénuries de munitions au front avec un impact mesurable sur le champ de bataille. À surveiller : débats d\'autorisation supplémentaire, langage conditionnel dans le NDAA, suspension de systèmes spécifiques (Patriot, ATACMS, soutien F-16), et conditionnement de l\'aide à un règlement négocié.',
-        kb3Title: 'Campagne de frappe à longue portée — ATACMS, Storm Shadow, drones nationaux',
-        kb3Body: 'L\'Ukraine a régulièrement étendu son enveloppe de frappe à longue portée : Storm Shadow/SCALP (UK/France) à ~250 km, ATACMS (US) à ~300 km, et drones de frappe profonde indigènes (Liutyi, Bober, FP-1) atteignant plus de 1 000 km en territoire russe. Les cibles incluent bases aériennes, raffineries, nœuds de commandement et navires de la flotte de la mer Noire. À surveiller : nouvelles autorisations pour systèmes occidentaux, seuils de représailles russes, et montée en puissance des missiles de croisière ukrainiens (Neptune-MD, Trembita).',
-        kb4Title: 'Base industrielle de défense et exports de conseillers drones',
-        kb4Body: 'La base industrielle de défense ukrainienne s\'est considérablement développée depuis 2022 : drones FPV, drones navals (MAGURA) et drones d\'attaque à sens unique fabriqués en Ukraine dominent désormais l\'innovation tactique au front. Au-delà de l\'usage domestique, l\'Ukraine a commencé à exporter des conseillers drones et une doctrine éprouvée au combat vers les États du CCG (EAU, Arabie saoudite) et d\'autres partenaires — une relation à flux inversé par rapport aux schémas de la Guerre froide. Cela monétise l\'expérience de combat ukrainienne. À surveiller : accords d\'export nommés, déploiements de conseillers, réponse russe à la normalisation des exports d\'armes ukrainiens.',
-        kb5Title: 'Corridor céréalier de la mer Noire et sécurité alimentaire',
-        kb5Body: 'L\'Ukraine produit environ 10% des exports mondiaux de blé, 15% du maïs, et domine l\'huile de tournesol. Le corridor céréalier de la mer Noire — depuis les ports d\'Odessa, Tchornomorsk et Pivdennyi — a été rouvert unilatéralement par l\'Ukraine fin 2023 après l\'effondrement de l\'Initiative céréalière initiale ONU-Turquie. Les frappes russes par missile et drone sur les infrastructures portuaires ukrainiennes se sont poursuivies sporadiquement. À surveiller : frappes ciblées sur stockage/chargement, réactions du marché de l\'assurance, frappes de navires, toute tentative de blocus.',
-        kb6Title: 'Trajectoire d\'adhésion à l\'OTAN et accords bilatéraux de sécurité',
-        kb6Body: 'La trajectoire d\'adhésion de l\'Ukraine à l\'OTAN reste aspirationnelle plutôt que programmée. Les sommets de Vilnius 2023 et Washington 2024 ont fourni un langage sur un « chemin irréversible » mais sans MAP ni calendrier d\'adhésion. En parallèle, l\'Ukraine a signé plus de 25 accords de sécurité bilatéraux sur 10 ans avec des partenaires du G7 et européens, fournissant armes, formation, renseignement et engagements de reconstruction. À surveiller : tout cadre équivalent au MAP, engagements de type article 5, ou — signal plus dur — abandon formel de l\'adhésion à l\'OTAN comme concession de fin de guerre.',
-        footerSourcesTitle: 'SOURCES DE DONNÉES',
-        footerSources: 'RSS (EN, UK, RU, PL) · GDELT · NewsAPI · Brave Search · Telegram OSINT (canaux Zelensky, OSINTtechnical, MOD ukrainien, miroirs milbloggers russes) · Bluesky (miroirs Département d\'État, war-translated, MAE ukrainien) · Reddit (r/UkraineWarVideoReport, r/europe)',
-        footerScanTitle: 'CADENCE DES SCANS',
-        footerScan: 'Rafraîchissement toutes les 6 heures · Scans manuels via le bouton Actualiser · Cache servi depuis Upstash Redis',
-        footerCaveatTitle: 'NOTE D\'USAGE',
-        footerCaveat: 'Signaux open-source uniquement · Pas de prédiction · Pas pour usage opérationnel · Vérifier via canaux officiels',
+        footSourcesTitle: 'Sources de données',
+        footSourcesText: 'RSS (Ukrainska Pravda, UNIAN, Kyiv Independent, ZN.UA, Euromaidan Press, Meduza, ISW, Politico Europe), Telegram OSINT (@V_Zelenskiy_official, OSINTtechnical, MOD ukrainien), GDELT (EN/UK/RU), Bluesky, Reddit. NewsAPI + Brave en relais lors des limitations GDELT.',
+        footMethodTitle: 'Méthodologie',
+        footMethodText: 'Score de pression = somme des escalades par acteur × pondération. Cadre à 7 acteurs. 9 lignes rouges, 5 lignes vertes. Modificateur diplomatique jusqu\'à -25 points. Actualisé toutes les 6 heures.',
+        footContactTitle: 'Contact',
+        footDisclaimerLabel: '⚠️ AVERTISSEMENT',
+        footDisclaimerText: 'Cette page fournit des estimations analytiques basées sur l\'agrégation OSINT. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires. Non destiné à un usage opérationnel.',
+        footBmacText: 'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez',
+        footBmacButton: 'm\'offrir un café',
+        footPrivacy: 'Politique de confidentialité',
+        footContact: 'Contact',
+        footCopy: 'Tous droits réservés. Suivi de la pression Ukraine v1.0.0 — Propriétaire et Confidentiel.',
+        scrollHint: '↕ défiler pour la liste complète',
     },
     de: {
-        backLink: '← Zurück zu Europa', pageFlag: 'UKRAINE', pageTitle: 'UKRAINE DRUCKTRACKER',
+        backLink: '← Zurück zu Ukraine-Stabilität', pageFlag: 'UKRAINE', pageTitle: 'UKRAINE DRUCKTRACKER',
         pageSubtitle: 'Selenskyj-Regierung · Streitkräfte · Russische Streitkräfte · US-Hilfe · NATO-Unterstützung · Verteidigungsindustrie · Besetzte Gebiete',
         lastUpdated: 'Zuletzt aktualisiert:', badgeLabel: '⚡ MULTIVEKTORIELLER DRUCK', themeLabel: 'THEMA',
         scoreLabel: 'DRUCKWERT / 100', theatreLevel: 'THEATER-NIVEAU',
@@ -856,28 +812,22 @@ const T = {
         articlesTitle: '📰 RHETORISCHE SIGNALE — ARTIKEL',
         trendTitle: '📈 DRUCK-TREND',
         historyEmpty: '📡 Datensammlung — erste Aufnahme im nächsten Scan-Zyklus',
-        kbTitle: '📚 WISSENSBIBLIOTHEK — UKRAINE-KONTEXT',
-        kb1Title: 'Frontlinien-Status und russisches Operationstempo',
-        kb1Body: 'Die aktive Frontlinie verläuft etwa 1.200 km von Charkiw oblast über Donezk, Saporischschja und Cherson. Wichtige umkämpfte Achsen umfassen Pokrowsk, Kupjansk, Torezk und Wowtschansk. Das russische Operationstempo betont Abnutzungsdruck mit massierten Infanterieangriffen, unterstützt durch Gleitbomben, Drohnen und Artillerie. Beachten: jeder russische strategische Durchbruch über ~10 km Tiefe hinaus, Kollaps befestigter ukrainischer Gürtel oder unerwartete Konzentrationsverschiebungen.',
-        kb2Title: 'US-Hilfspipeline und Kongress-Dynamik',
-        kb2Body: 'US-Militärhilfe an die Ukraine fließt seit 2022 über Presidential Drawdown Authority (PDA), Foreign Military Financing (FMF) und Ukraine Security Assistance Initiative (USAI). Hilfspausen Ende 2023 und erneut 2025 schufen Munitionsmangel an der Front mit messbarer Schlachtfeld-Wirkung. Beachten: Debatten über Zusatzgenehmigungen, Konditionierungssprache im NDAA, Aussetzung spezifischer Systeme (Patriot, ATACMS, F-16-Unterhalt), und jede Konditionierung der Hilfe an einen verhandelten Kompromiss.',
-        kb3Title: 'Langstreckenschlag-Kampagne — ATACMS, Storm Shadow, einheimische Drohnen',
-        kb3Body: 'Die Ukraine hat ihre Langstreckenschlag-Reichweite stetig erweitert: Storm Shadow/SCALP (UK/Frankreich) bei ~250 km, ATACMS (US) bei ~300 km, und einheimische Tiefschlag-Drohnen (Liutyi, Bober, FP-1) erreichen über 1.000 km in russisches Territorium. Ziele umfassen russische Luftwaffenbasen, Ölraffinerien, Kommandoknoten und Schwarzmeerflotte-Schiffe. Beachten: neue Erlaubnisse für westliche Systeme, russische Vergeltungsschwellen, und Skalierung ukrainischer Marschflugkörper-Produktion (Neptun-MD, Trembita).',
-        kb4Title: 'Verteidigungsindustrielle Basis und Drohnenberater-Exporte',
-        kb4Body: 'Die ukrainische Verteidigungsindustrie hat sich seit 2022 dramatisch ausgebaut: ukrainische FPV-Drohnen, Marinedrohnen (MAGURA) und Einweg-Angriffsdrohnen dominieren nun die Frontlinie taktischer Innovation. Über den heimischen Einsatz hinaus hat die Ukraine begonnen, Drohnenberater und schlachtfelderprobte Doktrin in GCC-Staaten (VAE, Saudi-Arabien) und andere Partner zu exportieren — eine Umkehrung der Kalten-Krieg-Muster. Dies monetarisiert ukrainische Kampferfahrung. Beachten: benannte Exportgeschäfte, Berater-Einsätze, russische Reaktion auf ukrainische Rüstungsexport-Normalisierung.',
-        kb5Title: 'Schwarzmeer-Getreidekorridor und Ernährungssicherheit',
-        kb5Body: 'Die Ukraine produziert etwa 10% der weltweiten Weizenexporte, 15% Mais und dominiert Sonnenblumenöl. Der Schwarzmeer-Getreidekorridor — von Odesa, Tschornomorsk und Piwdennyj — wurde Ende 2023 von der Ukraine einseitig wiedereröffnet, nachdem die UN-Türkei-vermittelte Schwarzmeer-Getreideinitiative kollabierte. Russische Raketen- und Drohnenangriffe auf ukrainische Hafeninfrastruktur dauerten sporadisch an. Beachten: gezielte Schläge auf Getreidelagerung/-verladung, Reaktionen des Versicherungsmarktes, Schiffstreffer, und jeder Blockadeversuch.',
-        kb6Title: 'NATO-Mitgliedschafts-Trajektorie und bilaterale Sicherheitsabkommen',
-        kb6Body: 'Die NATO-Mitgliedschafts-Trajektorie der Ukraine bleibt aspirativ statt geplant. Die Gipfel in Wilna 2023 und Washington 2024 lieferten Sprache über einen „unumkehrbaren Pfad", aber keinen MAP- oder Beitrittszeitplan. Parallel hat die Ukraine über 25 bilaterale 10-Jahres-Sicherheitsabkommen mit G7- und europäischen Partnern unterzeichnet, die Waffen, Ausbildung, Geheimdienste und Wiederaufbau-Verpflichtungen vorsehen. Beachten: jeden MAP-äquivalenten Rahmen, Artikel-5-ähnliche Verpflichtungen, oder — das härtere Signal — formaler Verzicht auf NATO-Mitgliedschaft als Kriegsbeendigungs-Konzession.',
-        footerSourcesTitle: 'DATENQUELLEN',
-        footerSources: 'RSS (EN, UK, RU, PL) · GDELT · NewsAPI · Brave Search · Telegram OSINT (Selenskyj-Kanäle, OSINTtechnical, ukrainisches MOD, russische Milblogger-Spiegel) · Bluesky (Außenministeriums-Spiegel, war-translated, ukrainisches Außenministerium) · Reddit (r/UkraineWarVideoReport, r/europe)',
-        footerScanTitle: 'SCAN-FREQUENZ',
-        footerScan: 'Hintergrund-Aktualisierung alle 6 Stunden · Manuelle Scans über Aktualisieren-Schaltfläche · Cache von Upstash Redis bedient',
-        footerCaveatTitle: 'NUTZUNGSHINWEIS',
-        footerCaveat: 'Nur Open-Source-Signale · Keine Vorhersage · Nicht für operative Nutzung · Über offizielle Kanäle verifizieren',
+        footSourcesTitle: 'Datenquellen',
+        footSourcesText: 'RSS (Ukrainska Pravda, UNIAN, Kyiv Independent, ZN.UA, Euromaidan Press, Meduza, ISW, Politico Europe), Telegram OSINT (@V_Zelenskiy_official, OSINTtechnical, ukrainisches MOD), GDELT (EN/UK/RU), Bluesky, Reddit. NewsAPI + Brave als Reserve bei GDELT-Ratenbegrenzungen.',
+        footMethodTitle: 'Methodik',
+        footMethodText: 'Druckwert = Summe der Akteur-Eskalation × Quellengewichtung. 7-Akteur-Rahmen. 9 rote Linien, 5 grüne Linien. Diplomatischer Modifikator bis zu -25 Punkte. Alle 6 Stunden aktualisiert.',
+        footContactTitle: 'Kontakt',
+        footDisclaimerLabel: '⚠️ HAFTUNGSAUSSCHLUSS',
+        footDisclaimerText: 'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Sie stellt keine nachrichtendienstlichen Bewertungen, militärischen Ratschläge oder politischen Empfehlungen dar. Konsultieren Sie für Entscheidungen stets autoritative Quellen. Nicht für den operativen Einsatz bestimmt.',
+        footBmacText: 'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie',
+        footBmacButton: 'mir einen Kaffee spendieren',
+        footPrivacy: 'Datenschutzrichtlinie',
+        footContact: 'Kontakt',
+        footCopy: 'Alle Rechte vorbehalten. Ukraine-Drucktracker v1.0.0 — Eigentum und vertraulich.',
+        scrollHint: '↕ scrollen für vollständige Liste',
     },
     ru: {
-        backLink: '← Назад в Европу', pageFlag: 'УКРАИНА', pageTitle: 'ТРЕКЕР ДАВЛЕНИЯ УКРАИНЫ',
+        backLink: '← Назад к стабильности Украины', pageFlag: 'УКРАИНА', pageTitle: 'ТРЕКЕР ДАВЛЕНИЯ УКРАИНЫ',
         pageSubtitle: 'Правительство Зеленского · Вооружённые силы · Российские силы · Помощь США · Поддержка НАТО · ВПК · Оккупированные территории',
         lastUpdated: 'Обновлено:', badgeLabel: '⚡ МНОГОВЕКТОРНОЕ ДАВЛЕНИЕ', themeLabel: 'ТЕМА',
         scoreLabel: 'ОЦЕНКА ДАВЛЕНИЯ / 100', theatreLevel: 'УРОВЕНЬ ТЕАТРА',
@@ -908,25 +858,19 @@ const T = {
         articlesTitle: '📰 РИТОРИЧЕСКИЕ СИГНАЛЫ — СТАТЬИ',
         trendTitle: '📈 ТРЕНД ДАВЛЕНИЯ',
         historyEmpty: '📡 Сбор данных — первый снимок при следующем цикле',
-        kbTitle: '📚 БИБЛИОТЕКА ЗНАНИЙ — КОНТЕКСТ УКРАИНЫ',
-        kb1Title: 'Состояние фронта и российский оперативный темп',
-        kb1Body: 'Активный фронт протянулся примерно на 1200 км от Харьковской области через Донецкую, Запорожскую и Херсонскую. Основные оспариваемые направления включают Покровск, Купянск, Торецк и Волчанск. Российский оперативный темп подчёркивает истощающее давление с массовыми пехотными штурмами при поддержке планирующих бомб, дронов и артиллерии. Наблюдать: любой российский стратегический прорыв глубже ~10 км, обвал укреплённых украинских поясов, или неожиданные сдвиги концентрации.',
-        kb2Title: 'Конвейер помощи США и динамика Конгресса',
-        kb2Body: 'Военная помощь США Украине поступает через Presidential Drawdown Authority (PDA), Foreign Military Financing (FMF) и Ukraine Security Assistance Initiative (USAI) с 2022 года. Паузы помощи в конце 2023 и 2025 годов создали дефицит боеприпасов на фронте с измеримым воздействием на поле боя. Наблюдать: дебаты о дополнительных полномочиях, обусловливающий язык в NDAA, приостановка конкретных систем (Patriot, ATACMS, поддержка F-16), любая обусловленность помощи переговорным урегулированием.',
-        kb3Title: 'Кампания дальнобойных ударов — ATACMS, Storm Shadow, отечественные дроны',
-        kb3Body: 'Украина неуклонно расширяет свою дальнобойную ударную оболочку: Storm Shadow/SCALP (Великобритания/Франция) на ~250 км, ATACMS (США) на ~300 км, и отечественные дроны глубоких ударов (Лютый, Бобёр, FP-1) достигают свыше 1000 км вглубь российской территории. Цели включают российские авиабазы, нефтеперерабатывающие заводы, командные узлы и корабли Черноморского флота. Наблюдать: новые разрешения на западные системы, пороги российского возмездия, наращивание производства украинских крылатых ракет (Нептун-MD, Трембита).',
-        kb4Title: 'ВПК и экспорт дрон-консультантов',
-        kb4Body: 'ВПК Украины резко вырос с 2022 года: украинские FPV-дроны, морские дроны (MAGURA) и одноразовые ударные дроны теперь доминируют в передовой тактической инновации. Помимо внутреннего использования, Украина начала экспортировать дрон-консультантов и проверенную в бою доктрину в страны ССАГПЗ (ОАЭ, Саудовская Аравия) и другим партнёрам — отношения обратного потока по сравнению с эпохой Холодной войны. Это монетизирует украинский боевой опыт. Наблюдать: именованные экспортные сделки, развёртывание консультантов, российский ответ на нормализацию украинского экспорта оружия.',
-        kb5Title: 'Черноморский зерновой коридор и продовольственная безопасность',
-        kb5Body: 'Украина производит около 10% мирового экспорта пшеницы, 15% кукурузы и доминирует в подсолнечном масле. Черноморский зерновой коридор — из портов Одессы, Черноморска и Пивденного — был вновь открыт Украиной в одностороннем порядке в конце 2023 года после краха первоначальной Черноморской зерновой инициативы при посредничестве ООН-Турции. Российские ракетные и дроновые удары по украинской портовой инфраструктуре продолжались спорадически. Наблюдать: целевые удары по хранению/погрузке зерна, реакции страхового рынка, попадания по судам, любые попытки блокады.',
-        kb6Title: 'Траектория членства в НАТО и двусторонние соглашения о безопасности',
-        kb6Body: 'Траектория членства Украины в НАТО остаётся скорее устремлением, чем графиком. Саммиты в Вильнюсе 2023 и Вашингтоне 2024 предоставили язык о «необратимом пути», но без MAP или графика вступления. Параллельно Украина подписала более 25 двусторонних 10-летних соглашений о безопасности с партнёрами G7 и европейскими, обеспечивающих оружие, обучение, разведку и обязательства по восстановлению. Наблюдать: любая MAP-эквивалентная рамка, обязательства, подобные статье 5, или — более жёсткий сигнал — формальный отказ от членства в НАТО как уступка прекращения войны.',
-        footerSourcesTitle: 'ИСТОЧНИКИ ДАННЫХ',
-        footerSources: 'RSS (EN, UK, RU, PL) · GDELT · NewsAPI · Brave Search · Telegram OSINT (каналы Зеленского, OSINTtechnical, МО Украины, зеркала российских милблогеров) · Bluesky (зеркала Госдепа, war-translated, МИД Украины) · Reddit (r/UkraineWarVideoReport, r/europe)',
-        footerScanTitle: 'ЧАСТОТА СКАНИРОВАНИЯ',
-        footerScan: 'Фоновое обновление каждые 6 часов · Ручные сканы через кнопку Обновить · Кэш из Upstash Redis',
-        footerCaveatTitle: 'ПРИМЕЧАНИЕ',
-        footerCaveat: 'Только сигналы открытых источников · Не прогноз · Не для оперативного использования · Проверять через официальные каналы',
+        footSourcesTitle: 'Источники данных',
+        footSourcesText: 'RSS (Ukrainska Pravda, UNIAN, Kyiv Independent, ZN.UA, Euromaidan Press, Meduza, ISW, Politico Europe), Telegram OSINT (@V_Zelenskiy_official, OSINTtechnical, МО Украины), GDELT (EN/UK/RU), Bluesky, Reddit. NewsAPI + Brave при ограничениях GDELT.',
+        footMethodTitle: 'Методология',
+        footMethodText: 'Оценка давления = сумма эскалации акторов × вес источника. Рамка из 7 акторов. 9 красных линий, 5 зелёных. Дипломатический модификатор до -25 баллов. Обновление каждые 6 часов.',
+        footContactTitle: 'Контакты',
+        footDisclaimerLabel: '⚠️ ОТКАЗ ОТ ОТВЕТСТВЕННОСТИ',
+        footDisclaimerText: 'Эта страница предоставляет аналитические оценки на основе агрегирования OSINT. Не является разведывательной оценкой, военным советом или политической рекомендацией. Всегда консультируйтесь с авторитетными источниками. Не для оперативного использования.',
+        footBmacText: 'Если Asifah Analytics полезен и вы хотите поддержать разработку, вы можете',
+        footBmacButton: 'купить мне кофе',
+        footPrivacy: 'Политика конфиденциальности',
+        footContact: 'Контакты',
+        footCopy: 'Все права защищены. Трекер давления Украины v1.0.0 — Собственный и конфиденциальный.',
+        scrollHint: '↕ прокрутка для полного списка',
     },
 };
 
@@ -1175,6 +1119,9 @@ function renderInterpretation(data) {
                 </div>`;
             rlEl.appendChild(item);
         });
+        // Show scroll hint when list exceeds 5 visible items
+        const rHint = document.getElementById('redLineScrollHint');
+        if (rHint) rHint.style.display = rl.triggered.length > 5 ? 'block' : 'none';
     }
 
     // DIPLOMATIC TRACK / GREEN LINES
@@ -1209,6 +1156,9 @@ function renderInterpretation(data) {
                 </div>`;
             glEl.appendChild(item);
         });
+        // Show scroll hint when list exceeds 5 visible items
+        const gHint = document.getElementById('greenLineScrollHint');
+        if (gHint) gHint.style.display = gl.triggered.length > 5 ? 'block' : 'none';
     }
 }
 
