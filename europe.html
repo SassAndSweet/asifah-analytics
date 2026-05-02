@@ -2394,15 +2394,26 @@ async function loadCachedScoresFallback() {
     }
 
     async function loadFlights() {
+        const container = document.getElementById('flight-container');
         try {
+            console.log('[Flights] Fetching /api/europe/flights...');
             const response = await fetch(`${API_BASE}/api/europe/flights`);
+            console.log('[Flights] HTTP status:', response.status);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
+            console.log('[Flights] Data received:', data);
             _flightLoaded = true;
-            displayFlights(data);
+            try {
+                displayFlights(data);
+            } catch (renderErr) {
+                console.error('[Flights] Render error:', renderErr);
+                const disruptions = data.disruptions || data.cancellations || [];
+                container.innerHTML = '<div class="flight-empty">⚠️ Render error: ' + renderErr.message +
+                    ' (received ' + disruptions.length + ' disruptions — check console)</div>';
+            }
         } catch (err) {
-            console.error('Flight load error:', err);
-            document.getElementById('flight-container').innerHTML =
+            console.error('[Flights] Load error:', err);
+            container.innerHTML =
                 '<div class="flight-empty">⚠️ Flight disruption data unavailable — ' + err.message + '</div>';
         }
     }
@@ -2476,16 +2487,18 @@ async function loadCachedScoresFallback() {
 
     // ===== WEATHER WIDGET =====
     const WEATHER_CAPITALS = {
-        'armenia':    { name: 'Yerevan', lat: 40.19, lon: 44.52 },
-        'azerbaijan': { name: 'Baku', lat: 40.41, lon: 49.87 },
-        'belarus':    { name: 'Minsk', lat: 53.90, lon: 27.57 },
-        'cyprus':     { name: 'Nicosia', lat: 35.17, lon: 33.36 },
-        'greenland':  { name: 'Nuuk', lat: 64.17, lon: -51.74 },
-        'hungary':    { name: 'Budapest', lat: 47.49, lon: 19.04 },
-        'poland':     { name: 'Warsaw', lat: 52.23, lon: 21.01 },
-        'russia':     { name: 'Moscow', lat: 55.75, lon: 37.62 },
-        'turkey':     { name: 'Ankara', lat: 39.93, lon: 32.86 },
-        'ukraine':    { name: 'Kyiv', lat: 50.45, lon: 30.52 }
+        'armenia':      { name: 'Yerevan', lat: 40.19, lon: 44.52 },
+        'azerbaijan':   { name: 'Baku', lat: 40.41, lon: 49.87 },
+        'belarus':      { name: 'Minsk', lat: 53.90, lon: 27.57 },
+        'cyprus':       { name: 'Nicosia', lat: 35.17, lon: 33.36 },
+        'greenland':    { name: 'Nuuk', lat: 64.17, lon: -51.74 },
+        'hungary':      { name: 'Budapest', lat: 47.49, lon: 19.04 },
+        'kazakhstan':   { name: 'Astana', lat: 51.17, lon: 71.45 },
+        'poland':       { name: 'Warsaw', lat: 52.23, lon: 21.01 },
+        'russia':       { name: 'Moscow', lat: 55.75, lon: 37.62 },
+        'turkey':       { name: 'Ankara', lat: 39.93, lon: 32.86 },
+        'turkmenistan': { name: 'Ashgabat', lat: 37.96, lon: 58.38 },
+        'ukraine':      { name: 'Kyiv', lat: 50.45, lon: 30.52 }
     };
 
     function getWeatherEmoji(code) {
