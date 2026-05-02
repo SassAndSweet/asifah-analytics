@@ -800,15 +800,17 @@
                 // Per-commodity rows
                 const rows = document.getElementById('commodityRows');
                 rows.innerHTML = data.commodity_summaries.map(c => {
-                    const icon = COMMODITY_ICONS[c.commodity_id] || '📦';
+                    const commodityId = c.commodity || c.commodity_id || 'unknown';
+                    const commodityName = c.name || c.commodity_name || commodityId;
+                    const icon = c.icon || COMMODITY_ICONS[commodityId] || '📦';
                     const role = c.role || 'producer';
                     const rolePill = '<span class="c-role-pill role-' + role + '">' + role + '</span>';
                     const rankText = c.rank ? '<span class="c-rank">#' + c.rank + ' globally</span>' : '';
                     const sigCount = c.signal_count || 0;
-                    return '<a href="commodities.html#' + c.commodity_id + '" class="commodity-row">' +
+                    return '<a href="commodities.html#' + commodityId + '" class="commodity-row">' +
                         '<span class="c-icon">' + icon + '</span>' +
                         '<div class="c-meta">' +
-                            '<span class="c-name">' + (c.commodity_name || c.commodity_id) + '</span>' +
+                            '<span class="c-name">' + commodityName + '</span>' +
                             '<span class="c-note">' + rolePill + (c.note || '') + '</span>' +
                         '</div>' +
                         rankText +
