@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - UAE Stability Index v1.0.0 -->
+<!-- Asifah Analytics - UAE Stability Index v2.0.0 (canonical rebuild May 2 2026) -->
 <html lang="en">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -12,7 +12,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>UAE Stability Index | Asifah Analytics v1.0.0</title>
+    <title>UAE Stability Index | Asifah Analytics v2.0.0</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -31,7 +31,27 @@
             --article-hover: #3a3a3a; --accent: #6495ED;
         }
         body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-color); color: var(--text-primary); line-height: 1.6; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+
+        /* ── PAGE LAYOUT WITH SIDEBAR ── */
+        .page-with-sidebar { display: grid; grid-template-columns: 240px 1fr; gap: 24px; max-width: 1700px; margin: 0 auto; padding: 0 20px; align-items: start; }
+        .nav-sidebar { position: sticky; top: 24px; align-self: start; display: flex; flex-direction: column; gap: 4px; max-height: calc(100vh - 48px); overflow-y: auto; padding-top: 20px; }
+        .nav-sidebar-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); padding: 8px 4px 4px 4px; }
+        .nav-btn { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--card-border); background: var(--article-bg); color: var(--text-primary); text-decoration: none; font-size: 12px; font-weight: 600; transition: all 0.15s; }
+        .nav-btn:hover { background: var(--article-hover); border-color: var(--accent); transform: translateX(2px); }
+        .nav-btn-label { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+        .nav-btn-status { font-size: 10px; opacity: 0.85; flex-shrink: 0; }
+        .nav-btn.active-nav { border-color: rgba(100,149,237,0.5); }
+        [data-theme="dark"] .nav-btn.active-nav { background: linear-gradient(135deg, rgba(100,149,237,0.15) 0%, rgba(56,189,248,0.10) 100%); color: #ffffff; }
+        .nav-btn.current-page { background: linear-gradient(135deg, rgba(100,149,237,0.30) 0%, rgba(56,189,248,0.20) 100%); border-color: var(--accent); color: var(--text-primary); cursor: default; pointer-events: none; }
+        [data-theme="dark"] .nav-btn.current-page { color: #ffffff; }
+        .nav-btn.inactive-nav { opacity: 0.45; cursor: not-allowed; }
+        .nav-btn.rhetoric-btn .nav-btn-status { color: #22c55e; }
+        .nav-btn.military-btn .nav-btn-status { color: #fbbf24; }
+        .nav-divider { height: 1px; background: var(--card-border); margin: 6px 0; }
+        @media (max-width: 1099px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+        /* ── CONTAINER & HEADER ── */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0; position: relative; z-index: 1; }
         header {
             background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
             color: var(--header-text); padding: 30px; border-radius: 12px; margin-bottom: 10px;
@@ -44,16 +64,18 @@
         .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
         .lang-btn:hover { background: rgba(255,255,255,0.3); }
         .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
-        .home-btn { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; position: absolute; top: 15px; left: 20px; }
-        .home-btn:hover { background: rgba(255,255,255,0.3); }
+        .home-btn, .back-link { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; position: absolute; top: 15px; left: 20px; }
+        .home-btn:hover, .back-link:hover { background: rgba(255,255,255,0.3); }
         .theme-toggle { display: flex; align-items: center; gap: 6px; color: white; font-size: 12px; cursor: pointer; }
         .theme-toggle input { width: 36px; height: 20px; appearance: none; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; cursor: pointer; }
         .theme-toggle input::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
         .theme-toggle input:checked::after { left: 18px; }
-        .map-section, .knowledge-library, .articles-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
+
+        /* ── CARDS ── */
+        .map-section, .knowledge-library, .articles-section, .commodity-card { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
         .map-section h2, .knowledge-library h2 { font-size: 20px; margin-bottom: 15px; color: var(--text-primary); }
         .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
-        .knowledge-categories { display: grid; gap: 12px; }
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
         .knowledge-card { border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
         .knowledge-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; background: var(--article-bg); }
         .knowledge-header:hover { background: var(--article-hover); }
@@ -70,24 +92,102 @@
         .report-link { display: inline-block; padding: 6px 14px; background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 6px; color: var(--accent); text-decoration: none; font-size: 12px; font-weight: bold; }
         .report-link:hover { background: var(--article-hover); }
         .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px; }
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
-        .article-item { padding: 15px; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 10px; background: var(--article-bg); }
+
+        /* ── COMMODITY EXPOSURE CARD ── */
+        .commodity-card-header { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; margin-bottom:6px; }
+        .commodity-card-title { font-size:18px; font-weight:bold; color:var(--text-primary); margin:0; }
+        .commodity-full-link { font-size:11px; font-weight:700; color:#fbbf24; text-decoration:none; padding:6px 12px; border:1px solid rgba(245,158,11,0.4); border-radius:6px; background:rgba(245,158,11,0.06); transition:all 0.2s; }
+        .commodity-full-link:hover { background:rgba(245,158,11,0.14); border-color:rgba(245,158,11,0.7); }
+        .commodity-subtitle { font-size:12px; color:var(--text-muted); margin-bottom:14px; font-style:italic; }
+        .commodity-pressure-strip { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:14px; font-size:11px; }
+        .commodity-row { display:grid; grid-template-columns:auto 1fr auto auto; gap:14px; align-items:center; padding:10px 14px; margin-bottom:8px; background:rgba(56,189,248,0.04); border:1px solid rgba(56,189,248,0.18); border-radius:8px; cursor:pointer; transition:all 0.2s; text-decoration:none; color:var(--text-primary); }
+        .commodity-row:hover { background:rgba(56,189,248,0.08); border-color:rgba(56,189,248,0.4); transform:translateX(2px); }
+        .commodity-row .c-icon { font-size:18px; }
+        .commodity-row .c-meta { display:flex; flex-direction:column; gap:2px; min-width:0; }
+        .commodity-row .c-name { font-size:13px; font-weight:700; color:var(--text-primary); letter-spacing:0.5px; }
+        .commodity-row .c-note { font-size:10.5px; color:var(--text-muted); line-height:1.4; }
+        .commodity-row .c-role-pill { font-size:9px; font-weight:700; padding:2px 7px; border-radius:3px; letter-spacing:1px; text-transform:uppercase; display:inline-block; margin-right:5px; }
+        .role-producer { background:rgba(34,197,94,0.15); color:#4ade80; border:1px solid rgba(34,197,94,0.3); }
+        .role-consumer { background:rgba(245,158,11,0.15); color:#fbbf24; border:1px solid rgba(245,158,11,0.3); }
+        .role-transit  { background:rgba(139,92,246,0.15); color:#a78bfa; border:1px solid rgba(139,92,246,0.3); }
+        .commodity-row .c-rank { font-size:9.5px; color:#93c5fd; font-weight:600; letter-spacing:0.5px; }
+        .commodity-row .c-signals { font-size:11px; font-weight:700; color:#38bdf8; }
+        .commodity-linkage { margin-top:14px; padding:10px 14px; background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.2); border-radius:8px; font-size:11px; color:var(--text-secondary); line-height:1.55; }
+
+        /* ── ARTICLE TABS (canonical) ── */
+        .article-tabs { display:flex; flex-wrap:wrap; gap:6px; border-bottom:2px solid var(--card-border); margin-bottom:14px; padding-bottom:0; }
+        .article-tab { padding:8px 14px; border:none; background:transparent; color:var(--text-secondary); font-size:12px; font-weight:600; cursor:pointer; border-radius:6px 6px 0 0; transition:all 0.15s; display:flex; align-items:center; gap:6px; }
+        .article-tab:hover { background:var(--article-hover); color:var(--text-primary); }
+        .article-tab.active { background:var(--accent); color:#ffffff; border-bottom:2px solid var(--accent); margin-bottom:-2px; }
+        .article-tab-count { font-size:10px; padding:1px 6px; border-radius:8px; background:rgba(255,255,255,0.18); font-weight:700; }
+        .article-tab.active .article-tab-count { background:rgba(255,255,255,0.3); }
+        .article-tab:not(.active) .article-tab-count { background:var(--article-bg); color:var(--text-muted); }
+        .article-item { padding: 15px; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 10px; background: var(--article-bg); transition:all 0.15s; }
         .article-item:hover { background: var(--article-hover); }
         .article-title { font-weight: bold; margin-bottom: 5px; }
-        .article-meta { font-size: 12px; color: var(--text-muted); }
+        .article-meta { font-size: 12px; color: var(--text-muted); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+        .article-source-pill { font-size:9px; font-weight:700; padding:1px 6px; border-radius:3px; letter-spacing:0.5px; text-transform:uppercase; }
+        .src-rss      { background:rgba(34,197,94,0.15); color:#4ade80; }
+        .src-gdelt    { background:rgba(56,189,248,0.15); color:#38bdf8; }
+        .src-newsapi  { background:rgba(245,158,11,0.15); color:#fbbf24; }
+        .src-brave    { background:rgba(249,115,22,0.15); color:#fb923c; }
+        .src-telegram { background:rgba(14,165,233,0.15); color:#0ea5e9; }
+        .src-bluesky  { background:rgba(56,189,248,0.15); color:#38bdf8; }
+        .src-thinktank { background:rgba(168,85,247,0.15); color:#a78bfa; }
         .article-link { display: inline-block; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 13px; }
-        footer { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; margin-top: 30px; margin-bottom: 30px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+
+        /* ── SECTION TITLE ── */
+        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
+
+        /* ── CANONICAL FOOTER ── */
+        .asifah-footer { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:30px; margin-top:30px; margin-bottom:30px; font-size:13px; color:var(--text-secondary); }
+        .footer-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:20px; margin-bottom:20px; }
+        .footer-grid h4 { font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--accent); margin-bottom:8px; }
+        .footer-grid p { font-size:12px; line-height:1.5; }
+        .footer-disclaimer { margin-top:20px; padding:14px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:8px; font-size:12px; line-height:1.5; }
+        .footer-coffee { margin-top:20px; padding:14px 18px; background:rgba(139,92,246,0.05); border:1px solid rgba(139,92,246,0.2); border-radius:8px; text-align:center; font-size:13px; }
+        .footer-links { text-align:center; margin-top:20px; padding-top:15px; border-top:1px solid var(--card-border); font-size:12px; }
+        .footer-copyright { text-align:center; margin-top:15px; font-size:11px; color:var(--text-muted); }
+
         @media (max-width: 768px) {
-            header h1 { font-size: 20px; }
-            .home-btn { position: static; margin-bottom: 10px; }
-            .header-controls { position: static; justify-content: center; margin-top: 10px; }
+            header h1 { font-size:22px; }
+            .knowledge-categories { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
+
+<div class="page-with-sidebar">
+
+    <nav class="nav-sidebar">
+        <div class="nav-sidebar-label" data-i18n="navDashboards">Dashboards</div>
+        <div class="nav-btn inactive-nav"><span class="nav-btn-label" data-i18n="navAfrica">🌍 Africa</span><span class="nav-btn-status" data-i18n="navFuture">🔒 Future</span></div>
+        <a href="asia.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navAsia">🌏 Asia &amp; Pacific</span><span class="nav-btn-status" data-i18n="navLive1">● Live</span></a>
+        <a href="europe.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navEurope">🌍 Europe</span><span class="nav-btn-status" data-i18n="navLive2">● Live</span></a>
+        <a href="middle-east.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navME">🕌 Middle East</span><span class="nav-btn-status" data-i18n="navLive3">● Live</span></a>
+        <a href="wha.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navWHA">🌎 W. Hemisphere</span><span class="nav-btn-status" data-i18n="navLive4">● Live</span></a>
+        <div class="nav-divider"></div>
+        <a href="military.html" class="nav-btn military-btn"><span class="nav-btn-label" data-i18n="navMilitary">🎖️ Military Tracker</span><span class="nav-btn-status" data-i18n="navLive5">● Live</span></a>
+        <a href="gpi.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navGPI">🌐 Global Pressure Index</span><span class="nav-btn-status" data-i18n="navLive6">● Live</span></a>
+        <a href="commodities.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navCommodities">🛢️ Commodities</span><span class="nav-btn-status" data-i18n="navLive14">● Live</span></a>
+        <div class="nav-divider"></div>
+        <div class="nav-sidebar-label" data-i18n="navRegionalRhetoric">Regional Rhetoric</div>
+        <a href="rhetoric-index.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navMERhet">🕌 Middle East</span><span class="nav-btn-status" data-i18n="navLive7">● Live</span></a>
+        <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navAsiaRhet">🌏 Asia</span><span class="nav-btn-status" data-i18n="navLive8">● Live</span></a>
+        <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navEuropeRhet">🌍 Europe</span><span class="nav-btn-status" data-i18n="navLive9">● Live</span></a>
+        <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="navWHARhet">🌎 W. Hemisphere</span><span class="nav-btn-status" data-i18n="navLive10">● Live</span></a>
+        <div class="nav-divider"></div>
+        <div class="nav-btn current-page"><span class="nav-btn-label" data-i18n="navUAEStab">🇦🇪 UAE Stability</span><span class="nav-btn-status" data-i18n="navYouAreHere">◉ You are here</span></div>
+        <div class="nav-divider"></div>
+        <a href="saudi_arabia-stability.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navKSAStab">🇸🇦 Saudi Arabia</span><span class="nav-btn-status" data-i18n="navLive11">● Live</span></a>
+        <a href="israel.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navIsrStab">🇮🇱 Israel Stability</span><span class="nav-btn-status" data-i18n="navLive12">● Live</span></a>
+        <a href="lebanon-stability.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navLebStab">🇱🇧 Lebanon Stability</span><span class="nav-btn-status" data-i18n="navLive13">● Live</span></a>
+        <a href="syria-conflicts.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="navSyrStab">🇸🇾 Syria Stability</span><span class="nav-btn-status" data-i18n="navLive15">● Live</span></a>
+    </nav>
+
     <div class="container">
         <header>
-            <a href="middle-east.html" class="home-btn">&larr; Back to Dashboard</a>
+            <a href="middle-east.html" class="home-btn" data-i18n="backLink">&larr; Back to Dashboard</a>
             <div class="header-controls">
                 <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
                 <button class="lang-btn" onclick="switchLanguage('he', this)">עב</button>
@@ -98,9 +198,9 @@
                     <input type="checkbox" onchange="toggleTheme()">
                 </label>
             </div>
-            <h1>🇦🇪 UAE STABILITY INDEX</h1>
-            <div class="subtitle">Multi-Factor Analysis: Iranian Drone Intercepts, Al Dhafra Air Base, Fujairah Port & Economic Hub Risk</div>
-            <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
+            <h1 data-i18n="pageTitle">🇦🇪 UAE STABILITY INDEX</h1>
+            <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: OPEC Departure (May 1, 2026), Fujairah Pipeline & Hormuz Bypass, Iranian Drone Intercepts, Al Dhafra Air Base & Economic Hub Risk</div>
+            <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
         </header>
 
         <!-- U.S. STATE DEPARTMENT — WORLDWIDE CAUTION -->
@@ -136,10 +236,32 @@
             <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/united-arab-emirates-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY &rarr;</a>
         </div>
 
+        <!-- COMMODITY EXPOSURE CARD (above map per spec) -->
+        <div class="commodity-card" id="commodityCard" style="display:none;">
+            <div class="commodity-card-header">
+                <div class="commodity-card-title">🛢️ <span data-i18n="commodityTitle">COMMODITY EXPOSURE — UAE</span></div>
+                <a href="commodities.html" class="commodity-full-link" data-i18n="commodityFullLink">View Full Commodity Tracker →</a>
+            </div>
+            <div class="commodity-subtitle" data-i18n="commoditySubtitle">Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.</div>
+
+            <!-- Pressure summary strip -->
+            <div id="commodityPressureStrip" class="commodity-pressure-strip"></div>
+
+            <!-- Per-commodity rows -->
+            <div id="commodityRows"></div>
+
+            <!-- Strategic linkage footer -->
+            <div id="commodityLinkage" class="commodity-linkage" data-i18n="commodityLinkage">
+                <strong style="color:#fbbf24;">Strategic Linkage:</strong> UAE left OPEC and OPEC+ effective May 1, 2026 — first major departure during a kinetic crisis. The Fujairah Oil Terminal + Habshan-Fujairah pipeline are the only Gulf bypass route around Iran's blockade of the Strait of Hormuz. Last year UAE exported 1.7M bpd via Fujairah. Cited drivers: GCC trust break (UAE blames Riyadh for inadequate defense during the Iran war), longstanding quota disputes with Saudi Arabia, and shift toward "national interest" framing.
+            </div>
+
+            <div id="commodityCacheNote" style="margin-top:8px;font-size:10px;color:var(--text-muted);font-style:italic;text-align:right;"></div>
+        </div>
+
         <!-- MAP SECTION -->
         <div class="map-section">
-            <h2>&#x1F5FA;&#xFE0F; UAE — Strategic Overview</h2>
-            <div class="map-subtitle">Interactive map centered on UAE. Al Dhafra base, Fujairah port, and threat corridors coming soon.</div>
+            <h2>🗺️ <span data-i18n="mapTitle">UAE — Strategic Overview</span></h2>
+            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on the UAE. Strategic features: Fujairah Oil Terminal (Gulf of Oman, Hormuz bypass), Al Dhafra Air Base (USAF presence near Abu Dhabi), Jebel Ali (world's largest man-made port), Strait of Hormuz exposure to the north.</div>
             <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
                 <iframe 
                     src="https://www.openstreetmap.org/export/embed.html?bbox=51.5%2C22.6%2C56.4%2C26.1&layer=mapnik&marker=24.45%2C54.65"
@@ -151,13 +273,175 @@
         <!-- KNOWLEDGE LIBRARY -->
         <div class="knowledge-library">
             <h2>
-                <span class="library-icon">&#x1F4DA;</span>
-                Knowledge Library
+                <span class="library-icon">📚</span>
+                <span data-i18n="kbTitle">Knowledge Library</span>
             </h2>
-            <p class="open-source-disclaimer">
+            <p class="open-source-disclaimer" data-i18n="kbDisclaimer">
                 Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
             </p>
             <div class="knowledge-categories">
+
+                <!-- ═══ OPEC NARRATIVE CARDS (May 2026 buildout) ═══ -->
+
+                <!-- May 1 2026 OPEC Departure -->
+                <div class="knowledge-card" id="card-opec_departure">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('opec_departure')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🛢️</span>
+                            <span data-i18n="kbOpecDepartureTitle">May 1 2026 — OPEC Departure (Significance)</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content" data-i18n="kbOpecDepartureContent">
+                        <p><strong>On April 28, 2026, the UAE announced it would leave OPEC and OPEC+ effective May 1, 2026</strong> — the first major OPEC departure during an active kinetic crisis. UAE state media framed the move as reflecting "the UAE's long-term strategic and economic vision and evolving energy profile" and a need to "focus our efforts on what our national interest dictates."</p>
+                        <p><strong>Why it matters now:</strong></p>
+                        <ul>
+                            <li><strong>OPEC institutional weakening:</strong> The cartel loses one of its top-7 producers at the moment global supply is already cut by Iran's Hormuz blockade. ~16M barrels/day are absent from the market.</li>
+                            <li><strong>Trump's persistent OPEC criticism:</strong> President Trump has accused OPEC of "ripping off the rest of the world" and linked U.S. military support to oil prices. UAE departure plays into that rhetorical frame.</li>
+                            <li><strong>Saudi-UAE rupture made public:</strong> What had been a private quota dispute is now an institutional schism. KSA loses a major Gulf coordination partner inside OPEC.</li>
+                            <li><strong>Precedent:</strong> Qatar (2019) and Angola (2023) left OPEC peacefully; the UAE timing — during a Hormuz crisis — is what makes this distinct.</li>
+                        </ul>
+                        <p><strong>Market impact (per analyst Karen Young, Columbia University):</strong> Minimal short-term volume change because UAE is already at Fujairah-pipeline capacity and Hormuz is blocked. The signal is institutional, not supply-side.</p>
+                        <div class="open-source-disclaimer" data-i18n="kbOpenSourceDisclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.aljazeera.com/news/2026/4/28/uae-leaves-opec-and-opec" target="_blank" class="report-link">📑 Al Jazeera: UAE leaves OPEC</a>
+                            <a href="https://www.washingtonpost.com/world/2026/04/28/uae-opec-iran-hormuz-trump-saudi/" target="_blank" class="report-link">📑 Washington Post</a>
+                            <a href="https://www.pbs.org/newshour/show/how-the-uaes-departure-from-opec-could-impact-oil-marketswar-with-iran" target="_blank" class="report-link">📑 PBS NewsHour analysis</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fujairah Pipeline & Hormuz Bypass -->
+                <div class="knowledge-card collapsed" id="card-fujairah">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('fujairah')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">⚓</span>
+                            <span data-i18n="kbFujairahTitle">Fujairah Pipeline & Hormuz Bypass</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content" data-i18n="kbFujairahContent">
+                        <p><strong>The Habshan-Fujairah pipeline (~370 km, 1.5M bpd capacity)</strong> is the UAE's only route to export crude oil without traversing the Strait of Hormuz. The pipeline runs from Habshan (Abu Dhabi inland fields) east to the Fujairah terminal on the Gulf of Oman — outside the Hormuz chokepoint.</p>
+                        <p><strong>Strategic role during the Iran war:</strong></p>
+                        <ul>
+                            <li>UAE exported approximately 1.7 million barrels per day (crude + refined) via Fujairah in the year before the war.</li>
+                            <li>The terminal was struck during the 2026 Iran war, creating temporary disruption and signaling UAE vulnerability even on its bypass route.</li>
+                            <li>During Hormuz blockade, Fujairah is at or near capacity — UAE cannot meaningfully increase exports until Hormuz reopens.</li>
+                        </ul>
+                        <p><strong>Pre-existing tensions:</strong> The pipeline was sabotaged in May 2019 (UAE accused Iran-linked actors); Houthi drone strikes on Fujairah-area infrastructure occurred in January 2022 (killing three).</p>
+                        <p><strong>Strategic outcome if Hormuz reopens:</strong> UAE recovers full export capacity quickly. <em>If</em> Iran maintains Hormuz "tolls" or partial restrictions post-conflict (as some Iranian officials have signaled), UAE's Fujairah bypass becomes a long-term competitive advantage over other Gulf producers.</p>
+                        <div class="open-source-disclaimer" data-i18n="kbOpenSourceDisclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.eia.gov/international/analysis/country/ARE" target="_blank" class="report-link">📑 U.S. EIA - UAE</a>
+                            <a href="https://www.adnoc.ae/" target="_blank" class="report-link">📑 ADNOC (UAE)</a>
+                            <a href="https://www.csis.org/" target="_blank" class="report-link">📑 CSIS</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GCC Tensions & Saudi Relationship -->
+                <div class="knowledge-card collapsed" id="card-gcc_tensions">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('gcc_tensions')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">⚖️</span>
+                            <span data-i18n="kbGccTitle">GCC Tensions & UAE-Saudi Relationship</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content" data-i18n="kbGccContent">
+                        <p><strong>The UAE-Saudi Arabia relationship is the structural backbone of the Gulf Cooperation Council (GCC)</strong> — and it's the most consequential bilateral break the GCC has experienced since the 2017-2021 Qatar blockade.</p>
+                        <p><strong>Public framing of the rupture (April 2026):</strong></p>
+                        <ul>
+                            <li>UAE officials and analysts (including Mamdouh Salameh) publicly cited that the GCC "did not adequately defend" the UAE during the Iran war.</li>
+                            <li>The Iranian strike on the Fujairah Oil Terminal — and the lack of unified GCC military response — is the explicit grievance.</li>
+                            <li>This builds on years of quiet UAE complaints about KSA setting OPEC+ quotas around <em>Saudi</em> production reality, not UAE production capacity.</li>
+                        </ul>
+                        <p><strong>Underlying drivers (longer-running):</strong></p>
+                        <ul>
+                            <li><strong>Quota disputes:</strong> The UAE had the most stringent OPEC quota relative to capacity for years — a persistent point of friction.</li>
+                            <li><strong>Yemen split:</strong> UAE pulled most forces from Yemen in 2019 while Saudi remained engaged — divergent strategic instincts.</li>
+                            <li><strong>Israel normalization:</strong> UAE signed the Abraham Accords (2020) without Saudi Arabia, ending decades of Gulf consensus on Israel.</li>
+                            <li><strong>Iran posture:</strong> UAE pursued back-channel Iran engagement earlier and more openly than KSA, despite the 2023 Saudi-Iran rapprochement.</li>
+                        </ul>
+                        <p><strong>What to watch:</strong> Whether KSA pursues retaliation (oil pricing, project competition with Vision 2030 vs. Dubai/Abu Dhabi infrastructure), or whether both sides quietly contain the rupture to maintain a unified U.S.-Gulf security posture.</p>
+                        <div class="open-source-disclaimer" data-i18n="kbOpenSourceDisclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://carnegie-mec.org/" target="_blank" class="report-link">📑 Carnegie ME</a>
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa" target="_blank" class="report-link">📑 Crisis Group</a>
+                            <a href="https://agsiw.org/" target="_blank" class="report-link">📑 AGSIW</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- OPEC Quota History -->
+                <div class="knowledge-card collapsed" id="card-quota_history">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('quota_history')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">📊</span>
+                            <span data-i18n="kbQuotaTitle">OPEC History & UAE Quota Disputes</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content" data-i18n="kbQuotaContent">
+                        <p><strong>The UAE joined OPEC in 1967</strong> via Abu Dhabi (then a separate emirate; the UAE federation formed in 1971 absorbed the membership). For nearly six decades, the UAE was a reliable OPEC+ producer with one of the smallest quotas relative to its actual production capacity.</p>
+                        <p><strong>Why the quota mattered:</strong></p>
+                        <ul>
+                            <li>The UAE has invested heavily in expanding production capacity — current capacity is ~5M bpd, well above its OPEC+ quota of ~3M bpd.</li>
+                            <li>Saudi Arabia, as the swing producer, has historically anchored OPEC+ quotas to <em>maintain</em> price discipline rather than <em>maximize</em> Gulf output.</li>
+                            <li>UAE has wanted to monetize its capacity expansion; KSA has wanted price stability. These goals are structurally in tension.</li>
+                        </ul>
+                        <p><strong>Earlier flashpoints:</strong></p>
+                        <ul>
+                            <li><strong>July 2021:</strong> UAE openly broke from OPEC+ over baseline quota negotiations, threatening to block any deal. KSA-UAE friction was visible publicly for the first time.</li>
+                            <li><strong>2023-2024:</strong> Multiple quota adjustments granted UAE marginal increases but did not resolve the structural mismatch.</li>
+                            <li><strong>2025-2026:</strong> Iran war disrupted all Gulf quota math; UAE's Fujairah bypass route gave it leverage that quota-restricted OPEC+ membership couldn't capture.</li>
+                        </ul>
+                        <p><strong>Comparable departures:</strong> Qatar left OPEC in January 2019 (gas-focused, quietly). Angola left OPEC in January 2024 (also over quota disputes — but a much smaller producer). UAE is the largest producer to leave during a crisis.</p>
+                        <div class="open-source-disclaimer" data-i18n="kbOpenSourceDisclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.opec.org/opec_web/en/" target="_blank" class="report-link">📑 OPEC Secretariat</a>
+                            <a href="https://www.eia.gov/" target="_blank" class="report-link">📑 U.S. EIA</a>
+                            <a href="https://www.iea.org/" target="_blank" class="report-link">📑 IEA</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hormuz Exposure & Strategic Posture -->
+                <div class="knowledge-card collapsed" id="card-hormuz">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('hormuz')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🌊</span>
+                            <span data-i18n="kbHormuzTitle">Strait of Hormuz Exposure & UAE Strategic Posture</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content" data-i18n="kbHormuzContent">
+                        <p><strong>Roughly 20% of global crude oil and a fifth of LNG normally pass through the Strait of Hormuz.</strong> The UAE's coastline sits along the Hormuz approach, making the UAE both a producer-victim of disruption and one of the few Gulf states with a partial workaround.</p>
+                        <p><strong>Current state (April 2026):</strong></p>
+                        <ul>
+                            <li>Iran controls the strait via naval blockade; ~16M barrels/day are absent from global markets.</li>
+                            <li>The U.S. continues a naval blockade of Iranian ports; Iran refuses transit to foreign-flagged ships.</li>
+                            <li>Iran has signaled willingness to maintain a "toll system" over the strait even if a ceasefire is reached — converting kinetic leverage into financial leverage.</li>
+                            <li>Polymarket pricing (April 2026): ~41% odds that Hormuz fully reopens by end of May.</li>
+                        </ul>
+                        <p><strong>UAE strategic implications:</strong></p>
+                        <ul>
+                            <li>Fujairah pipeline is operating at capacity and was struck during the war — partial bypass, not full immunity.</li>
+                            <li>Demand destruction is starting to bite: petrochemical feedstocks (naphtha, LPG), industrial fuels, and aviation fuel margins are all under pressure as inventories draw down.</li>
+                            <li>UAE has invested heavily in storage capacity at Fujairah — but storage is a buffer, not a supply solution.</li>
+                            <li>Long-term: UAE has structural incentive to support Hormuz "freedom of navigation" diplomacy AND to expand bypass infrastructure further.</li>
+                        </ul>
+                        <p><strong>Linkage to OPEC departure:</strong> By leaving OPEC, UAE positions itself as a "national interest" actor able to negotiate Hormuz access bilaterally rather than through a Saudi-led cartel framework. This is the strategic story underneath the institutional break.</p>
+                        <div class="open-source-disclaimer" data-i18n="kbOpenSourceDisclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://www.eia.gov/international/analysis/special-topics/World_Oil_Transit_Chokepoints" target="_blank" class="report-link">📑 EIA Chokepoints</a>
+                            <a href="https://www.iea.org/" target="_blank" class="report-link">📑 IEA</a>
+                            <a href="https://www.cna.org/" target="_blank" class="report-link">📑 CNA</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ═══ EXISTING KB CARDS (preserved from shell) ═══ -->
 
                 <!-- Air Defense & Iranian Drone Intercepts -->
                 <div class="knowledge-card collapsed" id="card-defense">
@@ -235,51 +519,106 @@
                     </div>
                 </div>
 
+                <!-- Regional Think Tanks & Policy Analysis -->
+                <div class="knowledge-card collapsed" id="card-thinktanks">
+                    <div class="knowledge-header" onclick="toggleKnowledgeCard('thinktanks')">
+                        <div class="knowledge-header-title">
+                            <span class="category-icon">🧠</span>
+                            <span data-i18n="kbThinkTanksTitle">Regional Think Tanks & Policy Analysis</span>
+                        </div>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="knowledge-content" data-i18n="kbThinkTanksContent">
+                        <p><strong>Curated set of think tanks producing rigorous English-language analysis on UAE, Gulf affairs, OPEC, and Hormuz security.</strong> Used both as background context for this stability page and as feed sources for the live "🧠 Think Tank" article tab below.</p>
+                        <ul>
+                            <li><strong>Badil (Beirut)</strong> — Regional perspective on Gulf security and US-Iran dynamics; sourced via Asifah's live feed integration.</li>
+                            <li><strong>AGSIW (Arab Gulf States Institute Washington)</strong> — Most consistent UAE-specific policy output; tracks Gulf-internal dynamics including OPEC quota disputes.</li>
+                            <li><strong>Carnegie Middle East Center</strong> — Strong on Saudi-UAE bilateral and Gulf diplomacy.</li>
+                            <li><strong>International Crisis Group (Gulf program)</strong> — Crisis-focused analysis with Hormuz/OPEC coverage.</li>
+                            <li><strong>Chatham House (MENA program)</strong> — UK-perspective on Gulf energy and security.</li>
+                            <li><strong>CSIS (Energy & Geopolitics Program)</strong> — Strong on chokepoints, OPEC dynamics, and U.S.-Gulf strategy.</li>
+                        </ul>
+                        <div class="open-source-disclaimer" data-i18n="kbOpenSourceDisclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
+                        <div class="report-links-grid">
+                            <a href="https://thebadil.com/" target="_blank" class="report-link">📑 Badil</a>
+                            <a href="https://agsiw.org/" target="_blank" class="report-link">📑 AGSIW</a>
+                            <a href="https://carnegie-mec.org/" target="_blank" class="report-link">📑 Carnegie ME</a>
+                            <a href="https://www.crisisgroup.org/middle-east-north-africa/gulf-and-arabian-peninsula" target="_blank" class="report-link">📑 ICG Gulf</a>
+                            <a href="https://www.chathamhouse.org/topics/middle-east-and-north-africa" target="_blank" class="report-link">📑 Chatham House</a>
+                            <a href="https://www.csis.org/programs/energy-security-and-climate-change-program" target="_blank" class="report-link">📑 CSIS Energy</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <!-- RECENT ARTICLES -->
+        <!-- RECENT ARTICLES (canonical article-tabs pattern) -->
         <div class="articles-section">
-            <div class="section-title">&#x1F4F0; Recent UAE, Dubai & Abu Dhabi Security Articles (Last 7 Days)</div>
+            <div class="section-title">📰 <span data-i18n="articlesTitle">Recent UAE, Dubai & Abu Dhabi Security Articles (Last 7 Days)</span></div>
+            <div class="article-tabs" id="articleTabs">
+                <button class="article-tab active" data-tab="all" onclick="switchArticleTab('all', this)"><span data-i18n="tabAll">All</span> <span class="article-tab-count" id="tabCount-all">0</span></button>
+                <button class="article-tab" data-tab="en" onclick="switchArticleTab('en', this)"><span data-i18n="tabEN">English</span> <span class="article-tab-count" id="tabCount-en">0</span></button>
+                <button class="article-tab" data-tab="ar" onclick="switchArticleTab('ar', this)"><span data-i18n="tabAR">Arabic</span> <span class="article-tab-count" id="tabCount-ar">0</span></button>
+                <button class="article-tab" data-tab="he" onclick="switchArticleTab('he', this)"><span data-i18n="tabHE">Hebrew</span> <span class="article-tab-count" id="tabCount-he">0</span></button>
+                <button class="article-tab" data-tab="fa" onclick="switchArticleTab('fa', this)"><span data-i18n="tabFA">Farsi</span> <span class="article-tab-count" id="tabCount-fa">0</span></button>
+                <button class="article-tab" data-tab="social" onclick="switchArticleTab('social', this)"><span data-i18n="tabSocial">Social</span> <span class="article-tab-count" id="tabCount-social">0</span></button>
+                <button class="article-tab" data-tab="thinktank" onclick="switchArticleTab('thinktank', this)">🧠 <span data-i18n="tabThinkTank">Think Tank — Regional</span> <span class="article-tab-count" id="tabCount-thinktank">0</span></button>
+            </div>
             <div id="articlesContainer">
-                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
+                <div style="text-align: center; color: var(--text-secondary); padding: 30px;" data-i18n="loadingArticles">Loading articles...</div>
             </div>
         </div>
 
-        <footer>
-            <div>Data Sources: NewsAPI, GDELT, The National, Gulf News, and OSINT sources</div>
-            <div style="margin-top:15px; font-size:0.85em;">
-                Multilingual content from Arabic, Hebrew, and Farsi feeds via GDELT.
+        <!-- CANONICAL ASIFAH FOOTER -->
+        <footer class="asifah-footer">
+            <div class="footer-grid">
+                <div>
+                    <h4 data-i18n="footerSourcesTitle">Data Sources</h4>
+                    <p data-i18n="footerSourcesText">NewsAPI · GDELT · Brave Search · The National · Gulf News · Arab News · Reuters · Al Jazeera · OSINT social feeds (Telegram, Bluesky) · Regional think tanks (Badil, AGSIW, Carnegie ME, ICG Gulf) · ADNOC + EIA reference data.</p>
+                </div>
+                <div>
+                    <h4 data-i18n="footerMethodTitle">Methodology</h4>
+                    <p data-i18n="footerMethodText">Source-weighted OSINT aggregation with time-decay scoring. Multi-language coverage (English, Arabic, Hebrew, Farsi). Open-source signals only — no classified data. Stability assessments are analytical estimates, not predictions.</p>
+                </div>
+                <div>
+                    <h4 data-i18n="footerContactTitle">Contact</h4>
+                    <p data-i18n="footerContactText">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a> · <a href="mailto:contact@asifahanalytics.com" style="color:var(--accent);">contact@asifahanalytics.com</a></p>
+                </div>
             </div>
-            <div style="margin-top:15px;">For inquiries, contact: asifahanalytics@gmail.com</div>
-            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em;">Asifah Analytics v1.0.0</div>
-                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
+            <div class="footer-disclaimer">
+                <strong style="color:#f59e0b;">⚠️ DISCLAIMER</strong> &mdash; <span data-i18n="footerDisclaimer">This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.</span>
             </div>
-            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
-                <span style="font-size:0.9em;">
-                    If you find Asifah Analytics useful, you can 
-                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
-                </span>
+            <div class="footer-coffee">
+                <span data-i18n="footerCoffee">If you find Asifah Analytics useful and want to support ongoing development, you can ☕</span> <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;" data-i18n="footerCoffeeLink">buy me a coffee</a>
             </div>
-            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
-                &copy; 2025 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
-                Unauthorized use, reproduction, or distribution prohibited.
+            <div class="footer-links">
+                <a href="privacy.html" style="color:var(--accent);text-decoration:none;" data-i18n="footerPrivacy">Privacy Policy</a>
+                <span style="color:var(--text-muted);margin:0 12px;">|</span>
+                <a href="contact.html" style="color:var(--accent);text-decoration:none;" data-i18n="footerContactLink">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025-2026 RCGG. All Rights Reserved. UAE Stability Index v2.0.0 — Proprietary and Confidential.
             </div>
         </footer>
     </div>
+</div>
 
     <script>
         const BACKEND_URL = 'https://asifah-backend.onrender.com';
+        const COUNTRY_KEY = 'uae';
 
+        // ── THEME ──
         function initTheme() {
             const saved = localStorage.getItem('asifah-theme') || 'light';
             document.documentElement.setAttribute('data-theme', saved);
+            document.body.setAttribute('data-theme', saved);
         }
         function toggleTheme() {
             const current = document.documentElement.getAttribute('data-theme');
             const next = current === 'dark' ? 'light' : 'dark';
             document.documentElement.setAttribute('data-theme', next);
+            document.body.setAttribute('data-theme', next);
             localStorage.setItem('asifah-theme', next);
         }
         initTheme();
@@ -289,73 +628,311 @@
             if (card) card.classList.toggle('collapsed');
         }
 
-        // Load articles
-        async function loadArticles() {
-            try {
-                const response = await fetch(BACKEND_URL + '/api/threat/uae?days=7');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                const articles = data.top_scoring_articles || data.articles || data.recent_headlines || [];
-                if (articles.length > 0) {
-                    displayArticles(articles);
-                } else {
-                    displayFallback();
-                }
-            } catch (error) {
-                console.warn('Article load failed:', error.message);
-                displayFallback();
-            }
+        // ── ARTICLE TABS ──
+        let allArticles = { all: [], en: [], ar: [], he: [], fa: [], social: [], thinktank: [] };
+        let activeTab = 'all';
+
+        function switchArticleTab(tabKey, btn) {
+            activeTab = tabKey;
+            document.querySelectorAll('.article-tab').forEach(t => t.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            renderArticleList();
         }
 
-        function displayArticles(articles) {
+        function detectArticleLanguage(article) {
+            // Heuristic: check title text for Arabic/Hebrew/Farsi script ranges
+            const text = (article.title || '') + ' ' + (article.article_title || '');
+            if (/[\u0590-\u05FF]/.test(text)) return 'he';      // Hebrew
+            if (/[\u0600-\u06FF]/.test(text)) {
+                // Arabic vs Farsi: Farsi has پ چ ژ گ — check for those
+                if (/[\u067E\u0686\u0698\u06AF]/.test(text)) return 'fa';
+                return 'ar';
+            }
+            // Source-based fallback
+            const source = (article.source || article.source_name || '').toLowerCase();
+            if (source.includes('press tv') || source.includes('mehr') || source.includes('tasnim') || source.includes('iran wire')) return 'fa';
+            if (source.includes('al jazeera arabic') || source.includes('al arabiya') || source.includes('arab')) return 'ar';
+            return 'en';
+        }
+
+        function classifyArticleSource(article) {
+            // Returns one of: rss | gdelt | newsapi | brave | telegram | bluesky | thinktank
+            const src = (article.source_type || article.fetch_source || article.source || '').toLowerCase();
+            if (src.includes('telegram') || article.telegram_channel) return 'telegram';
+            if (src.includes('bluesky') || article.bluesky_handle) return 'bluesky';
+            if (src.includes('gdelt')) return 'gdelt';
+            if (src.includes('newsapi')) return 'newsapi';
+            if (src.includes('brave')) return 'brave';
+            if (src.includes('thinktank') || src.includes('think_tank') || src.includes('think tank')) return 'thinktank';
+            return 'rss';
+        }
+
+        function renderArticleList() {
             const container = document.getElementById('articlesContainer');
-            container.innerHTML = articles.slice(0, 20).map(a => {
-                const title = a.title || a.article_title || 'Untitled';
-                const source = a.source || a.source_name || '';
-                const published = a.published || a.publishedAt || '';
+            const list = allArticles[activeTab] || [];
+            if (list.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-secondary);">No articles in this tab yet. Check the All tab or try a different language.</div>';
+                return;
+            }
+            container.innerHTML = list.slice(0, 30).map(a => {
+                const title = (a.title || a.article_title || 'Untitled').replace(/</g, '&lt;');
+                const source = (a.source || a.source_name || '').replace(/</g, '&lt;');
+                const published = a.published || a.publishedAt || a.date || '';
                 const url = a.url || '#';
+                const srcClass = 'src-' + classifyArticleSource(a);
                 let dateStr = 'Recent';
                 if (published) { try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); } catch(e) {} }
                 return '<div class="article-item">' +
                     '<div class="article-title">' + title + '</div>' +
-                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
-                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
+                    '<div class="article-meta">' +
+                        '<span class="article-source-pill ' + srcClass + '">' + classifyArticleSource(a) + '</span>' +
+                        '<span>' + source + '</span>' +
+                        '<span>•</span>' +
+                        '<span>' + dateStr + '</span>' +
+                    '</div>' +
+                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article →</a>' : '') +
                     '</div>';
             }).join('');
         }
 
-        function displayFallback() {
+        function updateTabCounts() {
+            ['all', 'en', 'ar', 'he', 'fa', 'social', 'thinktank'].forEach(k => {
+                const el = document.getElementById('tabCount-' + k);
+                if (el) el.textContent = (allArticles[k] || []).length;
+            });
+        }
+
+        async function loadArticles() {
+            try {
+                const response = await fetch(BACKEND_URL + '/api/threat/' + COUNTRY_KEY + '?days=7');
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                const data = await response.json();
+                const articles = data.top_scoring_articles || data.articles || data.recent_headlines || [];
+
+                // Reset buckets
+                allArticles = { all: [], en: [], ar: [], he: [], fa: [], social: [], thinktank: [] };
+
+                articles.forEach(a => {
+                    allArticles.all.push(a);
+                    const srcClass = classifyArticleSource(a);
+                    if (srcClass === 'telegram' || srcClass === 'bluesky') {
+                        allArticles.social.push(a);
+                    } else {
+                        const lang = detectArticleLanguage(a);
+                        if (allArticles[lang]) allArticles[lang].push(a);
+                    }
+                });
+                updateTabCounts();
+            } catch (error) {
+                console.warn('Article load failed:', error.message);
+                displayArticleFallback();
+            }
+            // Always attempt Think Tank load (separate endpoint)
+            await loadThinkTankArticles();
+            renderArticleList();
+        }
+
+        async function loadThinkTankArticles() {
+            try {
+                const resp = await fetch(BACKEND_URL + '/api/think-tank/uae');
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+                const articles = data.articles || [];
+                articles.forEach(a => {
+                    a.source_type = 'thinktank';
+                    if (!a.source) a.source = a.feed_name || 'Think Tank';
+                    allArticles.thinktank.push(a);
+                    allArticles.all.push(a);
+                });
+                updateTabCounts();
+            } catch (e) {
+                console.warn('Think Tank load failed (non-blocking):', e.message);
+            }
+        }
+
+        function displayArticleFallback() {
             const container = document.getElementById('articlesContainer');
-            container.innerHTML = 
+            container.innerHTML =
                 '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
-                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading...</p>' +
+                '<p style="font-size:16px; margin-bottom:15px;">📡 Live article feed loading...</p>' +
                 '<p style="font-size:13px; margin-bottom:20px;">Check these curated OSINT sources:</p>' +
                 '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
                 '<a href="https://www.aljazeera.com/tag/uae/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - UAE</a>' +
                 '<a href="https://www.reuters.com/world/middle-east/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - Middle East</a>' +
                 '<a href="https://www.thenationalnews.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">The National</a>' +
                 '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
-                "'</div>' +" +
-                "'</div>';";
+                '</div>' +
+                '</div>';
         }
 
-        function switchLanguage(lang, button) {
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            if (lang === 'he' || lang === 'ar' || lang === 'fa') {
-                document.documentElement.setAttribute('dir', 'rtl');
-            } else {
-                document.documentElement.setAttribute('dir', 'ltr');
+        // ── COMMODITY EXPOSURE LOADER ──
+        const COMMODITY_ICONS = {
+            oil: '🛢️', natural_gas: '⛽', wheat: '🌾', corn: '🌽',
+            potash: '🟫', uranium: '☢️', gold: '🥇', lithium: '🔋',
+            rare_earths: '⚙️', copper: '🟠', soybeans: '🫘', sunflower_oil: '🌻',
+        };
+
+        async function loadCommodityExposure() {
+            try {
+                const resp = await fetch(BACKEND_URL + '/api/commodity-pressure/' + COUNTRY_KEY);
+                if (!resp.ok) {
+                    console.warn('Commodity exposure unavailable (HTTP ' + resp.status + ')');
+                    return;
+                }
+                const data = await resp.json();
+                if (!data || !data.commodity_summaries || data.commodity_summaries.length === 0) {
+                    console.warn('No commodity data for', COUNTRY_KEY);
+                    return;
+                }
+                const card = document.getElementById('commodityCard');
+                card.style.display = 'block';
+
+                // Pressure summary strip
+                const strip = document.getElementById('commodityPressureStrip');
+                const totalSignals = (data.commodity_summaries || []).reduce((sum, c) => sum + (c.signal_count || 0), 0);
+                const status = data.overall_status || 'monitoring';
+                const statusColor = { surge: '#dc2626', elevated: '#f59e0b', active: '#facc15', normal: '#16a34a', baseline: '#16a34a', monitoring: '#6b7280' }[status] || '#6b7280';
+                strip.innerHTML =
+                    '<div style="padding:6px 12px; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:6px;"><strong>Status:</strong> <span style="color:' + statusColor + ';font-weight:700;text-transform:uppercase;">' + status + '</span></div>' +
+                    '<div style="padding:6px 12px; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:6px;"><strong>Signal Count:</strong> ' + totalSignals + '</div>' +
+                    '<div style="padding:6px 12px; background:rgba(56,189,248,0.08); border:1px solid rgba(56,189,248,0.25); border-radius:6px;"><strong>Commodities Tracked:</strong> ' + data.commodity_summaries.length + '</div>';
+
+                // Per-commodity rows
+                const rows = document.getElementById('commodityRows');
+                rows.innerHTML = data.commodity_summaries.map(c => {
+                    const icon = COMMODITY_ICONS[c.commodity_id] || '📦';
+                    const role = c.role || 'producer';
+                    const rolePill = '<span class="c-role-pill role-' + role + '">' + role + '</span>';
+                    const rankText = c.rank ? '<span class="c-rank">#' + c.rank + ' globally</span>' : '';
+                    const sigCount = c.signal_count || 0;
+                    return '<a href="commodities.html#' + c.commodity_id + '" class="commodity-row">' +
+                        '<span class="c-icon">' + icon + '</span>' +
+                        '<div class="c-meta">' +
+                            '<span class="c-name">' + (c.commodity_name || c.commodity_id) + '</span>' +
+                            '<span class="c-note">' + rolePill + (c.note || '') + '</span>' +
+                        '</div>' +
+                        rankText +
+                        '<span class="c-signals">' + sigCount + ' 📰</span>' +
+                    '</a>';
+                }).join('');
+
+                // Cache note
+                if (data.cached_at || data.generated_at) {
+                    const note = document.getElementById('commodityCacheNote');
+                    const ts = new Date(data.cached_at || data.generated_at);
+                    note.textContent = 'Commodity data: ' + ts.toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+                }
+            } catch (e) {
+                console.warn('Commodity load failed (non-blocking):', e.message);
             }
         }
 
+        // ── i18n TRANSLATIONS ──
+        const TRANSLATIONS = {
+            en: {
+                pageTitle: '🇦🇪 UAE STABILITY INDEX',
+                pageSubtitle: 'Multi-Factor Analysis: OPEC Departure (May 1, 2026), Fujairah Pipeline & Hormuz Bypass, Iranian Drone Intercepts, Al Dhafra Air Base & Economic Hub Risk',
+                lastUpdated: 'Last updated: Loading...',
+                backLink: '← Back to Dashboard',
+                navDashboards: 'Dashboards', navAfrica: '🌍 Africa', navFuture: '🔒 Future',
+                navAsia: '🌏 Asia & Pacific', navEurope: '🌍 Europe', navME: '🕌 Middle East', navWHA: '🌎 W. Hemisphere',
+                navMilitary: '🎖️ Military Tracker', navGPI: '🌐 Global Pressure Index', navCommodities: '🛢️ Commodities',
+                navLive1: '● Live', navLive2: '● Live', navLive3: '● Live', navLive4: '● Live', navLive5: '● Live', navLive6: '● Live',
+                navLive7: '● Live', navLive8: '● Live', navLive9: '● Live', navLive10: '● Live',
+                navLive11: '● Live', navLive12: '● Live', navLive13: '● Live', navLive14: '● Live', navLive15: '● Live',
+                navRegionalRhetoric: 'Regional Rhetoric',
+                navMERhet: '🕌 Middle East', navAsiaRhet: '🌏 Asia', navEuropeRhet: '🌍 Europe', navWHARhet: '🌎 W. Hemisphere',
+                navUAEStab: '🇦🇪 UAE Stability', navYouAreHere: '◉ You are here',
+                navKSAStab: '🇸🇦 Saudi Arabia', navIsrStab: '🇮🇱 Israel Stability', navLebStab: '🇱🇧 Lebanon Stability', navSyrStab: '🇸🇾 Syria Stability',
+                mapTitle: 'UAE — Strategic Overview',
+                mapSubtitle: "Interactive map centered on the UAE. Strategic features: Fujairah Oil Terminal (Gulf of Oman, Hormuz bypass), Al Dhafra Air Base (USAF presence near Abu Dhabi), Jebel Ali (world's largest man-made port), Strait of Hormuz exposure to the north.",
+                kbTitle: 'Knowledge Library',
+                kbDisclaimer: 'Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.',
+                kbOpenSourceDisclaimer: '* Based on open-source intelligence, think tank analysis, and government publications',
+                kbThinkTanksTitle: 'Regional Think Tanks & Policy Analysis',
+                commodityTitle: 'COMMODITY EXPOSURE — UAE',
+                commodityFullLink: 'View Full Commodity Tracker →',
+                commoditySubtitle: 'Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.',
+                articlesTitle: 'Recent UAE, Dubai & Abu Dhabi Security Articles (Last 7 Days)',
+                tabAll: 'All', tabEN: 'English', tabAR: 'Arabic', tabHE: 'Hebrew', tabFA: 'Farsi', tabSocial: 'Social', tabThinkTank: 'Think Tank — Regional',
+                loadingArticles: 'Loading articles...',
+                footerSourcesTitle: 'Data Sources',
+                footerMethodTitle: 'Methodology',
+                footerContactTitle: 'Contact',
+                footerCoffee: 'If you find Asifah Analytics useful and want to support ongoing development, you can ☕',
+                footerCoffeeLink: 'buy me a coffee',
+                footerPrivacy: 'Privacy Policy', footerContactLink: 'Contact',
+            },
+            ar: {
+                pageTitle: '🇦🇪 مؤشر استقرار الإمارات',
+                pageSubtitle: 'تحليل متعدد العوامل: الخروج من أوبك (1 مايو 2026)، خط أنابيب الفجيرة وتجاوز هرمز، اعتراض الطائرات الإيرانية بدون طيار، قاعدة الظفرة الجوية ومخاطر المركز الاقتصادي',
+                lastUpdated: 'آخر تحديث: جارٍ التحميل...',
+                backLink: '← العودة إلى لوحة التحكم',
+                navDashboards: 'لوحات المعلومات', navUAEStab: '🇦🇪 استقرار الإمارات', navYouAreHere: '◉ أنت هنا',
+                kbTitle: 'مكتبة المعرفة', articlesTitle: 'مقالات أمن الإمارات (آخر 7 أيام)',
+                tabAll: 'الكل', tabEN: 'إنجليزي', tabAR: 'عربي', tabHE: 'عبري', tabFA: 'فارسي', tabSocial: 'اجتماعي', tabThinkTank: '🧠 مراكز الفكر — إقليمي',
+                loadingArticles: 'جارٍ تحميل المقالات...',
+                commodityTitle: 'التعرض للسلع — الإمارات',
+                footerCoffee: 'إذا كنت تجد Asifah Analytics مفيدًا وتريد دعم التطوير المستمر، يمكنك ☕',
+                footerCoffeeLink: 'شراء قهوة لي', footerPrivacy: 'سياسة الخصوصية', footerContactLink: 'اتصل',
+            },
+            he: {
+                pageTitle: '🇦🇪 מדד יציבות איחוד האמירויות',
+                pageSubtitle: 'ניתוח רב-גורמי: יציאה מאופ"ק (1 במאי 2026), צינור פוג׳יירה ועקיפת הורמוז, יירוט כטב"מים איראניים, בסיס א-דאפרה וסיכון מרכז כלכלי',
+                lastUpdated: 'עודכן לאחרונה: טוען...',
+                backLink: '← חזרה ללוח הבקרה',
+                navDashboards: 'לוחות בקרה', navUAEStab: '🇦🇪 יציבות אמירויות', navYouAreHere: '◉ אתה כאן',
+                kbTitle: 'ספריית ידע', articlesTitle: 'מאמרי אבטחה - איחוד האמירויות (7 ימים אחרונים)',
+                tabAll: 'הכל', tabEN: 'אנגלית', tabAR: 'ערבית', tabHE: 'עברית', tabFA: 'פרסית', tabSocial: 'חברתי', tabThinkTank: '🧠 מכוני מחקר — אזורי',
+                loadingArticles: 'טוען מאמרים...',
+                commodityTitle: 'חשיפה לסחורות — אמירויות',
+                footerCoffee: 'אם אתה מוצא את Asifah Analytics שימושי ורוצה לתמוך בפיתוח מתמשך, אתה יכול ☕',
+                footerCoffeeLink: 'לקנות לי קפה', footerPrivacy: 'מדיניות פרטיות', footerContactLink: 'צור קשר',
+            },
+            fa: {
+                pageTitle: '🇦🇪 شاخص ثبات امارات',
+                pageSubtitle: 'تحلیل چندعاملی: خروج از اوپک (۱ مه ۲۰۲۶)، خط لوله فجیره و دور زدن هرمز، رهگیری پهپادهای ایرانی، پایگاه هوایی الظفره و ریسک هاب اقتصادی',
+                lastUpdated: 'آخرین به‌روزرسانی: در حال بارگذاری...',
+                backLink: '← بازگشت به داشبورد',
+                navDashboards: 'داشبوردها', navUAEStab: '🇦🇪 ثبات امارات', navYouAreHere: '◉ شما اینجا هستید',
+                kbTitle: 'کتابخانه دانش', articlesTitle: 'مقالات امنیتی امارات (۷ روز اخیر)',
+                tabAll: 'همه', tabEN: 'انگلیسی', tabAR: 'عربی', tabHE: 'عبری', tabFA: 'فارسی', tabSocial: 'اجتماعی', tabThinkTank: '🧠 اندیشکده — منطقه‌ای',
+                loadingArticles: 'در حال بارگذاری مقالات...',
+                commodityTitle: 'مواجهه کالایی — امارات',
+                footerCoffee: 'اگر Asifah Analytics را مفید می‌دانید و می‌خواهید از توسعه مداوم حمایت کنید، می‌توانید ☕',
+                footerCoffeeLink: 'یک قهوه برایم بخرید', footerPrivacy: 'سیاست حریم خصوصی', footerContactLink: 'تماس',
+            }
+        };
+
+        function switchLanguage(lang, button) {
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            if (button) button.classList.add('active');
+            const dir = (lang === 'he' || lang === 'ar' || lang === 'fa') ? 'rtl' : 'ltr';
+            document.documentElement.setAttribute('dir', dir);
+            document.documentElement.setAttribute('lang', lang);
+
+            const dict = TRANSLATIONS[lang] || TRANSLATIONS.en;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[key]) el.textContent = dict[key];
+            });
+            localStorage.setItem('asifah-uae-lang', lang);
+        }
+
+        // ── INIT ──
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('lastUpdated').textContent = 
-                'Last updated: ' + new Date().toLocaleString('en-US', { 
-                    month: 'short', day: 'numeric', year: 'numeric', 
-                    hour: 'numeric', minute: '2-digit', hour12: true 
+            document.getElementById('lastUpdated').textContent =
+                'Last updated: ' + new Date().toLocaleString('en-US', {
+                    month: 'short', day: 'numeric', year: 'numeric',
+                    hour: 'numeric', minute: '2-digit', hour12: true
                 });
+            // Restore language preference
+            const savedLang = localStorage.getItem('asifah-uae-lang') || 'en';
+            const langBtn = document.querySelector('.lang-btn[onclick*="\'' + savedLang + '\'"]');
+            if (savedLang !== 'en' && langBtn) switchLanguage(savedLang, langBtn);
+
             loadArticles();
+            loadCommodityExposure();
         });
     </script>
 </body>
