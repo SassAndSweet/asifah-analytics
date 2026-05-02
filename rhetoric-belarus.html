@@ -1,0 +1,1362 @@
+<!-- Asifah Analytics — Belarus Rhetoric & Pressure Tracker v1.0.0 — May 2026 -->
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<title>Belarus Pressure Tracker — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+    /* ── ARCTIC THEME VARIABLES (canonical for all Europe trackers) ── */
+    :root {
+        --bg-color:       #e8f0f8;
+        --container-bg:   #ffffff;
+        --card-bg:        #ffffff;
+        --card-border:    #b0c8e0;
+        --text-primary:   #0a1628;
+        --text-secondary: #1e3a5f;
+        --text-muted:     #4a6080;
+        --article-bg:     #f0f6fc;
+        --accent:         #0ea5e9;
+        --accent-glow:    rgba(14,165,233,0.2);
+        --card-glow:      none;
+        --card-hover-glow: 0 8px 20px rgba(0,0,0,0.12);
+        --watermark-opacity: 0.07;
+        --watermark-filter:  none;
+    }
+    [data-theme="dark"] {
+        --bg-color:       #060d1a;
+        --container-bg:   #0d1b2e;
+        --card-bg:        #0d1b2e;
+        --card-border:    #1e3a5f;
+        --text-primary:   #e2f0fb;
+        --text-secondary: #93c5fd;
+        --text-muted:     #4a7090;
+        --article-bg:     #0a1525;
+        --accent:         #38bdf8;
+        --accent-glow:    rgba(56,189,248,0.18);
+        --card-glow:      0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
+        --card-hover-glow: 0 0 22px rgba(56,189,248,0.2), 0 8px 25px rgba(0,0,0,0.5);
+        --watermark-opacity: 0.18;
+        --watermark-filter:  saturate(3) brightness(0.8) hue-rotate(185deg);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+        font-family: 'Times New Roman', Times, serif;
+        background-color: var(--bg-color);
+        color: var(--text-primary);
+        min-height: 100vh;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    body::before {
+        content: '';
+        position: fixed; top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 110vmin; height: 110vmin;
+        min-width: 800px; min-height: 800px;
+        max-width: 1400px; max-height: 1400px;
+        background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+        background-size: contain; background-repeat: no-repeat; background-position: center;
+        opacity: var(--watermark-opacity); filter: var(--watermark-filter);
+        z-index: 0; pointer-events: none; user-select: none;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+
+    /* ── HEADER ── */
+    header {
+        background: linear-gradient(135deg, #060d1a, #0a1628);
+        border: 1px solid #1e3a5f;
+        border-radius: 12px; padding: 20px 25px; margin-bottom: 20px;
+        display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px rgba(56,189,248,0.08);
+        border-bottom: 1px solid rgba(56,189,248,0.2);
+    }
+    [data-theme="light"] header { background: linear-gradient(135deg, #dbeafe, #eff6ff); border-color: #93c5fd; }
+    .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.4); flex-shrink: 0; }
+    .header-left { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+    .back-link {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.3);
+        color: #38bdf8; font-size: 0.7rem; font-weight: 700;
+        letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: all 0.2s;
+    }
+    .back-link:hover { border-color: #38bdf8; background: rgba(56,189,248,0.08); }
+    .header-center { flex: 1; text-align: center; }
+    .header-flag { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; }
+    .header-title { font-family: 'Times New Roman', Times, serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; margin: 4px 0; }
+    [data-theme="light"] .header-title { color: #0a1628; }
+    .header-subtitle { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; }
+    .header-timestamp { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .pressure-badge {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 12px; border-radius: 6px;
+        background: rgba(56,189,248,0.1); border: 1px solid rgba(56,189,248,0.4);
+        font-size: 0.6rem; font-weight: 700; letter-spacing: 2px; color: #38bdf8;
+        text-transform: uppercase; animation: pulse-arctic 3s ease-in-out infinite;
+    }
+    @keyframes pulse-arctic { 0%,100%{opacity:0.7;} 50%{opacity:1;} }
+    .lang-group { display: flex; gap: 4px; }
+    .lang-btn { padding: 4px 10px; border: 1px solid rgba(56,189,248,0.3); border-radius: 6px; background: transparent; color: #38bdf8; font-size: 0.65rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+    .lang-btn.active { background: rgba(56,189,248,0.18); border-color: #38bdf8; }
+    .lang-btn:hover { background: rgba(56,189,248,0.1); }
+    .theme-row { display: flex; align-items: center; gap: 8px; }
+    .theme-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1.5px; }
+    .theme-toggle { position: relative; width: 38px; height: 20px; }
+    .theme-toggle input { opacity: 0; width: 0; height: 0; }
+    .theme-slider { position: absolute; cursor: pointer; inset: 0; background: #475569; border-radius: 20px; transition: 0.3s; }
+    .theme-slider::before { content: ''; position: absolute; height: 14px; width: 14px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+    .theme-toggle input:checked + .theme-slider { background: #38bdf8; }
+    .theme-toggle input:checked + .theme-slider::before { transform: translateX(18px); }
+
+    /* ── SIDEBAR LAYOUT ── */
+    .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
+    .nav-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+    .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+    .nav-btn {
+        display: flex; flex-direction: column; padding: 9px 12px;
+        border-radius: 8px; border: 1px solid rgba(56,189,248,0.18);
+        background: rgba(13,27,46,0.4); color: rgba(226,240,251,0.7);
+        text-decoration: none; font-family: 'Times New Roman', Times, serif;
+        font-weight: 600; transition: all 0.2s; position: relative; overflow: hidden;
+    }
+    [data-theme="light"] .nav-btn { background: rgba(255,255,255,0.7); color: var(--text-secondary); }
+    .nav-btn .nav-btn-label { font-size: 12px; line-height: 1.3; }
+    .nav-btn .nav-btn-status { font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #38bdf8; }
+    .nav-btn:hover:not(.inactive-nav):not(.current-page) { border-color: rgba(56,189,248,0.5); background: rgba(56,189,248,0.08); color: #e2f0fb; }
+    .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); border-color: rgba(56,189,248,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(56,189,248,0.12); }
+    .nav-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); border-color: rgba(34,197,94,0.6); color: #ffffff; box-shadow: 0 0 18px rgba(34,197,94,0.2); }
+    .nav-btn.current-page .nav-btn-status { color: #4ade80; }
+    .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
+    [data-theme="light"] .nav-btn.inactive-nav { color: rgba(0,0,0,0.3); background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1); }
+    .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
+    .nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 4px 0; }
+    .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+    .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+    .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+    .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+    .nav-btn.commodity-btn { border-color: rgba(245,158,11,0.4); background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(217,119,6,0.05) 100%); }
+    .nav-btn.commodity-btn .nav-btn-status { color: #fbbf24; }
+    @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+    /* ── THEATRE BANNER ── */
+    .theatre-banner { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px 28px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--card-glow); }
+    .theatre-score-big { font-size: 3.2rem; font-weight: 900; line-height: 1; }
+    .theatre-score-label { font-size: 0.62rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-family: 'Courier New', monospace; margin-top: 4px; }
+    .theatre-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; font-size: 0.65rem; font-weight: 800; letter-spacing: 1.5px; color: white; text-transform: uppercase; margin-top: 8px; font-family: 'Courier New', monospace; }
+    .theatre-right { text-align: right; }
+    .theatre-escalation-label-text { font-size: 0.6rem; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-family: 'Courier New', monospace; }
+    .theatre-level-display { font-size: 1.1rem; font-weight: 800; }
+    .theatre-level-desc { font-size: 0.72rem; color: var(--text-secondary); max-width: 250px; line-height: 1.4; margin-top: 4px; }
+    .theatre-scan-info { font-size: 0.62rem; color: var(--text-muted); margin-top: 8px; font-family: 'Courier New', monospace; line-height: 1.5; }
+
+    /* ── SECTION CARDS ── */
+    .section-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; box-shadow: var(--card-glow); }
+    .section-title { font-size: 0.85rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-primary); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(56,189,248,0.2); display: flex; align-items: center; gap: 8px; }
+
+    /* ── ACTOR CARDS (single column for Belarus — no dual panel) ── */
+    .actor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+    .actor-card { background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; transition: all 0.3s; }
+    .actor-card:hover { box-shadow: var(--card-hover-glow); transform: translateY(-1px); }
+    .actor-card.lukashenko-regime { border-left: 3px solid rgba(220,38,38,0.6); }
+    .actor-card.russian-forces { border-left: 3px solid rgba(127,29,29,0.6); }
+    .actor-card.opposition { border-left: 3px solid rgba(22,163,74,0.6); }
+    .actor-card.nato-border { border-left: 3px solid rgba(56,189,248,0.6); }
+    .actor-card.iran-axis { border-left: 3px solid rgba(161,98,7,0.6); }
+    .actor-card.china-axis { border-left: 3px solid rgba(124,58,237,0.6); }
+    .actor-card.ukraine-border { border-left: 3px solid rgba(8,145,178,0.6); }
+    .actor-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+    .actor-flag { font-size: 1.3rem; flex-shrink: 0; }
+    .actor-name { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px; }
+    .actor-role { font-size: 0.58rem; color: var(--text-muted); text-transform: uppercase; margin-top: 1px; }
+    .actor-stats { display: flex; gap: 14px; padding: 6px 0; border-top: 1px solid rgba(56,189,248,0.1); border-bottom: 1px solid rgba(56,189,248,0.1); margin: 8px 0; }
+    .actor-stat { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .actor-stat span { color: #38bdf8; font-weight: 700; }
+    .level-badge { padding: 2px 8px; border-radius: 4px; font-size: 0.58rem; font-weight: 800; letter-spacing: 1px; color: white; flex-shrink: 0; font-family: 'Courier New', monospace; }
+    .silence-alert { font-size: 0.65rem; color: var(--text-muted); padding: 6px 8px; border-radius: 6px; background: rgba(100,116,139,0.08); border: 1px dashed rgba(100,116,139,0.2); margin: 6px 0; font-style: italic; text-align: center; }
+    .article-item { padding: 6px 8px; border-radius: 6px; margin-bottom: 4px; background: rgba(56,189,248,0.04); border-left: 2px solid rgba(56,189,248,0.2); }
+    .article-link { font-size: 0.72rem; color: var(--text-primary); text-decoration: none; line-height: 1.4; display: block; font-weight: 600; }
+    .article-link:hover { color: #38bdf8; text-decoration: underline; }
+    .article-meta { font-size: 0.58rem; color: var(--text-muted); margin-top: 2px; font-family: 'Courier New', monospace; }
+
+    /* ── INTERPRETATION CARDS ── */
+    .interp-so-what {
+        background: var(--container-bg); border: 1px solid var(--card-border);
+        border-left: 4px solid #f59e0b; border-radius: 12px;
+        padding: 18px 22px; margin-bottom: 16px;
+    }
+    .interp-scenario-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .interp-scenario-icon { font-size: 1.3rem; }
+    .interp-scenario-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .interp-scenario-value { font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; font-family: 'Times New Roman', serif; }
+    .interp-section-title { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: #38bdf8; font-family: 'Courier New', monospace; margin: 12px 0 6px; border-bottom: 1px solid rgba(56,189,248,0.2); padding-bottom: 4px; }
+    .interp-text { font-size: 0.82rem; line-height: 1.65; color: var(--text-primary); font-family: 'Times New Roman', serif; }
+    .interp-bullet { font-size: 0.78rem; line-height: 1.55; color: var(--text-secondary); padding: 5px 10px; border-left: 3px solid #38bdf8; background: rgba(56,189,248,0.06); border-radius: 0 6px 6px 0; margin: 5px 0; font-family: 'Times New Roman', serif; }
+    .interp-confidence-note { font-size: 0.65rem; color: var(--text-muted); font-style: italic; margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(56,189,248,0.15); font-family: 'Courier New', monospace; }
+
+    /* ── RED LINES ── */
+    .red-lines-card {
+        background: var(--container-bg); border: 1px solid var(--card-border);
+        border-left: 4px solid #dc2626; border-radius: 12px;
+        padding: 18px 22px; margin-bottom: 16px;
+    }
+    .interp-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .interp-card-title { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: #38bdf8; font-family: 'Courier New', monospace; margin-bottom: 2px; }
+    .interp-card-subtitle { font-size: 0.85rem; font-weight: 800; color: var(--text-primary); font-family: 'Times New Roman', serif; }
+    .red-line-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(56,189,248,0.1); }
+    .red-line-item.breached { border-left: 3px solid #dc2626; background: rgba(220,38,38,0.06); }
+    .red-line-item.approaching { border-left: 3px solid #38bdf8; background: rgba(56,189,248,0.05); }
+    .red-line-item.inactive { border-left: 3px solid #4a6080; background: rgba(74,96,128,0.04); }
+    .red-line-icon { font-size: 1rem; flex-shrink: 0; }
+    .red-line-label { font-size: 0.82rem; font-weight: 700; color: var(--text-primary); }
+    .red-line-trigger { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; line-height: 1.5; font-family: 'Times New Roman', serif; }
+    .red-line-source { font-size: 0.6rem; color: var(--text-muted); margin-top: 3px; font-family: 'Courier New', monospace; font-style: italic; }
+    .red-line-status-badge { font-size: 0.55rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px; font-family: 'Courier New', monospace; flex-shrink: 0; }
+    .red-line-status-badge.breached { background: #dc2626; color: white; }
+    .red-line-status-badge.approaching { background: #38bdf8; color: white; }
+    .red-line-status-badge.inactive { background: #4a6080; color: white; }
+
+    /* ── DIPLOMATIC TRACK / GREEN LINES ── */
+    .diplomatic-track-card {
+        background: var(--container-bg); border: 1px solid var(--card-border);
+        border-left: 4px solid #10b981; border-radius: 12px;
+        padding: 18px 22px; margin-bottom: 16px;
+    }
+    .diplomatic-score-bar { height: 8px; background: rgba(16,185,129,0.12); border-radius: 4px; overflow: hidden; margin: 6px 0; }
+    .diplomatic-score-fill { height: 100%; background: linear-gradient(90deg,#84cc16,#10b981); border-radius: 4px; transition: width 0.5s; }
+    .green-line-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(16,185,129,0.15); }
+    .green-line-item.active  { border-left: 3px solid #10b981; background: rgba(16,185,129,0.06); }
+    .green-line-item.signaled { border-left: 3px solid #84cc16; background: rgba(132,204,22,0.04); }
+    .green-line-item.dormant { border-left: 3px solid #4a6080; background: rgba(74,96,128,0.04); opacity: 0.65; }
+    .green-line-status-badge { font-size: 0.55rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; letter-spacing: 1px; font-family: 'Courier New', monospace; flex-shrink: 0; }
+    .green-line-status-badge.active { background: #10b981; color: white; }
+    .green-line-status-badge.signaled { background: #84cc16; color: white; }
+    .green-line-status-badge.dormant { background: #4a6080; color: white; }
+
+    /* ── COMMODITY EXPOSURE CARD ── */
+    .commodity-card {
+        background: var(--container-bg); border: 1px solid var(--card-border);
+        border-left: 4px solid #f59e0b; border-radius: 12px;
+        padding: 18px 22px; margin-bottom: 16px;
+    }
+    .commodity-pressure-pill { padding: 5px 12px; border-radius: 16px; font-weight: 700; letter-spacing: 1px; font-size: 0.65rem; font-family: 'Courier New', monospace; }
+    .commodity-pressure-pill.surge { background: #dc2626; color: white; }
+    .commodity-pressure-pill.elevated { background: #f59e0b; color: white; }
+    .commodity-pressure-pill.normal { background: #6b7280; color: white; }
+    .commodity-headline { font-size: 0.85rem; font-weight: 800; color: var(--text-primary); margin-top: 8px; }
+    .commodity-context { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.55; margin-top: 8px; font-family: 'Times New Roman', serif; }
+    .commodity-link { display: inline-block; margin-top: 10px; padding: 5px 12px; border-radius: 6px; background: rgba(245,158,11,0.10); border: 1px solid rgba(245,158,11,0.4); color: #f59e0b; font-size: 0.72rem; font-weight: 700; text-decoration: none; }
+    .commodity-link:hover { background: rgba(245,158,11,0.20); }
+
+    /* ── ESCALATION LADDER ── */
+    .ladder-row { display: flex; gap: 6px; flex-wrap: wrap; }
+    .ladder-step { flex: 1; min-width: 80px; padding: 10px 8px; border-radius: 8px; text-align: center; border: 1px solid rgba(56,189,248,0.2); transition: all 0.3s; opacity: 0.5; }
+    .ladder-step.active { opacity: 1; border-width: 2px; transform: scale(1.05); }
+    .ladder-step-num { font-size: 1.4rem; font-weight: 900; line-height: 1; }
+    .ladder-step-label { font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; font-family: 'Courier New', monospace; }
+    .scan-btn { padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.4); background: rgba(56,189,248,0.10); color: #38bdf8; font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; font-family: 'Courier New', monospace; }
+    .scan-btn:hover:not(:disabled) { background: rgba(56,189,248,0.20); border-color: #38bdf8; }
+    .scan-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── HISTORY CHART ── */
+    .history-chart-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; box-shadow: var(--card-glow); }
+    .history-chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+    .history-chart-title { font-size: 0.85rem; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-primary); }
+    .history-toggle-group { display: flex; gap: 4px; }
+    .history-toggle-btn { padding: 4px 10px; border-radius: 6px; border: 1px solid rgba(56,189,248,0.3); background: transparent; color: #38bdf8; font-size: 0.62rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+    .history-toggle-btn.active { background: rgba(56,189,248,0.18); border-color: #38bdf8; }
+    .history-chart-wrap { position: relative; height: 280px; }
+    .history-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: var(--text-muted); font-size: 0.78rem; font-style: italic; }
+    .history-legend { display: flex; gap: 14px; margin-top: 8px; flex-wrap: wrap; font-size: 0.7rem; color: var(--text-muted); }
+    .history-legend-item { display: flex; align-items: center; gap: 6px; }
+    .history-legend-dot { width: 12px; height: 2px; border-radius: 1px; }
+
+    /* ── ARTICLES SECTION ── */
+    .articles-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; }
+    .article-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; border-bottom: 1px solid rgba(56,189,248,0.15); padding-bottom: 10px; }
+    .article-tab { padding: 6px 12px; border-radius: 6px 6px 0 0; border: 1px solid rgba(56,189,248,0.2); border-bottom: none; background: transparent; color: var(--text-secondary); font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Courier New', monospace; letter-spacing: 1px; }
+    .article-tab.active { background: rgba(56,189,248,0.15); border-color: #38bdf8; color: #38bdf8; }
+    .article-tab .count-badge { display: inline-block; margin-left: 6px; padding: 1px 6px; border-radius: 8px; background: rgba(56,189,248,0.2); font-size: 0.6rem; font-weight: 800; }
+    .article-list { max-height: 480px; overflow-y: auto; }
+    .article-row { display: flex; flex-direction: column; padding: 8px 12px; border-radius: 8px; margin-bottom: 6px; background: var(--article-bg); border: 1px solid rgba(56,189,248,0.08); }
+    .article-row a { color: var(--text-primary); text-decoration: none; font-size: 0.78rem; font-weight: 600; line-height: 1.4; }
+    .article-row a:hover { color: #38bdf8; text-decoration: underline; }
+    .article-row .meta-row { display: flex; gap: 8px; align-items: center; margin-top: 4px; flex-wrap: wrap; }
+    .article-source-pill { font-size: 0.55rem; padding: 1px 6px; border-radius: 4px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; font-family: 'Courier New', monospace; }
+    .source-pill-rss { background: #38bdf8; color: white; }
+    .source-pill-gdelt { background: #8b5cf6; color: white; }
+    .source-pill-newsapi { background: #10b981; color: white; }
+    .source-pill-brave { background: #f97316; color: white; }
+    .source-pill-telegram { background: #0ea5e9; color: white; }
+    .source-pill-bluesky { background: #06b6d4; color: white; }
+    .source-pill-reddit { background: #f87171; color: white; }
+    .article-date { font-size: 0.6rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+
+    /* ── KNOWLEDGE LIBRARY ── */
+    .kb-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; }
+    .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
+    .kb-item {
+        border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px;
+        background: var(--article-bg); cursor: pointer; transition: all 0.2s;
+    }
+    .kb-item:hover { border-color: #38bdf8; box-shadow: 0 0 14px rgba(56,189,248,0.10); }
+    .kb-summary { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .kb-icon { font-size: 1.1rem; }
+    .kb-title { font-size: 0.82rem; font-weight: 800; color: var(--text-primary); flex: 1; }
+    .kb-arrow { font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
+    .kb-item[open] .kb-arrow { transform: rotate(90deg); }
+    .kb-body { font-size: 0.75rem; line-height: 1.6; color: var(--text-secondary); margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(56,189,248,0.12); font-family: 'Times New Roman', serif; }
+
+    /* ── PAGE FOOTER (3-column canonical) ── */
+    .page-footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; padding: 18px; margin-top: 14px; background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; }
+    .footer-col h4 { font-size: 0.7rem; letter-spacing: 1.5px; text-transform: uppercase; color: #38bdf8; margin-bottom: 8px; font-family: 'Courier New', monospace; }
+    .footer-col p, .footer-col a { font-size: 0.7rem; line-height: 1.55; color: var(--text-muted); text-decoration: none; display: block; margin-bottom: 4px; }
+    .footer-col a:hover { color: #38bdf8; }
+    @media (max-width: 800px) { .page-footer-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ── HEADER ── -->
+<header>
+    <div class="header-left">
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+        <a href="rhetoric-europe.html" class="back-link" data-i18n="backLink">← Back to Europe</a>
+    </div>
+    <div class="header-center">
+        <div class="header-flag" data-i18n="pageFlag">🇧🇾 BELARUS</div>
+        <div class="header-title" data-i18n="pageTitle">BELARUS PRESSURE TRACKER</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Lukashenko Regime · Russian Forces · NATO Border · SCO Trilateral · Succession Watch</div>
+        <div class="header-timestamp">Last scan: <span id="lastUpdated">Loading...</span></div>
+    </div>
+    <div class="header-right">
+        <div class="pressure-badge" data-i18n="badgeLabel">⚡ MULTI-VECTOR PRESSURE</div>
+        <div class="lang-group">
+            <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+            <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
+            <button class="lang-btn" onclick="setLang('de',this)">DE</button>
+            <button class="lang-btn" onclick="setLang('ru',this)">RU</button>
+        </div>
+        <div class="theme-row">
+            <span class="theme-label" data-i18n="themeLabel">THEME</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()" checked/>
+                <span class="theme-slider"></span>
+            </label>
+        </div>
+    </div>
+</header>
+
+<div class="page-with-sidebar">
+
+<!-- ── NAV SIDEBAR ── -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label" data-i18n="navDashboards">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="commodities.html" class="nav-btn commodity-btn">
+        <span class="nav-btn-label">🛢️ Commodities</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label" data-i18n="navEuropeRhetoric">Europe Rhetoric</div>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">📡 Europe Monitor</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-russia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇷🇺 Russia Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-greenland.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🧊 Greenland Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-belarus.html" class="nav-btn rhetoric-btn current-page">
+        <span class="nav-btn-label">🇧🇾 Belarus Tracker</span>
+        <span class="nav-btn-status">◉ You are here</span>
+    </a>
+    <a href="rhetoric-ukraine.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇺🇦 Ukraine Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="belarus-stability.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🇧🇾 Belarus Stability</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+</nav>
+
+<!-- ── MAIN CONTENT ── -->
+<div style="flex:1;min-width:0;">
+
+<!-- THEATRE BANNER -->
+<div class="theatre-banner" id="theatreBanner">
+    <div>
+        <div class="theatre-score-big" id="theatreScore" style="color:#38bdf8;">--</div>
+        <div class="theatre-score-label" data-i18n="scoreLabel">PRESSURE SCORE / 100</div>
+        <div class="theatre-badge" id="theatreBadge" style="background:#6b7280;">--</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:center;">
+        <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;letter-spacing:1.5px;text-transform:uppercase;" data-i18n="postureLabel">📊 Belarus Posture Mix</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
+            <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(220,38,38,0.3);background:rgba(220,38,38,0.06);">
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">☢️ NUCLEAR</div>
+                <div style="font-size:0.78rem;font-weight:800;" id="vecNuclear">--</div>
+            </div>
+            <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(56,189,248,0.3);background:rgba(56,189,248,0.06);">
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">🛡️ NATO BORDER</div>
+                <div style="font-size:0.78rem;font-weight:800;" id="vecNato">--</div>
+            </div>
+            <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(161,98,7,0.3);background:rgba(161,98,7,0.06);">
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">🤝 SCO AXIS</div>
+                <div style="font-size:0.78rem;font-weight:800;" id="vecSco">--</div>
+            </div>
+            <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(220,38,38,0.3);background:rgba(220,38,38,0.06);">
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">👤 SUCCESSION</div>
+                <div style="font-size:0.78rem;font-weight:800;" id="vecSuccession">--</div>
+            </div>
+            <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(245,158,11,0.3);background:rgba(245,158,11,0.06);">
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">🛢️ COMMODITY</div>
+                <div style="font-size:0.78rem;font-weight:800;" id="vecCommodity">--</div>
+            </div>
+        </div>
+    </div>
+    <div class="theatre-right">
+        <div class="theatre-escalation-label-text" data-i18n="theatreLevel">THEATRE LEVEL</div>
+        <div class="theatre-level-display" id="theatreLevelDisplay" style="color:#38bdf8;">--</div>
+        <div class="theatre-level-desc" id="theatreLevelDesc">--</div>
+        <div class="theatre-scan-info">
+            <span data-i18n="lastScan">Last scan</span>: <span id="scanTime">--</span><br>
+            <span id="articleCount">--</span> <span data-i18n="articlesLabel">articles analyzed</span>
+        </div>
+    </div>
+</div>
+
+<!-- COMMODITY EXPOSURE CARD -->
+<div class="commodity-card" id="commodityCard" style="display:none;">
+    <div class="interp-card-header">
+        <span style="font-size:1rem;">🛢️</span>
+        <div style="flex:1;">
+            <div class="interp-card-title" data-i18n="commodityLabel">COMMODITY EXPOSURE — POTASH · ENERGY TRANSIT</div>
+            <div class="interp-card-subtitle" id="commodityHeadline">--</div>
+        </div>
+        <span class="commodity-pressure-pill" id="commodityPill">--</span>
+    </div>
+    <div class="commodity-context" id="commodityContext">--</div>
+    <a href="commodities.html#potash" class="commodity-link" data-i18n="viewCommodities">View Full Commodity Tracker →</a>
+</div>
+
+<!-- SO WHAT CARD -->
+<div class="interp-so-what" id="soWhatCard" style="display:none;">
+    <div class="interp-scenario-header">
+        <span class="interp-scenario-icon" id="soWhatIcon">⚪</span>
+        <div>
+            <div class="interp-scenario-label" data-i18n="soWhatLabel">BELARUS STRATEGIC ASSESSMENT</div>
+            <div class="interp-scenario-value" id="soWhatScenario">--</div>
+        </div>
+    </div>
+    <div class="interp-section-title" data-i18n="soWhatAssessment">ASSESSMENT</div>
+    <div class="interp-text" id="soWhatText">--</div>
+    <div class="interp-confidence-note" id="soWhatNote"></div>
+</div>
+
+<!-- RED LINES CARD -->
+<div class="red-lines-card" id="redLinesCard">
+    <div class="interp-card-header">
+        <span style="font-size:1rem;">🚨</span>
+        <div style="flex:1;">
+            <div class="interp-card-title" data-i18n="redLinesLabel">RED LINE PROXIMITY</div>
+            <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Belarus Escalation Triggers — Nuclear · NATO Border · Succession · SCO Axis · Hybrid</div>
+        </div>
+        <div style="display:flex;gap:16px;">
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="breached">BREACHED</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#38bdf8;" id="redLineApproachingCount">0</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="approaching">APPROACHING</div>
+            </div>
+        </div>
+    </div>
+    <div id="redLineItems"><div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div></div>
+</div>
+
+<!-- DIPLOMATIC TRACK / GREEN LINES CARD -->
+<div class="diplomatic-track-card" id="diplomaticTrackCard">
+    <div class="interp-card-header">
+        <span style="font-size:1rem;">🕊️</span>
+        <div style="flex:1;">
+            <div class="interp-card-title" data-i18n="diplomaticLabel">DIPLOMATIC TRACK</div>
+            <div class="interp-card-subtitle" data-i18n="diplomaticSubtitle">Belarus Off-Ramp Signals — Succession · Prisoner Release · US-Belarus Re-engagement</div>
+        </div>
+        <div style="display:flex;gap:16px;">
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#10b981;" id="greenLineActiveCount">0</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="active">ACTIVE</div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:1.4rem;font-weight:900;color:#84cc16;" id="greenLineSignaledCount">0</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="signaled">SIGNALED</div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-bottom:14px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:#065f46;font-family:'Courier New',monospace;" data-i18n="diplomaticMomentum">DIPLOMATIC MOMENTUM</span>
+            <span style="font-size:0.85rem;font-weight:800;color:#10b981;" id="diplomaticScoreDisplay">0/100</span>
+        </div>
+        <div class="diplomatic-score-bar"><div class="diplomatic-score-fill" id="diplomaticScoreFill" style="width:0%;"></div></div>
+        <div style="font-size:0.72rem;font-weight:700;font-family:'Times New Roman',serif;margin-top:4px;" id="diplomaticScenarioLabel"></div>
+    </div>
+    <div id="greenLineItems"><div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div></div>
+</div>
+
+<!-- ACTORS — 7 actor grid -->
+<div class="section-card">
+    <div class="section-title" data-i18n="actorsTitle">🎭 BELARUS RHETORIC ACTORS — 7-ACTOR FRAMEWORK</div>
+    <div class="actor-grid" id="actorGrid">
+        <div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;grid-column:1/-1;" data-i18n="loading">Loading...</div>
+    </div>
+</div>
+
+<!-- ESCALATION LADDER -->
+<div class="section-card">
+    <div class="section-title" data-i18n="ladderTitle">🪜 PRESSURE LADDER</div>
+    <div class="ladder-row" id="ladderRow"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified">Articles classified: --</div>
+        <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
+            🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+        </button>
+    </div>
+</div>
+
+<!-- HISTORY CHART -->
+<div class="history-chart-card" id="historyCard">
+    <div class="history-chart-header">
+        <span class="history-chart-title" data-i18n="historyTitle">📈 RHETORIC TREND</span>
+        <div class="history-toggle-group">
+            <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')">7 DAY</button>
+            <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')">30 DAY</button>
+            <button class="history-toggle-btn" id="btnCompare" onclick="setHistoryView('compare')" data-i18n="compareEurope">COMPARE EUROPE</button>
+        </div>
+    </div>
+    <div class="history-chart-wrap"><canvas id="historyChart"></canvas>
+        <div class="history-empty" id="historyEmpty" style="display:none;" data-i18n="historyEmptyText">📡 Collecting data — first snapshot saves on next scan cycle</div>
+    </div>
+    <div class="history-legend" id="historyLegend"></div>
+</div>
+
+<!-- ARTICLES SECTION (5 tabs) -->
+<div class="articles-card">
+    <div class="section-title" data-i18n="articlesSourcesTitle">📰 ARTICLES &amp; INTELLIGENCE FEEDS</div>
+    <div class="article-tabs" id="articleTabs">
+        <button class="article-tab active" data-tab="english" onclick="setArticleTab('english')"><span data-i18n="tabEnglish">English</span> <span class="count-badge" id="countEnglish">0</span></button>
+        <button class="article-tab" data-tab="russian" onclick="setArticleTab('russian')"><span data-i18n="tabRussian">Russian</span> <span class="count-badge" id="countRussian">0</span></button>
+        <button class="article-tab" data-tab="regional" onclick="setArticleTab('regional')"><span data-i18n="tabRegional">Regional</span> <span class="count-badge" id="countRegional">0</span></button>
+        <button class="article-tab" data-tab="social" onclick="setArticleTab('social')"><span data-i18n="tabSocial">Social</span> <span class="count-badge" id="countSocial">0</span></button>
+        <button class="article-tab" data-tab="all" onclick="setArticleTab('all')"><span data-i18n="tabAll">All</span> <span class="count-badge" id="countAll">0</span></button>
+    </div>
+    <div class="article-list" id="articleList">
+        <div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div>
+    </div>
+</div>
+
+<!-- KNOWLEDGE LIBRARY -->
+<div class="kb-card">
+    <div class="section-title" data-i18n="kbTitle">📚 KNOWLEDGE LIBRARY — BELARUS</div>
+    <div class="kb-grid">
+        <details class="kb-item">
+            <summary class="kb-summary"><span class="kb-icon">👤</span><span class="kb-title" data-i18n="kbLukashenkoTitle">Lukashenko Regime &amp; Succession</span><span class="kb-arrow">▶</span></summary>
+            <div class="kb-body" data-i18n="kbLukashenkoBody">Aleksandr Lukashenko has ruled Belarus since 1994 — Europe's longest-serving authoritarian leader. The 2020 election protests, brutally suppressed, fundamentally reshaped his rhetorical posture: post-2020, the regime has aligned ever more deeply with Moscow. Watch for: succession signals, health language ("medical leave," "rest"), opposition crackdown intensity, Article 130 (extremism) prosecution rates, KGB activity, and propaganda tone shifts on @pul_1 (presidential pool channel). Acute health events would trigger a crisis window Russia is positioned to exploit for deeper integration — most likely outcome: a Russian-backed candidate from the security services apparatus.</div>
+        </details>
+        <details class="kb-item">
+            <summary class="kb-summary"><span class="kb-icon">☢️</span><span class="kb-title" data-i18n="kbNuclearTitle">Russian Tactical Nuclear Sharing</span><span class="kb-arrow">▶</span></summary>
+            <div class="kb-body" data-i18n="kbNuclearBody">Russia has stationed tactical nuclear weapons (Iskander-M systems with nuclear warheads) on Belarusian territory since 2023, the first such deployment outside Russian territory in the post-Cold War era. The primary storage facility is at Asipovichy. This compresses NATO decision-making timelines on the eastern flank and gives Russia an additional theater for coercion against Poland and the Baltics. Watch for: warhead count growth beyond the 2023 baseline, expanded storage facility construction, additional Iskander brigades, or new weapons systems (Oreshnik medium-range mentioned by Lukashenko). Nuclear posture changes are the single most significant escalation trigger in this theater.</div>
+        </details>
+        <details class="kb-item">
+            <summary class="kb-summary"><span class="kb-icon">🛡️</span><span class="kb-title" data-i18n="kbSuwalkiTitle">The Suwałki Gap</span><span class="kb-arrow">▶</span></summary>
+            <div class="kb-body" data-i18n="kbSuwalkiBody">The Suwałki Gap is a 65-mile (104 km) corridor along the Polish-Lithuanian border, sandwiched between Russian Kaliningrad oblast and Belarus. It is the only land bridge connecting Poland to Lithuania, Latvia, and Estonia. Belarusian or Russian forces postured to seize or interdict the Gap would represent the most strategically sensitive geography on NATO's entire eastern flank — physically severing the Baltic states from NATO ground reinforcement. Joint Russia-Belarus exercises like Zapad have repeatedly rehearsed scenarios in this geography. Watch for: Iskander deployments near Hrodna, force concentrations at Asipovichy, exercise tempo, S-400 movements.</div>
+        </details>
+        <details class="kb-item">
+            <summary class="kb-summary"><span class="kb-icon">🤝</span><span class="kb-title" data-i18n="kbScoTitle">SCO Trilateral &amp; Iran Cooperation</span><span class="kb-arrow">▶</span></summary>
+            <div class="kb-body" data-i18n="kbScoBody">Belarus achieved full SCO membership in 2024, becoming the first European state in the bloc. The April 27, 2026 SCO Defense Ministers meeting in Kyrgyzstan marked a watershed moment: Belarus DM Khrenin, Russia DM Belousov, and Iran Deputy DM Talaei-Nik publicly affirmed trilateral cooperation. This represents Iran's first formal defense relationship with a state on NATO's perimeter. Watch for: drone technology transfer (Shahed/Mohajer pattern), missile component shipments, joint exercise language, named envoy meetings, SCO secondary-meeting readouts. Iranian presence on Belarusian territory would be a strategic earthquake.</div>
+        </details>
+        <details class="kb-item">
+            <summary class="kb-summary"><span class="kb-icon">🏗️</span><span class="kb-title" data-i18n="kbChinaTitle">China-Belarus Strategic Anchor</span><span class="kb-arrow">▶</span></summary>
+            <div class="kb-body" data-i18n="kbChinaBody">China has cultivated Belarus as a continental anchor through three vectors: SCO membership formalization (2024), the Great Stone industrial park (China's largest such project in Europe), and Belt &amp; Road Initiative rail routes. These rail routes are critical for sanctions bypass — Belarusian potash and petroleum products move via Russian ports and Chinese rail to global markets. PLA military cooperation MoUs exist but remain modest in scope. Watch for: Great Stone expansion announcements, joint exercises, BRI rail reconfigurations, technology transfer (especially dual-use systems). PRC formalization of Belarus as a strategic anchor would cement sanctions-bypass infrastructure permanently.</div>
+        </details>
+        <details class="kb-item">
+            <summary class="kb-summary"><span class="kb-icon">🚪</span><span class="kb-title" data-i18n="kbHybridTitle">Migrant Weaponization &amp; Hybrid Pressure</span><span class="kb-arrow">▶</span></summary>
+            <div class="kb-body" data-i18n="kbHybridBody">Belarus pioneered state-organized migrant funneling as a hybrid pressure tool against NATO neighbors. The 2021 crisis saw thousands of third-country nationals (primarily Iraqi Kurds, Afghans, Syrians) channeled to the Polish, Lithuanian, and Latvian borders. Both Poland and Lithuania closed border crossings and deployed military to the frontier. The pattern is reusable: any deterioration in regime relations with the EU may trigger renewed funneling. Watch for: visa relaxations to source countries, charter flights to Minsk, migrant camp formation near border, NATO neighbor border emergency declarations. This is asymmetric warfare disguised as a humanitarian dilemma.</div>
+        </details>
+    </div>
+</div>
+
+</div><!-- end main content -->
+</div><!-- end page-with-sidebar -->
+
+<!-- 3-COLUMN FOOTER -->
+<div class="page-footer-grid">
+    <div class="footer-col">
+        <h4 data-i18n="footerSourcesTitle">Data Sources</h4>
+        <p data-i18n="footerSources">RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave fallback when GDELT rate-limits.</p>
+    </div>
+    <div class="footer-col">
+        <h4 data-i18n="footerMethodTitle">Methodology</h4>
+        <p data-i18n="footerMethod">Pressure score = sum of actor escalation × weight. 7-actor framework. 8 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.</p>
+    </div>
+    <div class="footer-col">
+        <h4 data-i18n="footerDisclaimerTitle">Disclaimer</h4>
+        <p data-i18n="footerDisclaimer">Open-source OSINT research. Not a prediction. Not for operational use. Verify through official channels. Asifah Analytics · Belarus Pressure Tracker v1.0.0</p>
+    </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════════════════════════════
+const API_BASE = 'https://asifa-europe-backend.onrender.com';
+const BELARUS_API = API_BASE + '/api/rhetoric/belarus';
+
+const ESCALATION_LEVELS = {
+    0: { label: 'Baseline',   color: '#6b7280', desc: 'Below escalation threshold' },
+    1: { label: 'Rhetoric',   color: '#3b82f6', desc: 'Standard pressure language, formulaic warnings' },
+    2: { label: 'Warning',    color: '#f59e0b', desc: 'Elevated tempo, escalatory language' },
+    3: { label: 'Crisis',     color: '#f97316', desc: 'Named exercises, explicit threat signals' },
+    4: { label: 'Coercion',   color: '#ef4444', desc: 'Active nuclear signaling, NATO border incident' },
+    5: { label: 'Conflict',   color: '#dc2626', desc: 'Confirmed military action, Article 5 territory' },
+};
+
+// 7 Belarus actors in canonical order
+const BELARUS_ACTORS = [
+    { key: 'lukashenko_regime',       css: 'lukashenko-regime' },
+    { key: 'russian_forces_in_belarus', css: 'russian-forces' },
+    { key: 'belarusian_opposition',   css: 'opposition' },
+    { key: 'nato_border_states',      css: 'nato-border' },
+    { key: 'iran_belarus_axis',       css: 'iran-axis' },
+    { key: 'china_belarus_axis',      css: 'china-axis' },
+    { key: 'ukraine_border_signals',  css: 'ukraine-border' },
+];
+
+// ══════════════════════════════════════════════════════════════
+// TRANSLATIONS — EN / FR / DE / RU
+// ══════════════════════════════════════════════════════════════
+const T = {
+    en: {
+        backLink: '← Back to Europe',
+        pageFlag: '🇧🇾 BELARUS',
+        pageTitle: 'BELARUS PRESSURE TRACKER',
+        pageSubtitle: 'Lukashenko Regime · Russian Forces · NATO Border · SCO Trilateral · Succession Watch',
+        badgeLabel: '⚡ MULTI-VECTOR PRESSURE',
+        themeLabel: 'THEME',
+        scoreLabel: 'PRESSURE SCORE / 100',
+        theatreLevel: 'THEATRE LEVEL',
+        articlesLabel: 'articles analyzed',
+        lastScan: 'Last scan',
+        postureLabel: '📊 BELARUS POSTURE MIX',
+        actorsTitle: '🎭 BELARUS RHETORIC ACTORS — 7-ACTOR FRAMEWORK',
+        commodityLabel: 'COMMODITY EXPOSURE — POTASH · ENERGY TRANSIT',
+        viewCommodities: 'View Full Commodity Tracker →',
+        soWhatLabel: 'BELARUS STRATEGIC ASSESSMENT',
+        soWhatAssessment: 'ASSESSMENT',
+        redLinesLabel: 'RED LINE PROXIMITY',
+        redLinesSubtitle: 'Belarus Escalation Triggers — Nuclear · NATO Border · Succession · SCO Axis · Hybrid',
+        diplomaticLabel: 'DIPLOMATIC TRACK',
+        diplomaticSubtitle: 'Belarus Off-Ramp Signals — Succession · Prisoner Release · US-Belarus Re-engagement',
+        diplomaticMomentum: 'DIPLOMATIC MOMENTUM',
+        breached: 'BREACHED', approaching: 'APPROACHING', active: 'ACTIVE', signaled: 'SIGNALED',
+        ladderTitle: '🪜 PRESSURE LADDER',
+        refreshScan: 'Refresh Scan',
+        historyTitle: '📈 RHETORIC TREND',
+        compareEurope: 'COMPARE EUROPE',
+        historyEmptyText: '📡 Collecting data — first snapshot saves on next scan cycle',
+        articlesSourcesTitle: '📰 ARTICLES & INTELLIGENCE FEEDS',
+        tabEnglish: 'English', tabRussian: 'Russian (Беларуская)', tabRegional: 'Regional', tabSocial: 'Social', tabAll: 'All',
+        kbTitle: '📚 KNOWLEDGE LIBRARY — BELARUS',
+        kbLukashenkoTitle: 'Lukashenko Regime & Succession',
+        kbNuclearTitle: 'Russian Tactical Nuclear Sharing',
+        kbSuwalkiTitle: 'The Suwałki Gap',
+        kbScoTitle: 'SCO Trilateral & Iran Cooperation',
+        kbChinaTitle: 'China-Belarus Strategic Anchor',
+        kbHybridTitle: 'Migrant Weaponization & Hybrid Pressure',
+        loading: 'Loading...',
+        navDashboards: 'Dashboards', navEuropeRhetoric: 'Europe Rhetoric',
+        footerSourcesTitle: 'Data Sources',
+        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave fallback when GDELT rate-limits.',
+        footerMethodTitle: 'Methodology',
+        footerMethod: 'Pressure score = sum of actor escalation × weight. 7-actor framework. 8 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.',
+        footerDisclaimerTitle: 'Disclaimer',
+        footerDisclaimer: 'Open-source OSINT research. Not a prediction. Not for operational use. Verify through official channels. Asifah Analytics · Belarus Pressure Tracker v1.0.0',
+    },
+    fr: {
+        backLink: '← Retour à l\'Europe',
+        pageFlag: '🇧🇾 BIÉLORUSSIE',
+        pageTitle: 'SUIVI DE PRESSION — BIÉLORUSSIE',
+        pageSubtitle: 'Régime Loukachenko · Forces russes · Frontière OTAN · Trilatérale OCS · Veille de succession',
+        badgeLabel: '⚡ PRESSION MULTI-VECTEURS',
+        themeLabel: 'THÈME',
+        scoreLabel: 'SCORE DE PRESSION / 100',
+        theatreLevel: 'NIVEAU DU THÉÂTRE',
+        articlesLabel: 'articles analysés',
+        lastScan: 'Dernière analyse',
+        postureLabel: '📊 POSTURE BIÉLORUSSE',
+        actorsTitle: '🎭 ACTEURS RHÉTORIQUES — CADRE À 7 ACTEURS',
+        commodityLabel: 'EXPOSITION MATIÈRES — POTASSE · TRANSIT ÉNERGIE',
+        viewCommodities: 'Voir le Suivi des Matières →',
+        soWhatLabel: 'ÉVALUATION STRATÉGIQUE — BIÉLORUSSIE',
+        soWhatAssessment: 'ÉVALUATION',
+        redLinesLabel: 'PROXIMITÉ DES LIGNES ROUGES',
+        redLinesSubtitle: 'Déclencheurs d\'escalade — Nucléaire · Frontière OTAN · Succession · Axe OCS · Hybride',
+        diplomaticLabel: 'VOIE DIPLOMATIQUE',
+        diplomaticSubtitle: 'Signaux de désescalade — Succession · Libération de prisonniers · Réengagement US-Biélorussie',
+        diplomaticMomentum: 'DYNAMIQUE DIPLOMATIQUE',
+        breached: 'FRANCHIE', approaching: 'EN APPROCHE', active: 'ACTIVE', signaled: 'SIGNALÉE',
+        ladderTitle: '🪜 ÉCHELLE DE PRESSION',
+        refreshScan: 'Actualiser l\'analyse',
+        historyTitle: '📈 TENDANCE RHÉTORIQUE',
+        compareEurope: 'COMPARER EUROPE',
+        historyEmptyText: '📡 Collecte de données — premier instantané au prochain cycle d\'analyse',
+        articlesSourcesTitle: '📰 ARTICLES & FLUX DE RENSEIGNEMENT',
+        tabEnglish: 'Anglais', tabRussian: 'Russe (Беларуская)', tabRegional: 'Régional', tabSocial: 'Social', tabAll: 'Tous',
+        kbTitle: '📚 BIBLIOTHÈQUE DE CONNAISSANCES — BIÉLORUSSIE',
+        kbLukashenkoTitle: 'Régime Loukachenko & Succession',
+        kbNuclearTitle: 'Partage nucléaire tactique russe',
+        kbSuwalkiTitle: 'Le couloir de Suwałki',
+        kbScoTitle: 'Trilatérale OCS & Coopération iranienne',
+        kbChinaTitle: 'Ancrage stratégique Chine-Biélorussie',
+        kbHybridTitle: 'Instrumentalisation migratoire & Pression hybride',
+        loading: 'Chargement...',
+        navDashboards: 'Tableaux de bord', navEuropeRhetoric: 'Rhétorique Europe',
+        footerSourcesTitle: 'Sources de données',
+        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave en relais lors des limitations GDELT.',
+        footerMethodTitle: 'Méthodologie',
+        footerMethod: 'Score = somme des escalades par acteur × pondération. Cadre à 7 acteurs. 8 lignes rouges, 5 lignes vertes. Modificateur diplomatique jusqu\'à -25. Actualisé toutes les 6 heures.',
+        footerDisclaimerTitle: 'Avertissement',
+        footerDisclaimer: 'Recherche OSINT en source ouverte. Pas une prédiction. Pas à usage opérationnel. Vérifier via les canaux officiels. Asifah Analytics · Suivi Biélorussie v1.0.0',
+    },
+    de: {
+        backLink: '← Zurück zu Europa',
+        pageFlag: '🇧🇾 BELARUS',
+        pageTitle: 'BELARUS DRUCKTRACKER',
+        pageSubtitle: 'Lukaschenko-Regime · Russische Streitkräfte · NATO-Grenze · SCO-Trilaterale · Nachfolgewache',
+        badgeLabel: '⚡ MULTIVEKTORIELLER DRUCK',
+        themeLabel: 'THEMA',
+        scoreLabel: 'DRUCKWERT / 100',
+        theatreLevel: 'THEATER-NIVEAU',
+        articlesLabel: 'Artikel analysiert',
+        lastScan: 'Letzter Scan',
+        postureLabel: '📊 BELARUS-HALTUNG',
+        actorsTitle: '🎭 BELARUS RHETORIK-AKTEURE — 7-AKTEUR-RAHMEN',
+        commodityLabel: 'ROHSTOFF-EXPOSITION — KALI · ENERGIETRANSIT',
+        viewCommodities: 'Vollen Rohstoff-Tracker ansehen →',
+        soWhatLabel: 'STRATEGISCHE BEWERTUNG — BELARUS',
+        soWhatAssessment: 'BEWERTUNG',
+        redLinesLabel: 'NÄHE ZU ROTEN LINIEN',
+        redLinesSubtitle: 'Eskalationsauslöser — Nuklear · NATO-Grenze · Nachfolge · SCO-Achse · Hybrid',
+        diplomaticLabel: 'DIPLOMATISCHE SPUR',
+        diplomaticSubtitle: 'Deeskalationssignale — Nachfolge · Gefangenenfreilassung · US-Belarus-Wiederengagement',
+        diplomaticMomentum: 'DIPLOMATISCHE DYNAMIK',
+        breached: 'ÜBERSCHRITTEN', approaching: 'ANNÄHERND', active: 'AKTIV', signaled: 'SIGNALISIERT',
+        ladderTitle: '🪜 DRUCKLEITER',
+        refreshScan: 'Scan aktualisieren',
+        historyTitle: '📈 RHETORISCHER TREND',
+        compareEurope: 'EUROPA VERGLEICHEN',
+        historyEmptyText: '📡 Datenerfassung — erste Aufnahme im nächsten Scan-Zyklus',
+        articlesSourcesTitle: '📰 ARTIKEL & NACHRICHTENQUELLEN',
+        tabEnglish: 'Englisch', tabRussian: 'Russisch (Беларуская)', tabRegional: 'Regional', tabSocial: 'Sozial', tabAll: 'Alle',
+        kbTitle: '📚 WISSENSBIBLIOTHEK — BELARUS',
+        kbLukashenkoTitle: 'Lukaschenko-Regime & Nachfolge',
+        kbNuclearTitle: 'Russische taktische Nuklearteilhabe',
+        kbSuwalkiTitle: 'Die Suwałki-Lücke',
+        kbScoTitle: 'SCO-Trilaterale & Iran-Kooperation',
+        kbChinaTitle: 'China-Belarus strategischer Anker',
+        kbHybridTitle: 'Migrationswaffe & Hybrider Druck',
+        loading: 'Wird geladen...',
+        navDashboards: 'Dashboards', navEuropeRhetoric: 'Europa-Rhetorik',
+        footerSourcesTitle: 'Datenquellen',
+        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave als Reserve bei GDELT-Ratenbegrenzungen.',
+        footerMethodTitle: 'Methodik',
+        footerMethod: 'Druckwert = Summe der Akteur-Eskalation × Gewichtung. 7-Akteur-Rahmen. 8 rote Linien, 5 grüne Linien. Diplomatischer Modifikator bis zu -25 Punkte. Alle 6 Stunden aktualisiert.',
+        footerDisclaimerTitle: 'Haftungsausschluss',
+        footerDisclaimer: 'Open-Source OSINT-Forschung. Keine Vorhersage. Nicht für operativen Einsatz. Über offizielle Kanäle verifizieren. Asifah Analytics · Belarus-Tracker v1.0.0',
+    },
+    ru: {
+        backLink: '← Назад в Европу',
+        pageFlag: '🇧🇾 БЕЛАРУСЬ',
+        pageTitle: 'ТРЕКЕР ДАВЛЕНИЯ — БЕЛАРУСЬ',
+        pageSubtitle: 'Режим Лукашенко · Российские войска · Граница НАТО · Трёхсторонняя ШОС · Наблюдение за преемственностью',
+        badgeLabel: '⚡ МНОГОВЕКТОРНОЕ ДАВЛЕНИЕ',
+        themeLabel: 'ТЕМА',
+        scoreLabel: 'ОЦЕНКА ДАВЛЕНИЯ / 100',
+        theatreLevel: 'УРОВЕНЬ ТЕАТРА',
+        articlesLabel: 'статей проанализировано',
+        lastScan: 'Последнее сканирование',
+        postureLabel: '📊 ПОЗИЦИЯ БЕЛАРУСИ',
+        actorsTitle: '🎭 РИТОРИЧЕСКИЕ АКТОРЫ БЕЛАРУСИ — РАМКА 7 АКТОРОВ',
+        commodityLabel: 'СЫРЬЕВАЯ ЭКСПОЗИЦИЯ — КАЛИЙ · ЭНЕРГОТРАНЗИТ',
+        viewCommodities: 'Полный сырьевой трекер →',
+        soWhatLabel: 'СТРАТЕГИЧЕСКАЯ ОЦЕНКА — БЕЛАРУСЬ',
+        soWhatAssessment: 'ОЦЕНКА',
+        redLinesLabel: 'БЛИЗОСТЬ КРАСНЫХ ЛИНИЙ',
+        redLinesSubtitle: 'Триггеры эскалации — Ядерные · Граница НАТО · Преемственность · Ось ШОС · Гибридные',
+        diplomaticLabel: 'ДИПЛОМАТИЧЕСКИЙ ТРЕК',
+        diplomaticSubtitle: 'Сигналы деэскалации — Преемственность · Освобождение узников · Восстановление США-Беларусь',
+        diplomaticMomentum: 'ДИПЛОМАТИЧЕСКАЯ ДИНАМИКА',
+        breached: 'ПРОЙДЕНА', approaching: 'ПРИБЛИЖАЕТСЯ', active: 'АКТИВНА', signaled: 'ОБОЗНАЧЕНА',
+        ladderTitle: '🪜 ЛЕСТНИЦА ДАВЛЕНИЯ',
+        refreshScan: 'Обновить сканирование',
+        historyTitle: '📈 РИТОРИЧЕСКАЯ ДИНАМИКА',
+        compareEurope: 'СРАВНИТЬ ЕВРОПУ',
+        historyEmptyText: '📡 Сбор данных — первый снимок при следующем цикле',
+        articlesSourcesTitle: '📰 СТАТЬИ И ИСТОЧНИКИ',
+        tabEnglish: 'Английский', tabRussian: 'Русский (Беларуская)', tabRegional: 'Региональные', tabSocial: 'Соцсети', tabAll: 'Все',
+        kbTitle: '📚 БИБЛИОТЕКА ЗНАНИЙ — БЕЛАРУСЬ',
+        kbLukashenkoTitle: 'Режим Лукашенко и преемственность',
+        kbNuclearTitle: 'Российское тактическое ядерное размещение',
+        kbSuwalkiTitle: 'Сувалкский коридор',
+        kbScoTitle: 'Трёхсторонняя ШОС и сотрудничество с Ираном',
+        kbChinaTitle: 'Китай-Беларусь — стратегический якорь',
+        kbHybridTitle: 'Миграционное оружие и гибридное давление',
+        loading: 'Загрузка...',
+        navDashboards: 'Дашборды', navEuropeRhetoric: 'Риторика Европы',
+        footerSourcesTitle: 'Источники данных',
+        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave при ограничениях GDELT.',
+        footerMethodTitle: 'Методология',
+        footerMethod: 'Оценка давления = сумма эскалации акторов × вес. Рамка из 7 акторов. 8 красных линий, 5 зелёных. Дипломатический модификатор до -25 баллов. Обновление каждые 6 часов.',
+        footerDisclaimerTitle: 'Отказ от ответственности',
+        footerDisclaimer: 'OSINT-исследование на основе открытых источников. Не прогноз. Не для оперативного использования. Проверяйте по официальным каналам. Asifah Analytics · Трекер Беларуси v1.0.0',
+    },
+};
+
+let currentLang = 'en';
+
+function setLang(lang, btn) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    applyTranslations();
+    if (currentData) renderAll(currentData);
+}
+
+function applyTranslations() {
+    const tr = T[currentLang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (tr[key] !== undefined) el.textContent = tr[key];
+    });
+}
+
+// ══════════════════════════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════════════════════════
+function loadTheme() {
+    const saved = localStorage.getItem('asifah-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    const toggle = document.getElementById('themeToggle');
+    if (toggle) toggle.checked = saved === 'dark';
+}
+function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    const next = current === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('asifah-theme', next);
+}
+
+// ══════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════
+function lvl(n) { return ESCALATION_LEVELS[Math.min(Math.max(n || 0, 0), 5)] || ESCALATION_LEVELS[0]; }
+
+function levelBadge(level, label) {
+    const lv = lvl(level);
+    return `<span class="level-badge" style="background:${lv.color};">L${level} ${label || lv.label}</span>`;
+}
+
+function fmtDate(ts) {
+    if (!ts) return '—';
+    try { return new Date(ts).toLocaleDateString('en-US', {month:'short', day:'numeric'}); }
+    catch { return ts; }
+}
+
+let currentData = null;
+let _historyChart = null;
+let _historyView = '7d';
+let _allArticles = []; // accumulated articles for tabs
+
+// ══════════════════════════════════════════════════════════════
+// RENDER ACTORS
+// ══════════════════════════════════════════════════════════════
+function renderActors(data) {
+    const actors = data.actor_summaries || data.actors || {};
+    const grid = document.getElementById('actorGrid');
+    grid.innerHTML = '';
+
+    BELARUS_ACTORS.forEach(({key, css}) => {
+        const a = actors[key];
+        if (!a) return;
+        const articles = (a.top_articles || []).slice(0, 3);
+        const articlesHTML = articles.map(art => `
+            <div class="article-item">
+                <a href="${art.url || '#'}" target="_blank" class="article-link">${(art.title || '').slice(0, 95)}${art.title?.length > 95 ? '…' : ''}</a>
+                <div class="article-meta">${art.source || ''} · ${fmtDate(art.published)}</div>
+            </div>`).join('');
+
+        const card = document.createElement('div');
+        card.className = `actor-card ${css}`;
+        card.innerHTML = `
+            <div class="actor-header">
+                <span class="actor-flag">${a.flag || ''}</span>
+                <div style="flex:1;">
+                    <div class="actor-name">${a.name || key}</div>
+                    <div class="actor-role">${a.role || ''}</div>
+                </div>
+                ${levelBadge(a.escalation_level || 0, a.escalation_label)}
+            </div>
+            <div class="actor-stats">
+                <div class="actor-stat"><span>${a.article_count || 0}</span> articles</div>
+                ${a.escalation_phrase ? `<div class="actor-stat">Trigger: <span>${a.escalation_phrase.slice(0,40)}</span></div>` : ''}
+            </div>
+            ${(a.article_count || 0) === 0 ? '<div class="silence-alert">⚠️ No signals captured this scan</div>' : articlesHTML}`;
+        grid.appendChild(card);
+    });
+
+    if (!grid.children.length) {
+        grid.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;grid-column:1/-1;">No actor data available</div>';
+    }
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER THEATRE BANNER
+// ══════════════════════════════════════════════════════════════
+function renderBanner(data) {
+    const score = data.theatre_score ?? data.pressure_score ?? 0;
+    const ALERT_TO_LEVEL = {'normal': 0, 'elevated': 1, 'high': 2, 'critical': 4, 'surge': 4};
+    const level = ALERT_TO_LEVEL[(data.alert_level || 'normal').toLowerCase()] ?? 0;
+    const lv = lvl(level);
+
+    document.getElementById('theatreScore').textContent = score;
+    document.getElementById('theatreScore').style.color = lv.color;
+
+    const badge = document.getElementById('theatreBadge');
+    badge.textContent = (data.alert_level || 'NORMAL').toUpperCase();
+    badge.style.background = lv.color;
+
+    document.getElementById('theatreLevelDisplay').textContent = `L${level} — ${lv.label}`;
+    document.getElementById('theatreLevelDisplay').style.color = lv.color;
+    document.getElementById('theatreLevelDesc').textContent = lv.desc;
+
+    const scanned = data.cached_at ? new Date(data.cached_at).toLocaleString() : '--';
+    document.getElementById('scanTime').textContent = scanned;
+    document.getElementById('articleCount').textContent = data.total_articles || 0;
+    document.getElementById('lastUpdated').textContent = scanned;
+
+    // Vector pills — derive from cross_theater_fingerprints + commodity_signal + actors
+    const ftp = data.cross_theater_fingerprints || {};
+    const lukashenko = (data.actor_summaries?.lukashenko_regime?.escalation_level) || 0;
+    const russianForces = (data.actor_summaries?.russian_forces_in_belarus?.escalation_level) || 0;
+    const natoBorder = (data.actor_summaries?.nato_border_states?.escalation_level) || 0;
+    const iranAxis = (data.actor_summaries?.iran_belarus_axis?.escalation_level) || 0;
+    const commodityLevel = data.commodity_signal?.escalation_modifier ? Math.min(Math.ceil(data.commodity_signal.escalation_modifier / 2), 5) : 0;
+
+    const setPill = (id, level) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const lv2 = lvl(level);
+        el.textContent = `L${level} ${lv2.label}`;
+        el.style.color = lv2.color;
+    };
+    setPill('vecNuclear', russianForces);
+    setPill('vecNato', natoBorder);
+    setPill('vecSco', iranAxis);
+    setPill('vecSuccession', lukashenko);
+    setPill('vecCommodity', commodityLevel);
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER COMMODITY CARD
+// ══════════════════════════════════════════════════════════════
+function renderCommodity(data) {
+    const cs = data.commodity_signal;
+    const card = document.getElementById('commodityCard');
+    if (!cs || !cs.band) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+
+    const headline = cs.band.short_text || '--';
+    const context = cs.band.long_text || '--';
+    const alert = (cs.alert || cs.band.level || 'normal').toLowerCase();
+
+    document.getElementById('commodityHeadline').textContent = headline;
+    document.getElementById('commodityContext').textContent = context;
+
+    const pill = document.getElementById('commodityPill');
+    pill.textContent = alert.toUpperCase();
+    pill.className = 'commodity-pressure-pill ' + (alert === 'surge' || alert === 'critical' ? 'surge' : alert === 'elevated' || alert === 'high' ? 'elevated' : 'normal');
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER SO WHAT
+// ══════════════════════════════════════════════════════════════
+function renderSoWhat(data) {
+    const sw = data.so_what;
+    const card = document.getElementById('soWhatCard');
+    if (!sw) { card.style.display = 'none'; return; }
+    card.style.display = 'block';
+
+    const priorityIcons = { normal: '⚪', monitoring: '🟡', elevated: '🟠', high: '🔴', critical: '🚨' };
+    document.getElementById('soWhatIcon').textContent = priorityIcons[sw.priority] || '⚪';
+    document.getElementById('soWhatScenario').textContent = sw.scenario || '--';
+    document.getElementById('soWhatText').textContent = sw.assessment || '--';
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER RED LINES
+// ══════════════════════════════════════════════════════════════
+function renderRedLines(data) {
+    const rl = data.red_lines;
+    if (!rl) return;
+    document.getElementById('redLineBreachedCount').textContent = rl.breached_count || 0;
+    document.getElementById('redLineApproachingCount').textContent = rl.approaching_count || 0;
+
+    const items = rl.triggered || [];
+    const el = document.getElementById('redLineItems');
+    el.innerHTML = '';
+    items.forEach(r => {
+        const status = (r.status || 'INACTIVE').toLowerCase();
+        const itemClass = status === 'breached' ? 'breached' : status === 'watching' ? 'approaching' : 'inactive';
+        const badgeClass = itemClass;
+        const item = document.createElement('div');
+        item.className = `red-line-item ${itemClass}`;
+        item.innerHTML = `
+            <span class="red-line-icon">⚠️</span>
+            <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span class="red-line-label">${r.title || r.id}</span>
+                    <span class="red-line-status-badge ${badgeClass}">${(r.status || 'INACTIVE').toUpperCase()}</span>
+                    <span style="font-size:0.55rem;color:#94a3b8;font-family:'Courier New',monospace;">${r.category || ''}</span>
+                    <span style="font-size:0.55rem;color:#94a3b8;font-family:'Courier New',monospace;">SEV ${r.severity || '?'}/5</span>
+                </div>
+                <div class="red-line-trigger">${r.description || ''}</div>
+            </div>`;
+        el.appendChild(item);
+    });
+    if (!items.length) el.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;padding:10px;text-align:center;font-style:italic;">No red lines defined this scan</div>';
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER DIPLOMATIC TRACK / GREEN LINES
+// ══════════════════════════════════════════════════════════════
+function renderDiplomatic(data) {
+    const gl = data.green_lines;
+    const dt = data.diplomatic_track;
+
+    document.getElementById('greenLineActiveCount').textContent = gl?.active_count || 0;
+    document.getElementById('greenLineSignaledCount').textContent = gl?.signaled_count || 0;
+
+    const dscore = dt?.score || 0;
+    document.getElementById('diplomaticScoreDisplay').textContent = `${dscore}/100`;
+    document.getElementById('diplomaticScoreFill').style.width = `${dscore}%`;
+
+    const lbl = document.getElementById('diplomaticScenarioLabel');
+    if (lbl) lbl.textContent = dt?.scenario || '';
+
+    const items = gl?.triggered || [];
+    const el = document.getElementById('greenLineItems');
+    el.innerHTML = '';
+    items.forEach(g => {
+        const status = (g.status || 'DORMANT').toLowerCase();
+        const item = document.createElement('div');
+        item.className = `green-line-item ${status}`;
+        item.innerHTML = `
+            <span class="red-line-icon">🕊️</span>
+            <div style="flex:1;">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+                    <span class="red-line-label">${g.title || g.id}</span>
+                    <span class="green-line-status-badge ${status}">${(g.status || 'DORMANT').toUpperCase()}</span>
+                    <span style="font-size:0.55rem;color:#94a3b8;font-family:'Courier New',monospace;">${g.category || ''}</span>
+                </div>
+                <div class="red-line-trigger">${g.description || ''}</div>
+            </div>`;
+        el.appendChild(item);
+    });
+    if (!items.length) el.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;padding:10px;text-align:center;font-style:italic;">No green lines defined this scan</div>';
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER ESCALATION LADDER
+// ══════════════════════════════════════════════════════════════
+function renderLadder(activeLevel) {
+    const row = document.getElementById('ladderRow');
+    row.innerHTML = '';
+    for (let i = 0; i <= 5; i++) {
+        const lv = ESCALATION_LEVELS[i];
+        const div = document.createElement('div');
+        div.className = 'ladder-step' + (i === activeLevel ? ' active' : '');
+        div.style.color = lv.color;
+        div.style.background = i === activeLevel ? lv.color + '22' : '';
+        div.innerHTML = `<div class="ladder-step-num" style="color:${lv.color}">${i}</div><div class="ladder-step-label" style="color:${lv.color}">${lv.label}</div>`;
+        row.appendChild(div);
+    }
+}
+
+// ══════════════════════════════════════════════════════════════
+// ARTICLES — 5 TABS
+// ══════════════════════════════════════════════════════════════
+function categorizeArticles(data) {
+    const en = data.articles_en || [];
+    const ru = data.articles_ru || [];
+    // Source-based categorization
+    const isSocial = (a) => ['telegram','bluesky','reddit'].includes((a.source_type || '').toLowerCase());
+    const isRegional = (a) => {
+        const src = (a.source || '').toLowerCase();
+        return /belarus|tut\.by|nexta|euroradio|svaboda|charter|pozirk/.test(src);
+    };
+    const all = [...en, ...ru];
+    const byTab = {
+        english: en.filter(a => !isSocial(a)),
+        russian: ru.filter(a => !isSocial(a)),
+        regional: all.filter(a => isRegional(a) && !isSocial(a)),
+        social: all.filter(isSocial),
+        all,
+    };
+    return byTab;
+}
+
+let _articleTabs = null;
+let _currentTab = 'english';
+
+function setArticleTab(tab) {
+    _currentTab = tab;
+    document.querySelectorAll('.article-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+    renderArticleList();
+}
+
+function renderArticleList() {
+    if (!_articleTabs) return;
+    const list = _articleTabs[_currentTab] || [];
+    const el = document.getElementById('articleList');
+    el.innerHTML = '';
+    if (!list.length) {
+        el.innerHTML = '<div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;font-style:italic;">No articles in this tab</div>';
+        return;
+    }
+    list.slice(0, 50).forEach(a => {
+        const src = (a.source_type || 'rss').toLowerCase();
+        const pillCls = `source-pill-${src}`;
+        const row = document.createElement('div');
+        row.className = 'article-row';
+        row.innerHTML = `
+            <a href="${a.url || '#'}" target="_blank">${(a.title || '').slice(0, 140)}</a>
+            <div class="meta-row">
+                <span class="article-source-pill ${pillCls}">${src}</span>
+                <span class="article-date">${a.source || ''} · ${fmtDate(a.published)}</span>
+            </div>`;
+        el.appendChild(row);
+    });
+}
+
+function renderArticles(data) {
+    _articleTabs = categorizeArticles(data);
+    document.getElementById('countEnglish').textContent = _articleTabs.english.length;
+    document.getElementById('countRussian').textContent = _articleTabs.russian.length;
+    document.getElementById('countRegional').textContent = _articleTabs.regional.length;
+    document.getElementById('countSocial').textContent = _articleTabs.social.length;
+    document.getElementById('countAll').textContent = _articleTabs.all.length;
+    renderArticleList();
+}
+
+// ══════════════════════════════════════════════════════════════
+// HISTORY CHART
+// ══════════════════════════════════════════════════════════════
+const LEVEL_ZONES = [
+    { yMin:0,  yMax:20,  color:'rgba(107,114,128,0.08)' },
+    { yMin:20, yMax:40,  color:'rgba(59,130,246,0.08)'  },
+    { yMin:40, yMax:60,  color:'rgba(245,158,11,0.10)'  },
+    { yMin:60, yMax:80,  color:'rgba(249,115,22,0.12)'  },
+    { yMin:80, yMax:100, color:'rgba(220,38,38,0.14)'   },
+];
+const zoneBandPlugin = {
+    id: 'zoneBands',
+    beforeDraw(chart) {
+        const { ctx, chartArea:{ left, right }, scales:{ y } } = chart;
+        LEVEL_ZONES.forEach(zone => {
+            const yTop = y.getPixelForValue(zone.yMax);
+            const yBot = y.getPixelForValue(zone.yMin);
+            ctx.save(); ctx.fillStyle = zone.color;
+            ctx.fillRect(left, Math.min(yTop,yBot), right-left, Math.abs(yBot-yTop));
+            ctx.restore();
+        });
+    }
+};
+
+function _sliceEntries(entries, view) {
+    if (!entries || !entries.length) return [];
+    return view === '7d' ? entries.slice(-28) : entries;
+}
+
+function renderHistoryChart(datasets, labels) {
+    const canvas = document.getElementById('historyChart');
+    const emptyEl = document.getElementById('historyEmpty');
+    if (!canvas) return;
+    if (!datasets || !datasets.length || !datasets[0].data.length) {
+        canvas.style.display = 'none'; if (emptyEl) emptyEl.style.display = 'block'; return;
+    }
+    canvas.style.display = 'block'; if (emptyEl) emptyEl.style.display = 'none';
+    if (_historyChart) { _historyChart.destroy(); _historyChart = null; }
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor = isDark ? 'rgba(56,189,248,0.05)' : 'rgba(0,0,0,0.06)';
+    const tickColor = isDark ? '#4a7090' : '#4a6080';
+    const fontFam = "'Times New Roman', Times, serif";
+    _historyChart = new Chart(canvas.getContext('2d'), {
+        type: 'line', plugins: [zoneBandPlugin],
+        data: { labels, datasets },
+        options: {
+            responsive: true, maintainAspectRatio: false, animation: { duration: 400 },
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: datasets.length > 1, labels: { color: tickColor, font: { family: fontFam, size: 10 }, boxWidth: 20, boxHeight: 2, usePointStyle: true, pointStyle: 'line' } },
+                tooltip: { backgroundColor: isDark ? '#0d1b2e' : '#fff', borderColor: isDark ? 'rgba(56,189,248,0.3)' : 'rgba(0,0,0,0.1)', borderWidth: 1, titleColor: isDark ? '#e2f0fb' : '#0a1628', bodyColor: isDark ? '#93c5fd' : '#1e3a5f', titleFont: { family: fontFam, size: 11, weight: 'bold' }, bodyFont: { family: fontFam, size: 10 }, callbacks: { label: ctx => `Score: ${ctx.parsed.y}` } }
+            },
+            scales: {
+                x: { grid: { color: gridColor }, ticks: { color: tickColor, font: { family: fontFam, size: 9 }, maxRotation: 0, maxTicksLimit: 10 } },
+                y: { min: 0, max: 100, grid: { color: gridColor }, ticks: { color: tickColor, font: { family: fontFam, size: 9 }, stepSize: 20 } }
+            }
+        }
+    });
+}
+
+async function loadHistoryData() {
+    try {
+        const resp = await fetch(API_BASE + '/api/rhetoric/belarus/history?limit=120');
+        if (!resp.ok) return;
+        const data = await resp.json();
+        const entries = _sliceEntries(data.history || [], _historyView);
+        const legendEl = document.getElementById('historyLegend');
+        if (legendEl) legendEl.innerHTML = `<div class="history-legend-item"><div class="history-legend-dot" style="background:#38bdf8;"></div> Belarus Pressure Score</div>`;
+        renderHistoryChart([{
+            label: 'Belarus', data: entries.map(e => e.score ?? 0),
+            borderColor: '#38bdf8', backgroundColor: 'rgba(56,189,248,0.07)',
+            borderWidth: 2, pointRadius: entries.length < 15 ? 3 : 0, pointHoverRadius: 4, fill: true, tension: 0.35
+        }], entries.map(e => fmtDate(e.scanned_at || e.cached_at)));
+    } catch (e) { console.warn('[HistoryChart]', e); }
+}
+
+async function loadCompareData() {
+    const compareTheatres = [
+        { label: 'Belarus',  url: API_BASE + '/api/rhetoric/belarus/history',  color: '#38bdf8' },
+        { label: 'Russia',   url: API_BASE + '/api/rhetoric/russia/history',   color: '#a78bfa' },
+        { label: 'Ukraine',  url: API_BASE + '/api/rhetoric/ukraine/history',  color: '#fbbf24' },
+        { label: 'Greenland',url: API_BASE + '/api/rhetoric/greenland/history', color: '#86efac' },
+    ];
+    try {
+        const results = await Promise.allSettled(
+            compareTheatres.map(t => fetch(t.url + '?limit=120').then(r => r.ok ? r.json() : null))
+        );
+        let maxEntries = [];
+        results.forEach(r => {
+            const e = r.status === 'fulfilled' && r.value?.history ? _sliceEntries(r.value.history, _historyView) : [];
+            if (e.length > maxEntries.length) maxEntries = e;
+        });
+        const labels = maxEntries.map(e => fmtDate(e.scanned_at || e.cached_at));
+        const datasets = compareTheatres.map((t, i) => {
+            const e = results[i].status === 'fulfilled' && results[i].value?.history ? _sliceEntries(results[i].value.history, _historyView) : [];
+            return { label: t.label, data: e.map(x => x.score ?? 0), borderColor: t.color, backgroundColor: 'transparent', borderWidth: 2, pointRadius: e.length < 15 ? 3 : 0, pointHoverRadius: 4, fill: false, tension: 0.35 };
+        });
+        const legendEl = document.getElementById('historyLegend');
+        if (legendEl) legendEl.innerHTML = compareTheatres.map(t => `<div class="history-legend-item"><div class="history-legend-dot" style="background:${t.color};"></div> ${t.label}</div>`).join('');
+        renderHistoryChart(datasets, labels);
+    } catch (e) { console.warn('[HistoryChart compare]', e); }
+}
+
+function setHistoryView(mode) {
+    _historyView = mode;
+    document.getElementById('btn7d').classList.toggle('active', mode === '7d');
+    document.getElementById('btn30d').classList.toggle('active', mode === '30d');
+    document.getElementById('btnCompare').classList.toggle('active', mode === 'compare');
+    if (mode === 'compare') loadCompareData(); else loadHistoryData();
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════════════════════════════
+function renderAll(data) {
+    currentData = data;
+    renderBanner(data);
+    renderCommodity(data);
+    renderSoWhat(data);
+    renderRedLines(data);
+    renderDiplomatic(data);
+    renderActors(data);
+    const ALERT_TO_LEVEL = {'normal':0,'elevated':1,'high':2,'critical':4,'surge':4};
+    renderLadder(ALERT_TO_LEVEL[(data.alert_level || 'normal').toLowerCase()] ?? 0);
+    renderArticles(data);
+    document.getElementById('articlesClassified').textContent = `Articles classified: ${data.total_articles || 0}`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// FETCH + SCAN
+// ══════════════════════════════════════════════════════════════
+async function fetchData(force = false) {
+    try {
+        const url = force ? BELARUS_API + '?force=true' : BELARUS_API;
+        const resp = await fetch(url);
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        renderAll(data);
+        loadHistoryData();
+    } catch (e) {
+        console.error('[Belarus Tracker] Fetch error:', e);
+    }
+}
+
+async function triggerScan() {
+    const btn = document.getElementById('scanBtn');
+    btn.disabled = true;
+    btn.textContent = '⏳ Scanning...';
+    await fetchData(true);
+    btn.disabled = false;
+    btn.innerHTML = '🔄 <span data-i18n="refreshScan">Refresh Scan</span>';
+    applyTranslations();
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+loadTheme();
+applyTranslations();
+fetchData();
+</script>
+</body>
+</html>
