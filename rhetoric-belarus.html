@@ -236,6 +236,29 @@
     .green-line-status-badge.signaled { background: #84cc16; color: white; }
     .green-line-status-badge.dormant { background: #4a6080; color: white; }
 
+    /* ── SCROLLABLE SIGNAL LISTS (cap at ~5 visible, scroll for more) ── */
+    .signal-list-scroll {
+        max-height: 340px;
+        overflow-y: auto;
+        padding-right: 6px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(56,189,248,0.4) rgba(56,189,248,0.08);
+    }
+    .signal-list-scroll::-webkit-scrollbar { width: 8px; }
+    .signal-list-scroll::-webkit-scrollbar-track { background: rgba(56,189,248,0.05); border-radius: 4px; }
+    .signal-list-scroll::-webkit-scrollbar-thumb { background: rgba(56,189,248,0.35); border-radius: 4px; }
+    .signal-list-scroll::-webkit-scrollbar-thumb:hover { background: rgba(56,189,248,0.55); }
+    .signal-list-scroll-hint {
+        font-size: 0.65rem;
+        color: var(--text-muted);
+        text-align: center;
+        margin-top: 6px;
+        font-family: 'Courier New', monospace;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-style: italic;
+    }
+
     /* ── COMMODITY EXPOSURE CARD ── */
     .commodity-card {
         background: var(--container-bg); border: 1px solid var(--card-border);
@@ -294,21 +317,6 @@
     .source-pill-bluesky { background: #06b6d4; color: white; }
     .source-pill-reddit { background: #f87171; color: white; }
     .article-date { font-size: 0.6rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
-
-    /* ── KNOWLEDGE LIBRARY ── */
-    .kb-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 18px 22px; margin-bottom: 16px; }
-    .kb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 14px; }
-    .kb-item {
-        border: 1px solid var(--card-border); border-radius: 10px; padding: 12px 14px;
-        background: var(--article-bg); cursor: pointer; transition: all 0.2s;
-    }
-    .kb-item:hover { border-color: #38bdf8; box-shadow: 0 0 14px rgba(56,189,248,0.10); }
-    .kb-summary { display: flex; align-items: center; gap: 8px; cursor: pointer; }
-    .kb-icon { font-size: 1.1rem; }
-    .kb-title { font-size: 0.82rem; font-weight: 800; color: var(--text-primary); flex: 1; }
-    .kb-arrow { font-size: 0.7rem; color: var(--text-muted); transition: transform 0.2s; }
-    .kb-item[open] .kb-arrow { transform: rotate(90deg); }
-    .kb-body { font-size: 0.75rem; line-height: 1.6; color: var(--text-secondary); margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(56,189,248,0.12); font-family: 'Times New Roman', serif; }
 
     /* ── PAGE FOOTER (3-column canonical) ── */
     .page-footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; padding: 18px; margin-top: 14px; background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; }
@@ -489,6 +497,18 @@
     <div class="interp-confidence-note" id="soWhatNote"></div>
 </div>
 
+<!-- ESCALATION LADDER -->
+<div class="section-card">
+    <div class="section-title" data-i18n="ladderTitle">🪜 PRESSURE LADDER</div>
+    <div class="ladder-row" id="ladderRow"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
+        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified">Articles classified: --</div>
+        <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
+            🔄 <span data-i18n="refreshScan">Refresh Scan</span>
+        </button>
+    </div>
+</div>
+
 <!-- RED LINES CARD -->
 <div class="red-lines-card" id="redLinesCard">
     <div class="interp-card-header">
@@ -508,7 +528,8 @@
             </div>
         </div>
     </div>
-    <div id="redLineItems"><div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div></div>
+    <div id="redLineItems" class="signal-list-scroll"><div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div></div>
+    <div class="signal-list-scroll-hint" id="redLineScrollHint" style="display:none;" data-i18n="scrollHint">↕ scroll for full list</div>
 </div>
 
 <!-- DIPLOMATIC TRACK / GREEN LINES CARD -->
@@ -538,7 +559,8 @@
         <div class="diplomatic-score-bar"><div class="diplomatic-score-fill" id="diplomaticScoreFill" style="width:0%;"></div></div>
         <div style="font-size:0.72rem;font-weight:700;font-family:'Times New Roman',serif;margin-top:4px;" id="diplomaticScenarioLabel"></div>
     </div>
-    <div id="greenLineItems"><div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div></div>
+    <div id="greenLineItems" class="signal-list-scroll"><div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;" data-i18n="loading">Loading...</div></div>
+    <div class="signal-list-scroll-hint" id="greenLineScrollHint" style="display:none;" data-i18n="scrollHint">↕ scroll for full list</div>
 </div>
 
 <!-- ACTORS — 7 actor grid -->
@@ -546,18 +568,6 @@
     <div class="section-title" data-i18n="actorsTitle">🎭 BELARUS RHETORIC ACTORS — 7-ACTOR FRAMEWORK</div>
     <div class="actor-grid" id="actorGrid">
         <div style="color:var(--text-muted);font-size:0.75rem;padding:14px;text-align:center;grid-column:1/-1;" data-i18n="loading">Loading...</div>
-    </div>
-</div>
-
-<!-- ESCALATION LADDER -->
-<div class="section-card">
-    <div class="section-title" data-i18n="ladderTitle">🪜 PRESSURE LADDER</div>
-    <div class="ladder-row" id="ladderRow"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
-        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified">Articles classified: --</div>
-        <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
-            🔄 <span data-i18n="refreshScan">Refresh Scan</span>
-        </button>
     </div>
 </div>
 
@@ -592,55 +602,40 @@
     </div>
 </div>
 
-<!-- KNOWLEDGE LIBRARY -->
-<div class="kb-card">
-    <div class="section-title" data-i18n="kbTitle">📚 KNOWLEDGE LIBRARY — BELARUS</div>
-    <div class="kb-grid">
-        <details class="kb-item">
-            <summary class="kb-summary"><span class="kb-icon">👤</span><span class="kb-title" data-i18n="kbLukashenkoTitle">Lukashenko Regime &amp; Succession</span><span class="kb-arrow">▶</span></summary>
-            <div class="kb-body" data-i18n="kbLukashenkoBody">Aleksandr Lukashenko has ruled Belarus since 1994 — Europe's longest-serving authoritarian leader. The 2020 election protests, brutally suppressed, fundamentally reshaped his rhetorical posture: post-2020, the regime has aligned ever more deeply with Moscow. Watch for: succession signals, health language ("medical leave," "rest"), opposition crackdown intensity, Article 130 (extremism) prosecution rates, KGB activity, and propaganda tone shifts on @pul_1 (presidential pool channel). Acute health events would trigger a crisis window Russia is positioned to exploit for deeper integration — most likely outcome: a Russian-backed candidate from the security services apparatus.</div>
-        </details>
-        <details class="kb-item">
-            <summary class="kb-summary"><span class="kb-icon">☢️</span><span class="kb-title" data-i18n="kbNuclearTitle">Russian Tactical Nuclear Sharing</span><span class="kb-arrow">▶</span></summary>
-            <div class="kb-body" data-i18n="kbNuclearBody">Russia has stationed tactical nuclear weapons (Iskander-M systems with nuclear warheads) on Belarusian territory since 2023, the first such deployment outside Russian territory in the post-Cold War era. The primary storage facility is at Asipovichy. This compresses NATO decision-making timelines on the eastern flank and gives Russia an additional theater for coercion against Poland and the Baltics. Watch for: warhead count growth beyond the 2023 baseline, expanded storage facility construction, additional Iskander brigades, or new weapons systems (Oreshnik medium-range mentioned by Lukashenko). Nuclear posture changes are the single most significant escalation trigger in this theater.</div>
-        </details>
-        <details class="kb-item">
-            <summary class="kb-summary"><span class="kb-icon">🛡️</span><span class="kb-title" data-i18n="kbSuwalkiTitle">The Suwałki Gap</span><span class="kb-arrow">▶</span></summary>
-            <div class="kb-body" data-i18n="kbSuwalkiBody">The Suwałki Gap is a 65-mile (104 km) corridor along the Polish-Lithuanian border, sandwiched between Russian Kaliningrad oblast and Belarus. It is the only land bridge connecting Poland to Lithuania, Latvia, and Estonia. Belarusian or Russian forces postured to seize or interdict the Gap would represent the most strategically sensitive geography on NATO's entire eastern flank — physically severing the Baltic states from NATO ground reinforcement. Joint Russia-Belarus exercises like Zapad have repeatedly rehearsed scenarios in this geography. Watch for: Iskander deployments near Hrodna, force concentrations at Asipovichy, exercise tempo, S-400 movements.</div>
-        </details>
-        <details class="kb-item">
-            <summary class="kb-summary"><span class="kb-icon">🤝</span><span class="kb-title" data-i18n="kbScoTitle">SCO Trilateral &amp; Iran Cooperation</span><span class="kb-arrow">▶</span></summary>
-            <div class="kb-body" data-i18n="kbScoBody">Belarus achieved full SCO membership in 2024, becoming the first European state in the bloc. The April 27, 2026 SCO Defense Ministers meeting in Kyrgyzstan marked a watershed moment: Belarus DM Khrenin, Russia DM Belousov, and Iran Deputy DM Talaei-Nik publicly affirmed trilateral cooperation. This represents Iran's first formal defense relationship with a state on NATO's perimeter. Watch for: drone technology transfer (Shahed/Mohajer pattern), missile component shipments, joint exercise language, named envoy meetings, SCO secondary-meeting readouts. Iranian presence on Belarusian territory would be a strategic earthquake.</div>
-        </details>
-        <details class="kb-item">
-            <summary class="kb-summary"><span class="kb-icon">🏗️</span><span class="kb-title" data-i18n="kbChinaTitle">China-Belarus Strategic Anchor</span><span class="kb-arrow">▶</span></summary>
-            <div class="kb-body" data-i18n="kbChinaBody">China has cultivated Belarus as a continental anchor through three vectors: SCO membership formalization (2024), the Great Stone industrial park (China's largest such project in Europe), and Belt &amp; Road Initiative rail routes. These rail routes are critical for sanctions bypass — Belarusian potash and petroleum products move via Russian ports and Chinese rail to global markets. PLA military cooperation MoUs exist but remain modest in scope. Watch for: Great Stone expansion announcements, joint exercises, BRI rail reconfigurations, technology transfer (especially dual-use systems). PRC formalization of Belarus as a strategic anchor would cement sanctions-bypass infrastructure permanently.</div>
-        </details>
-        <details class="kb-item">
-            <summary class="kb-summary"><span class="kb-icon">🚪</span><span class="kb-title" data-i18n="kbHybridTitle">Migrant Weaponization &amp; Hybrid Pressure</span><span class="kb-arrow">▶</span></summary>
-            <div class="kb-body" data-i18n="kbHybridBody">Belarus pioneered state-organized migrant funneling as a hybrid pressure tool against NATO neighbors. The 2021 crisis saw thousands of third-country nationals (primarily Iraqi Kurds, Afghans, Syrians) channeled to the Polish, Lithuanian, and Latvian borders. Both Poland and Lithuania closed border crossings and deployed military to the frontier. The pattern is reusable: any deterioration in regime relations with the EU may trigger renewed funneling. Watch for: visa relaxations to source countries, charter flights to Minsk, migrant camp formation near border, NATO neighbor border emergency declarations. This is asymmetric warfare disguised as a humanitarian dilemma.</div>
-        </details>
-    </div>
-</div>
-
 </div><!-- end main content -->
 </div><!-- end page-with-sidebar -->
 
-<!-- 3-COLUMN FOOTER -->
-<div class="page-footer-grid">
-    <div class="footer-col">
-        <h4 data-i18n="footerSourcesTitle">Data Sources</h4>
-        <p data-i18n="footerSources">RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave fallback when GDELT rate-limits.</p>
+<!-- FOOTER (canonical Asifah pattern) -->
+<footer style="background:var(--card-bg, var(--container-bg, #0d1b2e));border:1px solid var(--card-border, #1e3a5f);border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footSourcesTitle">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footSourcesText">RSS (Nasha Niva, Zviazda, Euroradio, Radio Svaboda, NEXTA, RFE/RL, Viasna, Meduza, Belsat), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT (EN/RU/BE), Bluesky, Reddit. NewsAPI + Brave fallback when GDELT rate-limits.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footMethodTitle">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footMethodText">Pressure score = sum of actor escalation × source weight. 7-actor framework. 8 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footContactTitle">Contact</h4>
+            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
+        </div>
     </div>
-    <div class="footer-col">
-        <h4 data-i18n="footerMethodTitle">Methodology</h4>
-        <p data-i18n="footerMethod">Pressure score = sum of actor escalation × weight. 7-actor framework. 8 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.</p>
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;" data-i18n="footDisclaimerLabel">⚠️ DISCLAIMER</strong> &mdash; <span data-i18n="footDisclaimerText">This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.</span>
     </div>
-    <div class="footer-col">
-        <h4 data-i18n="footerDisclaimerTitle">Disclaimer</h4>
-        <p data-i18n="footerDisclaimer">Open-source OSINT research. Not a prediction. Not for operational use. Verify through official channels. Asifah Analytics · Belarus Pressure Tracker v1.0.0</p>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;" data-i18n="footBmacButton">buy me a coffee</a>
     </div>
-</div>
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, #1e3a5f);font-size:12px;">
+        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footPrivacy">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footContact">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Belarus Pressure Tracker v1.0.0 — Proprietary and Confidential.</span>
+    </div>
+</footer>
 
 </div><!-- end container -->
 
@@ -705,21 +700,21 @@ const T = {
         historyEmptyText: '📡 Collecting data — first snapshot saves on next scan cycle',
         articlesSourcesTitle: '📰 ARTICLES & INTELLIGENCE FEEDS',
         tabEnglish: 'English', tabRussian: 'Russian (Беларуская)', tabRegional: 'Regional', tabSocial: 'Social', tabAll: 'All',
-        kbTitle: '📚 KNOWLEDGE LIBRARY — BELARUS',
-        kbLukashenkoTitle: 'Lukashenko Regime & Succession',
-        kbNuclearTitle: 'Russian Tactical Nuclear Sharing',
-        kbSuwalkiTitle: 'The Suwałki Gap',
-        kbScoTitle: 'SCO Trilateral & Iran Cooperation',
-        kbChinaTitle: 'China-Belarus Strategic Anchor',
-        kbHybridTitle: 'Migrant Weaponization & Hybrid Pressure',
         loading: 'Loading...',
         navDashboards: 'Dashboards', navEuropeRhetoric: 'Europe Rhetoric',
-        footerSourcesTitle: 'Data Sources',
-        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave fallback when GDELT rate-limits.',
-        footerMethodTitle: 'Methodology',
-        footerMethod: 'Pressure score = sum of actor escalation × weight. 7-actor framework. 8 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.',
-        footerDisclaimerTitle: 'Disclaimer',
-        footerDisclaimer: 'Open-source OSINT research. Not a prediction. Not for operational use. Verify through official channels. Asifah Analytics · Belarus Pressure Tracker v1.0.0',
+        footSourcesTitle: 'Data Sources',
+        footSourcesText: 'RSS (Nasha Niva, Zviazda, Euroradio, Radio Svaboda, NEXTA, RFE/RL, Viasna, Meduza, Belsat), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT (EN/RU/BE), Bluesky, Reddit. NewsAPI + Brave fallback when GDELT rate-limits.',
+        footMethodTitle: 'Methodology',
+        footMethodText: 'Pressure score = sum of actor escalation × source weight. 7-actor framework. 8 red lines, 5 green lines. Diplomatic modifier subtracts up to 25 points from theatre score. Updated every 6 hours.',
+        footContactTitle: 'Contact',
+        footDisclaimerLabel: '⚠️ DISCLAIMER',
+        footDisclaimerText: 'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.',
+        footBmacText: 'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footBmacButton: 'buy me a coffee',
+        footPrivacy: 'Privacy Policy',
+        footContact: 'Contact',
+        footCopy: 'All Rights Reserved. Belarus Pressure Tracker v1.0.0 — Proprietary and Confidential.',
+        scrollHint: '↕ scroll for full list',
     },
     fr: {
         backLink: '← Retour à l\'Europe',
@@ -751,21 +746,21 @@ const T = {
         historyEmptyText: '📡 Collecte de données — premier instantané au prochain cycle d\'analyse',
         articlesSourcesTitle: '📰 ARTICLES & FLUX DE RENSEIGNEMENT',
         tabEnglish: 'Anglais', tabRussian: 'Russe (Беларуская)', tabRegional: 'Régional', tabSocial: 'Social', tabAll: 'Tous',
-        kbTitle: '📚 BIBLIOTHÈQUE DE CONNAISSANCES — BIÉLORUSSIE',
-        kbLukashenkoTitle: 'Régime Loukachenko & Succession',
-        kbNuclearTitle: 'Partage nucléaire tactique russe',
-        kbSuwalkiTitle: 'Le couloir de Suwałki',
-        kbScoTitle: 'Trilatérale OCS & Coopération iranienne',
-        kbChinaTitle: 'Ancrage stratégique Chine-Biélorussie',
-        kbHybridTitle: 'Instrumentalisation migratoire & Pression hybride',
         loading: 'Chargement...',
         navDashboards: 'Tableaux de bord', navEuropeRhetoric: 'Rhétorique Europe',
-        footerSourcesTitle: 'Sources de données',
-        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave en relais lors des limitations GDELT.',
-        footerMethodTitle: 'Méthodologie',
-        footerMethod: 'Score = somme des escalades par acteur × pondération. Cadre à 7 acteurs. 8 lignes rouges, 5 lignes vertes. Modificateur diplomatique jusqu\'à -25. Actualisé toutes les 6 heures.',
-        footerDisclaimerTitle: 'Avertissement',
-        footerDisclaimer: 'Recherche OSINT en source ouverte. Pas une prédiction. Pas à usage opérationnel. Vérifier via les canaux officiels. Asifah Analytics · Suivi Biélorussie v1.0.0',
+        footSourcesTitle: 'Sources de données',
+        footSourcesText: 'RSS (Nasha Niva, Zviazda, Euroradio, Radio Svaboda, NEXTA, RFE/RL, Viasna, Meduza, Belsat), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT (EN/RU/BE), Bluesky, Reddit. NewsAPI + Brave en relais lors des limitations GDELT.',
+        footMethodTitle: 'Méthodologie',
+        footMethodText: 'Score de pression = somme des escalades par acteur × pondération. Cadre à 7 acteurs. 8 lignes rouges, 5 lignes vertes. Modificateur diplomatique jusqu\'à -25 points. Actualisé toutes les 6 heures.',
+        footContactTitle: 'Contact',
+        footDisclaimerLabel: '⚠️ AVERTISSEMENT',
+        footDisclaimerText: 'Cette page fournit des estimations analytiques basées sur l\'agrégation OSINT. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires. Non destiné à un usage opérationnel.',
+        footBmacText: 'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez',
+        footBmacButton: 'm\'offrir un café',
+        footPrivacy: 'Politique de confidentialité',
+        footContact: 'Contact',
+        footCopy: 'Tous droits réservés. Suivi de la pression Biélorussie v1.0.0 — Propriétaire et Confidentiel.',
+        scrollHint: '↕ défiler pour la liste complète',
     },
     de: {
         backLink: '← Zurück zu Europa',
@@ -797,21 +792,21 @@ const T = {
         historyEmptyText: '📡 Datenerfassung — erste Aufnahme im nächsten Scan-Zyklus',
         articlesSourcesTitle: '📰 ARTIKEL & NACHRICHTENQUELLEN',
         tabEnglish: 'Englisch', tabRussian: 'Russisch (Беларуская)', tabRegional: 'Regional', tabSocial: 'Sozial', tabAll: 'Alle',
-        kbTitle: '📚 WISSENSBIBLIOTHEK — BELARUS',
-        kbLukashenkoTitle: 'Lukaschenko-Regime & Nachfolge',
-        kbNuclearTitle: 'Russische taktische Nuklearteilhabe',
-        kbSuwalkiTitle: 'Die Suwałki-Lücke',
-        kbScoTitle: 'SCO-Trilaterale & Iran-Kooperation',
-        kbChinaTitle: 'China-Belarus strategischer Anker',
-        kbHybridTitle: 'Migrationswaffe & Hybrider Druck',
         loading: 'Wird geladen...',
         navDashboards: 'Dashboards', navEuropeRhetoric: 'Europa-Rhetorik',
-        footerSourcesTitle: 'Datenquellen',
-        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave als Reserve bei GDELT-Ratenbegrenzungen.',
-        footerMethodTitle: 'Methodik',
-        footerMethod: 'Druckwert = Summe der Akteur-Eskalation × Gewichtung. 7-Akteur-Rahmen. 8 rote Linien, 5 grüne Linien. Diplomatischer Modifikator bis zu -25 Punkte. Alle 6 Stunden aktualisiert.',
-        footerDisclaimerTitle: 'Haftungsausschluss',
-        footerDisclaimer: 'Open-Source OSINT-Forschung. Keine Vorhersage. Nicht für operativen Einsatz. Über offizielle Kanäle verifizieren. Asifah Analytics · Belarus-Tracker v1.0.0',
+        footSourcesTitle: 'Datenquellen',
+        footSourcesText: 'RSS (Nasha Niva, Zviazda, Euroradio, Radio Svaboda, NEXTA, RFE/RL, Viasna, Meduza, Belsat), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT (EN/RU/BE), Bluesky, Reddit. NewsAPI + Brave als Reserve bei GDELT-Ratenbegrenzungen.',
+        footMethodTitle: 'Methodik',
+        footMethodText: 'Druckwert = Summe der Akteur-Eskalation × Quellengewichtung. 7-Akteur-Rahmen. 8 rote Linien, 5 grüne Linien. Diplomatischer Modifikator bis zu -25 Punkte. Alle 6 Stunden aktualisiert.',
+        footContactTitle: 'Kontakt',
+        footDisclaimerLabel: '⚠️ HAFTUNGSAUSSCHLUSS',
+        footDisclaimerText: 'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Sie stellt keine nachrichtendienstlichen Bewertungen, militärischen Ratschläge oder politischen Empfehlungen dar. Konsultieren Sie für Entscheidungen stets autoritative Quellen. Nicht für den operativen Einsatz bestimmt.',
+        footBmacText: 'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie',
+        footBmacButton: 'mir einen Kaffee spendieren',
+        footPrivacy: 'Datenschutzrichtlinie',
+        footContact: 'Kontakt',
+        footCopy: 'Alle Rechte vorbehalten. Belarus-Drucktracker v1.0.0 — Eigentum und vertraulich.',
+        scrollHint: '↕ scrollen für vollständige Liste',
     },
     ru: {
         backLink: '← Назад в Европу',
@@ -843,21 +838,21 @@ const T = {
         historyEmptyText: '📡 Сбор данных — первый снимок при следующем цикле',
         articlesSourcesTitle: '📰 СТАТЬИ И ИСТОЧНИКИ',
         tabEnglish: 'Английский', tabRussian: 'Русский (Беларуская)', tabRegional: 'Региональные', tabSocial: 'Соцсети', tabAll: 'Все',
-        kbTitle: '📚 БИБЛИОТЕКА ЗНАНИЙ — БЕЛАРУСЬ',
-        kbLukashenkoTitle: 'Режим Лукашенко и преемственность',
-        kbNuclearTitle: 'Российское тактическое ядерное размещение',
-        kbSuwalkiTitle: 'Сувалкский коридор',
-        kbScoTitle: 'Трёхсторонняя ШОС и сотрудничество с Ираном',
-        kbChinaTitle: 'Китай-Беларусь — стратегический якорь',
-        kbHybridTitle: 'Миграционное оружие и гибридное давление',
         loading: 'Загрузка...',
         navDashboards: 'Дашборды', navEuropeRhetoric: 'Риторика Европы',
-        footerSourcesTitle: 'Источники данных',
-        footerSources: 'RSS (Meduza, Bellingcat, Politico Europe, NEXTA, Tut.By, ISW, USNI), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT, Bluesky, Reddit. NewsAPI + Brave при ограничениях GDELT.',
-        footerMethodTitle: 'Методология',
-        footerMethod: 'Оценка давления = сумма эскалации акторов × вес. Рамка из 7 акторов. 8 красных линий, 5 зелёных. Дипломатический модификатор до -25 баллов. Обновление каждые 6 часов.',
-        footerDisclaimerTitle: 'Отказ от ответственности',
-        footerDisclaimer: 'OSINT-исследование на основе открытых источников. Не прогноз. Не для оперативного использования. Проверяйте по официальным каналам. Asifah Analytics · Трекер Беларуси v1.0.0',
+        footSourcesTitle: 'Источники данных',
+        footSourcesText: 'RSS (Nasha Niva, Zviazda, Euroradio, Radio Svaboda, NEXTA, RFE/RL, Viasna, Meduza, Belsat), Telegram OSINT (@pul_1, @nexta_tv, @belamova), GDELT (EN/RU/BE), Bluesky, Reddit. NewsAPI + Brave при ограничениях GDELT.',
+        footMethodTitle: 'Методология',
+        footMethodText: 'Оценка давления = сумма эскалации акторов × вес источника. Рамка из 7 акторов. 8 красных линий, 5 зелёных. Дипломатический модификатор до -25 баллов. Обновление каждые 6 часов.',
+        footContactTitle: 'Контакты',
+        footDisclaimerLabel: '⚠️ ОТКАЗ ОТ ОТВЕТСТВЕННОСТИ',
+        footDisclaimerText: 'Эта страница предоставляет аналитические оценки на основе агрегирования OSINT. Не является разведывательной оценкой, военным советом или политической рекомендацией. Всегда консультируйтесь с авторитетными источниками. Не для оперативного использования.',
+        footBmacText: 'Если Asifah Analytics полезен и вы хотите поддержать разработку, вы можете',
+        footBmacButton: 'купить мне кофе',
+        footPrivacy: 'Политика конфиденциальности',
+        footContact: 'Контакты',
+        footCopy: 'Все права защищены. Трекер давления Беларуси v1.0.0 — Собственный и конфиденциальный.',
+        scrollHint: '↕ прокрутка для полного списка',
     },
 };
 
@@ -1073,6 +1068,9 @@ function renderRedLines(data) {
         el.appendChild(item);
     });
     if (!items.length) el.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;padding:10px;text-align:center;font-style:italic;">No red lines defined this scan</div>';
+    // Show scroll hint when list exceeds 5 visible items
+    const hint = document.getElementById('redLineScrollHint');
+    if (hint) hint.style.display = items.length > 5 ? 'block' : 'none';
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1112,6 +1110,9 @@ function renderDiplomatic(data) {
         el.appendChild(item);
     });
     if (!items.length) el.innerHTML = '<div style="color:var(--text-muted);font-size:0.72rem;padding:10px;text-align:center;font-style:italic;">No green lines defined this scan</div>';
+    // Show scroll hint when list exceeds 5 visible items
+    const hint = document.getElementById('greenLineScrollHint');
+    if (hint) hint.style.display = items.length > 5 ? 'block' : 'none';
 }
 
 // ══════════════════════════════════════════════════════════════
