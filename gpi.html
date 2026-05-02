@@ -148,6 +148,184 @@ header h1 { font-family: 'Cinzel', serif; font-size: 26px; margin-bottom: 6px; l
 .bluf-signal-text { font-weight: 600; }
 .bluf-timestamp { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-muted); margin-top: 12px; letter-spacing: 1px; }
 
+/* ── PRESSURE AXES STACK (v2.2 — multi-axis pressure model) ── */
+.pressure-axes-card {
+    background: var(--container-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+.pressure-axes-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+    flex-wrap: wrap;
+}
+.pressure-axes-title-group { display: flex; align-items: center; gap: 12px; }
+.pressure-axes-pill {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: var(--accent);
+    color: #ffffff;
+}
+.pressure-axes-title {
+    font-family: 'Cinzel', serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+}
+.pressure-axes-headline-note {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+.pressure-axes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 10px;
+}
+.pressure-axis-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--article-bg);
+    border: 1px solid var(--card-border);
+    border-left-width: 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.pressure-axis-row:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.pressure-axis-row.is-headline {
+    background: linear-gradient(135deg, var(--article-hover) 0%, var(--article-bg) 100%);
+}
+.pressure-axis-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    line-height: 1;
+}
+.pressure-axis-body { flex: 1; min-width: 0; }
+.pressure-axis-label {
+    font-family: 'Cinzel', serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    line-height: 1.2;
+}
+.pressure-axis-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+.pressure-axis-level {
+    font-family: 'Cinzel', serif;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+}
+.pressure-axis-headline-badge {
+    display: inline-block;
+    font-family: 'Courier New', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: var(--accent);
+    color: #ffffff;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Expandable detail panel — drops in below grid when an axis is clicked */
+.pressure-axis-detail {
+    margin-top: 14px;
+    padding: 14px 18px;
+    background: var(--article-bg);
+    border-radius: 8px;
+    border-left: 4px solid var(--accent);
+    display: none;
+}
+.pressure-axis-detail.is-open { display: block; }
+.pressure-axis-detail-header {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+.pressure-axis-detail-signals { display: flex; flex-direction: column; gap: 6px; }
+.pressure-axis-detail-signal {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    background: var(--container-bg);
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+.pressure-axis-detail-signal-level {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    color: #ffffff;
+    flex-shrink: 0;
+}
+.pressure-axis-detail-signal-region {
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+.pressure-axis-detail-signal-text { flex: 1; min-width: 0; }
+.pressure-axis-detail-empty {
+    padding: 16px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .pressure-axes-grid { grid-template-columns: 1fr; }
+    .pressure-axis-icon { font-size: 22px; }
+    .pressure-axis-level { font-size: 20px; }
+}
+/* End Pressure Axes Stack */
+
 .regional-cards-section { margin-top: 30px; }
 .regional-cards-title { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--card-border); }
 .regional-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 16px; }
@@ -268,6 +446,24 @@ header h1 { font-family: 'Cinzel', serif; font-size: 26px; margin-bottom: 6px; l
                 </div>
             </div>
 
+            <!-- ── PRESSURE AXES (v2.2) ── multi-axis stack BELOW headline ── -->
+            <div class="pressure-axes-card" id="pressureAxesCard" style="display:none;">
+                <div class="pressure-axes-header">
+                    <div class="pressure-axes-title-group">
+                        <span class="pressure-axes-pill">AXES</span>
+                        <span class="pressure-axes-title">Pressure Vectors</span>
+                    </div>
+                    <span class="pressure-axes-headline-note" id="pressureAxesHeadlineNote">Headline driven by — kinetic axis</span>
+                </div>
+                <div class="pressure-axes-grid" id="pressureAxesGrid">
+                    <!-- populated by JS -->
+                </div>
+                <div class="pressure-axis-detail" id="pressureAxisDetail">
+                    <div class="pressure-axis-detail-header" id="pressureAxisDetailHeader">Top signals</div>
+                    <div class="pressure-axis-detail-signals" id="pressureAxisDetailSignals"></div>
+                </div>
+            </div>
+
             <div class="bluf-card">
                 <div class="bluf-header">
                     <span class="bluf-pill" id="blufPill">SYNTHESIS</span>
@@ -313,7 +509,7 @@ header h1 { font-family: 'Cinzel', serif; font-size: 26px; margin-bottom: 6px; l
             <a href="contact.html" style="color:var(--accent);text-decoration:none;">Contact</a>
         </div>
         <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted);">
-            © 2025-2026 RCGG. All Rights Reserved. Global Pressure Index v2.0.0 — Proprietary and Confidential.
+            © 2025-2026 RCGG. All Rights Reserved. Global Pressure Index v2.2.0 — Proprietary and Confidential.
         </div>
     </footer>
 
@@ -387,6 +583,9 @@ async function loadGpi() {
             document.getElementById('lastUpdated').textContent = `Last synthesis: ${dt.toLocaleString()}`;
         }
 
+        // ── v2.2 — Pressure Axes Stack ──
+        renderPressureAxes(data.pressure_axes);
+
         const grid = document.getElementById('regionalCardsGrid');
         grid.innerHTML = '';
         (data.regional_cards || []).forEach(card => {
@@ -422,6 +621,112 @@ async function loadGpi() {
         document.getElementById('gpiLevelDisplay').classList.remove('loading-shimmer');
         document.getElementById('gpiLevelDisplay').textContent = 'L?';
     }
+}
+
+// ── v2.2 PRESSURE AXES — multi-axis stack render ──
+// Reads data.pressure_axes from the API payload (added by GPI v2.2 backend).
+// Falls back gracefully if the field is absent (older backend deploy).
+const LEVEL_COLOR_MAP = {
+    0: '#6b7280',  // gray — monitoring
+    1: '#16a34a',  // green — routine
+    2: '#facc15',  // yellow — elevated
+    3: '#f59e0b',  // amber — heightened
+    4: '#f97316',  // orange — active signaling
+    5: '#dc2626',  // red — active conflict
+};
+function _levelColor(lvl) {
+    return LEVEL_COLOR_MAP[lvl] || '#6b7280';
+}
+
+function renderPressureAxes(pressureAxes) {
+    const card = document.getElementById('pressureAxesCard');
+    if (!pressureAxes || !pressureAxes.axes || !pressureAxes.axes_ordered) {
+        // Backend hasn't deployed v2.2 yet — hide the section gracefully
+        card.style.display = 'none';
+        return;
+    }
+    card.style.display = 'block';
+
+    const headlineAxis = pressureAxes.headline_axis || 'kinetic';
+    const headlineMeta = pressureAxes.axes[headlineAxis];
+    if (headlineMeta) {
+        document.getElementById('pressureAxesHeadlineNote').textContent =
+            `Headline driven by — ${headlineMeta.label.toLowerCase()} axis`;
+    }
+
+    const grid = document.getElementById('pressureAxesGrid');
+    grid.innerHTML = '';
+
+    pressureAxes.axes_ordered.forEach(axisKey => {
+        const axis = pressureAxes.axes[axisKey];
+        if (!axis) return;
+
+        const row = document.createElement('div');
+        row.className = 'pressure-axis-row';
+        if (axisKey === headlineAxis) row.classList.add('is-headline');
+        row.style.borderLeftColor = axis.color || _levelColor(axis.level);
+        row.dataset.axis = axisKey;
+
+        const isHeadlineBadge = axisKey === headlineAxis
+            ? `<span class="pressure-axis-headline-badge">Headline</span>`
+            : '';
+
+        // signal_count — show count or "no signals" if zero
+        const sigCount = axis.signal_count || 0;
+        const sigSuffix = sigCount === 1 ? 'signal' : 'signals';
+        const metaText = sigCount > 0
+            ? `${sigCount} ${sigSuffix} · ${(axis.level_label || '').toLowerCase()}`
+            : 'no signals on this axis';
+
+        row.innerHTML = `
+            <div class="pressure-axis-icon">${axis.icon || '⚡'}</div>
+            <div class="pressure-axis-body">
+                <div class="pressure-axis-label">${axis.label}${isHeadlineBadge}</div>
+                <div class="pressure-axis-meta">${metaText}</div>
+            </div>
+            <div class="pressure-axis-level" style="color:${_levelColor(axis.level)};">L${axis.level}</div>
+        `;
+
+        row.addEventListener('click', () => showAxisDetail(axisKey, axis));
+        grid.appendChild(row);
+    });
+
+    // Auto-open the detail for the headline axis on first render
+    const firstAxis = pressureAxes.axes[headlineAxis];
+    if (firstAxis) showAxisDetail(headlineAxis, firstAxis);
+}
+
+function showAxisDetail(axisKey, axis) {
+    const detail = document.getElementById('pressureAxisDetail');
+    const header = document.getElementById('pressureAxisDetailHeader');
+    const sigs   = document.getElementById('pressureAxisDetailSignals');
+
+    detail.classList.add('is-open');
+    detail.style.borderLeftColor = axis.color || _levelColor(axis.level);
+
+    header.textContent = `${axis.icon || '⚡'} Top ${axis.label} Signals · L${axis.level} ${(axis.level_label || '').toUpperCase()}`;
+
+    sigs.innerHTML = '';
+    const topSignals = axis.top_signals || [];
+    if (topSignals.length === 0) {
+        sigs.innerHTML = `<div class="pressure-axis-detail-empty">No signals currently active on the ${axis.label.toLowerCase()} axis. ${axis.description || ''}</div>`;
+        return;
+    }
+
+    topSignals.forEach(sig => {
+        const div = document.createElement('div');
+        div.className = 'pressure-axis-detail-signal';
+        const lvlColor = _levelColor(sig.level);
+        const region = sig.region || sig.theatre || '';
+        const text = (sig.short_text || '').replace(/</g, '&lt;');
+        const longText = (sig.long_text || '').replace(/"/g, '&quot;');
+        div.innerHTML = `
+            <span class="pressure-axis-detail-signal-level" style="background:${lvlColor};">L${sig.level}</span>
+            <span class="pressure-axis-detail-signal-region">${region.replace('_', ' ')}</span>
+            <span class="pressure-axis-detail-signal-text" title="${longText}">${text}</span>
+        `;
+        sigs.appendChild(div);
+    });
 }
 
 loadGpi();
