@@ -246,6 +246,14 @@
         .article-link { color: var(--accent); text-decoration: none; font-size: 12px; }
         .article-link:hover { text-decoration: underline; }
 
+        /* ── ARTICLE TABS (canonical Russia pattern) ── */
+        .tab-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+        .tab-btn { padding: 6px 15px; border-radius: 6px; border: 2px solid var(--card-border); background: transparent; color: var(--text-muted); font-family: 'Times New Roman', serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .tab-btn:hover { color: var(--accent); border-color: rgba(56,189,248,0.5); }
+        .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .tab-count { display: inline-block; background: rgba(255,255,255,0.18); padding: 1px 7px; border-radius: 10px; font-size: 10px; margin-left: 4px; font-weight: 600; }
+        .tab-btn.active .tab-count { background: rgba(0,0,0,0.25); color: #000; }
+
         /* ── FOOTER ── */
         .page-footer {
             text-align: center; padding: 22px 0 30px;
@@ -437,19 +445,6 @@
     <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/belarus-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:11px;font-weight:bold;white-space:nowrap;" data-i18n="viewAdvisory">VIEW ADVISORY →</a>
 </div>
 
-<!-- BELARUS STRATEGIC CONTEXT BANNER -->
-<div style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-    <div>
-        <div style="font-size:0.63rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;" data-i18n="contextLabel">📡 APRIL 27, 2026 — STRATEGIC SIGNAL</div>
-        <div style="font-size:0.82rem;color:var(--text);font-weight:700;" data-i18n="contextHeadline">IR-RU-BY Trilateral · SCO Defense Ministers · Kyrgyzstan</div>
-        <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px;" data-i18n="contextSub">Belarus DM Khrenin met Iran Deputy DM Talaei-Nik · "Mutual interest of Minsk and Tehran for further deepening of joint interaction" · Russian nuclear weapons stationed in Belarus since 2023</div>
-    </div>
-    <div style="text-align:right;">
-        <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:1px;" data-i18n="contextTagLabel">Belarus MOD:</div>
-        <div style="font-size:0.72rem;color:var(--accent);font-style:italic;" data-i18n="contextQuote">"Political-diplomatic settlement"</div>
-    </div>
-</div>
-
 <!-- BELARUS RHETORIC TRACKER BANNER (canonical green pattern) -->
 <div class="rhetoric-banner-canonical" id="rhetoricPressureCard" style="display:none;">
     <div style="font-size:24px;flex-shrink:0;">📡</div>
@@ -463,6 +458,19 @@
         <div style="font-size:11px;color:#a7f3d0;line-height:1.4;margin-top:3px;" id="rhetoricDetail"></div>
     </div>
     <a href="rhetoric-belarus.html" class="rhet-banner-link" data-i18n="rhetoricLink">Open Tracker →</a>
+</div>
+
+<!-- BELARUS STRATEGIC CONTEXT BANNER -->
+<div style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div>
+        <div style="font-size:0.63rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;" data-i18n="contextLabel">📡 APRIL 27, 2026 — STRATEGIC SIGNAL</div>
+        <div style="font-size:0.82rem;color:var(--text);font-weight:700;" data-i18n="contextHeadline">IR-RU-BY Trilateral · SCO Defense Ministers · Kyrgyzstan</div>
+        <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px;" data-i18n="contextSub">Belarus DM Khrenin met Iran Deputy DM Talaei-Nik · "Mutual interest of Minsk and Tehran for further deepening of joint interaction" · Russian nuclear weapons stationed in Belarus since 2023</div>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:1px;" data-i18n="contextTagLabel">Belarus MOD:</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-style:italic;" data-i18n="contextQuote">"Political-diplomatic settlement"</div>
+    </div>
 </div>
 
 <!-- BELARUS PRESSURE TRACKER DETAIL CARD (canonical Russia pattern) -->
@@ -729,23 +737,55 @@
     </div>
 </div>
 
-<!-- ARTICLES -->
+<!-- ARTICLES — TABBED -->
 <div class="card">
     <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT BELARUS STABILITY & STRATEGIC ARTICLES</span></div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">NewsAPI + GDELT · Last 7 days · English + Russian (rus)</div>
-    <div id="articlesContainer">
-        <div style="text-align:center;color:var(--text-muted);padding:26px;font-style:italic;">Loading articles...</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">English · Russian · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit</div>
+    <div class="tab-row">
+        <button class="tab-btn active" id="tab-en" onclick="switchArticleTab('en')" data-i18n="tabEN">🇬🇧 English <span class="tab-count" id="tabCountEN">0</span></button>
+        <button class="tab-btn" id="tab-ru" onclick="switchArticleTab('ru')" data-i18n="tabRU">🇷🇺 Russian <span class="tab-count" id="tabCountRU">0</span></button>
+        <button class="tab-btn" id="tab-be" onclick="switchArticleTab('be')" data-i18n="tabBE">🇧🇾 Belarusian <span class="tab-count" id="tabCountBE">0</span></button>
+        <button class="tab-btn" id="tab-social" onclick="switchArticleTab('social')" data-i18n="tabSocial">📡 Social <span class="tab-count" id="tabCountSocial">0</span></button>
     </div>
-</div>
-
-<!-- FOOTER -->
-<div class="page-footer">
-    © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.1.0-belarus-stability |
-    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:#38bdf8;text-decoration:none;">☕ buy me a coffee</a>
+    <div id="articlesContainer">
+        <div style="text-align:center;color:var(--text-muted);padding:26px;font-style:italic;" data-i18n="articlesLoading">Loading articles...</div>
+    </div>
 </div>
 
 </div><!-- /main-content -->
 </div><!-- /page-with-sidebar -->
+
+<!-- FOOTER (canonical Asifah pattern) -->
+<footer style="background:var(--card-bg, var(--card, #0d1b2e));border:1px solid var(--card-border, var(--border, #1e3a5f));border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footSourcesTitle">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footSourcesText">NewsAPI, GDELT, RSS Feeds (EN, RU, BE, PL), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footMethodTitle">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footMethodText">Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footContactTitle">Contact</h4>
+            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
+        </div>
+    </div>
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;" data-i18n="footDisclaimerLabel">⚠️ DISCLAIMER</strong> &mdash; <span data-i18n="footDisclaimerText">This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.</span>
+    </div>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;" data-i18n="footBmacButton">buy me a coffee</a>
+    </div>
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, var(--border, #1e3a5f));font-size:12px;">
+        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footPrivacy">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footContact">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Belarus Stability Index v1.1.0 — Proprietary and Confidential.</span>
+    </div>
+</footer>
 
 </div><!-- /container -->
 
@@ -798,13 +838,42 @@ function hideLoading() {
 }
 
 // ── ARTICLES ──
+// ── ARTICLES (tabbed: EN / RU / BE / Social) ──
+let _articleCache = { en: [], ru: [], be: [], social: [] };
+
 async function loadArticles() {
     try {
-        const r = await fetch(`${API_BASE}/api/europe/articles/belarus`);
+        const r = await fetch(`${API_BASE}/api/rhetoric/belarus`);
         if (!r.ok) throw new Error('HTTP ' + r.status);
         const d = await r.json();
-        const articles = d.articles || d.recent_headlines || [];
-        if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
+
+        _articleCache.en = (d.articles_en || []).map(a => ({ ...a, _lang: 'en' }));
+        _articleCache.ru = (d.articles_ru || []).map(a => ({ ...a, _lang: 'ru' }));
+        _articleCache.be = (d.articles_be || []).map(a => ({ ...a, _lang: 'be' }));
+
+        // Social: combine telegram + bluesky + reddit signals into a unified list, tag origin
+        const tg     = (d.telegram_signals || []).map(p => ({ ...p, _origin: 'telegram' }));
+        const bsky   = (d.bluesky_signals  || []).map(p => ({ ...p, _origin: 'bluesky'  }));
+        const reddit = (d.reddit_signals   || []).map(p => ({ ...p, _origin: 'reddit'   }));
+        _articleCache.social = [...tg, ...bsky, ...reddit];
+
+        // Update tab counts — prefer count fields if signal arrays not yet exposed (backward compat)
+        document.getElementById('tabCountEN').textContent = _articleCache.en.length;
+        document.getElementById('tabCountRU').textContent = _articleCache.ru.length;
+        document.getElementById('tabCountBE').textContent = _articleCache.be.length;
+        const socialCount = _articleCache.social.length || ((d.telegram_count||0) + (d.bluesky_count||0) + (d.reddit_count||0));
+        document.getElementById('tabCountSocial').textContent = socialCount;
+
+        // Default to EN; auto-switch to first tab with content
+        if (_articleCache.en.length) {
+            switchArticleTab('en');
+        } else if (_articleCache.ru.length) {
+            switchArticleTab('ru');
+        } else if (_articleCache.be.length) {
+            switchArticleTab('be');
+        } else {
+            switchArticleTab('en');
+        }
     } catch(e) {
         console.warn('[Belarus] Articles failed:', e.message);
         displayFallback();
@@ -813,24 +882,71 @@ async function loadArticles() {
         document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
     }
 }
-function displayArticles(articles) {
+
+function switchArticleTab(tab) {
+    ['en','ru','be','social'].forEach(t => {
+        const b = document.getElementById('tab-'+t);
+        if (b) b.classList.toggle('active', t === tab);
+    });
     const c = document.getElementById('articlesContainer');
-    c.innerHTML = articles.slice(0, 20).map(a => {
+
+    if (tab === 'social') {
+        const posts = _articleCache.social;
+        if (!posts.length) {
+            c.innerHTML = '<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No social signals captured this scan. Backend may still be aggregating Telegram / Bluesky / Reddit feeds.</div>';
+            return;
+        }
+        // Origin colors + emojis
+        const ORIGINS = {
+            telegram: { color: '#38bdf8', label: '📨 Telegram', bg: 'rgba(56,189,248,0.07)', border: 'rgba(56,189,248,0.25)' },
+            bluesky:  { color: '#60a5fa', label: '🦋 Bluesky',  bg: 'rgba(96,165,250,0.07)', border: 'rgba(96,165,250,0.25)' },
+            reddit:   { color: '#fb923c', label: '💬 Reddit',   bg: 'rgba(251,146,60,0.07)', border: 'rgba(251,146,60,0.25)' },
+        };
+        c.innerHTML = posts.slice(0, 30).map(p => {
+            const o = ORIGINS[p._origin] || { color: '#94a3b8', label: '📡 Signal', bg: 'rgba(148,163,184,0.07)', border: 'rgba(148,163,184,0.25)' };
+            const text = p.text || p.title || p.content || p.message || '';
+            const author = p.author || p.handle || p.channel || p.subreddit || p.source || '';
+            const url = p.url || p.link || '#';
+            const pub = p.published || p.publishedAt || p.date || p.timestamp || '';
+            let ds = '';
+            if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
+            return `<div style="padding:11px 14px;background:${o.bg};border:1px solid ${o.border};border-radius:8px;margin-bottom:8px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                    <span style="font-size:10px;font-weight:700;color:${o.color};text-transform:uppercase;letter-spacing:1px;">${o.label}</span>
+                    ${author ? `<span style="font-size:11px;color:var(--text-muted);">${author}</span>` : ''}
+                    ${ds ? `<span style="font-size:10px;color:var(--text-muted);">${ds}</span>` : ''}
+                </div>
+                <div style="font-size:13px;color:var(--text);line-height:1.5;">${text.substring(0,260)}${text.length>260?'…':''}</div>
+                ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" style="color:${o.color};text-decoration:none;font-size:11px;font-weight:600;margin-top:5px;display:inline-block;">View post →</a>` : ''}
+            </div>`;
+        }).join('');
+        return;
+    }
+
+    // EN, RU, or BE tab
+    const list = _articleCache[tab] || [];
+    const langName = { en: 'English', ru: 'Russian', be: 'Belarusian' }[tab] || tab;
+    if (!list.length) {
+        c.innerHTML = `<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No ${langName} articles in current scan.</div>`;
+        return;
+    }
+    c.innerHTML = list.slice(0, 25).map(a => {
         const title = a.title || 'Untitled';
-        const source = typeof a.source === 'object' ? (a.source?.name || '') : (a.source || '');
-        const pub = a.published || a.publishedAt || '';
-        const url = a.url || '#';
-        const desc = a.description || '';
+        const src = (typeof a.source === 'object' ? a.source?.name : a.source) || a.source_name || '';
+        const pub = a.published || a.publishedAt || a.date || '';
+        const url = a.url || a.link || '#';
+        const desc = a.description || a.summary || '';
         let ds = '';
         if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
         return `<div class="article-item">
             <div class="article-title">${title}</div>
             ${desc ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:5px;line-height:1.5;">${desc.substring(0,180)}${desc.length>180?'...':''}</div>` : ''}
-            <div class="article-meta">${source}${ds?' · '+ds:''}</div>
-            ${url !== '#' ? `<a href="${url}" target="_blank" class="article-link">Read article →</a>` : ''}
+            <div class="article-meta">${src}${ds ? ' · '+ds : ''}</div>
+            ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" class="article-link">Read article →</a>` : ''}
         </div>`;
     }).join('');
 }
+
 function displayFallback() {
     document.getElementById('articlesContainer').innerHTML =
         '<div style="text-align:center;padding:22px;color:var(--text-muted);">' +
@@ -873,7 +989,7 @@ const T = {
         commodityFullLink:'View Full Commodity Tracker →',
         commoditySubtitle:'Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.',
         articlesTitle:'RECENT BELARUS STABILITY & STRATEGIC ARTICLES',
-        articlesDesc:'NewsAPI + GDELT · Last 7 days · English + Russian (rus)',
+        articlesDesc:'English · Russian · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit', tabEN:'🇬🇧 English', tabRU:'🇷🇺 Russian', tabBE:'🇧🇾 Belarusian', tabSocial:'📡 Social', articlesLoading:'Loading articles...', footSourcesTitle:'Data Sources', footSourcesText:'NewsAPI, GDELT, RSS Feeds (EN, RU, BE, PL), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.', footMethodTitle:'Methodology', footMethodText:'Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.', footContactTitle:'Contact', footDisclaimerLabel:'⚠️ DISCLAIMER', footDisclaimerText:'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.', footBmacText:'If you find Asifah Analytics useful and want to support ongoing development, you can', footBmacButton:'buy me a coffee', footPrivacy:'Privacy Policy', footContact:'Contact', footCopy:'All Rights Reserved. Belarus Stability Index v1.1.0 — Proprietary and Confidential.',
     },
     fr: {
         pageFlag:'BIÉLORUSSIE', pageTitle:'INDICE DE STABILITÉ — BIÉLORUSSIE',
@@ -901,7 +1017,7 @@ const T = {
         catIran:'Coopération iranienne & Trilatérale OCS',
         catOpposition:'Opposition en exil & Prisonniers politiques',
         articlesTitle:'ARTICLES RÉCENTS — BIÉLORUSSIE',
-        articlesDesc:'NewsAPI + GDELT · 7 derniers jours · Anglais + Russe',
+        articlesDesc:'Anglais · Russe · Signaux sociaux · 7 derniers jours · NewsAPI + GDELT + Telegram + Bluesky + Reddit', tabEN:'🇬🇧 Anglais', tabRU:'🇷🇺 Russe', tabBE:'🇧🇾 Biélorusse', tabSocial:'📡 Social', articlesLoading:'Chargement des articles...', footSourcesTitle:'Sources de données', footSourcesText:'NewsAPI, GDELT, flux RSS (EN, RU, BE, PL), Telegram OSINT, Bluesky, Reddit et données du Département d\'État.', footMethodTitle:'Méthodologie', footMethodText:'Agrégation OSINT pondérée par source avec score de décroissance temporelle. Sources ouvertes uniquement — aucune donnée classifiée.', footContactTitle:'Contact', footDisclaimerLabel:'⚠️ AVERTISSEMENT', footDisclaimerText:'Cette page fournit des estimations analytiques basées sur l\'agrégation de renseignements open-source. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires pour la prise de décision. Non destiné à un usage opérationnel.', footBmacText:'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez', footBmacButton:'m\'offrir un café', footPrivacy:'Politique de confidentialité', footContact:'Contact', footCopy:'Tous droits réservés. Indice de stabilité Biélorussie v1.1.0 — Propriétaire et Confidentiel.',
     },
     ru: {
         pageFlag:'БЕЛАРУСЬ', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ БЕЛАРУСИ',
@@ -929,7 +1045,7 @@ const T = {
         catIran:'Сотрудничество с Ираном и трёхсторонняя встреча ШОС',
         catOpposition:'Оппозиция в изгнании и политические заключённые',
         articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ О БЕЛАРУСИ',
-        articlesDesc:'NewsAPI + GDELT · Последние 7 дней · Английский + Русский',
+        articlesDesc:'Английский · Русский · Социальные сигналы · Последние 7 дней · NewsAPI + GDELT + Telegram + Bluesky + Reddit', tabEN:'🇬🇧 Английский', tabRU:'🇷🇺 Русский', tabBE:'🇧🇾 Беларуский', tabSocial:'📡 Социальные', articlesLoading:'Загрузка статей...', footSourcesTitle:'Источники данных', footSourcesText:'NewsAPI, GDELT, RSS-каналы (EN, RU, BE, PL), Telegram OSINT, Bluesky, Reddit и данные travel.state.gov.', footMethodTitle:'Методология', footMethodText:'Взвешенное по источникам агрегирование OSINT с временным затуханием. Только открытые источники — никаких секретных данных.', footContactTitle:'Контакты', footDisclaimerLabel:'⚠️ ОТКАЗ ОТ ОТВЕТСТВЕННОСТИ', footDisclaimerText:'Эта страница предоставляет аналитические оценки на основе агрегирования OSINT. Не является разведывательной оценкой, военным советом или политической рекомендацией. Всегда консультируйтесь с авторитетными источниками. Не для оперативного использования.', footBmacText:'Если Asifah Analytics полезен и вы хотите поддержать разработку, вы можете', footBmacButton:'купить мне кофе', footPrivacy:'Политика конфиденциальности', footContact:'Контакты', footCopy:'Все права защищены. Индекс стабильности Беларуси v1.1.0 — Собственный и конфиденциальный.',
     },
     de: {
         pageFlag:'BELARUS', pageTitle:'BELARUS-STABILITÄTSINDEX',
@@ -957,7 +1073,7 @@ const T = {
         catIran:'Iran-Kooperation & SOZ-Trilaterale',
         catOpposition:'Opposition im Exil & Politische Gefangene',
         articlesTitle:'AKTUELLE ARTIKEL — BELARUS',
-        articlesDesc:'NewsAPI + GDELT · Letzte 7 Tage · Englisch + Russisch',
+        articlesDesc:'Englisch · Russisch · Soziale Signale · Letzte 7 Tage · NewsAPI + GDELT + Telegram + Bluesky + Reddit', tabEN:'🇬🇧 Englisch', tabRU:'🇷🇺 Russisch', tabBE:'🇧🇾 Belarussisch', tabSocial:'📡 Sozial', articlesLoading:'Lade Artikel...', footSourcesTitle:'Datenquellen', footSourcesText:'NewsAPI, GDELT, RSS-Feeds (EN, RU, BE, PL), Telegram OSINT, Bluesky, Reddit und travel.state.gov-Reisehinweise.', footMethodTitle:'Methodik', footMethodText:'Quellengewichtete OSINT-Aggregation mit zeitlich abnehmender Bewertung. Nur quelloffene Signale — keine klassifizierten Daten.', footContactTitle:'Kontakt', footDisclaimerLabel:'⚠️ HAFTUNGSAUSSCHLUSS', footDisclaimerText:'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Sie stellt keine nachrichtendienstlichen Bewertungen, militärischen Ratschläge oder politischen Empfehlungen dar. Konsultieren Sie für Entscheidungen stets autoritative Quellen. Nicht für den operativen Einsatz bestimmt.', footBmacText:'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie', footBmacButton:'mir einen Kaffee spendieren', footPrivacy:'Datenschutzrichtlinie', footContact:'Kontakt', footCopy:'Alle Rechte vorbehalten. Belarus-Stabilitätsindex v1.1.0 — Eigentum und vertraulich.',
     }
 };
 
