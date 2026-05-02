@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - Azerbaijan Stability Index v1.0.0 -->
+<!-- Asifah Analytics - Azerbaijan Stability Index v1.1.0 — May 2026 -->
 <html lang="en">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
@@ -11,395 +11,1328 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azerbaijan Stability Index | Asifah Analytics v1.0.0</title>
+    <title>Azerbaijan Stability Index | Asifah Analytics</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── ARCTIC / ICE COLOR SCHEME ── */
         :root {
-            --bg-color:       #e8f0f8;
-            --container-bg:   #ffffff;
-            --card-bg:        #ffffff;
-            --card-border:    #b0c8e0;
-            --text-primary:   #0a1628;
-            --text-secondary: #1e3a5f;
-            --text-muted:     #4a6080;
-            --article-bg:     #f0f6fc;
-            --article-hover:  #e1ecf7;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end:   #0ea5e9;
-            --header-text:    #ffffff;
-            --accent:         #0ea5e9;
-            --accent-glow:    rgba(14,165,233,0.2);
+            --bg:           #060d1a;
+            --card:         #0d1b2e;
+            --border:       #1e3a5f;
+            --accent:       #38bdf8;
+            --accent-glow:  rgba(56,189,248,0.18);
+            --text:         #e2f0fb;
+            --text-2:       #93c5fd;
+            --text-muted:   #4a7fa5;
+            --red:          #ef4444;
+            --amber:        #f59e0b;
+            --green:        #22c55e;
+            --wm-filter:    saturate(3) brightness(0.8) hue-rotate(185deg);
         }
-        [data-theme="dark"] {
-            --bg-color:       #060d1a;
-            --container-bg:   #0d1b2e;
-            --card-bg:        #0d1b2e;
-            --card-border:    #1e3a5f;
-            --text-primary:   #e2f0fb;
-            --text-secondary: #93c5fd;
-            --text-muted:     #4a7090;
-            --article-bg:     #0a1525;
-            --article-hover:  #112038;
-            --header-gradient-start: #060d1a;
-            --header-gradient-end:   #1e3a5f;
-            --header-text:    #e2f0fb;
-            --accent:         #38bdf8;
-            --accent-glow:    rgba(56,189,248,0.2);
+        [data-theme="light"] {
+            --bg:           #f0f5fa;
+            --card:         #ffffff;
+            --border:       #c8daea;
+            --text:         #1a2a3a;
+            --text-2:       #2c4a6e;
+            --text-muted:   #7a9ab8;
+            --wm-filter:    none;
         }
-        body { font-family: 'Times New Roman', Times, serif; font-size: 14px; background: var(--bg-color); color: var(--text-primary); line-height: 1.6; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 0 20px; }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            min-width: 800px; min-height: 800px;
+            max-width: 1400px; max-height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.22;
+            filter: var(--wm-filter);
+            z-index: 0;
+            pointer-events: none;
+        }
+        [data-theme="light"] body::before { opacity: 0.06; }
+
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ── LOADING ── */
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(6,13,26,0.97);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loading-spinner {
+            width: 56px; height: 56px;
+            border: 4px solid rgba(56,189,248,0.2);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 28px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-title { font-size: 20px; font-weight: 700; color: #38bdf8; margin-bottom: 18px; letter-spacing: 2px; }
+        .loading-step { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px; font-size: 13px; color: var(--text-2); }
+        .loading-step.active { color: #38bdf8; font-weight: 700; }
+        .loading-step.complete { color: #22c55e; }
+        .step-icon { font-size: 15px; min-width: 18px; }
+        .loading-error { color: #f87171; font-size: 13px; margin-top: 14px; padding: 10px 14px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; display: none; }
+
+        /* ── HEADER ── */
         header {
-            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
-            color: var(--header-text); padding: 30px; border-radius: 12px; margin-bottom: 10px;
-            text-align: center; position: relative;
+            background: linear-gradient(135deg, #060d1a, #0d1b2e);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px 30px;
+            margin-bottom: 18px;
+            display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+            box-shadow: 0 0 40px rgba(56,189,248,0.07);
+            position: relative;
         }
-        header h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: 2px; }
-        .subtitle { font-size: 16px; opacity: 0.95; }
-        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
-        .header-controls { position: absolute; top: 15px; right: 20px; display: flex; gap: 8px; align-items: center; }
-        .lang-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; }
-        .lang-btn:hover { background: rgba(255,255,255,0.3); }
-        .lang-btn.active { background: rgba(255,255,255,0.3); border-color: white; font-weight: bold; }
-        .home-btn { display: inline-block; padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; color: white; text-decoration: none; font-size: 13px; font-weight: bold; position: absolute; top: 15px; left: 20px; }
-        .home-btn:hover { background: rgba(255,255,255,0.3); }
-        .theme-toggle { display: flex; align-items: center; gap: 6px; color: white; font-size: 12px; cursor: pointer; }
-        .theme-toggle input { width: 36px; height: 20px; appearance: none; background: rgba(255,255,255,0.2); border-radius: 10px; position: relative; cursor: pointer; }
-        .theme-toggle input::after { content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: 0.3s; }
-        .theme-toggle input:checked::after { left: 18px; }
-        .map-section, .knowledge-library, .articles-section { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 25px; margin-bottom: 20px; }
-        .map-section h2, .knowledge-library h2 { font-size: 20px; margin-bottom: 15px; }
-        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
-        .knowledge-categories { display: grid; gap: 12px; }
-        .knowledge-card { border: 1px solid var(--card-border); border-radius: 8px; overflow: hidden; }
-        .knowledge-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; cursor: pointer; background: var(--article-bg); }
-        .knowledge-header:hover { background: var(--article-hover); }
-        .knowledge-header-title { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-        .category-icon { font-size: 20px; }
-        .collapse-icon { font-size: 12px; color: var(--text-muted); transition: transform 0.3s; }
-        .knowledge-card.collapsed .knowledge-content { display: none; }
-        .knowledge-card:not(.collapsed) .collapse-icon { transform: rotate(180deg); }
-        .knowledge-content { padding: 18px; line-height: 1.8; }
-        .knowledge-content p { margin-bottom: 12px; }
-        .knowledge-content ul { margin: 10px 0 15px 20px; }
-        .knowledge-content li { margin-bottom: 6px; }
-        .report-links-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-        .report-link { display: inline-block; padding: 6px 14px; background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 6px; color: var(--accent); text-decoration: none; font-size: 12px; font-weight: bold; }
-        .report-link:hover { background: var(--article-hover); }
-        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 10px; }
-        .section-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; }
-        .article-item { padding: 15px; border: 1px solid var(--card-border); border-radius: 8px; margin-bottom: 10px; background: var(--article-bg); }
-        .article-item:hover { background: var(--article-hover); }
-        .article-title { font-weight: bold; margin-bottom: 5px; }
-        .article-meta { font-size: 12px; color: var(--text-muted); }
-        .article-link { display: inline-block; margin-top: 8px; color: var(--accent); text-decoration: none; font-size: 13px; }
-        footer { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; margin-top: 30px; margin-bottom: 30px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+        [data-theme="light"] header { background: linear-gradient(135deg, #1c3a5c, #2a5080); }
+        .header-logo { width: 68px; height: 68px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.35); flex-shrink: 0; }
+        .header-center { flex: 1; text-align: center; }
+        .header-flag { font-size: 0.68rem; font-weight: 700; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
+        .header-title { font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; margin: 4px 0; }
+        .header-subtitle { font-size: 0.73rem; color: var(--text-muted); letter-spacing: 1px; }
+        .header-ts { font-size: 0.63rem; color: var(--text-muted); margin-top: 4px; }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 13px; border-radius: 8px;
+            border: 1px solid rgba(56,189,248,0.3);
+            color: var(--accent); font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 1px; text-decoration: none; text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .back-link:hover { border-color: var(--accent); background: rgba(56,189,248,0.08); }
+        .lang-group { display: flex; gap: 4px; }
+        .lang-btn {
+            font-family: 'Times New Roman', serif;
+            padding: 4px 10px; border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            font-size: 0.68rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .theme-row { display: flex; align-items: center; gap: 7px; }
+        .theme-label { font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+        .theme-toggle { position: relative; width: 44px; height: 22px; cursor: pointer; }
+        .theme-toggle input { opacity: 0; width: 0; height: 0; }
+        .theme-slider { position: absolute; inset: 0; border-radius: 11px; background: var(--border); transition: 0.3s; display: flex; align-items: center; padding: 2px; }
+        .theme-slider::before { content: '☀️'; width: 18px; height: 18px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: 0.3s; }
+        [data-theme="light"] .theme-slider { background: var(--accent); }
+        [data-theme="light"] .theme-slider::before { content: '🌙'; margin-left: 22px; }
+
+        /* ── BANNERS ── */
+        .banner-red {
+            background: linear-gradient(135deg, #1a0000, #2a0000);
+            border: 1px solid rgba(239,68,68,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .banner-amber {
+            background: linear-gradient(135deg, #1a0e00, #2a1800);
+            border: 1px solid rgba(245,158,11,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .level-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 4px;
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: white;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 6px rgba(30,58,95,0.25);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .card-title {
+            font-size: 0.63rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 14px;
+            padding-bottom: 9px; border-bottom: 1px solid var(--border);
+        }
+
+        /* ── MAP ── */
+        .map-frame {
+            width: 100%; height: 420px;
+            border-radius: 8px; border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+        .knowledge-card {
+            background: rgba(6,13,26,0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+            transition: all 0.3s;
+        }
+        [data-theme="light"] .knowledge-card { background: #f8fbfe; }
+        .knowledge-card:hover { border-color: rgba(56,189,248,0.35); }
+        .knowledge-header {
+            padding: 14px 17px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(30,58,95,0.2);
+            transition: background 0.3s;
+        }
+        [data-theme="light"] .knowledge-header { background: rgba(56,189,248,0.06); }
+        .knowledge-header:hover { background: rgba(30,58,95,0.32); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 700; color: var(--text); }
+        .collapse-icon { font-size: 14px; color: var(--accent); transition: transform 0.3s; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content {
+            padding: 15px 17px;
+            max-height: 520px; overflow-y: auto;
+            transition: max-height 0.3s ease, padding 0.3s;
+        }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 17px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 9px; }
+        .knowledge-content ul { margin-left: 17px; margin-bottom: 9px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 5px; }
+        .knowledge-content strong { color: var(--text); }
+        .kl-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 7px; margin-top: 10px; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 7px 11px;
+            background: rgba(56,189,248,0.1); color: var(--accent);
+            text-decoration: none; border-radius: 6px;
+            font-size: 11px; font-weight: 700;
+            border: 1px solid rgba(56,189,248,0.22);
+            transition: all 0.2s;
+        }
+        .report-link:hover { background: rgba(56,189,248,0.18); }
+
+        /* ── ARTICLES ── */
+        .article-item {
+            background: rgba(6,13,26,0.6);
+            padding: 13px; border-radius: 8px; margin-bottom: 9px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.2s;
+        }
+        [data-theme="light"] .article-item { background: #f8fbfe; }
+        .article-item:hover { transform: translateX(4px); }
+        .article-title { color: var(--text); font-size: 13px; margin-bottom: 3px; font-weight: 500; line-height: 1.4; }
+        .article-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 12px; }
+        .article-link:hover { text-decoration: underline; }
+
+        /* ── ARTICLE TABS (canonical Russia pattern) ── */
+        .tab-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+        .tab-btn { padding: 6px 15px; border-radius: 6px; border: 2px solid var(--card-border); background: transparent; color: var(--text-muted); font-family: 'Times New Roman', serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .tab-btn:hover { color: var(--accent); border-color: rgba(56,189,248,0.5); }
+        .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .tab-count { display: inline-block; background: rgba(255,255,255,0.18); padding: 1px 7px; border-radius: 10px; font-size: 10px; margin-left: 4px; font-weight: 600; }
+        .tab-btn.active .tab-count { background: rgba(0,0,0,0.25); color: #000; }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            text-align: center; padding: 22px 0 30px;
+            font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1px;
+        }
+
         @media (max-width: 768px) {
-            header h1 { font-size: 20px; }
-            .home-btn { position: static; margin-bottom: 10px; }
-            .header-controls { position: static; justify-content: center; margin-top: 10px; }
+            header { flex-direction: column; align-items: center; text-align: center; }
+            .header-right { align-items: center; }
+            .knowledge-categories { grid-template-columns: 1fr; }
         }
-    
-        /* ── CANONICAL SIDEBAR ── */
+
+        /* ── PAGE WITH SIDEBAR (canonical) ── */
         .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
-        .nav-sidebar { width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+        .nav-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
         .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
-        .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(56,189,248,0.2); background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.04) 100%); color: rgba(255,255,255,0.7); }
-        [data-theme="light"] .nav-btn, :root:not([data-theme="dark"]) .nav-btn { color: var(--text-secondary); }
+        .nav-btn { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 9px 11px; border-radius: 7px; background: rgba(13,27,46,0.6); border: 1px solid rgba(56,189,248,0.18); color: #e2f0fb; font-family: 'Times New Roman', serif; font-weight: 700; font-size: 11px; letter-spacing: 0.3px; text-decoration: none; transition: all 0.2s; overflow: hidden; }
+        [data-theme="light"] .nav-btn { color: var(--text-secondary); }
         .nav-btn .nav-btn-label { position: relative; z-index: 2; font-size: 12px; line-height: 1.3; }
         .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #38bdf8; }
         .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); border-color: rgba(56,189,248,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(56,189,248,0.12); }
-        [data-theme="light"] .nav-btn.active-nav, :root:not([data-theme="dark"]) .nav-btn.active-nav { color: var(--text-primary); }
         .nav-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); border-color: rgba(34,197,94,0.6); color: #ffffff; box-shadow: 0 0 18px rgba(34,197,94,0.2); }
-        [data-theme="light"] .nav-btn.current-page, :root:not([data-theme="dark"]) .nav-btn.current-page { color: var(--text-primary); }
         .nav-btn.current-page .nav-btn-status { color: #4ade80; }
         .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
-        [data-theme="light"] .nav-btn.inactive-nav, :root:not([data-theme="dark"]) .nav-btn.inactive-nav { color: var(--text-muted); border-color: rgba(0,0,0,0.08); background: rgba(0,0,0,0.02); }
+        [data-theme="light"] .nav-btn.inactive-nav { color: rgba(0,0,0,0.3); background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1); }
         .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
         .nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 4px 0; }
         .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
         .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
         .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
         .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+        .nav-btn.commodities-btn { border-color: rgba(245,158,11,0.4); background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(217,119,6,0.05) 100%); }
+        .nav-btn.commodities-btn .nav-btn-status { color: #fbbf24; }
+        .main-content { flex: 1; min-width: 0; }
         @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+        /* ── RHETORIC TRACKER BANNER (canonical green pattern, matches Israel) ── */
+        .rhetoric-banner-canonical { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#052e16,#14532d); border:2px solid #22c55e; border-radius:10px; padding:14px 20px; margin-bottom:15px; box-shadow:0 4px 12px rgba(0,0,0,0.15); flex-wrap:wrap; }
+        .rhet-banner-badge { background:#6b7280; color:white; font-size:10px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px; white-space:nowrap; text-transform:uppercase; font-family:'Courier New',monospace; }
+        .rhet-banner-link { flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap; }
+        .rhet-banner-link:hover { background:rgba(255,255,255,0.25); }
+
+        /* ── RHETORIC DETAIL CARD (canonical Russia pattern) ── */
+        .rhetoric-card { background: var(--card-bg); border: 2px solid rgba(56,189,248,0.35); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+        .rhetoric-actor-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--card-border); font-size: 12px; color: var(--text-secondary); }
+        .rhetoric-actor-row:last-child { border-bottom: none; }
+        .rhetoric-signal-row { padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+        .rhetoric-signal-row:last-child { border-bottom: none; }
+        .rhetoric-signal-label { font-weight: 700; color: #38bdf8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px; font-family: 'Courier New', monospace; }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <a href="europe.html" class="home-btn">&larr; Back to Europe Dashboard</a>
-            <div class="header-controls">
-                <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
-                <button class="lang-btn" onclick="switchLanguage('fr', this)">FR</button>
-                <button class="lang-btn" onclick="switchLanguage('ru', this)">RU</button>
-                <button class="lang-btn" onclick="switchLanguage('de', this)">DE</button>
-                <label class="theme-toggle">
-                    <span>Theme</span>
-                    <input type="checkbox" onchange="toggleTheme()">
-                </label>
-            </div>
-            <h1>🇦🇿 AZERBAIJAN STABILITY INDEX</h1>
-            <div class="subtitle">Multi-Factor Analysis: Iran Border Conflict, Nakhchivan Drone Strikes, Energy Corridor & Post-Karabakh Posture</div>
-            <div class="last-updated" id="lastUpdated">Last updated: Loading...</div>
-        </header>
 
-        <div class="page-with-sidebar">
-
-        <!-- CANONICAL NAV SIDEBAR -->
-        <nav class="nav-sidebar">
-            <div class="nav-sidebar-label">Dashboards</div>
-            <div class="nav-btn inactive-nav">
-                <span class="nav-btn-label">🌍 Africa</span>
-                <span class="nav-btn-status">🔒 Future</span>
-            </div>
-            <a href="asia.html" class="nav-btn active-nav">
-                <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <a href="europe.html" class="nav-btn active-nav">
-                <span class="nav-btn-label">🌍 Europe</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <a href="middle-east.html" class="nav-btn active-nav">
-                <span class="nav-btn-label">🕌 Middle East</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <a href="wha.html" class="nav-btn active-nav">
-                <span class="nav-btn-label">🌎 W. Hemisphere</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <div class="nav-divider"></div>
-            <a href="military.html" class="nav-btn military-btn">
-                <span class="nav-btn-label">🎖️ Military Tracker</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <div class="nav-divider"></div>
-            <div class="nav-sidebar-label">Regional Rhetoric</div>
-            <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
-                <span class="nav-btn-label">🕌 Middle East</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
-                <span class="nav-btn-label">🌏 Asia</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
-                <span class="nav-btn-label">🌍 Europe</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-            <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
-                <span class="nav-btn-label">🌎 W. Hemisphere</span>
-                <span class="nav-btn-status">● Live</span>
-            </a>
-        </nav>
-
-        <!-- MAIN CONTENT -->
-        <div style="flex:1; min-width:0;">
-
-
-        <!-- WORLDWIDE CAUTION -->
-        <div style="
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">&#x1F6A8;</div>
-            <div style="flex: 1;">
-                <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;">&#x26A0;&#xFE0F; U.S. State Department — Worldwide Caution</div>
-                <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
-            </div>
-            <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW CAUTION &rarr;</a>
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div style="text-align:center;">
+        <div class="loading-title">Loading Azerbaijan Stability Data</div>
+        <div>
+            <div class="loading-step active" id="step1"><span class="step-icon">⏳</span> Fetching OSINT articles on Azerbaijan...</div>
+            <div class="loading-step" id="step2"><span class="step-icon">⏳</span> Scanning Iran transit corridor &amp; Caspian shipping signals...</div>
+            <div class="loading-step" id="step3"><span class="step-icon">⏳</span> Analyzing SOCAR, Armenia, &amp; Israel-Azerbaijan dynamics...</div>
+            <div class="loading-step" id="step4"><span class="step-icon">⏳</span> Rendering dashboard...</div>
         </div>
+        <div style="margin-top:18px;font-size:11px;color:var(--text-muted);font-style:italic;">This may take 20–40 seconds...</div>
+        <div class="loading-error" id="loadingError"></div>
+    </div>
+</div>
 
-        <!-- TRAVEL ADVISORY -->
-        <div style="
-            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-            border: 2px solid #f59e0b; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">🇦🇿</div>
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 11px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px;">U.S. State Department — Azerbaijan Travel Advisory</span>
-                    <span style="background: #f59e0b; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px;">LEVEL 2</span>
-                </div>
-                <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;"><strong style="color: #f59e0b;">Exercise Increased Caution in Azerbaijan</strong> due to the risk of Iranian drone and missile strikes. The Nakhchivan exclave was struck by Iranian drones in March 2026. Azerbaijan has declared Level 1 mobilization.</div>
-            </div>
-            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/azerbaijan-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY &rarr;</a>
+<div class="container">
+
+<!-- HEADER -->
+<header>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+        <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe</a>
+    </div>
+    <div class="header-center">
+        <div class="header-flag">🇦🇿 <span data-i18n="pageFlag">AZERBAIJAN</span></div>
+        <div class="header-title" data-i18n="pageTitle">AZERBAIJAN STABILITY INDEX</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Caspian Energy Hub · Iran Transit Corridor · Israel Defense Partner · Armenia Tensions · SOCAR & BTC Pipeline</div>
+        <div class="header-ts">Last updated: <span id="lastUpdated">Loading...</span></div>
+    </div>
+    <div class="header-right">
+        <div class="lang-group">
+            <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+            <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
+            <button class="lang-btn" onclick="setLang('ru',this)">RU</button>
+            <button class="lang-btn" onclick="setLang('de',this)">DE</button>
         </div>
-
-        <!-- MAP -->
-        <div class="map-section">
-            <h2>&#x1F5FA;&#xFE0F; Azerbaijan — Strategic Overview</h2>
-            <div class="map-subtitle">Interactive map centered on Azerbaijan. Nakhchivan exclave, BTC pipeline, and Iranian border zones coming soon.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=44.8%2C38.4%2C50.4%2C41.9&layer=mapnik&marker=40.41%2C49.87"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;"></iframe>
-            </div>
+        <div class="theme-row">
+            <span class="theme-label">THEME</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
+                <span class="theme-slider"></span>
+            </label>
         </div>
+    </div>
+</header>
 
-        <!-- KNOWLEDGE LIBRARY -->
-        <div class="knowledge-library">
-            <h2>&#x1F4DA; Knowledge Library</h2>
-            <p class="open-source-disclaimer">Note: Background information is compiled from open-source research and analysis.</p>
-            <div class="knowledge-categories">
+<!-- PAGE WITH SIDEBAR -->
+<div class="page-with-sidebar">
 
-                <div class="knowledge-card collapsed" id="card-iran_conflict">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('iran_conflict')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🚀</span>
-                            <span>Iranian Drone Strikes & Border Tension</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Iranian drones struck Nakhchivan airport in March 2026</strong>, injuring 4 people and marking a dramatic escalation in Iran-Azerbaijan tensions. While Iranian President Pezeshkian apologized, the IRGC issued threats demanding Azerbaijan "expel the Zionists" or face further attacks.</p><p><strong>Azerbaijan has declared Level 1 mobilization</strong> and is weighing whether to allow Israel to use Azerbaijani bases for operations against Iran. The Azerbaijani security services also foiled Iran-planned terror attacks targeting the BTC pipeline, Israeli embassy, and Jewish community sites.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.crisisgroup.org/europe-central-asia/caucasus/azerbaijan" target="_blank" class="report-link">📑 Crisis Group - Azerbaijan</a>
-                            <a href="https://missilethreat.csis.org/" target="_blank" class="report-link">📑 CSIS Missile Threat</a>
-                        </div>
-                    </div>
-                </div>
+<!-- NAV SIDEBAR -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="commodities.html" class="nav-btn commodities-btn">
+        <span class="nav-btn-label">🛢️ Commodities</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Azerbaijan</div>
+    <a href="rhetoric-azerbaijan.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇦🇿 Pressure Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="azerbaijan-stability.html" class="nav-btn active-nav current-page">
+        <span class="nav-btn-label">🇦🇿 Stability Index</span>
+        <span class="nav-btn-status">◉ You are here</span>
+    </a>
+</nav>
 
-                <div class="knowledge-card collapsed" id="card-energy">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('energy')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">⛽</span>
-                            <span>Energy Corridor & BTC Pipeline</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Azerbaijan is a critical energy transit hub</strong> connecting Caspian oil and gas to European markets. The Baku-Tbilisi-Ceyhan (BTC) pipeline carries approximately 1 million barrels per day, and the Southern Gas Corridor (TANAP/TAP) delivers natural gas to Europe.</p><p><strong>Vulnerability:</strong> Iranian-planned attacks on the BTC pipeline were foiled by Azerbaijani security services in March 2026. Any successful strike on energy infrastructure would have significant consequences for European energy security and Azerbaijan's economy.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.eia.gov/" target="_blank" class="report-link">📑 EIA - Azerbaijan</a>
-                            <a href="https://www.iea.org/" target="_blank" class="report-link">📑 IEA</a>
-                        </div>
-                    </div>
-                </div>
+<!-- MAIN CONTENT -->
+<div class="main-content">
 
-                <div class="knowledge-card collapsed" id="card-israel">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('israel')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🇮🇱</span>
-                            <span>Israel-Azerbaijan Strategic Partnership</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Azerbaijan and Israel maintain a deep strategic partnership</strong> encompassing arms sales (Israeli drones were decisive in the 2020 Karabakh war), intelligence sharing, and energy trade. Azerbaijan supplies approximately 40% of Israel's oil imports. This relationship makes Azerbaijan a potential staging area for Israeli operations against Iran, and a target for Iranian retaliation.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.washingtoninstitute.org/" target="_blank" class="report-link">📑 Washington Institute</a>
-                            <a href="https://www.jiss.org.il/" target="_blank" class="report-link">📑 JISS</a>
-                        </div>
-                    </div>
-                </div>
+<!-- WORLDWIDE CAUTION (canonical bright red) -->
+<div style="background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#7f1d1d 100%);border:2px solid #ef4444;border-radius:10px;padding:14px 20px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 15px rgba(239,68,68,0.3);">
+    <div style="font-size:24px;flex-shrink:0;">🚨</div>
+    <div style="flex:1;">
+        <div style="font-size:12px;font-weight:bold;color:#fca5a5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;" data-i18n="cautionLabel">⚠️ U.S. State Department — Worldwide Caution</div>
+        <div style="font-size:12px;color:#fde8e8;line-height:1.4;" data-i18n="cautionText">U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in the Smart Traveler Enrollment Program (STEP).</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/ea/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:11px;font-weight:bold;white-space:nowrap;" data-i18n="viewCaution">VIEW CAUTION →</a>
+</div>
 
-                <div class="knowledge-card collapsed" id="card-karabakh">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('karabakh')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🏔️</span>
-                            <span>Post-Karabakh Military Posture</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Azerbaijan's September 2023 recapture of Nagorno-Karabakh</strong> cemented President Aliyev's domestic position and demonstrated the effectiveness of Turkish-supplied Bayraktar TB2 and Israeli-supplied Harop drones. Azerbaijan now seeks a comprehensive peace treaty with Armenia, though disagreements over border demarcation and the "Zangezur corridor" persist.</p>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, think tank analysis, and government publications</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.crisisgroup.org/" target="_blank" class="report-link">📑 Crisis Group</a>
-                            <a href="https://www.iiss.org/" target="_blank" class="report-link">📑 IISS</a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+<!-- AZERBAIJAN TRAVEL ADVISORY — LEVEL 3 (canonical blue-base, Iran-war-driven upgrade) -->
+<div style="background:linear-gradient(135deg,#1e3a5f 0%,#2c5282 100%);border:2px solid #f59e0b;border-radius:10px;padding:14px 20px;margin-bottom:15px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    <div style="font-size:24px;flex-shrink:0;">🇦🇿</div>
+    <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-size:11px;font-weight:bold;color:#fcd34d;text-transform:uppercase;letter-spacing:1.5px;" data-i18n="advisoryLabel">U.S. State Department — Azerbaijan Travel Advisory</span>
+            <span style="background:#f59e0b;color:white;font-size:10px;font-weight:800;padding:2px 8px;border-radius:3px;letter-spacing:1px;" data-i18n="advisoryLevel">LEVEL 3</span>
         </div>
+        <div style="font-size:12px;color:#e2e8f0;line-height:1.4;" data-i18n="advisoryText"><strong style="color:#f59e0b;">Reconsider Travel to Azerbaijan</strong> due to terrorism, armed conflict, and risk of landmines. Advisory level raised to 3 following the February 28, 2026 onset of US-Iran hostilities. Do not travel to: the southern border region (Iranian drone/missile threat — March 5, 2026 strike on Nakhchivan International Airport), the Armenian border (landmines), or former Nagorno-Karabakh territories (Aghdam, Lachın, Shusha and 9 others — landmines).</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/azerbajian-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:11px;font-weight:bold;white-space:nowrap;" data-i18n="viewAdvisory">VIEW ADVISORY →</a>
+</div>
 
-        <!-- ARTICLES -->
-        <div class="articles-section">
-            <div class="section-title">&#x1F4F0; Recent Azerbaijan, Nakhchivan & Caspian Articles (Last 7 Days)</div>
-            <div id="articlesContainer">
-                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
-            </div>
+<!-- AZERBAIJAN RHETORIC TRACKER BANNER (canonical green pattern) -->
+<div class="rhetoric-banner-canonical" id="rhetoricPressureCard" style="display:none;">
+    <div style="font-size:24px;flex-shrink:0;">📡</div>
+    <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-size:11px;font-weight:bold;color:#86efac;text-transform:uppercase;letter-spacing:1.5px;" data-i18n="rhetoricLabel">Azerbaijan Rhetoric Tracker — Live</span>
+            <span class="rhet-banner-badge" id="rhetoricPill">LOADING</span>
+            <span class="rhet-banner-badge" id="rhetoricScore" style="background:rgba(34,197,94,0.25);color:#86efac;">--</span>
         </div>
+        <div style="font-size:12px;color:#d1fae5;line-height:1.4;" id="rhetoricHeadline">Loading Azerbaijan pressure assessment...</div>
+        <div style="font-size:11px;color:#a7f3d0;line-height:1.4;margin-top:3px;" id="rhetoricDetail"></div>
+    </div>
+    <a href="rhetoric-azerbaijan.html" class="rhet-banner-link" data-i18n="rhetoricLink">Open Tracker →</a>
+</div>
 
-                </div><!-- end main content -->
-        </div><!-- end page-with-sidebar -->
+<!-- AZERBAIJAN STRATEGIC CONTEXT BANNER -->
+<div style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div>
+        <div style="font-size:0.63rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;" data-i18n="contextLabel">📡 APRIL 28, 2026 — STRATEGIC SIGNAL</div>
+        <div style="font-size:0.82rem;color:var(--text);font-weight:700;" data-i18n="contextHeadline">Iran Transit Corridor · Caspian Shipping Surge · WSJ Reporting</div>
+        <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px;" data-i18n="contextSub">Iran routing rail and road shipments via Azerbaijan, Armenia, and Turkey amid economic death spiral · 11+ vessels arrived at Iranian Caspian ports from Russia, Kazakhstan, Turkmenistan · 67% inflation, $270B reconstruction estimate vs $341B GDP</div>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:1px;" data-i18n="contextTagLabel">Source:</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-style:italic;" data-i18n="contextQuote">"WSJ — Iran's economic death spiral"</div>
+    </div>
+</div>
 
-        <footer style="background:var(--card-bg);border:1px solid var(--card-border);border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary);">
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
-                <div>
-                    <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:8px;">Data Sources</h4>
-                    <p style="font-size:12px;line-height:1.5;">NewsAPI, GDELT, RSS Feeds, Reddit, OSINT aggregators, and travel.state.gov travel advisory data.</p>
-                </div>
-                <div>
-                    <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:8px;">Methodology</h4>
-                    <p style="font-size:12px;line-height:1.5;">Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.</p>
-                </div>
-                <div>
-                    <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent);margin-bottom:8px;">Contact</h4>
-                    <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a></p>
-                </div>
-            </div>
-            <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
-                <strong style="color:#f59e0b;">⚠️ DISCLAIMER</strong> &mdash; This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.
-            </div>
-            <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
-                If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;">buy me a coffee</a>
-            </div>
-            <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border);font-size:12px;">
-                <a href="privacy.html" style="color:var(--accent);text-decoration:none;">Privacy Policy</a>
-                <span style="color:var(--text-muted);margin:0 12px;">|</span>
-                <a href="contact.html" style="color:var(--accent);text-decoration:none;">Contact</a>
-            </div>
-            <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted);">
-                © 2025 RCGG. All Rights Reserved. Azerbaijan Stability Index v1.0.0
-            </div>
-        </footer>
+<!-- AZERBAIJAN PRESSURE TRACKER DETAIL CARD (canonical Russia pattern) -->
+<div class="rhetoric-card" id="azerbaijanRhetoricCard" style="display:none;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#38bdf8;margin-bottom:11px;">📡 <span data-i18n="rhetoricCardTitle">AZERBAIJAN PRESSURE TRACKER</span></div>
+    <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:5px;">
+        <div style="font-size:30px;font-weight:700;color:var(--text-primary);" id="azerbaijanRhetoricScoreFull">--</div>
+        <span id="azerbaijanRhetoricLevelLabel" style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:4px;background:#6b7280;color:white;">--</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:11px;" data-i18n="rhetoricCardDesc">Multi-vector pressure score — Iran Border · Armenia Tensions · Israel Defense Axis · Caspian Shipping · SOCAR Energy Politics · Updated every 6h</div>
+    <div id="azerbaijanRhetoricSignalList" style="font-size:12px;color:var(--text-secondary);"><span style="font-style:italic;" data-i18n="loading">Loading…</span></div>
+    <div style="margin-top:13px;padding-top:11px;border-top:1px solid var(--card-border);text-align:center;">
+        <a href="rhetoric-azerbaijan.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="viewFullTracker">View Full Pressure Analysis →</a>
+    </div>
+    <div id="azerbaijanRhetoricScanInfo" style="margin-top:7px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
+</div>
+
+<!-- COMMODITY EXPOSURE CARD (above map per spec) -->
+<div class="card" id="commodityCard" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+        <div class="card-title" style="margin-bottom:0;">🛢️ <span data-i18n="commodityTitle">COMMODITY EXPOSURE — AZERBAIJAN</span></div>
+        <a href="commodities.html" class="commodity-full-link" data-i18n="commodityFullLink">View Full Commodity Tracker →</a>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;font-style:italic;" data-i18n="commoditySubtitle">Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.</div>
+
+    <!-- Pressure summary strip -->
+    <div id="commodityPressureStrip" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;"></div>
+
+    <!-- Per-commodity rows -->
+    <div id="commodityRows"></div>
+
+    <!-- Strategic linkage footer -->
+    <div id="commodityLinkage" style="margin-top:14px;padding:10px 14px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:8px;font-size:11px;color:var(--text-2);line-height:1.55;" data-i18n="commodityLinkage">
+        <strong style="color:#fbbf24;">Strategic Linkage:</strong> Azerbaijan produces ~700K bbl/day of Caspian crude (BTC pipeline — the only major non-Russian, non-Iranian westbound oil corridor from the Caspian basin). The TANAP–TAP gas system carries Azerbaijani natural gas to Europe via Turkey (Southern Gas Corridor). Sangachal Terminal at Baku is the sole export node for both. Iran sanctions-circumvention transit — Caspian shipping plus rail through Astara — adds a transit-hub vector beyond pure production exposure.
     </div>
 
-    <script>
-        const BACKEND_URL = 'https://asifa-europe-backend.onrender.com';
-        function initTheme() { const s = localStorage.getItem('asifah-theme') || 'light'; document.documentElement.setAttribute('data-theme', s); }
-        function toggleTheme() { const c = document.documentElement.getAttribute('data-theme'); const n = c === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', n); localStorage.setItem('asifah-theme', n); }
-        initTheme();
-        function toggleKnowledgeCard(id) { const c = document.getElementById('card-' + id); if (c) c.classList.toggle('collapsed'); }
-        async function loadArticles() {
-            try {
-                const r = await fetch(BACKEND_URL + '/api/europe/threat/azerbaijan?days=7');
-                if (!r.ok) throw new Error('HTTP ' + r.status);
-                const d = await r.json();
-                const articles = d.top_scoring_articles || d.articles || [];
-                if (articles.length > 0) { displayArticles(articles); } else { displayFallback(); }
-            } catch (e) { displayFallback(); }
+    <div id="commodityCacheNote" style="margin-top:8px;font-size:10px;color:var(--text-muted);font-style:italic;text-align:right;"></div>
+</div>
+
+<!-- COMMODITY CARD STYLING -->
+<style>
+.commodity-full-link {
+    font-size: 11px; font-weight: 700; color: #fbbf24; text-decoration: none;
+    padding: 6px 12px; border: 1px solid rgba(245,158,11,0.4); border-radius: 6px;
+    background: rgba(245,158,11,0.06); transition: all 0.2s;
+}
+.commodity-full-link:hover {
+    background: rgba(245,158,11,0.14); border-color: rgba(245,158,11,0.7);
+}
+.commodity-row {
+    display: grid; grid-template-columns: auto 1fr auto auto; gap: 14px; align-items: center;
+    padding: 10px 14px; margin-bottom: 8px;
+    background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.18);
+    border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    text-decoration: none; color: var(--text);
+}
+.commodity-row:hover {
+    background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.4);
+    transform: translateX(2px);
+}
+.commodity-row .c-icon { font-size: 18px; }
+.commodity-row .c-meta { display: flex; flex-direction: column; gap: 2px; }
+.commodity-row .c-name { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.5px; }
+.commodity-row .c-note { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+.commodity-row .c-role-pill {
+    font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px;
+    letter-spacing: 1px; text-transform: uppercase; display: inline-block; margin-right: 5px;
+}
+.role-producer { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.role-consumer { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.role-transit  { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+.commodity-row .c-rank { font-size: 9.5px; color: #93c5fd; font-weight: 600; letter-spacing: 0.5px; }
+.commodity-row .c-spark { font-family: 'Courier New', monospace; font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.commodity-row .c-signals {
+    font-size: 10.5px; color: var(--text-2); white-space: nowrap;
+    padding: 4px 9px; background: rgba(56,189,248,0.08); border-radius: 4px;
+}
+.commodity-pressure-pill {
+    padding: 5px 12px; border-radius: 16px; font-weight: 700; letter-spacing: 1px;
+}
+.alert-normal   { background: rgba(34,197,94,0.12);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.alert-elevated { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.alert-high     { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+.alert-critical { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+@media (max-width: 768px) {
+    .commodity-row { grid-template-columns: auto 1fr; gap: 8px; }
+    .commodity-row .c-spark, .commodity-row .c-signals { grid-column: 2; }
+}
+</style>
+
+
+<div class="card">
+    <div class="card-title">🗺️ <span data-i18n="mapTitle">AZERBAIJAN — STRATEGIC OVERVIEW</span></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:11px;font-style:italic;" data-i18n="mapSubtitle">Azerbaijan's strategic position on the Caspian's western shore — bordered by Russia (north), Georgia (northwest), Armenia (west), Iran (south), and the Caspian Sea (east). The exclave of Nakhchivan abuts Iran, Armenia, and Turkey. BTC pipeline carries crude from Sangachal (Baku) to Ceyhan; TANAP feeds gas to Turkey and onward to Europe. NATO partner; quiet but consequential security relationship with Israel.</div>
+    <iframe class="map-frame"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=44.0%2C38.0%2C51.0%2C42.0&layer=mapnik&marker=40.41%2C49.88"
+        frameborder="0" scrolling="no">
+    </iframe>
+</div>
+
+<!-- KNOWLEDGE LIBRARY -->
+<div class="card">
+    <div class="card-title">📚 <span data-i18n="knowledgeTitle">KNOWLEDGE LIBRARY</span></div>
+    <p style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;" data-i18n="knowledgeDisclaimer">Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
+
+    <div class="knowledge-categories">
+
+        <!-- Iran Transit Corridor (April 2026) — OPEN BY DEFAULT — anchor narrative -->
+        <div class="knowledge-card" id="card-iran-transit">
+            <div class="knowledge-header" onclick="toggleCard('iran-transit')">
+                <div class="knowledge-header-title"><span>🛣️</span> <span data-i18n="catIranTransit">Iran Transit Corridor — April 2026</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Azerbaijan has emerged as a primary land and sea corridor for Iranian goods amid Tehran's worsening economic crisis.</strong> The Wall Street Journal reporting of April 28, 2026 documented Iran routing rail and road shipments via Azerbaijan, Armenia, and Turkey — alongside Caspian Sea routes — as US-led sanctions and the post-war reconstruction burden push Iran toward sustained economic collapse.</p>
+                <ul>
+                    <li><strong>Caspian Shipping Surge:</strong> WSJ documented at least 11 vessels arriving at Iranian Caspian ports (primarily Bandar-e Anzali and Amirabad) carrying grain, corn, and sunflower oil from Russia, Kazakhstan, and Turkmenistan. Caspian routes bypass Strait of Hormuz risk and US/Gulf naval interdiction.</li>
+                    <li><strong>Astara Rail Crossing:</strong> The Astara border on the Iran-Azerbaijan southern frontier has historically handled limited cross-border rail and truck traffic. Reports indicate the corridor has been used for Iranian goods moving northbound — and for grain and consumer goods inbound to Iran — at significantly higher volumes since the February-April 2026 war.</li>
+                    <li><strong>Economic Pressure on Iran:</strong> WSJ cited 67% annual inflation through mid-April 2026, 1M+ Iranians directly out of work plus 1M+ indirectly affected, and a reconstruction estimate of $270B against an annual GDP of approximately $341B (~79% ratio). These conditions are forcing Iran into transit-route diversification it would not otherwise pursue.</li>
+                    <li><strong>Iranian Ceasefire Offer:</strong> Per WSJ, Iran has offered to halt attacks in the Strait of Hormuz in exchange for a full end to hostilities and lifting of US economic blockade — postponing nuclear discussions. Pakistan, Oman, and Russia are involved as mediators.</li>
+                    <li><strong>Azerbaijani Position:</strong> Baku has not publicly framed the transit volume as a political stance. Azerbaijan's official posture remains pragmatic — maintaining commercial corridors while balancing relations with Russia, Iran, Turkey, Israel, and the United States. Energy exports via BTC and TANAP continue unaffected.</li>
+                    <li><strong>Sanctions Risk:</strong> US Treasury OFAC has issued generalized sanctions warnings about transit-jurisdiction enabling of Iranian sanctions evasion. Azerbaijani financial institutions and shipping operators face elevated due-diligence exposure.</li>
+                </ul>
+                <div class="kl-note">* Sources: WSJ (Apr 28 2026), Reuters, Lloyd's List Maritime Intelligence, OFAC advisories, Caspian Policy Center</div>
+                <div class="report-links-grid">
+                    <a href="https://www.wsj.com/world/middle-east/iranians-feel-the-pain-as-their-economy-descends-into-a-death-spiral-47dba669" target="_blank" class="report-link">📑 WSJ Iran Economy</a>
+                    <a href="https://www.caspianpolicy.org/" target="_blank" class="report-link">📑 Caspian Policy Ctr</a>
+                    <a href="https://ofac.treasury.gov/" target="_blank" class="report-link">📑 OFAC Iran</a>
+                    <a href="https://www.reuters.com/world/middle-east/" target="_blank" class="report-link">📑 Reuters ME</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Caspian Sea & Maritime Strategic Position -->
+        <div class="knowledge-card collapsed" id="card-caspian">
+            <div class="knowledge-header" onclick="toggleCard('caspian')">
+                <div class="knowledge-header-title"><span>🌊</span> <span data-i18n="catCaspian">Caspian Sea & Maritime Strategic Position</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Azerbaijan controls roughly 20% of the Caspian Sea's western coastline and Baku is the basin's largest commercial port.</strong> The Caspian — the world's largest enclosed inland water body — connects five littoral states (Russia, Kazakhstan, Turkmenistan, Iran, Azerbaijan) and has become a quiet but increasingly consequential corridor for sanctions-pressured trade.</p>
+                <ul>
+                    <li><strong>Caspian Status Convention (2018):</strong> The five littoral states signed a framework agreement defining the Caspian as a "sea" with special legal status — neither a full sea (UNCLOS) nor a full lake. The Convention bars third-country military presence on the Caspian, formalizing a Russia-Iran-aligned exclusion of NATO naval assets.</li>
+                    <li><strong>Baku Port and Alat:</strong> The Port of Baku at Alat (commissioned 2018) is the largest deep-water port on the Caspian. It is the western terminus of the Trans-Caspian International Transport Route ("Middle Corridor") connecting China to Europe via Kazakhstan, Caspian shipping, Azerbaijan, Georgia, and Turkey — a sanctions-resilient alternative to Russian rail.</li>
+                    <li><strong>Iranian Caspian Trade:</strong> Iranian ports at Bandar-e Anzali and Amirabad receive grain, hydrocarbons, and dual-use goods from Russia, Kazakhstan, and Turkmenistan. WSJ reporting identified at least 11 such vessel arrivals in the period covered by the April 28, 2026 piece.</li>
+                    <li><strong>Energy Infrastructure:</strong> Caspian offshore oil and gas fields (Azeri-Chirag-Gunashli, Shah Deniz) feed the BTC and TANAP pipelines via the Sangachal Terminal south of Baku. Sangachal is the single-point chokehold for both energy systems.</li>
+                    <li><strong>Russian Naval Presence:</strong> Russia maintains its Caspian Flotilla based at Astrakhan and Makhachkala — armed with Kalibr cruise missiles used in strikes against Ukraine since 2015 (Syria) and 2022. The Flotilla's presence creates a dual-use commercial-military backdrop on the Caspian.</li>
+                    <li><strong>Climate and Trafficking Concerns:</strong> The Caspian is shrinking — water level decline accelerating since 2020 — with implications for port operations, fish stocks, and sub-surface infrastructure. The basin is also a documented route for narcotics and weapons trafficking.</li>
+                </ul>
+                <div class="kl-note">* Sources: Caspian Policy Center, Atlantic Council, ICG, World Bank, US EIA</div>
+                <div class="report-links-grid">
+                    <a href="https://www.caspianpolicy.org/" target="_blank" class="report-link">📑 Caspian Policy Ctr</a>
+                    <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                    <a href="https://www.crisisgroup.org/" target="_blank" class="report-link">📑 Intl Crisis Group</a>
+                    <a href="https://www.eia.gov/international/" target="_blank" class="report-link">📑 US EIA</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- SOCAR, BTC Pipeline & Iran Border Dynamics -->
+        <div class="knowledge-card collapsed" id="card-socar">
+            <div class="knowledge-header" onclick="toggleCard('socar')">
+                <div class="knowledge-header-title"><span>🛢️</span> <span data-i18n="catSocar">SOCAR, BTC Pipeline & Iran Border</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>SOCAR (State Oil Company of Azerbaijan Republic) operates one of the post-Soviet space's most strategically valuable hydrocarbon export systems.</strong> The Baku-Tbilisi-Ceyhan (BTC) crude pipeline and the Trans-Anatolian Natural Gas Pipeline (TANAP) together provide the only major energy export corridor from the Caspian basin that bypasses both Russian and Iranian territory.</p>
+                <ul>
+                    <li><strong>BTC Pipeline:</strong> 1,768 km from Sangachal Terminal (Baku) through Tbilisi to Ceyhan on Turkey's Mediterranean coast. Capacity ~1 million barrels per day. Operational since 2006. Carries Azerbaijani crude (Azeri-Chirag-Gunashli) and increasing volumes of Kazakh and Turkmen crude via Caspian shipping. The single most strategically important non-Russian, non-Iranian westbound oil pipeline in the post-Soviet space.</li>
+                    <li><strong>TANAP & TAP — Southern Gas Corridor:</strong> Azerbaijani gas from Shah Deniz Phase 2 flows through TANAP across Turkey into the Trans-Adriatic Pipeline (TAP), reaching Italy and onward to European markets since 2020. Capacity expansions in progress to support EU gas-diversification away from Russian supply.</li>
+                    <li><strong>Sangachal Terminal:</strong> The single export node for both BTC and the Southern Gas Corridor. Located on the Caspian coast south of Baku. A successful attack on Sangachal would disrupt all major Azerbaijani energy exports simultaneously — making it a strategic chokepoint.</li>
+                    <li><strong>Iran Border Tensions:</strong> The 765 km Azerbaijan-Iran border has periodically been the site of military exercises and rhetorical escalations — including Iranian large-scale exercises in October 2022 ostensibly responding to Azerbaijan-Israel cooperation. The March 5, 2026 Iranian drone strike on Nakhchivan International Airport marked a new operational escalation.</li>
+                    <li><strong>Nakhchivan Exclave:</strong> Azerbaijan's exclave bordered by Iran, Armenia, and Turkey. The "Zangezur Corridor" — a proposed transit route through Armenia connecting Azerbaijan proper to Nakhchivan and onward to Turkey — remains a major flashpoint in Armenia-Azerbaijan negotiations and a long-running point of friction with Iran (which opposes any sovereignty-altering corridor on its northern border).</li>
+                    <li><strong>SOCAR International Footprint:</strong> SOCAR operates retail and refining assets in Turkey (Petkim, STAR refinery), Switzerland, Romania, and Ukraine. Diversification has reduced Azerbaijan's exposure to single-buyer pressure but increased its visibility in European energy politics.</li>
+                </ul>
+                <div class="kl-note">* Sources: BP statistical review, SOCAR official, Eurasianet, EIA, Brookings</div>
+                <div class="report-links-grid">
+                    <a href="https://www.bp.com/" target="_blank" class="report-link">📑 BP Caspian</a>
+                    <a href="https://eurasianet.org/" target="_blank" class="report-link">📑 Eurasianet</a>
+                    <a href="https://www.eia.gov/international/analysis/country/AZE" target="_blank" class="report-link">📑 EIA Azerbaijan</a>
+                    <a href="https://www.brookings.edu/" target="_blank" class="report-link">📑 Brookings</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Armenia Tensions & Nagorno-Karabakh Aftermath -->
+        <div class="knowledge-card collapsed" id="card-armenia">
+            <div class="knowledge-header" onclick="toggleCard('armenia')">
+                <div class="knowledge-header-title"><span>⚔️</span> <span data-i18n="catArmenia">Armenia Tensions & Nagorno-Karabakh Aftermath</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>The September 2023 Azerbaijani military operation in Nagorno-Karabakh ended three decades of de facto Armenian control, triggering the displacement of nearly the entire ethnic Armenian population (~100,000 people) from the territory.</strong> The aftermath has restructured the South Caucasus security order — and remains the dominant unresolved issue in Azerbaijan-Armenia relations.</p>
+                <ul>
+                    <li><strong>September 2023 Operation:</strong> A 24-hour Azerbaijani military operation forced the dissolution of the breakaway Republic of Artsakh (Nagorno-Karabakh). Armenian forces and civilians evacuated en masse via the Lachin corridor; the territory has since been formally reintegrated into Azerbaijan.</li>
+                    <li><strong>Demining Burden:</strong> The former Nagorno-Karabakh territories — Aghdam, Aghdara, Fuzuli, Gubadli, Jabrayil, Kalbajar, Khankendi, Khojaly, Khojavend, Lachın, Shusha, and Zangilan — remain heavily contaminated with landmines. The US travel advisory designates these as "Do Not Travel" areas due to landmine risk.</li>
+                    <li><strong>Zangezur Corridor Question:</strong> Azerbaijan demands a transit route through Armenia's Syunik Province connecting the Azerbaijani mainland to Nakhchivan. Armenia and Iran have resisted any sovereignty-altering corridor; the issue has been the central sticking point in peace negotiations and creates direct friction with Tehran.</li>
+                    <li><strong>Peace Treaty Negotiations:</strong> Direct Armenia-Azerbaijan talks have proceeded intermittently since 2023, mediated variously by the EU, US, and Russia. A draft peace framework reportedly reached substantial agreement on borders and connectivity in 2024-2025, though formal signature remains delayed.</li>
+                    <li><strong>Russian Peacekeepers:</strong> The Russian peacekeeping contingent deployed to Nagorno-Karabakh under the November 2020 ceasefire withdrew in 2024. Their absence removed a long-standing Russian leverage point in the region — but also any neutral on-the-ground monitoring capacity.</li>
+                    <li><strong>Diaspora Politics:</strong> The Armenian diaspora — particularly in the US (California, Massachusetts), France, and Russia — exerts significant political influence on Western policy toward both Armenia and Azerbaijan. US Section 907 sanctions on Azerbaijan (Freedom Support Act, 1992) have been periodically waived but remain a structural friction in US-Azerbaijani relations.</li>
+                </ul>
+                <div class="kl-note">* Sources: ICG, OSCE Minsk Group archives, HRW, UN OCHA, Caucasus Watch</div>
+                <div class="report-links-grid">
+                    <a href="https://www.crisisgroup.org/europe-central-asia/caucasus" target="_blank" class="report-link">📑 ICG Caucasus</a>
+                    <a href="https://www.hrw.org/europe/central-asia/azerbaijan" target="_blank" class="report-link">📑 HRW Azerbaijan</a>
+                    <a href="https://caucasuswatch.de/" target="_blank" class="report-link">📑 Caucasus Watch</a>
+                    <a href="https://www.osce.org/" target="_blank" class="report-link">📑 OSCE</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Israel-Azerbaijan Defense Relationship -->
+        <div class="knowledge-card collapsed" id="card-israel">
+            <div class="knowledge-header" onclick="toggleCard('israel')">
+                <div class="knowledge-header-title"><span>🇮🇱</span> <span data-i18n="catIsrael">Israel-Azerbaijan Defense Relationship</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Azerbaijan and Israel maintain one of the closest — and most quietly significant — bilateral defense and intelligence relationships of any Muslim-majority state.</strong> The partnership rests on shared concern with Iran, Azerbaijani energy exports to Israel, and Israeli weapons transfers that have shaped the regional military balance.</p>
+                <ul>
+                    <li><strong>Energy Trade:</strong> Azerbaijan supplies an estimated 40-65% of Israel's crude oil imports via BTC pipeline → Ceyhan → tanker to Ashkelon. This makes Israel one of the largest single buyers of Azerbaijani crude, and Azerbaijan one of Israel's most important energy partners.</li>
+                    <li><strong>Israeli Weapons Transfers:</strong> Azerbaijan has been one of the largest customers of Israeli defense exports. Israeli systems — including Harop loitering munitions, SkyStriker drones, Spike missiles, and Barak air-defense — were extensively used by Azerbaijani forces in the 2020 Nagorno-Karabakh war and the 2023 operation, and have shaped Azerbaijan's force structure across both conflicts.</li>
+                    <li><strong>Diplomatic Upgrade (2023):</strong> Azerbaijan opened its first full embassy in Israel in March 2023 — a significant move that broke a long-standing pattern of formal-but-distant diplomatic relations dating to 1992.</li>
+                    <li><strong>Iran Friction Vector:</strong> Tehran has consistently characterized the Israel-Azerbaijan partnership as a strategic threat, citing alleged Israeli intelligence presence on Iran's northern border. Iranian officials have repeatedly accused Baku of permitting Israeli operations targeting Iranian nuclear scientists and infrastructure — accusations Baku denies.</li>
+                    <li><strong>Mossad Reporting:</strong> Open-source reporting (notably Bergman in The New York Times, Yedioth Ahronoth) has detailed alleged Israeli intelligence cooperation involving Azerbaijani territory dating back at least to 2012. The 2026 US-Iran-Israel war intensified analytical attention on these arrangements, though Baku and Jerusalem maintain operational silence.</li>
+                    <li><strong>Turkey Triangle:</strong> Azerbaijan, Israel, and Turkey form an unusual de facto triangle of intersecting interests — Azerbaijan-Turkey is "two states one nation"; Azerbaijan-Israel is the deep defense relationship; Turkey-Israel relations are cyclically frosty. Baku occasionally serves as a quiet diplomatic bridge between Ankara and Jerusalem.</li>
+                </ul>
+                <div class="kl-note">* Sources: SIPRI arms transfers DB, NYT, Haaretz, Times of Israel, MEMRI</div>
+                <div class="report-links-grid">
+                    <a href="https://www.sipri.org/databases/armstransfers" target="_blank" class="report-link">📑 SIPRI Arms DB</a>
+                    <a href="https://www.haaretz.com/" target="_blank" class="report-link">📑 Haaretz</a>
+                    <a href="https://www.timesofisrael.com/" target="_blank" class="report-link">📑 Times of Israel</a>
+                    <a href="https://www.memri.org/" target="_blank" class="report-link">📑 MEMRI</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ARTICLES — TABBED -->
+<div class="card">
+    <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT AZERBAIJAN STABILITY & STRATEGIC ARTICLES</span></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">English · Russian · Azerbaijani · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit</div>
+    <div class="tab-row">
+        <button class="tab-btn active" id="tab-en" onclick="switchArticleTab('en')" data-i18n="tabEN">🇬🇧 English <span class="tab-count" id="tabCountEN">0</span></button>
+        <button class="tab-btn" id="tab-ru" onclick="switchArticleTab('ru')" data-i18n="tabRU">🇷🇺 Russian <span class="tab-count" id="tabCountRU">0</span></button>
+        <button class="tab-btn" id="tab-az" onclick="switchArticleTab('az')" data-i18n="tabAZ">🇦🇿 Azerbaijani <span class="tab-count" id="tabCountAZ">0</span></button>
+        <button class="tab-btn" id="tab-social" onclick="switchArticleTab('social')" data-i18n="tabSocial">📡 Social <span class="tab-count" id="tabCountSocial">0</span></button>
+    </div>
+    <div id="articlesContainer">
+        <div style="text-align:center;color:var(--text-muted);padding:26px;font-style:italic;" data-i18n="articlesLoading">Loading articles...</div>
+    </div>
+</div>
+
+</div><!-- /main-content -->
+</div><!-- /page-with-sidebar -->
+
+<!-- FOOTER (canonical Asifah pattern) -->
+<footer style="background:var(--card-bg, var(--card, #0d1b2e));border:1px solid var(--card-border, var(--border, #1e3a5f));border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footSourcesTitle">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footSourcesText">NewsAPI, GDELT, RSS Feeds (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footMethodTitle">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footMethodText">Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footContactTitle">Contact</h4>
+            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
+        </div>
+    </div>
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;" data-i18n="footDisclaimerLabel">⚠️ DISCLAIMER</strong> &mdash; <span data-i18n="footDisclaimerText">This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.</span>
+    </div>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;" data-i18n="footBmacButton">buy me a coffee</a>
+    </div>
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, var(--border, #1e3a5f));font-size:12px;">
+        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footPrivacy">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footContact">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Azerbaijan Stability Index v1.1.0 — Proprietary and Confidential.</span>
+    </div>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+const API_BASE = 'https://asifa-europe-backend.onrender.com';
+
+// ── THEME ──
+function initTheme() {
+    const s = localStorage.getItem('asifah-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', s);
+    document.getElementById('themeToggle').checked = (s === 'light');
+}
+function toggleTheme() {
+    const n = document.getElementById('themeToggle').checked ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('asifah-theme', n);
+}
+initTheme();
+
+// ── KNOWLEDGE CARDS ──
+function toggleCard(id) {
+    const c = document.getElementById('card-' + id);
+    if (c) c.classList.toggle('collapsed');
+}
+
+// ── LOADING ──
+let _step = 0, _loadInt = null;
+function startLoading() {
+    const steps = ['step1','step2','step3','step4'];
+    _loadInt = setInterval(() => {
+        if (_step < steps.length - 1) {
+            const c = document.getElementById(steps[_step]);
+            if (c) { c.classList.remove('active'); c.classList.add('complete'); c.querySelector('.step-icon').textContent = '✓'; }
+            _step++;
+            const n = document.getElementById(steps[_step]);
+            if (n) n.classList.add('active');
         }
-        function displayArticles(articles) {
-            document.getElementById('articlesContainer').innerHTML = articles.slice(0, 20).map(a => {
-                const t = a.title || a.article_title || 'Untitled';
-                const s = a.source || a.source_name || '';
-                const p = a.published || a.publishedAt || '';
-                const u = a.url || '#';
-                let d = 'Recent'; if (p) { try { d = new Date(p).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }); } catch(e) {} }
-                return '<div class="article-item"><div class="article-title">' + t + '</div><div class="article-meta">' + s + ' &bull; ' + d + '</div>' + (u !== '#' ? '<a href="' + u + '" target="_blank" class="article-link">Read &rarr;</a>' : '') + '</div>';
-            }).join('');
+    }, 4000);
+}
+function hideLoading() {
+    if (_loadInt) clearInterval(_loadInt);
+    document.querySelectorAll('.loading-step').forEach(s => {
+        s.classList.remove('active'); s.classList.add('complete');
+        s.querySelector('.step-icon').textContent = '✓';
+    });
+    setTimeout(() => {
+        const o = document.getElementById('loadingOverlay');
+        if (o) o.classList.add('hidden');
+    }, 500);
+}
+
+// ── ARTICLES ──
+// ── ARTICLES (tabbed: EN / RU / AZ / Social) ──
+let _articleCache = { en: [], ru: [], az: [], social: [] };
+
+async function loadArticles() {
+    try {
+        const r = await fetch(`${API_BASE}/api/rhetoric/azerbaijan`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+
+        _articleCache.en = (d.articles_en || []).map(a => ({ ...a, _lang: 'en' }));
+        _articleCache.ru = (d.articles_ru || []).map(a => ({ ...a, _lang: 'ru' }));
+        _articleCache.az = (d.articles_az || []).map(a => ({ ...a, _lang: 'az' }));
+
+        // Social: combine telegram + bluesky + reddit signals into a unified list, tag origin
+        const tg     = (d.telegram_signals || []).map(p => ({ ...p, _origin: 'telegram' }));
+        const bsky   = (d.bluesky_signals  || []).map(p => ({ ...p, _origin: 'bluesky'  }));
+        const reddit = (d.reddit_signals   || []).map(p => ({ ...p, _origin: 'reddit'   }));
+        _articleCache.social = [...tg, ...bsky, ...reddit];
+
+        // Update tab counts — prefer count fields if signal arrays not yet exposed (backward compat)
+        document.getElementById('tabCountEN').textContent = _articleCache.en.length;
+        document.getElementById('tabCountRU').textContent = _articleCache.ru.length;
+        document.getElementById('tabCountAZ').textContent = _articleCache.az.length;
+        const socialCount = _articleCache.social.length || ((d.telegram_count||0) + (d.bluesky_count||0) + (d.reddit_count||0));
+        document.getElementById('tabCountSocial').textContent = socialCount;
+
+        // Default to EN; auto-switch to first tab with content
+        if (_articleCache.en.length) {
+            switchArticleTab('en');
+        } else if (_articleCache.ru.length) {
+            switchArticleTab('ru');
+        } else if (_articleCache.az.length) {
+            switchArticleTab('az');
+        } else {
+            switchArticleTab('en');
         }
-        function displayFallback() {
-            document.getElementById('articlesContainer').innerHTML = '<div style="text-align:center; padding:30px; color:var(--text-secondary);"><p>&#x1F4E1; Live article feed loading...</p></div>';
+    } catch(e) {
+        console.warn('[Azerbaijan] Articles failed:', e.message);
+        displayFallback();
+    } finally {
+        hideLoading();
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+    }
+}
+
+function switchArticleTab(tab) {
+    ['en','ru','az','social'].forEach(t => {
+        const b = document.getElementById('tab-'+t);
+        if (b) b.classList.toggle('active', t === tab);
+    });
+    const c = document.getElementById('articlesContainer');
+
+    if (tab === 'social') {
+        const posts = _articleCache.social;
+        if (!posts.length) {
+            c.innerHTML = '<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No social signals captured this scan. Backend may still be aggregating Telegram / Bluesky / Reddit feeds.</div>';
+            return;
         }
-        function switchLanguage(lang, btn) {
-            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+        // Origin colors + emojis
+        const ORIGINS = {
+            telegram: { color: '#38bdf8', label: '📨 Telegram', bg: 'rgba(56,189,248,0.07)', border: 'rgba(56,189,248,0.25)' },
+            bluesky:  { color: '#60a5fa', label: '🦋 Bluesky',  bg: 'rgba(96,165,250,0.07)', border: 'rgba(96,165,250,0.25)' },
+            reddit:   { color: '#fb923c', label: '💬 Reddit',   bg: 'rgba(251,146,60,0.07)', border: 'rgba(251,146,60,0.25)' },
+        };
+        c.innerHTML = posts.slice(0, 30).map(p => {
+            const o = ORIGINS[p._origin] || { color: '#94a3b8', label: '📡 Signal', bg: 'rgba(148,163,184,0.07)', border: 'rgba(148,163,184,0.25)' };
+            const text = p.text || p.title || p.content || p.message || '';
+            const author = p.author || p.handle || p.channel || p.subreddit || p.source || '';
+            const url = p.url || p.link || '#';
+            const pub = p.published || p.publishedAt || p.date || p.timestamp || '';
+            let ds = '';
+            if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
+            return `<div style="padding:11px 14px;background:${o.bg};border:1px solid ${o.border};border-radius:8px;margin-bottom:8px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                    <span style="font-size:10px;font-weight:700;color:${o.color};text-transform:uppercase;letter-spacing:1px;">${o.label}</span>
+                    ${author ? `<span style="font-size:11px;color:var(--text-muted);">${author}</span>` : ''}
+                    ${ds ? `<span style="font-size:10px;color:var(--text-muted);">${ds}</span>` : ''}
+                </div>
+                <div style="font-size:13px;color:var(--text);line-height:1.5;">${text.substring(0,260)}${text.length>260?'…':''}</div>
+                ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" style="color:${o.color};text-decoration:none;font-size:11px;font-weight:600;margin-top:5px;display:inline-block;">View post →</a>` : ''}
+            </div>`;
+        }).join('');
+        return;
+    }
+
+    // EN, RU, or AZ tab
+    const list = _articleCache[tab] || [];
+    const langName = { en: 'English', ru: 'Russian', az: 'Azerbaijani' }[tab] || tab;
+    if (!list.length) {
+        c.innerHTML = `<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No ${langName} articles in current scan.</div>`;
+        return;
+    }
+    c.innerHTML = list.slice(0, 25).map(a => {
+        const title = a.title || 'Untitled';
+        const src = (typeof a.source === 'object' ? a.source?.name : a.source) || a.source_name || '';
+        const pub = a.published || a.publishedAt || a.date || '';
+        const url = a.url || a.link || '#';
+        const desc = a.description || a.summary || '';
+        let ds = '';
+        if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
+        return `<div class="article-item">
+            <div class="article-title">${title}</div>
+            ${desc ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:5px;line-height:1.5;">${desc.substring(0,180)}${desc.length>180?'...':''}</div>` : ''}
+            <div class="article-meta">${src}${ds ? ' · '+ds : ''}</div>
+            ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" class="article-link">Read article →</a>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function displayFallback() {
+    document.getElementById('articlesContainer').innerHTML =
+        '<div style="text-align:center;padding:22px;color:var(--text-muted);">' +
+        '<p style="font-size:14px;margin-bottom:10px;">📡 Live feed loading. Check these curated sources:</p>' +
+        '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:10px;">' +
+        ['Eurasianet|https://eurasianet.org/regions/azerbaijan','Caucasus Watch|https://caucasuswatch.de/','APA|https://apa.az/en','Trend|https://en.trend.az/','OC Media|https://oc-media.org/']
+            .map(s => { const [l,u] = s.split('|'); return `<a href="${u}" target="_blank" style="padding:7px 14px;background:rgba(56,189,248,0.14);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,0.28);">${l}</a>`; })
+            .join('') +
+        '</div></div>';
+}
+
+// ── TRANSLATIONS ──
+const T = {
+    en: {
+        pageFlag:'AZERBAIJAN', pageTitle:'AZERBAIJAN STABILITY INDEX',
+        pageSubtitle:'Caspian Energy Hub · Iran Transit Corridor · Israel Defense Partner · Armenia Tensions · SOCAR & BTC Pipeline',
+        backLink:'← Back to Europe',
+        cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
+        cautionText:'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in STEP.',
+        viewCaution:'VIEW CAUTION →',
+        advisoryLabel:'U.S. STATE DEPARTMENT — AZERBAIJAN TRAVEL ADVISORY',
+        advisoryLevel:'LEVEL 3', viewAdvisory:'VIEW ADVISORY →',
+        advisoryText:'Reconsider Travel to Azerbaijan due to terrorism, armed conflict, and risk of landmines. Advisory level raised to 3 following the February 28, 2026 onset of US-Iran hostilities. Do not travel to: the southern border region (Iranian drone/missile threat — March 5, 2026 strike on Nakhchivan International Airport), the Armenian border (landmines), or former Nagorno-Karabakh territories.',
+        rhetoricLabel:'AZERBAIJAN RHETORIC TRACKER — LIVE',
+        rhetoricLink:'Open Tracker →',
+        contextLabel:'📡 APRIL 28, 2026 — STRATEGIC SIGNAL',
+        contextHeadline:'Iran Transit Corridor · Caspian Shipping Surge · WSJ Reporting',
+        contextSub:'Iran routing rail and road shipments via Azerbaijan, Armenia, and Turkey amid economic death spiral · 11+ vessels arrived at Iranian Caspian ports from Russia, Kazakhstan, Turkmenistan · 67% inflation, $270B reconstruction estimate vs $341B GDP',
+        contextTagLabel:'Source:',
+        contextQuote:'"WSJ — Iran\u2019s economic death spiral"',
+        rhetoricCardTitle:'AZERBAIJAN PRESSURE TRACKER',
+        rhetoricCardDesc:'Multi-vector pressure score — Iran Border · Armenia Tensions · Israel Defense Axis · Caspian Shipping · SOCAR Energy Politics · Updated every 6h',
+        loading:'Loading…', viewFullTracker:'View Full Pressure Analysis →',
+        commodityTitle:'COMMODITY EXPOSURE — AZERBAIJAN',
+        commodityFullLink:'View Full Commodity Tracker →',
+        commoditySubtitle:'Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.',
+        commodityLinkage:'Strategic Linkage: Azerbaijan produces ~700K bbl/day of Caspian crude (BTC pipeline — the only major non-Russian, non-Iranian westbound oil corridor from the Caspian basin). The TANAP–TAP gas system carries Azerbaijani natural gas to Europe via Turkey. Sangachal Terminal at Baku is the sole export node for both. Iran sanctions-circumvention transit adds a transit-hub vector beyond pure production exposure.',
+        mapTitle:'AZERBAIJAN — STRATEGIC OVERVIEW',
+        mapSubtitle:"Azerbaijan's strategic position on the Caspian's western shore — bordered by Russia (north), Georgia (northwest), Armenia (west), Iran (south), and the Caspian Sea (east). The exclave of Nakhchivan abuts Iran, Armenia, and Turkey. BTC pipeline carries crude from Sangachal (Baku) to Ceyhan; TANAP feeds gas to Turkey and onward to Europe. NATO partner; quiet but consequential security relationship with Israel.",
+        knowledgeTitle:'KNOWLEDGE LIBRARY',
+        knowledgeDisclaimer:'Background information compiled from open-source research, think tank analyses, and public government reporting.',
+        catIranTransit:'Iran Transit Corridor — April 2026',
+        catCaspian:'Caspian Sea & Maritime Strategic Position',
+        catSocar:'SOCAR, BTC Pipeline & Iran Border',
+        catArmenia:'Armenia Tensions & Nagorno-Karabakh Aftermath',
+        catIsrael:'Israel-Azerbaijan Defense Relationship',
+        articlesTitle:'RECENT AZERBAIJAN STABILITY & STRATEGIC ARTICLES',
+        articlesDesc:'English · Russian · Azerbaijani · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 English', tabRU:'🇷🇺 Russian', tabAZ:'🇦🇿 Azerbaijani', tabSocial:'📡 Social',
+        articlesLoading:'Loading articles...',
+        footSourcesTitle:'Data Sources',
+        footSourcesText:'NewsAPI, GDELT, RSS Feeds (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.',
+        footMethodTitle:'Methodology',
+        footMethodText:'Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.',
+        footContactTitle:'Contact',
+        footDisclaimerLabel:'⚠️ DISCLAIMER',
+        footDisclaimerText:'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.',
+        footBmacText:'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footBmacButton:'buy me a coffee',
+        footPrivacy:'Privacy Policy', footContact:'Contact',
+        footCopy:'All Rights Reserved. Azerbaijan Stability Index v1.1.0 — Proprietary and Confidential.',
+    },
+    fr: {
+        pageFlag:'AZERBAÏDJAN', pageTitle:'INDICE DE STABILITÉ — AZERBAÏDJAN',
+        pageSubtitle:'Carrefour énergétique caspien · Corridor de transit iranien · Partenaire défense israélien · Tensions Arménie · SOCAR & oléoduc BTC',
+        backLink:'← Retour à l\u2019Europe',
+        cautionLabel:'DÉPARTEMENT D\u2019ÉTAT — MISE EN GARDE MONDIALE',
+        cautionText:'Les citoyens américains dans le monde entier doivent rester vigilants face aux menaces terroristes et à la violence.',
+        viewCaution:'VOIR LA MISE EN GARDE →',
+        advisoryLabel:'DÉPARTEMENT D\u2019ÉTAT — AVIS AZERBAÏDJAN',
+        advisoryLevel:'NIVEAU 3', viewAdvisory:'VOIR L\u2019AVIS →',
+        advisoryText:'Reconsidérer le voyage en Azerbaïdjan en raison du terrorisme, des conflits armés et du risque de mines. Le niveau d\u2019avis a été relevé au niveau 3 suite au début des hostilités américano-iraniennes le 28 février 2026. Ne pas voyager dans la région frontalière sud (menace de drones/missiles iraniens — frappe du 5 mars 2026 sur l\u2019aéroport international de Nakhitchevan), à la frontière arménienne (mines), ni dans les anciens territoires du Haut-Karabakh.',
+        rhetoricLabel:'TRACKER RHÉTORIQUE AZERBAÏDJAN — EN DIRECT',
+        rhetoricLink:'Ouvrir le tracker →',
+        contextLabel:'📡 28 AVRIL 2026 — SIGNAL STRATÉGIQUE',
+        contextHeadline:'Corridor de transit iranien · Surge maritime caspien · Reportage WSJ',
+        contextSub:'L\u2019Iran achemine ses expéditions ferroviaires et routières via l\u2019Azerbaïdjan, l\u2019Arménie et la Turquie au milieu d\u2019une spirale économique mortelle · 11+ navires sont arrivés dans les ports caspiens iraniens depuis la Russie, le Kazakhstan, le Turkménistan · Inflation de 67 %, estimation de reconstruction de 270 G$ contre PIB de 341 G$',
+        contextTagLabel:'Source :',
+        contextQuote:'« WSJ — la spirale économique mortelle de l\u2019Iran »',
+        rhetoricCardTitle:'TRACKER DE PRESSION AZERBAÏDJAN',
+        rhetoricCardDesc:'Score de pression multi-vecteurs — Frontière iranienne · Tensions Arménie · Axe défense Israël · Trafic caspien · Politique énergétique SOCAR · Mis à jour toutes les 6 h',
+        loading:'Chargement…', viewFullTracker:'Voir l\u2019analyse complète →',
+        commodityTitle:'EXPOSITION AUX MATIÈRES PREMIÈRES — AZERBAÏDJAN',
+        commodityFullLink:'Voir le tracker complet →',
+        commoditySubtitle:'Exposition stratégique aux matières premières avec comptage de signaux médiatiques en direct. Cliquez sur une ligne pour explorer.',
+        commodityLinkage:'Lien stratégique : L\u2019Azerbaïdjan produit environ 700 000 b/j de pétrole brut caspien (oléoduc BTC — le seul corridor pétrolier majeur non-russe et non-iranien vers l\u2019ouest depuis le bassin caspien). Le système gazier TANAP–TAP transporte le gaz azerbaïdjanais vers l\u2019Europe via la Turquie. Le terminal de Sangachal à Bakou est le seul nœud d\u2019exportation pour les deux. Le transit de contournement des sanctions iraniennes ajoute un vecteur de plaque tournante.',
+        mapTitle:'AZERBAÏDJAN — VUE STRATÉGIQUE',
+        mapSubtitle:'Position stratégique de l\u2019Azerbaïdjan sur la rive ouest de la Caspienne — bordé par la Russie (nord), la Géorgie (nord-ouest), l\u2019Arménie (ouest), l\u2019Iran (sud) et la mer Caspienne (est). L\u2019exclave du Nakhitchevan jouxte l\u2019Iran, l\u2019Arménie et la Turquie. L\u2019oléoduc BTC achemine le brut de Sangachal (Bakou) à Ceyhan ; TANAP alimente la Turquie puis l\u2019Europe en gaz. Partenaire de l\u2019OTAN ; relation sécuritaire discrète mais conséquente avec Israël.',
+        knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES',
+        knowledgeDisclaimer:'Informations compilées à partir de recherches en sources ouvertes, d\u2019analyses de groupes de réflexion et de rapports gouvernementaux publics.',
+        catIranTransit:'Corridor de transit iranien — avril 2026',
+        catCaspian:'Mer Caspienne & position maritime stratégique',
+        catSocar:'SOCAR, oléoduc BTC & frontière iranienne',
+        catArmenia:'Tensions Arménie & héritage du Haut-Karabakh',
+        catIsrael:'Relation défense Israël-Azerbaïdjan',
+        articlesTitle:'ARTICLES RÉCENTS — AZERBAÏDJAN',
+        articlesDesc:'Anglais · Russe · Azerbaïdjanais · Signaux sociaux · 7 derniers jours · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Anglais', tabRU:'🇷🇺 Russe', tabAZ:'🇦🇿 Azerbaïdjanais', tabSocial:'📡 Social',
+        articlesLoading:'Chargement des articles...',
+        footSourcesTitle:'Sources de données',
+        footSourcesText:'NewsAPI, GDELT, flux RSS (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit et données du Département d\u2019État.',
+        footMethodTitle:'Méthodologie',
+        footMethodText:'Agrégation OSINT pondérée par source avec score de décroissance temporelle. Sources ouvertes uniquement — aucune donnée classifiée.',
+        footContactTitle:'Contact',
+        footDisclaimerLabel:'⚠️ AVERTISSEMENT',
+        footDisclaimerText:'Cette page fournit des estimations analytiques basées sur l\u2019agrégation de renseignements open-source. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires pour la prise de décision. Non destiné à un usage opérationnel.',
+        footBmacText:'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez',
+        footBmacButton:'m\u2019offrir un café',
+        footPrivacy:'Politique de confidentialité', footContact:'Contact',
+        footCopy:'Tous droits réservés. Indice de stabilité Azerbaïdjan v1.1.0 — Propriétaire et Confidentiel.',
+    },
+    ru: {
+        pageFlag:'АЗЕРБАЙДЖАН', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ АЗЕРБАЙДЖАНА',
+        pageSubtitle:'Каспийский энергетический хаб · Иранский транзитный коридор · Партнёр Израиля по обороне · Напряжённость с Арменией · SOCAR и трубопровод БТД',
+        backLink:'← Назад к Европе',
+        cautionLabel:'ГОСДЕПАРТАМЕНТ США — ВСЕМИРНОЕ ПРЕДУПРЕЖДЕНИЕ',
+        cautionText:'Гражданам США во всём мире следует сохранять бдительность. Террористические группы и насильственные субъекты продолжают планировать атаки глобально.',
+        viewCaution:'СМОТРЕТЬ ПРЕДУПРЕЖДЕНИЕ →',
+        advisoryLabel:'ГОСДЕПАРТАМЕНТ США — РЕКОМЕНДАЦИИ ПО АЗЕРБАЙДЖАНУ',
+        advisoryLevel:'УРОВЕНЬ 3', viewAdvisory:'СМОТРЕТЬ РЕКОМЕНДАЦИЮ →',
+        advisoryText:'Пересмотрите поездки в Азербайджан из-за терроризма, вооружённого конфликта и риска противопехотных мин. Уровень рекомендации повышен до 3 после начала американо-иранских боевых действий 28 февраля 2026 года. Не ездите в южный приграничный регион (угроза иранских беспилотников и ракет — удар 5 марта 2026 года по международному аэропорту Нахичевани), к армянской границе (мины), а также в бывшие территории Нагорного Карабаха.',
+        rhetoricLabel:'ТРЕКЕР РИТОРИКИ АЗЕРБАЙДЖАНА — В РЕАЛЬНОМ ВРЕМЕНИ',
+        rhetoricLink:'Открыть трекер →',
+        contextLabel:'📡 28 АПРЕЛЯ 2026 — СТРАТЕГИЧЕСКИЙ СИГНАЛ',
+        contextHeadline:'Иранский транзитный коридор · Всплеск каспийского судоходства · Репортаж WSJ',
+        contextSub:'Иран направляет железнодорожные и автомобильные перевозки через Азербайджан, Армению и Турцию на фоне экономической смертельной спирали · 11+ судов прибыли в иранские каспийские порты из России, Казахстана, Туркменистана · Инфляция 67%, оценка восстановления $270 млрд против ВВП $341 млрд',
+        contextTagLabel:'Источник:',
+        contextQuote:'«WSJ — экономическая смертельная спираль Ирана»',
+        rhetoricCardTitle:'ТРЕКЕР ДАВЛЕНИЯ АЗЕРБАЙДЖАНА',
+        rhetoricCardDesc:'Многовекторная оценка давления — Иранская граница · Армянская напряжённость · Израильская оборонная ось · Каспийское судоходство · Энергетическая политика SOCAR · Обновляется каждые 6 ч',
+        loading:'Загрузка…', viewFullTracker:'Посмотреть полный анализ →',
+        commodityTitle:'СЫРЬЕВАЯ ЭКСПОЗИЦИЯ — АЗЕРБАЙДЖАН',
+        commodityFullLink:'Полный трекер сырья →',
+        commoditySubtitle:'Стратегическая сырьевая экспозиция с подсчётом новостных сигналов в реальном времени. Нажмите на строку для перехода.',
+        commodityLinkage:'Стратегическая связь: Азербайджан добывает ~700 тыс. барр/сутки каспийской нефти (трубопровод БТД — единственный крупный нероссийский, неиранский западный нефтяной коридор из каспийского бассейна). Газовая система ТАНАП–ТАП доставляет азербайджанский газ в Европу через Турцию. Терминал Сангачал в Баку — единственный экспортный узел для обеих систем. Иранский обход санкций добавляет вектор транзитного хаба.',
+        mapTitle:'АЗЕРБАЙДЖАН — СТРАТЕГИЧЕСКИЙ ОБЗОР',
+        mapSubtitle:'Стратегическое положение Азербайджана на западном побережье Каспия — граничит с Россией (север), Грузией (северо-запад), Арменией (запад), Ираном (юг) и Каспийским морем (восток). Эксклав Нахичевань граничит с Ираном, Арменией и Турцией. Трубопровод БТД доставляет нефть от Сангачала (Баку) до Джейхана; ТАНАП поставляет газ в Турцию и далее в Европу. Партнёр НАТО; тихие, но значимые отношения безопасности с Израилем.',
+        knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ',
+        knowledgeDisclaimer:'Справочная информация составлена из открытых источников, аналитических работ исследовательских центров и публичных правительственных отчётов.',
+        catIranTransit:'Иранский транзитный коридор — апрель 2026',
+        catCaspian:'Каспийское море и морская стратегическая позиция',
+        catSocar:'SOCAR, трубопровод БТД и иранская граница',
+        catArmenia:'Напряжённость с Арменией и наследие Карабаха',
+        catIsrael:'Оборонные отношения Израиль–Азербайджан',
+        articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ ОБ АЗЕРБАЙДЖАНЕ',
+        articlesDesc:'Английский · Русский · Азербайджанский · Социальные сигналы · Последние 7 дней · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Английский', tabRU:'🇷🇺 Русский', tabAZ:'🇦🇿 Азербайджанский', tabSocial:'📡 Социальные',
+        articlesLoading:'Загрузка статей...',
+        footSourcesTitle:'Источники данных',
+        footSourcesText:'NewsAPI, GDELT, RSS-каналы (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit и данные travel.state.gov.',
+        footMethodTitle:'Методология',
+        footMethodText:'Взвешенная по источникам OSINT-агрегация с временным затуханием. Только открытые источники — никаких засекреченных данных.',
+        footContactTitle:'Контакт',
+        footDisclaimerLabel:'⚠️ ДИСКЛЕЙМЕР',
+        footDisclaimerText:'Эта страница предоставляет аналитические оценки на основе агрегации разведданных из открытых источников. Она не представляет собой разведывательных оценок, военных советов или политических рекомендаций. Всегда консультируйтесь с авторитетными источниками при принятии решений. Не для оперативного использования.',
+        footBmacText:'Если Asifah Analytics полезен вам и вы хотите поддержать развитие, вы можете',
+        footBmacButton:'купить мне кофе',
+        footPrivacy:'Политика конфиденциальности', footContact:'Контакт',
+        footCopy:'Все права защищены. Индекс стабильности Азербайджана v1.1.0 — Собственность и конфиденциально.',
+    },
+    de: {
+        pageFlag:'ASERBAIDSCHAN', pageTitle:'ASERBAIDSCHAN-STABILITÄTSINDEX',
+        pageSubtitle:'Kaspischer Energieknotenpunkt · Iranischer Transitkorridor · Israelischer Verteidigungspartner · Armenien-Spannungen · SOCAR & BTC-Pipeline',
+        backLink:'← Zurück zu Europa',
+        cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG',
+        cautionText:'US-Bürger weltweit sollten wachsam bleiben. Terrorgruppen und gewalttätige Akteure planen weiterhin Angriffe weltweit.',
+        viewCaution:'WARNUNG ANZEIGEN →',
+        advisoryLabel:'AUSSENMINISTERIUM — ASERBAIDSCHAN-REISEHINWEIS',
+        advisoryLevel:'STUFE 3', viewAdvisory:'WARNUNG ANZEIGEN →',
+        advisoryText:'Reisen nach Aserbaidschan überdenken aufgrund von Terrorismus, bewaffneten Konflikten und Minenrisiko. Stufe nach Beginn der US-iranischen Feindseligkeiten am 28. Februar 2026 auf 3 angehoben. Nicht reisen in: die südliche Grenzregion (iranische Drohnen- und Raketenbedrohung — Angriff vom 5. März 2026 auf den Internationalen Flughafen Nachitschewan), die armenische Grenze (Minen) oder die ehemaligen Berg-Karabach-Gebiete.',
+        rhetoricLabel:'ASERBAIDSCHAN-RHETORIK-TRACKER — LIVE',
+        rhetoricLink:'Tracker öffnen →',
+        contextLabel:'📡 28. APRIL 2026 — STRATEGISCHES SIGNAL',
+        contextHeadline:'Iranischer Transitkorridor · Kaspische Schiffsfahrt-Welle · WSJ-Berichterstattung',
+        contextSub:'Iran leitet Bahn- und Straßentransporte über Aserbaidschan, Armenien und die Türkei inmitten einer wirtschaftlichen Todesspirale · 11+ Schiffe trafen aus Russland, Kasachstan, Turkmenistan in iranischen kaspischen Häfen ein · 67 % Inflation, Wiederaufbauschätzung 270 Mrd. $ gegenüber BIP 341 Mrd. $',
+        contextTagLabel:'Quelle:',
+        contextQuote:'„WSJ — Irans wirtschaftliche Todesspirale"',
+        rhetoricCardTitle:'ASERBAIDSCHAN-DRUCKTRACKER',
+        rhetoricCardDesc:'Multi-Vektor-Druck-Score — Iranische Grenze · Armenien-Spannungen · Israel-Verteidigungsachse · Kaspische Schifffahrt · SOCAR-Energiepolitik · Aktualisiert alle 6 h',
+        loading:'Lade…', viewFullTracker:'Vollständige Druckanalyse anzeigen →',
+        commodityTitle:'ROHSTOFF-EXPOSITION — ASERBAIDSCHAN',
+        commodityFullLink:'Vollständigen Rohstoff-Tracker anzeigen →',
+        commoditySubtitle:'Strategische Rohstoff-Exposition mit Live-Nachrichtensignalzählung. Klicken Sie auf eine Zeile, um zu vertiefen.',
+        commodityLinkage:'Strategische Verknüpfung: Aserbaidschan produziert ca. 700.000 Barrel/Tag kaspisches Rohöl (BTC-Pipeline — der einzige bedeutende nicht-russische, nicht-iranische westwärts gerichtete Ölkorridor aus dem kaspischen Becken). Das TANAP–TAP-Gassystem transportiert aserbaidschanisches Gas über die Türkei nach Europa. Das Sangachal-Terminal in Baku ist der einzige Exportknoten für beide. Iran-Sanktionsumgehungstransit fügt einen Transit-Hub-Vektor hinzu.',
+        mapTitle:'ASERBAIDSCHAN — STRATEGISCHER ÜBERBLICK',
+        mapSubtitle:'Aserbaidschans strategische Lage am Westufer des Kaspischen Meeres — grenzt an Russland (Norden), Georgien (Nordwesten), Armenien (Westen), Iran (Süden) und das Kaspische Meer (Osten). Die Exklave Nachitschewan grenzt an Iran, Armenien und die Türkei. Die BTC-Pipeline transportiert Rohöl von Sangachal (Baku) nach Ceyhan; TANAP versorgt die Türkei und weiter Europa mit Gas. NATO-Partner; ruhige, aber konsequente Sicherheitsbeziehung mit Israel.',
+        knowledgeTitle:'WISSENSBIBLIOTHEK',
+        knowledgeDisclaimer:'Hintergrundinformationen aus Open-Source-Forschung, Think-Tank-Analysen und öffentlichen Regierungsberichten zusammengestellt.',
+        catIranTransit:'Iranischer Transitkorridor — April 2026',
+        catCaspian:'Kaspisches Meer & maritime strategische Position',
+        catSocar:'SOCAR, BTC-Pipeline & iranische Grenze',
+        catArmenia:'Armenien-Spannungen & Berg-Karabach-Nachwirkungen',
+        catIsrael:'Israel-Aserbaidschan-Verteidigungsbeziehung',
+        articlesTitle:'AKTUELLE ARTIKEL — ASERBAIDSCHAN',
+        articlesDesc:'Englisch · Russisch · Aserbaidschanisch · Soziale Signale · Letzte 7 Tage · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Englisch', tabRU:'🇷🇺 Russisch', tabAZ:'🇦🇿 Aserbaidschanisch', tabSocial:'📡 Sozial',
+        articlesLoading:'Lade Artikel...',
+        footSourcesTitle:'Datenquellen',
+        footSourcesText:'NewsAPI, GDELT, RSS-Feeds (EN, RU, AZ, TR), Telegram OSINT, Bluesky, Reddit und travel.state.gov-Reisehinweise.',
+        footMethodTitle:'Methodik',
+        footMethodText:'Quellengewichtete OSINT-Aggregation mit zeitlich abnehmender Bewertung. Nur quelloffene Signale — keine klassifizierten Daten.',
+        footContactTitle:'Kontakt',
+        footDisclaimerLabel:'⚠️ HAFTUNGSAUSSCHLUSS',
+        footDisclaimerText:'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Sie stellt keine nachrichtendienstlichen Bewertungen, militärischen Ratschläge oder politischen Empfehlungen dar. Konsultieren Sie für Entscheidungen stets autoritative Quellen. Nicht für den operativen Einsatz bestimmt.',
+        footBmacText:'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie',
+        footBmacButton:'mir einen Kaffee spendieren',
+        footPrivacy:'Datenschutzrichtlinie', footContact:'Kontakt',
+        footCopy:'Alle Rechte vorbehalten. Aserbaidschan-Stabilitätsindex v1.1.0 — Eigentum und vertraulich.',
+    }
+};
+
+function setLang(lang, btn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const t = T[lang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (t[k] !== undefined) el.textContent = t[k];
+    });
+}
+
+// ── COMMODITY EXPOSURE LOADER (calls Europe backend proxy with 12hr Redis cache) ──
+async function loadCommodity() {
+    const COUNTRY_KEY = 'azerbaijan';
+    try {
+        const r = await fetch(`${API_BASE}/api/europe/commodity/${COUNTRY_KEY}`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        if (d.success !== false && (d.commodity_summaries || []).length > 0) {
+            renderCommodityCard(d);
+            document.getElementById('commodityCard').style.display = 'block';
+        } else if (d.message) {
+            // Awaiting first scan — show card with placeholder so user knows it's coming
+            renderCommodityPlaceholder(d.message);
+            document.getElementById('commodityCard').style.display = 'block';
         }
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('lastUpdated').textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
-            loadArticles();
-        });
-    </script>
+    } catch(e) {
+        console.warn('[Azerbaijan] Commodity fetch failed:', e.message);
+        // Silent fail — card stays hidden, no broken UI
+    }
+}
+
+function renderCommodityCard(d) {
+    // Pressure summary strip
+    const pressure = d.commodity_pressure || 0;
+    const alert = (d.alert_level || 'normal').toLowerCase();
+    const alertLabel = alert.toUpperCase();
+    const stripHtml = `
+        <div class="commodity-pressure-pill alert-${alert}">PRESSURE: ${Math.round(pressure)}</div>
+        <div class="commodity-pressure-pill alert-${alert}">ALERT: ${alertLabel}</div>
+        <div style="display:flex;align-items:center;color:var(--text-muted);font-size:10.5px;letter-spacing:1px;">
+            ${(d.commodity_summaries || []).length} commodities tracked
+        </div>
+    `;
+    document.getElementById('commodityPressureStrip').innerHTML = stripHtml;
+
+    // Per-commodity rows
+    const rowsContainer = document.getElementById('commodityRows');
+    rowsContainer.innerHTML = '';
+    (d.commodity_summaries || []).forEach(c => {
+        const role = (c.role || 'producer').toLowerCase();
+        const rolePill = `<span class="c-role-pill role-${role}">${role}</span>`;
+        const rankText = c.rank ? `#${c.rank} globally` : '';
+        const sparkline = renderSparkline(c.sparkline);
+        const signalCount = c.signal_count || 0;
+        const note = c.note || '';
+        const icon = c.icon || '📦';
+        const name = (c.name || c.commodity || '').toUpperCase();
+
+        const row = document.createElement('a');
+        row.className = 'commodity-row';
+        row.href = `commodities.html#${c.commodity}`;
+        row.innerHTML = `
+            <div class="c-icon">${icon}</div>
+            <div class="c-meta">
+                <div class="c-name">${name}</div>
+                <div>${rolePill}<span class="c-rank">${rankText}</span></div>
+                ${note ? `<div class="c-note">${note}</div>` : ''}
+            </div>
+            <div class="c-spark">${sparkline}</div>
+            <div class="c-signals">📰 ${signalCount} signals</div>
+        `;
+        rowsContainer.appendChild(row);
+    });
+
+    // Cache freshness note
+    const cacheStatus = d.cache_status || 'unknown';
+    const cachedAt = d.proxy_cached_at || d.last_updated;
+    let cacheText = '';
+    if (cachedAt) {
+        const ageMin = Math.floor((Date.now() - new Date(cachedAt).getTime()) / 60000);
+        cacheText = `Cache: ${cacheStatus} · ${ageMin < 60 ? ageMin + 'm' : Math.floor(ageMin/60) + 'h ' + (ageMin%60) + 'm'} ago`;
+    }
+    document.getElementById('commodityCacheNote').textContent = cacheText;
+}
+
+function renderCommodityPlaceholder(msg) {
+    document.getElementById('commodityPressureStrip').innerHTML = '';
+    document.getElementById('commodityRows').innerHTML = `
+        <div style="padding:20px;text-align:center;color:var(--text-muted);font-style:italic;font-size:12px;">
+            ${msg || 'Commodity scan pending — data will appear shortly.'}
+        </div>
+    `;
+}
+
+// Inline ASCII sparkline from a numeric array (or sparkline.values shape).
+function renderSparkline(spark) {
+    if (!spark) return '';
+    let values = [];
+    if (Array.isArray(spark)) values = spark;
+    else if (spark.values && Array.isArray(spark.values)) values = spark.values;
+    else if (spark.points && Array.isArray(spark.points)) values = spark.points.map(p => typeof p === 'number' ? p : (p.y || p.close || 0));
+    if (values.length < 2) return '';
+    const blocks = '▁▂▃▄▅▆▇█';
+    const min = Math.min(...values), max = Math.max(...values);
+    const range = max - min || 1;
+    const sparkStr = values.map(v => blocks[Math.floor(((v - min) / range) * (blocks.length - 1))]).join('');
+    const trend = values[values.length - 1] - values[0];
+    const arrow = trend > 0 ? '↑' : (trend < 0 ? '↓' : '→');
+    const arrowColor = trend > 0 ? '#4ade80' : (trend < 0 ? '#f87171' : '#94a3b8');
+    return `${sparkStr} <span style="color:${arrowColor};font-weight:700;">${arrow}</span>`;
+}
+
+// ── RHETORIC PRESSURE (live tracker — banner + detail card) ──
+async function loadRhetoric() {
+    const ALERT_COLORS = { normal: '#6b7280', elevated: '#3b82f6', high: '#f59e0b', critical: '#dc2626', surge: '#ef4444' };
+    const ALERT_TO_LEVEL = { normal: 0, elevated: 1, high: 2, surge: 3, critical: 4 };
+    const LEVEL_LABELS = { 0: 'Baseline', 1: 'Rhetoric', 2: 'Warning', 3: 'Confrontation', 4: 'Coercion', 5: 'Active Conflict' };
+    try {
+        const r = await fetch(`${API_BASE}/api/rhetoric/azerbaijan`);
+        if (!r.ok) return;
+        const d = await r.json();
+        const score = d.theatre_score || d.pressure_score || 0;
+        const alert = (d.alert_level || 'normal').toLowerCase();
+        const alertColor = ALERT_COLORS[alert] || '#6b7280';
+        const level = ALERT_TO_LEVEL[alert] !== undefined ? ALERT_TO_LEVEL[alert] : 0;
+        const levelLabel = LEVEL_LABELS[level] || 'Baseline';
+
+        // ── Green banner (top) ──
+        const card = document.getElementById('rhetoricPressureCard');
+        if (card) {
+            card.style.display = 'flex';
+            document.getElementById('rhetoricScore').textContent = `Score: ${score}`;
+            const pill = document.getElementById('rhetoricPill');
+            pill.textContent = alert.toUpperCase();
+            pill.style.background = alertColor;
+            const sw = d.so_what || {};
+            document.getElementById('rhetoricHeadline').textContent = sw.scenario || 'Azerbaijan Pressure Tracker — Live';
+            const rl = d.red_lines || {};
+            const dt = d.diplomatic_track || {};
+            const breached = rl.breached_count || 0;
+            const approaching = rl.approaching_count || 0;
+            const greenActive = (d.green_lines || {}).active_count || 0;
+            document.getElementById('rhetoricDetail').textContent =
+                `${breached} breached · ${approaching} approaching · ${greenActive} active diplomatic signals · Diplomatic momentum: ${dt.score || 0}/100. ${sw.assessment || ''}`;
+        }
+
+        // ── Azerbaijan pressure tracker detail card ──
+        const detailCard = document.getElementById('azerbaijanRhetoricCard');
+        if (detailCard) {
+            detailCard.style.display = 'block';
+            const scoreEl = document.getElementById('azerbaijanRhetoricScoreFull');
+            if (scoreEl) { scoreEl.textContent = score + '/100'; scoreEl.style.color = alertColor; }
+            const lvlEl = document.getElementById('azerbaijanRhetoricLevelLabel');
+            if (lvlEl) { lvlEl.textContent = levelLabel; lvlEl.style.background = alertColor; }
+
+            // Body: top_signals (preferred) or fallback to so_what + counts
+            const signalEl = document.getElementById('azerbaijanRhetoricSignalList');
+            if (signalEl) {
+                const signals = (d.top_signals || []).slice(0, 5);
+                if (signals.length) {
+                    signalEl.innerHTML = signals.map(s => {
+                        const txt = s.short_text || s.text || s.long_text || '';
+                        const cat = s.category ? s.category.toUpperCase().replace(/_/g, ' ') : '';
+                        return `<div class="rhetoric-signal-row">${cat ? `<span class="rhetoric-signal-label">${cat}</span>` : ''}${txt}</div>`;
+                    }).join('');
+                } else {
+                    // Fallback: show red-line + green-line counts as actor-row entries
+                    const rl = d.red_lines || {};
+                    const gl = d.green_lines || {};
+                    const dt = d.diplomatic_track || {};
+                    const sw = d.so_what || {};
+                    const rows = [
+                        { label: '🚨 Red Lines Breached',     val: rl.breached_count || 0,   color: '#dc2626' },
+                        { label: '⚠️ Red Lines Approaching',  val: rl.approaching_count || 0, color: '#f59e0b' },
+                        { label: '🕊️ Active Diplomatic',      val: gl.active_count || 0,     color: '#10b981' },
+                        { label: '📊 Diplomatic Momentum',    val: (dt.score || 0) + '/100', color: '#38bdf8' },
+                    ];
+                    let html = rows.map(r => `<div class="rhetoric-actor-row"><span>${r.label}</span><span style="font-weight:700;color:${r.color};">${r.val}</span></div>`).join('');
+                    if (sw.scenario) html += `<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--card-border);font-style:italic;color:var(--text-muted);font-size:11px;line-height:1.5;">${sw.scenario}</div>`;
+                    signalEl.innerHTML = html;
+                }
+            }
+
+            // Scan info footer
+            const scanEl = document.getElementById('azerbaijanRhetoricScanInfo');
+            if (scanEl && d.cached_at) {
+                const ago = Math.round((Date.now() - new Date(d.cached_at)) / 60000);
+                const agoStr = ago < 60 ? `${ago}m` : `${Math.round(ago / 60)}h`;
+                scanEl.textContent = `Last scan: ${agoStr} ago · ${d.total_articles || 0} articles analyzed`;
+            }
+        }
+    } catch(e) { console.warn('[Azerbaijan] Rhetoric pressure fetch failed:', e.message); }
+}
+
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    startLoading();
+    loadArticles();
+    loadCommodity();
+    loadRhetoric();
+});
+</script>
 </body>
 </html>
