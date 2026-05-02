@@ -287,6 +287,14 @@
         .rhet-banner-badge { background:#6b7280; color:white; font-size:10px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px; white-space:nowrap; text-transform:uppercase; font-family:'Courier New',monospace; }
         .rhet-banner-link { flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap; }
         .rhet-banner-link:hover { background:rgba(255,255,255,0.25); }
+
+        /* ── RHETORIC DETAIL CARD (canonical Russia pattern) ── */
+        .rhetoric-card { background: var(--card-bg); border: 2px solid rgba(56,189,248,0.35); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+        .rhetoric-actor-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--card-border); font-size: 12px; color: var(--text-secondary); }
+        .rhetoric-actor-row:last-child { border-bottom: none; }
+        .rhetoric-signal-row { padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+        .rhetoric-signal-row:last-child { border-bottom: none; }
+        .rhetoric-signal-label { font-weight: 700; color: #38bdf8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px; font-family: 'Courier New', monospace; }
     </style>
 </head>
 <body>
@@ -455,6 +463,21 @@
         <div style="font-size:11px;color:#a7f3d0;line-height:1.4;margin-top:3px;" id="rhetoricDetail"></div>
     </div>
     <a href="rhetoric-belarus.html" class="rhet-banner-link" data-i18n="rhetoricLink">Open Tracker →</a>
+</div>
+
+<!-- BELARUS PRESSURE TRACKER DETAIL CARD (canonical Russia pattern) -->
+<div class="rhetoric-card" id="belarusRhetoricCard" style="display:none;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#38bdf8;margin-bottom:11px;">📡 <span data-i18n="rhetoricCardTitle">BELARUS PRESSURE TRACKER</span></div>
+    <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:5px;">
+        <div style="font-size:30px;font-weight:700;color:var(--text-primary);" id="belarusRhetoricScoreFull">--</div>
+        <span id="belarusRhetoricLevelLabel" style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:4px;background:#6b7280;color:white;">--</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:11px;" data-i18n="rhetoricCardDesc">Multi-vector pressure score — Nuclear Sharing · NATO Border · Russia Axis · Iran/China Axis · Regime Stability · Updated every 6h</div>
+    <div id="belarusRhetoricSignalList" style="font-size:12px;color:var(--text-secondary);"><span style="font-style:italic;" data-i18n="loading">Loading…</span></div>
+    <div style="margin-top:13px;padding-top:11px;border-top:1px solid var(--card-border);text-align:center;">
+        <a href="rhetoric-belarus.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="viewFullTracker">View Full Pressure Analysis →</a>
+    </div>
+    <div id="belarusRhetoricScanInfo" style="margin-top:7px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
 </div>
 
 <!-- COMMODITY EXPOSURE CARD (above map per spec) -->
@@ -1050,31 +1073,85 @@ function renderSparkline(spark) {
     return `${sparkStr} <span style="color:${arrowColor};font-weight:700;">${arrow}</span>`;
 }
 
-// ── RHETORIC PRESSURE (live tracker summary card) ──
+// ── RHETORIC PRESSURE (live tracker — banner + detail card) ──
 async function loadRhetoric() {
+    const ALERT_COLORS = { normal: '#6b7280', elevated: '#3b82f6', high: '#f59e0b', critical: '#dc2626', surge: '#ef4444' };
+    const ALERT_TO_LEVEL = { normal: 0, elevated: 1, high: 2, surge: 3, critical: 4 };
+    const LEVEL_LABELS = { 0: 'Baseline', 1: 'Rhetoric', 2: 'Warning', 3: 'Confrontation', 4: 'Coercion', 5: 'Active Conflict' };
     try {
         const r = await fetch(`${API_BASE}/api/rhetoric/belarus`);
         if (!r.ok) return;
         const d = await r.json();
         const score = d.theatre_score || d.pressure_score || 0;
         const alert = (d.alert_level || 'normal').toLowerCase();
-        const colorMap = { normal: '#6b7280', elevated: '#3b82f6', high: '#f59e0b', critical: '#dc2626' };
+        const alertColor = ALERT_COLORS[alert] || '#6b7280';
+        const level = ALERT_TO_LEVEL[alert] !== undefined ? ALERT_TO_LEVEL[alert] : 0;
+        const levelLabel = LEVEL_LABELS[level] || 'Baseline';
+
+        // ── Green banner (top) ──
         const card = document.getElementById('rhetoricPressureCard');
-        if (!card) return;
-        card.style.display = 'flex';
-        document.getElementById('rhetoricScore').textContent = `Score: ${score}`;
-        const pill = document.getElementById('rhetoricPill');
-        pill.textContent = alert.toUpperCase();
-        pill.style.background = colorMap[alert] || '#6b7280';
-        const sw = d.so_what || {};
-        document.getElementById('rhetoricHeadline').textContent = sw.scenario || 'Belarus Pressure Tracker — Live';
-        const rl = d.red_lines || {};
-        const dt = d.diplomatic_track || {};
-        const breached = rl.breached_count || 0;
-        const approaching = rl.approaching_count || 0;
-        const greenActive = (d.green_lines || {}).active_count || 0;
-        document.getElementById('rhetoricDetail').textContent =
-            `${breached} breached · ${approaching} approaching · ${greenActive} active diplomatic signals · Diplomatic momentum: ${dt.score || 0}/100. ${sw.assessment || ''}`;
+        if (card) {
+            card.style.display = 'flex';
+            document.getElementById('rhetoricScore').textContent = `Score: ${score}`;
+            const pill = document.getElementById('rhetoricPill');
+            pill.textContent = alert.toUpperCase();
+            pill.style.background = alertColor;
+            const sw = d.so_what || {};
+            document.getElementById('rhetoricHeadline').textContent = sw.scenario || 'Belarus Pressure Tracker — Live';
+            const rl = d.red_lines || {};
+            const dt = d.diplomatic_track || {};
+            const breached = rl.breached_count || 0;
+            const approaching = rl.approaching_count || 0;
+            const greenActive = (d.green_lines || {}).active_count || 0;
+            document.getElementById('rhetoricDetail').textContent =
+                `${breached} breached · ${approaching} approaching · ${greenActive} active diplomatic signals · Diplomatic momentum: ${dt.score || 0}/100. ${sw.assessment || ''}`;
+        }
+
+        // ── Belarus pressure tracker detail card ──
+        const detailCard = document.getElementById('belarusRhetoricCard');
+        if (detailCard) {
+            detailCard.style.display = 'block';
+            const scoreEl = document.getElementById('belarusRhetoricScoreFull');
+            if (scoreEl) { scoreEl.textContent = score + '/100'; scoreEl.style.color = alertColor; }
+            const lvlEl = document.getElementById('belarusRhetoricLevelLabel');
+            if (lvlEl) { lvlEl.textContent = levelLabel; lvlEl.style.background = alertColor; }
+
+            // Body: top_signals (preferred) or fallback to so_what + counts
+            const signalEl = document.getElementById('belarusRhetoricSignalList');
+            if (signalEl) {
+                const signals = (d.top_signals || []).slice(0, 5);
+                if (signals.length) {
+                    signalEl.innerHTML = signals.map(s => {
+                        const txt = s.short_text || s.text || s.long_text || '';
+                        const cat = s.category ? s.category.toUpperCase().replace(/_/g, ' ') : '';
+                        return `<div class="rhetoric-signal-row">${cat ? `<span class="rhetoric-signal-label">${cat}</span>` : ''}${txt}</div>`;
+                    }).join('');
+                } else {
+                    // Fallback: show red-line + green-line counts as actor-row entries
+                    const rl = d.red_lines || {};
+                    const gl = d.green_lines || {};
+                    const dt = d.diplomatic_track || {};
+                    const sw = d.so_what || {};
+                    const rows = [
+                        { label: '🚨 Red Lines Breached',     val: rl.breached_count || 0,   color: '#dc2626' },
+                        { label: '⚠️ Red Lines Approaching',  val: rl.approaching_count || 0, color: '#f59e0b' },
+                        { label: '🕊️ Active Diplomatic',      val: gl.active_count || 0,     color: '#10b981' },
+                        { label: '📊 Diplomatic Momentum',    val: (dt.score || 0) + '/100', color: '#38bdf8' },
+                    ];
+                    let html = rows.map(r => `<div class="rhetoric-actor-row"><span>${r.label}</span><span style="font-weight:700;color:${r.color};">${r.val}</span></div>`).join('');
+                    if (sw.scenario) html += `<div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--card-border);font-style:italic;color:var(--text-muted);font-size:11px;line-height:1.5;">${sw.scenario}</div>`;
+                    signalEl.innerHTML = html;
+                }
+            }
+
+            // Scan info footer
+            const scanEl = document.getElementById('belarusRhetoricScanInfo');
+            if (scanEl && d.cached_at) {
+                const ago = Math.round((Date.now() - new Date(d.cached_at)) / 60000);
+                const agoStr = ago < 60 ? `${ago}m` : `${Math.round(ago / 60)}h`;
+                scanEl.textContent = `Last scan: ${agoStr} ago · ${d.total_articles || 0} articles analyzed`;
+            }
+        }
     } catch(e) { console.warn('[Belarus] Rhetoric pressure fetch failed:', e.message); }
 }
 
