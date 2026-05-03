@@ -1274,6 +1274,86 @@
         .leader-card .lc-note { font-size: 10px; color: #64748b; font-style: italic; line-height: 1.4; }
         .leader-card .lc-since { font-size: 10px; color: #475569; margin-top: 4px; }
 
+        /* ── COMMODITY EXPOSURE CARD ── */
+        .commodity-exposure-card {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            border: 2px solid #334155; border-radius: 12px; padding: 20px;
+            margin-top: 20px; margin-bottom: 20px;
+        }
+        .commodity-exposure-card .ce-title {
+            font-size: 14px; font-weight: bold; color: #e2e8f0;
+            margin-bottom: 4px;
+        }
+        .commodity-exposure-card .ce-subtitle {
+            font-size: 11px; color: #64748b;
+            margin-bottom: 16px;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        .commodity-exposure-card .ce-convergence-alert {
+            display: none;            /* shown when wheat_lebanon_active = true */
+            background: linear-gradient(135deg, rgba(251,146,60,0.18) 0%, rgba(239,68,68,0.18) 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        .commodity-exposure-card .ce-convergence-alert.active { display: block; }
+        .commodity-exposure-card .ce-convergence-alert-title {
+            font-size: 12px; font-weight: bold; color: #f59e0b;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .commodity-exposure-card .ce-convergence-alert-detail {
+            font-size: 11px; color: #fbbf24;
+            line-height: 1.5;
+        }
+        .commodity-exposure-card .ce-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #1e293b;
+        }
+        .commodity-exposure-card .ce-row:last-child { border-bottom: none; }
+        .commodity-exposure-card .ce-icon { font-size: 22px; min-width: 30px; text-align: center; }
+        .commodity-exposure-card .ce-name {
+            flex: 1; font-size: 13px; font-weight: 600; color: #e2e8f0;
+        }
+        .commodity-exposure-card .ce-name-sub {
+            font-size: 10px; color: #64748b;
+            font-weight: normal;
+            margin-top: 2px;
+        }
+        .commodity-exposure-card .ce-alert-badge {
+            display: inline-block;
+            padding: 3px 10px; border-radius: 4px;
+            font-size: 10px; font-weight: bold;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            min-width: 70px; text-align: center;
+        }
+        .commodity-exposure-card .ce-alert-normal   { background: rgba(107,114,128,0.18); color: #9ca3af; border: 1px solid rgba(107,114,128,0.35); }
+        .commodity-exposure-card .ce-alert-elevated { background: rgba(251,191,36,0.18); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); }
+        .commodity-exposure-card .ce-alert-high     { background: rgba(251,146,60,0.18); color: #fb923c; border: 1px solid rgba(251,146,60,0.45); }
+        .commodity-exposure-card .ce-alert-surge    { background: rgba(239,68,68,0.20);  color: #ef4444; border: 1px solid rgba(239,68,68,0.5); }
+        .commodity-exposure-card .ce-footer {
+            margin-top: 14px; padding-top: 12px;
+            border-top: 1px solid #1e293b;
+            font-size: 10px; color: #64748b;
+            display: flex; justify-content: space-between; align-items: center;
+            flex-wrap: wrap; gap: 8px;
+        }
+        .commodity-exposure-card .ce-footer a { color: #60a5fa; text-decoration: none; }
+        .commodity-exposure-card .ce-footer a:hover { text-decoration: underline; }
+        .commodity-exposure-card .ce-loading,
+        .commodity-exposure-card .ce-empty {
+            text-align: center; font-size: 12px; color: #64748b;
+            font-style: italic; padding: 20px;
+        }
+        /* Cyber dark-mode tints */
+        [data-theme="dark"] .commodity-exposure-card {
+            border-color: rgba(100,149,237,0.25);
+            box-shadow: 0 0 10px rgba(100,149,237,0.06);
+        }
+
         /* ── CYBER DARK MODE -- Cyan outlines across Lebanon Stability ── */
         [data-theme="dark"] .stability-index-card {
             border-color: rgba(100,149,237,0.25);
@@ -1546,6 +1626,30 @@
                         <div id="rhetoricAlertList"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- COMMODITY EXPOSURE CARD — surfaces wheat-Lebanon convergence when active -->
+        <div class="commodity-exposure-card" id="commodityExposureCard" style="display: none;">
+            <div class="ce-title" data-i18n="commodityExposureTitle">📈 Commodity Exposure</div>
+            <div class="ce-subtitle" data-i18n="commodityExposureSubtitle">Lebanon import vulnerabilities</div>
+
+            <!-- Convergence alert pill — only renders when wheat_lebanon_active = true -->
+            <div class="ce-convergence-alert" id="commodityConvergenceAlert">
+                <div class="ce-convergence-alert-title" id="commodityConvergenceAlertTitle">⚠️ Wheat-Lebanon convergence: ACTIVE</div>
+                <div class="ce-convergence-alert-detail" id="commodityConvergenceAlertDetail">
+                    Global wheat in SURGE × active humanitarian crisis — compound import risk.
+                </div>
+            </div>
+
+            <!-- Commodity rows — populated by JS from /api/commodity-pressure/lebanon -->
+            <div id="commodityExposureRows">
+                <div class="ce-loading" data-i18n="commodityLoading">Loading commodity exposure data…</div>
+            </div>
+
+            <div class="ce-footer">
+                <span data-i18n="commoditySource">Source: <a href="/commodities.html" target="_blank">commodity_tracker.py</a></span>
+                <a href="/commodities.html" target="_blank" data-i18n="commodityViewFull">View full commodity tracker →</a>
             </div>
         </div>
 
@@ -2559,6 +2663,7 @@
                 await loadTrendData();
                 loadElectionNews();
                 loadRhetoricData();
+                loadCommodityExposure();
                 hideLoadingOverlay();
                 setTimeout(() => { initLebanonMap(); }, 300);
                 
@@ -2997,7 +3102,12 @@
                 viewFullAnalysis: "View Full Rhetoric Analysis →",
                 catThinkTanks: "Regional Think Tanks & Policy Analysis",
                 tabAll: "All", tabEn: "English", tabHe: "Hebrew", tabAr: "Arabic", tabFa: "Farsi", tabSocial: "Social", tabThinkTank: "Think Tank",
-                noArticles: "No articles in this category."
+                noArticles: "No articles in this category.",
+                commodityExposureTitle: "📈 Commodity Exposure",
+                commodityExposureSubtitle: "Lebanon import vulnerabilities",
+                commodityLoading: "Loading commodity exposure data…",
+                commoditySource: "Source:",
+                commodityViewFull: "View full commodity tracker →"
             },
             he: {
                 pageTitle: "🇱🇧 מדד יציבות לבנון",
@@ -3035,7 +3145,12 @@
                 viewFullAnalysis: "→ ניתוח רטוריקה מלא",
                 catThinkTanks: "מכוני מחקר אזוריים וניתוח מדיניות",
                 tabAll: "הכל", tabEn: "אנגלית", tabHe: "עברית", tabAr: "ערבית", tabFa: "פרסית", tabSocial: "רשתות", tabThinkTank: "מכון מחקר",
-                noArticles: "אין כתבות בקטגוריה זו."
+                noArticles: "אין כתבות בקטגוריה זו.",
+                commodityExposureTitle: "📈 חשיפה לסחורות",
+                commodityExposureSubtitle: "פגיעויות יבוא של לבנון",
+                commodityLoading: "טוען נתוני חשיפה לסחורות…",
+                commoditySource: "מקור:",
+                commodityViewFull: "← צפה במעקב הסחורות המלא"
             },
             ar: {
                 pageTitle: "🇱🇧 مؤشر استقرار لبنان",
@@ -3073,7 +3188,12 @@
                 viewFullAnalysis: "← عرض التحليل الكامل للخطاب",
                 catThinkTanks: "مراكز الأبحاث الإقليمية وتحليل السياسات",
                 tabAll: "الكل", tabEn: "الإنجليزية", tabHe: "العبرية", tabAr: "العربية", tabFa: "الفارسية", tabSocial: "اجتماعي", tabThinkTank: "مركز أبحاث",
-                noArticles: "لا توجد مقالات في هذه الفئة."
+                noArticles: "لا توجد مقالات في هذه الفئة.",
+                commodityExposureTitle: "📈 التعرض للسلع",
+                commodityExposureSubtitle: "نقاط ضعف الاستيراد اللبنانية",
+                commodityLoading: "جارٍ تحميل بيانات التعرض للسلع…",
+                commoditySource: "المصدر:",
+                commodityViewFull: "← عرض متتبع السلع الكامل"
             },
             fa: {
                 pageTitle: "🇱🇧 شاخص ثبات لبنان",
@@ -3111,7 +3231,12 @@
                 viewFullAnalysis: "← مشاهده تحلیل کامل گفتمان",
                 catThinkTanks: "اندیشکده‌های منطقه‌ای و تحلیل سیاست",
                 tabAll: "همه", tabEn: "انگلیسی", tabHe: "عبری", tabAr: "عربی", tabFa: "فارسی", tabSocial: "اجتماعی", tabThinkTank: "اندیشکده",
-                noArticles: "هیچ مقاله‌ای در این دسته نیست."
+                noArticles: "هیچ مقاله‌ای در این دسته نیست.",
+                commodityExposureTitle: "📈 آسیب‌پذیری کالایی",
+                commodityExposureSubtitle: "آسیب‌پذیری‌های واردات لبنان",
+                commodityLoading: "بارگذاری داده‌های آسیب‌پذیری کالایی…",
+                commoditySource: "منبع:",
+                commodityViewFull: "← مشاهده کامل ردیاب کالا"
             }
         };
 
@@ -3414,6 +3539,98 @@
                 document.getElementById('rhetoricScore').textContent = 'N/A';
                 document.getElementById('rhetoricScanInfo').textContent = 'Data unavailable';
             }
+        }
+
+        // ============================================================
+        // COMMODITY EXPOSURE LOADER
+        // Pulls Lebanon's commodity import vulnerabilities from the
+        // ME backend's /api/commodity-pressure/<target> endpoint, plus
+        // the convergence flag from the ME BLUF response.
+        // Renders alongside the rhetoric card to surface compound risks
+        // (e.g. wheat-Lebanon convergence when global wheat is in surge).
+        // ============================================================
+        async function loadCommodityExposure() {
+            const card        = document.getElementById('commodityExposureCard');
+            const rowsEl      = document.getElementById('commodityExposureRows');
+            const alertEl     = document.getElementById('commodityConvergenceAlert');
+            const alertDetail = document.getElementById('commodityConvergenceAlertDetail');
+
+            try {
+                // Fetch in parallel: country exposure + ME BLUF (for convergence flag)
+                const ME_BACKEND = 'https://asifah-backend.onrender.com';
+                const [exposureResp, blufResp] = await Promise.all([
+                    fetch(`${ME_BACKEND}/api/commodity-pressure/lebanon`).catch(() => null),
+                    fetch(`${ME_BACKEND}/api/rhetoric/me/bluf`).catch(() => null),
+                ]);
+
+                if (!exposureResp || !exposureResp.ok) {
+                    console.warn('[Commodity Exposure] /api/commodity-pressure/lebanon unavailable');
+                    card.style.display = 'none';
+                    return;
+                }
+                const exposure = await exposureResp.json();
+                const summaries = exposure.commodity_summaries || [];
+
+                if (summaries.length === 0) {
+                    rowsEl.innerHTML = '<div class="ce-empty">No commodity exposure mapped for Lebanon.</div>';
+                    card.style.display = 'block';
+                    return;
+                }
+
+                // Render each commodity row
+                const rows = summaries.map(c => {
+                    const alertLevel = (c.global_alert_level || 'normal').toLowerCase();
+                    const badgeClass = `ce-alert-${alertLevel}`;
+                    const badgeLabel = alertLevel.toUpperCase();
+                    const role       = c.role ? c.role.charAt(0).toUpperCase() + c.role.slice(1) : '';
+                    const subtitle   = role
+                        ? `${role} · ${c.global_signal_count || 0} signals globally`
+                        : `${c.global_signal_count || 0} signals globally`;
+                    const noteHtml   = c.note
+                        ? `<div class="ce-name-sub">${escapeHtml(c.note.substring(0, 110))}${c.note.length > 110 ? '…' : ''}</div>`
+                        : '';
+                    return `
+                        <div class="ce-row">
+                            <div class="ce-icon">${c.icon || '📦'}</div>
+                            <div class="ce-name">
+                                ${c.name || c.commodity}
+                                <div class="ce-name-sub">${subtitle}</div>
+                                ${noteHtml}
+                            </div>
+                            <div class="ce-alert-badge ${badgeClass}">${badgeLabel}</div>
+                        </div>
+                    `;
+                }).join('');
+                rowsEl.innerHTML = rows;
+
+                // Check convergence flag from ME BLUF
+                if (blufResp && blufResp.ok) {
+                    const bluf = await blufResp.json();
+                    const humanitarianSig = (bluf.top_signals || bluf.signals || [])
+                        .find(s => s.category === 'humanitarian_lebanon');
+
+                    if (humanitarianSig && humanitarianSig.wheat_lebanon_active) {
+                        alertEl.classList.add('active');
+                        const wheatState = (humanitarianSig.convergence_states || {}).wheat_lebanon || {};
+                        const alertLevel = (wheatState.alert_level || 'elevated').toUpperCase();
+                        const signalCount = wheatState.signal_count || 0;
+                        alertDetail.innerHTML = `Global wheat in <strong>${alertLevel}</strong> (${signalCount} signals) × active humanitarian crisis. Lebanon's ~1-month wheat reserves + 60-67% Ukraine import dependency mean any Black Sea grain corridor disruption is materially worse during this crisis.`;
+                    }
+                }
+
+                card.style.display = 'block';
+            } catch (error) {
+                console.error('[Commodity Exposure] error:', error);
+                card.style.display = 'none';
+            }
+        }
+
+        // Tiny HTML-escape helper (defensive — commodity notes come from upstream data)
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
         }
 
         // ===== INIT =====
