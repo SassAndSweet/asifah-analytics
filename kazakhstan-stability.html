@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics - Kazakhstan Stability Index v1.0.0 — May 2026 -->
+<html lang="en">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kazakhstan Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── ARCTIC / ICE COLOR SCHEME ── */
+        :root {
+            --bg:           #060d1a;
+            --card:         #0d1b2e;
+            --border:       #1e3a5f;
+            --accent:       #38bdf8;
+            --accent-glow:  rgba(56,189,248,0.18);
+            --text:         #e2f0fb;
+            --text-2:       #93c5fd;
+            --text-muted:   #4a7fa5;
+            --red:          #ef4444;
+            --amber:        #f59e0b;
+            --green:        #22c55e;
+            --wm-filter:    saturate(3) brightness(0.8) hue-rotate(185deg);
+        }
+        [data-theme="light"] {
+            --bg:           #f0f5fa;
+            --card:         #ffffff;
+            --border:       #c8daea;
+            --text:         #1a2a3a;
+            --text-2:       #2c4a6e;
+            --text-muted:   #7a9ab8;
+            --wm-filter:    none;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 110vmin; height: 110vmin;
+            min-width: 800px; min-height: 800px;
+            max-width: 1400px; max-height: 1400px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.22;
+            filter: var(--wm-filter);
+            z-index: 0;
+            pointer-events: none;
+        }
+        [data-theme="light"] body::before { opacity: 0.06; }
+
+        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ── LOADING ── */
+        .loading-overlay {
+            position: fixed; inset: 0;
+            background: rgba(6,13,26,0.97);
+            backdrop-filter: blur(10px);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s, visibility 0.5s;
+        }
+        .loading-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+        .loading-spinner {
+            width: 56px; height: 56px;
+            border: 4px solid rgba(56,189,248,0.2);
+            border-top-color: #38bdf8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 28px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-title { font-size: 20px; font-weight: 700; color: #38bdf8; margin-bottom: 18px; letter-spacing: 2px; }
+        .loading-step { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 9px; font-size: 13px; color: var(--text-2); }
+        .loading-step.active { color: #38bdf8; font-weight: 700; }
+        .loading-step.complete { color: #22c55e; }
+        .step-icon { font-size: 15px; min-width: 18px; }
+        .loading-error { color: #f87171; font-size: 13px; margin-top: 14px; padding: 10px 14px; background: rgba(248,113,113,0.1); border: 1px solid rgba(248,113,113,0.3); border-radius: 8px; display: none; }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #060d1a, #0d1b2e);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 26px 30px;
+            margin-bottom: 18px;
+            display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+            box-shadow: 0 0 40px rgba(56,189,248,0.07);
+            position: relative;
+        }
+        [data-theme="light"] header { background: linear-gradient(135deg, #1c3a5c, #2a5080); }
+        .header-logo { width: 68px; height: 68px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.35); flex-shrink: 0; }
+        .header-center { flex: 1; text-align: center; }
+        .header-flag { font-size: 0.68rem; font-weight: 700; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
+        .header-title { font-size: clamp(1.2rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; margin: 4px 0; }
+        .header-subtitle { font-size: 0.73rem; color: var(--text-muted); letter-spacing: 1px; }
+        .header-ts { font-size: 0.63rem; color: var(--text-muted); margin-top: 4px; }
+        .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .back-link {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 13px; border-radius: 8px;
+            border: 1px solid rgba(56,189,248,0.3);
+            color: var(--accent); font-size: 0.68rem; font-weight: 700;
+            letter-spacing: 1px; text-decoration: none; text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .back-link:hover { border-color: var(--accent); background: rgba(56,189,248,0.08); }
+        .lang-group { display: flex; gap: 4px; }
+        .lang-btn {
+            font-family: 'Times New Roman', serif;
+            padding: 4px 10px; border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent; color: var(--text-muted);
+            font-size: 0.68rem; font-weight: 700; cursor: pointer;
+            transition: all 0.2s;
+        }
+        .lang-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .theme-row { display: flex; align-items: center; gap: 7px; }
+        .theme-label { font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+        .theme-toggle { position: relative; width: 44px; height: 22px; cursor: pointer; }
+        .theme-toggle input { opacity: 0; width: 0; height: 0; }
+        .theme-slider { position: absolute; inset: 0; border-radius: 11px; background: var(--border); transition: 0.3s; display: flex; align-items: center; padding: 2px; }
+        .theme-slider::before { content: '☀️'; width: 18px; height: 18px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 11px; transition: 0.3s; }
+        [data-theme="light"] .theme-slider { background: var(--accent); }
+        [data-theme="light"] .theme-slider::before { content: '🌙'; margin-left: 22px; }
+
+        /* ── BANNERS ── */
+        .banner-red {
+            background: linear-gradient(135deg, #1a0000, #2a0000);
+            border: 1px solid rgba(239,68,68,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .banner-amber {
+            background: linear-gradient(135deg, #1a0e00, #2a1800);
+            border: 1px solid rgba(245,158,11,0.5);
+            border-radius: 12px; padding: 15px 18px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        }
+        .level-badge {
+            display: inline-block; padding: 3px 10px; border-radius: 4px;
+            font-size: 0.58rem; font-weight: 700; letter-spacing: 1.5px;
+            text-transform: uppercase; color: white;
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px; padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 6px rgba(30,58,95,0.25);
+            transition: background 0.3s, border-color 0.3s;
+        }
+        .card-title {
+            font-size: 0.63rem; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--accent); margin-bottom: 14px;
+            padding-bottom: 9px; border-bottom: 1px solid var(--border);
+        }
+
+        /* ── MAP ── */
+        .map-frame {
+            width: 100%; height: 420px;
+            border-radius: 8px; border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+        .knowledge-card {
+            background: rgba(6,13,26,0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px; overflow: hidden;
+            transition: all 0.3s;
+        }
+        [data-theme="light"] .knowledge-card { background: #f8fbfe; }
+        .knowledge-card:hover { border-color: rgba(56,189,248,0.35); }
+        .knowledge-header {
+            padding: 14px 17px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(30,58,95,0.2);
+            transition: background 0.3s;
+        }
+        [data-theme="light"] .knowledge-header { background: rgba(56,189,248,0.06); }
+        .knowledge-header:hover { background: rgba(30,58,95,0.32); }
+        .knowledge-header-title { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 700; color: var(--text); }
+        .collapse-icon { font-size: 14px; color: var(--accent); transition: transform 0.3s; }
+        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .knowledge-content {
+            padding: 15px 17px;
+            max-height: 520px; overflow-y: auto;
+            transition: max-height 0.3s ease, padding 0.3s;
+        }
+        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 17px; overflow: hidden; }
+        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 9px; }
+        .knowledge-content ul { margin-left: 17px; margin-bottom: 9px; }
+        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-2); margin-bottom: 5px; }
+        .knowledge-content strong { color: var(--text); }
+        .kl-note { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border); }
+        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 7px; margin-top: 10px; }
+        .report-link {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 7px 11px;
+            background: rgba(56,189,248,0.1); color: var(--accent);
+            text-decoration: none; border-radius: 6px;
+            font-size: 11px; font-weight: 700;
+            border: 1px solid rgba(56,189,248,0.22);
+            transition: all 0.2s;
+        }
+        .report-link:hover { background: rgba(56,189,248,0.18); }
+
+        /* ── ARTICLES ── */
+        .article-item {
+            background: rgba(6,13,26,0.6);
+            padding: 13px; border-radius: 8px; margin-bottom: 9px;
+            border-left: 3px solid var(--accent);
+            transition: all 0.2s;
+        }
+        [data-theme="light"] .article-item { background: #f8fbfe; }
+        .article-item:hover { transform: translateX(4px); }
+        .article-title { color: var(--text); font-size: 13px; margin-bottom: 3px; font-weight: 500; line-height: 1.4; }
+        .article-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+        .article-link { color: var(--accent); text-decoration: none; font-size: 12px; }
+        .article-link:hover { text-decoration: underline; }
+
+        /* ── ARTICLE TABS (canonical Russia pattern) ── */
+        .tab-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; }
+        .tab-btn { padding: 6px 15px; border-radius: 6px; border: 2px solid var(--card-border); background: transparent; color: var(--text-muted); font-family: 'Times New Roman', serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        .tab-btn:hover { color: var(--accent); border-color: rgba(56,189,248,0.5); }
+        .tab-btn.active { background: var(--accent); color: #000; border-color: var(--accent); }
+        .tab-count { display: inline-block; background: rgba(255,255,255,0.18); padding: 1px 7px; border-radius: 10px; font-size: 10px; margin-left: 4px; font-weight: 600; }
+        .tab-btn.active .tab-count { background: rgba(0,0,0,0.25); color: #000; }
+
+        /* ── FOOTER ── */
+        .page-footer {
+            text-align: center; padding: 22px 0 30px;
+            font-size: 0.58rem; color: var(--text-muted); letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: center; text-align: center; }
+            .header-right { align-items: center; }
+            .knowledge-categories { grid-template-columns: 1fr; }
+        }
+
+        /* ── PAGE WITH SIDEBAR (canonical) ── */
+        .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
+        .nav-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+        .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+        .nav-btn { position: relative; display: flex; flex-direction: column; gap: 3px; padding: 9px 11px; border-radius: 7px; background: rgba(13,27,46,0.6); border: 1px solid rgba(56,189,248,0.18); color: #e2f0fb; font-family: 'Times New Roman', serif; font-weight: 700; font-size: 11px; letter-spacing: 0.3px; text-decoration: none; transition: all 0.2s; overflow: hidden; }
+        [data-theme="light"] .nav-btn { color: var(--text-secondary); }
+        .nav-btn .nav-btn-label { position: relative; z-index: 2; font-size: 12px; line-height: 1.3; }
+        .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #38bdf8; }
+        .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); border-color: rgba(56,189,248,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(56,189,248,0.12); }
+        .nav-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); border-color: rgba(34,197,94,0.6); color: #ffffff; box-shadow: 0 0 18px rgba(34,197,94,0.2); }
+        .nav-btn.current-page .nav-btn-status { color: #4ade80; }
+        .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
+        [data-theme="light"] .nav-btn.inactive-nav { color: rgba(0,0,0,0.3); background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.1); }
+        .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
+        .nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 4px 0; }
+        .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+        .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+        .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
+        .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+        .nav-btn.commodities-btn { border-color: rgba(245,158,11,0.4); background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(217,119,6,0.05) 100%); }
+        .nav-btn.commodities-btn .nav-btn-status { color: #fbbf24; }
+        .main-content { flex: 1; min-width: 0; }
+        @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+        /* ── RHETORIC TRACKER BANNER (canonical green pattern, matches Israel) ── */
+        .rhetoric-banner-canonical { display:flex; align-items:center; gap:14px; background:linear-gradient(135deg,#052e16,#14532d); border:2px solid #22c55e; border-radius:10px; padding:14px 20px; margin-bottom:15px; box-shadow:0 4px 12px rgba(0,0,0,0.15); flex-wrap:wrap; }
+        .rhet-banner-badge { background:#6b7280; color:white; font-size:10px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px; white-space:nowrap; text-transform:uppercase; font-family:'Courier New',monospace; }
+        .rhet-banner-link { flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap; }
+        .rhet-banner-link:hover { background:rgba(255,255,255,0.25); }
+
+        /* ── RHETORIC DETAIL CARD (canonical Russia pattern) ── */
+        .rhetoric-card { background: var(--card-bg); border: 2px solid rgba(56,189,248,0.35); border-radius: 12px; padding: 18px; margin-bottom: 18px; }
+        .rhetoric-actor-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-bottom: 1px solid var(--card-border); font-size: 12px; color: var(--text-secondary); }
+        .rhetoric-actor-row:last-child { border-bottom: none; }
+        .rhetoric-signal-row { padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+        .rhetoric-signal-row:last-child { border-bottom: none; }
+        .rhetoric-signal-label { font-weight: 700; color: #38bdf8; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-right: 8px; font-family: 'Courier New', monospace; }
+    </style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div style="text-align:center;">
+        <div class="loading-title">Loading Kazakhstan Stability Data</div>
+        <div>
+            <div class="loading-step active" id="step1"><span class="step-icon">⏳</span> Fetching OSINT articles on Kazakhstan...</div>
+            <div class="loading-step" id="step2"><span class="step-icon">⏳</span> Scanning constitutional reform, uranium &amp; Middle Corridor signals...</div>
+            <div class="loading-step" id="step3"><span class="step-icon">⏳</span> Analyzing Tokayev succession, Tengiz/Kashagan &amp; Russia-China hedging...</div>
+            <div class="loading-step" id="step4"><span class="step-icon">⏳</span> Rendering dashboard...</div>
+        </div>
+        <div style="margin-top:18px;font-size:11px;color:var(--text-muted);font-style:italic;">This may take 20–40 seconds...</div>
+        <div class="loading-error" id="loadingError"></div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- HEADER -->
+<header>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;">
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+        <a href="europe.html" class="back-link" data-i18n="backLink">← Back to Europe</a>
+    </div>
+    <div class="header-center">
+        <div class="header-flag">🇰🇿 <span data-i18n="pageFlag">KAZAKHSTAN</span></div>
+        <div class="header-title" data-i18n="pageTitle">KAZAKHSTAN STABILITY INDEX</div>
+        <div class="header-subtitle" data-i18n="pageSubtitle">Constitutional Reform · CPC Pipeline · World #1 Uranium · Middle Corridor · Russia/China Hedging</div>
+        <div class="header-ts">Last updated: <span id="lastUpdated">Loading...</span></div>
+    </div>
+    <div class="header-right">
+        <div class="lang-group">
+            <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+            <button class="lang-btn" onclick="setLang('fr',this)">FR</button>
+            <button class="lang-btn" onclick="setLang('ru',this)">RU</button>
+            <button class="lang-btn" onclick="setLang('de',this)">DE</button>
+        </div>
+        <div class="theme-row">
+            <span class="theme-label">THEME</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
+                <span class="theme-slider"></span>
+            </label>
+        </div>
+    </div>
+</header>
+
+<!-- PAGE WITH SIDEBAR -->
+<div class="page-with-sidebar">
+
+<!-- NAV SIDEBAR -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="commodities.html" class="nav-btn commodities-btn">
+        <span class="nav-btn-label">🛢️ Commodities</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Kazakhstan</div>
+    <a href="rhetoric-kazakhstan.html" class="nav-btn rhetoric-btn faded">
+        <span class="nav-btn-label">🇰🇿 Pressure Tracker</span>
+        <span class="nav-btn-status">⚙️ In Dev</span>
+    </a>
+    <a href="kazakhstan-stability.html" class="nav-btn active-nav current-page">
+        <span class="nav-btn-label">🇰🇿 Stability Index</span>
+        <span class="nav-btn-status">◉ You are here</span>
+    </a>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+<!-- WORLDWIDE CAUTION (canonical bright red) -->
+<div style="background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#7f1d1d 100%);border:2px solid #ef4444;border-radius:10px;padding:14px 20px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 15px rgba(239,68,68,0.3);">
+    <div style="font-size:24px;flex-shrink:0;">🚨</div>
+    <div style="flex:1;">
+        <div style="font-size:12px;font-weight:bold;color:#fca5a5;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:3px;" data-i18n="cautionLabel">⚠️ U.S. State Department — Worldwide Caution</div>
+        <div style="font-size:12px;color:#fde8e8;line-height:1.4;" data-i18n="cautionText">U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in the Smart Traveler Enrollment Program (STEP).</div>
+    </div>
+    <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:11px;font-weight:bold;white-space:nowrap;" data-i18n="viewCaution">VIEW CAUTION →</a>
+</div>
+
+<!-- KAZAKHSTAN TRAVEL ADVISORY — LEVEL 1 (canonical green-base) -->
+<div style="background:linear-gradient(135deg,#022c22 0%,#064e3b 100%);border:2px solid #10b981;border-radius:10px;padding:14px 20px;margin-bottom:15px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    <div style="font-size:24px;flex-shrink:0;">🇰🇿</div>
+    <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-size:11px;font-weight:bold;color:#a7f3d0;text-transform:uppercase;letter-spacing:1.5px;" data-i18n="advisoryLabel">U.S. State Department — Kazakhstan Travel Advisory</span>
+            <span style="background:#10b981;color:#022c22;font-size:10px;font-weight:800;padding:2px 8px;border-radius:3px;letter-spacing:1px;" data-i18n="advisoryLevel">LEVEL 1</span>
+        </div>
+        <div style="font-size:12px;color:#d1fae5;line-height:1.4;" data-i18n="advisoryText"><strong style="color:#10b981;">Exercise Normal Precautions in Kazakhstan.</strong> Reissued August 4, 2024 after periodic review without changes. Important caveats: <strong>Russian arrest warrants</strong> — Kazakhstan and Russia have law enforcement cooperation agreements; Russian authorities may request detention of US citizens with prior Russia work. <strong>Border with China</strong> — permission required from Kazakh government before traveling to certain areas bordering China and cities close to military installations. Demonstrations may occur; have ended in deaths and mass arrests historically (January 2022).</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/kazakhstan-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0;padding:6px 14px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:6px;color:white;text-decoration:none;font-size:11px;font-weight:bold;white-space:nowrap;" data-i18n="viewAdvisory">VIEW ADVISORY →</a>
+</div>
+
+<!-- ARMENIA RHETORIC TRACKER BANNER (canonical green pattern) -->
+<div class="rhetoric-banner-canonical" id="rhetoricPressureCard" style="display:none;">
+    <div style="font-size:24px;flex-shrink:0;">📡</div>
+    <div style="flex:1;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;">
+            <span style="font-size:11px;font-weight:bold;color:#86efac;text-transform:uppercase;letter-spacing:1.5px;" data-i18n="rhetoricLabel">Kazakhstan Rhetoric Tracker — Live</span>
+            <span class="rhet-banner-badge" id="rhetoricPill">LOADING</span>
+            <span class="rhet-banner-badge" id="rhetoricScore" style="background:rgba(34,197,94,0.25);color:#86efac;">--</span>
+        </div>
+        <div style="font-size:12px;color:#d1fae5;line-height:1.4;" id="rhetoricHeadline">Loading Kazakhstan pressure assessment...</div>
+        <div style="font-size:11px;color:#a7f3d0;line-height:1.4;margin-top:3px;" id="rhetoricDetail"></div>
+    </div>
+    <a href="rhetoric-kazakhstan.html" class="rhet-banner-link" data-i18n="rhetoricLink">Open Tracker →</a>
+</div>
+
+<!-- KAZAKHSTAN STRATEGIC CONTEXT BANNER -->
+<div style="background:linear-gradient(135deg,#0d1b2e,#1e3a5f);border:2px solid rgba(56,189,248,0.4);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+    <div>
+        <div style="font-size:0.63rem;font-weight:700;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:5px;" data-i18n="contextLabel">📡 JULY 1, 2026 — STRATEGIC SIGNAL</div>
+        <div style="font-size:0.82rem;color:var(--text);font-weight:700;" data-i18n="contextHeadline">New Constitution Effective · Tokayev Power Consolidation · Managed Succession</div>
+        <div style="font-size:0.72rem;color:var(--text-2);margin-top:3px;" data-i18n="contextSub">March 15 referendum approved by 87.15% on 73.12% turnout · Rewrote 84% of 1995 constitution · Replaced bicameral parliament with unicameral Kurultai · Restored Vice Presidency for managed succession · CPC pipeline operational (Russia-routed oil export) · World #1 uranium producer (Kazatomprom ~40% global supply) · Effective July 1, 2026</div>
+    </div>
+    <div style="text-align:right;">
+        <div style="font-size:0.58rem;color:var(--text-muted);letter-spacing:1px;" data-i18n="contextTagLabel">Tokayev framing:</div>
+        <div style="font-size:0.72rem;color:var(--accent);font-style:italic;" data-i18n="contextQuote">"New Kazakhstan"</div>
+    </div>
+</div>
+
+<!-- ARMENIA PRESSURE TRACKER DETAIL CARD (canonical Russia pattern) -->
+<div class="rhetoric-card" id="armeniaRhetoricCard" style="display:none;">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#38bdf8;margin-bottom:11px;">📡 <span data-i18n="rhetoricCardTitle">KAZAKHSTAN PRESSURE TRACKER</span></div>
+    <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:5px;">
+        <div style="font-size:30px;font-weight:700;color:var(--text-primary);" id="armeniaRhetoricScoreFull">--</div>
+        <span id="armeniaRhetoricLevelLabel" style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:4px;background:#6b7280;color:white;">--</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-secondary);margin-bottom:11px;" data-i18n="rhetoricCardDesc">Multi-vector pressure score — Constitutional Reform · CPC Pipeline · Uranium Politics · Russia/China Hedging · Middle Corridor · Updated every 6h</div>
+    <div id="armeniaRhetoricSignalList" style="font-size:12px;color:var(--text-secondary);"><span style="font-style:italic;" data-i18n="loading">Loading…</span></div>
+    <div style="margin-top:13px;padding-top:11px;border-top:1px solid var(--card-border);text-align:center;">
+        <a href="rhetoric-kazakhstan.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="viewFullTracker">View Full Pressure Analysis →</a>
+    </div>
+    <div id="armeniaRhetoricScanInfo" style="margin-top:7px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
+</div>
+
+<!-- COMMODITY EXPOSURE CARD (above map per spec) -->
+<div class="card" id="commodityCard" style="display:none;">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
+        <div class="card-title" style="margin-bottom:0;">🛢️ <span data-i18n="commodityTitle">COMMODITY EXPOSURE — KAZAKHSTAN</span></div>
+        <a href="commodities.html" class="commodity-full-link" data-i18n="commodityFullLink">View Full Commodity Tracker →</a>
+    </div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;font-style:italic;" data-i18n="commoditySubtitle">Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.</div>
+
+    <!-- Pressure summary strip -->
+    <div id="commodityPressureStrip" style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:11px;"></div>
+
+    <!-- Per-commodity rows -->
+    <div id="commodityRows"></div>
+
+    <!-- Strategic linkage footer -->
+    <div id="commodityLinkage" style="margin-top:14px;padding:10px 14px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:8px;font-size:11px;color:var(--text-2);line-height:1.55;" data-i18n="commodityLinkage">
+        <strong style="color:#fbbf24;">Strategic Linkage:</strong> Kazakhstan is <strong>Central Asia's indispensable commodity state</strong>. <strong>World #1 uranium producer</strong> (Kazatomprom, ~40% of global supply) — strategically critical to Western nuclear renaissance. Major oil producer: Tengiz (TCO/Chevron), Karachaganak, Kashagan supergiant fields. <strong>CPC pipeline</strong> (Caspian Pipeline Consortium) carries Kazakh crude through Russian territory to Novorossiysk on the Black Sea — single biggest Russia-exposure vector. KazTransOil routes crude east to China via Atasu-Alashankou. Aktau port is the western terminus of the <strong>Middle Corridor / Trans-Caspian International Transport Route (TITR)</strong> — Russia/Iran-bypassing trade route to Azerbaijan, Georgia, Turkey, Europe.
+    </div>
+
+    <div id="commodityCacheNote" style="margin-top:8px;font-size:10px;color:var(--text-muted);font-style:italic;text-align:right;"></div>
+</div>
+
+<!-- COMMODITY CARD STYLING -->
+<style>
+.commodity-full-link {
+    font-size: 11px; font-weight: 700; color: #fbbf24; text-decoration: none;
+    padding: 6px 12px; border: 1px solid rgba(245,158,11,0.4); border-radius: 6px;
+    background: rgba(245,158,11,0.06); transition: all 0.2s;
+}
+.commodity-full-link:hover {
+    background: rgba(245,158,11,0.14); border-color: rgba(245,158,11,0.7);
+}
+.commodity-row {
+    display: grid; grid-template-columns: auto 1fr auto auto; gap: 14px; align-items: center;
+    padding: 10px 14px; margin-bottom: 8px;
+    background: rgba(56,189,248,0.04); border: 1px solid rgba(56,189,248,0.18);
+    border-radius: 8px; cursor: pointer; transition: all 0.2s;
+    text-decoration: none; color: var(--text);
+}
+.commodity-row:hover {
+    background: rgba(56,189,248,0.08); border-color: rgba(56,189,248,0.4);
+    transform: translateX(2px);
+}
+.commodity-row .c-icon { font-size: 18px; }
+.commodity-row .c-meta { display: flex; flex-direction: column; gap: 2px; }
+.commodity-row .c-name { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: 0.5px; }
+.commodity-row .c-note { font-size: 10.5px; color: var(--text-muted); line-height: 1.4; }
+.commodity-row .c-role-pill {
+    font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 3px;
+    letter-spacing: 1px; text-transform: uppercase; display: inline-block; margin-right: 5px;
+}
+.role-producer { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.role-consumer { background: rgba(245,158,11,0.15); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.role-transit  { background: rgba(139,92,246,0.15); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+.commodity-row .c-rank { font-size: 9.5px; color: #93c5fd; font-weight: 600; letter-spacing: 0.5px; }
+.commodity-row .c-spark { font-family: 'Courier New', monospace; font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.commodity-row .c-signals {
+    font-size: 10.5px; color: var(--text-2); white-space: nowrap;
+    padding: 4px 9px; background: rgba(56,189,248,0.08); border-radius: 4px;
+}
+.commodity-pressure-pill {
+    padding: 5px 12px; border-radius: 16px; font-weight: 700; letter-spacing: 1px;
+}
+.alert-normal   { background: rgba(34,197,94,0.12);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.alert-elevated { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.3); }
+.alert-high     { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+.alert-critical { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.4); }
+@media (max-width: 768px) {
+    .commodity-row { grid-template-columns: auto 1fr; gap: 8px; }
+    .commodity-row .c-spark, .commodity-row .c-signals { grid-column: 2; }
+}
+</style>
+
+
+<div class="card">
+    <div class="card-title">🗺️ <span data-i18n="mapTitle">KAZAKHSTAN — STRATEGIC OVERVIEW</span></div>
+    <div style="font-size:12px;color:var(--text-muted);margin-bottom:11px;font-style:italic;" data-i18n="mapSubtitle">Kazakhstan's strategic position straddling Central Asia — bordered by Russia (north, ~7,644 km), China (east, ~1,533 km), Kyrgyzstan, Uzbekistan, Turkmenistan (south), and the Caspian Sea (west). The world's 9th-largest country by area. Capital Astana (formerly Nur-Sultan); largest city Almaty. Tengiz/Karachaganak/Kashagan oil supergiants in west; Kazatomprom uranium operations in south. CPC pipeline routes crude through Russia to Black Sea; KazTransOil routes east to China. Aktau port anchors the Middle Corridor.</div>
+    <iframe class="map-frame"
+        src="https://www.openstreetmap.org/export/embed.html?bbox=46.0%2C40.5%2C87.5%2C56.0&layer=mapnik&marker=51.17%2C71.45"
+        frameborder="0" scrolling="no">
+    </iframe>
+</div>
+
+<!-- KNOWLEDGE LIBRARY -->
+<div class="card">
+    <div class="card-title">📚 <span data-i18n="knowledgeTitle">KNOWLEDGE LIBRARY</span></div>
+    <p style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;" data-i18n="knowledgeDisclaimer">Background information compiled from open-source research, think tank analyses, and public government reporting.</p>
+
+    <div class="knowledge-categories">
+
+        <!-- Constitutional Reform + Tokayev Succession — OPEN BY DEFAULT — anchor narrative -->
+        <div class="knowledge-card" id="card-constitution">
+            <div class="knowledge-header" onclick="toggleCard('constitution')">
+                <div class="knowledge-header-title"><span>📜</span> <span data-i18n="catConstitution">Constitutional Reform & Tokayev Succession — July 2026</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Kazakhstan is in the final stages of the most consequential constitutional restructuring of any Central Asian state since independence.</strong> The March 15, 2026 referendum approved President Kassym-Jomart Tokayev's "New Kazakhstan" reform package by 87.15% on 73.12% turnout. The amended constitution takes effect July 1, 2026 — fundamentally reshaping the legislature, restoring a Vice Presidency for managed succession, and consolidating Tokayev's personal authority while formally distancing the state from his predecessor Nursultan Nazarbayev.</p>
+                <ul>
+                    <li><strong>Referendum Result (March 15, 2026):</strong> 87.15% approval on 73.12% turnout. International observers including OSCE/ODIHR raised process concerns but did not contest the underlying voter-direction. Tokayev publicly framed the result as a "decisive mandate" — a calibrated tone less triumphalist than Nazarbayev-era plebiscites.</li>
+                    <li><strong>Scope of Reform:</strong> Approximately 84% of the 1995 constitution rewritten or amended. The largest single revision since independence. Tokayev has positioned this as "New Kazakhstan" (Жаңа Қазақстан) — explicitly contrasting his governance era with Nazarbayev's "Old Kazakhstan."</li>
+                    <li><strong>Unicameral Kurultai:</strong> The bicameral parliament (Mazhilis lower + Senate upper) is replaced with a single-chamber Kurultai. Critics argue this consolidates executive power; the government argues it streamlines lawmaking and matches Kazakh historical precedent (the Kurultai was the traditional steppe assembly of khans). Effective July 1, 2026.</li>
+                    <li><strong>Vice Presidency Restored:</strong> A Vice Presidency role — abolished in 1995 — has been restored. Western analysts (Carnegie Endowment, BESA Center, Atlantic Council) read this primarily as managed-succession architecture: Tokayev is term-limited under his own 2022 reforms, and a Vice President allows for trusted succession without an open electoral contest. The first Vice President has not yet been named as of May 2026.</li>
+                    <li><strong>De-Nazarbayev-ification:</strong> January 2022 unrest ("Bloody January") triggered Tokayev's break with Nazarbayev. Subsequent reforms removed Nazarbayev's lifetime privileges, renamed Nur-Sultan back to Astana, and stripped the Nazarbayev family's commercial holdings. The 2026 reforms complete this trajectory institutionally.</li>
+                    <li><strong>Tokayev (b. 1953):</strong> Career diplomat. UN Under-Secretary-General 2011-2013. Foreign minister, prime minister under Nazarbayev. President since March 2019 (took office on Nazarbayev's surprise resignation). Re-elected 2022 with 81.31%. Personal style: technocratic, multilingual (Russian, Mandarin, English, French in addition to Kazakh), favors institutional reform over charismatic populism.</li>
+                    <li><strong>Reform Limits:</strong> Constitutional amendments do not address civil-society concerns flagged by HRW, Amnesty, RSF — political prisoner cases, restrictions on independent media, opposition party registration. Western governments (US, EU) have publicly welcomed the reforms while privately raising civil-liberties concerns.</li>
+                </ul>
+                <div class="kl-note">* Sources: Carnegie Endowment, BESA Center, Atlantic Council, OSCE/ODIHR, Akorda.kz, RFE/RL Kazakh Service, Eurasianet</div>
+                <div class="report-links-grid">
+                    <a href="https://carnegieendowment.org/" target="_blank" class="report-link">📑 Carnegie</a>
+                    <a href="https://besacenter.org/" target="_blank" class="report-link">📑 BESA Center</a>
+                    <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                    <a href="https://www.rferl.org/z/16927" target="_blank" class="report-link">📑 RFE/RL Kazakh</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Energy Supergiants & CPC Pipeline -->
+        <div class="knowledge-card collapsed" id="card-energy">
+            <div class="knowledge-header" onclick="toggleCard('energy')">
+                <div class="knowledge-header-title"><span>🛢️</span> <span data-i18n="catEnergy">Energy Supergiants & CPC Pipeline</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Kazakhstan is the dominant oil producer of the post-Soviet space outside Russia, with three supergiant fields and a pipeline architecture that creates substantial Russia exposure.</strong> The Caspian Pipeline Consortium (CPC) — Kazakhstan's primary crude export route — runs through Russian territory to Novorossiysk on the Black Sea, making Russian goodwill a non-negotiable input to Kazakh oil revenue. December 2025 Subsoil Code amendments raised the bar for new resource investment.</p>
+                <ul>
+                    <li><strong>Tengiz Field:</strong> Discovered 1979, in Atyrau Region near the northeastern Caspian coast. One of the world's deepest supergiant fields (~12,000 ft / 3,650 m drilling depth). Operated by Tengizchevroil (TCO) — Chevron 50%, ExxonMobil 25%, KazMunayGas 20%, Lukoil 5%. Production target: 1.0+ million barrels per day at full Future Growth Project capacity.</li>
+                    <li><strong>Kashagan Field:</strong> Discovered 2000, offshore northern Caspian Sea. The largest oil discovery globally in three decades. Notoriously difficult: high pressure, sulfide content, ice conditions. Operated by North Caspian Operating Company (NCOC) consortium — Eni, ExxonMobil, Shell, TotalEnergies, KazMunayGas, CNPC, INPEX. Current production ~400-450K bpd; ramp issues remain.</li>
+                    <li><strong>Karachaganak Field:</strong> Western Kazakhstan, near Russian border. Gas-condensate field operated by Karachaganak Petroleum Operating (KPO) — Eni, Shell, Chevron, KazMunayGas, Lukoil. Significant gas-injection complexities; condensate piped to Atyrau then CPC.</li>
+                    <li><strong>CPC Pipeline (Caspian Pipeline Consortium):</strong> 1,510 km from Tengiz to Russian port Novorossiysk on Black Sea. Carries ~80% of Kazakh oil exports, ~1.3-1.4 million bpd. Russia owns 24% of CPC; Kazakhstan owns 19%; Chevron 15%, Lukoil/Russia 12.5%, ExxonMobil 7.5%, others remainder. Periodic Russian disruptions (storm damage, court orders) create persistent leverage.</li>
+                    <li><strong>KazTransOil to China:</strong> Atasu-Alashankou pipeline runs east, delivering ~10-12 million tonnes/year (~200K bpd) to China. Active diversification but capacity is fraction of CPC. Expansion under discussion for years; pace constrained by upstream supply.</li>
+                    <li><strong>Subsoil Code Amendments (December 2025):</strong> New legislation prioritizes uranium, lithium, copper, polymetallics over hydrocarbons for new exploration tenders. Signal: Kazakhstan diversifying away from oil-only to critical minerals. International majors negotiating revised contract terms; reduces hydrocarbon-only investment incentive.</li>
+                    <li><strong>Aktau Caspian Port:</strong> Western terminus of crude rail-shuttle to Caspian shipping. Capacity for ~150K bpd via tanker. Marginal economics today but strategic Middle Corridor diversification value.</li>
+                </ul>
+                <div class="kl-note">* Sources: KazMunayGas, Chevron annual reports, Bloomberg Energy, S&P Global Platts, Reuters Energy, IEA</div>
+                <div class="report-links-grid">
+                    <a href="https://www.bloomberg.com/energy" target="_blank" class="report-link">📑 Bloomberg Energy</a>
+                    <a href="https://www.iea.org/countries/kazakhstan" target="_blank" class="report-link">📑 IEA Kazakhstan</a>
+                    <a href="https://www.kmg.kz/en/" target="_blank" class="report-link">📑 KazMunayGas</a>
+                    <a href="https://www.reuters.com/business/energy/" target="_blank" class="report-link">📑 Reuters Energy</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Uranium & Kazatomprom -->
+        <div class="knowledge-card collapsed" id="card-uranium">
+            <div class="knowledge-header" onclick="toggleCard('uranium')">
+                <div class="knowledge-header-title"><span>☢️</span> <span data-i18n="catUranium">Uranium & Kazatomprom — World #1 Producer</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Kazakhstan is the world's largest uranium producer — Kazatomprom, the state company, accounts for approximately 40% of global uranium supply.</strong> This makes Kazakhstan structurally critical to the Western nuclear renaissance, to Russian and Chinese reactor fleets, and to the small-modular-reactor (SMR) supply chain now ramping in the United States, France, UK, Canada, and South Korea. The geopolitics of Kazatomprom contracts increasingly drive both Western engagement and Russia/China hedging signals.</p>
+                <ul>
+                    <li><strong>Production Scale:</strong> Kazatomprom produces ~21,000-22,000 metric tonnes of uranium per year. Global production sits around 50,000-55,000 tonnes — Kazatomprom's share is roughly 40-45%. Canada (Cameco) is #2 globally at ~20%. No other country comes close.</li>
+                    <li><strong>In-Situ Recovery (ISR) Method:</strong> All Kazakh uranium is produced via in-situ leaching — chemical solution pumped underground to dissolve uranium, then pumped to surface. Lowest-cost, lowest-environmental-impact uranium production technology globally. Operations concentrated in southern Kazakhstan (Kyzylorda, Turkestan, Almaty regions).</li>
+                    <li><strong>Joint Ventures:</strong> Kazatomprom holds 14 mining JVs with foreign partners — Cameco (Canada), Orano (France), CGN/CNNC (China), Uranium One (Russia/Rosatom), and others. JV structures protect against any single sanctions or export-control regime disrupting Kazakh uranium flows.</li>
+                    <li><strong>Subsoil Code Priority:</strong> December 2025 Subsoil Code amendments explicitly prioritize uranium for new deposit licensing — a regulatory signal that Kazakhstan intends to remain dominant supplier through the late 2030s SMR demand wave. Combined with rare-earth and lithium prioritization, Kazakhstan is positioning as the indispensable Central Asian critical-minerals supplier.</li>
+                    <li><strong>Western Nuclear Renaissance Demand:</strong> US (10+ new reactor units announced via DOE programs), France (six EPR2 units), UK (Sizewell C, AMR program), Canada (BWRX-300 SMRs), South Korea (APR-1400 export pipeline) all depend on diversified uranium supply. Cameco-Kazatomprom strategic partnership (2025) anchors Western access.</li>
+                    <li><strong>Russia/China Hedging:</strong> Kazatomprom continues uranium deliveries to Rosatom for Russian-built reactors globally and to China General Nuclear (CGN) under long-term supply agreements. Rosatom's role as builder/operator of dozens of reactors (Belarus, Hungary, Egypt, Bangladesh, India, Türkiye, Iran) makes Kazakh uranium structurally embedded in the Russian-aligned nuclear ecosystem despite Western alignment trajectory.</li>
+                    <li><strong>SMR Supply Chain Vulnerability:</strong> Western SMR programs (NuScale, BWRX-300, X-energy, Kairos, Last Energy) all assume uranium availability without supply disruption. A Kazakh political instability event — succession crisis, Russia-aligned coup attempt, China-aligned compradore drift — would be a globally significant nuclear-fuel-cycle event.</li>
+                </ul>
+                <div class="kl-note">* Sources: Kazatomprom annual reports, World Nuclear Association, IAEA, Cameco, S&P Platts, Reuters Energy</div>
+                <div class="report-links-grid">
+                    <a href="https://www.kazatomprom.kz/en" target="_blank" class="report-link">📑 Kazatomprom</a>
+                    <a href="https://world-nuclear.org/" target="_blank" class="report-link">📑 World Nuclear</a>
+                    <a href="https://www.iaea.org/" target="_blank" class="report-link">📑 IAEA</a>
+                    <a href="https://www.spglobal.com/commodityinsights/" target="_blank" class="report-link">📑 S&P Platts</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Russia/China Hedging & Bloody January 2022 -->
+        <div class="knowledge-card collapsed" id="card-hedging">
+            <div class="knowledge-header" onclick="toggleCard('hedging')">
+                <div class="knowledge-header-title"><span>🎭</span> <span data-i18n="catHedging">Russia/China Hedging & Bloody January 2022</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>Kazakhstan operates the most sophisticated multi-vector hedging strategy in Central Asia — a pragmatic ride between Russia (security guarantor, oil-export host, ethnic-Russian minority north), China (Belt and Road partner, alternate oil offtake, Xinjiang-uranium-trade), and the West (technology, diplomatic legitimation, critical-minerals offtake).</strong> The January 2022 unrest — known as Qantar (Қаңтар, "January") — was the moment this hedging strategy was tested under fire and effectively recalibrated.</p>
+                <ul>
+                    <li><strong>Bloody January (Qantar) 2022:</strong> Began January 2 in Zhanaozen as protests over LPG fuel-price liberalization. Spread within days to Almaty and Astana. Government buildings stormed, Almaty Airport briefly seized, security forces effectively lost control of Almaty. ~238 deaths confirmed; thousands detained. Tokayev declared state of emergency, dismissed government, requested CSTO peacekeepers.</li>
+                    <li><strong>CSTO Deployment:</strong> Russian-led CSTO troops (~2,500, primarily Russian and Belarusian) deployed January 6, 2022 — first-ever CSTO military deployment under Article 4. Withdrawn within ~2 weeks. Tokayev publicly thanked CSTO/Putin. The deployment was widely interpreted as a debt — that Russia could call in.</li>
+                    <li><strong>Strategic Distancing Post-2022:</strong> Despite the CSTO debt, Tokayev declined to recognize Russian-annexed Donetsk/Luhansk territories at the June 2022 St. Petersburg International Economic Forum — telling Putin to his face, on stage. Subsequent moves: blocking Russian sanctions evasion through Kazakh banks (under US Treasury pressure), expanding Middle Corridor capacity, registering hundreds of thousands of Russian draft-evaders without facilitating their recruitment.</li>
+                    <li><strong>"May No Longer Need the Russians" Thesis:</strong> Carnegie Endowment, BESA Center, and Atlantic Council analyses published 2024-2026 argue that Kazakhstan's diversification trajectory has reached a point where post-Putin Russia would be the junior partner in the relationship. Tokayev's 2026 constitutional reforms — particularly the Vice Presidency for managed succession — reduce the inheritance value of Russian backing for any future Tokayev successor.</li>
+                    <li><strong>Russian Demographic Vulnerability:</strong> Northern Kazakhstan retains a substantial ethnic-Russian minority (~3.5 million of Kazakhstan's ~20 million population). Zhambyl, Kostanay, North Kazakhstan, and Pavlodar regions in particular. Russian Federation rhetoric occasionally invokes "compatriots abroad" framing (Medvedev 2022 statement re: Kazakh territorial integrity). This is the persistent Russian leverage.</li>
+                    <li><strong>Russian Arrest Warrant Cooperation:</strong> Per US State Department travel advisory, Kazakhstan and Russia have law enforcement cooperation agreements obligating information sharing. Russian authorities periodically request increased scrutiny of US citizens with prior Russia work. Kazakhstan retains discretion but the cooperation creates real risk for US citizens transiting Kazakhstan.</li>
+                    <li><strong>China Engagement:</strong> Xi Jinping made symbolically significant visits to Kazakhstan in 2013 (where he announced the Belt and Road Initiative) and subsequently. China is Kazakhstan's #2 trading partner. Sensitive issues (Xinjiang, Kazakh-Chinese minorities, religious-freedom of Kazakh Uighurs) handled quietly. Astana avoids public criticism of Beijing.</li>
+                </ul>
+                <div class="kl-note">* Sources: Carnegie Endowment, BESA Center, Atlantic Council, RFE/RL Kazakh, HRW, ICG Central Asia, Eurasianet, Tokayev/Putin press transcripts</div>
+                <div class="report-links-grid">
+                    <a href="https://carnegieendowment.org/" target="_blank" class="report-link">📑 Carnegie</a>
+                    <a href="https://www.crisisgroup.org/asia/central-asia" target="_blank" class="report-link">📑 ICG Central Asia</a>
+                    <a href="https://www.hrw.org/europe/central-asia/kazakhstan" target="_blank" class="report-link">📑 HRW Kazakhstan</a>
+                    <a href="https://eurasianet.org/regions/kazakhstan" target="_blank" class="report-link">📑 Eurasianet</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Middle Corridor & B5+1 / Western Engagement -->
+        <div class="knowledge-card collapsed" id="card-middle-corridor">
+            <div class="knowledge-header" onclick="toggleCard('middle-corridor')">
+                <div class="knowledge-header-title"><span>🚂</span> <span data-i18n="catMiddleCorridor">Middle Corridor & B5+1 / Western Engagement</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content">
+                <p><strong>The Trans-Caspian International Transport Route (TITR) — known commonly as the Middle Corridor — is the trade architecture that gives Kazakhstan structural alternatives to Russia-routed and Iran-routed commerce.</strong> Combined with the C5+1 / B5+1 diplomatic framework, the Middle Corridor is the explicit mechanism by which the United States, European Union, and Türkiye are attempting to anchor Central Asia in a post-Russia, non-Chinese-dominated trading order.</p>
+                <ul>
+                    <li><strong>Middle Corridor Routing:</strong> Container/cargo from China crosses the China-Kazakhstan border at Khorgos/Altynkol → rail across Kazakhstan → Aktau Caspian port → ferry/tanker to Baku, Azerbaijan → rail/road through Azerbaijan, Georgia → Black Sea ports (Poti, Batumi) or onward via Türkiye → Europe. Bypasses Russian rail (sanctions-exposed) and Iranian transit (sanctions-blocked).</li>
+                    <li><strong>2026 Capacity:</strong> Middle Corridor cargo volumes have grown from ~840,000 tonnes in 2021 to ~10+ million tonnes in 2025. EU and Türkiye target ~50 million tonnes/year by 2030 — a 5× expansion from 2025 base. Bottlenecks: Caspian shipping capacity, Aktau-Baku ferry, Caucasus rail tunnel capacity.</li>
+                    <li><strong>EU Critical Raw Materials Partnership:</strong> The EU signed strategic partnerships with Kazakhstan (2022), Uzbekistan (2024), and others on critical raw materials. Kazakhstan is the priority partner for uranium, copper, lithium, rare earths. Cargo flows underwrite the political relationship.</li>
+                    <li><strong>B5+1 Framework:</strong> Evolved from C5+1 (US + Central Asian 5: Kazakhstan, Kyrgyzstan, Tajikistan, Turkmenistan, Uzbekistan). The "B" frequently denotes business/commercial track. Established under Obama, expanded under Biden, sustained under Trump. Annual ministerial-level meetings; September 2023 New York summit was first head-of-state level. May 2026 has C5+1 working groups on critical minerals + connectivity.</li>
+                    <li><strong>US-Kazakhstan Strategic Partnership:</strong> Established 2018, expanded 2024. Includes defense cooperation (limited, given Russian sensitivity), counter-terrorism, civil-society engagement. US Embassy Almaty + Astana operations. Kazakhstan has been notably willing to host C5+1 events Russia would prefer Astana decline.</li>
+                    <li><strong>Türkiye/Organization of Turkic States:</strong> Türkiye's Erdogan has positioned Türkiye as patron of pan-Turkic political-economic integration. Organization of Turkic States (Türkiye, Azerbaijan, Kazakhstan, Kyrgyzstan, Uzbekistan + observers) advances Middle Corridor coordination, Turkic-language standardization, and political solidarity. October 2026 OST summit in Türkiye expected.</li>
+                    <li><strong>Civil Liberties Caveat:</strong> Western engagement with Kazakhstan operates under continuous tension with civil-society concerns: political prisoners (HRW, Amnesty), media freedom restrictions (RSF), opposition party limitations, treatment of Kazakh-Chinese ethnic minority, January 2022 detainee cases. US, EU, UK governments raise these issues bilaterally; concrete linkage to commercial engagement remains weak.</li>
+                </ul>
+                <div class="kl-note">* Sources: Middle Corridor Coordination Committee, EU Commission, US State Dept C5+1 readouts, Atlantic Council, Carnegie Europe, RFE/RL</div>
+                <div class="report-links-grid">
+                    <a href="https://www.atlanticcouncil.org/" target="_blank" class="report-link">📑 Atlantic Council</a>
+                    <a href="https://carnegieendowment.org/europe/" target="_blank" class="report-link">📑 Carnegie Europe</a>
+                    <a href="https://eeas.europa.eu/" target="_blank" class="report-link">📑 EEAS</a>
+                    <a href="https://2021-2025.state.gov/c51-secretariat/" target="_blank" class="report-link">📑 C5+1 Archive</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ARTICLES — TABBED -->
+<div class="card">
+    <div class="card-title">📰 <span data-i18n="articlesTitle">RECENT KAZAKHSTAN STABILITY & STRATEGIC ARTICLES</span></div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:11px;" data-i18n="articlesDesc">English · Russian · French · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit</div>
+    <div class="tab-row">
+        <button class="tab-btn active" id="tab-en" onclick="switchArticleTab('en')" data-i18n="tabEN">🇬🇧 English <span class="tab-count" id="tabCountEN">0</span></button>
+        <button class="tab-btn" id="tab-ru" onclick="switchArticleTab('ru')" data-i18n="tabRU">🇷🇺 Russian <span class="tab-count" id="tabCountRU">0</span></button>
+        <button class="tab-btn" id="tab-fr" onclick="switchArticleTab('fr')" data-i18n="tabFR">🇫🇷 French <span class="tab-count" id="tabCountFR">0</span></button>
+        <button class="tab-btn" id="tab-social" onclick="switchArticleTab('social')" data-i18n="tabSocial">📡 Social <span class="tab-count" id="tabCountSocial">0</span></button>
+    </div>
+    <div id="articlesContainer">
+        <div style="text-align:center;color:var(--text-muted);padding:26px;font-style:italic;" data-i18n="articlesLoading">Loading articles...</div>
+    </div>
+</div>
+
+</div><!-- /main-content -->
+</div><!-- /page-with-sidebar -->
+
+<!-- FOOTER (canonical Asifah pattern) -->
+<footer style="background:var(--card-bg, var(--card, #0d1b2e));border:1px solid var(--card-border, var(--border, #1e3a5f));border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footSourcesTitle">Data Sources</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footSourcesText">NewsAPI, GDELT, RSS Feeds (EN, RU, FR), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footMethodTitle">Methodology</h4>
+            <p style="font-size:12px;line-height:1.5;" data-i18n="footMethodText">Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.</p>
+        </div>
+        <div>
+            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;" data-i18n="footContactTitle">Contact</h4>
+            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
+        </div>
+    </div>
+    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
+        <strong style="color:#f59e0b;" data-i18n="footDisclaimerLabel">⚠️ DISCLAIMER</strong> &mdash; <span data-i18n="footDisclaimerText">This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.</span>
+    </div>
+    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
+        <span data-i18n="footBmacText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;" data-i18n="footBmacButton">buy me a coffee</a>
+    </div>
+    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, var(--border, #1e3a5f));font-size:12px;">
+        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footPrivacy">Privacy Policy</a>
+        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
+        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;" data-i18n="footContact">Contact</a>
+    </div>
+    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
+        © 2025-2026 RCGG. <span data-i18n="footCopy">All Rights Reserved. Kazakhstan Stability Index v1.0.0 — Proprietary and Confidential.</span>
+    </div>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+const API_BASE = 'https://asifa-europe-backend.onrender.com';
+
+// ── THEME ──
+function initTheme() {
+    const s = localStorage.getItem('asifah-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', s);
+    document.getElementById('themeToggle').checked = (s === 'light');
+}
+function toggleTheme() {
+    const n = document.getElementById('themeToggle').checked ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', n);
+    localStorage.setItem('asifah-theme', n);
+}
+initTheme();
+
+// ── KNOWLEDGE CARDS ──
+function toggleCard(id) {
+    const c = document.getElementById('card-' + id);
+    if (c) c.classList.toggle('collapsed');
+}
+
+// ── LOADING ──
+let _step = 0, _loadInt = null;
+function startLoading() {
+    const steps = ['step1','step2','step3','step4'];
+    _loadInt = setInterval(() => {
+        if (_step < steps.length - 1) {
+            const c = document.getElementById(steps[_step]);
+            if (c) { c.classList.remove('active'); c.classList.add('complete'); c.querySelector('.step-icon').textContent = '✓'; }
+            _step++;
+            const n = document.getElementById(steps[_step]);
+            if (n) n.classList.add('active');
+        }
+    }, 4000);
+}
+function hideLoading() {
+    if (_loadInt) clearInterval(_loadInt);
+    document.querySelectorAll('.loading-step').forEach(s => {
+        s.classList.remove('active'); s.classList.add('complete');
+        s.querySelector('.step-icon').textContent = '✓';
+    });
+    setTimeout(() => {
+        const o = document.getElementById('loadingOverlay');
+        if (o) o.classList.add('hidden');
+    }, 500);
+}
+
+// ── ARTICLES ──
+// ── ARTICLES (tabbed: EN / RU / FR / Social) ──
+let _articleCache = { en: [], ru: [], fr: [], social: [] };
+
+async function loadArticles() {
+    try {
+        const r = await fetch(`${API_BASE}/api/europe/threat/kazakhstan`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+
+        // Stash raw payload for rhetoric loader (avoid double-fetch — same endpoint)
+        window._threatPayload = d;
+
+        _articleCache.en = (d.articles_en || []).map(a => ({ ...a, _lang: 'en' }));
+        _articleCache.ru = (d.articles_ru || []).map(a => ({ ...a, _lang: 'ru' }));
+        _articleCache.fr = (d.articles_fr || []).map(a => ({ ...a, _lang: 'fr' }));
+
+        // Social: reddit articles from generic threat endpoint
+        const reddit = (d.articles_reddit || []).map(p => ({ ...p, _origin: 'reddit' }));
+        _articleCache.social = [...reddit];
+
+        document.getElementById('tabCountEN').textContent = _articleCache.en.length;
+        document.getElementById('tabCountRU').textContent = _articleCache.ru.length;
+        document.getElementById('tabCountFR').textContent = _articleCache.fr.length;
+        document.getElementById('tabCountSocial').textContent = _articleCache.social.length;
+
+        // Default to EN; auto-switch to first tab with content
+        if (_articleCache.en.length) {
+            switchArticleTab('en');
+        } else if (_articleCache.ru.length) {
+            switchArticleTab('ru');
+        } else if (_articleCache.fr.length) {
+            switchArticleTab('fr');
+        } else {
+            switchArticleTab('en');
+        }
+    } catch(e) {
+        console.warn('[Kazakhstan] Articles failed:', e.message);
+        displayFallback();
+    } finally {
+        hideLoading();
+        document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+    }
+}
+
+function switchArticleTab(tab) {
+    ['en','ru','fr','social'].forEach(t => {
+        const b = document.getElementById('tab-'+t);
+        if (b) b.classList.toggle('active', t === tab);
+    });
+    const c = document.getElementById('articlesContainer');
+
+    if (tab === 'social') {
+        const posts = _articleCache.social;
+        if (!posts.length) {
+            c.innerHTML = '<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No social signals captured this scan. Backend may still be aggregating Reddit feeds.</div>';
+            return;
+        }
+        const ORIGINS = {
+            telegram: { color: '#38bdf8', label: '📨 Telegram', bg: 'rgba(56,189,248,0.07)', border: 'rgba(56,189,248,0.25)' },
+            bluesky:  { color: '#60a5fa', label: '🦋 Bluesky',  bg: 'rgba(96,165,250,0.07)', border: 'rgba(96,165,250,0.25)' },
+            reddit:   { color: '#fb923c', label: '💬 Reddit',   bg: 'rgba(251,146,60,0.07)', border: 'rgba(251,146,60,0.25)' },
+        };
+        c.innerHTML = posts.slice(0, 30).map(p => {
+            const o = ORIGINS[p._origin] || { color: '#94a3b8', label: '📡 Signal', bg: 'rgba(148,163,184,0.07)', border: 'rgba(148,163,184,0.25)' };
+            const text = p.title || p.text || p.content || p.message || '';
+            const author = (typeof p.source === 'object' ? p.source?.name : p.source) || p.author || p.subreddit || '';
+            const url = p.url || p.link || '#';
+            const pub = p.published || p.publishedAt || p.date || p.timestamp || '';
+            let ds = '';
+            if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
+            return `<div style="padding:11px 14px;background:${o.bg};border:1px solid ${o.border};border-radius:8px;margin-bottom:8px;">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;flex-wrap:wrap;">
+                    <span style="font-size:10px;font-weight:700;color:${o.color};text-transform:uppercase;letter-spacing:1px;">${o.label}</span>
+                    ${author ? `<span style="font-size:11px;color:var(--text-muted);">${author}</span>` : ''}
+                    ${ds ? `<span style="font-size:10px;color:var(--text-muted);">${ds}</span>` : ''}
+                </div>
+                <div style="font-size:13px;color:var(--text);line-height:1.5;">${text.substring(0,260)}${text.length>260?'…':''}</div>
+                ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" style="color:${o.color};text-decoration:none;font-size:11px;font-weight:600;margin-top:5px;display:inline-block;">View post →</a>` : ''}
+            </div>`;
+        }).join('');
+        return;
+    }
+
+    const list = _articleCache[tab] || [];
+    const langName = { en: 'English', ru: 'Russian', fr: 'French' }[tab] || tab;
+    if (!list.length) {
+        c.innerHTML = `<div style="text-align:center;padding:22px;color:var(--text-muted);font-style:italic;">No ${langName} articles in current scan.</div>`;
+        return;
+    }
+    c.innerHTML = list.slice(0, 25).map(a => {
+        const title = a.title || 'Untitled';
+        const src = (typeof a.source === 'object' ? a.source?.name : a.source) || a.source_name || '';
+        const pub = a.published || a.publishedAt || a.date || '';
+        const url = a.url || a.link || '#';
+        const desc = a.description || a.summary || '';
+        let ds = '';
+        if (pub) { try { ds = new Date(pub).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); } catch(e){ ds = pub; } }
+        return `<div class="article-item">
+            <div class="article-title">${title}</div>
+            ${desc ? `<div style="font-size:11px;color:var(--text-muted);margin-bottom:5px;line-height:1.5;">${desc.substring(0,180)}${desc.length>180?'...':''}</div>` : ''}
+            <div class="article-meta">${src}${ds ? ' · '+ds : ''}</div>
+            ${url !== '#' ? `<a href="${url}" target="_blank" rel="noopener" class="article-link">Read article →</a>` : ''}
+        </div>`;
+    }).join('');
+}
+
+function displayFallback() {
+    document.getElementById('articlesContainer').innerHTML =
+        '<div style="text-align:center;padding:22px;color:var(--text-muted);">' +
+        '<p style="font-size:14px;margin-bottom:10px;">📡 Live feed loading. Check these curated sources:</p>' +
+        '<div style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-top:10px;">' +
+        ['Eurasianet|https://eurasianet.org/regions/kazakhstan','RFE/RL Kazakh|https://www.rferl.org/z/16927','Astana Times|https://astanatimes.com/','Tengrinews|https://tengrinews.kz/','Caspian News|https://caspiannews.com/']
+            .map(s => { const [l,u] = s.split('|'); return `<a href="${u}" target="_blank" style="padding:7px 14px;background:rgba(56,189,248,0.14);color:#38bdf8;border-radius:6px;text-decoration:none;font-size:12px;font-weight:700;border:1px solid rgba(56,189,248,0.28);">${l}</a>`; })
+            .join('') +
+        '</div></div>';
+}
+
+// ── COMMODITY EXPOSURE LOADER (calls Europe backend proxy with 12hr Redis cache) ──
+async function loadCommodity() {
+    const COUNTRY_KEY = 'kazakhstan';
+    try {
+        const r = await fetch(`${API_BASE}/api/europe/commodity/${COUNTRY_KEY}`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const d = await r.json();
+        if (d.success !== false && (d.commodity_summaries || []).length > 0) {
+            renderCommodityCard(d);
+            document.getElementById('commodityCard').style.display = 'block';
+        } else if (d.message) {
+            renderCommodityPlaceholder(d.message);
+            document.getElementById('commodityCard').style.display = 'block';
+        }
+    } catch(e) {
+        console.warn('[Kazakhstan] Commodity fetch failed:', e.message);
+    }
+}
+
+// ── RHETORIC PRESSURE — adapter for /api/europe/threat/<target> ──
+// Maps generic threat-scan output (probability, momentum, top_scoring_articles)
+// onto the canonical rhetoric banner + pressure detail card.
+async function loadRhetoric() {
+    // Reuse payload fetched by loadArticles to avoid double-call
+    let d = window._threatPayload;
+    if (!d) {
+        try {
+            const r = await fetch(`${API_BASE}/api/europe/threat/kazakhstan`);
+            if (!r.ok) return;
+            d = await r.json();
+        } catch(e) { console.warn('[Kazakhstan] Rhetoric pressure fetch failed:', e.message); return; }
+    }
+
+    // Awaiting first scan — show nothing; loadCommodity placeholder logic handles UI
+    if (d.pending_scan || d.probability === null || d.probability === undefined) return;
+
+    const score = d.probability || 0;
+
+    // Map momentum → alert level + color
+    const momentum = (d.momentum || 'stable').toLowerCase();
+    let alert, alertColor;
+    if (momentum === 'increasing' && score > 60) { alert = 'critical'; alertColor = '#dc2626'; }
+    else if (momentum === 'increasing')          { alert = 'high';     alertColor = '#f59e0b'; }
+    else if (momentum === 'decreasing')          { alert = 'normal';   alertColor = '#22c55e'; }
+    else                                         { alert = 'elevated'; alertColor = '#3b82f6'; }
+
+    // Map probability band → level label
+    let levelLabel;
+    if      (score >= 85) levelLabel = 'Critical';
+    else if (score >= 70) levelLabel = 'Elevated';
+    else if (score >= 50) levelLabel = 'Warning';
+    else if (score >= 30) levelLabel = 'Watch';
+    else                  levelLabel = 'Baseline';
+
+    // ── Green banner (top) ──
+    const card = document.getElementById('rhetoricPressureCard');
+    if (card) {
+        card.style.display = 'flex';
+        document.getElementById('rhetoricScore').textContent = `Score: ${score}`;
+        const pill = document.getElementById('rhetoricPill');
+        pill.textContent = alert.toUpperCase();
+        pill.style.background = alertColor;
+        document.getElementById('rhetoricHeadline').textContent =
+            `${levelLabel} pressure level · ${d.timeline || 'Timeline pending'} · momentum ${momentum}`;
+        document.getElementById('rhetoricDetail').textContent =
+            `${d.total_articles || 0} articles analyzed · ${d.recent_articles_48h || 0} in last 48h · ${d.deescalation_count || 0} de-escalation signals · Confidence: ${d.confidence || 'Unknown'}`;
+    }
+
+    // ── Armenia pressure tracker detail card ──
+    const detailCard = document.getElementById('armeniaRhetoricCard');
+    if (detailCard) {
+        detailCard.style.display = 'block';
+        const scoreEl = document.getElementById('armeniaRhetoricScoreFull');
+        if (scoreEl) { scoreEl.textContent = score + '/100'; scoreEl.style.color = alertColor; }
+        const lvlEl = document.getElementById('armeniaRhetoricLevelLabel');
+        if (lvlEl) { lvlEl.textContent = levelLabel; lvlEl.style.background = alertColor; }
+
+        // Body: top scoring article titles → signal rows
+        const signalEl = document.getElementById('armeniaRhetoricSignalList');
+        if (signalEl) {
+            const top = (d.top_scoring_articles || []).slice(0, 5);
+            if (top.length) {
+                signalEl.innerHTML = top.map(a => {
+                    const title = a.title || 'Untitled';
+                    const src = (typeof a.source === 'object' ? a.source?.name : a.source) || '';
+                    return `<div class="rhetoric-signal-row">${src ? `<span class="rhetoric-signal-label">${src}</span>` : ''}${title}</div>`;
+                }).join('');
+            } else {
+                // Fallback: scoring breakdown summary
+                const rows = [
+                    { label: '📈 Momentum',           val: momentum, color: alertColor },
+                    { label: '📊 Recent (48h)',       val: d.recent_articles_48h || 0, color: '#38bdf8' },
+                    { label: '📰 Total Articles',     val: d.total_articles || 0, color: '#38bdf8' },
+                    { label: '🕊️ De-escalation Hits', val: d.deescalation_count || 0, color: '#22c55e' },
+                ];
+                signalEl.innerHTML = rows.map(r => `<div class="rhetoric-actor-row"><span>${r.label}</span><span style="font-weight:700;color:${r.color};">${r.val}</span></div>`).join('');
+            }
+        }
+
+        // Scan info footer
+        const scanEl = document.getElementById('armeniaRhetoricScanInfo');
+        if (scanEl) {
+            const ageStr = d.cache_age_human || (d.cached ? 'cached' : 'fresh scan');
+            scanEl.textContent = `${ageStr} · ${d.total_articles || 0} articles analyzed · ${d.confidence || 'Unknown'} confidence`;
+        }
+    }
+}
+
+
+// ── COMMODITY HELPER RENDERERS ──
+function renderCommodityCard(d) {
+    const pressure = d.commodity_pressure || 0;
+    const alert = (d.alert_level || 'normal').toLowerCase();
+    const alertLabel = alert.toUpperCase();
+    const stripHtml = `
+        <div class="commodity-pressure-pill alert-${alert}">PRESSURE: ${Math.round(pressure)}</div>
+        <div class="commodity-pressure-pill alert-${alert}">ALERT: ${alertLabel}</div>
+        <div style="display:flex;align-items:center;color:var(--text-muted);font-size:10.5px;letter-spacing:1px;">
+            ${(d.commodity_summaries || []).length} commodities tracked
+        </div>
+    `;
+    document.getElementById('commodityPressureStrip').innerHTML = stripHtml;
+
+    const rowsContainer = document.getElementById('commodityRows');
+    rowsContainer.innerHTML = '';
+    (d.commodity_summaries || []).forEach(c => {
+        const role = (c.role || 'producer').toLowerCase();
+        const rolePill = `<span class="c-role-pill role-${role}">${role}</span>`;
+        const rankText = c.rank ? `#${c.rank} globally` : '';
+        const sparkline = renderSparkline(c.sparkline);
+        const signalCount = c.signal_count || 0;
+        const note = c.note || '';
+        const icon = c.icon || '📦';
+        const name = (c.name || c.commodity || '').toUpperCase();
+
+        const row = document.createElement('a');
+        row.className = 'commodity-row';
+        row.href = `commodities.html#${c.commodity}`;
+        row.innerHTML = `
+            <div class="c-icon">${icon}</div>
+            <div class="c-meta">
+                <div class="c-name">${name}</div>
+                <div>${rolePill}<span class="c-rank">${rankText}</span></div>
+                ${note ? `<div class="c-note">${note}</div>` : ''}
+            </div>
+            <div class="c-spark">${sparkline}</div>
+            <div class="c-signals">📰 ${signalCount} signals</div>
+        `;
+        rowsContainer.appendChild(row);
+    });
+
+    const cacheStatus = d.cache_status || 'unknown';
+    const cachedAt = d.proxy_cached_at || d.last_updated;
+    let cacheText = '';
+    if (cachedAt) {
+        const ageMin = Math.floor((Date.now() - new Date(cachedAt).getTime()) / 60000);
+        cacheText = `Cache: ${cacheStatus} · ${ageMin < 60 ? ageMin + 'm' : Math.floor(ageMin/60) + 'h ' + (ageMin%60) + 'm'} ago`;
+    }
+    document.getElementById('commodityCacheNote').textContent = cacheText;
+}
+
+function renderCommodityPlaceholder(msg) {
+    document.getElementById('commodityPressureStrip').innerHTML = '';
+    document.getElementById('commodityRows').innerHTML = `
+        <div style="padding:20px;text-align:center;color:var(--text-muted);font-style:italic;font-size:12px;">
+            ${msg || 'Commodity scan pending — data will appear shortly.'}
+        </div>
+    `;
+}
+
+function renderSparkline(spark) {
+    if (!spark) return '';
+    let values = [];
+    if (Array.isArray(spark)) values = spark;
+    else if (spark.values && Array.isArray(spark.values)) values = spark.values;
+    else if (spark.points && Array.isArray(spark.points)) values = spark.points.map(p => typeof p === 'number' ? p : (p.y || p.close || 0));
+    if (values.length < 2) return '';
+    const blocks = '▁▂▃▄▅▆▇█';
+    const min = Math.min(...values), max = Math.max(...values);
+    const range = max - min || 1;
+    const sparkStr = values.map(v => blocks[Math.floor(((v - min) / range) * (blocks.length - 1))]).join('');
+    const trend = values[values.length - 1] - values[0];
+    const arrow = trend > 0 ? '↑' : (trend < 0 ? '↓' : '→');
+    const arrowColor = trend > 0 ? '#4ade80' : (trend < 0 ? '#f87171' : '#94a3b8');
+    return `${sparkStr} <span style="color:${arrowColor};font-weight:700;">${arrow}</span>`;
+}
+
+// ── TRANSLATIONS ──
+const T = {
+    en: {
+        pageFlag:'KAZAKHSTAN', pageTitle:'KAZAKHSTAN STABILITY INDEX',
+        pageSubtitle:'Constitutional Reform · CPC Pipeline · World #1 Uranium · Middle Corridor · Russia/China Hedging',
+        backLink:'← Back to Europe',
+        cautionLabel:'U.S. STATE DEPARTMENT — WORLDWIDE CAUTION',
+        cautionText:'U.S. citizens worldwide should remain vigilant. Terrorist groups, criminals, and other violent actors continue to plot attacks globally. Monitor local media, heed official guidance, and enroll in STEP.',
+        viewCaution:'VIEW CAUTION →',
+        advisoryLabel:'U.S. STATE DEPARTMENT — KAZAKHSTAN TRAVEL ADVISORY',
+        advisoryLevel:'LEVEL 1', viewAdvisory:'VIEW ADVISORY →',
+        advisoryText:'Exercise Normal Precautions in Kazakhstan. Reissued August 4, 2024 after periodic review without changes. Important caveats: Russian arrest warrants — Kazakhstan-Russia law enforcement cooperation may result in detention of US citizens with prior Russia work. China border zones — permission required for travel near Chinese border or near military installations. Demonstrations may occur and have ended in deaths and mass arrests historically (January 2022).',
+        rhetoricLabel:'KAZAKHSTAN RHETORIC TRACKER — LIVE',
+        rhetoricLink:'Open Tracker →',
+        contextLabel:'📡 MAY 4, 2026 — STRATEGIC SIGNAL',
+        contextHeadline:'New Constitution Effective · Tokayev Power Consolidation · Managed Succession',
+        contextSub:'March 15 referendum approved by 87.15% on 73.12% turnout · Rewrote 84% of 1995 constitution · Replaced bicameral parliament with unicameral Kurultai · Restored Vice Presidency for managed succession · CPC pipeline operational (Russia-routed oil export) · World #1 uranium producer (Kazatomprom ~40% global supply) · Effective July 1, 2026',
+        contextTagLabel:'Pashinyan:',
+        contextQuote:'"Choice between war and peace"',
+        rhetoricCardTitle:'KAZAKHSTAN PRESSURE TRACKER',
+        rhetoricCardDesc:'Multi-vector pressure score — Constitutional Reform · CPC Pipeline · Uranium Politics · Russia/China Hedging · Middle Corridor · Updated every 6h',
+        loading:'Loading…', viewFullTracker:'View Full Pressure Analysis →',
+        commodityTitle:'COMMODITY EXPOSURE — KAZAKHSTAN',
+        commodityFullLink:'View Full Commodity Tracker →',
+        commoditySubtitle:'Strategic commodity exposure with live news signal counts. Click any row to deep-dive on commodities tracker.',
+        commodityLinkage:'Strategic Linkage: Kazakhstan is Central Asia\'s indispensable commodity state. World #1 uranium producer (Kazatomprom ~40% of global supply). Major oil producer: Tengiz, Karachaganak, Kashagan supergiants. CPC pipeline carries Kazakh crude through Russian territory to Novorossiysk — single biggest Russia-exposure vector. KazTransOil routes east to China via Atasu-Alashankou. Aktau port anchors the Middle Corridor — Russia/Iran-bypassing trade route to Azerbaijan, Georgia, Türkiye, Europe.',
+        mapTitle:'KAZAKHSTAN — STRATEGIC OVERVIEW',
+        mapSubtitle:"Kazakhstan's strategic position straddling Central Asia — bordered by Russia (north, ~7,644 km), China (east, ~1,533 km), Kyrgyzstan, Uzbekistan, Turkmenistan (south), and the Caspian Sea (west). Tengiz, Karachaganak, Kashagan oil supergiants in west; Kazatomprom uranium operations in south. CPC pipeline routes crude through Russia to Black Sea; KazTransOil routes east to China. Aktau port anchors the Middle Corridor.",
+        knowledgeTitle:'KNOWLEDGE LIBRARY',
+        knowledgeDisclaimer:'Background information compiled from open-source research, think tank analyses, and public government reporting.',
+        catConstitution:'Constitutional Reform & Tokayev Succession — July 2026',
+        catEnergy:'Energy Supergiants & CPC Pipeline',
+        catUranium:'Uranium & Kazatomprom — World #1 Producer',
+        catHedging:'Russia/China Hedging & Bloody January 2022',
+        catMiddleCorridor:'Middle Corridor & B5+1 / Western Engagement',
+        articlesTitle:'RECENT KAZAKHSTAN STABILITY & STRATEGIC ARTICLES',
+        articlesDesc:'English · Russian · French · Social signals · Last 7 days · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 English', tabRU:'🇷🇺 Russian', tabFR:'🇫🇷 French', tabSocial:'📡 Social',
+        articlesLoading:'Loading articles...',
+        footSourcesTitle:'Data Sources',
+        footSourcesText:'NewsAPI, GDELT, RSS Feeds (EN, RU, FR), Telegram OSINT, Bluesky, Reddit, and travel.state.gov travel advisory data.',
+        footMethodTitle:'Methodology',
+        footMethodText:'Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.',
+        footContactTitle:'Contact',
+        footDisclaimerLabel:'⚠️ DISCLAIMER',
+        footDisclaimerText:'This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.',
+        footBmacText:'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footBmacButton:'buy me a coffee',
+        footPrivacy:'Privacy Policy', footContact:'Contact',
+        footCopy:'All Rights Reserved. Kazakhstan Stability Index v1.0.0 — Proprietary and Confidential.',
+    },
+    fr: {
+        pageFlag:'KAZAKHSTAN', pageTitle:'INDICE DE STABILITÉ — KAZAKHSTAN',
+        pageSubtitle:'Pivot Russie · Voie d\u2019adhésion UE · Carrefour de transit iranien · Reconstruction post-Karabakh · Vulnérabilité Syunik',
+        backLink:'← Retour à l\u2019Europe',
+        cautionLabel:'DÉPARTEMENT D\u2019ÉTAT — MISE EN GARDE MONDIALE',
+        cautionText:'Les citoyens américains dans le monde entier doivent rester vigilants face aux menaces terroristes et à la violence.',
+        viewCaution:'VOIR LA MISE EN GARDE →',
+        advisoryLabel:'DÉPARTEMENT D\u2019ÉTAT — AVIS ARMÉNIE',
+        advisoryLevel:'NIVEAU 1', viewAdvisory:'VOIR L\u2019AVIS →',
+        advisoryText:'Précautions normales au Kazakhstan. Réémis le 4 août 2024 après revue périodique sans changement. Avertissements importants : mandats d\u2019arrêt russes — la coopération policière Kazakhstan-Russie peut entraîner la détention de citoyens américains ayant précédemment travaillé en Russie. Zones frontalières avec la Chine — autorisation requise pour les déplacements près de la frontière chinoise ou des installations militaires. Des manifestations peuvent survenir; certaines ont entraîné des morts et arrestations massives historiquement (janvier 2022).',
+        rhetoricLabel:'TRACKER RHÉTORIQUE KAZAKHSTAN — EN DIRECT',
+        rhetoricLink:'Ouvrir le tracker →',
+        contextLabel:'📡 4 MAI 2026 — SIGNAL STRATÉGIQUE',
+        contextHeadline:'Nouvelle constitution en vigueur · Consolidation du pouvoir Tokaïev · Succession gérée',
+        contextSub:'Référendum du 15 mars approuvé à 87,15 % sur 73,12 % de participation · Réécriture de 84 % de la constitution de 1995 · Remplacement du parlement bicaméral par le Kurultai unicaméral · Restauration de la vice-présidence pour succession gérée · Pipeline CPC opérationnel (export pétrolier via Russie) · Producteur d’uranium #1 mondial (Kazatomprom ~40 % de l’offre mondiale) · En vigueur le 1er juillet 2026',
+        contextTagLabel:'Pashinyan :',
+        contextQuote:'« Choix entre guerre et paix »',
+        rhetoricCardTitle:'TRACKER DE PRESSION KAZAKHSTAN',
+        rhetoricCardDesc:'Score de pression multi-vecteurs — Pivot Russie · Adhésion UE · Frontière Azerbaïdjan · Transit iranien · Élections juin 2026 · Mis à jour toutes les 6 h',
+        loading:'Chargement…', viewFullTracker:'Voir l\u2019analyse complète →',
+        commodityTitle:'EXPOSITION AUX MATIÈRES PREMIÈRES — KAZAKHSTAN',
+        commodityFullLink:'Voir le tracker complet →',
+        commoditySubtitle:'Exposition stratégique aux matières premières avec comptage de signaux médiatiques en direct. Cliquez sur une ligne pour explorer.',
+        commodityLinkage:'Lien stratégique : Le Kazakhstan est l\u2019État-matières premières indispensable de l\u2019Asie centrale. Producteur d\u2019uranium #1 mondial (Kazatomprom ~40 % de l\u2019offre mondiale). Producteur pétrolier majeur : super-géants Tengiz, Karachaganak, Kashagan. Le pipeline CPC achemine le brut kazakh à travers le territoire russe vers Novorossiysk — principal vecteur d\u2019exposition à la Russie. KazTransOil achemine vers l\u2019est vers la Chine via Atasu-Alashankou. Le port d\u2019Aktau ancre le Corridor du Milieu — route commerciale contournant Russie/Iran vers Azerbaïdjan, Géorgie, Türkiye, Europe.',
+        mapTitle:'KAZAKHSTAN — VUE STRATÉGIQUE',
+        mapSubtitle:'Position stratégique du Kazakhstan à cheval sur l\u2019Asie centrale — bordé par la Russie (nord, ~7\u202F644 km), la Chine (est, ~1\u202F533 km), le Kirghizistan, l\u2019Ouzbékistan, le Turkménistan (sud) et la mer Caspienne (ouest). Super-géants pétroliers Tengiz, Karachaganak, Kashagan à l\u2019ouest ; opérations d\u2019uranium Kazatomprom au sud. Pipeline CPC vers la Russie/mer Noire ; KazTransOil vers l\u2019est vers la Chine. Le port d\u2019Aktau ancre le Corridor du Milieu.',
+        knowledgeTitle:'BIBLIOTHÈQUE DE CONNAISSANCES',
+        knowledgeDisclaimer:'Informations compilées à partir de recherches en sources ouvertes, d\u2019analyses de groupes de réflexion et de rapports gouvernementaux publics.',
+        catRussiaEU:'Pivot Russie & voie d\u2019adhésion UE — mai 2026',
+        catEnergy:'Géants énergétiques & pipeline CPC',
+        catUranium:'Uranium & Kazatomprom — Producteur #1 mondial',
+        catHedging:'Couverture Russie/Chine & Janvier sanglant 2022',
+        catMiddleCorridor:'Corridor du milieu & B5+1 / engagement occidental',
+        articlesTitle:'ARTICLES RÉCENTS — KAZAKHSTAN',
+        articlesDesc:'Anglais · Russe · Français · Signaux sociaux · 7 derniers jours · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Anglais', tabRU:'🇷🇺 Russe', tabFR:'🇫🇷 Français', tabSocial:'📡 Social',
+        articlesLoading:'Chargement des articles...',
+        footSourcesTitle:'Sources de données',
+        footSourcesText:'NewsAPI, GDELT, flux RSS (EN, RU, FR), Telegram OSINT, Bluesky, Reddit et données du Département d\u2019État.',
+        footMethodTitle:'Méthodologie',
+        footMethodText:'Agrégation OSINT pondérée par source avec score de décroissance temporelle. Sources ouvertes uniquement — aucune donnée classifiée.',
+        footContactTitle:'Contact',
+        footDisclaimerLabel:'⚠️ AVERTISSEMENT',
+        footDisclaimerText:'Cette page fournit des estimations analytiques basées sur l\u2019agrégation de renseignements open-source. Elle ne constitue ni évaluation de renseignement, ni conseil militaire, ni recommandation politique. Toujours consulter des sources autoritaires pour la prise de décision. Non destiné à un usage opérationnel.',
+        footBmacText:'Si Asifah Analytics vous est utile et que vous souhaitez soutenir le développement, vous pouvez',
+        footBmacButton:'m\u2019offrir un café',
+        footPrivacy:'Politique de confidentialité', footContact:'Contact',
+        footCopy:'Tous droits réservés. Indice de stabilité Kazakhstan v1.0.0 — Propriétaire et Confidentiel.',
+    },
+    ru: {
+        pageFlag:'КАЗАХСТАН', pageTitle:'ИНДЕКС СТАБИЛЬНОСТИ КАЗАХСТАНА',
+        pageSubtitle:'Конституционная реформа · Трубопровод КТК · Уран #1 в мире · Срединный коридор · Хеджирование Россия/Китай',
+        backLink:'← Назад к Европе',
+        cautionLabel:'ГОСДЕПАРТАМЕНТ США — ВСЕМИРНОЕ ПРЕДУПРЕЖДЕНИЕ',
+        cautionText:'Гражданам США во всём мире следует сохранять бдительность. Террористические группы и насильственные субъекты продолжают планировать атаки глобально.',
+        viewCaution:'СМОТРЕТЬ ПРЕДУПРЕЖДЕНИЕ →',
+        advisoryLabel:'ГОСДЕПАРТАМЕНТ США — РЕКОМЕНДАЦИИ ПО КАЗАХСТАНУ',
+        advisoryLevel:'УРОВЕНЬ 1', viewAdvisory:'СМОТРЕТЬ РЕКОМЕНДАЦИЮ →',
+        advisoryText:'Соблюдайте обычные меры предосторожности в Казахстане. Переиздано 4 августа 2024 года после периодического пересмотра без изменений. Важные оговорки: российские ордера на арест — сотрудничество правоохранительных органов Казахстан-Россия может привести к задержанию граждан США, ранее работавших в России. Приграничные зоны с Китаем — требуется разрешение для поездок рядом с китайской границей или военными объектами. Возможны демонстрации; исторически приводили к гибели людей и массовым арестам (январь 2022).',
+        rhetoricLabel:'ТРЕКЕР РИТОРИКИ КАЗАХСТАНА — В РЕАЛЬНОМ ВРЕМЕНИ',
+        rhetoricLink:'Открыть трекер →',
+        contextLabel:'📡 4 МАЯ 2026 — СТРАТЕГИЧЕСКИЙ СИГНАЛ',
+        contextHeadline:'Новая конституция вступает в силу · Консолидация власти Токаева · Управляемая преемственность',
+        contextSub:'Референдум 15 марта одобрен 87,15% при явке 73,12% · Переписано 84% Конституции 1995 года · Двухпалатный парламент заменён однопалатным Курултаем · Восстановлено вице-президентство для управляемой преемственности · Трубопровод КТК функционирует (нефтяной экспорт через Россию) · Производитель урана #1 в мире (Казатомпром ~40% мирового предложения) · Вступает в силу 1 июля 2026 года',
+        contextTagLabel:'Пашинян:',
+        contextQuote:'«Выбор между войной и миром»',
+        rhetoricCardTitle:'ТРЕКЕР ДАВЛЕНИЯ КАЗАХСТАНА',
+        rhetoricCardDesc:'Многовекторная оценка давления — Поворот от России · Вступление в ЕС · Азербайджанская граница · Иранский транзит · Выборы в июне 2026 · Обновляется каждые 6 ч',
+        loading:'Загрузка…', viewFullTracker:'Посмотреть полный анализ →',
+        commodityTitle:'СЫРЬЕВАЯ ЭКСПОЗИЦИЯ — КАЗАХСТАН',
+        commodityFullLink:'Полный трекер сырья →',
+        commoditySubtitle:'Стратегическая сырьевая экспозиция с подсчётом новостных сигналов в реальном времени. Нажмите на строку для перехода.',
+        commodityLinkage:'Стратегическая связь: Казахстан — незаменимое сырьевое государство Центральной Азии. Производитель урана #1 в мире (Казатомпром ~40% мирового предложения). Крупный нефтепроизводитель: супергиганты Тенгиз, Карачаганак, Кашаган. Трубопровод КТК доставляет казахскую нефть через российскую территорию в Новороссийск — главный вектор зависимости от России. КазТрансОйл направляет на восток в Китай через Атасу-Алашанькоу. Порт Актау якорь Срединного коридора — торгового маршрута, обходящего Россию/Иран, в Азербайджан, Грузию, Турцию, Европу.',
+        mapTitle:'КАЗАХСТАН — СТРАТЕГИЧЕСКИЙ ОБЗОР',
+        mapSubtitle:'Стратегическое положение Казахстана на стыке Центральной Азии — граничит с Россией (север, ~7 644 км), Китаем (восток, ~1 533 км), Кыргызстаном, Узбекистаном, Туркменистаном (юг) и Каспийским морем (запад). Нефтяные супергиганты Тенгиз, Карачаганак, Кашаган на западе; урановые операции Казатомпрома на юге. Трубопровод КТК через Россию к Чёрному морю; КазТрансОйл на восток в Китай. Порт Актау якорь Срединного коридора.',
+        knowledgeTitle:'БИБЛИОТЕКА ЗНАНИЙ',
+        knowledgeDisclaimer:'Справочная информация составлена из открытых источников, аналитических работ исследовательских центров и публичных правительственных отчётов.',
+        catConstitution:'Конституционная реформа и преемственность Токаева — июль 2026',
+        catEnergy:'Нефтегазовые гиганты и трубопровод КТК',
+        catUranium:'Уран и Казатомпром — производитель #1 в мире',
+        catHedging:'Хеджирование Россия/Китай и Кровавый январь 2022',
+        catMiddleCorridor:'Срединный коридор и B5+1 / западное взаимодействие',
+        articlesTitle:'ПОСЛЕДНИЕ СТАТЬИ О КАЗАХСТАНЕ',
+        articlesDesc:'Английский · Русский · Французский · Социальные сигналы · Последние 7 дней · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Английский', tabRU:'🇷🇺 Русский', tabFR:'🇫🇷 Французский', tabSocial:'📡 Социальные',
+        articlesLoading:'Загрузка статей...',
+        footSourcesTitle:'Источники данных',
+        footSourcesText:'NewsAPI, GDELT, RSS-каналы (EN, RU, FR), Telegram OSINT, Bluesky, Reddit и данные travel.state.gov.',
+        footMethodTitle:'Методология',
+        footMethodText:'Взвешенная по источникам OSINT-агрегация с временным затуханием. Только открытые источники — никаких засекреченных данных.',
+        footContactTitle:'Контакт',
+        footDisclaimerLabel:'⚠️ ДИСКЛЕЙМЕР',
+        footDisclaimerText:'Эта страница предоставляет аналитические оценки на основе агрегации разведданных из открытых источников. Она не представляет собой разведывательных оценок, военных советов или политических рекомендаций. Всегда консультируйтесь с авторитетными источниками при принятии решений. Не для оперативного использования.',
+        footBmacText:'Если Asifah Analytics полезен вам и вы хотите поддержать развитие, вы можете',
+        footBmacButton:'купить мне кофе',
+        footPrivacy:'Политика конфиденциальности', footContact:'Контакт',
+        footCopy:'Все права защищены. Индекс стабильности Казахстана v1.0.0 — Собственность и конфиденциально.',
+    },
+    de: {
+        pageFlag:'KASACHSTAN', pageTitle:'KASACHSTAN-STABILITÄTSINDEX',
+        pageSubtitle:'Verfassungsreform · CPC-Pipeline · Uran #1 weltweit · Mittlerer Korridor · Russland/China-Absicherung',
+        backLink:'← Zurück zu Europa',
+        cautionLabel:'AUSSENMINISTERIUM — WELTWEITE WARNUNG',
+        cautionText:'US-Bürger weltweit sollten wachsam bleiben. Terrorgruppen und gewalttätige Akteure planen weiterhin Angriffe weltweit.',
+        viewCaution:'WARNUNG ANZEIGEN →',
+        advisoryLabel:'AUSSENMINISTERIUM — KASACHSTAN-REISEHINWEIS',
+        advisoryLevel:'STUFE 1', viewAdvisory:'WARNUNG ANZEIGEN →',
+        advisoryText:'Normale Vorsichtsmaßnahmen in Kasachstan. Am 4. August 2024 nach periodischer Überprüfung ohne Änderungen neu herausgegeben. Wichtige Vorbehalte: Russische Haftbefehle — Kooperation der Strafverfolgungsbehörden Kasachstan-Russland kann zur Festnahme von US-Bürgern mit früherer Russland-Tätigkeit führen. Grenzregionen zu China — Genehmigung für Reisen nahe der chinesischen Grenze oder Militäranlagen erforderlich. Demonstrationen können auftreten; haben historisch zu Todesfällen und Massenverhaftungen geführt (Januar 2022).',
+        rhetoricLabel:'KASACHSTAN-RHETORIK-TRACKER — LIVE',
+        rhetoricLink:'Tracker öffnen →',
+        contextLabel:'📡 4. MAI 2026 — STRATEGISCHES SIGNAL',
+        contextHeadline:'Neue Verfassung in Kraft · Tokajew-Machtkonsolidierung · Geordnete Nachfolge',
+        contextSub:'Referendum vom 15. März mit 87,15 % bei 73,12 % Wahlbeteiligung gebilligt · 84 % der Verfassung von 1995 neu geschrieben · Zweikammer-Parlament durch Einkammer-Kurultai ersetzt · Vize-Präsidentschaft für geordnete Nachfolge wiederhergestellt · CPC-Pipeline operativ (Russland-geroutete Ölexporte) · Welt-Uranproduzent #1 (Kazatomprom ~40 % der globalen Versorgung) · In Kraft ab 1. Juli 2026',
+        contextTagLabel:'Paschinjan:',
+        contextQuote:'„Wahl zwischen Krieg und Frieden"',
+        rhetoricCardTitle:'KASACHSTAN-DRUCKTRACKER',
+        rhetoricCardDesc:'Multi-Vektor-Druck-Score — Russland-Pivot · EU-Beitritt · Aserbaidschan-Grenze · Iran-Transit · Wahlen Juni 2026 · Aktualisiert alle 6 h',
+        loading:'Lade…', viewFullTracker:'Vollständige Druckanalyse anzeigen →',
+        commodityTitle:'ROHSTOFF-EXPOSITION — KASACHSTAN',
+        commodityFullLink:'Vollständigen Rohstoff-Tracker anzeigen →',
+        commoditySubtitle:'Strategische Rohstoff-Exposition mit Live-Nachrichtensignalzählung. Klicken Sie auf eine Zeile, um zu vertiefen.',
+        commodityLinkage:'Strategische Verknüpfung: Kasachstan ist Zentralasiens unentbehrlicher Rohstoffstaat. Welt-Uranproduzent #1 (Kazatomprom ~40 % der globalen Versorgung). Großer Ölproduzent: Supergiganten Tengiz, Karachaganak, Kaschagan. Die CPC-Pipeline transportiert kasachisches Rohöl durch russisches Territorium nach Noworossijsk — der größte Russland-Expositionsvektor. KazTransOil leitet ostwärts nach China über Atasu-Alashankou. Der Hafen Aktau verankert den Mittleren Korridor — Russland/Iran umgehende Handelsroute nach Aserbaidschan, Georgien, Türkei, Europa.',
+        mapTitle:'KASACHSTAN — STRATEGISCHER ÜBERBLICK',
+        mapSubtitle:'Kasachstans strategische Lage in Zentralasien — grenzt an Russland (Norden, ~7 644 km), China (Osten, ~1 533 km), Kirgisistan, Usbekistan, Turkmenistan (Süden) und das Kaspische Meer (Westen). Öl-Supergiganten Tengiz, Karachaganak, Kaschagan im Westen; Kazatomprom-Uranoperationen im Süden. CPC-Pipeline durch Russland zum Schwarzen Meer; KazTransOil ostwärts nach China. Hafen Aktau verankert den Mittleren Korridor.',
+        knowledgeTitle:'WISSENSBIBLIOTHEK',
+        knowledgeDisclaimer:'Hintergrundinformationen aus Open-Source-Forschung, Think-Tank-Analysen und öffentlichen Regierungsberichten zusammengestellt.',
+        catConstitution:'Verfassungsreform & Tokajew-Nachfolge — Juli 2026',
+        catEnergy:'Energie-Supergiganten & CPC-Pipeline',
+        catUranium:'Uran & Kazatomprom — Weltgrößter Produzent',
+        catHedging:'Russland/China-Absicherung & Blutiger Januar 2022',
+        catMiddleCorridor:'Mittlerer Korridor & B5+1 / westliches Engagement',
+        articlesTitle:'AKTUELLE ARTIKEL — KASACHSTAN',
+        articlesDesc:'Englisch · Russisch · Französisch · Soziale Signale · Letzte 7 Tage · NewsAPI + GDELT + Telegram + Bluesky + Reddit',
+        tabEN:'🇬🇧 Englisch', tabRU:'🇷🇺 Russisch', tabFR:'🇫🇷 Französisch', tabSocial:'📡 Sozial',
+        articlesLoading:'Lade Artikel...',
+        footSourcesTitle:'Datenquellen',
+        footSourcesText:'NewsAPI, GDELT, RSS-Feeds (EN, RU, FR), Telegram OSINT, Bluesky, Reddit und travel.state.gov-Reisehinweise.',
+        footMethodTitle:'Methodik',
+        footMethodText:'Quellengewichtete OSINT-Aggregation mit zeitlich abnehmender Bewertung. Nur quelloffene Signale — keine klassifizierten Daten.',
+        footContactTitle:'Kontakt',
+        footDisclaimerLabel:'⚠️ HAFTUNGSAUSSCHLUSS',
+        footDisclaimerText:'Diese Seite liefert analytische Schätzungen auf Basis der Aggregation quelloffener Geheimdienstinformationen. Sie stellt keine nachrichtendienstlichen Bewertungen, militärischen Ratschläge oder politischen Empfehlungen dar. Konsultieren Sie für Entscheidungen stets autoritative Quellen. Nicht für den operativen Einsatz bestimmt.',
+        footBmacText:'Wenn Sie Asifah Analytics nützlich finden und die Entwicklung unterstützen möchten, können Sie',
+        footBmacButton:'mir einen Kaffee spendieren',
+        footPrivacy:'Datenschutzrichtlinie', footContact:'Kontakt',
+        footCopy:'Alle Rechte vorbehalten. Kasachstan-Stabilitätsindex v1.0.0 — Eigentum und vertraulich.',
+    }
+};
+
+function setLang(lang, btn) {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    const t = T[lang] || T.en;
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (t[k] !== undefined) el.textContent = t[k];
+    });
+}
+// ── INIT ──
+document.addEventListener('DOMContentLoaded', () => {
+    startLoading();
+    loadArticles();
+    loadCommodity();
+    loadRhetoric();
+});
+</script>
+</body>
+</html>
