@@ -635,7 +635,7 @@
     // ── BLUF — consumes /api/rhetoric/europe/bluf (canonical schema) ──
     // v1.0 (Apr 2026): switched from client-side synthesis to backend BLUF.
     // Pattern matches rhetoric-asia.html, rhetoric-index.html (ME), rhetoric-wha.html.
-    async function updateBluf(resolved) {
+    async function updateBluf(_resolvedUnused) {
         try {
             const resp = await fetch(EUROPE_BACKEND + '/api/rhetoric/europe/bluf');
             if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -682,48 +682,77 @@
         }
     }
 
+   // ── FETCH WITH TIMEOUT (v1.1.0) ──
+    // Wraps fetch with a hard timeout so a slow Render cold-start doesn't
+    // hang a tracker banner indefinitely. Default 30s — generous for cold
+    // starts but bounded so the user sees feedback.
+    async function fetchWithTimeout(url, timeoutMs = 30000) {
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            const resp = await fetch(url, { cache: 'no-store', signal: controller.signal });
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            return await resp.json();
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+    // ── PROGRESSIVE TRACKER LOAD (v1.1.0) ──
+    // Each tracker renders the moment its own fetch resolves — no waiting for
+    // the slowest endpoint. Fixes the "page spins for 60s on Render cold-start"
+    // UX problem. Returns a settled-result for posture aggregation.
+    async function loadTrackerProgressive(tracker) {
+        try {
+            const data = await fetchWithTimeout(tracker.summaryUrl);
+            const newEl = renderTrackerBanner(tracker, data);
+            newEl.id = `banner-${tracker.id}`;
+            const old = document.getElementById(`banner-${tracker.id}`);
+            if (old) old.replaceWith(newEl);
+            return { tracker, data };
+        } catch (e) {
+            console.warn(`[${tracker.id}] fetch error:`, e);
+            // Show error state on the banner instead of leaving it spinning
+            const errEl = renderTrackerBanner(tracker, null);
+            errEl.id = `banner-${tracker.id}`;
+            // Add a subtle error indicator
+            const badge = errEl.querySelector('.level-badge');
+            if (badge) {
+                badge.innerHTML = '⚠️ Unavailable';
+                badge.style.background = '#6b7280';
+                badge.style.minWidth = '120px';
+            }
+            const old = document.getElementById(`banner-${tracker.id}`);
+            if (old) old.replaceWith(errEl);
+            return { tracker, data: null };
+        }
+    }
+
     // ── MAIN LOAD ──
     async function loadAll() {
         const list = document.getElementById('trackersList');
         list.innerHTML = '';
 
-        // Pre-render loading skeletons
+        // Pre-render loading skeletons (each will be replaced as its fetch resolves)
         TRACKERS.forEach(tracker => {
             const el = renderTrackerBanner(tracker, null);
             el.id = `banner-${tracker.id}`;
             list.appendChild(el);
         });
 
-        // Fetch all summaries in parallel
-        const settled = await Promise.allSettled(
-            TRACKERS.map(async tracker => {
-                try {
-                    const resp = await fetch(tracker.summaryUrl, { cache: 'no-store' });
-                    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-                    const data = await resp.json();
-                    return { tracker, data };
-                } catch(e) {
-                    console.warn(`[${tracker.id}] fetch error:`, e);
-                    return { tracker, data: null };
-                }
-            })
-        );
+        // v1.1.0: Progressive load — kick off all fetches AND the BLUF in parallel.
+        // Each tracker renders independently as its data arrives; we wait for all
+        // to settle before updating the aggregate posture banner.
+        // NOTE: BLUF runs in parallel — does NOT block tracker rendering.
+        const trackerPromises = TRACKERS.map(loadTrackerProgressive);
+        const blufPromise     = updateBluf();   // independent — no longer needs `resolved`
 
-        const resolved = settled.map(r =>
-            r.status === 'fulfilled' ? r.value : { tracker: null, data: null }
-        );
-
-        // Update each banner with live data
-        resolved.forEach(({ tracker, data }) => {
-            if (!tracker) return;
-            const newEl = renderTrackerBanner(tracker, data);
-            newEl.id = `banner-${tracker.id}`;
-            const old = document.getElementById(`banner-${tracker.id}`);
-            if (old) old.replaceWith(newEl);
-        });
-
+        // Wait for all trackers to settle (resolved or errored) — then update posture
+        const resolved = await Promise.all(trackerPromises);
         updatePosture(resolved);
-        updateBluf(resolved);
+
+        // BLUF resolves on its own timeline; we don't block on it
+        await blufPromise;
     }
 
     // ── INIT ──
