@@ -1409,6 +1409,451 @@
         [data-theme="dark"] .govt-card .metric-title {
             color: #22d3ee;
         }
+
+        /* ═══════════════════════════════════════════════════════════
+           PHASE 3 GOLD STANDARD ADDITIONS (May 5, 2026)
+           Sidebar + Commodity Card + Interpreter Cards + Footer harmonization
+           ═══════════════════════════════════════════════════════════ */
+
+        /* ── Canonical sidebar (Regional Rhetoric pattern) ── */
+        .page-with-sidebar {
+            display: grid;
+            grid-template-columns: 220px 1fr;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .canonical-sidebar {
+            position: sticky;
+            top: 20px;
+            align-self: start;
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 13px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+        }
+
+        [data-theme="dark"] .canonical-sidebar {
+            border-color: rgba(0,200,212,0.18);
+            box-shadow: 0 0 6px rgba(0,200,212,0.08);
+        }
+
+        .sidebar-section {
+            margin-bottom: 18px;
+        }
+
+        .sidebar-heading {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--iran-accent);
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 7px 10px;
+            margin-bottom: 3px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            border-radius: 6px;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-link:hover {
+            background: var(--article-hover);
+            color: var(--text-primary);
+            border-left-color: var(--iran-accent);
+        }
+
+        .sidebar-link.active {
+            background: rgba(100, 149, 237, 0.1);
+            color: var(--iran-accent);
+            border-left-color: var(--iran-accent);
+            font-weight: 600;
+        }
+
+        .sidebar-link.future {
+            color: var(--text-muted);
+            font-style: italic;
+            opacity: 0.65;
+        }
+
+        .sidebar-link.future::after {
+            content: ' (coming)';
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 1100px) {
+            .page-with-sidebar { grid-template-columns: 1fr; }
+            .canonical-sidebar { position: static; max-height: none; margin-bottom: 20px; }
+        }
+
+        /* ── Commodity Exposure Card (Phase 2A integration) ── */
+        .commodity-card {
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        [data-theme="dark"] .commodity-card {
+            border-color: rgba(0,200,212,0.18);
+            box-shadow: 0 0 6px rgba(0,200,212,0.08);
+        }
+
+        .commodity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        .commodity-pill {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .commodity-pill:hover {
+            transform: translateY(-2px);
+            background: var(--article-hover);
+            border-color: var(--iran-accent);
+            box-shadow: 0 4px 12px rgba(100,149,237,0.15);
+        }
+
+        .commodity-pill-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .commodity-pill-icon {
+            font-size: 24px;
+        }
+
+        .commodity-pill-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .commodity-pill-rank {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .commodity-pill-alert {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .commodity-alert-normal {
+            background: rgba(34,197,94,0.12);
+            color: #22c55e;
+            border: 1px solid rgba(34,197,94,0.3);
+        }
+
+        .commodity-alert-elevated {
+            background: rgba(234,179,8,0.12);
+            color: #eab308;
+            border: 1px solid rgba(234,179,8,0.3);
+        }
+
+        .commodity-alert-high {
+            background: rgba(249,115,22,0.15);
+            color: #f97316;
+            border: 1px solid rgba(249,115,22,0.4);
+        }
+
+        .commodity-alert-surge {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.4);
+        }
+
+        .commodity-pill-role {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .commodity-pill-note {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-top: 6px;
+        }
+
+        /* ── Interpreter output cards (So What / Red Lines / Historical) ── */
+        .interpreter-card {
+            background: var(--metric-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        [data-theme="dark"] .interpreter-card {
+            border-color: rgba(0,200,212,0.18);
+            box-shadow: 0 0 6px rgba(0,200,212,0.08);
+        }
+
+        .scenario-banner {
+            padding: 14px 18px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            border: 2px solid;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .scenario-icon {
+            font-size: 28px;
+        }
+
+        .scenario-text {
+            font-size: 16px;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .interpreter-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--iran-accent);
+            font-weight: 700;
+            margin: 16px 0 8px 0;
+        }
+
+        .interpreter-prose {
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .interpreter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .interpreter-list li {
+            padding: 10px 14px;
+            margin-bottom: 8px;
+            background: var(--article-bg);
+            border-left: 4px solid var(--iran-accent);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .interpreter-watch-list li {
+            border-left-color: #f97316;
+        }
+
+        .red-line-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--card-border);
+        }
+
+        .red-line-item.breached {
+            border-left-color: #ef4444;
+            background: rgba(239,68,68,0.05);
+        }
+
+        .red-line-item.approaching {
+            border-left-color: #f97316;
+            background: rgba(249,115,22,0.05);
+        }
+
+        .red-line-icon {
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .red-line-content {
+            flex: 1;
+        }
+
+        .red-line-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .red-line-status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            margin-left: 8px;
+        }
+
+        .red-line-status-badge.breached {
+            background: rgba(239,68,68,0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239,68,68,0.4);
+        }
+
+        .red-line-status-badge.approaching {
+            background: rgba(249,115,22,0.15);
+            color: #f97316;
+            border: 1px solid rgba(249,115,22,0.4);
+        }
+
+        .red-line-trigger {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+
+        .historical-match {
+            padding: 14px;
+            background: var(--article-bg);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--iran-accent);
+        }
+
+        .historical-match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .historical-match-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .historical-similarity {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--iran-accent);
+            font-family: 'Courier New', monospace;
+        }
+
+        .historical-match-outcome {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .historical-match-meta {
+            display: flex;
+            gap: 14px;
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Source pills (articles by source) ── */
+        .source-pill {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-right: 6px;
+        }
+
+        .source-pill-rss { background: rgba(100,149,237,0.15); color: #6495ED; }
+        .source-pill-gdelt { background: rgba(168,85,247,0.15); color: #a855f7; }
+        .source-pill-newsapi { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .source-pill-brave { background: rgba(249,115,22,0.15); color: #f97316; }
+        .source-pill-telegram { background: rgba(14,165,233,0.15); color: #0ea5e9; }
+        .source-pill-bluesky { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .source-pill-reddit { background: rgba(239,68,68,0.15); color: #ef4444; }
+        .source-pill-hrana { background: rgba(217,70,239,0.15); color: #d946ef; }
+        .source-pill-iranwire { background: rgba(20,184,166,0.15); color: #14b8a6; }
+
+        /* ── Component score breakdown row ── */
+        .stability-penalty-row {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--card-border);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .stability-penalty-item {
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .stability-penalty-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 3px;
+        }
+
+        .stability-penalty-value {
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Courier New', monospace;
+        }
+
+        .penalty-negative { color: #ef4444; }
+        .penalty-positive { color: #22c55e; }
+        .penalty-zero { color: var(--text-muted); }
+
     </style>
 </head>
 <body>
@@ -1475,6 +1920,41 @@
                 </div>
             </div>
         </header>
+
+        <!-- ═══ PAGE GRID: SIDEBAR + MAIN ═══ -->
+        <div class="page-with-sidebar">
+
+        <!-- ═══ CANONICAL SIDEBAR (Regional Rhetoric Pattern) ═══ -->
+        <aside class="canonical-sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-heading">Regional Rhetoric</div>
+                <a href="rhetoric-index.html" class="sidebar-link">Middle East Rhetoric</a>
+                <a href="rhetoric-asia.html" class="sidebar-link">Asia Rhetoric</a>
+                <a href="rhetoric-europe.html" class="sidebar-link">Europe Rhetoric</a>
+                <a href="rhetoric-wha.html" class="sidebar-link">Western Hemisphere Rhetoric</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-heading">Iran</div>
+                <a href="rhetoric-iran.html" class="sidebar-link">🇮🇷 Iran Rhetoric Tracker</a>
+                <a href="iran-protests.html" class="sidebar-link active">🇮🇷 Iran Stability (Current)</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-heading">Cross-Theater</div>
+                <a href="gpi.html" class="sidebar-link">🌐 Global Pressure Index</a>
+                <a href="commodities.html" class="sidebar-link">📊 Commodity Tracker</a>
+                <a href="military.html" class="sidebar-link">🪖 Military Tracker</a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-heading">Other ME Stability</div>
+                <a href="lebanon-stability.html" class="sidebar-link">🇱🇧 Lebanon</a>
+                <a href="israel-stability.html" class="sidebar-link future">🇮🇱 Israel</a>
+                <a href="yemen-stability.html" class="sidebar-link future">🇾🇪 Yemen</a>
+                <a href="iraq-stability.html" class="sidebar-link future">🇮🇶 Iraq</a>
+            </div>
+        </aside>
+
+        <!-- ═══ MAIN CONTENT ═══ -->
+        <main>
 
         <!-- WORLDWIDE CAUTION BANNER -->
         <div style="
@@ -1571,6 +2051,19 @@
                         <div id="irProxyDesc" style="font-size:11px;color:var(--text-muted);margin-top:2px;"></div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- ═══ COMMODITY EXPOSURE CARD (Phase 3, May 5 2026) ═══ -->
+        <div class="commodity-card" id="iranCommodityCard" style="display:none;">
+            <div class="metric-title">📊 IRAN COMMODITY EXPOSURE</div>
+            <div style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:10px;">
+                Real-time pressure on Iran's 5 strategic commodities. Click any card for full commodity tracker view.
+            </div>
+            <div id="iranCommodityAlert" style="margin-bottom:14px;"></div>
+            <div class="commodity-grid" id="iranCommodityGrid"></div>
+            <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--card-border);text-align:center;">
+                <a href="commodities.html" style="color:var(--iran-accent);text-decoration:none;font-size:12px;font-weight:600;">View Full Commodity Tracker →</a>
             </div>
         </div>
 
@@ -1775,7 +2268,64 @@
                     <div class="metric-subtitle" id="stability-level">Loading...</div>
                     <div class="metric-explanation" id="stability-trend">Trend: --</div>
                 </div>
+
+                <!-- Stability Penalty Breakdown (Phase 3) -->
+                <div class="stability-penalty-row" id="stabilityPenaltyRow" style="display:none;">
+                    <div class="stability-penalty-item">
+                        <div class="stability-penalty-label">Composite Raw</div>
+                        <div class="stability-penalty-value" id="penaltyComposite">--</div>
+                    </div>
+                    <div class="stability-penalty-item">
+                        <div class="stability-penalty-label">Rhetoric</div>
+                        <div class="stability-penalty-value" id="penaltyRhetoric">--</div>
+                    </div>
+                    <div class="stability-penalty-item">
+                        <div class="stability-penalty-label">Proxy Activation</div>
+                        <div class="stability-penalty-value" id="penaltyProxy">--</div>
+                    </div>
+                    <div class="stability-penalty-item" id="penaltyCommodityWrap" style="display:none;">
+                        <div class="stability-penalty-label">Commodity</div>
+                        <div class="stability-penalty-value" id="penaltyCommodity">--</div>
+                    </div>
+                </div>
             </div>
+        </div>
+
+        <!-- ═══ INTERPRETER OUTPUT CARDS (Phase 2B Display) ═══ -->
+        <!-- So What Summary -->
+        <div class="interpreter-card" id="soWhatCard" style="display:none;">
+            <div class="metric-title">🎯 SO WHAT — IRAN COMMAND NODE ASSESSMENT</div>
+            <div class="scenario-banner" id="scenarioBanner">
+                <div class="scenario-icon" id="scenarioIcon">⚪</div>
+                <div class="scenario-text" id="scenarioText">Loading...</div>
+            </div>
+            <div class="interpreter-section-title">SITUATION</div>
+            <div class="interpreter-prose" id="situationText"></div>
+            <div class="interpreter-section-title">KEY INDICATORS</div>
+            <ul class="interpreter-list" id="keyIndicators"></ul>
+            <div class="interpreter-section-title">ASSESSMENT</div>
+            <div class="interpreter-prose" id="assessmentText"></div>
+            <div class="interpreter-section-title">WATCH LIST</div>
+            <ul class="interpreter-list interpreter-watch-list" id="watchList"></ul>
+            <div style="font-size:10px;color:var(--text-muted);font-style:italic;margin-top:14px;padding-top:12px;border-top:1px solid var(--card-border);" id="confidenceNote"></div>
+        </div>
+
+        <!-- Red Lines Status -->
+        <div class="interpreter-card" id="redLinesCard" style="display:none;">
+            <div class="metric-title">🚨 RED LINES STATUS</div>
+            <div style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;">
+                Iran's stated escalation triggers AND adversary red lines re: Iran. <span id="redLinesSummary"></span>
+            </div>
+            <div id="redLinesContainer"></div>
+        </div>
+
+        <!-- Historical Pattern Match -->
+        <div class="interpreter-card" id="historicalCard" style="display:none;">
+            <div class="metric-title">📜 HISTORICAL PATTERN MATCH</div>
+            <div style="font-size:11px;color:var(--text-muted);font-style:italic;margin-bottom:14px;">
+                Current signal pattern compared to documented Iranian escalation precedents (OTP1, OTP2, Soleimani retaliation, Maximum Pressure).
+            </div>
+            <div id="historicalContainer"></div>
         </div>
 
                 <!-- ========== PROTEST INTENSITY + GEOGRAPHIC SPREAD ========== -->
@@ -1956,16 +2506,17 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong style="color: #eab308;">🔄 UPDATE PENDING:</strong> <em style="color: var(--text-muted);">This section is being updated to reflect the impact of US-Israel strikes on nuclear facilities. IAEA assessment ongoing. Check back for verified updates.</em></p>
-                        <p><strong>Iran's nuclear program</strong> remains a critical regional security concern. Following U.S. withdrawal from the Joint Comprehensive Plan of Action (JCPOA) in 2018, Iran has significantly expanded uranium enrichment activities.</p>
-                        <p><strong>Pre-War Status (as of Feb 2026):</strong></p>
+                        <p><strong>Iran's nuclear program</strong> is the central red line of the 2026 conflict. Following U.S. withdrawal from the Joint Comprehensive Plan of Action (JCPOA) in 2018, Iran enriched uranium to 60% (weapons-grade is 90%) before the February 2026 strikes targeted Natanz, Fordow, and surrounding nuclear infrastructure.</p>
+                        <p><strong>Current Status (post-strike, March-May 2026):</strong></p>
                         <ul>
-                            <li><strong>Enrichment Levels:</strong> Iran enriched uranium up to 60% purity (weapons-grade is 90%), with stockpiles exceeding JCPOA limits</li>
-                            <li><strong>Centrifuge Installations:</strong> Advanced IR-6 centrifuges installed at Natanz and Fordow facilities — both sites struck in Feb 28 attacks; damage assessment ongoing</li>
-                            <li><strong>IAEA Access:</strong> Limited inspections; Iran removed surveillance cameras in 2022. Post-strike access status unknown</li>
-                            <li><strong>Breakout Time:</strong> Previously estimated at weeks to months — impact of strikes on timeline unknown</li>
-                            <li><strong>Negotiations:</strong> JCPOA talks effectively dead following outbreak of hostilities</li>
+                            <li><strong>Natanz:</strong> Surface enrichment halls reportedly damaged; underground cascade halls status unclear pending IAEA verification</li>
+                            <li><strong>Fordow:</strong> Deep-buried facility, struck with bunker-busters; damage assessment ongoing — buried infrastructure historically hard to assess</li>
+                            <li><strong>IAEA Access:</strong> Suspended since strikes began; no post-strike inspection mission has been authorized</li>
+                            <li><strong>Stockpile Status:</strong> Iran's pre-strike 60% enriched stockpile location unknown — may be dispersed or relocated</li>
+                            <li><strong>Mujtaba Khamenei Statements:</strong> New Supreme Leader has not publicly committed to or rejected weaponization since assuming role March 14</li>
+                            <li><strong>JCPOA / Diplomatic Off-Ramp:</strong> Backchannel ceasefire talks reported via Oman/Qatar mediation; 45-day proposal floated April 2026</li>
                         </ul>
+                        <p><strong>Pre-Strike Trajectory (for reference):</strong> Iran was ~2-3 weeks from weapons-grade breakout, with IR-6 centrifuges installed at Natanz/Fordow and limited IAEA visibility since the 2022 surveillance camera removal.</p>
                         <div class="open-source-disclaimer">* Based on IAEA reports, OSINT analysis, and public statements from U.S./Israeli intelligence</div>
                         <div class="report-links-grid">
                             <a href="https://www.iaea.org/newscenter/focus/iran" target="_blank" class="report-link">IAEA Iran Reports</a>
@@ -2028,16 +2579,16 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong style="color: #eab308;">🔄 UPDATE PENDING:</strong> <em style="color: var(--text-muted);">Proxy network status is rapidly evolving. Houthi attacks resumed Feb 28. Hezbollah posture post-2025 war uncertain. Iraqi PMF activated. Check back for verified updates.</em></p>
-                        <p><strong>Iran's "Axis of Resistance"</strong> is a network of state and non-state actors across the Middle East that receive military, financial, and political support from Tehran.</p>
-                        <p><strong>Key Proxy Groups:</strong></p>
+                        <p><strong>Iran's "Axis of Resistance"</strong> — the proxy network of Hezbollah, Houthis, Iraqi militias, Hamas/PIJ, and (formerly) Assad-Syria — has been severely degraded by 18 months of Israeli action plus the 2026 US-Israel strikes on Iran itself, but remains the primary mechanism for Iranian power projection.</p>
+                        <p><strong>Current Operational Status (as of May 2026):</strong></p>
                         <ul>
-                            <li><strong>Hezbollah (Lebanon):</strong> Severely degraded by 2025 Lebanon war; leadership losses including Nasrallah; current operational capacity uncertain</li>
-                            <li><strong>Houthis (Yemen):</strong> Resumed attacks on Red Sea shipping and declared renewed hostilities against Israel on Feb 28, 2026</li>
-                            <li><strong>Popular Mobilization Forces (Iraq):</strong> Coalition of Shia militias; reported drone/missile attacks on US positions in Iraq following Feb 28 strikes</li>
-                            <li><strong>Hamas & Palestinian Islamic Jihad (Gaza):</strong> Severely degraded by ongoing Israel-Gaza conflict; limited operational capacity</li>
-                            <li><strong>Syrian Government:</strong> Post-Assad transition ongoing; Iranian influence diminished</li>
+                            <li><strong>Hezbollah (Lebanon):</strong> Severely degraded by 2025 Lebanon war; Nasrallah killed September 2024; new leadership under Naim Qassem. Limited cross-border activity since outbreak; per Asifah Lebanon stability tracking, primarily defensive posture</li>
+                            <li><strong>Houthis (Yemen):</strong> Resumed Red Sea shipping attacks Feb 28; ballistic missile launches at Israel reported. Bab el-Mandeb pressure paired with Hormuz forms dual chokepoint risk</li>
+                            <li><strong>Iraqi PMF / Kataib Hezbollah:</strong> Drone and rocket attacks on US Al-Asad and Erbil positions reported throughout March-April 2026; Quds Force coordination disrupted by C2 strikes but proxy autonomy maintained</li>
+                            <li><strong>Hamas & PIJ (Gaza):</strong> Largely depleted by 18-month Gaza conflict; limited capacity to project beyond Gaza; Iranian funding continues via opaque channels</li>
+                            <li><strong>Syria — POST-ASSAD:</strong> Assad regime fell December 2024; HTS-led transitional government; Iranian basing/transit infrastructure largely lost. Major strategic setback for axis</li>
                         </ul>
+                        <p><strong>Cross-Theater Convergence Risk:</strong> Asifah Analytics tracks Iran proxy activation level via shared Redis fingerprints (see Iran Rhetoric Tracker → Proxy Activation Index). Levels ≥4 indicate Iran is directing simultaneous multi-theater operations rather than supporting individual proxies.</p>
                         <div class="pdf-link-section">
                             <div class="pdf-link-title">📑 RELATED ONE-PAGER:</div>
                             <a href="hizballah-financing.html" class="pdf-link">
@@ -2064,17 +2615,17 @@
                         <span class="collapse-icon">▼</span>
                     </div>
                     <div class="knowledge-content">
-                        <p><strong style="color: #eab308;">🔄 UPDATE PENDING:</strong> <em style="color: var(--text-muted);">Economic conditions have dramatically worsened since the outbreak of hostilities. Strait of Hormuz closure has halted oil exports. Rial in freefall. Check back for verified updates.</em></p>
-                        <p><strong>Iran faces the most comprehensive sanctions regime in modern history</strong>, targeting its energy sector, banking system, shipping, and military procurement.</p>
-                        <p><strong>Key Sanctions Categories:</strong></p>
+                        <p><strong>Iran faces unprecedented economic pressure</strong> — comprehensive sanctions since 2018, layered with active wartime conditions since February 2026. The Iranian economy is in catastrophic state: Hormuz closure has effectively halted oil exports, Kharg Island terminal struck, the Rial trades at ~1.64M/USD on black market (60%+ depreciation in 6 months), and inflation continues accelerating.</p>
+                        <p><strong>Active Pressure Vectors (May 2026):</strong></p>
                         <ul>
-                            <li><strong>Energy Sector:</strong> Oil exports fell from 2.5M bpd (2017) to ~1.5M bpd (2024); now effectively zero with Strait of Hormuz closed</li>
-                            <li><strong>Banking & Finance:</strong> Cut off from SWIFT (2018); limited access to international financial system</li>
-                            <li><strong>IRGC Designation:</strong> Islamic Revolutionary Guard Corps designated as Foreign Terrorist Organization (2019)</li>
-                            <li><strong>Technology & Dual-Use:</strong> Restrictions on advanced computing, aerospace, and industrial equipment</li>
-                            <li><strong>Humanitarian Exemptions:</strong> Food, medicine, and medical devices exempt but delivery severely disrupted by active conflict</li>
+                            <li><strong>Energy:</strong> Pre-war ~1.5M bpd → near-zero with Hormuz closed and Kharg Island struck. Oil revenue, the regime's primary lifeline, has effectively stopped</li>
+                            <li><strong>Sanctions Layer:</strong> 2018 maximum pressure regime still in place; expanded post-strike with new financial measures</li>
+                            <li><strong>Wheat / Bread Stability:</strong> Iran imports ~5-7M tonnes/yr (~25-30% of consumption); subsidized bread is the political stability lever — wheat shortage = regime risk (1979 echo). Russian wheat primary source</li>
+                            <li><strong>Gold Trade:</strong> Iran-Russia-China gold barter as sanctions evasion vehicle; Tehran Gold Exchange + bazaar physical demand surging</li>
+                            <li><strong>Black Market FX:</strong> Rial at ~1.64M/USD (vs ~42,000 official); pressure indicates SELLING dominant. See Asifah USD/IRR ticker</li>
+                            <li><strong>Asset Seizure Regime:</strong> Tehran Public Prosecutor announced April 2026 freeze of assets of 100+ Iranian citizens abroad — capital flight indicator</li>
                         </ul>
-                        <p><strong>Economic Impact:</strong> Rial depreciation (98% since 2018), 40%+ inflation, GDP contraction. Wartime conditions have accelerated economic collapse — oil revenue halted, infrastructure destroyed, trade routes closed.</p>
+                        <p><strong>Stability Implication:</strong> Asifah tracks bread inflation, gold pressure, and oil revenue collapse via the commodity exposure card above. Wheat surge in commodity tracker triggers a stability score penalty — historically, bread crises preceded the 1979 Revolution.</p>
                         <div class="open-source-disclaimer">* Based on U.S. Treasury OFAC, IMF, World Bank, and sanctions compliance databases</div>
                         <div class="report-links-grid">
                             <a href="https://home.treasury.gov/policy-issues/financial-sanctions/sanctions-programs-and-country-information/iran-sanctions" target="_blank" class="report-link">U.S. Treasury - Iran Sanctions</a>
@@ -2166,7 +2717,10 @@
                 Unauthorized use, reproduction, or distribution prohibited.
             </div>
         </footer>
-    </div>
+
+        </main>
+        </div><!-- /.page-with-sidebar -->
+    </div><!-- /.container -->
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ============================================
@@ -2446,6 +3000,9 @@
                 updateOilData(data);
                 updateWarCasualties(data);
                 updateGovernmentCard(data);
+                updateCommodityCard(data);     // Phase 3
+                updateInterpreterCards(data);  // Phase 3
+                updateStabilityPenalties(data); // Phase 3
                 updateTabCounts(data);
                 showArticles('hrana');
                 updateLastUpdated();
@@ -2457,6 +3014,223 @@
                     '<div class="error">Error loading data. Please refresh the page.</div>';
                 document.getElementById('loadingProgress').textContent = 'Error loading data. Please refresh the page.';
                 document.getElementById('loadingError').style.display = 'block';
+            }
+        }
+
+        // ════════════════════════════════════════════════════════════
+        // PHASE 3 FUNCTIONS — Commodity Card + Interpreter Cards (May 5 2026)
+        // All defensive — gracefully no-op when data unavailable
+        // ════════════════════════════════════════════════════════════
+        
+        function updateCommodityCard(data) {
+            const card = document.getElementById('iranCommodityCard');
+            const cp = data.commodity_pressure;
+            if (!cp || !cp.commodity_summaries || cp.commodity_summaries.length === 0) {
+                if (card) card.style.display = 'none';
+                return;
+            }
+            card.style.display = 'block';
+
+            // Top-level alert banner
+            const alertEl = document.getElementById('iranCommodityAlert');
+            const alertLevel = (cp.alert_level || 'normal').toLowerCase();
+            const alertColors = {
+                normal:   { bg: 'rgba(34,197,94,0.08)', border: '#22c55e', label: 'NORMAL' },
+                elevated: { bg: 'rgba(234,179,8,0.08)', border: '#eab308', label: 'ELEVATED' },
+                high:     { bg: 'rgba(249,115,22,0.1)', border: '#f97316', label: 'HIGH' },
+                surge:    { bg: 'rgba(239,68,68,0.1)', border: '#ef4444', label: 'SURGE' },
+            };
+            const ac = alertColors[alertLevel] || alertColors.normal;
+            alertEl.innerHTML = `
+                <div style="padding:10px 14px; background:${ac.bg}; border-left:4px solid ${ac.border}; border-radius:6px; font-size:12px;">
+                    <strong style="color:${ac.border}; letter-spacing:1.5px;">IRAN COMMODITY PRESSURE: ${ac.label}</strong>
+                    <span style="color:var(--text-muted); margin-left:8px;">Score: ${(cp.commodity_pressure || 0).toFixed(1)}</span>
+                </div>
+            `;
+
+            // Commodity tiles
+            const grid = document.getElementById('iranCommodityGrid');
+            grid.innerHTML = '';
+            cp.commodity_summaries.forEach(c => {
+                const globalAlert = (c.global_alert_level || 'normal').toLowerCase();
+                const rankText = c.rank ? `#${c.rank} producer` : (c.role || '').toUpperCase();
+                const tile = document.createElement('a');
+                tile.className = 'commodity-pill';
+                tile.href = 'commodities.html';
+                tile.innerHTML = `
+                    <div class="commodity-pill-header">
+                        <div class="commodity-pill-icon">${c.icon || '📊'}</div>
+                        <div style="flex:1;">
+                            <div class="commodity-pill-name">${c.name || c.commodity}</div>
+                            <div class="commodity-pill-rank">${rankText}</div>
+                        </div>
+                    </div>
+                    <span class="commodity-pill-alert commodity-alert-${globalAlert}">${globalAlert}</span>
+                    <div class="commodity-pill-role">${c.role || ''} ${c.global_signal_count ? '· ' + c.global_signal_count + ' signals' : ''}</div>
+                    ${c.note ? `<div class="commodity-pill-note">${c.note.slice(0, 140)}${c.note.length > 140 ? '...' : ''}</div>` : ''}
+                `;
+                grid.appendChild(tile);
+            });
+        }
+
+        function updateInterpreterCards(data) {
+            // Iran rhetoric interpretation comes from the rhetoric tracker, not iran_protests
+            // Try to fetch it from the rhetoric endpoint
+            fetchIranInterpretation();
+        }
+
+        async function fetchIranInterpretation() {
+            try {
+                const resp = await fetch('https://asifah-backend.onrender.com/api/rhetoric/iran');
+                if (!resp.ok) return;
+                const data = await resp.json();
+                const interp = data.interpretation;
+                if (!interp) return;
+
+                // ── So What card ──
+                const sw = interp.so_what;
+                if (sw && sw.scenario) {
+                    document.getElementById('soWhatCard').style.display = 'block';
+                    const banner = document.getElementById('scenarioBanner');
+                    banner.style.background = (sw.scenario_color || '#6b7280') + '15';
+                    banner.style.borderColor = sw.scenario_color || '#6b7280';
+                    document.getElementById('scenarioIcon').textContent = sw.scenario_icon || '⚪';
+                    document.getElementById('scenarioText').textContent = sw.scenario;
+                    document.getElementById('scenarioText').style.color = sw.scenario_color || 'var(--text-primary)';
+                    document.getElementById('situationText').textContent = sw.situation || 'No situation summary available.';
+                    document.getElementById('assessmentText').textContent = sw.assessment || 'No assessment available.';
+
+                    // Key indicators
+                    const kiList = document.getElementById('keyIndicators');
+                    kiList.innerHTML = '';
+                    (sw.key_indicators || []).forEach(ind => {
+                        const li = document.createElement('li');
+                        li.textContent = ind;
+                        kiList.appendChild(li);
+                    });
+                    if ((sw.key_indicators || []).length === 0) {
+                        kiList.innerHTML = '<li style="border-left-color:var(--text-muted);font-style:italic;color:var(--text-muted);">No key indicators triggered at current threshold.</li>';
+                    }
+
+                    // Watch list
+                    const wlList = document.getElementById('watchList');
+                    wlList.innerHTML = '';
+                    (sw.watch_list || []).forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        wlList.appendChild(li);
+                    });
+
+                    if (sw.confidence_note) {
+                        document.getElementById('confidenceNote').textContent = '⚠️ ' + sw.confidence_note;
+                    }
+                }
+
+                // ── Red Lines card ──
+                const rl = interp.red_lines;
+                if (rl && rl.triggered) {
+                    document.getElementById('redLinesCard').style.display = 'block';
+                    document.getElementById('redLinesSummary').textContent = 
+                        `${rl.breached_count || 0} BREACHED, ${rl.approaching_count || 0} APPROACHING`;
+                    
+                    const container = document.getElementById('redLinesContainer');
+                    container.innerHTML = '';
+                    if (rl.triggered.length === 0) {
+                        container.innerHTML = '<div style="padding:14px;text-align:center;color:var(--text-muted);font-style:italic;font-size:12px;">No red lines currently triggered.</div>';
+                    } else {
+                        rl.triggered.forEach(line => {
+                            const status = (line.status || '').toLowerCase();
+                            const item = document.createElement('div');
+                            item.className = `red-line-item ${status}`;
+                            item.innerHTML = `
+                                <div class="red-line-icon">${line.icon || '🚨'}</div>
+                                <div class="red-line-content">
+                                    <div class="red-line-label">
+                                        ${line.label || 'Red line'}
+                                        <span class="red-line-status-badge ${status}">${line.status || ''}</span>
+                                    </div>
+                                    <div class="red-line-trigger">${line.trigger || ''}</div>
+                                    ${line.detail ? `<div style="font-size:10px;color:var(--text-muted);margin-top:4px;">${line.detail}</div>` : ''}
+                                </div>
+                            `;
+                            container.appendChild(item);
+                        });
+                    }
+                }
+
+                // ── Historical Matches card ──
+                const hm = interp.historical_matches;
+                if (hm && hm.length > 0) {
+                    document.getElementById('historicalCard').style.display = 'block';
+                    const container = document.getElementById('historicalContainer');
+                    container.innerHTML = '';
+                    hm.forEach(match => {
+                        const card = document.createElement('div');
+                        card.className = 'historical-match';
+                        card.innerHTML = `
+                            <div class="historical-match-header">
+                                <div class="historical-match-label">${match.label || 'Historical pattern'}</div>
+                                <div class="historical-similarity">${match.similarity || 0}%</div>
+                            </div>
+                            <div class="historical-match-outcome">${match.outcome || ''}</div>
+                            <div class="historical-match-meta">
+                                <span>Window: ${match.window_hours || '--'}h</span>
+                                <span>Confidence: ${match.confidence || 'Unknown'}</span>
+                                ${match.source ? '<span style="font-style:italic;">Source: ' + match.source.slice(0, 80) + (match.source.length > 80 ? '...' : '') + '</span>' : ''}
+                            </div>
+                        `;
+                        container.appendChild(card);
+                    });
+                }
+
+            } catch (e) {
+                console.warn('[Iran Interpreter Cards] Fetch failed (non-fatal):', e);
+            }
+        }
+
+        function updateStabilityPenalties(data) {
+            const rs = data.regime_stability || {};
+            const row = document.getElementById('stabilityPenaltyRow');
+            if (!row) return;
+
+            // Show row if we have any penalty data
+            const hasComposite = rs.composite_raw !== undefined;
+            const hasRhetoric = rs.rhetoric_penalty !== undefined;
+            const hasProxy = rs.proxy_penalty !== undefined;
+            const hasCommodity = rs.commodity_penalty !== undefined;
+
+            if (!hasComposite && !hasRhetoric && !hasProxy && !hasCommodity) return;
+            row.style.display = 'flex';
+
+            function setPenalty(elId, value, isComposite=false) {
+                const el = document.getElementById(elId);
+                if (!el) return;
+                if (value === undefined || value === null) {
+                    el.textContent = '--';
+                    el.className = 'stability-penalty-value penalty-zero';
+                } else if (isComposite) {
+                    el.textContent = parseFloat(value).toFixed(1);
+                    el.className = 'stability-penalty-value';
+                    el.style.color = 'var(--text-primary)';
+                } else {
+                    const numVal = parseFloat(value);
+                    el.textContent = numVal > 0 ? '+' + numVal : numVal;
+                    el.className = 'stability-penalty-value ' + 
+                        (numVal < 0 ? 'penalty-negative' : numVal > 0 ? 'penalty-positive' : 'penalty-zero');
+                }
+            }
+
+            setPenalty('penaltyComposite', rs.composite_raw, true);
+            setPenalty('penaltyRhetoric', rs.rhetoric_penalty);
+            setPenalty('penaltyProxy', rs.proxy_penalty);
+            
+            // Show commodity column only if we have data
+            const commodityWrap = document.getElementById('penaltyCommodityWrap');
+            if (hasCommodity) {
+                commodityWrap.style.display = 'block';
+                setPenalty('penaltyCommodity', rs.commodity_penalty);
+            } else {
+                commodityWrap.style.display = 'none';
             }
         }
 
@@ -3272,10 +4046,23 @@
                 description.className = 'article-description';
                 description.textContent = article.description || 'No description available.';
                 
+                // Source pill — Phase 3 Lebanon Gold Standard pattern
+                const sourceName = (article.source?.name || 'unknown').toLowerCase();
+                let pillType = 'rss';
+                if (sourceName.includes('hrana')) pillType = 'hrana';
+                else if (sourceName.includes('iran wire') || sourceName.includes('iranwire')) pillType = 'iranwire';
+                else if (sourceName.includes('telegram') || sourceName.startsWith('@')) pillType = 'telegram';
+                else if (sourceName.startsWith('r/')) pillType = 'reddit';
+                else if (sourceName.includes('bluesky') || sourceName.includes('bsky')) pillType = 'bluesky';
+                else if (sourceName.includes('gdelt')) pillType = 'gdelt';
+                else if (sourceName.includes('newsapi')) pillType = 'newsapi';
+                else if (sourceName.includes('brave')) pillType = 'brave';
+                else if (article.feed_type) pillType = article.feed_type.toLowerCase();
+                
                 const meta = document.createElement('div');
                 meta.className = 'article-meta';
                 meta.innerHTML = `
-                    <span>${article.source?.name || 'Unknown source'}</span>
+                    <span><span class="source-pill source-pill-${pillType}">${pillType}</span>${article.source?.name || 'Unknown'}</span>
                     <span>${formatDate(article.publishedAt)}</span>
                 `;
                 
