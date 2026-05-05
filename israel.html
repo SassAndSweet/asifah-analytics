@@ -1152,10 +1152,70 @@
             }
         }
 
+        // ════════════════════════════════════════════════════════════
+        // PHASE 3 — COMMODITY EXPOSURE CARD (May 5 2026)
+        // Defensive — gracefully no-ops when backend cache hasn't refreshed
+        // ════════════════════════════════════════════════════════════
+        function updateIsraelCommodityCard(data) {
+            const card = document.getElementById('israelCommodityCard');
+            if (!card) return;
+            const cp = data.commodity_pressure;
+            if (!cp || !cp.commodity_summaries || cp.commodity_summaries.length === 0) {
+                card.style.display = 'none';
+                return;
+            }
+            card.style.display = 'block';
+
+            // Top-level alert banner
+            const alertEl = document.getElementById('israelCommodityAlert');
+            const alertLevel = (cp.alert_level || 'normal').toLowerCase();
+            const alertColors = {
+                normal:   { bg: 'rgba(34,197,94,0.08)',  border: '#22c55e', label: 'NORMAL' },
+                elevated: { bg: 'rgba(234,179,8,0.08)',  border: '#eab308', label: 'ELEVATED' },
+                high:     { bg: 'rgba(249,115,22,0.1)',  border: '#f97316', label: 'HIGH' },
+                surge:    { bg: 'rgba(239,68,68,0.1)',   border: '#ef4444', label: 'SURGE' },
+            };
+            const ac = alertColors[alertLevel] || alertColors.normal;
+            alertEl.innerHTML = `
+                <div style="padding:10px 14px;background:${ac.bg};border-left:4px solid ${ac.border};border-radius:6px;font-size:12px;">
+                    <strong style="color:${ac.border};letter-spacing:1.5px;">ISRAEL COMMODITY PRESSURE: ${ac.label}</strong>
+                    <span style="color:var(--text-muted);margin-left:8px;">Score: ${(cp.commodity_pressure || 0).toFixed(1)}</span>
+                </div>
+            `;
+
+            // Commodity tiles
+            const grid = document.getElementById('israelCommodityGrid');
+            grid.innerHTML = '';
+            cp.commodity_summaries.forEach(c => {
+                const globalAlert = (c.global_alert_level || 'normal').toLowerCase();
+                const role = c.role || '';
+                const rankText = c.rank ? `#${c.rank} producer` : role.toUpperCase();
+                const tile = document.createElement('a');
+                tile.className = 'commodity-pill';
+                tile.href = 'commodities.html';
+                tile.innerHTML = `
+                    <div class="commodity-pill-header">
+                        <div class="commodity-pill-icon">${c.icon || '📊'}</div>
+                        <div style="flex:1;">
+                            <div class="commodity-pill-name">${c.name || c.commodity}</div>
+                            <div class="commodity-pill-rank">${rankText}</div>
+                        </div>
+                    </div>
+                    <span class="commodity-pill-alert commodity-alert-${globalAlert}">${globalAlert}</span>
+                    <div class="commodity-pill-role">${role} ${c.global_signal_count ? '· ' + c.global_signal_count + ' signals' : ''}</div>
+                    ${c.note ? `<div class="commodity-pill-note">${c.note.slice(0, 140)}${c.note.length > 140 ? '...' : ''}</div>` : ''}
+                `;
+                grid.appendChild(tile);
+            });
+        }
+
         function displayData(data) {
             document.getElementById('content').style.display = 'block';
             document.getElementById('lastUpdated').textContent =
                 'Last updated: ' + new Date().toLocaleString('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit', hour12:true });
+
+            // Phase 3 — commodity exposure card (defensive render)
+            updateIsraelCommodityCard(data);
 
             // Stability score
             const stability = data.stability || {};
