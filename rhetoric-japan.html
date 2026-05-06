@@ -1,0 +1,1311 @@
+<!-- Asifah Analytics — Japan Rhetoric & Coercion Tracker v1.0.0 — May 2026 -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<!-- Tier A dual-dashboard pattern (mirrors Israel architecture). Arctic scheme canonical. -->
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Japan Rhetoric Tracker — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+
+<style>
+/* ════════════════════════════════════════════════════════════
+   ARCTIC SCHEME (canonical across all rhetoric trackers)
+   ════════════════════════════════════════════════════════════ */
+:root {
+    --bg-color:       #f8fafc;
+    --container-bg:   #ffffff;
+    --card-bg:        #ffffff;
+    --card-border:    #e2e8f0;
+    --text-primary:   #0f172a;
+    --text-secondary: #475569;
+    --text-muted:     #64748b;
+    --article-bg:     #f1f5f9;
+    --article-hover:  #e2e8f0;
+    --header-gradient-start: #f1f5f9;
+    --header-gradient-end:   #cbd5e1;
+    --header-text:    #0f172a;
+    --accent:         #0ea5e9;
+    --accent-glow:    rgba(14,165,233,0.15);
+    --card-glow:      0 1px 3px rgba(0,0,0,0.06);
+    --card-hover-glow: 0 8px 20px rgba(0,0,0,0.15);
+    --watermark-opacity: 0.08;
+    --watermark-filter: none;
+    --inbound-color:  #dc2626;
+    --outbound-color: #0284c7;
+    --article9-color: #f59e0b;
+}
+[data-theme="dark"] {
+    --bg-color:       #060d1a;
+    --container-bg:   #0d1b2e;
+    --card-bg:        #0d1b2e;
+    --card-border:    #1e3a5f;
+    --text-primary:   #e2f0fb;
+    --text-secondary: #93c5fd;
+    --text-muted:     #4a7090;
+    --article-bg:     #0a1525;
+    --article-hover:  #112038;
+    --header-gradient-start: #060d1a;
+    --header-gradient-end:   #1e3a5f;
+    --header-text:    #e2f0fb;
+    --accent:         #38bdf8;
+    --accent-glow:    rgba(56,189,248,0.2);
+    --card-glow:      0 0 6px rgba(56,189,248,0.12), 0 0 1px rgba(56,189,248,0.25);
+    --card-hover-glow: 0 0 22px rgba(56,189,248,0.28), 0 8px 25px rgba(0,0,0,0.5);
+    --watermark-opacity: 0.22;
+    --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+    --inbound-color:  #ef4444;
+    --outbound-color: #60a5fa;
+    --article9-color: #fbbf24;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    transition: background-color 0.3s, color 0.3s;
+}
+body::before {
+    content: '';
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 110vmin; height: 110vmin;
+    min-width: 800px; min-height: 800px;
+    max-width: 1400px; max-height: 1400px;
+    background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    opacity: var(--watermark-opacity);
+    filter: var(--watermark-filter);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── CONTAINER + LAYOUT ── */
+.container { max-width: 1800px; margin: 0 auto; padding: 0 20px; position: relative; z-index: 1; }
+.page-with-sidebar { display: flex; flex-direction: row; gap: 20px; align-items: flex-start; }
+.main-content { flex: 1; min-width: 0; }
+@media (max-width: 1024px) { .page-with-sidebar { flex-direction: column; } }
+
+/* ── HEADER ── */
+header {
+    background: linear-gradient(135deg, var(--header-gradient-start), var(--header-gradient-end));
+    padding: 22px 30px;
+    margin-bottom: 22px;
+    border-radius: 0 0 12px 12px;
+    color: var(--header-text);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; gap: 24px;
+}
+.header-logo-wrap { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.header-logo {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 12px var(--accent-glow);
+    object-fit: cover;
+}
+.back-link {
+    font-size: 11px; font-weight: 700; color: var(--accent);
+    text-decoration: none; padding: 4px 10px;
+    border: 1px solid var(--accent); border-radius: 4px;
+    transition: all 0.3s;
+}
+.back-link:hover { background: rgba(56,189,248,0.08); }
+.header-content { flex: 1; }
+header h1 {
+    font-size: 1.6rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--header-text);
+    margin-bottom: 4px;
+}
+.subtitle { font-size: 0.85rem; color: var(--text-secondary); }
+.last-updated { font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-style: italic; }
+.header-controls { display: flex; flex-direction: column; gap: 8px; align-items: flex-end; }
+.theme-toggle { display: flex; align-items: center; gap: 8px; }
+.theme-toggle-label { font-size: 11px; color: var(--text-muted); }
+.theme-toggle-switch {
+    width: 44px; height: 22px; border-radius: 22px;
+    background: var(--card-border); position: relative; cursor: pointer;
+    transition: background 0.3s;
+}
+[data-theme="dark"] .theme-toggle-switch { background: var(--accent); }
+.theme-toggle-slider {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: white; position: absolute; top: 2px; left: 2px;
+    transition: left 0.3s;
+}
+[data-theme="dark"] .theme-toggle-slider { left: 24px; }
+
+/* ── NAV SIDEBAR (canonical pattern) ── */
+.nav-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; align-self: flex-start; }
+.nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+.nav-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; border-radius: 8px;
+    background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.18);
+    color: var(--text-secondary); text-decoration: none;
+    font-size: 12px; font-weight: 600;
+    transition: all 0.25s;
+}
+.nav-btn-label { flex: 1; }
+.nav-btn-status { font-size: 10px; color: var(--text-muted); margin-left: 8px; }
+.nav-btn:hover { transform: translateY(-1px); border-color: var(--accent); color: var(--text-primary); }
+.nav-btn.active-nav { background: linear-gradient(135deg, rgba(0,180,255,0.15), rgba(0,120,200,0.10)); border-color: rgba(0,200,255,0.5); color: var(--text-primary); }
+.nav-btn.active-nav:hover { box-shadow: 0 0 18px rgba(0,180,255,0.25); }
+.nav-btn.current-page { background: linear-gradient(135deg, rgba(0,200,255,0.20), rgba(0,150,200,0.15)); border-color: rgba(0,220,255,0.7); color: var(--text-primary); box-shadow: 0 0 16px rgba(0,200,255,0.22); }
+.nav-btn.inactive-nav { opacity: 0.4; cursor: default; border-color: rgba(100,100,100,0.2); background: transparent; }
+.nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.4); background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(21,128,61,0.05)); }
+.nav-btn.rhetoric-btn:hover { border-color: rgba(34,197,94,0.8); box-shadow: 0 0 18px rgba(34,197,94,0.2); }
+.nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+.nav-btn.rhetoric-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18), rgba(21,128,61,0.12)); }
+.nav-btn.military-btn { border-color: rgba(139,92,246,0.4); background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(91,33,182,0.05)); }
+.nav-btn.military-btn:hover { border-color: rgba(139,92,246,0.8); box-shadow: 0 0 18px rgba(139,92,246,0.2); }
+.nav-btn.military-btn .nav-btn-status { color: #a78bfa; }
+.nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 4px 0; }
+
+/* ── THEATRE BANNER ── */
+.theatre-banner {
+    background: linear-gradient(135deg, var(--card-bg), var(--article-bg));
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 20px 28px;
+    margin-bottom: 22px;
+    box-shadow: var(--card-glow);
+    display: flex; flex-wrap: wrap; gap: 24px; align-items: center;
+}
+.theatre-score-block { display: flex; align-items: center; gap: 16px; }
+.theatre-score-circle {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: var(--card-bg); border: 4px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.8rem; font-weight: 700;
+    color: var(--accent);
+    box-shadow: 0 0 18px var(--accent-glow);
+}
+.theatre-score-label { display: flex; flex-direction: column; gap: 4px; }
+.theatre-score-name { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); }
+.theatre-score-level { font-size: 1.2rem; font-weight: 700; color: var(--text-primary); }
+.theatre-score-flags { font-size: 0.75rem; color: var(--text-secondary); }
+.theatre-meta { display: flex; flex-wrap: wrap; gap: 16px; font-size: 0.8rem; color: var(--text-secondary); margin-left: auto; }
+.theatre-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.theatre-meta-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+.theatre-meta-value { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); }
+
+/* ── DUAL DASHBOARD ── */
+.dual-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin-bottom: 22px;
+}
+@media (max-width: 1024px) { .dual-dashboard { grid-template-columns: 1fr; } }
+
+.dashboard-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: var(--card-glow);
+}
+.dashboard-card.inbound  { border-top: 4px solid var(--inbound-color); }
+.dashboard-card.outbound { border-top: 4px solid var(--outbound-color); }
+.dashboard-title {
+    font-size: 1rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--text-primary);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+}
+.dashboard-card.inbound  .dashboard-title { color: var(--inbound-color); }
+.dashboard-card.outbound .dashboard-title { color: var(--outbound-color); }
+.dashboard-score-row { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+.dashboard-score {
+    font-size: 2.2rem; font-weight: 700; line-height: 1;
+}
+.dashboard-card.inbound  .dashboard-score { color: var(--inbound-color); }
+.dashboard-card.outbound .dashboard-score { color: var(--outbound-color); }
+.dashboard-label { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
+.dashboard-question {
+    font-size: 0.85rem; font-style: italic;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    padding: 10px 14px;
+    background: var(--article-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+}
+.dashboard-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; margin-bottom: 6px;
+    background: var(--article-bg); border-radius: 8px;
+    transition: all 0.2s;
+}
+.dashboard-row:hover { background: var(--article-hover); transform: translateX(2px); }
+.dashboard-row-actor { display: flex; align-items: center; gap: 10px; flex: 1; }
+.dashboard-row-flag { font-size: 1rem; }
+.dashboard-row-icon { font-size: 0.95rem; }
+.dashboard-row-name { font-size: 0.85rem; color: var(--text-primary); font-weight: 600; }
+.dashboard-row-articles { font-size: 0.7rem; color: var(--text-muted); margin-left: 6px; }
+.dashboard-row-level {
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase; min-width: 100px; text-align: center;
+}
+
+/* ── SO WHAT CARD ── */
+.so-what-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--card-glow);
+}
+.so-what-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px;
+}
+.so-what-title {
+    font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+}
+.so-what-scenario {
+    padding: 6px 14px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: white;
+}
+.so-what-situation {
+    font-size: 0.95rem; line-height: 1.65;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    padding: 14px 18px;
+    background: var(--article-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+}
+.so-what-section {
+    margin-bottom: 16px;
+}
+.so-what-section-title {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.so-what-list { list-style: none; padding: 0; }
+.so-what-list li {
+    padding: 6px 0 6px 22px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.55;
+    position: relative;
+}
+.so-what-list li::before {
+    content: '▸';
+    position: absolute; left: 6px; top: 6px;
+    color: var(--accent);
+    font-weight: 700;
+}
+.so-what-assessment {
+    font-size: 0.9rem; line-height: 1.6;
+    color: var(--text-primary);
+    padding: 12px 14px;
+    background: var(--article-bg);
+    border-radius: 6px;
+    border-left: 3px solid var(--outbound-color);
+}
+.so-what-confidence {
+    margin-top: 14px; padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+    font-size: 0.7rem; color: var(--text-muted);
+    font-style: italic;
+    line-height: 1.5;
+}
+
+/* ── RED LINES CARD ── */
+.red-lines-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-left: 4px solid var(--inbound-color);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--card-glow);
+}
+.red-lines-title {
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--inbound-color);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.red-lines-list { list-style: none; padding: 0; }
+.red-lines-list li {
+    padding: 8px 0 8px 24px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--card-border);
+    line-height: 1.5;
+    position: relative;
+}
+.red-lines-list li:last-child { border-bottom: none; }
+.red-lines-list li::before {
+    content: '🚨';
+    position: absolute; left: 0; top: 8px;
+    font-size: 0.85rem;
+}
+
+/* ── ARTICLE 9 CONSTITUTIONAL WATCH (Japan-unique) ── */
+.article9-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(245,158,11,0.3);
+    border-left: 4px solid var(--article9-color);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--card-glow);
+    display: none;
+}
+.article9-card.show { display: block; }
+.article9-title {
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--article9-color);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 10px;
+}
+.article9-state-pill {
+    display: inline-block;
+    padding: 4px 12px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(245,158,11,0.12);
+    color: var(--article9-color);
+    border: 1px solid rgba(245,158,11,0.3);
+}
+.article9-ladder { display: flex; gap: 4px; margin-top: 12px; flex-wrap: wrap; }
+.article9-ladder-step {
+    flex: 1; min-width: 110px;
+    padding: 10px 12px;
+    background: var(--article-bg); border-radius: 6px;
+    border-left: 3px solid var(--card-border);
+    font-size: 0.7rem;
+}
+.article9-ladder-step.active { border-left-color: var(--article9-color); background: rgba(245,158,11,0.08); }
+.article9-ladder-label { font-weight: 700; font-size: 0.65rem; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; }
+.article9-ladder-detail { color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
+.article9-ladder-step.active .article9-ladder-label { color: var(--article9-color); }
+.article9-ladder-step.active .article9-ladder-detail { color: var(--text-primary); }
+
+/* ── ACTOR STATUS GRID ── */
+.actors-section {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--card-glow);
+}
+.actors-title {
+    font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+.actors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+.actor-card {
+    background: var(--article-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px;
+    transition: all 0.3s;
+}
+.actor-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-hover-glow);
+    border-color: var(--accent);
+}
+.actor-card.inbound-actor  { border-top: 3px solid var(--inbound-color); }
+.actor-card.outbound-actor { border-top: 3px solid var(--outbound-color); }
+.actor-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.actor-card-icon { font-size: 1.4rem; }
+.actor-card-name {
+    flex: 1;
+    font-size: 0.9rem; font-weight: 700; color: var(--text-primary);
+}
+.actor-card-flag { font-size: 1.1rem; }
+.actor-card-role {
+    font-size: 0.7rem; color: var(--text-muted); font-style: italic;
+    margin-bottom: 8px;
+}
+.actor-card-level {
+    display: inline-block;
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
+    text-transform: uppercase;
+    color: white;
+    margin-bottom: 8px;
+}
+.actor-card-meta {
+    display: flex; gap: 12px; font-size: 0.7rem; color: var(--text-muted);
+}
+.actor-card-description {
+    font-size: 0.78rem; color: var(--text-secondary); line-height: 1.45;
+    margin-top: 8px; padding-top: 8px;
+    border-top: 1px solid var(--card-border);
+}
+
+/* ── TOP ARTICLES ── */
+.articles-section {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 22px;
+    box-shadow: var(--card-glow);
+}
+.articles-title {
+    font-size: 0.95rem; font-weight: 700; letter-spacing: 1.5px;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.articles-tabs {
+    display: flex; gap: 4px; margin-bottom: 12px;
+    border-bottom: 1px solid var(--card-border);
+    flex-wrap: wrap;
+}
+.articles-tab {
+    padding: 8px 14px;
+    background: transparent; border: none;
+    color: var(--text-muted); font-size: 0.8rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    font-family: inherit;
+}
+.articles-tab:hover { color: var(--accent); }
+.articles-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+.articles-tab-count {
+    display: inline-block; margin-left: 6px;
+    padding: 1px 7px; border-radius: 10px;
+    background: var(--article-bg);
+    font-size: 0.65rem; font-weight: 700;
+    color: var(--text-secondary);
+}
+.articles-tab.active .articles-tab-count { background: var(--accent-glow); color: var(--accent); }
+.articles-list { list-style: none; padding: 0; max-height: 600px; overflow-y: auto; }
+.articles-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--card-border);
+    font-size: 0.85rem; line-height: 1.5;
+}
+.articles-list li:last-child { border-bottom: none; }
+.articles-list a {
+    color: var(--text-primary); text-decoration: none;
+    font-weight: 600;
+}
+.articles-list a:hover { color: var(--accent); }
+.articles-meta { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
+.article-source-pill {
+    display: inline-block;
+    padding: 1px 7px; border-radius: 3px;
+    background: var(--article-bg); border: 1px solid var(--card-border);
+    margin-right: 6px;
+    font-size: 0.65rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.5px;
+}
+.article-actor-pill {
+    display: inline-block;
+    padding: 1px 7px; border-radius: 3px;
+    background: rgba(56,189,248,0.10);
+    border: 1px solid rgba(56,189,248,0.25);
+    color: var(--accent);
+    margin-left: 6px;
+    font-size: 0.65rem; font-weight: 700;
+}
+
+/* ── SOURCES BREAKDOWN PILLS ── */
+.sources-strip {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;
+}
+.source-pill {
+    padding: 4px 10px; border-radius: 20px;
+    background: var(--article-bg); border: 1px solid var(--card-border);
+    font-size: 0.7rem; color: var(--text-secondary);
+    display: inline-flex; align-items: center; gap: 6px;
+}
+.source-pill-count { font-weight: 700; color: var(--text-primary); }
+
+/* ── FOOTER ── */
+footer {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px 28px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+footer h4 { color: var(--text-primary); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+footer .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 16px; }
+@media (max-width: 768px) { footer .footer-grid { grid-template-columns: 1fr; } }
+footer .footer-disclaimer {
+    padding: 12px 14px;
+    background: var(--article-bg); border-left: 3px solid var(--inbound-color);
+    border-radius: 6px;
+    font-size: 0.78rem;
+    margin-bottom: 14px;
+}
+footer .footer-support {
+    text-align: center; padding: 10px;
+    font-size: 0.85rem;
+}
+footer .footer-support a { color: var(--accent); text-decoration: none; font-weight: 700; }
+footer .footer-copyright {
+    text-align: center; font-size: 0.7rem; color: var(--text-muted);
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid var(--card-border);
+}
+
+/* ── LEVEL COLORS ── */
+.level-0 { background: #6b7280; }
+.level-1 { background: #3b82f6; }
+.level-2 { background: #f59e0b; }
+.level-3 { background: #f97316; }
+.level-4 { background: #ef4444; }
+.level-5 { background: #dc2626; }
+
+/* ── LOADING ── */
+.loading-text {
+    text-align: center; color: var(--text-muted); font-style: italic;
+    padding: 40px 20px;
+}
+.loading-dot {
+    display: inline-block; animation: pulse 1.4s infinite;
+}
+.loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.loading-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse {
+    0%, 80%, 100% { opacity: 0.3; }
+    40% { opacity: 1; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════════════════════════
+     HEADER
+     ════════════════════════════════════════════════════════════ -->
+<header>
+    <div class="header-logo-wrap">
+        <a href="rhetoric-asia.html" class="back-link">← Asia Hub</a>
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png"
+             alt="Asifah Analytics Logo" class="header-logo"/>
+    </div>
+    <div class="header-content">
+        <h1>🇯🇵 JAPAN RHETORIC TRACKER</h1>
+        <div class="subtitle">Dual-Dashboard: Inbound pressure (PRC, DPRK, Russia) + Outbound posture (Cabinet, MOFA, MoD/JSDF, Diet, US Alliance) · Article 9 reinterpretation watch</div>
+        <div class="last-updated" id="lastUpdated">Connecting to Japan tracker...</div>
+    </div>
+    <div class="header-controls">
+        <div class="theme-toggle">
+            <span class="theme-toggle-label">Theme</span>
+            <div class="theme-toggle-switch" onclick="toggleTheme()">
+                <div class="theme-toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════
+     PAGE WITH SIDEBAR
+     ════════════════════════════════════════════════════════════ -->
+<div class="page-with-sidebar">
+
+<!-- ── NAV SIDEBAR (canonical) ── -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label">🌍 Africa</span>
+        <span class="nav-btn-status">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="gpi.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🌐 Global Pressure</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="commodities.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🛢️ Commodities</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Asia Trackers</div>
+    <a href="rhetoric-china.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇨🇳 China</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-taiwan.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇹🇼 Taiwan</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-japan.html" class="nav-btn rhetoric-btn current-page">
+        <span class="nav-btn-label">🇯🇵 Japan</span>
+        <span class="nav-btn-status">◉ You are here</span>
+    </a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════
+     MAIN CONTENT
+     ════════════════════════════════════════════════════════════ -->
+<div class="main-content">
+
+<!-- ── THEATRE BANNER ── -->
+<div class="theatre-banner">
+    <div class="theatre-score-block">
+        <div class="theatre-score-circle" id="theatreScoreCircle">--</div>
+        <div class="theatre-score-label">
+            <div class="theatre-score-name">Japan Theatre Score</div>
+            <div class="theatre-score-level" id="theatreLevelLabel">Loading...</div>
+            <div class="theatre-score-flags">🇯🇵 🇨🇳 🇰🇵 🇷🇺 🇺🇸 · 11 actors tracked</div>
+        </div>
+    </div>
+    <div class="theatre-meta">
+        <div class="theatre-meta-item">
+            <span class="theatre-meta-label">Inbound Max</span>
+            <span class="theatre-meta-value" id="metaInbound">L--</span>
+        </div>
+        <div class="theatre-meta-item">
+            <span class="theatre-meta-label">Outbound Max</span>
+            <span class="theatre-meta-value" id="metaOutbound">L--</span>
+        </div>
+        <div class="theatre-meta-item">
+            <span class="theatre-meta-label">Articles</span>
+            <span class="theatre-meta-value" id="metaArticles">--</span>
+        </div>
+        <div class="theatre-meta-item">
+            <span class="theatre-meta-label">Alert Level</span>
+            <span class="theatre-meta-value" id="metaAlert">--</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── SOURCES STRIP ── -->
+<div class="sources-strip" id="sourcesStrip">
+    <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+</div>
+
+<!-- ── SO WHAT CARD ── -->
+<div class="so-what-card" id="soWhatCard">
+    <div class="so-what-header">
+        <div class="so-what-title">📊 So What — Analytical Assessment</div>
+        <div class="so-what-scenario level-0" id="soWhatScenario">Loading…</div>
+    </div>
+    <div class="so-what-situation" id="soWhatSituation">
+        <span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span>
+    </div>
+    <div class="so-what-section">
+        <div class="so-what-section-title">Key Indicators</div>
+        <ul class="so-what-list" id="soWhatIndicators"></ul>
+    </div>
+    <div class="so-what-section">
+        <div class="so-what-section-title">Assessment</div>
+        <div class="so-what-assessment" id="soWhatAssessment">--</div>
+    </div>
+    <div class="so-what-section">
+        <div class="so-what-section-title">Watch List</div>
+        <ul class="so-what-list" id="soWhatWatch"></ul>
+    </div>
+    <div class="so-what-confidence" id="soWhatConfidence"></div>
+</div>
+
+<!-- ── ARTICLE 9 CONSTITUTIONAL WATCH (Japan-unique) ── -->
+<div class="article9-card" id="article9Card">
+    <div class="article9-title">
+        <span>📜 Article 9 Constitutional Watch</span>
+        <span class="article9-state-pill" id="article9StatePill">Dormant</span>
+    </div>
+    <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px; line-height:1.55;" id="article9Description">
+        Tracks constitutional reinterpretation of Article 9 (Japan's pacifist constitution renouncing war) as a four-step ladder.
+        Most consequential since 2015 collective self-defense reinterpretation.
+    </div>
+    <div class="article9-ladder">
+        <div class="article9-ladder-step" id="article9L2">
+            <div class="article9-ladder-label">L2 — Rhetoric</div>
+            <div class="article9-ladder-detail">"Collective self-defense" / "potentially critical situation" generic language</div>
+        </div>
+        <div class="article9-ladder-step" id="article9L3">
+            <div class="article9-ladder-label">L3 — Cabinet</div>
+            <div class="article9-ladder-detail">Named cabinet decision approving new interpretation</div>
+        </div>
+        <div class="article9-ladder-step" id="article9L4">
+            <div class="article9-ladder-label">L4 — Diet</div>
+            <div class="article9-ladder-detail">Diet vote scheduled or passed on reinterpretation</div>
+        </div>
+        <div class="article9-ladder-step" id="article9L5">
+            <div class="article9-ladder-label">L5 — Kinetic</div>
+            <div class="article9-ladder-detail">JSDF in active combat operations under reinterpretation</div>
+        </div>
+    </div>
+</div>
+
+<!-- ── DUAL DASHBOARD ── -->
+<div class="dual-dashboard">
+
+    <!-- INBOUND DASHBOARD -->
+    <div class="dashboard-card inbound">
+        <div class="dashboard-title">🎯 Inbound Threat Dashboard</div>
+        <div class="dashboard-question">
+            Q: Are external actors escalating military or rhetorical pressure against Japan?
+        </div>
+        <div class="dashboard-score-row">
+            <div class="dashboard-score" id="inboundScore">--</div>
+            <div>
+                <div class="dashboard-label">Inbound Threat Score / 100</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);" id="inboundLevelLabel">Max L-- · Baseline</div>
+            </div>
+        </div>
+        <div id="inboundRows">
+            <div class="loading-text"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>
+        </div>
+    </div>
+
+    <!-- OUTBOUND DASHBOARD -->
+    <div class="dashboard-card outbound">
+        <div class="dashboard-title">🗺️ Outbound Posture Dashboard</div>
+        <div class="dashboard-question">
+            Q: Is Japan committing to active military or constitutional posture changes?
+        </div>
+        <div class="dashboard-score-row">
+            <div class="dashboard-score" id="outboundScore">--</div>
+            <div>
+                <div class="dashboard-label">Outbound Posture Score / 100</div>
+                <div style="font-size:0.75rem;color:var(--text-muted);" id="outboundLevelLabel">Max L-- · Baseline</div>
+            </div>
+        </div>
+        <div id="outboundRows">
+            <div class="loading-text"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ── RED LINES ── -->
+<div class="red-lines-card">
+    <div class="red-lines-title">🚨 Red Lines — Tripwires That Would Change the Picture</div>
+    <ul class="red-lines-list">
+        <li>PM formally invokes "potentially critical situation" for Taiwan — auto-escalates outbound to L4.</li>
+        <li>Diet votes on Article 9 reinterpretation — historic constitutional escalation.</li>
+        <li>PLA fires across median line into JADIZ — auto-escalates inbound to L4+.</li>
+        <li>DPRK missile lands in Japan EEZ or territorial waters — auto-escalates DPRK threat to L4-L5.</li>
+        <li>China Coast Guard fires at JCG vessels at Senkaku — kinetic threshold breach.</li>
+        <li>First Tomahawk delivery operational — strike capability milestone.</li>
+        <li>Article 9 amendment ratified — historic post-WWII constitutional rupture.</li>
+    </ul>
+</div>
+
+<!-- ── ACTOR STATUS GRID ── -->
+<div class="actors-section">
+    <div class="actors-title">👥 Actor Status Grid · 11 actors tracked</div>
+    <div class="actors-grid" id="actorsGrid">
+        <div class="loading-text"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>
+    </div>
+</div>
+
+<!-- ── TOP ARTICLES ── -->
+<div class="articles-section">
+    <div class="articles-title">📰 Top Articles · Live Signal Feed</div>
+    <div class="articles-tabs" id="articlesTabs"></div>
+    <ul class="articles-list" id="articlesList">
+        <div class="loading-text"><span class="loading-dot">●</span><span class="loading-dot">●</span><span class="loading-dot">●</span></div>
+    </ul>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER
+     ════════════════════════════════════════════════════════════ -->
+<footer>
+    <div class="footer-grid">
+        <div>
+            <h4>Methodology</h4>
+            <p>Dual-dashboard architecture: 6 inbound threat actors (China, DPRK, Russia, Senkaku intrusions, Okinawa pressure, Taiwan Strait spillover) + 5 outbound posture actors (PM Cabinet, MOFA, MoD/JSDF, LDP/Diet, US Alliance). L0-L5 escalation scale (canonical across all rhetoric trackers, including L5 Kinetic Activity). Article 9 reinterpretation tracked as a four-step ladder (L2 rhetoric → L3 cabinet → L4 diet → L5 kinetic). 12-hour background refresh, cross-theater fingerprint reads from China + Taiwan.</p>
+        </div>
+        <div>
+            <h4>Data Sources</h4>
+            <p>RSS (Japan Times, Mainichi English, Kyodo News, NHK World, Nikkei Asia, Reuters), GDELT (English + Japanese language queries), NewsAPI, Brave Search (tertiary fallback), BlueSky Asia aggregator (POTUS/SecDef/INDOPACOM/State/MOFA-Japan/Taiwan-MND mirrors when available). Dedicated Japan-relevant accounts under verification.</p>
+        </div>
+        <div>
+            <h4>Contact</h4>
+            <p>Built by Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a></p>
+        </div>
+    </div>
+    <div class="footer-disclaimer">
+        <strong>⚠️ DISCLAIMER:</strong> This dashboard provides probability estimates based on open-source intelligence aggregation and algorithmic analysis. It does not constitute intelligence assessments, military advice, or policy recommendations. Posture indicators reflect media signal intensity and should not be interpreted as ground-truth predictions of operational deployments. Always consult authoritative sources for decision-making.
+    </div>
+    <div class="footer-support">
+        If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank">buy me a coffee</a>
+    </div>
+    <div class="footer-copyright">
+        © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0<br>
+        Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.<br>
+        <a href="index.html" style="color:var(--accent);">← Back to Main Dashboard</a>
+    </div>
+</footer>
+
+</div> <!-- /main-content -->
+</div> <!-- /page-with-sidebar -->
+</div> <!-- /container -->
+
+<script>
+// ════════════════════════════════════════════════════════════
+// JAPAN RHETORIC TRACKER — Frontend Logic
+// Reads from /api/rhetoric/japan (Asia backend)
+// ════════════════════════════════════════════════════════════
+
+const API_BASE = 'https://asifah-asia-backend.onrender.com';
+
+const LEVEL_LABELS = {
+    0: 'Baseline',
+    1: 'Rhetoric',
+    2: 'Warning',
+    3: 'Directive',
+    4: 'Operational',
+    5: 'Kinetic Activity',
+};
+const LEVEL_COLORS = {
+    0: '#6b7280',
+    1: '#3b82f6',
+    2: '#f59e0b',
+    3: '#f97316',
+    4: '#ef4444',
+    5: '#dc2626',
+};
+
+let CURRENT_DATA = null;
+let CURRENT_TAB = 'all';
+
+// ── Theme toggle ──
+function toggleTheme() {
+    const html = document.documentElement;
+    const cur = html.getAttribute('data-theme');
+    const next = cur === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('asifah-theme', next); } catch (e) {}
+}
+(function initTheme() {
+    try {
+        const saved = localStorage.getItem('asifah-theme');
+        if (saved) document.documentElement.setAttribute('data-theme', saved);
+    } catch (e) {}
+})();
+
+// ── Helpers ──
+function el(id) { return document.getElementById(id); }
+function escapeHtml(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+function formatDate(iso) {
+    if (!iso) return '';
+    try {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return iso.slice(0, 10);
+        const now = new Date();
+        const diffMin = Math.round((now - d) / 60000);
+        if (diffMin < 60) return diffMin + 'm ago';
+        if (diffMin < 1440) return Math.round(diffMin / 60) + 'h ago';
+        return Math.round(diffMin / 1440) + 'd ago';
+    } catch (e) { return ''; }
+}
+
+// ── Render: Theatre Banner ──
+function renderBanner(data) {
+    const score = data.theatre_score || 0;
+    const overall = data.overall_level || 0;
+    const inbound = data.inbound_max_level || 0;
+    const outbound = data.outbound_max_level || 0;
+    const alert = data.alert_level || 'normal';
+
+    const circle = el('theatreScoreCircle');
+    circle.textContent = score;
+    circle.style.borderColor = LEVEL_COLORS[overall];
+    circle.style.color = LEVEL_COLORS[overall];
+    circle.style.boxShadow = '0 0 18px ' + LEVEL_COLORS[overall] + '55';
+
+    el('theatreLevelLabel').textContent = 'L' + overall + ' — ' + (LEVEL_LABELS[overall] || 'Baseline');
+    el('metaInbound').textContent = 'L' + inbound;
+    el('metaOutbound').textContent = 'L' + outbound;
+    el('metaArticles').textContent = (data.classified_articles || 0) + ' / ' + (data.total_articles || 0);
+    el('metaAlert').textContent = (alert || '').toUpperCase();
+    el('metaAlert').style.color = LEVEL_COLORS[overall];
+
+    if (data.updated_at) {
+        el('lastUpdated').textContent = 'Last scan: ' + formatDate(data.updated_at);
+    }
+}
+
+// ── Render: Sources Strip ──
+function renderSources(data) {
+    const breakdown = data.sources_breakdown || {};
+    const strip = el('sourcesStrip');
+    strip.innerHTML = '';
+    const sources = [
+        { key: 'rss',     icon: '📡', label: 'RSS' },
+        { key: 'gdelt',   icon: '🌐', label: 'GDELT' },
+        { key: 'newsapi', icon: '📰', label: 'NewsAPI' },
+        { key: 'brave',   icon: '🦁', label: 'Brave' },
+        { key: 'bluesky', icon: '🦋', label: 'BlueSky' },
+    ];
+    sources.forEach(function (s) {
+        const count = breakdown[s.key] || 0;
+        const span = document.createElement('span');
+        span.className = 'source-pill';
+        span.innerHTML = s.icon + ' ' + s.label + ' <span class="source-pill-count">' + count + '</span>';
+        strip.appendChild(span);
+    });
+}
+
+// ── Render: So What Card ──
+function renderSoWhat(data) {
+    const sw = data.so_what || {};
+    el('soWhatScenario').textContent = sw.scenario || 'Baseline';
+    el('soWhatScenario').style.background = sw.scenario_color || '#6b7280';
+    el('soWhatSituation').textContent = sw.situation || 'No active situation summary available.';
+
+    const indicators = sw.key_indicators || [];
+    el('soWhatIndicators').innerHTML = indicators.length
+        ? indicators.map(function (i) { return '<li>' + escapeHtml(i) + '</li>'; }).join('')
+        : '<li style="color:var(--text-muted); font-style:italic;">No indicators above baseline.</li>';
+
+    el('soWhatAssessment').textContent = sw.assessment || 'Assessment pending.';
+
+    const watch = sw.watch_list || [];
+    el('soWhatWatch').innerHTML = watch.length
+        ? watch.map(function (w) { return '<li>' + escapeHtml(w) + '</li>'; }).join('')
+        : '<li style="color:var(--text-muted); font-style:italic;">Standard monitoring.</li>';
+
+    el('soWhatConfidence').textContent = sw.confidence_note || '';
+}
+
+// ── Render: Article 9 Card ──
+function renderArticle9(data) {
+    const card = el('article9Card');
+    const actors = data.actors || {};
+    const pm = actors.pm_cabinet || {};
+    const diet = actors.ldp_diet || {};
+    const pmTw = pm.tripwires || {};
+    const dietTw = diet.tripwires || {};
+
+    let state = 'dormant';
+    let stateLabel = 'Dormant';
+    let stateColor = '#6b7280';
+
+    if (pmTw.article9_l5) {
+        state = 'kinetic'; stateLabel = 'Kinetic Activity'; stateColor = '#dc2626';
+    } else if (pmTw.article9_l4 || dietTw.article9_l4) {
+        state = 'diet_vote'; stateLabel = 'Diet Vote'; stateColor = '#ef4444';
+    } else if (pmTw.article9_l3 || dietTw.article9_l3) {
+        state = 'cabinet_decision'; stateLabel = 'Cabinet Decision'; stateColor = '#f97316';
+    } else if (pmTw.article9_l2) {
+        state = 'rhetoric'; stateLabel = 'Rhetoric Active'; stateColor = '#f59e0b';
+    }
+
+    if (state === 'dormant') {
+        card.classList.remove('show');
+        return;
+    }
+
+    card.classList.add('show');
+    el('article9StatePill').textContent = stateLabel;
+    el('article9StatePill').style.background = stateColor + '22';
+    el('article9StatePill').style.color = stateColor;
+    el('article9StatePill').style.borderColor = stateColor + '55';
+
+    // Highlight active ladder steps
+    el('article9L2').classList.toggle('active', !!pmTw.article9_l2 || ['rhetoric','cabinet_decision','diet_vote','kinetic'].indexOf(state) >= 0);
+    el('article9L3').classList.toggle('active', !!(pmTw.article9_l3 || dietTw.article9_l3) || ['cabinet_decision','diet_vote','kinetic'].indexOf(state) >= 0);
+    el('article9L4').classList.toggle('active', !!(pmTw.article9_l4 || dietTw.article9_l4) || ['diet_vote','kinetic'].indexOf(state) >= 0);
+    el('article9L5').classList.toggle('active', !!pmTw.article9_l5 || state === 'kinetic');
+}
+
+// ── Render: Dashboard rows (inbound/outbound) ──
+function renderDashboardRow(actorKey, actor) {
+    const lv = actor.level || 0;
+    const color = actor.level_color || LEVEL_COLORS[lv];
+    const label = actor.level_label || LEVEL_LABELS[lv];
+    const articleCount = actor.article_count || 0;
+    return (
+        '<div class="dashboard-row">' +
+            '<div class="dashboard-row-actor">' +
+                '<span class="dashboard-row-flag">' + (actor.flag || '') + '</span>' +
+                '<span class="dashboard-row-icon">' + (actor.icon || '') + '</span>' +
+                '<span class="dashboard-row-name">' + escapeHtml(actor.name || actorKey) + '</span>' +
+                '<span class="dashboard-row-articles">· ' + articleCount + ' arts</span>' +
+            '</div>' +
+            '<span class="dashboard-row-level" style="background:' + color + '; color:white;">L' + lv + ' · ' + label + '</span>' +
+        '</div>'
+    );
+}
+
+function renderDashboards(data) {
+    const actors = data.actors || {};
+    const inboundKeys = data.inbound_actors || [];
+    const outboundKeys = data.outbound_actors || [];
+
+    const inboundMax = data.inbound_max_level || 0;
+    const outboundMax = data.outbound_max_level || 0;
+    const inboundScore = inboundMax * 10 + ((inboundMax >= 3 && outboundMax >= 3) ? 5 : 0);
+    const outboundScore = outboundMax * 10;
+
+    el('inboundScore').textContent = inboundScore;
+    el('outboundScore').textContent = outboundScore;
+    el('inboundLevelLabel').textContent = 'Max L' + inboundMax + ' · ' + (LEVEL_LABELS[inboundMax] || 'Baseline');
+    el('outboundLevelLabel').textContent = 'Max L' + outboundMax + ' · ' + (LEVEL_LABELS[outboundMax] || 'Baseline');
+
+    const inSorted = inboundKeys.slice().sort(function (a, b) {
+        return ((actors[b] || {}).level || 0) - ((actors[a] || {}).level || 0);
+    });
+    const outSorted = outboundKeys.slice().sort(function (a, b) {
+        return ((actors[b] || {}).level || 0) - ((actors[a] || {}).level || 0);
+    });
+
+    el('inboundRows').innerHTML = inSorted.map(function (k) {
+        return renderDashboardRow(k, actors[k] || {});
+    }).join('');
+    el('outboundRows').innerHTML = outSorted.map(function (k) {
+        return renderDashboardRow(k, actors[k] || {});
+    }).join('');
+}
+
+// ── Render: Actor Status Grid ──
+function renderActorsGrid(data) {
+    const actors = data.actors || {};
+    const grid = el('actorsGrid');
+    grid.innerHTML = '';
+
+    Object.keys(actors).forEach(function (key) {
+        const a = actors[key];
+        const card = document.createElement('div');
+        const isInbound = a.is_inbound;
+        const isOutbound = a.is_outbound;
+        card.className = 'actor-card ' + (isInbound ? 'inbound-actor' : (isOutbound ? 'outbound-actor' : ''));
+
+        card.innerHTML =
+            '<div class="actor-card-header">' +
+                '<span class="actor-card-icon">' + (a.icon || '') + '</span>' +
+                '<span class="actor-card-name">' + escapeHtml(a.name || key) + '</span>' +
+                '<span class="actor-card-flag">' + (a.flag || '') + '</span>' +
+            '</div>' +
+            '<div class="actor-card-role">' + escapeHtml(a.role || '') + '</div>' +
+            '<span class="actor-card-level" style="background:' + (a.level_color || '#6b7280') + ';">' +
+                'L' + (a.level || 0) + ' — ' + (a.level_label || 'Baseline') +
+            '</span>' +
+            '<div class="actor-card-meta">' +
+                '<span>📰 ' + (a.article_count || 0) + ' articles</span>' +
+                '<span>' + (isInbound ? 'INBOUND' : (isOutbound ? 'OUTBOUND' : 'OTHER')) + '</span>' +
+                (a.is_reporting ? '<span style="color:var(--accent);">REPORTING</span>' : '') +
+            '</div>' +
+            '<div class="actor-card-description">' + escapeHtml(a.description || '') + '</div>';
+
+        grid.appendChild(card);
+    });
+}
+
+// ── Render: Articles ──
+function renderArticleTabs(data) {
+    const articles = data.top_articles || [];
+    const counts = { all: articles.length };
+    articles.forEach(function (a) {
+        counts[a.actor] = (counts[a.actor] || 0) + 1;
+    });
+
+    const actors = data.actors || {};
+    const tabs = el('articlesTabs');
+    tabs.innerHTML = '';
+
+    // "All" tab
+    const allTab = document.createElement('button');
+    allTab.className = 'articles-tab' + (CURRENT_TAB === 'all' ? ' active' : '');
+    allTab.innerHTML = 'All <span class="articles-tab-count">' + counts.all + '</span>';
+    allTab.onclick = function () { CURRENT_TAB = 'all'; renderArticleTabs(data); renderArticleList(data); };
+    tabs.appendChild(allTab);
+
+    // One tab per actor (only if articles exist)
+    Object.keys(actors).forEach(function (key) {
+        const c = counts[key] || 0;
+        if (c === 0) return;
+        const a = actors[key];
+        const t = document.createElement('button');
+        t.className = 'articles-tab' + (CURRENT_TAB === key ? ' active' : '');
+        t.innerHTML = (a.icon || '') + ' ' + escapeHtml((a.name || key).split(' (')[0]) + ' <span class="articles-tab-count">' + c + '</span>';
+        t.onclick = function () { CURRENT_TAB = key; renderArticleTabs(data); renderArticleList(data); };
+        tabs.appendChild(t);
+    });
+}
+
+function renderArticleList(data) {
+    const articles = data.top_articles || [];
+    const filtered = CURRENT_TAB === 'all' ? articles : articles.filter(function (a) { return a.actor === CURRENT_TAB; });
+    const list = el('articlesList');
+    list.innerHTML = '';
+
+    if (filtered.length === 0) {
+        list.innerHTML = '<li style="color:var(--text-muted); font-style:italic;">No articles for this filter.</li>';
+        return;
+    }
+
+    filtered.slice(0, 100).forEach(function (a) {
+        const li = document.createElement('li');
+        li.innerHTML =
+            '<a href="' + escapeHtml(a.url || '#') + '" target="_blank" rel="noopener">' + escapeHtml(a.title || 'Untitled') + '</a>' +
+            '<div class="articles-meta">' +
+                '<span class="article-source-pill">' + (a.feed_type || 'src').toUpperCase() + '</span>' +
+                escapeHtml(a.source || '') + ' · ' + formatDate(a.published) +
+                '<span class="article-actor-pill">' + escapeHtml((data.actors[a.actor] || {}).name || a.actor) + '</span>' +
+            '</div>';
+        list.appendChild(li);
+    });
+}
+
+// ── Generate So What client-side (until backend interpreter is wired into endpoint) ──
+// Simple fallback: synthesize a basic So What from scan data if not present.
+// This lets the page render meaningfully even before japan_signal_interpreter is integrated server-side.
+function synthesizeSoWhat(data) {
+    if (data.so_what) return data.so_what;
+
+    const overall = data.overall_level || 0;
+    const inbound = data.inbound_max_level || 0;
+    const outbound = data.outbound_max_level || 0;
+    const actors = data.actors || {};
+
+    let scenario = 'Baseline Posture';
+    let scenario_color = '#6b7280';
+    if (overall >= 5) { scenario = 'Kinetic Activity'; scenario_color = '#991b1b'; }
+    else if (inbound >= 3 && outbound >= 3) { scenario = 'Dual-Track Escalation'; scenario_color = '#ef4444'; }
+    else if (outbound >= 3) { scenario = 'Outbound Posture Shift'; scenario_color = '#f97316'; }
+    else if (inbound >= 3) { scenario = 'Inbound Pressure'; scenario_color = '#f59e0b'; }
+    else if (overall >= 1) { scenario = 'Rhetoric Spike'; scenario_color = '#3b82f6'; }
+
+    const indicators = [];
+    Object.keys(actors).forEach(function (k) {
+        const a = actors[k];
+        if ((a.level || 0) >= 3) {
+            indicators.push((a.name || k) + ' at L' + a.level + ' (' + (a.level_label || '') + ') — ' + (a.article_count || 0) + ' articles');
+        }
+    });
+
+    const watch = [
+        'PM Takaichi public statements + Cabinet press briefings',
+        'Diet defense committee schedules + Article 9 motion calendar',
+        'China MFA daily briefings + Eastern Theater Command activity',
+        'JCG presence in Senkaku contiguous zone',
+        'KCNA / Rodong Sinmun statements + DPRK missile test windows',
+    ];
+
+    let assessment = 'Japan posture at baseline.';
+    if (scenario === 'Dual-Track Escalation') {
+        assessment = 'Both inbound pressure and Japan\'s outbound posture are simultaneously elevated — classical convergence pattern that historically precedes alliance-coordination cycles or crisis-management summits.';
+    } else if (scenario === 'Outbound Posture Shift') {
+        assessment = 'Japan is publicly hardening its defense posture without proportional inbound trigger — suggests domestic political timing or anticipatory positioning ahead of expected contingencies.';
+    } else if (scenario === 'Inbound Pressure') {
+        assessment = 'External pressure on Japan is elevated; Japan\'s own posture remains comparatively measured. Pattern suggests Japan in absorption/diplomatic mode rather than confrontation.';
+    } else if (scenario === 'Rhetoric Spike') {
+        assessment = 'Rhetoric is above baseline but no operational follow-through detected. Pattern is consistent with normal political-cycle posturing or response to a specific recent incident.';
+    }
+
+    return {
+        scenario: scenario,
+        scenario_color: scenario_color,
+        situation: 'Overall Japan theatre at L' + overall + ' (' + (LEVEL_LABELS[overall] || 'Baseline') + '). Inbound max L' + inbound + ', outbound max L' + outbound + '. ' + (data.classified_articles || 0) + ' articles classified across 11 actors.',
+        key_indicators: indicators.length ? indicators : ['No high-priority indicators above baseline. Routine institutional rhetoric only.'],
+        assessment: assessment,
+        watch_list: watch,
+        confidence_note: 'This assessment is generated algorithmically from open-source signal data (RSS, GDELT, NewsAPI, Brave Search, BlueSky aggregation). It is not a prediction and should not be used as the sole basis for any decision. Cross-reference with authoritative sources (MOFA, Kantei, DoD official channels, Reuters/AP newswires).'
+    };
+}
+
+// ── MAIN LOAD ──
+async function loadData() {
+    try {
+        const r = await fetch(API_BASE + '/api/rhetoric/japan');
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        const data = await r.json();
+        if (!data || data.success === false) {
+            throw new Error(data.error || 'Unknown error');
+        }
+        // Synthesize so_what if missing
+        if (!data.so_what) data.so_what = synthesizeSoWhat(data);
+
+        CURRENT_DATA = data;
+
+        renderBanner(data);
+        renderSources(data);
+        renderSoWhat(data);
+        renderArticle9(data);
+        renderDashboards(data);
+        renderActorsGrid(data);
+        renderArticleTabs(data);
+        renderArticleList(data);
+
+        console.log('[Japan Rhetoric] Loaded successfully', data);
+    } catch (e) {
+        console.error('[Japan Rhetoric] Load failed:', e);
+        el('lastUpdated').textContent = '⚠️ Tracker temporarily unavailable. Cache warming up — please refresh in 60 seconds.';
+        el('lastUpdated').style.color = '#ef4444';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', loadData);
+</script>
+
+</body>
+</html>
