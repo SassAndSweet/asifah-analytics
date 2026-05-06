@@ -229,6 +229,156 @@
         .nav-btn.commodities-btn { border-color: rgba(245,158,11,0.4); background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(217,119,6,0.05) 100%); }
         .nav-btn.commodities-btn .nav-btn-status { color: #fbbf24; }
         @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
+
+        /* ═══════════════════════════════════════════════════════════
+           COMMODITY EXPOSURE CARD — Gold Standard v1.0 (May 6, 2026)
+           Arctic palette, matches Russia page accent (#38bdf8)
+           ═══════════════════════════════════════════════════════════ */
+        .commodity-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 18px;
+            box-shadow: 0 0 6px rgba(30,58,95,0.25);
+        }
+        .commodity-card-title {
+            font-size: 0.63rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 14px;
+            padding-bottom: 9px;
+            border-bottom: 1px solid var(--border);
+        }
+        .commodity-prose {
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: var(--text-2);
+            margin: 10px 0 16px 0;
+            padding: 12px 14px;
+            background: rgba(6,13,26,0.6);
+            border-left: 3px solid var(--accent);
+            border-radius: 6px;
+        }
+        [data-theme="light"] .commodity-prose { background: #f8fbfe; }
+        .commodity-alert-banner {
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            font-size: 12px;
+            display: none;
+        }
+        .commodity-alert-banner.show { display: block; }
+        .commodity-alert-banner.alert-normal   { background: rgba(34,197,94,0.08);  border-left-color: #22c55e; color: #22c55e; }
+        .commodity-alert-banner.alert-elevated { background: rgba(234,179,8,0.10);  border-left-color: #eab308; color: #eab308; }
+        .commodity-alert-banner.alert-high     { background: rgba(249,115,22,0.10); border-left-color: #f97316; color: #f97316; }
+        .commodity-alert-banner.alert-surge    { background: rgba(239,68,68,0.12);  border-left-color: #ef4444; color: #ef4444; }
+        .commodity-alert-banner strong { letter-spacing: 1.5px; }
+        .commodity-alert-banner .ab-meta { color: var(--text-muted); font-weight: 400; margin-left: 10px; }
+
+        .commodity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .commodity-pill {
+            background: rgba(6,13,26,0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        [data-theme="light"] .commodity-pill { background: #f8fbfe; }
+        .commodity-pill:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(56,189,248,0.15);
+        }
+        .commodity-pill-header { display: flex; align-items: center; gap: 10px; }
+        .commodity-pill-icon { font-size: 22px; line-height: 1; }
+        .commodity-pill-name { font-size: 13px; font-weight: 700; color: var(--text); flex: 1; }
+        .commodity-pill-rank { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .commodity-pill-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .commodity-pill-alert {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .commodity-alert-normal   { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+        .commodity-alert-elevated { background: rgba(234,179,8,0.12);  color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
+        .commodity-alert-high     { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.4); }
+        .commodity-alert-surge    { background: rgba(239,68,68,0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+        .commodity-pill-role-badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: rgba(56,189,248,0.12);
+            color: var(--accent);
+            border: 1px solid rgba(56,189,248,0.25);
+        }
+        .commodity-pill-signal-count {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .commodity-pill-price {
+            font-size: 12px;
+            color: var(--text);
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        .commodity-pill-price .price-up   { color: #22c55e; }
+        .commodity-pill-price .price-down { color: #ef4444; }
+        .commodity-pill-spark { width: 100%; height: 28px; display: block; }
+        .commodity-pill-note {
+            font-size: 11px;
+            color: var(--text-2);
+            line-height: 1.45;
+            margin-top: 4px;
+        }
+        .commodity-top-signals {
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: rgba(6,13,26,0.6);
+            border-radius: 6px;
+            border-left: 3px solid var(--text-muted);
+            font-size: 11px;
+        }
+        [data-theme="light"] .commodity-top-signals { background: #f8fbfe; }
+        .commodity-top-signals .ts-title {
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-size: 10px;
+        }
+        .commodity-top-signals a {
+            color: var(--text-2);
+            text-decoration: none;
+            display: block;
+            padding: 3px 0;
+            line-height: 1.45;
+        }
+        .commodity-top-signals a:hover { color: var(--accent); }
+        .commodity-top-signals .ts-source { color: var(--text-muted); font-size: 10px; }
     </style>
 </head>
 <body>
@@ -418,6 +568,24 @@
         <a href="rhetoric-russia.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="viewFullTracker">View Full Pressure Analysis →</a>
     </div>
     <div id="russiaRhetoricScanInfo" style="margin-top:7px;font-size:10px;color:var(--text-muted);text-align:center;">--</div>
+</div>
+
+<!-- ═══ COMMODITY EXPOSURE CARD — Gold Standard v1.0 (May 6, 2026) ═══ -->
+<!-- Always-rendered canonical pattern. Three sections: prose + alert banner + tiles grid. -->
+<!-- Russia framing: producer-dominant leverage signals (NOT regime stress). -->
+<div class="commodity-card" id="russiaCommodityCard">
+    <div class="commodity-card-title">📊 <span data-i18n="commodityTitle">RUSSIA COMMODITY LEVERAGE</span></div>
+    <div class="commodity-prose" id="commodityProse" data-i18n="commodityLoading">Loading exposure profile…</div>
+    <div class="commodity-alert-banner" id="commodityAlertBanner"></div>
+    <div class="commodity-grid" id="commodityGrid"></div>
+    <div class="commodity-top-signals" id="commodityTopSignals" style="display:none;"></div>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.2);border-radius:8px;font-size:11px;color:var(--text-2);line-height:1.55;" data-i18n="commodityLinkage">
+        <strong style="color:#38bdf8;">Strategic Linkage:</strong> Russia is producer-dominant — #1 wheat exporter, #2 oil &amp; gas producer, #2 potash producer, dominant Rosatom HALEU enrichment (~46% global). Producer-side commodity surge translates to export revenue + geopolitical leverage rather than regime stress. Tracker reads these as leverage signals (war financing cushion, BRICS+ sanctions evasion, MENA food-security pressure).
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;">
+        <a href="commodities.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="commodityFullLink">View Full Commodity Tracker →</a>
+    </div>
+    <div id="commodityCacheNote" style="margin-top:8px;font-size:10px;color:var(--text-muted);font-style:italic;text-align:right;"></div>
 </div>
 
 <!-- UKRAINE WAR STATUS -->
@@ -870,7 +1038,8 @@
         <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;">Contact</a>
     </div>
     <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
-        © 2025-2026 RCGG. All Rights Reserved. Russia Stability Index v2.0.0 — Proprietary and Confidential.
+        © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — Russia Stability Index v2.1.0<br>
+        Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.
     </div>
 </footer>
 
@@ -1118,6 +1287,130 @@ function displayFallback() {
         '</div></div>';
 }
 
+// ════════════════════════════════════════════════════════════
+// COMMODITY EXPOSURE CARD — Gold Standard v1.0 renderer
+// Always-rendered canonical pattern. Uses Europe proxy
+// (12hr Redis cache → ME backend passthrough) for canonical data.
+// Three sections: prose paragraph + adaptive alert banner + tiles grid.
+// Russia-specific: producer-dominant leverage framing, not regime stress.
+// ════════════════════════════════════════════════════════════
+async function loadCommodity() {
+    const COUNTRY_KEY = 'russia';
+    const card = document.getElementById('russiaCommodityCard');
+    if (!card) return;
+
+    let data;
+    try {
+        const r = await fetch(`${API_BASE}/api/europe/commodity/${COUNTRY_KEY}`);
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        data = await r.json();
+    } catch (e) {
+        console.warn(`[Russia Commodity] Fetch failed:`, e.message);
+        const proseEl = document.getElementById('commodityProse');
+        if (proseEl) proseEl.textContent = 'Commodity exposure data temporarily unavailable. Please refresh.';
+        return;
+    }
+
+    // ── Prose paragraph (always rendered) ──
+    document.getElementById('commodityProse').textContent =
+        data.prose || 'No exposure profile available.';
+
+    // ── Adaptive alert banner ──
+    const banner = document.getElementById('commodityAlertBanner');
+    const alertLevel = (data.alert_level || 'normal').toLowerCase();
+    const alertLabels = {
+        normal:   '✓ NO ACTIVE COMMODITY PRESSURE',
+        elevated: '◐ ELEVATED COMMODITY PRESSURE',
+        high:     '▲ HIGH COMMODITY PRESSURE',
+        surge:    '🚨 COMMODITY PRESSURE SURGE'
+    };
+    const pressure = (data.commodity_pressure || 0);
+    banner.className = `commodity-alert-banner alert-${alertLevel} show`;
+    banner.innerHTML = `
+        <strong>${alertLabels[alertLevel] || alertLabels.normal}</strong>
+        <span class="ab-meta">Pressure score: ${pressure.toFixed(1)} · ${data.commodity_summaries?.length || 0} exposures tracked${data.has_live_data ? '' : ' · awaiting live signals'}</span>
+    `;
+
+    // ── Commodity tiles ──
+    const grid = document.getElementById('commodityGrid');
+    grid.innerHTML = '';
+    (data.commodity_summaries || []).forEach(c => {
+        const globalAlert = (c.global_alert_level || 'normal').toLowerCase();
+        const role = (c.role || 'producer').toLowerCase();
+        const rankText = c.rank ? `#${c.rank} globally` : '';
+        const signalText = c.signal_count > 0 ? `${c.signal_count} signal${c.signal_count !== 1 ? 's' : ''}` : '';
+
+        let sparklineHtml = '';
+        let priceHtml = '';
+        if (c.sparkline && c.sparkline.spark && c.sparkline.spark.length > 1) {
+            const spark = c.sparkline.spark;
+            const min = Math.min(...spark);
+            const max = Math.max(...spark);
+            const range = max - min || 1;
+            const points = spark.map((v, i) => {
+                const x = (i / (spark.length - 1)) * 100;
+                const y = 100 - ((v - min) / range) * 100;
+                return `${x.toFixed(1)},${y.toFixed(1)}`;
+            }).join(' ');
+            const pctChange = c.sparkline.change_pct_30d || 0;
+            const sparkColor = pctChange >= 0 ? '#22c55e' : '#ef4444';
+            sparklineHtml = `<svg class="commodity-pill-spark" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline fill="none" stroke="${sparkColor}" stroke-width="2" points="${points}"/></svg>`;
+            const priceClass = pctChange >= 0 ? 'price-up' : 'price-down';
+            const arrow = pctChange >= 0 ? '▲' : '▼';
+            priceHtml = `<div class="commodity-pill-price">$${c.sparkline.price?.toFixed(2) || '--'} <span class="${priceClass}">${arrow} ${pctChange.toFixed(2)}% (30d)</span></div>`;
+        }
+
+        const tile = document.createElement('a');
+        tile.className = 'commodity-pill';
+        tile.href = `commodities.html#${c.commodity}`;
+        tile.innerHTML = `
+            <div class="commodity-pill-header">
+                <div class="commodity-pill-icon">${c.icon || '📊'}</div>
+                <div style="flex:1;">
+                    <div class="commodity-pill-name">${c.name || c.commodity}</div>
+                    ${rankText ? `<div class="commodity-pill-rank">${rankText}</div>` : ''}
+                </div>
+            </div>
+            <div class="commodity-pill-row">
+                <span class="commodity-pill-alert commodity-alert-${globalAlert}">${globalAlert}</span>
+                <span class="commodity-pill-role-badge">${role}</span>
+                ${signalText ? `<span class="commodity-pill-signal-count">${signalText}</span>` : ''}
+            </div>
+            ${priceHtml}
+            ${sparklineHtml}
+            ${c.note ? `<div class="commodity-pill-note">${c.note.slice(0, 180)}${c.note.length > 180 ? '…' : ''}</div>` : ''}
+        `;
+        grid.appendChild(tile);
+    });
+
+    // ── Top signals footer ──
+    const tsEl = document.getElementById('commodityTopSignals');
+    const topSignals = data.top_signals || [];
+    if (topSignals.length > 0) {
+        const items = topSignals.slice(0, 3).map(s => `
+            <a href="${s.article_url}" target="_blank" rel="noopener">
+                ${s.commodity_icon || '📰'} <strong>${s.commodity_name}:</strong> ${s.article_title}
+                <span class="ts-source">— ${s.source}</span>
+            </a>
+        `).join('');
+        tsEl.innerHTML = `<div class="ts-title">Top live signals</div>${items}`;
+        tsEl.style.display = 'block';
+    } else {
+        tsEl.style.display = 'none';
+    }
+
+    // ── Cache freshness note (Europe proxy artifact) ──
+    const cacheStatus = data.cache_status || 'unknown';
+    const cachedAt = data.proxy_cached_at || data.last_updated;
+    let cacheText = '';
+    if (cachedAt) {
+        const ageMin = Math.floor((Date.now() - new Date(cachedAt).getTime()) / 60000);
+        cacheText = `Cache: ${cacheStatus} · ${ageMin < 60 ? ageMin + 'm' : Math.floor(ageMin/60) + 'h ' + (ageMin%60) + 'm'} ago`;
+    }
+    const cacheEl = document.getElementById('commodityCacheNote');
+    if (cacheEl) cacheEl.textContent = cacheText;
+}
+
 // ── RHETORIC ──
 async function loadRhetoric() {
     const LEVELS = {0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626'};
@@ -1279,8 +1572,12 @@ const T = {
         articlesDesc:'English · Russian · Reddit feeds · Last 7 days · NewsAPI + GDELT',
         tabEN:'🇬🇧 English', tabRU:'🇷🇺 Russian', tabReddit:'💬 Reddit',
         articlesLoading:'Loading articles...',
+        commodityTitle:'RUSSIA COMMODITY LEVERAGE',
+        commodityLoading:'Loading exposure profile…',
+        commodityFullLink:'View Full Commodity Tracker →',
+        commodityLinkage:'',  // Long HTML; rendered statically — left empty so i18n setter doesn't overwrite the strong tags
     },
-    fr: {
+   fr: {
         pageFlag:'RUSSIE', pageTitle:'INDICE DE STABILITÉ DE LA RUSSIE',
         pageSubtitle:'Impact des sanctions · Posture militaire · Dynamiques internes · Alignement mondial',
         backLink:'← Retour à l\'Europe', themeLabel:'THÈME', loading:'Chargement...',
@@ -1328,6 +1625,10 @@ const T = {
         articlesDesc:'Flux anglais · russe · Reddit · 7 derniers jours',
         tabEN:'🇬🇧 Anglais', tabRU:'🇷🇺 Russe', tabReddit:'💬 Reddit',
         articlesLoading:'Chargement des articles...',
+        commodityTitle:'LEVIER COMMERCIAL — RUSSIE',
+        commodityLoading:'Chargement du profil d\'exposition…',
+        commodityFullLink:'Voir le suivi complet des matières premières →',
+        commodityLinkage:'',
         econDefense:'Dépenses de défense', econDefenseNote:'Le plus haut depuis la Guerre froide',
         econFrozen:'Réserves gelées', econFrozenNote:'Gelées dans les juridictions occidentales',
         econCap:'Plafond pétrolier G7', econCapNote:'La Russie vend au-dessus du plafond via la flotte fantôme',
@@ -1386,6 +1687,10 @@ const T = {
         articlesDesc:'Английские · Русские · Reddit · Последние 7 дней',
         tabEN:'🇬🇧 Английский', tabRU:'🇷🇺 Русский', tabReddit:'💬 Reddit',
         articlesLoading:'Загрузка статей...',
+        commodityTitle:'СЫРЬЕВОЕ ВЛИЯНИЕ РОССИИ',
+        commodityLoading:'Загрузка профиля воздействия…',
+        commodityFullLink:'Полный трекер сырья →',
+        commodityLinkage:'',
         econDefense:'Расходы на оборону', econDefenseNote:'Самый высокий с холодной войны',
         econFrozen:'Замороженные резервы', econFrozenNote:'Заморожены в западных юрисдикциях',
         econCap:'Ценовой потолок G7', econCapNote:'Россия продаёт выше потолка через теневой флот',
@@ -1444,6 +1749,10 @@ const T = {
         articlesDesc:'Englische · Russische · Reddit-Feeds · Letzte 7 Tage',
         tabEN:'🇬🇧 Englisch', tabRU:'🇷🇺 Russisch', tabReddit:'💬 Reddit',
         articlesLoading:'Artikel werden geladen...',
+        commodityTitle:'RUSSLAND ROHSTOFF-HEBEL',
+        commodityLoading:'Expositionsprofil wird geladen…',
+        commodityFullLink:'Vollständigen Rohstoff-Tracker anzeigen →',
+        commodityLinkage:'',
         econDefense:'Verteidigungsausgaben', econDefenseNote:'Höchste seit dem Kalten Krieg',
         econFrozen:'Eingefrorene Reserven', econFrozenNote:'In westlichen Jurisdiktionen eingefroren',
         econCap:'G7-Ölpreisdeckel', econCapNote:'Russland verkauft über dem Deckel via Schattenflotte',
@@ -1472,6 +1781,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startLoading();
     initMap();
     loadRhetoric();
+    loadCommodity();
     loadStability();
 });
 </script>
