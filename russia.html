@@ -97,6 +97,75 @@
         .rhetoric-actor-row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid var(--border); font-size:12px; color:var(--text-2); }
         .rhetoric-actor-row:last-child { border-bottom:none; }
 
+        /* ═══ v1.1.0 RICH RHETORIC CARD — Strategic Assessment surface ═══ */
+        .rhet-strategic-block {
+            margin-top:14px; padding:14px 16px; border-radius:8px;
+            background:rgba(6,13,26,0.6); border-left:3px solid var(--accent);
+        }
+        [data-theme="light"] .rhet-strategic-block { background:#f8fbfe; }
+        .rhet-section-title {
+            font-size:0.58rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+            color:var(--accent); margin-bottom:6px; font-family:'Courier New',monospace;
+        }
+        .rhet-scenario-header { display:flex; align-items:center; gap:8px; margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid rgba(56,189,248,0.2); }
+        .rhet-scenario-icon { font-size:1.2rem; }
+        .rhet-scenario-text { font-size:0.95rem; font-weight:800; }
+        .rhet-prose {
+            font-size:12.5px; line-height:1.6; color:var(--text-2);
+            margin-bottom:10px; font-family:'Times New Roman',serif;
+        }
+        .rhet-watch-item {
+            font-size:11px; color:var(--text-2); padding:4px 0 4px 10px;
+            border-left:2px solid rgba(56,189,248,0.3); margin:3px 0;
+            font-family:'Courier New',monospace; line-height:1.5;
+        }
+        .rhet-redline-item {
+            display:flex; align-items:flex-start; gap:8px; padding:8px 10px;
+            border-radius:6px; margin-bottom:6px;
+            background:rgba(255,255,255,0.02); border:1px solid rgba(56,189,248,0.1);
+        }
+        .rhet-redline-item.breached    { border-left:3px solid #dc2626; background:rgba(220,38,38,0.06); }
+        .rhet-redline-item.approaching { border-left:3px solid #38bdf8; background:rgba(56,189,248,0.05); }
+        .rhet-redline-icon { font-size:0.95rem; flex-shrink:0; }
+        .rhet-redline-label { font-size:11.5px; font-weight:700; color:var(--text); line-height:1.4; }
+        .rhet-redline-meta {
+            display:flex; gap:6px; flex-wrap:wrap; margin-top:3px;
+            font-size:9px; font-family:'Courier New',monospace; color:var(--text-muted);
+        }
+        .rhet-redline-status-badge {
+            font-size:8.5px; font-weight:800; padding:1px 6px; border-radius:3px;
+            letter-spacing:1px; text-transform:uppercase;
+        }
+        .rhet-redline-status-badge.breached    { background:#dc2626; color:#fff; }
+        .rhet-redline-status-badge.approaching { background:#0ea5e9; color:#fff; }
+        .rhet-diplomatic-block {
+            margin-top:14px; padding:12px 14px; border-radius:8px;
+            background:rgba(16,185,129,0.06); border:1px solid rgba(16,185,129,0.25);
+            border-left:3px solid #10b981;
+        }
+        .rhet-diplomatic-header {
+            display:flex; align-items:center; justify-content:space-between;
+            font-size:11px; margin-bottom:6px; flex-wrap:wrap; gap:8px;
+        }
+        .rhet-diplomatic-title { font-weight:700; color:#10b981; font-family:'Courier New',monospace; letter-spacing:1.5px; text-transform:uppercase; font-size:10px; }
+        .rhet-diplomatic-score { font-weight:800; color:#10b981; }
+        .rhet-diplomatic-bar {
+            background:rgba(255,255,255,0.1); border-radius:3px; height:6px;
+            overflow:hidden; margin:4px 0;
+        }
+        .rhet-diplomatic-fill {
+            height:100%; border-radius:3px;
+            background:linear-gradient(90deg,#10b981,#22c55e);
+            transition:width 0.8s ease;
+        }
+        .rhet-diplomatic-scenario { font-size:11.5px; font-weight:700; font-family:'Times New Roman',serif; }
+        .rhet-max-pressure-alert {
+            margin-top:10px; padding:8px 10px; border-radius:6px;
+            background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.3);
+            border-left:3px solid #dc2626; font-size:11px; color:#fecaca;
+        }
+        .rhet-actor-list { margin-top:10px; }
+
         /* WAR STATUS */
         .war-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(145px,1fr)); gap:10px; margin-bottom:8px; }
         .war-card { background:rgba(6,13,26,0.6); border:1px solid var(--border); border-radius:8px; padding:13px; }
@@ -555,7 +624,9 @@
     </div>
 </div>
 
-<!-- RHETORIC DETAIL CARD -->
+<!-- RHETORIC DETAIL CARD — v1.1.0 Rich Strategic Surface -->
+<!-- Surfaces full BLUF intelligence: scenario, situation, assessment, watch list,    -->
+<!-- top red lines, and diplomatic track — pulled from /api/rhetoric/russia/summary.  -->
 <div class="rhetoric-card">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#38bdf8;margin-bottom:11px;">📡 <span data-i18n="rhetoricCardTitle">RUSSIA PRESSURE TRACKER</span></div>
     <div style="display:flex;align-items:baseline;gap:9px;margin-bottom:5px;">
@@ -563,7 +634,56 @@
         <span id="russiaRhetoricLabel" style="font-size:12px;font-weight:700;padding:3px 9px;border-radius:4px;background:#6b7280;color:white;">--</span>
     </div>
     <div style="font-size:11px;color:var(--text-2);margin-bottom:11px;" data-i18n="rhetoricDesc">Five-vector pressure score — Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid · Updated every 12h</div>
-    <div id="russiaRhetoricActorList" style="font-size:12px;color:var(--text-2);"><span style="font-style:italic;" data-i18n="loading">Loading...</span></div>
+
+    <!-- ── Strategic Assessment block (so_what) ── -->
+    <div class="rhet-strategic-block" id="rhetStrategicBlock" style="display:none;">
+        <div class="rhet-scenario-header">
+            <span class="rhet-scenario-icon" id="rhetScenarioIcon">⚪</span>
+            <div style="flex:1;">
+                <div class="rhet-section-title" data-i18n="rhetStrategicLabel">RUSSIA STRATEGIC ASSESSMENT — MILITARY TRACK</div>
+                <div class="rhet-scenario-text" id="rhetScenarioText" style="color:#6b7280;">--</div>
+            </div>
+        </div>
+        <div class="rhet-section-title" data-i18n="rhetSituationLabel">SITUATION</div>
+        <div class="rhet-prose" id="rhetSituation"></div>
+        <div class="rhet-section-title" data-i18n="rhetAssessmentLabel">ASSESSMENT</div>
+        <div class="rhet-prose" id="rhetAssessment"></div>
+        <div class="rhet-section-title" data-i18n="rhetWatchLabel">WATCH FOR</div>
+        <div id="rhetWatchList"></div>
+    </div>
+
+    <!-- ── Red Lines block (top 3) ── -->
+    <div class="rhet-strategic-block" id="rhetRedLinesBlock" style="display:none;border-left-color:#dc2626;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;flex-wrap:wrap;gap:8px;">
+            <span class="rhet-section-title" style="color:#fca5a5;" data-i18n="rhetRedLinesLabel">🚨 RED LINE PROXIMITY</span>
+            <span style="font-size:10px;color:var(--text-muted);font-family:'Courier New',monospace;">
+                <span style="color:#dc2626;font-weight:800;" id="rhetBreachedCount">0</span> BREACHED ·
+                <span style="color:#38bdf8;font-weight:800;" id="rhetApproachingCount">0</span> APPROACHING
+            </span>
+        </div>
+        <div id="rhetRedLineItems"></div>
+    </div>
+
+    <!-- ── Diplomatic Track block ── -->
+    <div class="rhet-diplomatic-block" id="rhetDiplomaticBlock" style="display:none;">
+        <div class="rhet-diplomatic-header">
+            <span class="rhet-diplomatic-title" data-i18n="rhetDiplomaticLabel">🕊️ DIPLOMATIC TRACK</span>
+            <span class="rhet-diplomatic-score" id="rhetDiplomaticScore">0/100</span>
+        </div>
+        <div class="rhet-diplomatic-bar">
+            <div class="rhet-diplomatic-fill" id="rhetDiplomaticFill" style="width:0%;"></div>
+        </div>
+        <div class="rhet-diplomatic-scenario" id="rhetDiplomaticScenario" style="color:#10b981;"></div>
+        <div class="rhet-max-pressure-alert" id="rhetMaxPressureAlert" style="display:none;">
+            <strong style="color:#fca5a5;">⚠️ MAXIMUM PRESSURE</strong> — Multiple vectors elevated with no active diplomatic channel.
+        </div>
+    </div>
+
+    <!-- ── Actor levels (compact, retained as supplemental detail) ── -->
+    <div class="rhet-actor-list" id="russiaRhetoricActorList" style="font-size:12px;color:var(--text-2);">
+        <span style="font-style:italic;" data-i18n="loading">Loading...</span>
+    </div>
+
     <div style="margin-top:13px;padding-top:11px;border-top:1px solid var(--border);text-align:center;">
         <a href="rhetoric-russia.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="viewFullTracker">View Full Pressure Analysis →</a>
     </div>
@@ -1411,15 +1531,27 @@ async function loadCommodity() {
     if (cacheEl) cacheEl.textContent = cacheText;
 }
 
-// ── RHETORIC ──
+// ════════════════════════════════════════════════════════════
+// RHETORIC v1.1.0 — Rich Strategic Surface
+// Renders full BLUF: scenario + situation + assessment + watch list
+// + top red lines + diplomatic track — same data the rhetoric tracker
+// page shows, surfaced here so stability page is a real BLUF.
+// ════════════════════════════════════════════════════════════
 async function loadRhetoric() {
     const LEVELS = {0:'#6b7280',1:'#3b82f6',2:'#f59e0b',3:'#f97316',4:'#ef4444',5:'#dc2626'};
     const LABELS = {0:'Baseline',1:'Rhetoric',2:'Warning',3:'Confrontation',4:'Coercion',5:'Active Conflict'};
+    const RL_CAT_LABELS = {
+        nuclear:'☢️ NUCLEAR', nato_flank:'🛡️ NATO FLANK', ukraine_front:'🇺🇦 UKRAINE',
+        arctic:'🧊 ARCTIC', hybrid:'💻 HYBRID', cross_theater:'🌐 CROSS-THEATER',
+        deescalation:'✅ DE-ESCALATION'
+    };
     try {
         const r = await fetch(API_BASE + '/api/rhetoric/russia/summary');
         if (!r.ok) return;
         const data = await r.json();
         if (!data.success) return;
+
+        // ── Header score + badge ──
         const level = data.theatre_level || 0;
         const color = LEVELS[level] || '#6b7280';
         const label = LABELS[level] || 'Baseline';
@@ -1429,6 +1561,68 @@ async function loadRhetoric() {
         if (scoreEl) { scoreEl.textContent = (data.theatre_score||0) + '/100'; scoreEl.style.color = color; }
         const labelEl = document.getElementById('russiaRhetoricLabel');
         if (labelEl) { labelEl.textContent = label; labelEl.style.background = color; }
+
+        // ── Strategic Assessment (so_what) ──
+        if (data.so_what_scenario) {
+            document.getElementById('rhetStrategicBlock').style.display = 'block';
+            document.getElementById('rhetScenarioIcon').textContent = data.so_what_scenario_icon || '⚪';
+            const scenEl = document.getElementById('rhetScenarioText');
+            scenEl.textContent = data.so_what_scenario;
+            scenEl.style.color = data.so_what_scenario_color || '#6b7280';
+            document.getElementById('rhetSituation').textContent = data.so_what_situation || '';
+            document.getElementById('rhetAssessment').textContent = data.so_what_assessment || '';
+            const wlEl = document.getElementById('rhetWatchList');
+            wlEl.innerHTML = '';
+            (data.so_what_watch_list || []).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'rhet-watch-item';
+                div.textContent = '→ ' + item;
+                wlEl.appendChild(div);
+            });
+        }
+
+        // ── Red Lines (top 3) ──
+        const rls = data.top_red_lines || [];
+        if (rls.length > 0) {
+            document.getElementById('rhetRedLinesBlock').style.display = 'block';
+            document.getElementById('rhetBreachedCount').textContent = data.red_lines_breached || 0;
+            document.getElementById('rhetApproachingCount').textContent = data.red_lines_approaching || 0;
+            const rlEl = document.getElementById('rhetRedLineItems');
+            rlEl.innerHTML = '';
+            rls.forEach(rl => {
+                const statusClass = rl.status === 'BREACHED' ? 'breached' : 'approaching';
+                const catLbl = RL_CAT_LABELS[rl.category] || (rl.category || '').toUpperCase();
+                const div = document.createElement('div');
+                div.className = 'rhet-redline-item ' + statusClass;
+                div.innerHTML = `
+                    <span class="rhet-redline-icon">${rl.icon || '⚠️'}</span>
+                    <div style="flex:1;min-width:0;">
+                        <div class="rhet-redline-label">${rl.label || ''}</div>
+                        <div class="rhet-redline-meta">
+                            <span class="rhet-redline-status-badge ${statusClass}">${rl.status || ''}</span>
+                            <span>${catLbl}</span>
+                            <span>SEV ${rl.severity || '?'}/3</span>
+                        </div>
+                    </div>`;
+                rlEl.appendChild(div);
+            });
+        }
+
+        // ── Diplomatic Track ──
+        if (data.diplomatic_score > 0 || data.diplomatic_scenario) {
+            document.getElementById('rhetDiplomaticBlock').style.display = 'block';
+            const dscore = data.diplomatic_score || 0;
+            document.getElementById('rhetDiplomaticScore').textContent = dscore + '/100';
+            document.getElementById('rhetDiplomaticFill').style.width = dscore + '%';
+            const dscenEl = document.getElementById('rhetDiplomaticScenario');
+            dscenEl.textContent = data.diplomatic_scenario || '';
+            dscenEl.style.color = data.diplomatic_color || '#10b981';
+            if (data.maximum_pressure) {
+                document.getElementById('rhetMaxPressureAlert').style.display = 'block';
+            }
+        }
+
+        // ── Actor levels (compact supplemental detail) ──
         const actorEl = document.getElementById('russiaRhetoricActorList');
         if (actorEl) {
             const actors = [
@@ -1442,6 +1636,8 @@ async function loadRhetoric() {
                 `<div class="rhetoric-actor-row"><span>${a.label}</span><span style="font-weight:700;color:${LEVELS[a.level]||'#6b7280'};">L${a.level} — ${LABELS[a.level]||'Baseline'}</span></div>`
             ).join('');
         }
+
+        // ── Scan info ──
         const scanEl = document.getElementById('russiaRhetoricScanInfo');
         if (scanEl && data.scanned_at) {
             const ago = Math.round((Date.now() - new Date(data.scanned_at)) / 60000);
