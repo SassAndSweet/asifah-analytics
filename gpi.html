@@ -148,6 +148,9 @@ header h1 { font-family: 'Cinzel', serif; font-size: 26px; margin-bottom: 6px; l
 .bluf-signal-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--article-bg); border-left: 4px solid var(--accent); border-radius: 6px; font-size: 13px; }
 .bluf-signal-icon { font-size: 18px; flex-shrink: 0; }
 .bluf-signal-text { font-weight: 600; }
+/* ── Region pill: shows source region for each GPI BLUF signal (down-altitude attribution) ── */
+.bluf-signal-region { display: inline-flex; align-items: center; font-family: 'Courier New', monospace; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; background: rgba(56,189,248,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.3); flex-shrink: 0; }
+[data-theme="dark"] .bluf-signal-region { background: rgba(56,189,248,0.10); color: #38bdf8; border-color: rgba(56,189,248,0.25); }
 .bluf-timestamp { font-family: 'Courier New', monospace; font-size: 11px; color: var(--text-muted); margin-top: 12px; letter-spacing: 1px; }
 
 /* ── PRESSURE AXES STACK (v2.2 — multi-axis pressure model) ── */
@@ -568,6 +571,21 @@ async function loadGpi() {
         proseEl.textContent = data.bluf || '';
         proseEl.classList.remove('loading-shimmer');
 
+        // ── Region pill normalization map (handles whatever region key GPI emits) ──
+        const REGION_PILL_LABELS = {
+            'me': 'ME', 'middle east': 'ME', 'middle_east': 'ME',
+            'asia': 'ASIA', 'asia_pacific': 'ASIA', 'asia pacific': 'ASIA',
+            'europe': 'EUROPE', 'eu': 'EUROPE',
+            'wha': 'WHA', 'western hemisphere': 'WHA', 'western_hemisphere': 'WHA', 'americas': 'WHA',
+            'arctic': 'ARCTIC',
+            'africa': 'AFRICA'
+        };
+        function _regionPillLabel(sig) {
+            const raw = (sig.region || sig.theatre || '').toString().toLowerCase().trim();
+            if (!raw) return '';
+            return REGION_PILL_LABELS[raw] || raw.toUpperCase().replace(/_/g, ' ');
+        }
+
         const sigsEl = document.getElementById('blufSignals');
         sigsEl.innerHTML = '';
         (data.top_signals || []).forEach(sig => {
@@ -576,7 +594,11 @@ async function loadGpi() {
             div.style.borderLeftColor = sig.color || 'var(--accent)';
             const text     = sig.short_text || sig.text || '';
             const longText = (sig.long_text || '').replace(/"/g, '&quot;');
-            div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
+            const regionLabel = _regionPillLabel(sig);
+            const regionPill  = regionLabel
+                ? `<span class="bluf-signal-region" title="Source region — click regional card below to drill down">${regionLabel}</span>`
+                : '';
+            div.innerHTML = `${regionPill}<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
                 <span class="bluf-signal-text" style="color:${sig.color || 'var(--text-primary)'};" title="${longText}">${text}</span>`;
             sigsEl.appendChild(div);
         });
