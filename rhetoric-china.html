@@ -1,4 +1,6 @@
-<!-- Asifah Analytics — China Rhetoric & Coercion Tracker v1.0.0 — March 2026 -->
+<!-- Asifah Analytics — China Coercion Tracker v2.0.0 — May 2026 -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<!-- v2.0.0: Gold Standard pass — Arctic cyan rebrand, 1800px container, GPI sidebar, class-based footer, REGIME SIGNALS card. -->
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -6,41 +8,49 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <title>China Coercion Tracker — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
-    /* ── THEME VARIABLES ── */
+    /* ── ARCTIC THEME VARIABLES (canonical for all rhetoric trackers) ── */
     :root {
-        --bg-color: #f5f0f0;
-        --container-bg: #ffffff;
-        --card-bg: #ffffff;
-        --card-border: #e0d0d0;
-        --text-primary: #1a0a0a;
-        --text-secondary: #4a2020;
-        --text-muted: #7a5050;
-        --article-bg: #f8f0f0;
-        --accent: #c0392b;
-        --accent-glow: rgba(192,57,43,0.3);
-        --card-glow: none;
+        --bg-color:       #e8f0f8;
+        --container-bg:   #ffffff;
+        --card-bg:        #ffffff;
+        --card-border:    #b0c8e0;
+        --text-primary:   #0a1628;
+        --text-secondary: #1e3a5f;
+        --text-muted:     #4a6080;
+        --article-bg:     #f0f6fc;
+        --article-hover:  #e2e8f0;
+        --accent:         #0ea5e9;
+        --accent-glow:    rgba(14,165,233,0.2);
+        --card-glow:      none;
         --card-hover-glow: 0 8px 20px rgba(0,0,0,0.12);
         --watermark-opacity: 0.07;
-        --watermark-filter: none;
+        --watermark-filter:  none;
+        --outbound-color: #ef4444;
+        --inbound-color:  #38bdf8;
     }
     [data-theme="dark"] {
-        --bg-color: #0a0808;
-        --container-bg: #120c0c;
-        --card-bg: #120c0c;
-        --card-border: #8b1a1a;
-        --text-primary: #f0d5c8;
-        --text-secondary: #c4907a;
-        --text-muted: #8a6050;
-        --article-bg: #0f0909;
-        --accent: #ef4444;
-        --accent-glow: rgba(239,68,68,0.25);
-        --card-glow: 0 0 6px rgba(139,26,26,0.3), 0 0 1px rgba(239,68,68,0.2);
-        --card-hover-glow: 0 0 22px rgba(239,68,68,0.25), 0 8px 25px rgba(0,0,0,0.5);
-        --watermark-opacity: 0.22;
-        --watermark-filter: saturate(5) brightness(0.9) hue-rotate(330deg);
+        --bg-color:       #060d1a;
+        --container-bg:   #0d1b2e;
+        --card-bg:        #0d1b2e;
+        --card-border:    #1e3a5f;
+        --text-primary:   #e2f0fb;
+        --text-secondary: #93c5fd;
+        --text-muted:     #4a7090;
+        --article-bg:     #0a1525;
+        --article-hover:  #112038;
+        --accent:         #38bdf8;
+        --accent-glow:    rgba(56,189,248,0.18);
+        --card-glow:      0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
+        --card-hover-glow: 0 0 22px rgba(56,189,248,0.2), 0 8px 25px rgba(0,0,0,0.5);
+        --watermark-opacity: 0.18;
+        --watermark-filter:  saturate(3) brightness(0.8) hue-rotate(185deg);
+        --outbound-color: #ef4444;
+        --inbound-color:  #60a5fa;
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
         font-family: 'Times New Roman', Times, serif;
@@ -61,73 +71,82 @@
         opacity: var(--watermark-opacity); filter: var(--watermark-filter);
         z-index: 0; pointer-events: none; user-select: none;
     }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+    /* v2.0.0: Container width raised to 1800px (Japan canonical) */
+    .container { max-width: 1800px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
     /* ── HEADER ── */
     header {
-        background: linear-gradient(135deg, #1a0808, #200c0c);
-        border: 1px solid var(--card-border);
+        background: linear-gradient(135deg, #060d1a, #0a1628);
+        border: 1px solid #1e3a5f;
         border-radius: 12px; padding: 20px 25px; margin-bottom: 20px;
         display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px rgba(220,38,38,0.15);
-        border-bottom: 1px solid rgba(220,38,38,0.3);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.5), 0 0 40px rgba(56,189,248,0.08);
+        border-bottom: 1px solid rgba(56,189,248,0.2);
     }
-    [data-theme="dark"] header { background: linear-gradient(135deg, #100505, #180808); }
-    .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(220,38,38,0.4); flex-shrink: 0; }
+    [data-theme="light"] header { background: linear-gradient(135deg, #dbeafe, #eff6ff); border-color: #93c5fd; }
+    .header-logo { width: 52px; height: 52px; border-radius: 50%; border: 2px solid rgba(56,189,248,0.4); flex-shrink: 0; }
     .header-left { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
     .back-link {
         display: inline-flex; align-items: center; gap: 6px;
-        padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(220,38,38,0.3);
-        color: #ef4444; font-size: 0.7rem; font-weight: 700;
+        padding: 6px 14px; border-radius: 8px; border: 1px solid rgba(56,189,248,0.3);
+        color: #38bdf8; font-size: 0.7rem; font-weight: 700;
         letter-spacing: 1px; text-decoration: none; text-transform: uppercase; transition: all 0.2s;
     }
-    .back-link:hover { border-color: #ef4444; background: rgba(239,68,68,0.08); }
+    .back-link:hover { border-color: #38bdf8; background: rgba(56,189,248,0.08); }
     .header-center { flex: 1; text-align: center; }
-    .header-flag { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; color: #ef4444; text-transform: uppercase; }
-    .header-title { font-family: 'Times New Roman', Times, serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #f0d5c8; margin: 4px 0; }
+    .header-flag { font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; color: #38bdf8; text-transform: uppercase; }
+    .header-title { font-family: 'Times New Roman', Times, serif; font-size: clamp(1.3rem, 3vw, 1.9rem); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: #e2f0fb; margin: 4px 0; }
+    [data-theme="light"] .header-title { color: #0a1628; }
     .header-subtitle { font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px; }
     .header-timestamp { font-size: 0.65rem; color: var(--text-muted); margin-top: 4px; }
     .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
     .lang-group { display: flex; gap: 4px; flex-wrap: wrap; }
-    .lang-btn { font-family: 'Times New Roman', Times, serif; padding: 4px 10px; border-radius: 6px; border: 1px solid var(--card-border); background: transparent; color: var(--text-muted); font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
-    .lang-btn.active { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .lang-btn {
+        font-family: 'Times New Roman', Times, serif;
+        padding: 4px 10px; border-radius: 6px; border: 1px solid var(--card-border);
+        background: transparent; color: var(--text-muted);
+        font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+    }
+    .lang-btn.active { background: #0ea5e9; color: #fff; border-color: #0ea5e9; }
     .theme-row { display: flex; align-items: center; gap: 8px; }
     .theme-label { font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1.5px; text-transform: uppercase; }
     .theme-toggle { position: relative; width: 48px; height: 24px; cursor: pointer; }
     .theme-toggle input { opacity: 0; width: 0; height: 0; }
     .theme-toggle-slider { position: absolute; inset: 0; border-radius: 12px; background: #ccc; transition: 0.3s; display: flex; align-items: center; padding: 2px; }
-    [data-theme="dark"] .theme-toggle-slider { background: #dc2626; }
+    [data-theme="dark"] .theme-toggle-slider { background: #0ea5e9; }
     .theme-toggle-slider::before { content: '☀️'; width: 20px; height: 20px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-size: 12px; transition: 0.3s; }
     [data-theme="dark"] .theme-toggle-slider::before { content: '🌙'; margin-left: 24px; }
 
-    /* ── NAV SIDEBAR ── */
+    /* ── NAV SIDEBAR (canonical pattern) ── */
     .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
-    .nav-sidebar { width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
-    .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(220,38,38,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
-    .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(0,200,255,0.2); background: linear-gradient(135deg, rgba(0,180,255,0.06) 0%, rgba(0,120,200,0.04) 100%); color: rgba(255,255,255,0.7); }
+    .nav-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+    .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
+    .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(56,189,248,0.2); background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.04) 100%); color: rgba(255,255,255,0.7); }
+    [data-theme="light"] .nav-btn { color: var(--text-secondary); }
     .nav-btn .nav-btn-label { position: relative; z-index: 2; font-size: 12px; line-height: 1.3; }
-    .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #64dcff; }
-    .nav-btn.active-nav { background: linear-gradient(135deg, rgba(0,180,255,0.15) 0%, rgba(0,120,200,0.10) 100%); border-color: rgba(0,200,255,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(0,180,255,0.15); }
-    .nav-btn.current-page { background: linear-gradient(135deg, rgba(220,38,38,0.2) 0%, rgba(185,28,28,0.15) 100%); border-color: rgba(239,68,68,0.7); color: #ffffff; box-shadow: 0 0 18px rgba(220,38,38,0.25); }
-    .nav-btn.current-page .nav-btn-status { color: #ef4444; }
+    .nav-btn .nav-btn-status { position: relative; z-index: 2; font-family: 'Courier New', monospace; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; margin-top: 5px; opacity: 0.7; color: #38bdf8; }
+    .nav-btn.active-nav { background: linear-gradient(135deg, rgba(56,189,248,0.15) 0%, rgba(14,165,233,0.10) 100%); border-color: rgba(56,189,248,0.5); color: #ffffff; box-shadow: 0 0 14px rgba(56,189,248,0.12); }
+    .nav-btn.current-page { background: linear-gradient(135deg, rgba(34,197,94,0.18) 0%, rgba(22,163,74,0.12) 100%); border-color: rgba(34,197,94,0.6); color: #ffffff; box-shadow: 0 0 18px rgba(34,197,94,0.2); }
+    .nav-btn.current-page .nav-btn-status { color: #4ade80; }
     .nav-btn.inactive-nav { border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.02); color: rgba(255,255,255,0.25); cursor: default; }
     .nav-btn.inactive-nav .nav-btn-status { color: rgba(255,255,255,0.2); }
-    .nav-divider { height: 1px; background: rgba(220,38,38,0.15); margin: 4px 0; }
-    .nav-btn.rhetoric-btn { border-color: rgba(249,115,22,0.35); background: linear-gradient(135deg, rgba(249,115,22,0.08) 0%, rgba(220,38,38,0.05) 100%); }
-    .nav-btn.rhetoric-btn:hover { border-color: rgba(249,115,22,0.7); box-shadow: 0 0 18px rgba(249,115,22,0.2); transform: translateY(-2px); }
-    .nav-btn.rhetoric-btn .nav-btn-status { color: #f97316; }
+    .nav-divider { height: 1px; background: rgba(56,189,248,0.15); margin: 4px 0; }
+    .nav-btn.rhetoric-btn { border-color: rgba(34,197,94,0.35); background: linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(22,163,74,0.05) 100%); }
+    .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
     .nav-btn.military-btn { border-color: rgba(100,116,139,0.4); background: linear-gradient(135deg, rgba(100,116,139,0.08) 0%, rgba(51,65,85,0.05) 100%); }
     .nav-btn.military-btn .nav-btn-status { color: #94a3b8; }
+    .nav-btn.commodities-btn { border-color: rgba(245,158,11,0.4); background: linear-gradient(135deg, rgba(245,158,11,0.08) 0%, rgba(217,119,6,0.05) 100%); }
+    .nav-btn.commodities-btn .nav-btn-status { color: #fbbf24; }
     @media (max-width: 1199px) { .nav-sidebar { display: none; } .page-with-sidebar { display: block; } }
 
     /* ── SECTION CARDS ── */
     .section-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: var(--card-glow); transition: background 0.3s, border-color 0.3s, box-shadow 0.3s; }
     .section-card:hover { box-shadow: var(--card-hover-glow); }
-    .section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
+    .section-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #38bdf8; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--card-border); }
 
     /* ── THEATRE BANNER ── */
     .theatre-banner { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px 28px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: var(--card-glow); }
-    .theatre-score-big { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; line-height: 1; color: #ef4444; }
+    .theatre-score-big { font-size: clamp(3rem, 8vw, 5rem); font-weight: 900; line-height: 1; color: #38bdf8; }
     .theatre-score-label { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); margin-top: 4px; }
     .theatre-badge { display: inline-block; padding: 5px 16px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: white; margin-top: 8px; }
     .theatre-right { text-align: right; }
@@ -136,23 +155,94 @@
     .theatre-level-desc { font-size: 0.7rem; color: var(--text-muted); }
     .theatre-scan-info { font-size: 0.6rem; color: var(--text-muted); font-style: italic; margin-top: 4px; }
 
+    /* ── REGIME SIGNALS CARD (v2.0.0 — China regime architecture) ── */
+    .regime-signal-card {
+        border-radius: 12px; padding: 22px; margin-bottom: 18px;
+        border: 2px solid rgba(56,189,248,0.35);
+        background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.03) 100%);
+    }
+    .regime-signal-header {
+        display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px;
+        flex-wrap: wrap;
+    }
+    .regime-signal-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .regime-signal-titles { flex: 1; min-width: 200px; }
+    .regime-signal-eyebrow { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .regime-signal-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; color: var(--text-primary); margin-top: 2px; font-family: 'Times New Roman', serif; }
+    .regime-signal-meta {
+        display: flex; gap: 12px; flex-wrap: wrap; margin-left: auto;
+    }
+    .regime-signal-stat {
+        text-align: center; padding: 6px 12px; border-radius: 6px;
+        background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
+        min-width: 70px;
+    }
+    .regime-signal-stat-label { font-size: 0.55rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .regime-signal-stat-value { font-size: 1.2rem; font-weight: 800; color: #38bdf8; margin-top: 1px; }
+    .regime-signal-framing {
+        font-size: 0.85rem; line-height: 1.65; color: var(--text-primary);
+        padding: 12px 16px; margin-bottom: 14px;
+        background: rgba(56,189,248,0.05); border-left: 3px solid #38bdf8;
+        border-radius: 0 6px 6px 0; font-family: 'Times New Roman', serif;
+    }
+    .regime-dimensions-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px; margin-bottom: 14px;
+    }
+    .regime-dimension {
+        padding: 10px 12px; border-radius: 8px;
+        background: var(--article-bg); border: 1px solid var(--card-border);
+        transition: all 0.2s;
+    }
+    .regime-dimension.active {
+        border-color: #38bdf8;
+        box-shadow: 0 0 12px rgba(56,189,248,0.18);
+        background: rgba(56,189,248,0.06);
+    }
+    .regime-dimension-header {
+        display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    }
+    .regime-dimension-icon { font-size: 1rem; }
+    .regime-dimension-name {
+        flex: 1; font-size: 0.72rem; font-weight: 700;
+        color: var(--text-primary); letter-spacing: 0.3px;
+    }
+    .regime-dimension-level {
+        font-size: 0.65rem; font-weight: 800; padding: 2px 7px;
+        border-radius: 4px; font-family: 'Courier New', monospace;
+        color: white;
+    }
+    .regime-dimension-level.lvl-0 { background: #6b7280; }
+    .regime-dimension-level.lvl-1 { background: #3b82f6; }
+    .regime-dimension-level.lvl-2 { background: #f59e0b; }
+    .regime-dimension-level.lvl-3 { background: #f97316; }
+    .regime-dimension-level.lvl-4 { background: #ef4444; }
+    .regime-dimension-level.lvl-5 { background: #dc2626; }
+    .regime-dimension-desc { font-size: 0.68rem; color: var(--text-muted); line-height: 1.4; font-family: 'Times New Roman', serif; }
+    .regime-signal-caveat {
+        font-size: 0.65rem; line-height: 1.55; color: var(--text-muted);
+        font-style: italic; padding-top: 12px; margin-top: 6px;
+        border-top: 1px solid rgba(56,189,248,0.15);
+        font-family: 'Courier New', monospace;
+    }
+
     /* ── DUAL DASHBOARD ── */
     .dual-dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
     @media (max-width: 700px) { .dual-dashboard { grid-template-columns: 1fr; } }
-    .dashboard-card { border-radius: 12px; padding: 20px; border: 2px solid; }
-    .dashboard-card.outbound { background: linear-gradient(135deg, rgba(220,38,38,0.06), rgba(185,28,28,0.03)); border-color: rgba(220,38,38,0.4); }
-    [data-theme="dark"] .dashboard-card.outbound { background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(127,29,29,0.05)); }
-    .dashboard-card.inbound { background: linear-gradient(135deg, rgba(29,78,216,0.06), rgba(30,64,175,0.03)); border-color: rgba(59,130,246,0.4); }
-    [data-theme="dark"] .dashboard-card.inbound { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(29,78,216,0.05)); }
+    .dashboard-card { border-radius: 12px; padding: 20px; border: 2px solid; background: var(--container-bg); }
+    .dashboard-card.outbound { border-color: rgba(239,68,68,0.4); border-top-width: 4px; border-top-color: var(--outbound-color); }
+    [data-theme="dark"] .dashboard-card.outbound { background: linear-gradient(135deg, rgba(239,68,68,0.05), var(--container-bg)); }
+    .dashboard-card.inbound { border-color: rgba(56,189,248,0.4); border-top-width: 4px; border-top-color: var(--inbound-color); }
+    [data-theme="dark"] .dashboard-card.inbound { background: linear-gradient(135deg, rgba(56,189,248,0.05), var(--container-bg)); }
     .dashboard-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid; }
-    .dashboard-card.outbound .dashboard-title { color: #ef4444; border-color: rgba(220,38,38,0.2); }
-    .dashboard-card.inbound .dashboard-title { color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+    .dashboard-card.outbound .dashboard-title { color: var(--outbound-color); border-color: rgba(239,68,68,0.2); }
+    .dashboard-card.inbound .dashboard-title { color: var(--inbound-color); border-color: rgba(56,189,248,0.2); }
     .dashboard-q { font-size: 0.65rem; color: var(--text-muted); font-style: italic; margin-bottom: 14px; }
     .dashboard-score { font-size: 2.2rem; font-weight: 900; line-height: 1; }
-    .dashboard-card.outbound .dashboard-score { color: #ef4444; }
-    .dashboard-card.inbound .dashboard-score { color: #60a5fa; }
+    .dashboard-card.outbound .dashboard-score { color: var(--outbound-color); }
+    .dashboard-card.inbound .dashboard-score { color: var(--inbound-color); }
     .dashboard-label { font-size: 0.6rem; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); margin-top: 3px; }
-    .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.7rem; }
+    .dashboard-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--card-border); font-size: 0.7rem; }
     .dashboard-row:last-child { border-bottom: none; }
     .dashboard-row-label { color: var(--text-muted); }
     .dashboard-row-level { font-weight: 700; font-size: 0.75rem; }
@@ -160,7 +250,7 @@
     /* ── ESCALATION LADDER ── */
     .ladder-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 16px 0; }
     .ladder-step { flex: 1; min-width: 80px; background: var(--article-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 10px 8px; text-align: center; transition: all 0.2s; }
-    .ladder-step.active { background: rgba(220,38,38,0.08); }
+    .ladder-step.active { background: rgba(56,189,248,0.08); border-color: #38bdf8; box-shadow: 0 0 16px rgba(56,189,248,0.25); }
     .ladder-step-num { font-size: 1.4rem; font-weight: 900; }
     .ladder-step-label { font-size: 0.55rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-top: 4px; }
 
@@ -168,8 +258,8 @@
     .actors-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
     .actor-card { background: var(--article-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 14px; transition: all 0.2s; }
     .actor-card:hover { box-shadow: var(--card-hover-glow); }
-    .actor-card.outbound-actor { border-left: 3px solid #ef4444; }
-    .actor-card.inbound-actor { border-left: 3px solid #60a5fa; }
+    .actor-card.outbound-actor { border-left: 3px solid var(--outbound-color); }
+    .actor-card.inbound-actor { border-left: 3px solid var(--inbound-color); }
     .actor-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
     .actor-flag { font-size: 1.3rem; flex-shrink: 0; }
     .actor-name { font-size: 0.75rem; font-weight: 700; color: var(--text-primary); }
@@ -177,19 +267,19 @@
     .actor-level-badge { padding: 3px 10px; border-radius: 5px; font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: white; white-space: nowrap; }
     .actor-stats { font-size: 0.65rem; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 6px; }
     .direction-tag { font-size: 0.55rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-top: 6px; }
-    .direction-tag.outbound { background: rgba(220,38,38,0.12); color: #ef4444; }
-    .direction-tag.inbound { background: rgba(59,130,246,0.12); color: #60a5fa; }
+    .direction-tag.outbound { background: rgba(239,68,68,0.12); color: var(--outbound-color); }
+    .direction-tag.inbound { background: rgba(56,189,248,0.12); color: var(--inbound-color); }
     .matched-triggers { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px; }
-    .trigger-pill { font-size: 0.55rem; background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2); border-radius: 4px; padding: 2px 6px; color: var(--text-muted); }
-    .trigger-pill.tripwire { background: rgba(220,38,38,0.2); border-color: rgba(220,38,38,0.5); color: #ef4444; font-weight: 700; }
+    .trigger-pill { font-size: 0.55rem; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); border-radius: 4px; padding: 2px 6px; color: var(--text-muted); }
+    .trigger-pill.tripwire { background: rgba(239,68,68,0.2); border-color: rgba(239,68,68,0.5); color: var(--outbound-color); font-weight: 700; }
 
     /* ── HISTORY CHART ── */
     .history-chart-card { background: var(--container-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 22px; margin-bottom: 18px; box-shadow: var(--card-glow); }
     .history-chart-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
-    .history-chart-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; }
+    .history-chart-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #38bdf8; }
     .history-toggle-group { display: flex; gap: 4px; background: rgba(0,0,0,0.2); border-radius: 6px; padding: 3px; }
     .history-toggle-btn { font-family: 'Times New Roman', Times, serif; font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 4px; border: 1px solid transparent; cursor: pointer; text-transform: uppercase; background: transparent; color: var(--text-muted); transition: all 0.2s; }
-    .history-toggle-btn.active { background: #dc2626; color: #fff; border-color: #dc2626; }
+    .history-toggle-btn.active { background: #0ea5e9; color: #fff; border-color: #0ea5e9; }
     .history-toggle-btn.compare.active { background: #7c3aed; border-color: #7c3aed; color: #fff; }
     .history-chart-wrap { position: relative; height: 180px; }
     .history-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.75rem; letter-spacing: 1px; }
@@ -201,38 +291,26 @@
     .article-item { padding: 8px 0; border-bottom: 1px solid var(--card-border); }
     .article-item:last-child { border-bottom: none; }
     .article-link { color: var(--text-primary); text-decoration: none; font-size: 0.75rem; line-height: 1.4; font-weight: 600; }
-    .article-link:hover { color: #ef4444; }
+    .article-link:hover { color: var(--accent); }
     .article-meta { font-size: 0.6rem; color: var(--text-muted); margin-top: 3px; }
-    .article-trigger { font-size: 0.55rem; background: rgba(239,68,68,0.1); border-radius: 3px; padding: 1px 5px; color: #ef4444; margin-left: 6px; }
+    .article-trigger { font-size: 0.55rem; background: rgba(56,189,248,0.1); border-radius: 3px; padding: 1px 5px; color: var(--accent); margin-left: 6px; }
 
     /* ── SCAN BUTTON ── */
     .scan-btn {
         display: inline-flex; align-items: center; gap: 8px;
         padding: 8px 20px; border-radius: 8px;
-        background: linear-gradient(135deg, #dc2626, #b91c1c);
-        border: 1px solid rgba(220,38,38,0.6); color: white;
+        background: rgba(56,189,248,0.08);
+        border: 1px solid rgba(56,189,248,0.4); color: #38bdf8;
         font-family: 'Times New Roman', Times, serif;
         font-size: 0.7rem; font-weight: 700; letter-spacing: 1px;
         text-transform: uppercase; cursor: pointer; transition: all 0.2s;
     }
-    .scan-btn:hover { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 0 16px rgba(220,38,38,0.4); }
+    .scan-btn:hover { background: rgba(56,189,248,0.15); border-color: #38bdf8; box-shadow: 0 0 16px rgba(56,189,248,0.25); }
     .scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .scan-btn .spin { display: inline-block; animation: spin 1s linear infinite; }
 
-    /* ── FINGERPRINT BADGE (Taiwan cross-theater read) ── */
-    .fingerprint-badge {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 4px 12px; border-radius: 6px;
-        background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3);
-        font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; color: #60a5fa;
-        text-transform: uppercase;
-    }
-
-    /* ── PAGE FOOTER ── */
-    .page-footer { text-align: center; padding: 20px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 0.5px; margin-top: 10px; }
-
-    /* ── INTERPRETATION CARDS (So What / Red Lines) — v1.1.0 ── */
+    /* ── INTERPRETATION CARDS (So What / Red Lines) ── */
     .interp-so-what {
         border-radius: 12px; padding: 22px; margin-bottom: 16px;
         border: 2px solid rgba(56,189,248,0.3);
@@ -258,7 +336,7 @@
 
     /* ── RED LINES CARD ── */
     .red-lines-card { border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; border: 1px solid rgba(30,58,95,0.4); background: linear-gradient(135deg, #0a1525 0%, #0d1b2e 100%); }
-    [data-theme="light"] .red-lines-card { background: linear-gradient(135deg, #f8fafc, #e2e8f0); border-color: rgba(100,116,139,0.3); }
+    [data-theme="light"] .red-lines-card { background: linear-gradient(135deg, #f0f6fc, #e8f4ff); border-color: rgba(56,189,248,0.2); }
     .interp-card-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
     .interp-card-title { font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px; color: #38bdf8; text-transform: uppercase; }
     .interp-card-subtitle { font-size: 0.6rem; color: var(--text-muted); margin-top: 2px; font-family: 'Courier New', monospace; letter-spacing: 1px; }
@@ -272,6 +350,48 @@
     .red-line-status-badge.approaching { background: #f97316; }
     .red-line-trigger { font-size: 0.68rem; color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
     .red-line-source { font-size: 0.6rem; color: var(--text-muted); margin-top: 4px; font-style: italic; line-height: 1.4; }
+
+    /* ── FOOTER (v2.0.0 — class-based, Japan canonical pattern) ── */
+    footer {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 22px 28px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+    footer h4 { color: var(--text-primary); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    footer .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 16px; }
+    @media (max-width: 768px) { footer .footer-grid { grid-template-columns: 1fr; } }
+    footer .footer-disclaimer {
+        padding: 12px 14px;
+        background: var(--article-bg); border-left: 3px solid #f59e0b;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        margin-bottom: 14px;
+    }
+    footer .footer-support {
+        text-align: center; padding: 10px;
+        font-size: 0.85rem;
+    }
+    footer .footer-support a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    footer .footer-copyright {
+        text-align: center; font-size: 0.7rem; color: var(--text-muted);
+        margin-top: 14px; padding-top: 14px;
+        border-top: 1px solid var(--card-border);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+        header { flex-direction: column; align-items: center; text-align: center; }
+        .header-right { align-items: center; }
+        .theatre-banner { flex-direction: column; text-align: center; }
+        .theatre-right { text-align: center; }
+        .regime-signal-meta { margin-left: 0; }
+    }
 </style>
 </head>
 <body>
@@ -279,22 +399,15 @@
 
 <!-- HEADER -->
 <header>
-    <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
     <div class="header-left">
-        <a href="https://www.asifahanalytics.com/china-stability.html" class="back-link" data-i18n="backLink">← Back to China Stability</a>
-        <div class="theme-row">
-            <span class="theme-label" data-i18n="themeLabel">THEME</span>
-            <label class="theme-toggle">
-                <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
-                <span class="theme-toggle-slider"></span>
-            </label>
-        </div>
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" class="header-logo" alt="Asifah Analytics"/>
+        <a href="china-stability.html" class="back-link" data-i18n="backLink">← Back to China Stability</a>
     </div>
     <div class="header-center">
         <div class="header-flag">🇨🇳 <span data-i18n="pageFlag">CHINA</span></div>
         <div class="header-title" data-i18n="pageTitle">CHINA COERCION TRACKER</div>
         <div class="header-subtitle" data-i18n="pageSubtitle">Xi / CMC · PLA Posture · MFA Signals · TAO · US / Japan / Taiwan Coalition</div>
-        <div class="header-timestamp">Last updated: <span id="lastUpdated">--</span></div>
+        <div class="header-timestamp"><span data-i18n="lastUpdatedLabel">Last updated</span>: <span id="lastUpdated">--</span></div>
     </div>
     <div class="header-right">
         <div class="lang-group">
@@ -302,6 +415,13 @@
             <button class="lang-btn" onclick="setLanguage('zh')">中文</button>
             <button class="lang-btn" onclick="setLanguage('ja')">日本語</button>
             <button class="lang-btn" onclick="setLanguage('ko')">한국어</button>
+        </div>
+        <div class="theme-row">
+            <span class="theme-label" data-i18n="themeLabel">THEME</span>
+            <label class="theme-toggle">
+                <input type="checkbox" id="themeToggle" onchange="toggleTheme()"/>
+                <span class="theme-toggle-slider"></span>
+            </label>
         </div>
         <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
             <span id="scanBtnIcon">🔄</span>
@@ -313,7 +433,7 @@
 <!-- PAGE WITH SIDEBAR -->
 <div class="page-with-sidebar">
 
-<!-- LEFT NAV SIDEBAR -->
+<!-- LEFT NAV SIDEBAR (canonical) -->
 <nav class="nav-sidebar">
     <div class="nav-sidebar-label">Dashboards</div>
     <div class="nav-btn inactive-nav">
@@ -332,26 +452,53 @@
         <span class="nav-btn-label">🕌 Middle East</span>
         <span class="nav-btn-status">● Live</span>
     </a>
-    <div class="nav-btn inactive-nav">
+    <a href="wha.html" class="nav-btn active-nav">
         <span class="nav-btn-label">🌎 W. Hemisphere</span>
-        <span class="nav-btn-status">🔒 In Dev</span>
-    </div>
+        <span class="nav-btn-status">● Live</span>
+    </a>
     <div class="nav-divider"></div>
     <a href="military.html" class="nav-btn military-btn">
         <span class="nav-btn-label">🎖️ Military Tracker</span>
         <span class="nav-btn-status">● Live</span>
     </a>
-    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn current-page">
-        <span class="nav-btn-label">📡 Asia Rhetoric</span>
-        <span class="nav-btn-status">◉ You are here</span>
+    <a href="gpi.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🌐 Global Pressure</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="commodities.html" class="nav-btn commodities-btn">
+        <span class="nav-btn-label">🛢️ Commodities</span>
+        <span class="nav-btn-status">● Live</span>
     </a>
     <div class="nav-divider"></div>
-    <a href="rhetoric-china.html" class="nav-btn active-nav" style="border-color:rgba(220,38,38,0.5);">
-        <span class="nav-btn-label">🇨🇳 China</span>
-        <span class="nav-btn-status">◉ This page</span>
+    <div class="nav-sidebar-label">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
     </a>
-    <a href="rhetoric-taiwan.html" class="nav-btn active-nav">
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label">Asia Trackers</div>
+    <a href="rhetoric-china.html" class="nav-btn rhetoric-btn current-page">
+        <span class="nav-btn-label">🇨🇳 China</span>
+        <span class="nav-btn-status">◉ You are here</span>
+    </a>
+    <a href="rhetoric-taiwan.html" class="nav-btn rhetoric-btn">
         <span class="nav-btn-label">🇹🇼 Taiwan</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-japan.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇯🇵 Japan</span>
         <span class="nav-btn-status">● Live</span>
     </a>
 </nav>
@@ -374,12 +521,45 @@
     </div>
 </div>
 
-<!-- SO WHAT CARD (v1.1.0 — backend-synthesized via china_signal_interpreter) -->
+<!-- ════════════════════════════════════════════════════════════
+     REGIME SIGNALS CARD (v2.0.0 — between theatre banner and So What)
+     Hidden by default. Shows when regime_signals.active_count >= 1.
+     ════════════════════════════════════════════════════════════ -->
+<div class="regime-signal-card" id="regimeSignalCard" style="display:none;">
+    <div class="regime-signal-header">
+        <span class="regime-signal-icon">🌐</span>
+        <div class="regime-signal-titles">
+            <div class="regime-signal-eyebrow" data-i18n="regimeEyebrow">REGIME-LEVEL SIGNALS</div>
+            <div class="regime-signal-title" data-i18n="regimeTitle">China as Architect of the Alternative System</div>
+        </div>
+        <div class="regime-signal-meta">
+            <div class="regime-signal-stat">
+                <div class="regime-signal-stat-label" data-i18n="regimeActive">Active</div>
+                <div class="regime-signal-stat-value" id="regimeActiveCount">0</div>
+            </div>
+            <div class="regime-signal-stat">
+                <div class="regime-signal-stat-label" data-i18n="regimeMaxLevel">Max Level</div>
+                <div class="regime-signal-stat-value" id="regimeMaxLevel">L0</div>
+            </div>
+        </div>
+    </div>
+    <div class="regime-signal-framing" data-i18n="regimeFraming">
+        China is the architect of the alternative international system. Where Iran is the densest evasion node and Russia is the engine, China is the plumbing — CIPS, BRICS expansion, MFA dedollarization rhetoric, and yuan settlement infrastructure underwrite the broader regime-fragmentation cluster. Where others operate within the system to evade it, China is constructing the parallel system itself.
+    </div>
+    <div class="regime-dimensions-grid" id="regimeDimensionsGrid">
+        <!-- Dimensions injected by renderRegimeSignals(data) -->
+    </div>
+    <div class="regime-signal-caveat" data-i18n="regimeCaveat">
+        Asifah measures these signals based on available open-source material across multiple languages and source types. Their interpretation as evidence of structural change in the international system should be weighed appropriately — these are measurements, not assertions.
+    </div>
+</div>
+
+<!-- SO WHAT CARD (backend-synthesized via china_signal_interpreter) -->
 <div class="interp-so-what" id="soWhatCard" style="display:none;">
     <div class="interp-scenario-header">
         <span class="interp-scenario-icon" id="soWhatIcon">⚪</span>
         <div>
-            <div class="interp-scenario-label">CHINA STRATEGIC ASSESSMENT</div>
+            <div class="interp-scenario-label" data-i18n="strategicAssessmentLabel">CHINA STRATEGIC ASSESSMENT</div>
             <div class="interp-scenario-value" id="soWhatScenario">--</div>
         </div>
     </div>
@@ -387,29 +567,29 @@
     <!-- Four-vector readout -->
     <div class="vector-readout" id="soWhatVectors">
         <div class="vector-stat">
-            <div class="vector-stat-label">Kinetic</div>
+            <div class="vector-stat-label" data-i18n="vecKineticLabel">Kinetic</div>
             <div class="vector-stat-value" id="vecKinetic" style="color:#ef4444;">--</div>
         </div>
         <div class="vector-stat">
-            <div class="vector-stat-label">Economic</div>
+            <div class="vector-stat-label" data-i18n="vecEconomicLabel">Economic</div>
             <div class="vector-stat-value" id="vecEconomic" style="color:#f97316;">--</div>
         </div>
         <div class="vector-stat">
-            <div class="vector-stat-label">Coalition Pushback</div>
+            <div class="vector-stat-label" data-i18n="vecCoalitionLabel">Coalition Pushback</div>
             <div class="vector-stat-value" id="vecCoalition" style="color:#38bdf8;">--</div>
         </div>
         <div class="vector-stat">
-            <div class="vector-stat-label">Domestic Fracture</div>
+            <div class="vector-stat-label" data-i18n="vecDomesticLabel">Domestic Fracture</div>
             <div class="vector-stat-value" id="vecDomestic" style="color:#7c3aed;">--</div>
         </div>
     </div>
 
-    <div class="interp-section-title">SITUATION</div>
+    <div class="interp-section-title" data-i18n="situationLabel">SITUATION</div>
     <div class="interp-text" id="soWhatSituation"></div>
     <div id="soWhatIndicators"></div>
-    <div class="interp-section-title" style="margin-top:14px;">ASSESSMENT</div>
+    <div class="interp-section-title" style="margin-top:14px;" data-i18n="assessmentLabel">ASSESSMENT</div>
     <div class="interp-text" id="soWhatAssessment"></div>
-    <div class="interp-section-title" style="margin-top:14px;">WATCH FOR</div>
+    <div class="interp-section-title" style="margin-top:14px;" data-i18n="watchForLabel">WATCH FOR</div>
     <div id="soWhatWatchList"></div>
     <div class="interp-confidence-note" id="soWhatNote"></div>
 </div>
@@ -419,17 +599,17 @@
     <div class="interp-card-header">
         <span style="font-size:1rem;">🚨</span>
         <div style="flex:1;">
-            <div class="interp-card-title">RED LINE PROXIMITY</div>
-            <div class="interp-card-subtitle">China Escalation Triggers — Cross-Strait · Economic · Decoupling · Domestic · Alliance</div>
+            <div class="interp-card-title" data-i18n="redLinesTitle">RED LINE PROXIMITY</div>
+            <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">China Escalation Triggers — Cross-Strait · Economic · Decoupling · Domestic · Alliance</div>
         </div>
         <div style="display:flex;gap:16px;">
             <div style="text-align:right;">
                 <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
-                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;">BREACHED</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="breachedLabel">BREACHED</div>
             </div>
             <div style="text-align:right;">
                 <div style="font-size:1.4rem;font-weight:900;color:#f97316;" id="redLineApproachingCount">0</div>
-                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;">APPROACHING</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);font-family:'Courier New',monospace;" data-i18n="approachingLabel">APPROACHING</div>
             </div>
         </div>
     </div>
@@ -476,9 +656,9 @@
     <div class="history-chart-header">
         <div class="history-chart-title" data-i18n="trendTitle">📈 COERCION TREND</div>
         <div class="history-toggle-group">
-            <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')">7D</button>
-            <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')">30D</button>
-            <button class="history-toggle-btn compare" id="btnCompare" onclick="setHistoryView('compare')">COMPARE</button>
+            <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')" data-i18n="btn7day">7D</button>
+            <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')" data-i18n="btn30day">30D</button>
+            <button class="history-toggle-btn compare" id="btnCompare" onclick="setHistoryView('compare')" data-i18n="btnCompare">COMPARE</button>
         </div>
     </div>
     <div class="history-chart-wrap">
@@ -500,14 +680,40 @@
     <div id="articlesList"></div>
 </div>
 
-<!-- FOOTER -->
-<div class="page-footer">
-    © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v1.0.0-china |
-    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);text-decoration:none;">☕ buy me a coffee</a>
-</div>
-
 </div><!-- end main content -->
 </div><!-- end page-with-sidebar -->
+
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER (v2.0.0 — class-based, Japan canonical pattern)
+     ════════════════════════════════════════════════════════════ -->
+<footer>
+    <div class="footer-grid">
+        <div>
+            <h4 data-i18n="footerMethodology">Methodology</h4>
+            <p data-i18n="footerMethodologyBody">Source-weighted OSINT aggregation with time-decay scoring. Dual-dashboard model: 5 outbound coercion actors (Xi/CMC, PLA Operational, MFA/Global Times, Taiwan Affairs Office, Economic Coercion) + 3 inbound coalition actors (Taiwan Defense, US Commitment, Japan/Regional). Plus regime-level signals (Yuan Internationalization · MFA Dedollarization · BRICS Architect · Sanctions Facilitator · Oil-Yuan Settlement). 12-hour background refresh, cross-theater fingerprint reads from Iran, Russia, and Taiwan trackers.</p>
+        </div>
+        <div>
+            <h4 data-i18n="footerSources">Data Sources</h4>
+            <p data-i18n="footerSourcesBody">RSS (Global Times, Xinhua, China Daily, SCMP, Nikkei Asia, The Diplomat), GDELT (English + Mandarin queries), NewsAPI, Brave Search (tertiary fallback), Bluesky aggregator (POTUS/State/INDOPACOM mirrors), Reddit OSINT aggregators. Open-source signals only — no classified data.</p>
+        </div>
+        <div>
+            <h4 data-i18n="footerContact">Contact</h4>
+            <p>Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a></p>
+        </div>
+    </div>
+    <div class="footer-disclaimer">
+        <strong style="color:#f59e0b;">⚠️ <span data-i18n="footerDisclaimerLabel">DISCLAIMER:</span></strong> <span data-i18n="footerDisclaimerBody">This dashboard provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Posture indicators reflect media signal intensity and should not be interpreted as ground-truth predictions of operational deployments. Always consult authoritative sources for decision-making.</span>
+    </div>
+    <div class="footer-support">
+        <span data-i18n="footerSupportText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" data-i18n="footerSupportLink">buy me a coffee</a>
+    </div>
+    <div class="footer-copyright">
+        © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v2.0.0<br>
+        <span data-i18n="footerCopyrightLine2">Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.</span><br>
+        <a href="index.html" style="color:var(--accent);" data-i18n="footerBackToMain">← Back to Main Dashboard</a>
+    </div>
+</footer>
+
 </div><!-- end container -->
 
 <script>
@@ -526,22 +732,70 @@
     const INBOUND_ACTORS  = ['taiwan_defense','us_commitment','japan_regional'];
     const ACTOR_ORDER     = [...OUTBOUND_ACTORS, ...INBOUND_ACTORS];
 
-    // ── TRANSLATIONS ──
+    // ── REGIME DIMENSIONS (China-specific, 5 dimensions, mirrors backend) ──
+    const REGIME_DIMENSIONS_CHINA = [
+        { key: 'yuan_internationalization', icon: '💴', i18nName: 'regimeDimYuanIntl',          i18nDesc: 'regimeDimYuanIntlDesc' },
+        { key: 'mfa_dedollarization',       icon: '🌐', i18nName: 'regimeDimMfaDedollar',       i18nDesc: 'regimeDimMfaDedollarDesc' },
+        { key: 'brics_architect',           icon: '🏛️', i18nName: 'regimeDimBricsArchitect',    i18nDesc: 'regimeDimBricsArchitectDesc' },
+        { key: 'sanctions_facilitator',     icon: '🤝', i18nName: 'regimeDimSanctionsFac',      i18nDesc: 'regimeDimSanctionsFacDesc' },
+        { key: 'oil_yuan_settlement',       icon: '⛽', i18nName: 'regimeDimOilYuan',           i18nDesc: 'regimeDimOilYuanDesc' },
+    ];
+
+    // ════════════════════════════════════════════════════════════════
+    // TRANSLATIONS (EN / ZH / JA / KO) — full static text coverage v2.0.0
+    // ════════════════════════════════════════════════════════════════
     const T = {
         en: {
             backLink:'← Back to China Stability', pageFlag:'CHINA',
             pageTitle:'CHINA COERCION TRACKER',
             pageSubtitle:'Xi / CMC · PLA Posture · MFA Signals · TAO · US / Japan / Taiwan Coalition',
+            lastUpdatedLabel:'Last updated',
             loading:'Loading...', scoreLabel:'OUTBOUND SCORE / 100',
             escalationLabel:'COERCION ESCALATION LEVEL',
+            // Regime card
+            regimeEyebrow:'REGIME-LEVEL SIGNALS',
+            regimeTitle:'China as Architect of the Alternative System',
+            regimeActive:'Active',
+            regimeMaxLevel:'Max Level',
+            regimeFraming:'China is the architect of the alternative international system. Where Iran is the densest evasion node and Russia is the engine, China is the plumbing — CIPS, BRICS expansion, MFA dedollarization rhetoric, and yuan settlement infrastructure underwrite the broader regime-fragmentation cluster. Where others operate within the system to evade it, China is constructing the parallel system itself.',
+            regimeCaveat:'Asifah measures these signals based on available open-source material across multiple languages and source types. Their interpretation as evidence of structural change in the international system should be weighed appropriately — these are measurements, not assertions.',
+            regimeDimYuanIntl:'Yuan Internationalization',
+            regimeDimYuanIntlDesc:'Yuan as international reserve currency, CIPS expansion, currency swap agreements with non-Western central banks.',
+            regimeDimMfaDedollar:'MFA Dedollarization',
+            regimeDimMfaDedollarDesc:'PRC Foreign Ministry rhetoric framing dollar dominance as illegitimate; explicit calls for monetary system change.',
+            regimeDimBricsArchitect:'BRICS Architect',
+            regimeDimBricsArchitectDesc:'BRICS+ expansion advocacy, New Development Bank financing, alternative settlement infrastructure leadership.',
+            regimeDimSanctionsFac:'Sanctions Facilitator',
+            regimeDimSanctionsFacDesc:'Settlement layer beneath sanctioned actor evasion — Iranian oil, Russian gas, DPRK trade routed through PRC institutions.',
+            regimeDimOilYuan:'Oil-Yuan Settlement',
+            regimeDimOilYuanDesc:'Crude oil paid in yuan via Shanghai Petroleum Exchange; petroyuan rhetoric as direct dollar challenge.',
+            // So What card
+            strategicAssessmentLabel:'CHINA STRATEGIC ASSESSMENT',
+            vecKineticLabel:'Kinetic',
+            vecEconomicLabel:'Economic',
+            vecCoalitionLabel:'Coalition Pushback',
+            vecDomesticLabel:'Domestic Fracture',
+            situationLabel:'SITUATION',
+            assessmentLabel:'ASSESSMENT',
+            watchForLabel:'WATCH FOR',
+            // Red Lines
+            redLinesTitle:'RED LINE PROXIMITY',
+            redLinesSubtitle:'China Escalation Triggers — Cross-Strait · Economic · Decoupling · Domestic · Alliance',
+            breachedLabel:'BREACHED',
+            approachingLabel:'APPROACHING',
+            // Dashboards
             outboundTitle:'OUTBOUND — CHINA COERCION',
             outboundScoreLabel:'OUTBOUND SCORE / 100',
             outboundQ:'Q: Is China moving toward coercive action against Taiwan?',
             inboundTitle:'INBOUND — COALITION RESPONSE',
             inboundScoreLabel:'INBOUND SCORE / 100',
             inboundQ:'Q: What is the US/Japan/Taiwan coalition signaling back?',
+            // Other
             ladderTitle:'🪜 ESCALATION LADDER',
             trendTitle:'📈 COERCION TREND',
+            btn7day:'7D',
+            btn30day:'30D',
+            btnCompare:'COMPARE',
             chartEmpty:'Collecting data — first snapshot saves on next scan cycle',
             actorTitle:'🎯 ACTOR STATUS',
             articlesTitle:'📰 TOP ARTICLES BY ACTOR',
@@ -549,21 +803,65 @@
             themeLabel:'THEME',
             articles:'articles', maxLevel:'Max Level',
             outboundTag:'🇨🇳 Outbound', inboundTag:'🛡️ Inbound',
+            // Footer
+            footerMethodology:'Methodology',
+            footerMethodologyBody:'Source-weighted OSINT aggregation with time-decay scoring. Dual-dashboard model: 5 outbound coercion actors (Xi/CMC, PLA Operational, MFA/Global Times, Taiwan Affairs Office, Economic Coercion) + 3 inbound coalition actors (Taiwan Defense, US Commitment, Japan/Regional). Plus regime-level signals (Yuan Internationalization · MFA Dedollarization · BRICS Architect · Sanctions Facilitator · Oil-Yuan Settlement). 12-hour background refresh, cross-theater fingerprint reads from Iran, Russia, and Taiwan trackers.',
+            footerSources:'Data Sources',
+            footerSourcesBody:'RSS (Global Times, Xinhua, China Daily, SCMP, Nikkei Asia, The Diplomat), GDELT (English + Mandarin queries), NewsAPI, Brave Search (tertiary fallback), Bluesky aggregator (POTUS/State/INDOPACOM mirrors), Reddit OSINT aggregators. Open-source signals only — no classified data.',
+            footerContact:'Contact',
+            footerDisclaimerLabel:'DISCLAIMER:',
+            footerDisclaimerBody:'This dashboard provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Posture indicators reflect media signal intensity and should not be interpreted as ground-truth predictions of operational deployments. Always consult authoritative sources for decision-making.',
+            footerSupportText:'If you find Asifah Analytics useful and want to support ongoing development, you can',
+            footerSupportLink:'buy me a coffee',
+            footerCopyrightLine2:'Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.',
+            footerBackToMain:'← Back to Main Dashboard',
         },
         zh: {
             backLink:'← 返回中国稳定页', pageFlag:'中国',
             pageTitle:'中国胁迫追踪器',
             pageSubtitle:'习近平/中央军委 · 解放军态势 · 外交部信号 · 国台办 · 美日台联盟',
+            lastUpdatedLabel:'最后更新',
             loading:'加载中...', scoreLabel:'对外评分 / 100',
             escalationLabel:'胁迫升级级别',
+            regimeEyebrow:'体制层面信号',
+            regimeTitle:'中国作为替代体系的设计者',
+            regimeActive:'活跃',
+            regimeMaxLevel:'最高级别',
+            regimeFraming:'中国是替代国际体系的设计者。如果说伊朗是最密集的规避节点,俄罗斯是引擎,那么中国就是管道——CIPS(跨境支付系统)、金砖国家扩张、外交部去美元化言论以及人民币结算基础设施支撑着更广泛的体制碎片化集群。其他国家在体系内运作以规避它,而中国正在构建平行体系本身。',
+            regimeCaveat:'Asifah根据多种语言和来源类型的可用开源材料来衡量这些信号。将其解释为国际体系结构性变化的证据时应予以适当权衡——这些是测量,而非断言。',
+            regimeDimYuanIntl:'人民币国际化',
+            regimeDimYuanIntlDesc:'人民币作为国际储备货币、CIPS扩张、与非西方央行的货币互换协议。',
+            regimeDimMfaDedollar:'外交部去美元化',
+            regimeDimMfaDedollarDesc:'中国外交部将美元主导地位定性为非合法的言论;明确呼吁货币体系变革。',
+            regimeDimBricsArchitect:'金砖架构师',
+            regimeDimBricsArchitectDesc:'金砖+扩张倡导、新开发银行融资、替代结算基础设施领导地位。',
+            regimeDimSanctionsFac:'制裁规避促进者',
+            regimeDimSanctionsFacDesc:'被制裁行为者规避制裁的结算层——伊朗石油、俄罗斯天然气、朝鲜贸易通过中国机构路由。',
+            regimeDimOilYuan:'石油-人民币结算',
+            regimeDimOilYuanDesc:'通过上海石油交易所以人民币支付原油;石油人民币言论作为对美元的直接挑战。',
+            strategicAssessmentLabel:'中国战略评估',
+            vecKineticLabel:'动能',
+            vecEconomicLabel:'经济',
+            vecCoalitionLabel:'联盟反弹',
+            vecDomesticLabel:'国内分裂',
+            situationLabel:'局势',
+            assessmentLabel:'评估',
+            watchForLabel:'关注',
+            redLinesTitle:'红线接近度',
+            redLinesSubtitle:'中国升级触发因素——两岸 · 经济 · 脱钩 · 国内 · 联盟',
+            breachedLabel:'已突破',
+            approachingLabel:'接近中',
             outboundTitle:'对外 — 中国胁迫',
             outboundScoreLabel:'对外评分 / 100',
-            outboundQ:'问：中国是否正在对台湾采取胁迫行动？',
+            outboundQ:'问:中国是否正在对台湾采取胁迫行动?',
             inboundTitle:'对内 — 联盟回应',
             inboundScoreLabel:'对内评分 / 100',
-            inboundQ:'问：美日台联盟正在发出什么信号？',
+            inboundQ:'问:美日台联盟正在发出什么信号?',
             ladderTitle:'🪜 升级阶梯',
             trendTitle:'📈 胁迫趋势',
+            btn7day:'7天',
+            btn30day:'30天',
+            btnCompare:'比较',
             chartEmpty:'正在收集数据 — 第一次快照将在下次扫描周期保存',
             actorTitle:'🎯 行为者状态',
             articlesTitle:'📰 按行为者排名的顶级文章',
@@ -571,21 +869,64 @@
             themeLabel:'主题',
             articles:'文章', maxLevel:'最高级别',
             outboundTag:'🇨🇳 对外', inboundTag:'🛡️ 对内',
+            footerMethodology:'方法论',
+            footerMethodologyBody:'按来源加权的开源情报聚合,采用时间衰减评分。双仪表盘模型:5个对外胁迫行为者(习/中央军委、解放军作战层、外交部/环球时报、国台办、经济胁迫)+ 3个对内联盟行为者(台湾防务、美国承诺、日本/区域)。加上体制层面信号(人民币国际化 · 外交部去美元化 · 金砖架构师 · 制裁规避促进者 · 石油-人民币结算)。12小时后台刷新,跨战区指纹读取来自伊朗、俄罗斯和台湾追踪器。',
+            footerSources:'数据来源',
+            footerSourcesBody:'RSS(环球时报、新华社、中国日报、南华早报、日经亚洲、外交学者)、GDELT(英语+普通话查询)、NewsAPI、Brave Search(第三级备选)、Bluesky聚合器(POTUS/国务院/印太司令部镜像)、Reddit OSINT聚合器。仅限开源信号——无机密数据。',
+            footerContact:'联系方式',
+            footerDisclaimerLabel:'免责声明:',
+            footerDisclaimerBody:'本仪表板提供基于开源情报聚合的分析估计。它不构成情报评估、军事建议或政策建议。态势指标反映媒体信号强度,不应解释为对作战部署的实地预测。决策时请始终咨询权威来源。',
+            footerSupportText:'如果您觉得Asifah Analytics有用并希望支持持续开发,可以',
+            footerSupportLink:'请我喝杯咖啡',
+            footerCopyrightLine2:'专有和保密。未经授权的使用、复制或分发被禁止。',
+            footerBackToMain:'← 返回主仪表板',
         },
         ja: {
             backLink:'← 中国安定ページへ戻る', pageFlag:'中国',
             pageTitle:'中国威圧トラッカー',
             pageSubtitle:'習近平/中央軍事委員会 · PLA態勢 · 外務省シグナル · 台湾事務弁公室 · 米日台連合',
+            lastUpdatedLabel:'最終更新',
             loading:'読み込み中...', scoreLabel:'対外スコア / 100',
             escalationLabel:'威圧エスカレーションレベル',
+            regimeEyebrow:'レジームレベルシグナル',
+            regimeTitle:'代替システムの設計者としての中国',
+            regimeActive:'アクティブ',
+            regimeMaxLevel:'最高レベル',
+            regimeFraming:'中国は代替国際システムの設計者である。イランが最も密集した回避ノードであり、ロシアがエンジンであるなら、中国は配管である——CIPS、BRICS拡大、外務省脱ドル化レトリック、人民元決済インフラがより広範なレジーム断片化クラスターを支えている。他者がシステム内で活動して回避する一方、中国は並行システムそのものを構築している。',
+            regimeCaveat:'Asifahは、複数の言語とソース種別にわたる利用可能なオープンソース資料に基づいてこれらのシグナルを測定する。国際システムにおける構造的変化の証拠としての解釈は適切に評価されるべきである——これらは測定であり、主張ではない。',
+            regimeDimYuanIntl:'人民元国際化',
+            regimeDimYuanIntlDesc:'国際準備通貨としての人民元、CIPS拡大、非西側中央銀行との通貨スワップ協定。',
+            regimeDimMfaDedollar:'外務省脱ドル化',
+            regimeDimMfaDedollarDesc:'中国外務省によるドル支配を非合法的とするレトリック;通貨制度変更への明示的な要求。',
+            regimeDimBricsArchitect:'BRICS設計者',
+            regimeDimBricsArchitectDesc:'BRICS+拡大の擁護、新開発銀行融資、代替決済インフラのリーダーシップ。',
+            regimeDimSanctionsFac:'制裁回避ファシリテーター',
+            regimeDimSanctionsFacDesc:'制裁対象者の回避を支える決済層——イラン石油、ロシアガス、北朝鮮貿易が中国機関を経由してルーティング。',
+            regimeDimOilYuan:'石油-人民元決済',
+            regimeDimOilYuanDesc:'上海石油取引所を通じた人民元での原油決済;ペトロ人民元レトリックを直接的なドルへの挑戦として。',
+            strategicAssessmentLabel:'中国戦略評価',
+            vecKineticLabel:'動的',
+            vecEconomicLabel:'経済',
+            vecCoalitionLabel:'連合の反発',
+            vecDomesticLabel:'国内分裂',
+            situationLabel:'状況',
+            assessmentLabel:'評価',
+            watchForLabel:'注視',
+            redLinesTitle:'レッドライン接近度',
+            redLinesSubtitle:'中国エスカレーショントリガー——両岸 · 経済 · デカップリング · 国内 · 同盟',
+            breachedLabel:'突破',
+            approachingLabel:'接近中',
             outboundTitle:'対外 — 中国の威圧',
             outboundScoreLabel:'対外スコア / 100',
-            outboundQ:'Q: 中国は台湾への強制行動に向かっているか？',
+            outboundQ:'Q: 中国は台湾への強制行動に向かっているか?',
             inboundTitle:'対内 — 連合の反応',
             inboundScoreLabel:'対内スコア / 100',
-            inboundQ:'Q: 米日台連合はどのようなシグナルを送っているか？',
+            inboundQ:'Q: 米日台連合はどのようなシグナルを送っているか?',
             ladderTitle:'🪜 エスカレーションラダー',
             trendTitle:'📈 威圧トレンド',
+            btn7day:'7日',
+            btn30day:'30日',
+            btnCompare:'比較',
             chartEmpty:'データ収集中 — 最初のスナップショットは次のスキャンサイクルで保存',
             actorTitle:'🎯 アクターステータス',
             articlesTitle:'📰 アクター別トップ記事',
@@ -593,13 +934,53 @@
             themeLabel:'テーマ',
             articles:'記事', maxLevel:'最高レベル',
             outboundTag:'🇨🇳 対外', inboundTag:'🛡️ 対内',
+            footerMethodology:'方法論',
+            footerMethodologyBody:'時間減衰スコアリングによるソース加重OSINT集約。デュアルダッシュボードモデル:5つの対外威圧アクター(習/中央軍事委員会、PLA作戦級、外務省/環球時報、台湾事務弁公室、経済威圧)+ 3つの対内連合アクター(台湾防衛、米国コミットメント、日本/地域)。加えてレジームレベルシグナル(人民元国際化 · 外務省脱ドル化 · BRICS設計者 · 制裁回避ファシリテーター · 石油-人民元決済)。12時間バックグラウンド更新、イラン・ロシア・台湾トラッカーからの劇場間フィンガープリント読み取り。',
+            footerSources:'データソース',
+            footerSourcesBody:'RSS(環球時報、新華社、チャイナデイリー、SCMP、日経アジア、ザ・ディプロマット)、GDELT(英語+普通話クエリ)、NewsAPI、Brave Search(第三次フォールバック)、Blueskyアグリゲーター(POTUS/国務省/インド太平洋軍ミラー)、Reddit OSINTアグリゲーター。オープンソースシグナルのみ——機密データなし。',
+            footerContact:'お問い合わせ',
+            footerDisclaimerLabel:'免責事項:',
+            footerDisclaimerBody:'このダッシュボードは、オープンソースインテリジェンスの集約に基づく分析推定を提供します。これは情報評価、軍事的助言、または政策提言を構成しません。態勢指標はメディアシグナルの強度を反映しており、作戦展開の地上真実予測として解釈すべきではありません。意思決定には常に権威ある情報源を参照してください。',
+            footerSupportText:'Asifah Analyticsが役立つと感じ、継続的な開発をサポートしたい場合は',
+            footerSupportLink:'コーヒーをおごる',
+            footerCopyrightLine2:'独自かつ機密。無断使用、複製、配布は禁止されています。',
+            footerBackToMain:'← メインダッシュボードへ戻る',
         },
         ko: {
             backLink:'← 중국 안정 페이지로', pageFlag:'중국',
             pageTitle:'중국 강압 추적기',
             pageSubtitle:'시진핑/중앙군사위 · PLA 자세 · 외교부 신호 · 국무원 · 미일대만 연합',
+            lastUpdatedLabel:'마지막 업데이트',
             loading:'로딩 중...', scoreLabel:'대외 점수 / 100',
             escalationLabel:'강압 에스컬레이션 수준',
+            regimeEyebrow:'체제 수준 신호',
+            regimeTitle:'대안 체제의 설계자로서의 중국',
+            regimeActive:'활성',
+            regimeMaxLevel:'최고 수준',
+            regimeFraming:'중국은 대안 국제 체제의 설계자입니다. 이란이 가장 밀집된 회피 노드이고 러시아가 엔진이라면, 중국은 배관입니다 — CIPS, BRICS 확장, 외교부 탈달러화 수사, 위안화 결제 인프라가 더 광범위한 체제 분열 클러스터를 뒷받침합니다. 다른 국가들이 체제 내에서 활동하며 회피하는 반면, 중국은 평행 체제 그 자체를 구축하고 있습니다.',
+            regimeCaveat:'Asifah는 여러 언어와 출처 유형에 걸친 사용 가능한 오픈소스 자료를 기반으로 이러한 신호를 측정합니다. 국제 체제의 구조적 변화의 증거로서의 해석은 적절히 평가되어야 합니다 — 이것은 측정이며 주장이 아닙니다.',
+            regimeDimYuanIntl:'위안화 국제화',
+            regimeDimYuanIntlDesc:'국제 준비통화로서의 위안화, CIPS 확장, 비서구 중앙은행과의 통화 스왑 협정.',
+            regimeDimMfaDedollar:'외교부 탈달러화',
+            regimeDimMfaDedollarDesc:'중국 외교부가 달러 패권을 비합법적으로 규정하는 수사; 통화 체제 변경에 대한 명시적 요구.',
+            regimeDimBricsArchitect:'BRICS 설계자',
+            regimeDimBricsArchitectDesc:'BRICS+ 확장 옹호, 신개발은행 융자, 대안 결제 인프라 리더십.',
+            regimeDimSanctionsFac:'제재 회피 촉진자',
+            regimeDimSanctionsFacDesc:'제재 대상 행위자의 회피를 뒷받침하는 결제 계층 — 이란 석유, 러시아 가스, 북한 무역이 중국 기관을 통해 라우팅.',
+            regimeDimOilYuan:'석유-위안화 결제',
+            regimeDimOilYuanDesc:'상하이 석유 거래소를 통해 위안화로 결제되는 원유; 석유 위안화 수사가 달러에 대한 직접적 도전으로.',
+            strategicAssessmentLabel:'중국 전략 평가',
+            vecKineticLabel:'동적',
+            vecEconomicLabel:'경제',
+            vecCoalitionLabel:'연합 반발',
+            vecDomesticLabel:'국내 분열',
+            situationLabel:'상황',
+            assessmentLabel:'평가',
+            watchForLabel:'주시',
+            redLinesTitle:'레드라인 근접도',
+            redLinesSubtitle:'중국 에스컬레이션 트리거 — 양안 · 경제 · 디커플링 · 국내 · 동맹',
+            breachedLabel:'돌파',
+            approachingLabel:'접근 중',
             outboundTitle:'대외 — 중국 강압',
             outboundScoreLabel:'대외 점수 / 100',
             outboundQ:'Q: 중국이 대만에 대한 강압 행동으로 이동하고 있는가?',
@@ -608,6 +989,9 @@
             inboundQ:'Q: 미일대만 연합은 어떤 신호를 보내고 있는가?',
             ladderTitle:'🪜 에스컬레이션 사다리',
             trendTitle:'📈 강압 추세',
+            btn7day:'7일',
+            btn30day:'30일',
+            btnCompare:'비교',
             chartEmpty:'데이터 수집 중 — 첫 번째 스냅샷은 다음 스캔 주기에 저장',
             actorTitle:'🎯 행위자 상태',
             articlesTitle:'📰 행위자별 상위 기사',
@@ -615,6 +999,17 @@
             themeLabel:'테마',
             articles:'기사', maxLevel:'최고 레벨',
             outboundTag:'🇨🇳 대외', inboundTag:'🛡️ 대내',
+            footerMethodology:'방법론',
+            footerMethodologyBody:'시간 감쇠 스코어링이 적용된 출처 가중 OSINT 집계. 듀얼 대시보드 모델: 5개 대외 강압 행위자(시/중앙군사위, PLA 작전급, 외교부/환구시보, 대만사무판공실, 경제 강압) + 3개 대내 연합 행위자(대만 방위, 미국 약속, 일본/지역). 더하여 체제 수준 신호(위안화 국제화 · 외교부 탈달러화 · BRICS 설계자 · 제재 회피 촉진자 · 석유-위안화 결제). 12시간 백그라운드 새로고침, 이란·러시아·대만 추적기로부터의 극장 간 지문 읽기.',
+            footerSources:'데이터 출처',
+            footerSourcesBody:'RSS(환구시보, 신화사, 차이나데일리, SCMP, 닛케이아시아, 더 디플로맷), GDELT(영어+북경어 쿼리), NewsAPI, Brave Search(3차 폴백), Bluesky 집계기(POTUS/국무부/인도태평양사령부 미러), Reddit OSINT 집계기. 오픈소스 신호만 — 기밀 데이터 없음.',
+            footerContact:'연락처',
+            footerDisclaimerLabel:'면책 조항:',
+            footerDisclaimerBody:'이 대시보드는 오픈소스 정보 집계를 기반으로 한 분석적 추정치를 제공합니다. 이는 정보 평가, 군사적 조언 또는 정책 권고를 구성하지 않습니다. 자세 지표는 미디어 신호 강도를 반영하며 작전 배치의 실측 예측으로 해석되어서는 안 됩니다. 의사 결정 시에는 항상 권위 있는 출처를 참고하십시오.',
+            footerSupportText:'Asifah Analytics가 유용하다고 생각하시고 지속적인 개발을 지원하고 싶으시다면',
+            footerSupportLink:'커피 한 잔 사주기',
+            footerCopyrightLine2:'독점적이며 기밀입니다. 무단 사용, 복제 또는 배포는 금지됩니다.',
+            footerBackToMain:'← 메인 대시보드로 돌아가기',
         },
     };
 
@@ -623,10 +1018,8 @@
     let currentData = null;
     let _historyChart = null;
     let _historyView = '7d';
-    let retryInterval = null;
-    let retryCount = 0;
 
-    // ── HISTORY CHART ──
+    // ── HISTORY CHART CONFIG ──
     const HISTORY_CONFIG = {
         historyUrl: API_BASE + '/api/rhetoric/china/history',
         compareTheatres: [
@@ -678,8 +1071,8 @@
         canvas.style.display='block'; if(emptyEl) emptyEl.style.display='none';
         if (_historyChart) { _historyChart.destroy(); _historyChart=null; }
         const isDark = document.documentElement.getAttribute('data-theme')==='dark';
-        const gridColor = isDark?'rgba(255,255,255,0.05)':'rgba(0,0,0,0.06)';
-        const tickColor = isDark?'#8a6050':'#7a6060';
+        const gridColor = isDark?'rgba(56,189,248,0.05)':'rgba(0,0,0,0.06)';
+        const tickColor = isDark?'#4a7090':'#4a6080';
         const fontFam = "'Times New Roman', Times, serif";
         _historyChart = new Chart(canvas.getContext('2d'), {
             type:'line', plugins:[zoneBandPlugin], data:{labels,datasets},
@@ -689,10 +1082,10 @@
                 plugins:{
                     legend:{display:datasets.length>1,labels:{color:tickColor,font:{family:fontFam,size:10},boxWidth:20,boxHeight:2,usePointStyle:true,pointStyle:'line'}},
                     tooltip:{
-                        backgroundColor:isDark?'#1a0808':'#fff',
-                        borderColor:isDark?'rgba(220,38,38,0.3)':'rgba(0,0,0,0.1)',
-                        borderWidth:1, titleColor:isDark?'#f0d5c8':'#1a1015',
-                        bodyColor:isDark?'#c4907a':'#4a3535',
+                        backgroundColor:isDark?'#0d1b2e':'#fff',
+                        borderColor:isDark?'rgba(56,189,248,0.3)':'rgba(0,0,0,0.1)',
+                        borderWidth:1, titleColor:isDark?'#e2f0fb':'#0a1628',
+                        bodyColor:isDark?'#93c5fd':'#1e3a5f',
                         titleFont:{family:fontFam,size:11,weight:'bold'},
                         bodyFont:{family:fontFam,size:10},
                         callbacks:{label:ctx=>`${ctx.dataset.label}: ${ctx.parsed.y}`}
@@ -786,6 +1179,44 @@
         document.getElementById('themeToggle').checked = saved==='light';
     }
 
+    // ── REGIME SIGNALS RENDER (v2.0.0) ──
+    function renderRegimeSignals(data) {
+        const card = document.getElementById('regimeSignalCard');
+        if (!card) return;
+        const rs = data.regime_signals;
+        const activeCount = data.regime_signals_active_count !== undefined
+            ? data.regime_signals_active_count
+            : (rs ? rs.active_count : 0);
+
+        if (!rs || !activeCount) {
+            card.style.display = 'none';
+            return;
+        }
+
+        const t = T[currentLang] || T.en;
+        card.style.display = 'block';
+        document.getElementById('regimeActiveCount').textContent = activeCount;
+        document.getElementById('regimeMaxLevel').textContent = 'L' + (data.regime_signals_max_level || rs.max || 0);
+
+        const grid = document.getElementById('regimeDimensionsGrid');
+        grid.innerHTML = '';
+        REGIME_DIMENSIONS_CHINA.forEach(dim => {
+            const level = rs[dim.key] || 0;
+            const isActive = level >= 1;
+            const div = document.createElement('div');
+            div.className = 'regime-dimension' + (isActive ? ' active' : '');
+            div.innerHTML = `
+                <div class="regime-dimension-header">
+                    <span class="regime-dimension-icon">${dim.icon}</span>
+                    <span class="regime-dimension-name">${t[dim.i18nName] || dim.key}</span>
+                    <span class="regime-dimension-level lvl-${level}">L${level}</span>
+                </div>
+                <div class="regime-dimension-desc">${t[dim.i18nDesc] || ''}</div>
+            `;
+            grid.appendChild(div);
+        });
+    }
+
     // ── THEATRE BANNER ──
     function renderTheatre(data) {
         const level = data.overall_level || 0;
@@ -814,7 +1245,6 @@
         const t = T[currentLang] || T.en;
 
         document.getElementById('outboundScore').textContent = data.outbound_score || 0;
-        document.getElementById('outboundScore').style.color = (ESCALATION_LEVELS[data.outbound_max_level||0]||ESCALATION_LEVELS[0]).color;
 
         const outRows = [
             { label:'👁️ Xi Jinping / CMC',        level: data.xi_level   || 0 },
@@ -832,7 +1262,6 @@
         }).join('');
 
         document.getElementById('inboundScore').textContent = data.inbound_score || 0;
-        document.getElementById('inboundScore').style.color = '#60a5fa';
 
         const inRows = [
             { label:'🇹🇼 Taiwan Defense / ADIZ',   level: data.taiwan_defense_level || 0 },
@@ -947,6 +1376,7 @@
     function renderAll(data) {
         currentData = data;
         renderTheatre(data);
+        renderRegimeSignals(data);    // v2.0.0: between banner and So What
         renderDualDashboard(data);
         renderLadder(data.overall_level || 0);
         renderActors(data.actors || {});
@@ -958,7 +1388,7 @@
         loadHistoryData();
     }
 
-    // ── RENDER: SO WHAT CARD (v1.1.0) ──
+    // ── RENDER: SO WHAT CARD ──
     function renderSoWhat(data) {
         const sw = data.so_what;
         if (!sw) { document.getElementById('soWhatCard').style.display = 'none'; return; }
@@ -1005,7 +1435,7 @@
         document.getElementById('soWhatNote').textContent = sw.confidence_note || '';
     }
 
-    // ── RENDER: RED LINES CARD (v1.1.0) ──
+    // ── RENDER: RED LINES CARD ──
     function renderRedLines(data) {
         const rls = data.red_lines || [];
         const card = document.getElementById('redLinesCard');
