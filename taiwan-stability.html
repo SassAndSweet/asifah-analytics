@@ -299,6 +299,189 @@
             .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
             .knowledge-categories { grid-template-columns: 1fr; }
         }
+
+        /* ═══════════════════════════════════════════════════════════
+           COMMODITY EXPOSURE CARD — Gold Standard v2.0 (May 7, 2026)
+           Mirrors russia.html + china-stability.html canonical pattern.
+           Always-rendered. Prose + adaptive alert banner + tiles + Strategic Linkage.
+           Taiwan-specific: dual convergence alert (Hormuz oil + trilateral alliance).
+           ═══════════════════════════════════════════════════════════ */
+        .commodity-card {
+            background: var(--container-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        [data-theme="dark"] .commodity-card {
+            box-shadow: 0 0 6px rgba(56,189,248,0.15);
+        }
+        .commodity-card-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-bottom: 9px;
+            border-bottom: 1px solid var(--card-border);
+        }
+        .commodity-prose {
+            font-size: 13.5px;
+            line-height: 1.65;
+            color: var(--text-secondary);
+            margin: 10px 0 16px 0;
+            padding: 12px 14px;
+            background: rgba(2,6,23,0.5);
+            border-left: 3px solid #38bdf8;
+            border-radius: 6px;
+        }
+        [data-theme="light"] .commodity-prose { background: #f8fbfe; }
+        .commodity-convergence-alert {
+            display: none;
+            margin: 10px 0 14px 0;
+            padding: 12px 14px;
+            background: linear-gradient(135deg, rgba(251,146,60,0.18) 0%, rgba(239,68,68,0.18) 100%);
+            border: 2px solid #f59e0b;
+            border-radius: 8px;
+        }
+        .commodity-convergence-alert.active { display: block; }
+        .commodity-convergence-alert.alert-trilateral {
+            background: linear-gradient(135deg, rgba(56,189,248,0.18) 0%, rgba(14,165,233,0.18) 100%);
+            border-color: #0ea5e9;
+        }
+        .commodity-convergence-alert.alert-trilateral .cca-title { color: #0ea5e9; }
+        .commodity-convergence-alert.alert-trilateral .cca-detail { color: #7dd3fc; }
+        .cca-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #f59e0b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .cca-detail {
+            font-size: 11px;
+            color: #fbbf24;
+            line-height: 1.5;
+        }
+        .commodity-alert-banner {
+            margin-bottom: 14px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 4px solid;
+            font-size: 12px;
+            display: none;
+        }
+        .commodity-alert-banner.show { display: block; }
+        .commodity-alert-banner.alert-normal   { background: rgba(34,197,94,0.08);  border-left-color: #22c55e; color: #22c55e; }
+        .commodity-alert-banner.alert-elevated { background: rgba(234,179,8,0.10);  border-left-color: #eab308; color: #eab308; }
+        .commodity-alert-banner.alert-high     { background: rgba(249,115,22,0.10); border-left-color: #f97316; color: #f97316; }
+        .commodity-alert-banner.alert-surge    { background: rgba(239,68,68,0.12);  border-left-color: #ef4444; color: #ef4444; }
+        .commodity-alert-banner strong { letter-spacing: 1.5px; }
+        .commodity-alert-banner .ab-meta { color: var(--text-muted); font-weight: 400; margin-left: 10px; }
+
+        .commodity-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .commodity-pill {
+            background: rgba(2,6,23,0.5);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 14px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        [data-theme="light"] .commodity-pill { background: #f8fbfe; }
+        .commodity-pill:hover {
+            transform: translateY(-2px);
+            border-color: #38bdf8;
+            box-shadow: 0 4px 12px rgba(56,189,248,0.15);
+        }
+        .commodity-pill-header { display: flex; align-items: center; gap: 10px; }
+        .commodity-pill-icon { font-size: 22px; line-height: 1; }
+        .commodity-pill-name { font-size: 13px; font-weight: 700; color: var(--text-primary); flex: 1; }
+        .commodity-pill-rank { font-size: 9px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .commodity-pill-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+        .commodity-pill-alert {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .commodity-alert-normal   { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+        .commodity-alert-elevated { background: rgba(234,179,8,0.12);  color: #eab308; border: 1px solid rgba(234,179,8,0.3); }
+        .commodity-alert-high     { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.4); }
+        .commodity-alert-surge    { background: rgba(239,68,68,0.15);  color: #ef4444; border: 1px solid rgba(239,68,68,0.4); }
+        .commodity-pill-role-badge {
+            display: inline-block;
+            padding: 2px 7px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: rgba(56,189,248,0.12);
+            color: #38bdf8;
+            border: 1px solid rgba(56,189,248,0.25);
+        }
+        .commodity-pill-signal-count {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .commodity-pill-price {
+            font-size: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+        .commodity-pill-price .price-up   { color: #22c55e; }
+        .commodity-pill-price .price-down { color: #ef4444; }
+        .commodity-pill-spark { width: 100%; height: 28px; display: block; }
+        .commodity-pill-note {
+            font-size: 11px;
+            color: var(--text-secondary);
+            line-height: 1.45;
+            margin-top: 4px;
+        }
+        .commodity-top-signals {
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: rgba(2,6,23,0.5);
+            border-radius: 6px;
+            border-left: 3px solid var(--text-muted);
+            font-size: 11px;
+        }
+        [data-theme="light"] .commodity-top-signals { background: #f8fbfe; }
+        .commodity-top-signals .ts-title {
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            font-size: 10px;
+        }
+        .commodity-top-signals a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            padding: 3px 0;
+            line-height: 1.45;
+        }
+        .commodity-top-signals a:hover { color: #38bdf8; }
+        .commodity-top-signals .ts-source { color: var(--text-muted); font-size: 10px; }
     </style>
 </head>
 <body>
@@ -421,6 +604,39 @@
                 <a href="rhetoric-taiwan.html" style="color:#7dd3fc;text-decoration:none;font-size:12px;font-weight:600;">View Full Deterrence Analysis →</a>
             </div>
             <div id="rhetoricScanInfo" style="margin-top:8px;font-size:10px;color:var(--text-secondary);text-align:center;">--</div>
+        </div>
+
+        <!-- ═══ COMMODITY EXPOSURE CARD — Gold Standard v2.0 (May 7, 2026) ═══ -->
+        <!-- Always-rendered canonical pattern. Mirrors russia.html + china-stability.html. -->
+        <!-- Taiwan-specific: dual convergence alerts (Hormuz oil + trilateral alliance). -->
+        <div class="commodity-card" id="taiwanCommodityCard">
+            <div class="commodity-card-title">📊 <span data-i18n="commodityTitle">TAIWAN COMMODITY EXPOSURE</span></div>
+            <!-- Hormuz oil convergence alert (orange/red — surfaces when iran_hormuz_pressure active) -->
+            <div class="commodity-convergence-alert" id="commodityHormuzAlert">
+                <div class="cca-title">⚠️ Hormuz-Taiwan oil convergence: ACTIVE</div>
+                <div class="cca-detail" id="commodityHormuzAlertDetail">
+                    Iran/Hormuz pressure × Taiwan's ~99% oil import dependency — compound blockade vulnerability with ~140-day petroleum reserve, ~10-14 day LNG reserve.
+                </div>
+            </div>
+            <!-- Trilateral defense convergence alert (cyan/blue — surfaces when Japan + US active) -->
+            <div class="commodity-convergence-alert alert-trilateral" id="commodityTrilateralAlert">
+                <div class="cca-title">🤝 Trilateral defense convergence: ACTIVE</div>
+                <div class="cca-detail" id="commodityTrilateralAlertDetail">
+                    Japan committing to Taiwan defense × US alliance — converts strategic ambiguity into explicit trilateral commitment.
+                </div>
+            </div>
+            <div class="commodity-prose" id="commodityProse" data-i18n="commodityLoading">Loading exposure profile…</div>
+            <div class="commodity-alert-banner" id="commodityAlertBanner"></div>
+            <div class="commodity-grid" id="commodityGrid"></div>
+            <div class="commodity-top-signals" id="commodityTopSignals" style="display:none;"></div>
+            <!-- Strategic Linkage: Taiwan-specific (extreme dependency × extreme leverage) -->
+            <div style="margin-top:14px;padding:10px 14px;background:rgba(56,189,248,0.06);border:1px solid rgba(56,189,248,0.2);border-radius:8px;font-size:11px;color:var(--text-secondary);line-height:1.55;">
+                <strong style="color:#38bdf8;">Strategic Linkage:</strong> Taiwan holds the <strong>most asymmetric commodity profile on the platform</strong> — near-total import dependency (~99% oil, ~99% gas, ~95% wheat) creates inherent blockade vulnerability with ~140-day petroleum reserves and only ~10-14 day LNG reserves. Counterbalanced by a single point of leverage so significant it reshapes great-power calculus: <strong>TSMC manufactures ~60% of global foundry output and ~90% of leading-edge chips</strong>, including all advanced AI accelerators and Apple silicon. Fab 18 (Tainan) is arguably the most strategically valuable industrial facility on Earth. This asymmetry is why US, Japan, and EU share material interest in cross-strait stability. Tracker reads consumer-side surges as compound blockade risk multipliers and TSMC signals as leverage indicators (capacity expansions, Arizona/Kumamoto/Dresden progress, US export-control updates).
+            </div>
+            <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--card-border);text-align:center;">
+                <a href="commodities.html" style="color:#38bdf8;text-decoration:none;font-size:12px;font-weight:600;" data-i18n="commodityFullLink">View Full Commodity Tracker →</a>
+            </div>
+            <div id="commodityCacheNote" style="margin-top:8px;font-size:10px;color:var(--text-muted);font-style:italic;text-align:right;"></div>
         </div>
 
         <!-- MAP SECTION -->
@@ -875,10 +1091,200 @@
             });
         }
 
+        // ════════════════════════════════════════════════════════════
+        // COMMODITY EXPOSURE — Gold Standard v2.0 (May 7, 2026)
+        // Mirrors china-stability.html pattern. Resilient fetch:
+        //   1. Try Asia proxy (/api/asia/commodity/taiwan) — fast, cached
+        //   2. Fallback to ME backend direct (/api/commodity-pressure/taiwan)
+        //   3. Always render: prose + alert banner + tiles + Strategic Linkage
+        // Taiwan-specific: dual convergence alerts (Hormuz oil + trilateral alliance)
+        // ════════════════════════════════════════════════════════════
+        async function loadCommodity() {
+            const COUNTRY_KEY = 'taiwan';
+            const ASIA_BACKEND = 'https://asifah-asia-backend.onrender.com';
+            const ME_BACKEND   = 'https://asifah-backend.onrender.com';
+            const card = document.getElementById('taiwanCommodityCard');
+            if (!card) return;
+
+            // ── Resilient fetch: Asia proxy first, ME backend fallback ──
+            let data = null;
+            let usedFallback = false;
+            try {
+                const r = await fetch(`${ASIA_BACKEND}/api/asia/commodity/${COUNTRY_KEY}`);
+                if (!r.ok) throw new Error('Asia proxy HTTP ' + r.status);
+                data = await r.json();
+                if (!data || data.success === false) throw new Error('Asia proxy returned failure');
+            } catch (e) {
+                console.warn(`[Taiwan Commodity] Asia proxy failed (${e.message}); trying ME backend direct...`);
+                try {
+                    const r = await fetch(`${ME_BACKEND}/api/commodity-pressure/${COUNTRY_KEY}`);
+                    if (!r.ok) throw new Error('ME backend HTTP ' + r.status);
+                    data = await r.json();
+                    usedFallback = true;
+                } catch (e2) {
+                    console.warn(`[Taiwan Commodity] ME backend fallback also failed:`, e2.message);
+                    const proseEl = document.getElementById('commodityProse');
+                    if (proseEl) proseEl.textContent = 'Commodity exposure data temporarily unavailable. Please refresh.';
+                    return;
+                }
+            }
+
+            // ── Prose paragraph (uses backend prose if present, else placeholder) ──
+            const proseEl = document.getElementById('commodityProse');
+            if (proseEl) {
+                proseEl.textContent = data.prose ||
+                    `Taiwan tracks ${data.commodity_summaries?.length || 0} strategic commodity exposures — extreme asymmetry (near-total import dependency × TSMC semiconductor dominance). See tiles below for live status; Strategic Linkage at footer for analytical framing.`;
+            }
+
+            // ── Adaptive alert banner ──
+            const banner = document.getElementById('commodityAlertBanner');
+            const alertLevel = (data.alert_level || 'normal').toLowerCase();
+            const alertLabels = {
+                normal:   '✓ NO ACTIVE COMMODITY PRESSURE',
+                elevated: '◐ ELEVATED COMMODITY PRESSURE',
+                high:     '▲ HIGH COMMODITY PRESSURE',
+                surge:    '🚨 COMMODITY PRESSURE SURGE'
+            };
+            const pressure = (data.commodity_pressure || 0);
+            banner.className = `commodity-alert-banner alert-${alertLevel} show`;
+            banner.innerHTML = `
+                <strong>${alertLabels[alertLevel] || alertLabels.normal}</strong>
+                <span class="ab-meta">Pressure score: ${Number(pressure).toFixed(1)} · ${data.commodity_summaries?.length || 0} exposures tracked${data.has_live_data === false ? ' · awaiting live signals' : ''}</span>
+            `;
+
+            // ── DUAL convergence alerts: Hormuz oil + Trilateral defense ──
+            // Read from Taiwan rhetoric tracker's top_signals (interpreter populates
+            // hormuz_taiwan_oil_dependency_active and taiwan_alliance_convergence_active).
+            try {
+                const rhetoricResp = await fetch(`${ASIA_BACKEND}/api/rhetoric/taiwan`);
+                if (rhetoricResp.ok) {
+                    const rhetoric = await rhetoricResp.json();
+                    const sigs = rhetoric.top_signals || [];
+
+                    // ── Hormuz oil convergence ──
+                    const hormuzSig = sigs.find(s => s.category === 'hormuz_taiwan_oil_dependency' || s.hormuz_taiwan_oil_dependency_active);
+                    const hormuzEl = document.getElementById('commodityHormuzAlert');
+                    const hormuzDetailEl = document.getElementById('commodityHormuzAlertDetail');
+                    if (hormuzSig && hormuzEl) {
+                        const cs = (hormuzSig.convergence_states || {}).hormuz_taiwan_oil_dependency || {};
+                        const alertLvl = (cs.alert_level || 'elevated').toUpperCase();
+                        const iranScore = cs.iran_score || 0;
+                        const iranIrgc = cs.iran_irgc || 0;
+                        hormuzEl.classList.add('active');
+                        if (hormuzDetailEl) {
+                            hormuzDetailEl.innerHTML = `Iran posture at <strong>${alertLvl}</strong> (theatre score ${iranScore}, IRGC L${iranIrgc}) × Taiwan's ~99% oil import dependency. Compound blockade vulnerability — ~140-day petroleum reserve, ~10-14 day LNG reserve compresses strategic timeline. Watch CPC Corp + Formosa Petrochemical reserve drawdowns, LNG terminal status, MOEA energy briefings.`;
+                        }
+                    } else if (hormuzEl) {
+                        hormuzEl.classList.remove('active');
+                    }
+
+                    // ── Trilateral defense convergence ──
+                    const trilateralSig = sigs.find(s => s.category === 'taiwan_alliance_convergence' || s.taiwan_alliance_convergence_active);
+                    const trilateralEl = document.getElementById('commodityTrilateralAlert');
+                    const trilateralDetailEl = document.getElementById('commodityTrilateralAlertDetail');
+                    if (trilateralSig && trilateralEl) {
+                        const cs = (trilateralSig.convergence_states || {}).taiwan_alliance_convergence || {};
+                        const alertLvl = (cs.alert_level || 'elevated').toUpperCase();
+                        const japanLvl = cs.japan_outbound_max || 0;
+                        trilateralEl.classList.add('active');
+                        if (trilateralDetailEl) {
+                            trilateralDetailEl.innerHTML = `Japan committing to Taiwan defense at <strong>${alertLvl}</strong> (outbound L${japanLvl}) × US alliance signaling. Converts historically-ambiguous US-Taiwan posture into explicit trilateral commitment. Raises threshold for PRC kinetic action; increases probability of structured PLA escalation. Watch PLA Eastern Theater activity, MFA condemnation cadence, TAO statements on "external interference."`;
+                        }
+                    } else if (trilateralEl) {
+                        trilateralEl.classList.remove('active');
+                    }
+                }
+            } catch (e) {
+                console.warn('[Taiwan Commodity] Convergence read error:', e.message);
+            }
+
+            // ── Commodity tiles ──
+            const grid = document.getElementById('commodityGrid');
+            grid.innerHTML = '';
+            (data.commodity_summaries || []).forEach(c => {
+                const globalAlert = (c.global_alert_level || 'normal').toLowerCase();
+                const role = (c.role || 'consumer').toLowerCase();
+                const rankText = c.rank ? `#${c.rank} globally` : '';
+                const signalText = c.signal_count > 0 ? `${c.signal_count} signal${c.signal_count !== 1 ? 's' : ''}` : '';
+
+                let sparklineHtml = '';
+                let priceHtml = '';
+                if (c.sparkline && c.sparkline.spark && c.sparkline.spark.length > 1) {
+                    const spark = c.sparkline.spark;
+                    const min = Math.min(...spark);
+                    const max = Math.max(...spark);
+                    const range = max - min || 1;
+                    const points = spark.map((v, i) => {
+                        const x = (i / (spark.length - 1)) * 100;
+                        const y = 100 - ((v - min) / range) * 100;
+                        return `${x.toFixed(1)},${y.toFixed(1)}`;
+                    }).join(' ');
+                    const pctChange = c.sparkline.change_pct_30d || 0;
+                    const sparkColor = pctChange >= 0 ? '#22c55e' : '#ef4444';
+                    sparklineHtml = `<svg class="commodity-pill-spark" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline fill="none" stroke="${sparkColor}" stroke-width="2" points="${points}"/></svg>`;
+                    const priceClass = pctChange >= 0 ? 'price-up' : 'price-down';
+                    const arrow = pctChange >= 0 ? '▲' : '▼';
+                    priceHtml = `<div class="commodity-pill-price">$${c.sparkline.price?.toFixed(2) || '--'} <span class="${priceClass}">${arrow} ${pctChange.toFixed(2)}% (30d)</span></div>`;
+                }
+
+                const tile = document.createElement('a');
+                tile.className = 'commodity-pill';
+                tile.href = `commodities.html#${c.commodity}`;
+                tile.innerHTML = `
+                    <div class="commodity-pill-header">
+                        <div class="commodity-pill-icon">${c.icon || '📊'}</div>
+                        <div style="flex:1;">
+                            <div class="commodity-pill-name">${c.name || c.commodity}</div>
+                            ${rankText ? `<div class="commodity-pill-rank">${rankText}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="commodity-pill-row">
+                        <span class="commodity-pill-alert commodity-alert-${globalAlert}">${globalAlert}</span>
+                        <span class="commodity-pill-role-badge">${role}</span>
+                        ${signalText ? `<span class="commodity-pill-signal-count">${signalText}</span>` : ''}
+                    </div>
+                    ${priceHtml}
+                    ${sparklineHtml}
+                    ${c.note ? `<div class="commodity-pill-note">${c.note.slice(0, 180)}${c.note.length > 180 ? '…' : ''}</div>` : ''}
+                `;
+                grid.appendChild(tile);
+            });
+
+            // ── Top signals footer ──
+            const tsEl = document.getElementById('commodityTopSignals');
+            const topSignals = data.top_signals || [];
+            if (topSignals.length > 0) {
+                const items = topSignals.slice(0, 3).map(s => `
+                    <a href="${s.article_url}" target="_blank" rel="noopener">
+                        ${s.commodity_icon || '📰'} <strong>${s.commodity_name}:</strong> ${s.article_title}
+                        <span class="ts-source">— ${s.source}</span>
+                    </a>
+                `).join('');
+                tsEl.innerHTML = `<div class="ts-title">Top live signals</div>${items}`;
+                tsEl.style.display = 'block';
+            } else {
+                tsEl.style.display = 'none';
+            }
+
+            // ── Cache freshness note ──
+            const cacheStatus = data.cache_status || (usedFallback ? 'me-direct' : 'unknown');
+            const cachedAt = data.proxy_cached_at || data.last_updated;
+            let cacheText = '';
+            if (cachedAt) {
+                const ageMin = Math.floor((Date.now() - new Date(cachedAt).getTime()) / 60000);
+                cacheText = `Cache: ${cacheStatus} · ${ageMin < 60 ? ageMin + 'm' : Math.floor(ageMin/60) + 'h ' + (ageMin%60) + 'm'} ago`;
+            } else if (usedFallback) {
+                cacheText = 'Source: ME backend (Asia proxy unavailable)';
+            }
+            const cacheEl = document.getElementById('commodityCacheNote');
+            if (cacheEl) cacheEl.textContent = cacheText;
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             startLoadingProgress();
             loadRhetoricData();
+            loadCommodity();
             document.getElementById('lastUpdated').textContent =
                 'Last updated: ' + new Date().toLocaleString('en-US', {
                     month: 'short', day: 'numeric', year: 'numeric',
