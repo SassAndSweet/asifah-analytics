@@ -192,6 +192,11 @@
     [data-theme="dark"] .bluf-signal-item { background:rgba(255,255,255,0.04); }
     .bluf-signal-icon { font-size:0.9rem; flex-shrink:0; margin-top:1px; }
     .bluf-signal-text { flex:1; line-height:1.5; }
+    /* ── GPI escalation badge — appears when Global Pressure Index also flags this signal ── */
+    .gpi-badge { display:inline-flex; align-items:center; gap:3px; font-family:'Courier New',monospace; font-size:0.58rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 6px; border-radius:3px; background:rgba(245,158,11,0.18); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); flex-shrink:0; margin-top:1px; cursor:help; }
+    [data-theme="dark"] .gpi-badge { background:rgba(245,158,11,0.12); color:#fbbf24; border-color:rgba(245,158,11,0.35); }
+    .bluf-signal-item.gpi-only { border-left-width:3px; border-left-color:#f59e0b; background:rgba(245,158,11,0.06); }
+    [data-theme="dark"] .bluf-signal-item.gpi-only { background:rgba(245,158,11,0.05); }
     .bluf-footer { font-size:0.6rem; color:var(--text-muted); font-family:'Courier New',monospace; margin-top:10px; font-style:italic; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; }
 
     /* ── TRACKER BANNERS ── */
@@ -811,9 +816,47 @@
         blufProseEl.textContent = blufData.bluf || 'No BLUF prose available.';
 
         // Top signals — render canonical {priority, category, theatre, level, icon, color, short_text, long_text}
+        // v2.1 Three-Altitude Synthesis: GPI-flagged signals get 🌍 badge.
+        // GPI-only (cross-region escalation that regional BLUF missed) appears at TOP.
         signalsEl.innerHTML = '';
         const signals = blufData.top_signals || blufData.signals || [];
-        if (!signals.length) {
+        const gpiSignals = (window._gpiSignalsForRegion || []);
+
+        function _gpiMatchKey(s) {
+            return ((s && s.short_text) || (s && s.text) || '').slice(0, 40).toLowerCase().trim();
+        }
+        function _renderSignalItem(sig, opts) {
+            opts = opts || {};
+            const div = document.createElement('div');
+            div.className = 'bluf-signal-item' + (opts.gpiOnly ? ' gpi-only' : '');
+            div.style.borderLeftColor = opts.gpiOnly ? '#f59e0b' : (sig.color || '#6b7280');
+            const text     = sig.short_text || sig.text || '';
+            const longText = (sig.long_text || '').replace(/"/g, '&quot;');
+            const gpiTip   = opts.gpiTooltip ? opts.gpiTooltip.replace(/"/g, '&quot;') : '';
+            const badge = opts.gpiFlagged
+                ? `<span class="gpi-badge" title="Also flagged by Global Pressure Index — ${gpiTip}">🌍 GPI${opts.gpiOnly ? ' · global' : ''}</span>`
+                : '';
+            div.innerHTML = `${badge}<span class="bluf-signal-icon">${sig.icon || '•'}</span>
+                <span class="bluf-signal-text" style="color:${opts.gpiOnly ? '#f59e0b' : (sig.color || '#6b7280')};" title="${longText}">${text}</span>`;
+            return div;
+        }
+
+        const regionalKeys = new Set(signals.map(_gpiMatchKey));
+        const gpiKeyMap = new Map();
+        gpiSignals.forEach(g => { gpiKeyMap.set(_gpiMatchKey(g), g); });
+
+        // 1) GPI-only signals first (regional analyst missed; GPI escalated)
+        gpiSignals.forEach(g => {
+            if (!regionalKeys.has(_gpiMatchKey(g))) {
+                signalsEl.appendChild(_renderSignalItem(g, {
+                    gpiFlagged: true, gpiOnly: true,
+                    gpiTooltip: g.long_text || g.short_text || ''
+                }));
+            }
+        });
+
+        // 2) Regional signals (with badge if also in GPI), or baseline placeholder if none
+        if (!signals.length && !gpiSignals.length) {
             const div = document.createElement('div');
             div.className = 'bluf-signal-item';
             div.style.borderLeftColor = '#6b7280';
@@ -822,15 +865,11 @@
             signalsEl.appendChild(div);
         } else {
             signals.forEach(sig => {
-                const div = document.createElement('div');
-                div.className = 'bluf-signal-item';
-                div.style.borderLeftColor = sig.color || '#6b7280';
-                // Prefer short_text (canonical v2.0+) over text (legacy)
-                const text = sig.short_text || sig.text || '';
-                const longText = sig.long_text || '';
-                div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '•'}</span>
-                    <span class="bluf-signal-text" style="color:${sig.color || '#6b7280'};" title="${longText.replace(/"/g, '&quot;')}">${text}</span>`;
-                signalsEl.appendChild(div);
+                const matched = gpiKeyMap.get(_gpiMatchKey(sig));
+                signalsEl.appendChild(_renderSignalItem(sig, {
+                    gpiFlagged: !!matched, gpiOnly: false,
+                    gpiTooltip: matched ? (matched.long_text || matched.short_text || '') : ''
+                }));
             });
         }
 
@@ -874,6 +913,25 @@
             }
         })();
 
+        // Three-Altitude Synthesis: also fetch GPI top_signals for region='wha'
+        // (cross-region escalation surfacing — appears with 🌍 GPI badge)
+        const ME_BACKEND_FOR_GPI = 'https://asifah-backend.onrender.com';
+        const gpiPromise = (async () => {
+            try {
+                const resp = await fetch(ME_BACKEND_FOR_GPI + '/api/gpi', { cache: 'no-store' });
+                if (!resp.ok) return [];
+                const data = await resp.json();
+                if (!data.success) return [];
+                return (data.top_signals || []).filter(s => {
+                    const r = (s.region || s.theatre || '').toString().toLowerCase();
+                    return r === 'wha' || r === 'western hemisphere' || r === 'western_hemisphere' || r === 'americas';
+                });
+            } catch(e) {
+                console.warn('[WHA GPI augment] fetch error:', e);
+                return [];
+            }
+        })();
+
         const settled = await Promise.allSettled(
             TRACKERS.map(async tracker => {
                 try {
@@ -901,8 +959,10 @@
             if (old) old.replaceWith(newEl);
         });
 
-        // Wait for BLUF + update synthesis blocks
+        // Wait for BLUF + GPI augmentation, then update synthesis blocks
         const blufData = await blufPromise;
+        const gpiSignals = await gpiPromise;
+        window._gpiSignalsForRegion = gpiSignals;  // read by updateBluf
         updatePosture(blufData, resolved);
         updateBluf(blufData, resolved);
     }
