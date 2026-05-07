@@ -211,6 +211,11 @@
     [data-theme="dark"] .bluf-signal-item { background:rgba(255,255,255,0.04); }
     .bluf-signal-icon { font-size:0.9rem; flex-shrink:0; margin-top:1px; }
     .bluf-signal-text { flex:1; line-height:1.5; }
+    /* ── GPI escalation badge — appears when Global Pressure Index also flags this signal ── */
+    .gpi-badge { display:inline-flex; align-items:center; gap:3px; font-family:'Courier New',monospace; font-size:0.58rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:2px 6px; border-radius:3px; background:rgba(245,158,11,0.18); color:#f59e0b; border:1px solid rgba(245,158,11,0.4); flex-shrink:0; margin-top:1px; cursor:help; }
+    [data-theme="dark"] .gpi-badge { background:rgba(245,158,11,0.12); color:#fbbf24; border-color:rgba(245,158,11,0.35); }
+    .bluf-signal-item.gpi-only { border-left-width:3px; border-left-color:#f59e0b; background:rgba(245,158,11,0.06); }
+    [data-theme="dark"] .bluf-signal-item.gpi-only { background:rgba(245,158,11,0.05); }
     .bluf-footer { font-size:0.6rem; color:var(--text-muted); font-family:'Courier New',monospace; margin-top:10px; font-style:italic; display:flex; justify-content:space-between; flex-wrap:wrap; gap:4px; }
     .bluf-loading { text-align:center; padding:16px; font-size:0.72rem; color:var(--text-muted); font-family:'Courier New',monospace; letter-spacing:1px; }
 
@@ -648,14 +653,56 @@
     }
 
     // ── BLUF — uses ME backend's dedicated synthesis endpoint ──
+    // v2.1 — Three-Altitude Synthesis: also reads /api/gpi to surface signals
+    //        the Global Pressure Index has flagged for this region. Cross-region
+    //        signals appear at TOP with 🌍 GPI badge; matched signals get the
+    //        badge inline. Bidirectional propagation principle: if GPI thinks
+    //        it's important, the regional page must show it too.
+    const REGION_KEY = 'me'; // for GPI signal filtering
+    function _gpiMatchKey(s) {
+        return ((s && s.short_text) || (s && s.text) || '').slice(0, 40).toLowerCase().trim();
+    }
+    async function _fetchGpiSignalsForRegion(regionKey) {
+        try {
+            const resp = await fetch(ME_BACKEND + '/api/gpi', { cache: 'no-store' });
+            if (!resp.ok) return [];
+            const data = await resp.json();
+            if (!data.success) return [];
+            return (data.top_signals || []).filter(s => {
+                const r = (s.region || s.theatre || '').toString().toLowerCase();
+                return r === regionKey || r === regionKey.replace('_', ' ');
+            });
+        } catch (e) {
+            console.warn('[GPI augment] fetch error:', e);
+            return [];
+        }
+    }
+    function _renderSignalItem(sig, opts) {
+        opts = opts || {};
+        const div = document.createElement('div');
+        div.className = 'bluf-signal-item' + (opts.gpiOnly ? ' gpi-only' : '');
+        div.style.borderLeftColor = opts.gpiOnly ? '#f59e0b' : (sig.color || '#6b7280');
+        const text     = sig.short_text || sig.text || '';
+        const longText = (sig.long_text || '').replace(/"/g, '&quot;');
+        const gpiTip   = opts.gpiTooltip ? opts.gpiTooltip.replace(/"/g, '&quot;') : '';
+        const badge = opts.gpiFlagged
+            ? `<span class="gpi-badge" title="Also flagged by Global Pressure Index — ${gpiTip}">🌍 GPI${opts.gpiOnly ? ' · global' : ''}</span>`
+            : '';
+        div.innerHTML = `${badge}<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
+            <span class="bluf-signal-text" style="color:${opts.gpiOnly ? '#f59e0b' : (sig.color || 'var(--text-secondary)')};" title="${longText}">${text}</span>`;
+        return div;
+    }
     async function loadMEBluf() {
         try {
-            const resp = await fetch(ME_BACKEND + '/api/rhetoric/me/bluf');
-            if (!resp.ok) {
+            const [respBluf, gpiSignals] = await Promise.all([
+                fetch(ME_BACKEND + '/api/rhetoric/me/bluf'),
+                _fetchGpiSignalsForRegion(REGION_KEY)
+            ]);
+            if (!respBluf.ok) {
                 document.getElementById('blufLoading').textContent = '⚠️ BLUF unavailable';
                 return;
             }
-            const data = await resp.json();
+            const data = await respBluf.json();
             if (!data.success) {
                 document.getElementById('blufLoading').textContent = '⚠️ BLUF unavailable';
                 return;
@@ -666,18 +713,34 @@
             document.getElementById('blufProse').textContent = (data.bluf || '').replace(/^ME /, '');
             const signalsEl = document.getElementById('blufSignals');
             signalsEl.innerHTML = '';
-            // v2.0+ canonical: top_signals[] with short_text/long_text/category/priority
-            // v1.x legacy:    signals[] with text only
-            (data.top_signals || data.signals || []).forEach(sig => {
-                const div = document.createElement('div');
-                div.className = 'bluf-signal-item';
-                div.style.borderLeftColor = sig.color || '#6b7280';
-                const text     = sig.short_text || sig.text || '';
-                const longText = (sig.long_text || '').replace(/"/g, '&quot;');
-                div.innerHTML = `<span class="bluf-signal-icon">${sig.icon || '⚡'}</span>
-                    <span class="bluf-signal-text" style="color:${sig.color || 'var(--text-secondary)'};" title="${longText}">${text}</span>`;
-                signalsEl.appendChild(div);
+
+            // Build lookup of regional signal match-keys to detect overlap with GPI
+            const regionalSignals = data.top_signals || data.signals || [];
+            const regionalKeys = new Set(regionalSignals.map(_gpiMatchKey));
+            const gpiKeyMap = new Map();
+            gpiSignals.forEach(g => { gpiKeyMap.set(_gpiMatchKey(g), g); });
+
+            // 1) GPI-only signals first (regional analyst missed; GPI escalated)
+            gpiSignals.forEach(g => {
+                if (!regionalKeys.has(_gpiMatchKey(g))) {
+                    signalsEl.appendChild(_renderSignalItem(g, {
+                        gpiFlagged: true,
+                        gpiOnly: true,
+                        gpiTooltip: g.long_text || g.short_text || ''
+                    }));
+                }
             });
+
+            // 2) Regional signals (with badge if also in GPI)
+            regionalSignals.forEach(sig => {
+                const matched = gpiKeyMap.get(_gpiMatchKey(sig));
+                signalsEl.appendChild(_renderSignalItem(sig, {
+                    gpiFlagged: !!matched,
+                    gpiOnly: false,
+                    gpiTooltip: matched ? (matched.long_text || matched.short_text || '') : ''
+                }));
+            });
+
             if (data.generated_at) {
                 const dt = new Date(data.generated_at);
                 document.getElementById('blufTimestamp').textContent =
