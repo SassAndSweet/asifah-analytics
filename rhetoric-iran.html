@@ -408,7 +408,76 @@
         font-family: 'Courier New', monospace; font-style: italic;
     }
 
-    /* ── VECTOR TABS ── */
+    /* ── REGIME SIGNAL CARD (May 7 2026) ── */
+    /* Arctic cyan = canonical platform color. Regime signals are the
+       platform's marquee analytical product and use the Arctic palette
+       to read as part of the platform skeleton, not a special exception.
+       Sits between theatre banner and So What — analytical sequence is
+       data → frame → meaning. Measures Iran's contribution to structural
+       fragmentation: gold-for-oil, dedollarization, yuan settlement,
+       BRICS alignment, OPEC realignment, arms exports. */
+    .regime-signal-card {
+        background: linear-gradient(135deg, rgba(14,165,233,0.08), rgba(56,189,248,0.04));
+        border: 1px solid rgba(56,189,248,0.35);
+        border-radius: 12px; padding: 20px; margin-bottom: 18px;
+    }
+    [data-theme="dark"] .regime-signal-card {
+        background: linear-gradient(135deg, rgba(14,165,233,0.10), rgba(30,58,95,0.20));
+        border-color: rgba(56,189,248,0.30);
+    }
+    .regime-signal-title {
+        font-size: 0.7rem; font-weight: 700; letter-spacing: 2px;
+        text-transform: uppercase; color: #0ea5e9; margin-bottom: 14px;
+        padding-bottom: 10px; border-bottom: 1px solid rgba(56,189,248,0.2);
+    }
+    [data-theme="dark"] .regime-signal-title { color: #38bdf8; }
+    .regime-header {
+        display: flex; align-items: flex-end; gap: 18px;
+        flex-wrap: wrap; margin-bottom: 14px;
+    }
+    .regime-active-count {
+        font-size: 2.5rem; font-weight: 900; color: #0ea5e9; line-height: 1;
+    }
+    [data-theme="dark"] .regime-active-count { color: #38bdf8; }
+    .regime-active-sub {
+        font-size: 0.6rem; color: var(--text-muted);
+        letter-spacing: 1px; margin-top: 4px; text-transform: uppercase;
+        font-family: 'Courier New', monospace;
+    }
+    .regime-narrative {
+        flex: 1; min-width: 240px;
+        font-size: 0.82rem; line-height: 1.6;
+        color: var(--text-primary);
+        font-family: 'Times New Roman', serif;
+    }
+    .regime-narrative strong { color: #0ea5e9; font-weight: 700; }
+    [data-theme="dark"] .regime-narrative strong { color: #38bdf8; }
+    .regime-dimensions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 8px; margin-top: 12px;
+    }
+    .regime-dim-pill {
+        display: flex; align-items: center; gap: 8px;
+        padding: 8px 12px; border-radius: 8px;
+        background: rgba(56,189,248,0.06);
+        border: 1px solid rgba(56,189,248,0.2);
+        font-size: 0.7rem;
+        transition: all 0.2s;
+    }
+    .regime-dim-pill.dim-active {
+        background: rgba(56,189,248,0.14);
+        border-color: rgba(56,189,248,0.5);
+    }
+    .regime-dim-pill.dim-inactive {
+        opacity: 0.45;
+    }
+    .regime-dim-icon {
+        font-size: 1.1rem; flex-shrink: 0;
+    }
+    .regime-dim-text {
+        flex: 1; min-width: 0;
+        display: flex; flex-direction: column; gap: 2px
     .vector-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
     .vector-tab { background: var(--article-bg); border: 2px solid var(--card-border); border-radius: 8px; padding: 10px 16px; cursor: pointer; transition: all 0.2s; flex: 1; min-width: 130px; text-align: center; }
     .vector-tab:hover { box-shadow: var(--card-hover-glow); }
@@ -607,6 +676,31 @@
             <div class="theatre-level-display" id="theatreLevelDisplay">--</div>
             <div class="theatre-level-desc" id="theatreLevelDesc">--</div>
             <div class="theatre-scan-info" id="theatreScanInfo" data-i18n="loading">Loading...</div>
+        </div>
+    </div>
+
+    <!-- ── REGIME SIGNAL CARD (May 7 2026) ── -->
+    <!-- Sits BEFORE the So What card by design. Analytical sequence:
+         theatre banner (data) → regime card (frame) → So What (meaning).
+         The structural-system context informs how to read everything below.
+         Visible when regime_signals_active_count >= 1; hidden otherwise. -->
+    <div class="regime-signal-card" id="regimeSignalCard" style="display:none;">
+        <div class="regime-signal-title">🌐 <span data-i18n="regimeTitle">REGIME SIGNAL ACTIVITY</span></div>
+        <div class="regime-header">
+            <div>
+                <div class="regime-active-count" id="regimeActiveCount">0</div>
+                <div class="regime-active-sub"><span data-i18n="regimeActiveSub">of 6 dimensions active</span></div>
+            </div>
+            <div class="regime-narrative" id="regimeNarrative">
+                <!-- populated by renderRegimeSignals() -->
+            </div>
+        </div>
+        <div class="regime-dimensions-grid" id="regimeDimensionsGrid">
+            <!-- populated by renderRegimeSignals() -->
+        </div>
+        <div class="regime-caveat">
+            <strong data-i18n="regimeCaveatLabel">🛈 About these indicators</strong><br>
+            <span data-i18n="regimeCaveatText">Asifah measures these signals based on available open-source material across multiple languages and source types. Their interpretation as evidence of structural change in the international system should be weighed appropriately — these are measurements, not assertions.</span>
         </div>
     </div>
 
@@ -917,6 +1011,19 @@
             articles:'articles', maxLevel:'Max Level',
             irgcVec:'IRGC', proxyVec:'Proxy', nuclearVec:'Nuclear', domesticVec:'Domestic', regionalVec:'Regional',
             proxyTag:'🔗 Proxy Signal',
+            // ── Regime Signal Card (May 7 2026) ──
+            regimeTitle:'REGIME SIGNAL ACTIVITY',
+            regimeActiveSub:'of 6 dimensions active',
+            regimeDim_goldForOil:'Gold-for-Oil',
+            regimeDim_dedollar:'Dedollarization',
+            regimeDim_yuanSettlement:'Yuan Settlement',
+            regimeDim_bricsAlign:'BRICS Alignment',
+            regimeDim_opecRealign:'OPEC Realignment',
+            regimeDim_armsExport:'Arms Exports',
+            regimeNarrativeIran:'Iran is the densest sanctions-evasion source in the regime-fragmentation cluster. Currently contributing through: <strong>{dims}</strong>.',
+            regimeNarrativeNone:'no dimensions at directive level',
+            regimeCaveatLabel:'🛈 About these indicators',
+            regimeCaveatText:'Asifah measures these signals based on available open-source material across multiple languages and source types. Their interpretation as evidence of structural change in the international system should be weighed appropriately — these are measurements, not assertions.',
         },
         ar: {
             backLink:'→ العودة لإيران', pageFlag:'إيران', pageTitle:'متتبع العقدة القيادية لإيران',
@@ -944,6 +1051,19 @@
             articles:'مقالات', maxLevel:'أعلى مستوى',
             irgcVec:'الحرس', proxyVec:'وكيل', nuclearVec:'نووي', domesticVec:'داخلي', regionalVec:'إقليمي',
             proxyTag:'🔗 إشارة وكيل',
+            // ── Regime Signal Card (May 7 2026) ──
+            regimeTitle:'نشاط إشارات النظام الدولي',
+            regimeActiveSub:'من ٦ أبعاد نشطة',
+            regimeDim_goldForOil:'الذهب مقابل النفط',
+            regimeDim_dedollar:'إنهاء هيمنة الدولار',
+            regimeDim_yuanSettlement:'التسوية باليوان',
+            regimeDim_bricsAlign:'انحياز بريكس',
+            regimeDim_opecRealign:'إعادة تنظيم أوبك',
+            regimeDim_armsExport:'تصدير الأسلحة',
+            regimeNarrativeIran:'إيران أكثف مصادر التهرب من العقوبات في عنقود تفتت النظام الدولي. تساهم حاليًا عبر: <strong>{dims}</strong>.',
+            regimeNarrativeNone:'لا أبعاد على مستوى التوجيه',
+            regimeCaveatLabel:'🛈 حول هذه المؤشرات',
+            regimeCaveatText:'تقيس أصيفة هذه الإشارات استنادًا إلى المواد المتاحة من المصادر المفتوحة بلغات ومصادر متعددة. ينبغي تقييم تفسيرها كدليل على تغيير هيكلي في النظام الدولي بحذر مناسب — هذه قياسات وليست تأكيدات.',
         },
         he: {
             backLink:'← חזרה לאיראן', pageFlag:'איראן', pageTitle:'עוקב צומת פיקוד איראן',
@@ -971,6 +1091,19 @@
             articles:'מאמרים', maxLevel:'רמה מקסימלית',
             irgcVec:'משמרות', proxyVec:'פרוקסי', nuclearVec:'גרעין', domesticVec:'פנימי', regionalVec:'אזורי',
             proxyTag:'🔗 אות פרוקסי',
+            // ── Regime Signal Card (May 7 2026) ──
+            regimeTitle:'פעילות אותות מבניים',
+            regimeActiveSub:'מתוך 6 ממדים פעילים',
+            regimeDim_goldForOil:'זהב תמורת נפט',
+            regimeDim_dedollar:'דה-דולריזציה',
+            regimeDim_yuanSettlement:'סליקה ביואן',
+            regimeDim_bricsAlign:'התיישרות BRICS',
+            regimeDim_opecRealign:'ארגון מחדש של OPEC',
+            regimeDim_armsExport:'יצוא נשק',
+            regimeNarrativeIran:'איראן היא המקור הצפוף ביותר להעלמת סנקציות באשכול התפצלות הסדר הגלובלי. תורמת כעת דרך: <strong>{dims}</strong>.',
+            regimeNarrativeNone:'אין ממדים ברמת הוראה',
+            regimeCaveatLabel:'🛈 לגבי האינדיקטורים הללו',
+            regimeCaveatText:'אסיפה מודדת את האותות הללו על בסיס חומר זמין ממקורות פתוחים בשפות וסוגי מקורות מרובים. פרשנותם כעדות לשינוי מבני בסדר הבינלאומי צריכה להישקל בהתאם — אלה מדידות, לא הצהרות.',
         },
         fa: {
             backLink:'→ بازگشت به ایران', pageFlag:'ایران', pageTitle:'ردیاب گره فرماندهی ایران',
@@ -998,6 +1131,19 @@
             articles:'مقالات', maxLevel:'حداکثر سطح',
             irgcVec:'سپاه', proxyVec:'نیابتی', nuclearVec:'هسته‌ای', domesticVec:'داخلی', regionalVec:'منطقه‌ای',
             proxyTag:'🔗 سیگنال نیابتی',
+            // ── Regime Signal Card (May 7 2026) ──
+            regimeTitle:'فعالیت سیگنال‌های نظام بین‌الملل',
+            regimeActiveSub:'از ۶ بعد فعال',
+            regimeDim_goldForOil:'طلا در برابر نفت',
+            regimeDim_dedollar:'دلارزدایی',
+            regimeDim_yuanSettlement:'تسویه به یوآن',
+            regimeDim_bricsAlign:'هم‌سویی با بریکس',
+            regimeDim_opecRealign:'بازآرایی اوپک',
+            regimeDim_armsExport:'صادرات تسلیحات',
+            regimeNarrativeIran:'ایران متراکم‌ترین منبع دور زدن تحریم‌ها در خوشه تفتت نظام بین‌الملل است. در حال حاضر از طریق این موارد مشارکت دارد: <strong>{dims}</strong>.',
+            regimeNarrativeNone:'هیچ بعدی در سطح دستور نیست',
+            regimeCaveatLabel:'🛈 درباره این شاخص‌ها',
+            regimeCaveatText:'آصفه این سیگنال‌ها را بر اساس مواد در دسترس از منابع باز در زبان‌ها و انواع منابع مختلف اندازه‌گیری می‌کند. تفسیر آن‌ها به عنوان شواهد تغییر ساختاری در نظام بین‌الملل باید با احتیاط مناسب سنجیده شود — این‌ها اندازه‌گیری هستند، نه ادعاها.',
         },
     };
 
@@ -1554,6 +1700,7 @@
         currentData = data;
         const level = data.theatre_escalation_level || 0;
         renderTheatre(data);
+        renderRegimeSignals(data);
         renderInterpretation(data);
         renderDiplomaticTrack(data);
         renderLadder(level);
@@ -1568,6 +1715,72 @@
         if (artCount) artCount.textContent = `📰 ${data.total_articles||0} articles analyzed · Corresponding articles below`;
 
         loadHistoryData();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // REGIME SIGNAL CARD (May 7 2026)
+    // Displays Iran's contribution to structural-system fragmentation:
+    // gold-for-oil, dedollarization, yuan settlement, BRICS alignment,
+    // OPEC realignment, arms exports. Hidden when nothing is firing.
+    // ══════════════════════════════════════════════════════════════
+    const REGIME_DIMENSIONS_IRAN = [
+        { id: 'gold_for_oil',     icon: '🪙', i18nKey: 'regimeDim_goldForOil',     fallback: 'Gold-for-Oil' },
+        { id: 'dedollarization',  icon: '💱', i18nKey: 'regimeDim_dedollar',       fallback: 'Dedollarization' },
+        { id: 'yuan_settlement',  icon: '🇨🇳', i18nKey: 'regimeDim_yuanSettlement', fallback: 'Yuan Settlement' },
+        { id: 'brics_alignment',  icon: '🌐', i18nKey: 'regimeDim_bricsAlign',     fallback: 'BRICS Alignment' },
+        { id: 'opec_realignment', icon: '⛽', i18nKey: 'regimeDim_opecRealign',    fallback: 'OPEC Realignment' },
+        { id: 'arms_export',      icon: '🛩️', i18nKey: 'regimeDim_armsExport',     fallback: 'Arms Exports' },
+    ];
+
+    function renderRegimeSignals(data) {
+        const card = document.getElementById('regimeSignalCard');
+        if (!card) return;
+
+        const regime = data.regime_signals || {};
+        const activeCount = data.regime_signals_active_count || regime.active_count || 0;
+        const t = T[currentLang] || T.en;
+
+        // Hide card when nothing is firing
+        if (activeCount === 0) {
+            card.style.display = 'none';
+            return;
+        }
+        card.style.display = 'block';
+
+        // Active count badge
+        const countEl = document.getElementById('regimeActiveCount');
+        if (countEl) countEl.textContent = activeCount;
+
+        // Build per-dimension pill grid + collect active dim labels for narrative
+        const grid = document.getElementById('regimeDimensionsGrid');
+        const activeLabels = [];
+        if (grid) {
+            grid.innerHTML = REGIME_DIMENSIONS_IRAN.map(dim => {
+                const level = regime[dim.id] || 0;
+                const isActive = level >= 3;
+                const lv = ESCALATION_LEVELS[level] || ESCALATION_LEVELS[0];
+                const dimName = (t[dim.i18nKey] !== undefined) ? t[dim.i18nKey] : dim.fallback;
+                if (isActive) activeLabels.push(dimName);
+                return `<div class="regime-dim-pill ${isActive ? 'dim-active' : 'dim-inactive'}">
+                    <span class="regime-dim-icon">${dim.icon}</span>
+                    <div class="regime-dim-text">
+                        <span class="regime-dim-name">${dimName}</span>
+                        <span class="regime-dim-level" style="color:${lv.color};">L${level} · ${lv.label}</span>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        // Iran-specific narrative line
+        const narrEl = document.getElementById('regimeNarrative');
+        if (narrEl) {
+            const dimsList = activeLabels.length > 0
+                ? activeLabels.join(', ')
+                : (t.regimeNarrativeNone || 'no dimensions at directive level');
+            const narrativeTemplate = t.regimeNarrativeIran ||
+                'Iran is the densest sanctions-evasion source in the regime-fragmentation cluster. Currently contributing through: <strong>{dims}</strong>.';
+            narrEl.innerHTML = narrativeTemplate.replace('{dims}', dimsList);
+        }
     }
 
     // ══════════════════════════════════════════════════════════════
