@@ -1,4 +1,6 @@
-<!-- Asifah Analytics — Russia Rhetoric & Pressure Tracker v1.0.0 — April 2026 -->
+<!-- Asifah Analytics — Russia Rhetoric & Pressure Tracker v2.0.0 — May 2026 -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<!-- v2.0.0: Gold Standard pass — 1800px container, GPI sidebar, class-based footer, REGIME SIGNALS card. -->
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -6,6 +8,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
 <title>Russia Pressure Tracker — Asifah Analytics</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
     /* ── ARCTIC THEME VARIABLES (canonical for all Europe trackers) ── */
@@ -18,6 +21,7 @@
         --text-secondary: #1e3a5f;
         --text-muted:     #4a6080;
         --article-bg:     #f0f6fc;
+        --article-hover:  #e2e8f0;
         --accent:         #0ea5e9;
         --accent-glow:    rgba(14,165,233,0.2);
         --card-glow:      none;
@@ -34,6 +38,7 @@
         --text-secondary: #93c5fd;
         --text-muted:     #4a7090;
         --article-bg:     #0a1525;
+        --article-hover:  #112038;
         --accent:         #38bdf8;
         --accent-glow:    rgba(56,189,248,0.18);
         --card-glow:      0 0 6px rgba(30,58,95,0.5), 0 0 1px rgba(56,189,248,0.15);
@@ -62,7 +67,8 @@
         opacity: var(--watermark-opacity); filter: var(--watermark-filter);
         z-index: 0; pointer-events: none; user-select: none;
     }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
+    /* v2.0.0: Container width raised to 1800px (Japan canonical) */
+    .container { max-width: 1800px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
 
     /* ── HEADER ── */
     header {
@@ -117,7 +123,7 @@
 
     /* ── NAV SIDEBAR ── */
     .page-with-sidebar { display: flex; flex-direction: row; align-items: flex-start; gap: 20px; }
-    .nav-sidebar { width: 180px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
+    .nav-sidebar { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; gap: 8px; padding-top: 4px; position: sticky; top: 20px; height: fit-content; }
     .nav-sidebar-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; color: rgba(56,189,248,0.5); font-family: 'Courier New', monospace; margin-bottom: 4px; padding-left: 2px; }
     .nav-btn { position: relative; display: flex; flex-direction: column; align-items: flex-start; padding: 10px 14px; border-radius: 8px; text-decoration: none; font-family: 'Times New Roman', Times, serif; font-size: 13px; font-weight: bold; letter-spacing: 0.5px; transition: all 0.3s ease; cursor: pointer; overflow: hidden; border: 1.5px solid rgba(56,189,248,0.2); background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.04) 100%); color: rgba(255,255,255,0.7); }
     [data-theme="light"] .nav-btn { color: var(--text-secondary); }
@@ -152,6 +158,77 @@
     .theatre-level-display { font-size: clamp(1.2rem, 3vw, 1.6rem); font-weight: 700; margin: 4px 0; }
     .theatre-level-desc { font-size: 0.7rem; color: var(--text-muted); }
     .theatre-scan-info { font-size: 0.6rem; color: var(--text-muted); font-style: italic; margin-top: 4px; }
+
+    /* ── REGIME SIGNALS CARD (v2.0.0 — Russia regime architecture) ── */
+    .regime-signal-card {
+        border-radius: 12px; padding: 22px; margin-bottom: 18px;
+        border: 2px solid rgba(56,189,248,0.35);
+        background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(14,165,233,0.03) 100%);
+    }
+    .regime-signal-header {
+        display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px;
+        flex-wrap: wrap;
+    }
+    .regime-signal-icon { font-size: 1.4rem; flex-shrink: 0; }
+    .regime-signal-titles { flex: 1; min-width: 200px; }
+    .regime-signal-eyebrow { font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .regime-signal-title { font-size: 1rem; font-weight: 800; letter-spacing: 0.5px; color: var(--text-primary); margin-top: 2px; font-family: 'Times New Roman', serif; }
+    .regime-signal-meta {
+        display: flex; gap: 12px; flex-wrap: wrap; margin-left: auto;
+    }
+    .regime-signal-stat {
+        text-align: center; padding: 6px 12px; border-radius: 6px;
+        background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2);
+        min-width: 70px;
+    }
+    .regime-signal-stat-label { font-size: 0.55rem; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-muted); font-family: 'Courier New', monospace; }
+    .regime-signal-stat-value { font-size: 1.2rem; font-weight: 800; color: #38bdf8; margin-top: 1px; }
+    .regime-signal-framing {
+        font-size: 0.85rem; line-height: 1.65; color: var(--text-primary);
+        padding: 12px 16px; margin-bottom: 14px;
+        background: rgba(56,189,248,0.05); border-left: 3px solid #38bdf8;
+        border-radius: 0 6px 6px 0; font-family: 'Times New Roman', serif;
+    }
+    .regime-dimensions-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px; margin-bottom: 14px;
+    }
+    .regime-dimension {
+        padding: 10px 12px; border-radius: 8px;
+        background: var(--article-bg); border: 1px solid var(--card-border);
+        transition: all 0.2s;
+    }
+    .regime-dimension.active {
+        border-color: #38bdf8;
+        box-shadow: 0 0 12px rgba(56,189,248,0.18);
+        background: rgba(56,189,248,0.06);
+    }
+    .regime-dimension-header {
+        display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+    }
+    .regime-dimension-icon { font-size: 1rem; }
+    .regime-dimension-name {
+        flex: 1; font-size: 0.72rem; font-weight: 700;
+        color: var(--text-primary); letter-spacing: 0.3px;
+    }
+    .regime-dimension-level {
+        font-size: 0.65rem; font-weight: 800; padding: 2px 7px;
+        border-radius: 4px; font-family: 'Courier New', monospace;
+        color: white;
+    }
+    .regime-dimension-level.lvl-0 { background: #6b7280; }
+    .regime-dimension-level.lvl-1 { background: #3b82f6; }
+    .regime-dimension-level.lvl-2 { background: #f59e0b; }
+    .regime-dimension-level.lvl-3 { background: #f97316; }
+    .regime-dimension-level.lvl-4 { background: #ef4444; }
+    .regime-dimension-level.lvl-5 { background: #dc2626; }
+    .regime-dimension-desc { font-size: 0.68rem; color: var(--text-muted); line-height: 1.4; font-family: 'Times New Roman', serif; }
+    .regime-signal-caveat {
+        font-size: 0.65rem; line-height: 1.55; color: var(--text-muted);
+        font-style: italic; padding-top: 12px; margin-top: 6px;
+        border-top: 1px solid rgba(56,189,248,0.15);
+        font-family: 'Courier New', monospace;
+    }
 
     /* ── FIVE VECTOR TABS ── */
     .vector-tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
@@ -188,16 +265,6 @@
     .article-link:hover { text-decoration: underline; }
     .article-meta { font-size: 0.58rem; color: var(--text-muted); margin-top: 2px; }
     .silence-alert { font-size: 0.68rem; color: #f59e0b; font-style: italic; padding: 6px 0; }
-
-    /* ── NUCLEAR PULSE CARD ── */
-    .nuclear-card {
-        background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(185,28,28,0.04));
-        border: 1px solid rgba(220,38,38,0.3);
-        border-radius: 12px; padding: 20px; margin-bottom: 18px;
-    }
-    .nuclear-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #ef4444; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(220,38,38,0.2); }
-    .nuclear-level-big { font-size: 3rem; font-weight: 900; color: #ef4444; line-height: 1; }
-    .nuclear-label { font-size: 0.7rem; color: var(--text-muted); margin-top: 4px; }
 
     /* ── INTERPRETATION CARDS ── */
     .interp-so-what {
@@ -285,8 +352,38 @@
     .history-legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
     .history-legend-dot { width: 10px; height: 3px; border-radius: 2px; }
 
-    /* ── FOOTER ── */
-    .page-footer { text-align: center; padding: 20px 0 30px; font-size: 0.6rem; color: var(--text-muted); letter-spacing: 1px; }
+    /* ── FOOTER (v2.0.0 — class-based, Japan canonical pattern) ── */
+    footer {
+        background: var(--card-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 12px;
+        padding: 22px 28px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        color: var(--text-secondary);
+        font-size: 0.8rem;
+        line-height: 1.6;
+    }
+    footer h4 { color: var(--text-primary); font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+    footer .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 16px; }
+    @media (max-width: 768px) { footer .footer-grid { grid-template-columns: 1fr; } }
+    footer .footer-disclaimer {
+        padding: 12px 14px;
+        background: var(--article-bg); border-left: 3px solid #f59e0b;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        margin-bottom: 14px;
+    }
+    footer .footer-support {
+        text-align: center; padding: 10px;
+        font-size: 0.85rem;
+    }
+    footer .footer-support a { color: var(--accent); text-decoration: none; font-weight: 700; }
+    footer .footer-copyright {
+        text-align: center; font-size: 0.7rem; color: var(--text-muted);
+        margin-top: 14px; padding-top: 14px;
+        border-top: 1px solid var(--card-border);
+    }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 600px) {
@@ -295,6 +392,7 @@
         .theatre-banner { flex-direction: column; text-align: center; }
         .theatre-right { text-align: center; }
         .vector-tabs { flex-direction: column; }
+        .regime-signal-meta { margin-left: 0; }
     }
 </style>
 </head>
@@ -334,7 +432,7 @@
 <!-- PAGE WITH SIDEBAR -->
 <div class="page-with-sidebar">
 
-<!-- NAV SIDEBAR -->
+<!-- NAV SIDEBAR (v2.0.0 canonical: GPI link added) -->
 <nav class="nav-sidebar">
     <div class="nav-sidebar-label">Dashboards</div>
     <div class="nav-btn inactive-nav">
@@ -360,6 +458,10 @@
     <div class="nav-divider"></div>
     <a href="military.html" class="nav-btn military-btn">
         <span class="nav-btn-label">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="gpi.html" class="nav-btn military-btn">
+        <span class="nav-btn-label">🌐 Global Pressure</span>
         <span class="nav-btn-status">● Live</span>
     </a>
     <a href="commodities.html" class="nav-btn commodities-btn">
@@ -410,23 +512,23 @@
         <!-- Five vector pills -->
         <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;">
             <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(220,38,38,0.3);background:rgba(220,38,38,0.06);">
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">☢️ NUCLEAR</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="nuclearPill">☢️ NUCLEAR</div>
                 <div style="font-size:0.8rem;font-weight:800;" id="nuclearPill">--</div>
             </div>
             <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(249,115,22,0.3);background:rgba(249,115,22,0.06);">
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">⚔️ GROUND OPS</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="groundPill">⚔️ GROUND OPS</div>
                 <div style="font-size:0.8rem;font-weight:800;" id="groundPill">--</div>
             </div>
             <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(56,189,248,0.3);background:rgba(56,189,248,0.06);">
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">🛡️ NATO FLANK</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="natoPill">🛡️ NATO FLANK</div>
                 <div style="font-size:0.8rem;font-weight:800;" id="natoFlankPill">--</div>
             </div>
             <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(14,165,233,0.3);background:rgba(14,165,233,0.06);">
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">🧊 ARCTIC</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="arcticPill">🧊 ARCTIC</div>
                 <div style="font-size:0.8rem;font-weight:800;" id="arcticPill">--</div>
             </div>
             <div style="text-align:center;padding:6px 12px;border-radius:6px;border:1px solid rgba(139,92,246,0.3);background:rgba(139,92,246,0.06);">
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">💻 HYBRID</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="hybridPill">💻 HYBRID</div>
                 <div style="font-size:0.8rem;font-weight:800;" id="hybridPill">--</div>
             </div>
         </div>
@@ -436,58 +538,91 @@
         <div class="theatre-level-display" id="theatreLevelDisplay" style="color:#38bdf8;">--</div>
         <div class="theatre-level-desc" id="theatreLevelDesc">--</div>
         <div class="theatre-scan-info">
-            Last scan: <span id="scanTime">--</span><br>
+            <span data-i18n="lastScanLabel">Last scan</span>: <span id="scanTime">--</span><br>
             <span id="articleCount">--</span> <span data-i18n="articlesLabel">articles analyzed</span>
         </div>
     </div>
 </div>
 
-<!-- SO WHAT CARD (moved above vectors) -->
+<!-- ════════════════════════════════════════════════════════════
+     REGIME SIGNALS CARD (v2.0.0 — between theatre banner and So What)
+     Hidden by default. Shows when regime_signals.active_count >= 1.
+     ════════════════════════════════════════════════════════════ -->
+<div class="regime-signal-card" id="regimeSignalCard" style="display:none;">
+    <div class="regime-signal-header">
+        <span class="regime-signal-icon">🌐</span>
+        <div class="regime-signal-titles">
+            <div class="regime-signal-eyebrow" data-i18n="regimeEyebrow">REGIME-LEVEL SIGNALS</div>
+            <div class="regime-signal-title" data-i18n="regimeTitle">Russia in the Regime-Fragmentation Cluster</div>
+        </div>
+        <div class="regime-signal-meta">
+            <div class="regime-signal-stat">
+                <div class="regime-signal-stat-label" data-i18n="regimeActive">Active</div>
+                <div class="regime-signal-stat-value" id="regimeActiveCount">0</div>
+            </div>
+            <div class="regime-signal-stat">
+                <div class="regime-signal-stat-label" data-i18n="regimeMaxLevel">Max Level</div>
+                <div class="regime-signal-stat-value" id="regimeMaxLevel">L0</div>
+            </div>
+        </div>
+    </div>
+    <div class="regime-signal-framing" data-i18n="regimeFraming">
+        Russia is the primary supplier in the regime-fragmentation cluster — the dedollarization architecture's loudest political champion, the principal arms exporter to sanctioned actors, and the operator of the shadow fleet infrastructure that makes evasion logistics possible. Where China is the architect and Iran is the densest evasion node, Russia is the engine that supplies fuel, weapons, and political cover.
+    </div>
+    <div class="regime-dimensions-grid" id="regimeDimensionsGrid">
+        <!-- Dimensions injected by renderRegimeSignals(data) -->
+    </div>
+    <div class="regime-signal-caveat" data-i18n="regimeCaveat">
+        Asifah measures these signals based on available open-source material across multiple languages and source types. Their interpretation as evidence of structural change in the international system should be weighed appropriately — these are measurements, not assertions.
+    </div>
+</div>
+
+<!-- SO WHAT CARD -->
 <div class="interp-so-what" id="soWhatCard" style="display:none;">
     <div class="interp-scenario-header">
         <span class="interp-scenario-icon" id="soWhatIcon">⚪</span>
         <div>
-            <div class="interp-scenario-label">RUSSIA STRATEGIC ASSESSMENT — MILITARY TRACK</div>
+            <div class="interp-scenario-label" data-i18n="strategicAssessmentLabel">RUSSIA STRATEGIC ASSESSMENT — MILITARY TRACK</div>
             <div class="interp-scenario-value" id="soWhatScenario">--</div>
         </div>
     </div>
     <div id="diplomaticScenarioLine" style="display:none;margin-bottom:10px;padding:8px 12px;border-radius:6px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);">
-        <span style="font-size:0.6rem;font-family:'Courier New',monospace;color:#10b981;letter-spacing:1px;text-transform:uppercase;">DIPLOMATIC TRACK — </span>
+        <span style="font-size:0.6rem;font-family:'Courier New',monospace;color:#10b981;letter-spacing:1px;text-transform:uppercase;" data-i18n="diplomaticTrackLabel">DIPLOMATIC TRACK — </span>
         <span style="font-size:0.78rem;font-weight:700;" id="diplomaticScenarioText"></span>
         <span style="font-size:0.72rem;font-weight:800;margin-left:8px;" id="diplomaticScoreText"></span>
     </div>
-    <div class="interp-section-title">SITUATION</div>
+    <div class="interp-section-title" data-i18n="situationLabel">SITUATION</div>
     <div class="interp-text" id="soWhatSituation"></div>
     <div id="soWhatIndicators"></div>
-    <div class="interp-section-title" style="margin-top:14px;">ASSESSMENT</div>
+    <div class="interp-section-title" style="margin-top:14px;" data-i18n="assessmentLabel">ASSESSMENT</div>
     <div class="interp-text" id="soWhatAssessment"></div>
-    <div class="interp-section-title" style="margin-top:14px;">WATCH FOR</div>
+    <div class="interp-section-title" style="margin-top:14px;" data-i18n="watchForLabel">WATCH FOR</div>
     <div id="soWhatWatchList"></div>
     <div class="interp-confidence-note" id="soWhatNote"></div>
 </div>
 
-<!-- DIPLOMATIC TRACK / GREEN LINES CARD — surfaced directly under Strategic Assessment for quick narrative flow -->
+<!-- DIPLOMATIC TRACK / GREEN LINES CARD -->
 <div class="diplomatic-track-card" id="diplomaticTrackCard" style="display:none;">
     <div class="interp-card-header">
         <span style="font-size:1rem;">🕊️</span>
         <div style="flex:1;">
-            <div class="interp-card-title">DIPLOMATIC TRACK</div>
-            <div class="interp-card-subtitle">Russia–Ukraine Off-Ramp Signals — Trump-Putin · Ceasefire · NATO Dialogue</div>
+            <div class="interp-card-title" data-i18n="diplomaticCardTitle">DIPLOMATIC TRACK</div>
+            <div class="interp-card-subtitle" data-i18n="diplomaticCardSubtitle">Russia–Ukraine Off-Ramp Signals — Trump-Putin · Ceasefire · NATO Dialogue</div>
         </div>
         <div style="display:flex;gap:16px;">
             <div style="text-align:right;">
                 <div style="font-size:1.4rem;font-weight:900;color:#10b981;" id="greenLineActiveCount">0</div>
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">ACTIVE</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="activeLabel">ACTIVE</div>
             </div>
             <div style="text-align:right;">
                 <div style="font-size:1.4rem;font-weight:900;color:#84cc16;" id="greenLineSignaledCount">0</div>
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">SIGNALED</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="signaledLabel">SIGNALED</div>
             </div>
         </div>
     </div>
     <div style="margin-bottom:14px;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-            <span style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:#065f46;font-family:'Courier New',monospace;">DIPLOMATIC MOMENTUM</span>
+            <span style="font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;color:#065f46;font-family:'Courier New',monospace;" data-i18n="diplomaticMomentumLabel">DIPLOMATIC MOMENTUM</span>
             <span style="font-size:0.85rem;font-weight:800;color:#10b981;" id="diplomaticScoreDisplay">0/100</span>
         </div>
         <div class="diplomatic-score-bar">
@@ -495,19 +630,18 @@
         </div>
         <div style="font-size:0.72rem;font-weight:700;font-family:'Times New Roman',serif;" id="diplomaticScenarioLabel"></div>
     </div>
-    <!-- Max pressure alert -->
     <div class="max-pressure-alert" id="maxPressureAlert" style="display:none;">
         <span style="font-size:1.1rem;flex-shrink:0;">⚠️</span>
         <div>
-            <div style="font-size:0.72rem;font-weight:800;color:#fca5a5;font-family:'Courier New',monospace;letter-spacing:1px;margin-bottom:4px;">MAXIMUM PRESSURE — NO DIPLOMATIC TRACK</div>
-            <div style="font-size:0.75rem;color:#fecaca;font-family:'Times New Roman',serif;line-height:1.5;">
+            <div style="font-size:0.72rem;font-weight:800;color:#fca5a5;font-family:'Courier New',monospace;letter-spacing:1px;margin-bottom:4px;" data-i18n="maxPressureTitle">MAXIMUM PRESSURE — NO DIPLOMATIC TRACK</div>
+            <div style="font-size:0.75rem;color:#fecaca;font-family:'Times New Roman',serif;line-height:1.5;" data-i18n="maxPressureBody">
                 Multiple vectors simultaneously elevated with no active diplomatic channel.
                 This is the most dangerous configuration — military pressure with no off-ramp.
             </div>
         </div>
     </div>
     <div id="greenLineItems"></div>
-    <div style="font-size:0.62rem;color:#065f46;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;">
+    <div style="font-size:0.62rem;color:#065f46;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;" data-i18n="greenLineFooter">
         Green lines track diplomatic off-ramp signals. ACTIVE = confirmed in current scan. SIGNALED = contextual signal present.
     </div>
 </div>
@@ -546,18 +680,16 @@
 
 <!-- DUAL PANEL ACTORS -->
 <div class="dual-panel-wrapper">
-    <!-- OUTBOUND PANEL -->
     <div class="actor-panel">
-        <div class="actor-panel-header outbound">🇷🇺 RUSSIAN PRESSURE ACTORS — OUTBOUND</div>
+        <div class="actor-panel-header outbound" data-i18n="outboundPanelTitle">🇷🇺 RUSSIAN PRESSURE ACTORS — OUTBOUND</div>
         <div id="outboundActors">
-            <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:20px;">Loading...</div>
+            <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:20px;" data-i18n="loading">Loading...</div>
         </div>
     </div>
-    <!-- INBOUND PANEL -->
     <div class="actor-panel">
-        <div class="actor-panel-header inbound">🌐 NATO / RESPONSE ACTORS — INBOUND</div>
+        <div class="actor-panel-header inbound" data-i18n="inboundPanelTitle">🌐 NATO / RESPONSE ACTORS — INBOUND</div>
         <div id="inboundActors">
-            <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:20px;">Loading...</div>
+            <div style="color:var(--text-muted);font-size:0.75rem;text-align:center;padding:20px;" data-i18n="loading">Loading...</div>
         </div>
     </div>
 </div>
@@ -567,17 +699,17 @@
     <div class="interp-card-header">
         <span style="font-size:1rem;">🚨</span>
         <div style="flex:1;">
-            <div class="interp-card-title">RED LINE PROXIMITY</div>
-            <div class="interp-card-subtitle">Russia Escalation Triggers — Nuclear · NATO Flank · Ukraine · Arctic · Hybrid</div>
+            <div class="interp-card-title" data-i18n="redLinesTitle">RED LINE PROXIMITY</div>
+            <div class="interp-card-subtitle" data-i18n="redLinesSubtitle">Russia Escalation Triggers — Nuclear · NATO Flank · Ukraine · Arctic · Hybrid</div>
         </div>
         <div style="display:flex;gap:16px;">
             <div style="text-align:right;">
                 <div style="font-size:1.4rem;font-weight:900;color:#dc2626;" id="redLineBreachedCount">0</div>
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">BREACHED</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="breachedLabel">BREACHED</div>
             </div>
             <div style="text-align:right;">
                 <div style="font-size:1.4rem;font-weight:900;color:#38bdf8;" id="redLineApproachingCount">0</div>
-                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;">APPROACHING</div>
+                <div style="font-size:0.6rem;color:#94a3b8;font-family:'Courier New',monospace;" data-i18n="approachingLabel">APPROACHING</div>
             </div>
         </div>
     </div>
@@ -589,12 +721,12 @@
     <div class="interp-card-header">
         <span style="font-size:1rem;">📚</span>
         <div>
-            <div class="interp-card-title">HISTORICAL PATTERN MATCH</div>
-            <div class="interp-card-subtitle">Signal Similarity to Documented Russia Escalation Events</div>
+            <div class="interp-card-title" data-i18n="historicalTitle">HISTORICAL PATTERN MATCH</div>
+            <div class="interp-card-subtitle" data-i18n="historicalSubtitle">Signal Similarity to Documented Russia Escalation Events</div>
         </div>
     </div>
     <div id="historicalItems"></div>
-    <div style="font-size:0.62rem;color:#0e7490;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;">
+    <div style="font-size:0.62rem;color:#0e7490;font-family:'Courier New',monospace;margin-top:10px;font-style:italic;" data-i18n="historicalFooter">
         Sources: ISW, IISS, RAND, Carnegie, Belfer Center, NATO ASWRG. Pattern match is analytical, not predictive.
     </div>
 </div>
@@ -604,7 +736,7 @@
     <div class="section-title" data-i18n="ladderTitle">🪜 PRESSURE LADDER</div>
     <div class="ladder-row" id="ladderRow"></div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-top:15px;">
-        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified">Articles classified: --</div>
+        <div style="font-size:11px;color:var(--text-muted);" id="articlesClassified" data-i18n="articlesClassifiedLoading">Articles classified: --</div>
         <button class="scan-btn" id="scanBtn" onclick="triggerScan()">
             🔄 <span data-i18n="refreshScan">Refresh Scan</span>
         </button>
@@ -614,15 +746,15 @@
 <!-- HISTORY CHART -->
 <div class="history-chart-card" id="historyCard">
     <div class="history-chart-header">
-        <span class="history-chart-title">📈 RHETORIC TREND</span>
+        <span class="history-chart-title" data-i18n="trendTitle">📈 RHETORIC TREND</span>
         <div class="history-toggle-group">
-            <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')">7 DAY</button>
-            <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')">30 DAY</button>
-            <button class="history-toggle-btn" id="btnCompare" onclick="setHistoryView('compare')">COMPARE</button>
+            <button class="history-toggle-btn active" id="btn7d" onclick="setHistoryView('7d')" data-i18n="btn7day">7 DAY</button>
+            <button class="history-toggle-btn" id="btn30d" onclick="setHistoryView('30d')" data-i18n="btn30day">30 DAY</button>
+            <button class="history-toggle-btn" id="btnCompare" onclick="setHistoryView('compare')" data-i18n="btnCompare">COMPARE</button>
         </div>
     </div>
     <div class="history-chart-wrap"><canvas id="historyChart"></canvas>
-        <div class="history-empty" id="historyEmpty" style="display:none;">📡 Collecting data — first snapshot saves on next scan cycle</div>
+        <div class="history-empty" id="historyEmpty" style="display:none;" data-i18n="historyEmpty">📡 Collecting data — first snapshot saves on next scan cycle</div>
     </div>
     <div class="history-legend" id="historyLegend"></div>
 </div>
@@ -630,35 +762,34 @@
 </div><!-- end main content -->
 </div><!-- end page-with-sidebar -->
 
-<footer style="background:var(--card-bg, var(--card, #0d1b2e));border:1px solid var(--card-border, var(--border, #1e3a5f));border-radius:12px;padding:30px;margin-top:30px;margin-bottom:30px;font-size:13px;color:var(--text-secondary, var(--text-2, #93c5fd));">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-bottom:20px;">
+<!-- ════════════════════════════════════════════════════════════
+     FOOTER (v2.0.0 — class-based, Japan canonical pattern)
+     ════════════════════════════════════════════════════════════ -->
+<footer>
+    <div class="footer-grid">
         <div>
-            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;">Data Sources</h4>
-            <p style="font-size:12px;line-height:1.5;">NewsAPI, GDELT, RSS Feeds, Reddit, OSINT aggregators, and travel.state.gov travel advisory data.</p>
+            <h4 data-i18n="footerMethodology">Methodology</h4>
+            <p data-i18n="footerMethodologyBody">Source-weighted OSINT aggregation with time-decay scoring. Five-vector pressure model (Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid) plus regime-level signals (Arms Export · Dedollarization · Shadow Fleet · BRICS Alignment · Yuan Settlement). 12-hour background refresh, cross-theater fingerprint reads from Iran, Belarus, and DPRK trackers. Open-source signals only — no classified data.</p>
         </div>
         <div>
-            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;">Methodology</h4>
-            <p style="font-size:12px;line-height:1.5;">Source-weighted OSINT aggregation with time-decay scoring. Open-source signals only — no classified data.</p>
+            <h4 data-i18n="footerSources">Data Sources</h4>
+            <p data-i18n="footerSourcesBody">RSS (Meduza, Moscow Times, TASS, RIA Novosti, RT, ISW, USNI, War on the Rocks), GDELT (English + Russian language queries), NewsAPI, Brave Search (tertiary fallback), Telegram channels (state and opposition), travel.state.gov advisory data, Reddit OSINT aggregators.</p>
         </div>
         <div>
-            <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--accent, #38bdf8);margin-bottom:8px;">Contact</h4>
-            <p style="font-size:12px;line-height:1.5;">Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent, #38bdf8);">asifahanalytics.com</a></p>
+            <h4 data-i18n="footerContact">Contact</h4>
+            <p>Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a></p>
         </div>
     </div>
-    <div style="margin-top:20px;padding:14px;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:8px;font-size:12px;line-height:1.5;">
-        <strong style="color:#f59e0b;">⚠️ DISCLAIMER</strong> &mdash; This page provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Always consult authoritative sources for decision-making. Not for operational use.
+    <div class="footer-disclaimer">
+        <strong style="color:#f59e0b;">⚠️ <span data-i18n="footerDisclaimerLabel">DISCLAIMER:</span></strong> <span data-i18n="footerDisclaimerBody">This dashboard provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Posture indicators reflect media signal intensity and should not be interpreted as ground-truth predictions of operational deployments. Always consult authoritative sources for decision-making.</span>
     </div>
-    <div style="margin-top:20px;padding:14px 18px;background:rgba(139,92,246,0.05);border:1px solid rgba(139,92,246,0.2);border-radius:8px;text-align:center;font-size:13px;">
-        If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" style="color:#8b5cf6;text-decoration:none;font-weight:bold;">buy me a coffee</a>
+    <div class="footer-support">
+        <span data-i18n="footerSupportText">If you find Asifah Analytics useful and want to support ongoing development, you can</span> ☕ <a href="https://buymeacoffee.com/asifahanalytics" target="_blank" data-i18n="footerSupportLink">buy me a coffee</a>
     </div>
-    <div style="text-align:center;margin-top:20px;padding-top:15px;border-top:1px solid var(--card-border, var(--border, #1e3a5f));font-size:12px;">
-        <a href="privacy.html" style="color:var(--accent, #38bdf8);text-decoration:none;">Privacy Policy</a>
-        <span style="color:var(--text-muted, #4a7090);margin:0 12px;">|</span>
-        <a href="contact.html" style="color:var(--accent, #38bdf8);text-decoration:none;">Contact</a>
-    </div>
-    <div style="text-align:center;margin-top:15px;font-size:11px;color:var(--text-muted, #4a7090);">
-        © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — Russia Rhetoric Tracker v1.1.0<br>
-        Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.
+    <div class="footer-copyright">
+        © 2025-2026 ASIFAH ANALYTICS — ALL RIGHTS RESERVED — v2.0.0<br>
+        <span data-i18n="footerCopyrightLine2">Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.</span><br>
+        <a href="index.html" style="color:var(--accent);" data-i18n="footerBackToMain">← Back to Main Dashboard</a>
     </div>
 </footer>
 
@@ -680,34 +811,120 @@ const ESCALATION_LEVELS = {
     5: { label: 'Active Conflict', color: '#dc2626', desc: 'Confirmed military action, Article 5 territory' },
 };
 
-// Outbound = Russian pressure actors
 const OUTBOUND_ACTORS = ['russia_military', 'russia_government', 'belarus'];
-// Inbound = response / target actors
 const INBOUND_ACTORS  = ['ukraine', 'nato_alliance', 'united_states', 'baltic_flank', 'arctic_watch'];
 
+// ── REGIME DIMENSIONS (Russia-specific, 5 dimensions, mirrors backend) ──
+const REGIME_DIMENSIONS_RUSSIA = [
+    { key: 'arms_export',       icon: '🛩️', i18nName: 'regimeDimArmsExport',       i18nDesc: 'regimeDimArmsExportDesc' },
+    { key: 'dedollarization',   icon: '💱', i18nName: 'regimeDimDedollarization',   i18nDesc: 'regimeDimDedollarizationDesc' },
+    { key: 'shadow_fleet',      icon: '🚢', i18nName: 'regimeDimShadowFleet',       i18nDesc: 'regimeDimShadowFleetDesc' },
+    { key: 'brics_alignment',   icon: '🌐', i18nName: 'regimeDimBricsAlignment',    i18nDesc: 'regimeDimBricsAlignmentDesc' },
+    { key: 'yuan_settlement',   icon: '🇨🇳', i18nName: 'regimeDimYuanSettlement',    i18nDesc: 'regimeDimYuanSettlementDesc' },
+];
+
 // ══════════════════════════════════════════════════════════════
-// TRANSLATIONS (EN / RU / FR / DE)
+// TRANSLATIONS (EN / RU / FR / DE) — full static text coverage v2.0.0
 // ══════════════════════════════════════════════════════════════
 const T = {
     en: {
+        // Header
         backLink: '← Back to Russia',
         pageFlag: 'RUSSIA',
         pageTitle: 'RUSSIA PRESSURE TRACKER',
         pageSubtitle: 'Military · Nuclear · NATO Flank · Arctic · Hybrid · Ukraine · Cross-Theater',
         badgeLabel: 'MULTI-VECTOR PRESSURE',
         themeLabel: 'THEME',
+        // Theatre banner
         scoreLabel: 'PRESSURE SCORE / 100',
         theatreLevel: 'THEATRE LEVEL',
         articlesLabel: 'articles analyzed',
+        lastScanLabel: 'Last scan',
+        nuclearPill: '☢️ NUCLEAR',
+        groundPill: '⚔️ GROUND OPS',
+        natoPill: '🛡️ NATO FLANK',
+        arcticPill: '🧊 ARCTIC',
+        hybridPill: '💻 HYBRID',
+        // Regime card
+        regimeEyebrow: 'REGIME-LEVEL SIGNALS',
+        regimeTitle: 'Russia in the Regime-Fragmentation Cluster',
+        regimeActive: 'Active',
+        regimeMaxLevel: 'Max Level',
+        regimeFraming: 'Russia is the primary supplier in the regime-fragmentation cluster — the dedollarization architecture\'s loudest political champion, the principal arms exporter to sanctioned actors, and the operator of the shadow fleet infrastructure that makes evasion logistics possible. Where China is the architect and Iran is the densest evasion node, Russia is the engine that supplies fuel, weapons, and political cover.',
+        regimeCaveat: 'Asifah measures these signals based on available open-source material across multiple languages and source types. Their interpretation as evidence of structural change in the international system should be weighed appropriately — these are measurements, not assertions.',
+        regimeDimArmsExport: 'Arms Export',
+        regimeDimArmsExportDesc: 'Weapons transfer signals to sanctioned actors — DPRK reciprocity, Iran drone/missile cooperation, named end-users.',
+        regimeDimDedollarization: 'Dedollarization',
+        regimeDimDedollarizationDesc: 'Anti-USD rhetoric and ruble-yuan trade architecture; political championing of "multipolarity."',
+        regimeDimShadowFleet: 'Shadow Fleet',
+        regimeDimShadowFleetDesc: 'Sanctions-evasion shipping infrastructure — flag-of-convenience tankers, ship-to-ship transfers, oil price-cap evasion.',
+        regimeDimBricsAlignment: 'BRICS Alignment',
+        regimeDimBricsAlignmentDesc: 'BRICS+ expansion advocacy, alternative settlement infrastructure rhetoric, anti-Western bloc-building language.',
+        regimeDimYuanSettlement: 'Yuan Settlement',
+        regimeDimYuanSettlementDesc: 'Russian oil/gas paid in yuan; CNY reserve accumulation; ruble-yuan direct settlement framing.',
+        // So What card
+        strategicAssessmentLabel: 'RUSSIA STRATEGIC ASSESSMENT — MILITARY TRACK',
+        diplomaticTrackLabel: 'DIPLOMATIC TRACK — ',
+        situationLabel: 'SITUATION',
+        assessmentLabel: 'ASSESSMENT',
+        watchForLabel: 'WATCH FOR',
+        // Diplomatic track card
+        diplomaticCardTitle: 'DIPLOMATIC TRACK',
+        diplomaticCardSubtitle: 'Russia–Ukraine Off-Ramp Signals — Trump-Putin · Ceasefire · NATO Dialogue',
+        activeLabel: 'ACTIVE',
+        signaledLabel: 'SIGNALED',
+        diplomaticMomentumLabel: 'DIPLOMATIC MOMENTUM',
+        maxPressureTitle: 'MAXIMUM PRESSURE — NO DIPLOMATIC TRACK',
+        maxPressureBody: 'Multiple vectors simultaneously elevated with no active diplomatic channel. This is the most dangerous configuration — military pressure with no off-ramp.',
+        greenLineFooter: 'Green lines track diplomatic off-ramp signals. ACTIVE = confirmed in current scan. SIGNALED = contextual signal present.',
+        // Vectors
         vectorsTitle: '⚡ PRESSURE VECTORS',
         nuclearVec: 'Nuclear',
         groundVec: 'Ground Ops',
         natoVec: 'NATO Flank',
         arcticVec: 'Arctic',
         hybridVec: 'Hybrid',
-        ladderTitle: '🪜 PRESSURE LADDER',
-        refreshScan: 'Refresh Scan',
+        // Actor panels
+        outboundPanelTitle: '🇷🇺 RUSSIAN PRESSURE ACTORS — OUTBOUND',
+        inboundPanelTitle: '🌐 NATO / RESPONSE ACTORS — INBOUND',
         loading: 'Loading...',
+        noData: 'No data',
+        articlesUnit: 'articles',
+        triggerLabel: 'Trigger',
+        noSignalsCaptured: '⚠️ No signals captured this scan',
+        // Red Lines
+        redLinesTitle: 'RED LINE PROXIMITY',
+        redLinesSubtitle: 'Russia Escalation Triggers — Nuclear · NATO Flank · Ukraine · Arctic · Hybrid',
+        breachedLabel: 'BREACHED',
+        approachingLabel: 'APPROACHING',
+        // Historical
+        historicalTitle: 'HISTORICAL PATTERN MATCH',
+        historicalSubtitle: 'Signal Similarity to Documented Russia Escalation Events',
+        historicalFooter: 'Sources: ISW, IISS, RAND, Carnegie, Belfer Center, NATO ASWRG. Pattern match is analytical, not predictive.',
+        // Ladder
+        ladderTitle: '🪜 PRESSURE LADDER',
+        articlesClassifiedLoading: 'Articles classified: --',
+        articlesClassifiedTpl: 'Articles classified: ',
+        refreshScan: 'Refresh Scan',
+        scanningLabel: '⏳ Scanning...',
+        // History
+        trendTitle: '📈 RHETORIC TREND',
+        btn7day: '7 DAY',
+        btn30day: '30 DAY',
+        btnCompare: 'COMPARE',
+        historyEmpty: '📡 Collecting data — first snapshot saves on next scan cycle',
+        // Footer
+        footerMethodology: 'Methodology',
+        footerMethodologyBody: 'Source-weighted OSINT aggregation with time-decay scoring. Five-vector pressure model (Nuclear · Ground Ops · NATO Flank · Arctic · Hybrid) plus regime-level signals (Arms Export · Dedollarization · Shadow Fleet · BRICS Alignment · Yuan Settlement). 12-hour background refresh, cross-theater fingerprint reads from Iran, Belarus, and DPRK trackers. Open-source signals only — no classified data.',
+        footerSources: 'Data Sources',
+        footerSourcesBody: 'RSS (Meduza, Moscow Times, TASS, RIA Novosti, RT, ISW, USNI, War on the Rocks), GDELT (English + Russian language queries), NewsAPI, Brave Search (tertiary fallback), Telegram channels (state and opposition), travel.state.gov advisory data, Reddit OSINT aggregators.',
+        footerContact: 'Contact',
+        footerDisclaimerLabel: 'DISCLAIMER:',
+        footerDisclaimerBody: 'This dashboard provides analytical estimates based on open-source intelligence aggregation. It does not constitute intelligence assessments, military advice, or policy recommendations. Posture indicators reflect media signal intensity and should not be interpreted as ground-truth predictions of operational deployments. Always consult authoritative sources for decision-making.',
+        footerSupportText: 'If you find Asifah Analytics useful and want to support ongoing development, you can',
+        footerSupportLink: 'buy me a coffee',
+        footerCopyrightLine2: 'Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.',
+        footerBackToMain: '← Back to Main Dashboard',
     },
     ru: {
         backLink: '← Назад к России',
@@ -719,15 +936,82 @@ const T = {
         scoreLabel: 'ОЦЕНКА ДАВЛЕНИЯ / 100',
         theatreLevel: 'УРОВЕНЬ ТЕАТРА',
         articlesLabel: 'статей проанализировано',
+        lastScanLabel: 'Последнее сканирование',
+        nuclearPill: '☢️ ЯДЕРНЫЙ',
+        groundPill: '⚔️ НАЗЕМНЫЕ ОПЕРАЦИИ',
+        natoPill: '🛡️ ФЛАНГ НАТО',
+        arcticPill: '🧊 АРКТИКА',
+        hybridPill: '💻 ГИБРИДНЫЕ',
+        regimeEyebrow: 'СИГНАЛЫ УРОВНЯ РЕЖИМА',
+        regimeTitle: 'Россия в кластере фрагментации режима',
+        regimeActive: 'Активно',
+        regimeMaxLevel: 'Макс. уровень',
+        regimeFraming: 'Россия — основной поставщик в кластере фрагментации режима: главный политический сторонник архитектуры дедолларизации, главный экспортёр оружия для подсанкционных субъектов и оператор инфраструктуры теневого флота, обеспечивающей логистику обхода санкций. Если Китай — архитектор, а Иран — наиболее плотный узел уклонения, то Россия — двигатель, поставляющий топливо, оружие и политическое прикрытие.',
+        regimeCaveat: 'Asifah измеряет эти сигналы на основе доступных открытых источников на нескольких языках и в различных типах источников. Их интерпретация как свидетельства структурных изменений в международной системе должна оцениваться соответствующим образом — это измерения, а не утверждения.',
+        regimeDimArmsExport: 'Экспорт оружия',
+        regimeDimArmsExportDesc: 'Сигналы передачи оружия подсанкционным субъектам — взаимность с КНДР, сотрудничество с Ираном по дронам/ракетам, названные конечные пользователи.',
+        regimeDimDedollarization: 'Дедолларизация',
+        regimeDimDedollarizationDesc: 'Антидолларовая риторика и архитектура рублёво-юаневой торговли; политическое продвижение «многополярности».',
+        regimeDimShadowFleet: 'Теневой флот',
+        regimeDimShadowFleetDesc: 'Инфраструктура судоходства для обхода санкций — танкеры под удобным флагом, перевалка с борта на борт, обход ценового потолка на нефть.',
+        regimeDimBricsAlignment: 'Альянс БРИКС',
+        regimeDimBricsAlignmentDesc: 'Поддержка расширения БРИКС+, риторика альтернативной расчётной инфраструктуры, формирование антизападного блока.',
+        regimeDimYuanSettlement: 'Юаневые расчёты',
+        regimeDimYuanSettlementDesc: 'Российская нефть/газ оплачивается юанями; накопление резервов в юанях; формат прямых рублёво-юаневых расчётов.',
+        strategicAssessmentLabel: 'СТРАТЕГИЧЕСКАЯ ОЦЕНКА РОССИИ — ВОЕННЫЙ ТРЕК',
+        diplomaticTrackLabel: 'ДИПЛОМАТИЧЕСКИЙ ТРЕК — ',
+        situationLabel: 'СИТУАЦИЯ',
+        assessmentLabel: 'ОЦЕНКА',
+        watchForLabel: 'ОТСЛЕЖИВАТЬ',
+        diplomaticCardTitle: 'ДИПЛОМАТИЧЕСКИЙ ТРЕК',
+        diplomaticCardSubtitle: 'Сигналы выхода из конфликта Россия-Украина — Трамп-Путин · Прекращение огня · Диалог НАТО',
+        activeLabel: 'АКТИВНО',
+        signaledLabel: 'ПРОЯВЛЕНО',
+        diplomaticMomentumLabel: 'ДИПЛОМАТИЧЕСКИЙ ИМПУЛЬС',
+        maxPressureTitle: 'МАКСИМАЛЬНОЕ ДАВЛЕНИЕ — НЕТ ДИПЛОМАТИЧЕСКОГО ТРЕКА',
+        maxPressureBody: 'Несколько векторов одновременно повышены без активного дипломатического канала. Это самая опасная конфигурация — военное давление без выхода.',
+        greenLineFooter: 'Зелёные линии отслеживают сигналы дипломатического выхода. АКТИВНО = подтверждено в текущем сканировании. ПРОЯВЛЕНО = есть контекстный сигнал.',
         vectorsTitle: '⚡ ВЕКТОРЫ ДАВЛЕНИЯ',
         nuclearVec: 'Ядерный',
         groundVec: 'Наземные операции',
         natoVec: 'Фланг НАТО',
         arcticVec: 'Арктика',
         hybridVec: 'Гибридный',
-        ladderTitle: '🪜 ЛЕСТНИЦА ДАВЛЕНИЯ',
-        refreshScan: 'Обновить сканирование',
+        outboundPanelTitle: '🇷🇺 СУБЪЕКТЫ ДАВЛЕНИЯ РОССИИ — ИСХОДЯЩИЕ',
+        inboundPanelTitle: '🌐 НАТО / СУБЪЕКТЫ ОТВЕТА — ВХОДЯЩИЕ',
         loading: 'Загрузка...',
+        noData: 'Нет данных',
+        articlesUnit: 'статей',
+        triggerLabel: 'Триггер',
+        noSignalsCaptured: '⚠️ Сигналы в этом сканировании не зафиксированы',
+        redLinesTitle: 'БЛИЗОСТЬ КРАСНЫХ ЛИНИЙ',
+        redLinesSubtitle: 'Триггеры эскалации России — Ядерный · Фланг НАТО · Украина · Арктика · Гибридный',
+        breachedLabel: 'НАРУШЕНО',
+        approachingLabel: 'ПРИБЛИЖАЕТСЯ',
+        historicalTitle: 'СОВПАДЕНИЕ С ИСТОРИЧЕСКИМИ ПАТТЕРНАМИ',
+        historicalSubtitle: 'Сходство сигналов с задокументированными случаями эскалации России',
+        historicalFooter: 'Источники: ISW, IISS, RAND, Carnegie, Belfer Center, NATO ASWRG. Совпадение паттернов — аналитическое, не прогнозное.',
+        ladderTitle: '🪜 ЛЕСТНИЦА ДАВЛЕНИЯ',
+        articlesClassifiedLoading: 'Классифицированных статей: --',
+        articlesClassifiedTpl: 'Классифицированных статей: ',
+        refreshScan: 'Обновить сканирование',
+        scanningLabel: '⏳ Сканирование...',
+        trendTitle: '📈 ТЕНДЕНЦИЯ РИТОРИКИ',
+        btn7day: '7 ДНЕЙ',
+        btn30day: '30 ДНЕЙ',
+        btnCompare: 'СРАВНИТЬ',
+        historyEmpty: '📡 Сбор данных — первый снимок сохранится при следующем цикле сканирования',
+        footerMethodology: 'Методология',
+        footerMethodologyBody: 'Взвешенная по источникам агрегация OSINT с оценкой временного затухания. Пятивекторная модель давления (Ядерный · Наземные операции · Фланг НАТО · Арктика · Гибридный) плюс сигналы уровня режима (Экспорт оружия · Дедолларизация · Теневой флот · Альянс БРИКС · Юаневые расчёты). Фоновое обновление каждые 12 часов, перекрёстное чтение отпечатков с трекеров Ирана, Беларуси и КНДР. Только открытые источники — без секретных данных.',
+        footerSources: 'Источники данных',
+        footerSourcesBody: 'RSS (Meduza, Moscow Times, ТАСС, РИА Новости, RT, ISW, USNI, War on the Rocks), GDELT (запросы на английском и русском), NewsAPI, Brave Search (третичный резерв), Telegram-каналы (государственные и оппозиционные), данные travel.state.gov, OSINT-агрегаторы Reddit.',
+        footerContact: 'Контакты',
+        footerDisclaimerLabel: 'ОТКАЗ ОТ ОТВЕТСТВЕННОСТИ:',
+        footerDisclaimerBody: 'Эта панель предоставляет аналитические оценки на основе агрегации открытых источников разведки. Она не является разведывательной оценкой, военным советом или политической рекомендацией. Индикаторы позиции отражают интенсивность медиа-сигналов и не должны интерпретироваться как достоверные прогнозы оперативных развёртываний. Всегда обращайтесь к авторитетным источникам для принятия решений.',
+        footerSupportText: 'Если Asifah Analytics полезен вам и вы хотите поддержать его развитие, можете',
+        footerSupportLink: 'купить мне кофе',
+        footerCopyrightLine2: 'Конфиденциально. Несанкционированное использование, воспроизведение или распространение запрещено.',
+        footerBackToMain: '← Назад к главной панели',
     },
     fr: {
         backLink: '← Retour à la Russie',
@@ -739,15 +1023,82 @@ const T = {
         scoreLabel: 'SCORE DE PRESSION / 100',
         theatreLevel: 'NIVEAU DU THÉÂTRE',
         articlesLabel: 'articles analysés',
+        lastScanLabel: 'Dernier scan',
+        nuclearPill: '☢️ NUCLÉAIRE',
+        groundPill: '⚔️ OPS TERRESTRES',
+        natoPill: '🛡️ FLANC OTAN',
+        arcticPill: '🧊 ARCTIQUE',
+        hybridPill: '💻 HYBRIDE',
+        regimeEyebrow: 'SIGNAUX DE NIVEAU RÉGIME',
+        regimeTitle: 'La Russie dans le cluster de fragmentation du régime',
+        regimeActive: 'Actif',
+        regimeMaxLevel: 'Niveau max',
+        regimeFraming: 'La Russie est le fournisseur principal du cluster de fragmentation du régime — le défenseur politique le plus bruyant de l\'architecture de dédollarisation, le principal exportateur d\'armes vers les acteurs sous sanctions, et l\'opérateur de l\'infrastructure de la flotte fantôme qui rend possible la logistique d\'évasion. Là où la Chine est l\'architecte et l\'Iran le nœud d\'évasion le plus dense, la Russie est le moteur qui fournit carburant, armes et couverture politique.',
+        regimeCaveat: 'Asifah mesure ces signaux à partir de matériel open-source disponible dans plusieurs langues et types de sources. Leur interprétation comme preuve de changement structurel dans le système international doit être évaluée de manière appropriée — ce sont des mesures, non des affirmations.',
+        regimeDimArmsExport: 'Export d\'armes',
+        regimeDimArmsExportDesc: 'Signaux de transferts d\'armes vers acteurs sous sanctions — réciprocité RPDC, coopération drones/missiles avec l\'Iran, utilisateurs finaux nommés.',
+        regimeDimDedollarization: 'Dédollarisation',
+        regimeDimDedollarizationDesc: 'Rhétorique anti-USD et architecture commerciale rouble-yuan ; promotion politique de la « multipolarité ».',
+        regimeDimShadowFleet: 'Flotte fantôme',
+        regimeDimShadowFleetDesc: 'Infrastructure maritime de contournement de sanctions — pétroliers sous pavillon de complaisance, transferts de navire à navire, contournement du plafond pétrolier.',
+        regimeDimBricsAlignment: 'Alignement BRICS',
+        regimeDimBricsAlignmentDesc: 'Plaidoyer d\'expansion BRICS+, rhétorique d\'infrastructure de règlement alternatif, langage de construction de bloc anti-occidental.',
+        regimeDimYuanSettlement: 'Règlement en yuan',
+        regimeDimYuanSettlementDesc: 'Pétrole/gaz russe payé en yuan ; accumulation de réserves en CNY ; cadrage de règlement direct rouble-yuan.',
+        strategicAssessmentLabel: 'ÉVALUATION STRATÉGIQUE RUSSIE — TRACK MILITAIRE',
+        diplomaticTrackLabel: 'TRACK DIPLOMATIQUE — ',
+        situationLabel: 'SITUATION',
+        assessmentLabel: 'ÉVALUATION',
+        watchForLabel: 'À SURVEILLER',
+        diplomaticCardTitle: 'TRACK DIPLOMATIQUE',
+        diplomaticCardSubtitle: 'Signaux de sortie Russie-Ukraine — Trump-Poutine · Cessez-le-feu · Dialogue OTAN',
+        activeLabel: 'ACTIF',
+        signaledLabel: 'SIGNALÉ',
+        diplomaticMomentumLabel: 'MOMENTUM DIPLOMATIQUE',
+        maxPressureTitle: 'PRESSION MAXIMALE — AUCUN TRACK DIPLOMATIQUE',
+        maxPressureBody: 'Plusieurs vecteurs simultanément élevés sans canal diplomatique actif. C\'est la configuration la plus dangereuse — pression militaire sans porte de sortie.',
+        greenLineFooter: 'Les lignes vertes suivent les signaux de sortie diplomatique. ACTIF = confirmé au scan actuel. SIGNALÉ = signal contextuel présent.',
         vectorsTitle: '⚡ VECTEURS DE PRESSION',
         nuclearVec: 'Nucléaire',
         groundVec: 'Opérations terrestres',
         natoVec: 'Flanc OTAN',
         arcticVec: 'Arctique',
         hybridVec: 'Hybride',
-        ladderTitle: '🪜 ÉCHELLE DE PRESSION',
-        refreshScan: 'Actualiser l\'analyse',
+        outboundPanelTitle: '🇷🇺 ACTEURS DE PRESSION RUSSE — SORTANTS',
+        inboundPanelTitle: '🌐 OTAN / ACTEURS DE RÉPONSE — ENTRANTS',
         loading: 'Chargement...',
+        noData: 'Aucune donnée',
+        articlesUnit: 'articles',
+        triggerLabel: 'Déclencheur',
+        noSignalsCaptured: '⚠️ Aucun signal capté lors de ce scan',
+        redLinesTitle: 'PROXIMITÉ DES LIGNES ROUGES',
+        redLinesSubtitle: 'Déclencheurs d\'escalade Russie — Nucléaire · Flanc OTAN · Ukraine · Arctique · Hybride',
+        breachedLabel: 'FRANCHIE',
+        approachingLabel: 'APPROCHE',
+        historicalTitle: 'CORRESPONDANCE DE MOTIF HISTORIQUE',
+        historicalSubtitle: 'Similarité des signaux aux événements d\'escalade Russie documentés',
+        historicalFooter: 'Sources : ISW, IISS, RAND, Carnegie, Belfer Center, NATO ASWRG. Correspondance de motifs analytique, non prédictive.',
+        ladderTitle: '🪜 ÉCHELLE DE PRESSION',
+        articlesClassifiedLoading: 'Articles classés : --',
+        articlesClassifiedTpl: 'Articles classés : ',
+        refreshScan: 'Actualiser l\'analyse',
+        scanningLabel: '⏳ Analyse en cours...',
+        trendTitle: '📈 TENDANCE RHÉTORIQUE',
+        btn7day: '7 JOURS',
+        btn30day: '30 JOURS',
+        btnCompare: 'COMPARER',
+        historyEmpty: '📡 Collecte de données — premier instantané sauvegardé au prochain cycle de scan',
+        footerMethodology: 'Méthodologie',
+        footerMethodologyBody: 'Agrégation OSINT pondérée par source avec score de décroissance temporelle. Modèle de pression à cinq vecteurs (Nucléaire · Ops terrestres · Flanc OTAN · Arctique · Hybride) plus signaux de niveau régime (Export d\'armes · Dédollarisation · Flotte fantôme · Alignement BRICS · Règlement yuan). Rafraîchissement de fond toutes les 12h, lectures d\'empreintes inter-théâtres depuis les trackers Iran, Biélorussie et RPDC. Signaux open-source uniquement — pas de données classifiées.',
+        footerSources: 'Sources de données',
+        footerSourcesBody: 'RSS (Meduza, Moscow Times, TASS, RIA Novosti, RT, ISW, USNI, War on the Rocks), GDELT (requêtes en anglais et russe), NewsAPI, Brave Search (repli tertiaire), chaînes Telegram (étatiques et opposition), données travel.state.gov, agrégateurs OSINT Reddit.',
+        footerContact: 'Contact',
+        footerDisclaimerLabel: 'AVERTISSEMENT :',
+        footerDisclaimerBody: 'Ce tableau de bord fournit des estimations analytiques basées sur l\'agrégation de renseignements open-source. Il ne constitue pas une évaluation de renseignement, un conseil militaire ou une recommandation politique. Les indicateurs de posture reflètent l\'intensité des signaux médiatiques et ne doivent pas être interprétés comme des prédictions de vérité-terrain de déploiements opérationnels. Consultez toujours des sources autorisées pour la prise de décision.',
+        footerSupportText: 'Si vous trouvez Asifah Analytics utile et souhaitez soutenir son développement, vous pouvez',
+        footerSupportLink: 'm\'offrir un café',
+        footerCopyrightLine2: 'Propriétaire et confidentiel. Utilisation, reproduction ou distribution non autorisée interdite.',
+        footerBackToMain: '← Retour au tableau principal',
     },
     de: {
         backLink: '← Zurück zu Russland',
@@ -759,15 +1110,82 @@ const T = {
         scoreLabel: 'DRUCKWERT / 100',
         theatreLevel: 'THEATER-NIVEAU',
         articlesLabel: 'Artikel analysiert',
+        lastScanLabel: 'Letzter Scan',
+        nuclearPill: '☢️ NUKLEAR',
+        groundPill: '⚔️ BODENOPERATIONEN',
+        natoPill: '🛡️ NATO-FLANKE',
+        arcticPill: '🧊 ARKTIS',
+        hybridPill: '💻 HYBRID',
+        regimeEyebrow: 'REGIME-EBENE-SIGNALE',
+        regimeTitle: 'Russland im Regime-Fragmentierungs-Cluster',
+        regimeActive: 'Aktiv',
+        regimeMaxLevel: 'Max. Stufe',
+        regimeFraming: 'Russland ist der Hauptlieferant im Regime-Fragmentierungs-Cluster — der lauteste politische Befürworter der Entdollarisierungs-Architektur, der wichtigste Waffenexporteur an sanktionierte Akteure und der Betreiber der Schattenflotten-Infrastruktur, die Umgehungslogistik ermöglicht. Wo China der Architekt und Iran der dichteste Umgehungsknoten ist, ist Russland der Motor, der Treibstoff, Waffen und politische Deckung liefert.',
+        regimeCaveat: 'Asifah misst diese Signale anhand verfügbaren Open-Source-Materials in mehreren Sprachen und Quellentypen. Ihre Interpretation als Beweis für strukturellen Wandel im internationalen System sollte angemessen abgewogen werden — es sind Messungen, keine Behauptungen.',
+        regimeDimArmsExport: 'Waffenexport',
+        regimeDimArmsExportDesc: 'Signale für Waffentransfers an sanktionierte Akteure — DPRK-Reziprozität, Iran-Drohnen-/Raketenkooperation, namentlich genannte Endnutzer.',
+        regimeDimDedollarization: 'Entdollarisierung',
+        regimeDimDedollarizationDesc: 'Anti-USD-Rhetorik und Rubel-Yuan-Handelsarchitektur; politische Förderung der „Multipolarität".',
+        regimeDimShadowFleet: 'Schattenflotte',
+        regimeDimShadowFleetDesc: 'Sanktionsumgehungs-Schifffahrtsinfrastruktur — Tanker unter Billigflagge, Schiff-zu-Schiff-Transfers, Umgehung des Ölpreisdeckels.',
+        regimeDimBricsAlignment: 'BRICS-Ausrichtung',
+        regimeDimBricsAlignmentDesc: 'BRICS+-Erweiterungsbefürwortung, Rhetorik alternativer Abrechnungsinfrastruktur, anti-westliche Blockbildungssprache.',
+        regimeDimYuanSettlement: 'Yuan-Abrechnung',
+        regimeDimYuanSettlementDesc: 'Russisches Öl/Gas in Yuan bezahlt; CNY-Reservenakkumulation; Rubel-Yuan-Direktabrechnungs-Framing.',
+        strategicAssessmentLabel: 'STRATEGISCHE BEWERTUNG RUSSLAND — MILITÄR-TRACK',
+        diplomaticTrackLabel: 'DIPLOMATISCHER TRACK — ',
+        situationLabel: 'SITUATION',
+        assessmentLabel: 'BEWERTUNG',
+        watchForLabel: 'BEOBACHTEN',
+        diplomaticCardTitle: 'DIPLOMATISCHER TRACK',
+        diplomaticCardSubtitle: 'Russland-Ukraine-Ausstiegssignale — Trump-Putin · Waffenstillstand · NATO-Dialog',
+        activeLabel: 'AKTIV',
+        signaledLabel: 'SIGNALISIERT',
+        diplomaticMomentumLabel: 'DIPLOMATISCHE DYNAMIK',
+        maxPressureTitle: 'MAXIMALER DRUCK — KEIN DIPLOMATISCHER TRACK',
+        maxPressureBody: 'Mehrere Vektoren gleichzeitig erhöht ohne aktiven diplomatischen Kanal. Dies ist die gefährlichste Konfiguration — militärischer Druck ohne Ausstieg.',
+        greenLineFooter: 'Grüne Linien verfolgen diplomatische Ausstiegssignale. AKTIV = im aktuellen Scan bestätigt. SIGNALISIERT = kontextuelles Signal vorhanden.',
         vectorsTitle: '⚡ DRUCKVEKTOREN',
         nuclearVec: 'Nuklear',
         groundVec: 'Bodenoperationen',
         natoVec: 'NATO-Flanke',
         arcticVec: 'Arktis',
         hybridVec: 'Hybrid',
-        ladderTitle: '🪜 DRUCKLEITER',
-        refreshScan: 'Scan aktualisieren',
+        outboundPanelTitle: '🇷🇺 RUSSISCHE DRUCKAKTEURE — AUSGEHEND',
+        inboundPanelTitle: '🌐 NATO / REAKTIONSAKTEURE — EINGEHEND',
         loading: 'Laden...',
+        noData: 'Keine Daten',
+        articlesUnit: 'Artikel',
+        triggerLabel: 'Auslöser',
+        noSignalsCaptured: '⚠️ Keine Signale in diesem Scan erfasst',
+        redLinesTitle: 'ROTE-LINIEN-NÄHE',
+        redLinesSubtitle: 'Russland-Eskalations-Auslöser — Nuklear · NATO-Flanke · Ukraine · Arktis · Hybrid',
+        breachedLabel: 'ÜBERSCHRITTEN',
+        approachingLabel: 'NÄHERT SICH',
+        historicalTitle: 'HISTORISCHER MUSTERABGLEICH',
+        historicalSubtitle: 'Signalähnlichkeit zu dokumentierten Russland-Eskalationsereignissen',
+        historicalFooter: 'Quellen: ISW, IISS, RAND, Carnegie, Belfer Center, NATO ASWRG. Musterabgleich ist analytisch, nicht prädiktiv.',
+        ladderTitle: '🪜 DRUCKLEITER',
+        articlesClassifiedLoading: 'Klassifizierte Artikel: --',
+        articlesClassifiedTpl: 'Klassifizierte Artikel: ',
+        refreshScan: 'Scan aktualisieren',
+        scanningLabel: '⏳ Scanning...',
+        trendTitle: '📈 RHETORIK-TREND',
+        btn7day: '7 TAGE',
+        btn30day: '30 TAGE',
+        btnCompare: 'VERGLEICHEN',
+        historyEmpty: '📡 Datenerhebung — erster Schnappschuss wird beim nächsten Scan-Zyklus gespeichert',
+        footerMethodology: 'Methodik',
+        footerMethodologyBody: 'Quellengewichtete OSINT-Aggregation mit Zeitabklingbewertung. Fünf-Vektor-Druckmodell (Nuklear · Bodenoperationen · NATO-Flanke · Arktis · Hybrid) plus Regime-Ebene-Signale (Waffenexport · Entdollarisierung · Schattenflotte · BRICS-Ausrichtung · Yuan-Abrechnung). 12-stündiges Hintergrund-Refresh, Cross-Theater-Fingerabdruckslesungen von Iran-, Belarus- und DPRK-Trackern. Nur Open-Source-Signale — keine klassifizierten Daten.',
+        footerSources: 'Datenquellen',
+        footerSourcesBody: 'RSS (Meduza, Moscow Times, TASS, RIA Novosti, RT, ISW, USNI, War on the Rocks), GDELT (Englisch- und Russisch-Sprachabfragen), NewsAPI, Brave Search (tertiärer Fallback), Telegram-Kanäle (staatlich und Opposition), travel.state.gov-Reiseberatungsdaten, Reddit-OSINT-Aggregatoren.',
+        footerContact: 'Kontakt',
+        footerDisclaimerLabel: 'HAFTUNGSAUSSCHLUSS:',
+        footerDisclaimerBody: 'Dieses Dashboard liefert analytische Schätzungen basierend auf Open-Source-Geheimdienstaggregation. Es stellt keine Geheimdiensteinschätzungen, militärische Ratschläge oder politische Empfehlungen dar. Stellungsindikatoren spiegeln die Mediensignalintensität wider und sollten nicht als bodennahe Vorhersagen operativer Einsätze interpretiert werden. Konsultieren Sie für Entscheidungen stets autorisierte Quellen.',
+        footerSupportText: 'Wenn Sie Asifah Analytics nützlich finden und die Weiterentwicklung unterstützen möchten, können Sie',
+        footerSupportLink: 'mir einen Kaffee spendieren',
+        footerCopyrightLine2: 'Eigentums- und vertraulich. Unerlaubte Nutzung, Reproduktion oder Verbreitung untersagt.',
+        footerBackToMain: '← Zurück zum Haupt-Dashboard',
     },
 };
 
@@ -793,7 +1211,7 @@ function setLanguage(lang) {
     });
     document.querySelectorAll('.lang-btn').forEach(btn => {
         const btnLang = btn.textContent.trim().toLowerCase();
-        const match = btnLang === lang || 
+        const match = btnLang === lang ||
                       (lang === 'ru' && btnLang === 'ру') ||
                       (lang === 'fr' && btnLang === 'fr') ||
                       (lang === 'de' && btnLang === 'de');
@@ -840,15 +1258,56 @@ function levelBadge(level, label) {
 }
 
 // ══════════════════════════════════════════════════════════════
+// RENDER REGIME SIGNALS (v2.0.0 — Russia regime architecture card)
+// Hidden by default; shows only if regime_signals.active_count >= 1.
+// ══════════════════════════════════════════════════════════════
+function renderRegimeSignals(data) {
+    const card = document.getElementById('regimeSignalCard');
+    if (!card) return;
+    const rs = data.regime_signals;
+    const activeCount = data.regime_signals_active_count !== undefined
+        ? data.regime_signals_active_count
+        : (rs ? rs.active_count : 0);
+
+    if (!rs || !activeCount) {
+        card.style.display = 'none';
+        return;
+    }
+
+    const t = T[currentLang] || T.en;
+    card.style.display = 'block';
+    document.getElementById('regimeActiveCount').textContent = activeCount;
+    document.getElementById('regimeMaxLevel').textContent = 'L' + (data.regime_signals_max_level || rs.max || 0);
+
+    const grid = document.getElementById('regimeDimensionsGrid');
+    grid.innerHTML = '';
+    REGIME_DIMENSIONS_RUSSIA.forEach(dim => {
+        const level = rs[dim.key] || 0;
+        const isActive = level >= 1;
+        const div = document.createElement('div');
+        div.className = 'regime-dimension' + (isActive ? ' active' : '');
+        div.innerHTML = `
+            <div class="regime-dimension-header">
+                <span class="regime-dimension-icon">${dim.icon}</span>
+                <span class="regime-dimension-name">${t[dim.i18nName] || dim.key}</span>
+                <span class="regime-dimension-level lvl-${level}">L${level}</span>
+            </div>
+            <div class="regime-dimension-desc">${t[dim.i18nDesc] || ''}</div>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+// ══════════════════════════════════════════════════════════════
 // RENDER ACTORS — DUAL PANEL
 // ══════════════════════════════════════════════════════════════
 function renderActors(data) {
+    const t = T[currentLang] || T.en;
     const actors = data.actors || {};
 
     function buildActorHTML(key, panelClass) {
         const a = actors[key];
         if (!a) return '';
-        const lv = lvl(a.escalation_level || 0);
         const articles = (a.top_articles || []).slice(0, 3);
         const articlesHTML = articles.map(art => `
             <div class="article-item">
@@ -867,21 +1326,21 @@ function renderActors(data) {
                     ${levelBadge(a.escalation_level || 0, a.escalation_label)}
                 </div>
                 <div class="actor-stats">
-                    <div class="actor-stat"><span>${a.statement_count || 0}</span> articles</div>
-                    ${a.escalation_phrase ? `<div class="actor-stat">Trigger: <span>${a.escalation_phrase}</span></div>` : ''}
+                    <div class="actor-stat"><span>${a.statement_count || 0}</span> ${t.articlesUnit}</div>
+                    ${a.escalation_phrase ? `<div class="actor-stat">${t.triggerLabel}: <span>${a.escalation_phrase}</span></div>` : ''}
                 </div>
-                ${a.statement_count === 0 ? '<div class="silence-alert">⚠️ No signals captured this scan</div>' : ''}
+                ${a.statement_count === 0 ? `<div class="silence-alert">${t.noSignalsCaptured}</div>` : ''}
                 ${articlesHTML}
             </div>`;
     }
 
     document.getElementById('outboundActors').innerHTML =
         OUTBOUND_ACTORS.map(k => buildActorHTML(k, 'outbound-actor')).join('') ||
-        '<div style="color:var(--text-muted);font-size:0.75rem;padding:10px;">No data</div>';
+        `<div style="color:var(--text-muted);font-size:0.75rem;padding:10px;">${t.noData}</div>`;
 
     document.getElementById('inboundActors').innerHTML =
         INBOUND_ACTORS.map(k => buildActorHTML(k, 'inbound-actor')).join('') ||
-        '<div style="color:var(--text-muted);font-size:0.75rem;padding:10px;">No data</div>';
+        `<div style="color:var(--text-muted);font-size:0.75rem;padding:10px;">${t.noData}</div>`;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -908,7 +1367,7 @@ function renderBanner(data) {
     document.getElementById('articleCount').textContent = data.total_articles || 0;
     document.getElementById('lastUpdated').textContent = scanned;
 
-    // Vector pills
+    // Vector pills (the level numbers, NOT the labels — labels are i18n via data-i18n)
     const vecs = [
         { id: 'nuclearPill',   level: data.nuclear_level    || 0 },
         { id: 'groundPill',    level: data.ground_ops_level || 0 },
@@ -958,7 +1417,6 @@ function renderInterpretation(data) {
         scenEl.textContent = sw.scenario || '--';
         scenEl.style.color = sw.scenario_color || '#6b7280';
 
-        // Diplomatic scenario line
         const diplScore = sw.diplomatic_score || 0;
         if (diplScore >= 15) {
             document.getElementById('diplomaticScenarioLine').style.display = 'block';
@@ -1005,13 +1463,13 @@ function renderInterpretation(data) {
         document.getElementById('redLineApproachingCount').textContent = rl.approaching_count || 0;
 
         const catLabels = {
-            'nuclear':           '☢️ NUCLEAR',
-            'nato_flank':        '🛡️ NATO FLANK',
-            'ukraine_front':     '🇺🇦 UKRAINE',
-            'arctic':            '🧊 ARCTIC',
-            'hybrid':            '💻 HYBRID',
-            'cross_theater':     '🌐 CROSS-THEATER',
-            'deescalation':      '✅ DE-ESCALATION',
+            'nuclear':        '☢️ NUCLEAR',
+            'nato_flank':     '🛡️ NATO FLANK',
+            'ukraine_front':  '🇺🇦 UKRAINE',
+            'arctic':         '🧊 ARCTIC',
+            'hybrid':         '💻 HYBRID',
+            'cross_theater':  '🌐 CROSS-THEATER',
+            'deescalation':   '✅ DE-ESCALATION',
         };
 
         const rlEl = document.getElementById('redLineItems');
@@ -1144,13 +1602,15 @@ function renderLadder(activeLevel) {
 // RENDER ALL
 // ══════════════════════════════════════════════════════════════
 function renderAll(data) {
+    const t = T[currentLang] || T.en;
     currentData = data;
     renderBanner(data);
+    renderRegimeSignals(data);          // v2.0.0: between banner and So What
     renderActors(data);
     renderInterpretation(data);
     renderLadder(data.theatre_level || 0);
     const classified = Object.values(data.actors || {}).reduce((s, a) => s + (a.statement_count || 0), 0);
-    document.getElementById('articlesClassified').textContent = `Articles classified: ${classified}`;
+    document.getElementById('articlesClassified').textContent = `${t.articlesClassifiedTpl}${classified}`;
 }
 
 // ══════════════════════════════════════════════════════════════
@@ -1174,12 +1634,13 @@ async function fetchData(force = false) {
 }
 
 async function triggerScan() {
+    const t = T[currentLang] || T.en;
     const btn = document.getElementById('scanBtn');
     btn.disabled = true;
-    btn.textContent = '⏳ Scanning...';
+    btn.textContent = t.scanningLabel;
     await fetchData(true);
     btn.disabled = false;
-    btn.innerHTML = '🔄 <span data-i18n="refreshScan">Refresh Scan</span>';
+    btn.innerHTML = `🔄 <span data-i18n="refreshScan">${t.refreshScan}</span>`;
 }
 
 // ══════════════════════════════════════════════════════════════
