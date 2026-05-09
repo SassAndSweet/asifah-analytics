@@ -816,16 +816,132 @@ footer .footer-copyright {
     <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/chile-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="travel_button">VIEW ADVISORY →</a>
 </div>
 
-<!-- ── RHETORIC TRACKER PLACEHOLDER (no Chile tracker yet — flag-only) ── -->
-<div class="rhetoric-placeholder">
-    <div>
-        <div style="font-size:13px;font-weight:bold;color:var(--text-primary);" data-i18n="rhetoric_placeholder_title">📡 Chile Rhetoric &amp; Coercion Tracker</div>
-        <div style="font-size:11px;color:var(--text-secondary);margin-top:3px;" data-i18n="rhetoric_placeholder_subtitle">Coming soon: Boric Cabinet · Cancillería · Mining Sector · US-Chile · China-Chile · Antarctic Posture</div>
+<!-- ── CHILE RHETORIC TRACKER LIVE CARD (v1.0.0 May 9 2026) ── -->
+<!-- Pulls /api/rhetoric/chile — composite gauge + top signals + link to full tracker -->
+<div class="metric-card" id="chileRhetoricCard" style="border-left: 4px solid #4ade80;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+        <div>
+            <div class="section-title" style="margin-bottom:4px;" data-i18n="chile_rhetoric_title">📡 Chile Rhetoric &amp; Pressure Tracker</div>
+            <div style="font-size:11px; color:var(--text-secondary);" data-i18n="chile_rhetoric_subtitle">7 actors · 4-vector composite · live signal tempo</div>
+        </div>
+        <a href="rhetoric-chile.html" style="font-size:12px; padding:6px 14px; background:rgba(74,222,128,0.10); border:1px solid rgba(74,222,128,0.30); color:#4ade80; border-radius:6px; text-decoration:none; font-weight:700; letter-spacing:0.5px;" data-i18n="chile_rhetoric_full">View full tracker →</a>
     </div>
-    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">
-        <span style="background:#6b7280;color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:6px;letter-spacing:0.5px;" data-i18n="rhetoric_in_dev">🔧 In Development</span>
+
+    <!-- Composite gauge strip — 1 composite + 4 vectors -->
+    <div id="chileRhetoricGauges" style="display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
+        <div class="chile-gauge composite" data-vector="composite">
+            <div class="chile-gauge-label" data-i18n="chile_rh_composite">Composite</div>
+            <div class="chile-gauge-value">—</div>
+            <div class="chile-gauge-pill">—</div>
+        </div>
+        <div class="chile-gauge" data-vector="domestic_stability">
+            <div class="chile-gauge-label" data-i18n="chile_rh_vec_domestic">Domestic</div>
+            <div class="chile-gauge-value">—</div>
+            <div class="chile-gauge-pill">—</div>
+        </div>
+        <div class="chile-gauge" data-vector="resource_sector">
+            <div class="chile-gauge-label" data-i18n="chile_rh_vec_resource">Resource</div>
+            <div class="chile-gauge-value">—</div>
+            <div class="chile-gauge-pill">—</div>
+        </div>
+        <div class="chile-gauge" data-vector="us_alignment">
+            <div class="chile-gauge-label" data-i18n="chile_rh_vec_us">US Align.</div>
+            <div class="chile-gauge-value">—</div>
+            <div class="chile-gauge-pill">—</div>
+        </div>
+        <div class="chile-gauge" data-vector="china_alignment">
+            <div class="chile-gauge-label" data-i18n="chile_rh_vec_china">China Align.</div>
+            <div class="chile-gauge-value">—</div>
+            <div class="chile-gauge-pill">—</div>
+        </div>
     </div>
+
+    <!-- Executive summary line -->
+    <div id="chileRhetoricSummary" style="font-size:13px; line-height:1.55; color:var(--text-primary); padding:10px 14px; background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.15); border-radius:6px; margin-bottom:12px;">
+        <span style="color:var(--text-muted);" data-i18n="chile_rhetoric_loading">Loading rhetoric snapshot…</span>
+    </div>
+
+    <!-- Top 3 signals (compact) -->
+    <div id="chileRhetoricTopSignals" style="display:flex; flex-direction:column; gap:8px;"></div>
 </div>
+
+<style>
+    /* Chile rhetoric card gauges — compact arctic styling */
+    .chile-gauge {
+        background: rgba(13,27,46,0.5);
+        border: 1px solid rgba(56,189,248,0.20);
+        border-radius: 8px;
+        padding: 10px 12px;
+        text-align: left;
+    }
+    body[data-theme="light"] .chile-gauge {
+        background: rgba(240,245,250,0.7);
+        border-color: rgba(56,189,248,0.30);
+    }
+    .chile-gauge.composite { border-color: rgba(74,222,128,0.35); }
+    .chile-gauge-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .chile-gauge-value {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--accent);
+        line-height: 1.1;
+    }
+    .chile-gauge.composite .chile-gauge-value { font-size: 1.4rem; color: #4ade80; }
+    .chile-gauge-pill {
+        display: inline-block;
+        font-size: 9px;
+        padding: 1px 7px;
+        border-radius: 10px;
+        margin-top: 4px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        border: 1px solid var(--card-border);
+        color: var(--text-muted);
+    }
+    .chile-gauge-pill.lvl-low      { background: rgba(16,185,129,0.10); border-color: #10b981; color: #10b981; }
+    .chile-gauge-pill.lvl-normal   { background: rgba(56,189,248,0.10); border-color: #38bdf8; color: #38bdf8; }
+    .chile-gauge-pill.lvl-elevated { background: rgba(245,158,11,0.10); border-color: #f59e0b; color: #f59e0b; }
+    .chile-gauge-pill.lvl-high     { background: rgba(249,115,22,0.10); border-color: #f97316; color: #f97316; }
+    .chile-gauge-pill.lvl-surge    { background: rgba(239,68,68,0.12);  border-color: #ef4444; color: #ef4444; }
+
+    .chile-rh-signal {
+        background: rgba(13,27,46,0.4);
+        border-left: 3px solid var(--card-border);
+        border-radius: 6px;
+        padding: 8px 12px;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+    body[data-theme="light"] .chile-rh-signal { background: rgba(240,245,250,0.6); }
+    .chile-rh-signal.lvl-low      { border-left-color: #10b981; }
+    .chile-rh-signal.lvl-normal   { border-left-color: #38bdf8; }
+    .chile-rh-signal.lvl-elevated { border-left-color: #f59e0b; }
+    .chile-rh-signal.lvl-high     { border-left-color: #f97316; }
+    .chile-rh-signal.lvl-surge    { border-left-color: #ef4444; }
+    .chile-rh-signal-short { color: var(--text-primary); font-weight: 700; margin-bottom: 3px; }
+    .chile-rh-signal-type {
+        display: inline-block;
+        font-size: 9px;
+        padding: 1px 6px;
+        border-radius: 3px;
+        background: rgba(56,189,248,0.10);
+        color: var(--accent);
+        margin-right: 6px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    @media (max-width: 760px) {
+        #chileRhetoricGauges { grid-template-columns: 1fr 1fr !important; }
+    }
+</style>
 
 <!-- ── COMMODITY EXPOSURE CARD — Gold Standard v2.0 ── -->
 <div class="commodity-card" id="commodityCard">
@@ -1150,6 +1266,16 @@ const TRANSLATIONS = {
         rhetoric_placeholder_title:    '📡 Chile Rhetoric & Coercion Tracker',
         rhetoric_placeholder_subtitle: 'Coming soon: Boric Cabinet · Cancillería · Mining Sector · US-Chile · China-Chile · Antarctic Posture',
         rhetoric_in_dev:               '🔧 In Development',
+        // ── Live Chile rhetoric card (v1.0.0 May 9 2026) ──
+        chile_rhetoric_title:          '📡 Chile Rhetoric & Pressure Tracker',
+        chile_rhetoric_subtitle:       '7 actors · 4-vector composite · live signal tempo',
+        chile_rhetoric_full:           'View full tracker →',
+        chile_rhetoric_loading:        'Loading rhetoric snapshot…',
+        chile_rh_composite:            'Composite',
+        chile_rh_vec_domestic:         'Domestic',
+        chile_rh_vec_resource:         'Resource',
+        chile_rh_vec_us:               'US Align.',
+        chile_rh_vec_china:            'China Align.',
         stability_card_title:          '🇨🇱 Chile Stability Index',
         stability_card_text:           'Multi-factor stability assessment combining mining-sector posture (copper/lithium), Boric government cohesion, Indigenous (Mapuche) tensions in Araucanía, and Antarctic/Pacific dimension.<br><br><em style="color:var(--text-muted);">Detailed stability scoring backend (chile_stability.py) is in development. Until then, draw stability inferences from the commodity card above and the Knowledge Library below. When the rhetoric tracker ships, this card will populate with a theatre score (inbound + outbound max levels).</em>',
         meta_mil_posture:       'Military Posture',
@@ -1242,6 +1368,16 @@ const TRANSLATIONS = {
         rhetoric_placeholder_title:    '📡 Rastreador de Retórica y Coerción de Chile',
         rhetoric_placeholder_subtitle: 'Próximamente: Gabinete de Boric · Cancillería · Sector Minero · EE.UU.-Chile · China-Chile · Postura Antártica',
         rhetoric_in_dev:               '🔧 En Desarrollo',
+        // ── Live Chile rhetoric card ──
+        chile_rhetoric_title:          '📡 Rastreador de Retórica y Presión de Chile',
+        chile_rhetoric_subtitle:       '7 actores · compuesto de 4 vectores · ritmo de señal en vivo',
+        chile_rhetoric_full:           'Ver rastreador completo →',
+        chile_rhetoric_loading:        'Cargando instantánea de retórica…',
+        chile_rh_composite:            'Compuesto',
+        chile_rh_vec_domestic:         'Doméstico',
+        chile_rh_vec_resource:         'Recursos',
+        chile_rh_vec_us:               'EE.UU.',
+        chile_rh_vec_china:            'China',
         stability_card_title:          '🇨🇱 Índice de Estabilidad de Chile',
         stability_card_text:           'Evaluación multifactorial de estabilidad que combina la postura del sector minero (cobre/litio), la cohesión del gobierno de Boric, las tensiones indígenas (Mapuche) en La Araucanía y la dimensión antártica/pacífica.<br><br><em style="color:var(--text-muted);">El backend detallado de puntuación de estabilidad (chile_stability.py) está en desarrollo. Hasta entonces, infiera la estabilidad a partir de la tarjeta de materias primas y la Biblioteca de Conocimiento. Cuando se publique el rastreador de retórica, esta tarjeta se llenará con una puntuación de teatro (niveles máximos entrantes + salientes).</em>',
         meta_mil_posture:       'Postura Militar',
@@ -1334,6 +1470,16 @@ const TRANSLATIONS = {
         rhetoric_placeholder_title:    '📡 Rastreador de Retórica e Coerção do Chile',
         rhetoric_placeholder_subtitle: 'Em breve: Gabinete Boric · Cancillería · Setor Minerador · EUA-Chile · China-Chile · Postura Antártica',
         rhetoric_in_dev:               '🔧 Em Desenvolvimento',
+        // ── Live Chile rhetoric card ──
+        chile_rhetoric_title:          '📡 Rastreador de Retórica e Pressão do Chile',
+        chile_rhetoric_subtitle:       '7 atores · composto de 4 vetores · ritmo de sinal ao vivo',
+        chile_rhetoric_full:           'Ver rastreador completo →',
+        chile_rhetoric_loading:        'Carregando snapshot de retórica…',
+        chile_rh_composite:            'Composto',
+        chile_rh_vec_domestic:         'Doméstico',
+        chile_rh_vec_resource:         'Recursos',
+        chile_rh_vec_us:               'EUA',
+        chile_rh_vec_china:            'China',
         stability_card_title:          '🇨🇱 Índice de Estabilidade do Chile',
         stability_card_text:           'Avaliação multifatorial de estabilidade combinando postura do setor minerador (cobre/lítio), coesão do governo Boric, tensões indígenas (Mapuche) na Araucanía e dimensão antártica/pacífica.<br><br><em style="color:var(--text-muted);">O backend detalhado de pontuação de estabilidade (chile_stability.py) está em desenvolvimento. Até lá, infira estabilidade a partir do cartão de commodities acima e da Biblioteca de Conhecimento abaixo. Quando o rastreador de retórica for lançado, este cartão será preenchido com uma pontuação de teatro (níveis máximos de entrada + saída).</em>',
         meta_mil_posture:       'Postura Militar',
@@ -1711,6 +1857,80 @@ function renderArticles(tab) {
 }
 
 // ════════════════════════════════════════════════════════════
+// CHILE RHETORIC TRACKER LIVE CARD (v1.0.0 May 9 2026)
+// ════════════════════════════════════════════════════════════
+async function loadChileRhetoric() {
+    const card = document.getElementById('chileRhetoricCard');
+    if (!card) return;
+    try {
+        const resp = await fetch(WHA_BACKEND + '/api/rhetoric/chile');
+        const data = await resp.json();
+        if (!data.success) return;
+
+        // Composite gauge
+        const composite = data.composite_score || 0;
+        const compositeLevel = data.composite_level || 'low';
+        const compositeGauge = card.querySelector('.chile-gauge.composite');
+        if (compositeGauge) {
+            compositeGauge.querySelector('.chile-gauge-value').textContent = composite.toFixed(1);
+            const pill = compositeGauge.querySelector('.chile-gauge-pill');
+            pill.className = 'chile-gauge-pill lvl-' + compositeLevel;
+            pill.textContent = compositeLevel.toUpperCase();
+        }
+
+        // Vector gauges
+        const vs = data.vector_scores || {};
+        const vl = data.vector_levels || {};
+        ['domestic_stability', 'resource_sector', 'us_alignment', 'china_alignment'].forEach(function (vec) {
+            const g = card.querySelector('.chile-gauge[data-vector="' + vec + '"]');
+            if (!g) return;
+            g.querySelector('.chile-gauge-value').textContent = (vs[vec] || 0).toFixed(1);
+            const pill = g.querySelector('.chile-gauge-pill');
+            const lvl = vl[vec] || 'low';
+            pill.className = 'chile-gauge-pill lvl-' + lvl;
+            pill.textContent = lvl.toUpperCase();
+        });
+
+        // Executive summary
+        const summaryEl = document.getElementById('chileRhetoricSummary');
+        if (summaryEl) {
+            summaryEl.textContent = data.executive_summary || '';
+            summaryEl.style.color = 'var(--text-primary)';
+        }
+
+        // Top 3 signals (compact)
+        const signalsEl = document.getElementById('chileRhetoricTopSignals');
+        if (signalsEl) {
+            const signals = (data.top_signals || []).slice(0, 3);
+            if (signals.length === 0) {
+                signalsEl.innerHTML = '<div style="font-size:11px; color:var(--text-muted); font-style:italic;">No active signals this scan.</div>';
+            } else {
+                signalsEl.innerHTML = signals.map(function (sig) {
+                    const lvl = sig.level || 'low';
+                    const type = (sig.type || 'actor_signal').replace(/_/g, ' ');
+                    return '<div class="chile-rh-signal lvl-' + lvl + '">' +
+                        '<span class="chile-rh-signal-type">' + escapeHtmlChile(type) + '</span>' +
+                        '<span class="chile-rh-signal-short">' + escapeHtmlChile(sig.short_text || '') + '</span>' +
+                        '</div>';
+                }).join('');
+            }
+        }
+    } catch (e) {
+        console.warn('Chile rhetoric load failed:', e);
+    }
+}
+
+function escapeHtmlChile(s) {
+    if (s == null) return '';
+    return String(s)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+}
+
+// ════════════════════════════════════════════════════════════
 // MAIN LOAD
 // ════════════════════════════════════════════════════════════
 async function loadData() {
@@ -1726,6 +1946,7 @@ async function loadData() {
 
     await Promise.allSettled([
         loadTravelAdvisory(),
+        loadChileRhetoric(),
         loadCommodity(),
         loadMilitaryPosture(),
         loadArticles(),
