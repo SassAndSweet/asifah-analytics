@@ -112,6 +112,52 @@
         .evac-banner-item a { color: var(--accent-red); text-decoration: none; }
         .evac-banner-item a:hover { text-decoration: underline; }
         .evac-subtype { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* ── THEATER ANALYSIS CARD (v3.2.x — analytical prose layer) ── */
+        .ta-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 18px 22px; margin-bottom: 24px; box-shadow: var(--shadow-md); display: none; }
+        .ta-card.visible { display: block; }
+        [data-theme="dark"] .ta-card { border-color: var(--cyber-border); box-shadow: 0 0 20px rgba(0,212,255,0.06); }
+        .ta-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 12px; flex-wrap: wrap; }
+        .ta-title { font-size: 0.95rem; font-weight: 700; color: var(--accent-cyan); letter-spacing: 2px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+        .ta-meta { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; letter-spacing: 0.5px; }
+        .ta-exec { background: rgba(0,212,255,0.04); border-left: 3px solid var(--accent-cyan); padding: 12px 16px; border-radius: 4px; margin-bottom: 16px; }
+        [data-theme="dark"] .ta-exec { background: rgba(0,212,255,0.06); }
+        .ta-exec-label { font-size: 0.65rem; color: var(--accent-cyan); letter-spacing: 1.5px; text-transform: uppercase; font-weight: 700; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+        .ta-exec-text { font-size: 0.92rem; color: var(--text-primary); line-height: 1.55; }
+        .ta-section { border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 12px; }
+        [data-theme="dark"] .ta-section { border-top-color: var(--cyber-border); }
+        .ta-section-toggle { display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; padding: 4px 0; transition: background 0.2s; border-radius: 4px; }
+        .ta-section-toggle:hover { background: rgba(0,212,255,0.04); padding-left: 4px; padding-right: 4px; }
+        .ta-section-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+        .ta-section-count { font-size: 0.7rem; color: var(--text-muted); font-family: 'Courier New', monospace; }
+        .ta-chevron { transition: transform 0.3s ease; color: var(--text-muted); font-size: 0.8rem; }
+        .ta-section.expanded .ta-chevron { transform: rotate(180deg); }
+        .ta-section-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, opacity 0.3s ease; opacity: 0; }
+        .ta-section.expanded .ta-section-body { max-height: 4000px; opacity: 1; padding-top: 10px; }
+
+        /* Convergence styling — distinct AMBER/ORANGE register */
+        .ta-section.convergence { background: rgba(245,158,11,0.04); border: 1px solid rgba(245,158,11,0.25); border-top: 1px solid rgba(245,158,11,0.25); border-radius: 8px; padding: 10px 14px; margin-top: 14px; }
+        [data-theme="dark"] .ta-section.convergence { background: rgba(245,158,11,0.07); border-color: rgba(245,158,11,0.35); box-shadow: 0 0 14px rgba(245,158,11,0.08); }
+        .ta-section.convergence .ta-section-title { color: #f59e0b; }
+        .ta-section.convergence .ta-section-count { color: #fbbf24; }
+        .ta-section.convergence .ta-section-toggle:hover { background: rgba(245,158,11,0.08); }
+        .ta-prose-block { font-size: 0.86rem; line-height: 1.55; color: var(--text-primary); padding: 8px 12px; background: rgba(0,0,0,0.02); border-radius: 4px; margin-bottom: 8px; border-left: 3px solid var(--border-color); }
+        [data-theme="dark"] .ta-prose-block { background: rgba(0,212,255,0.03); border-left-color: var(--cyber-border); }
+        .ta-prose-block.lvl-elevated, .ta-prose-block.lvl-monitored { border-left-color: var(--accent-yellow); }
+        .ta-prose-block.lvl-high, .ta-prose-block.lvl-contested { border-left-color: var(--accent-orange); }
+        .ta-prose-block.lvl-surge, .ta-prose-block.lvl-disrupted { border-left-color: var(--accent-red); }
+        .ta-prose-block.lvl-active { border-left-color: #f59e0b; }
+        .ta-prose-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .ta-prose-pill { font-size: 0.6rem; padding: 1px 7px; border-radius: 10px; font-weight: 700; letter-spacing: 0.5px; }
+        .ta-prose-pill.lvl-elevated, .ta-prose-pill.lvl-monitored { background: rgba(255,204,0,0.15); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
+        .ta-prose-pill.lvl-high, .ta-prose-pill.lvl-contested { background: rgba(255,140,0,0.15); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
+        .ta-prose-pill.lvl-surge, .ta-prose-pill.lvl-disrupted { background: rgba(255,59,59,0.15); color: var(--accent-red); border: 1px solid var(--accent-red); }
+        .ta-prose-pill.lvl-active { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid #f59e0b; }
+        .ta-prose-pill.lvl-normal, .ta-prose-pill.lvl-open { background: rgba(0,255,136,0.10); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .ta-empty { font-size: 0.78rem; color: var(--text-muted); font-style: italic; padding: 8px 0; }
+        .ta-unavailable { padding: 16px; text-align: center; color: var(--text-muted); font-size: 0.85rem; }
+        .ta-unavailable code { background: var(--bg-signal); padding: 2px 6px; border-radius: 3px; font-size: 0.8rem; color: var(--accent-cyan); }
+
         .status-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 24px; }
         .status-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 10px; padding: 16px 20px; text-align: center; box-shadow: var(--shadow-sm); transition: all 0.3s; }
         [data-theme="dark"] .status-card { border-color: var(--cyber-border); }
@@ -468,6 +514,48 @@
         <div class="evac-banner-title">&#128680; BASE EVACUATION / DEPARTURE ALERTS</div>
         <div class="evac-banner-items" id="evacBannerItems"></div>
     </div>
+
+    <!-- ── THEATER ANALYSIS (BLUF) — v3.2.x analytical prose layer ── -->
+    <div class="ta-card" id="taCard">
+        <div class="ta-header">
+            <div class="ta-title">🎯 <span data-i18n="taTitle">Theater Analysis</span></div>
+            <div class="ta-meta" id="taMeta">&mdash;</div>
+        </div>
+
+        <!-- Executive summary — always visible, no toggle -->
+        <div class="ta-exec" id="taExecBlock">
+            <div class="ta-exec-label">🪖 <span data-i18n="taExecLabel">Executive Summary</span></div>
+            <div class="ta-exec-text" id="taExecText">&mdash;</div>
+        </div>
+
+        <!-- Coupled-Pressure Fingerprints (amber/orange register, expandable) -->
+        <div class="ta-section convergence" id="taConvergenceSection" style="display:none;">
+            <div class="ta-section-toggle" onclick="toggleTaSection('taConvergenceSection')">
+                <div class="ta-section-title">⚡ <span data-i18n="taConvergence">Coupled-Pressure Fingerprints</span> <span class="ta-section-count" id="taConvergenceCount"></span></div>
+                <div class="ta-chevron">▼</div>
+            </div>
+            <div class="ta-section-body" id="taConvergenceBody"></div>
+        </div>
+
+        <!-- Chokepoints (cyan, expandable) -->
+        <div class="ta-section" id="taChokepointSection" style="display:none;">
+            <div class="ta-section-toggle" onclick="toggleTaSection('taChokepointSection')">
+                <div class="ta-section-title">🚢 <span data-i18n="taChokepoints">Chokepoints</span> <span class="ta-section-count" id="taChokepointCount"></span></div>
+                <div class="ta-chevron">▼</div>
+            </div>
+            <div class="ta-section-body" id="taChokepointBody"></div>
+        </div>
+
+        <!-- Theatres (cyan, expandable) -->
+        <div class="ta-section" id="taTheatreSection">
+            <div class="ta-section-toggle" onclick="toggleTaSection('taTheatreSection')">
+                <div class="ta-section-title">🌍 <span data-i18n="taTheatres">Theatres</span> <span class="ta-section-count" id="taTheatreCount"></span></div>
+                <div class="ta-chevron">▼</div>
+            </div>
+            <div class="ta-section-body" id="taTheatreBody"></div>
+        </div>
+    </div>
+
     <div class="status-strip">
         <div class="status-card" id="statusArticles"><div class="label" data-i18n="articlesScanned">ARTICLES SCANNED</div><div class="value" id="totalArticles">&mdash;</div><div class="sub" data-i18n="last7Days">Last 7 days</div></div>
         <div class="status-card" id="statusSignals"><div class="label" data-i18n="signalsDetected">SIGNALS DETECTED</div><div class="value" id="totalSignals">&mdash;</div></div>
@@ -544,10 +632,10 @@ var API_BASE = 'https://asifah-backend.onrender.com';
 var ENDPOINT = API_BASE + '/api/military-posture';
 
 var TRANSLATIONS = {
-    en: { pageTitle:'MILITARY POSTURE TRACKER', pageSubtitle:'Multi-Actor Deployment Intelligence', loading:'SCANNING MILITARY POSTURE...', articlesScanned:'ARTICLES SCANNED', signalsDetected:'SIGNALS DETECTED', activeActors:'ACTIVE ACTORS', tensionMultiplier:'TENSION MULTIPLIER', last7Days:'Last 7 days', sectionActors:'Active Military Actors', sectionTargets:'Target Posture Assessment', sectionAssets:'Asset Distribution', sectionSignals:'Signal Feed (Weighted by Impact)', backToMain:'\u2190 Back to Main Dashboard', toggleLabel:'TOGGLE: LIGHT - DARK', signals:'signals', score:'Score', topSignal:'Top Signal', defenseRSS:'DEFENSE RSS', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'REDDIT', lastUpdated:'Last Updated', scanTime:'Scan Time' },
-    ar: { pageTitle:'\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0639\u0633\u0643\u0631\u064a', pageSubtitle:'\u0627\u0633\u062a\u062e\u0628\u0627\u0631\u0627\u062a \u0627\u0644\u0646\u0634\u0631 \u0645\u062a\u0639\u062f\u062f \u0627\u0644\u0623\u0637\u0631\u0627\u0641', loading:'\u062c\u0627\u0631\u064d \u0645\u0633\u062d \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0639\u0633\u0643\u0631\u064a...', articlesScanned:'\u0627\u0644\u0645\u0642\u0627\u0644\u0627\u062a \u0627\u0644\u0645\u0645\u0633\u0648\u062d\u0629', signalsDetected:'\u0627\u0644\u0625\u0634\u0627\u0631\u0627\u062a \u0627\u0644\u0645\u0643\u062a\u0634\u0641\u0629', activeActors:'\u0627\u0644\u0623\u0637\u0631\u0627\u0641 \u0627\u0644\u0646\u0634\u0637\u0629', tensionMultiplier:'\u0645\u0636\u0627\u0639\u0641 \u0627\u0644\u062a\u0648\u062a\u0631', last7Days:'\u0622\u062e\u0631 7 \u0623\u064a\u0627\u0645', sectionActors:'\u0627\u0644\u0623\u0637\u0631\u0627\u0641 \u0627\u0644\u0639\u0633\u0643\u0631\u064a\u0629 \u0627\u0644\u0646\u0634\u0637\u0629', sectionTargets:'\u062a\u0642\u064a\u064a\u0645 \u0648\u0636\u0639 \u0627\u0644\u0623\u0647\u062f\u0627\u0641', sectionAssets:'\u062a\u0648\u0632\u064a\u0639 \u0627\u0644\u0623\u0635\u0648\u0644', sectionSignals:'\u062a\u063a\u0630\u064a\u0629 \u0627\u0644\u0625\u0634\u0627\u0631\u0627\u062a', backToMain:'\u2192 \u0627\u0644\u0639\u0648\u062f\u0629 \u0644\u0644\u0648\u062d\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629', toggleLabel:'\u062a\u0628\u062f\u064a\u0644: \u0641\u0627\u062a\u062d - \u062f\u0627\u0643\u0646', signals:'\u0625\u0634\u0627\u0631\u0627\u062a', score:'\u0627\u0644\u0646\u062a\u064a\u062c\u0629', topSignal:'\u0623\u0639\u0644\u0649 \u0625\u0634\u0627\u0631\u0629', defenseRSS:'RSS \u0627\u0644\u062f\u0641\u0627\u0639\u064a\u0629', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'\u0631\u064a\u062f\u064a\u062a', lastUpdated:'\u0622\u062e\u0631 \u062a\u062d\u062f\u064a\u062b', scanTime:'\u0648\u0642\u062a \u0627\u0644\u0645\u0633\u062d' },
-    he: { pageTitle:'\u05de\u05e2\u05e7\u05d1 \u05de\u05e6\u05d1 \u05e6\u05d1\u05d0\u05d9', pageSubtitle:'\u05de\u05d5\u05d3\u05d9\u05e2\u05d9\u05df \u05e4\u05e8\u05d9\u05e1\u05d4 \u05e8\u05d1-\u05e9\u05d7\u05e7\u05e0\u05d9\u05dd', loading:'\u05e1\u05d5\u05e8\u05e7 \u05de\u05e6\u05d1 \u05e6\u05d1\u05d0\u05d9...', articlesScanned:'\u05db\u05ea\u05d1\u05d5\u05ea \u05e0\u05e1\u05e8\u05e7\u05d5', signalsDetected:'\u05d0\u05d5\u05ea\u05d5\u05ea \u05d6\u05d5\u05d4\u05d5', activeActors:'\u05e9\u05d7\u05e7\u05e0\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd', tensionMultiplier:'\u05de\u05db\u05e4\u05d9\u05dc \u05de\u05ea\u05d7', last7Days:'7 \u05d9\u05de\u05d9\u05dd \u05d0\u05d7\u05e8\u05d5\u05e0\u05d9\u05dd', sectionActors:'\u05e9\u05d7\u05e7\u05e0\u05d9\u05dd \u05e6\u05d1\u05d0\u05d9\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd', sectionTargets:'\u05d4\u05e2\u05e8\u05db\u05ea \u05de\u05e6\u05d1 \u05de\u05d8\u05e8\u05d5\u05ea', sectionAssets:'\u05e4\u05d9\u05d6\u05d5\u05e8 \u05e0\u05db\u05e1\u05d9\u05dd', sectionSignals:'\u05e4\u05d9\u05d3 \u05d0\u05d5\u05ea\u05d5\u05ea', backToMain:'\u2190 \u05d7\u05d6\u05e8\u05d4 \u05dc\u05dc\u05d5\u05d7 \u05d4\u05e8\u05d0\u05e9\u05d9', toggleLabel:'\u05de\u05e6\u05d1: \u05d1\u05d4\u05d9\u05e8 - \u05db\u05d4\u05d4', signals:'\u05d0\u05d5\u05ea\u05d5\u05ea', score:'\u05e6\u05d9\u05d5\u05df', topSignal:'\u05d0\u05d5\u05ea \u05de\u05d5\u05d1\u05d9\u05dc', defenseRSS:'RSS \u05d1\u05d9\u05d8\u05d7\u05d5\u05e0\u05d9', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'\u05e8\u05d3\u05d9\u05d8', lastUpdated:'\u05e2\u05d3\u05db\u05d5\u05df \u05d0\u05d7\u05e8\u05d5\u05df', scanTime:'\u05d6\u05de\u05df \u05e1\u05e8\u05d9\u05e7\u05d4' },
-    fa: { pageTitle:'\u0631\u062f\u06cc\u0627\u0628 \u0648\u0636\u0639\u06cc\u062a \u0646\u0638\u0627\u0645\u06cc', pageSubtitle:'\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0633\u062a\u0642\u0631\u0627\u0631 \u0686\u0646\u062f \u0628\u0627\u0632\u06cc\u06af\u0631', loading:'\u062f\u0631 \u062d\u0627\u0644 \u0627\u0633\u06a9\u0646...', articlesScanned:'\u0645\u0642\u0627\u0644\u0627\u062a \u0627\u0633\u06a9\u0646 \u0634\u062f\u0647', signalsDetected:'\u0633\u06cc\u06af\u0646\u0627\u0644 \u0634\u0646\u0627\u0633\u0627\u06cc\u06cc', activeActors:'\u0628\u0627\u0632\u06cc\u06af\u0631\u0627\u0646 \u0641\u0639\u0627\u0644', tensionMultiplier:'\u0636\u0631\u06cc\u0628 \u062a\u0646\u0634', last7Days:'7 \u0631\u0648\u0632 \u06af\u0630\u0634\u062a\u0647', sectionActors:'\u0628\u0627\u0632\u06cc\u06af\u0631\u0627\u0646 \u0646\u0638\u0627\u0645\u06cc \u0641\u0639\u0627\u0644', sectionTargets:'\u0627\u0631\u0632\u06cc\u0627\u0628\u06cc \u0648\u0636\u0639\u06cc\u062a \u0627\u0647\u062f\u0627\u0641', sectionAssets:'\u062a\u0648\u0632\u06cc\u0639 \u062f\u0627\u0631\u0627\u06cc\u06cc', sectionSignals:'\u0641\u06cc\u062f \u0633\u06cc\u06af\u0646\u0627\u0644', backToMain:'\u2190 \u0628\u0627\u0632\u06af\u0634\u062a', toggleLabel:'\u062a\u063a\u06cc\u06cc\u0631: \u0631\u0648\u0634\u0646 - \u062a\u0627\u0631\u06cc\u06a9', signals:'\u0633\u06cc\u06af\u0646\u0627\u0644', score:'\u0627\u0645\u062a\u06cc\u0627\u0632', topSignal:'\u0633\u06cc\u06af\u0646\u0627\u0644 \u0628\u0631\u062a\u0631', defenseRSS:'RSS \u062f\u0641\u0627\u0639\u06cc', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'\u0631\u062f\u06cc\u062a', lastUpdated:'\u0622\u062e\u0631\u06cc\u0646 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc', scanTime:'\u0632\u0645\u0627\u0646 \u0627\u0633\u06a9\u0646' }
+    en: { pageTitle:'MILITARY POSTURE TRACKER', pageSubtitle:'Multi-Actor Deployment Intelligence', loading:'SCANNING MILITARY POSTURE...', articlesScanned:'ARTICLES SCANNED', signalsDetected:'SIGNALS DETECTED', activeActors:'ACTIVE ACTORS', tensionMultiplier:'TENSION MULTIPLIER', last7Days:'Last 7 days', sectionActors:'Active Military Actors', sectionTargets:'Target Posture Assessment', sectionAssets:'Asset Distribution', sectionSignals:'Signal Feed (Weighted by Impact)', backToMain:'\u2190 Back to Main Dashboard', toggleLabel:'TOGGLE: LIGHT - DARK', signals:'signals', score:'Score', topSignal:'Top Signal', defenseRSS:'DEFENSE RSS', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'REDDIT', lastUpdated:'Last Updated', scanTime:'Scan Time', taTitle:'Theater Analysis', taExecLabel:'Executive Summary', taConvergence:'Coupled-Pressure Fingerprints', taChokepoints:'Chokepoints', taTheatres:'Theatres' },
+    ar: { pageTitle:'\u0645\u062a\u062a\u0628\u0639 \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0639\u0633\u0643\u0631\u064a', pageSubtitle:'\u0627\u0633\u062a\u062e\u0628\u0627\u0631\u0627\u062a \u0627\u0644\u0646\u0634\u0631 \u0645\u062a\u0639\u062f\u062f \u0627\u0644\u0623\u0637\u0631\u0627\u0641', loading:'\u062c\u0627\u0631\u064d \u0645\u0633\u062d \u0627\u0644\u0648\u0636\u0639 \u0627\u0644\u0639\u0633\u0643\u0631\u064a...', articlesScanned:'\u0627\u0644\u0645\u0642\u0627\u0644\u0627\u062a \u0627\u0644\u0645\u0645\u0633\u0648\u062d\u0629', signalsDetected:'\u0627\u0644\u0625\u0634\u0627\u0631\u0627\u062a \u0627\u0644\u0645\u0643\u062a\u0634\u0641\u0629', activeActors:'\u0627\u0644\u0623\u0637\u0631\u0627\u0641 \u0627\u0644\u0646\u0634\u0637\u0629', tensionMultiplier:'\u0645\u0636\u0627\u0639\u0641 \u0627\u0644\u062a\u0648\u062a\u0631', last7Days:'\u0622\u062e\u0631 7 \u0623\u064a\u0627\u0645', sectionActors:'\u0627\u0644\u0623\u0637\u0631\u0627\u0641 \u0627\u0644\u0639\u0633\u0643\u0631\u064a\u0629 \u0627\u0644\u0646\u0634\u0637\u0629', sectionTargets:'\u062a\u0642\u064a\u064a\u0645 \u0648\u0636\u0639 \u0627\u0644\u0623\u0647\u062f\u0627\u0641', sectionAssets:'\u062a\u0648\u0632\u064a\u0639 \u0627\u0644\u0623\u0635\u0648\u0644', sectionSignals:'\u062a\u063a\u0630\u064a\u0629 \u0627\u0644\u0625\u0634\u0627\u0631\u0627\u062a', backToMain:'\u2192 \u0627\u0644\u0639\u0648\u062f\u0629 \u0644\u0644\u0648\u062d\u0629 \u0627\u0644\u0631\u0626\u064a\u0633\u064a\u0629', toggleLabel:'\u062a\u0628\u062f\u064a\u0644: \u0641\u0627\u062a\u062d - \u062f\u0627\u0643\u0646', signals:'\u0625\u0634\u0627\u0631\u0627\u062a', score:'\u0627\u0644\u0646\u062a\u064a\u062c\u0629', topSignal:'\u0623\u0639\u0644\u0649 \u0625\u0634\u0627\u0631\u0629', defenseRSS:'RSS \u0627\u0644\u062f\u0641\u0627\u0639\u064a\u0629', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'\u0631\u064a\u062f\u064a\u062a', lastUpdated:'\u0622\u062e\u0631 \u062a\u062d\u062f\u064a\u062b', scanTime:'\u0648\u0642\u062a \u0627\u0644\u0645\u0633\u062d', taTitle:'\u062a\u062d\u0644\u064a\u0644 \u0627\u0644\u0645\u0633\u0631\u062d', taExecLabel:'\u0627\u0644\u0645\u0644\u062e\u0635 \u0627\u0644\u062a\u0646\u0641\u064a\u0630\u064a', taConvergence:'\u0628\u0635\u0645\u0627\u062a \u0627\u0644\u0636\u063a\u0637 \u0627\u0644\u0645\u0632\u062f\u0648\u062c', taChokepoints:'\u0646\u0642\u0627\u0637 \u0627\u0644\u0627\u062e\u062a\u0646\u0627\u0642', taTheatres:'\u0627\u0644\u0645\u0633\u0627\u0631\u062d' },
+    he: { pageTitle:'\u05de\u05e2\u05e7\u05d1 \u05de\u05e6\u05d1 \u05e6\u05d1\u05d0\u05d9', pageSubtitle:'\u05de\u05d5\u05d3\u05d9\u05e2\u05d9\u05df \u05e4\u05e8\u05d9\u05e1\u05d4 \u05e8\u05d1-\u05e9\u05d7\u05e7\u05e0\u05d9\u05dd', loading:'\u05e1\u05d5\u05e8\u05e7 \u05de\u05e6\u05d1 \u05e6\u05d1\u05d0\u05d9...', articlesScanned:'\u05db\u05ea\u05d1\u05d5\u05ea \u05e0\u05e1\u05e8\u05e7\u05d5', signalsDetected:'\u05d0\u05d5\u05ea\u05d5\u05ea \u05d6\u05d5\u05d4\u05d5', activeActors:'\u05e9\u05d7\u05e7\u05e0\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd', tensionMultiplier:'\u05de\u05db\u05e4\u05d9\u05dc \u05de\u05ea\u05d7', last7Days:'7 \u05d9\u05de\u05d9\u05dd \u05d0\u05d7\u05e8\u05d5\u05e0\u05d9\u05dd', sectionActors:'\u05e9\u05d7\u05e7\u05e0\u05d9\u05dd \u05e6\u05d1\u05d0\u05d9\u05d9\u05dd \u05e4\u05e2\u05d9\u05dc\u05d9\u05dd', sectionTargets:'\u05d4\u05e2\u05e8\u05db\u05ea \u05de\u05e6\u05d1 \u05de\u05d8\u05e8\u05d5\u05ea', sectionAssets:'\u05e4\u05d9\u05d6\u05d5\u05e8 \u05e0\u05db\u05e1\u05d9\u05dd', sectionSignals:'\u05e4\u05d9\u05d3 \u05d0\u05d5\u05ea\u05d5\u05ea', backToMain:'\u2190 \u05d7\u05d6\u05e8\u05d4 \u05dc\u05dc\u05d5\u05d7 \u05d4\u05e8\u05d0\u05e9\u05d9', toggleLabel:'\u05de\u05e6\u05d1: \u05d1\u05d4\u05d9\u05e8 - \u05db\u05d4\u05d4', signals:'\u05d0\u05d5\u05ea\u05d5\u05ea', score:'\u05e6\u05d9\u05d5\u05df', topSignal:'\u05d0\u05d5\u05ea \u05de\u05d5\u05d1\u05d9\u05dc', defenseRSS:'RSS \u05d1\u05d9\u05d8\u05d7\u05d5\u05e0\u05d9', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'\u05e8\u05d3\u05d9\u05d8', lastUpdated:'\u05e2\u05d3\u05db\u05d5\u05df \u05d0\u05d7\u05e8\u05d5\u05df', scanTime:'\u05d6\u05de\u05df \u05e1\u05e8\u05d9\u05e7\u05d4', taTitle:'\u05e0\u05d9\u05ea\u05d5\u05d7 \u05d6\u05d9\u05e8\u05d4', taExecLabel:'\u05ea\u05e7\u05e6\u05d9\u05e8 \u05de\u05e0\u05d4\u05dc\u05d9\u05dd', taConvergence:'\u05d8\u05d1\u05d9\u05e2\u05d5\u05ea \u05dc\u05d7\u05e5 \u05de\u05d6\u05d5\u05d5\u05d2', taChokepoints:'\u05e6\u05d5\u05d5\u05d0\u05e8\u05d9 \u05ea\u05e0\u05d5\u05e2\u05d4', taTheatres:'\u05d6\u05d9\u05e8\u05d5\u05ea' },
+    fa: { pageTitle:'\u0631\u062f\u06cc\u0627\u0628 \u0648\u0636\u0639\u06cc\u062a \u0646\u0638\u0627\u0645\u06cc', pageSubtitle:'\u0627\u0637\u0644\u0627\u0639\u0627\u062a \u0627\u0633\u062a\u0642\u0631\u0627\u0631 \u0686\u0646\u062f \u0628\u0627\u0632\u06cc\u06af\u0631', loading:'\u062f\u0631 \u062d\u0627\u0644 \u0627\u0633\u06a9\u0646...', articlesScanned:'\u0645\u0642\u0627\u0644\u0627\u062a \u0627\u0633\u06a9\u0646 \u0634\u062f\u0647', signalsDetected:'\u0633\u06cc\u06af\u0646\u0627\u0644 \u0634\u0646\u0627\u0633\u0627\u06cc\u06cc', activeActors:'\u0628\u0627\u0632\u06cc\u06af\u0631\u0627\u0646 \u0641\u0639\u0627\u0644', tensionMultiplier:'\u0636\u0631\u06cc\u0628 \u062a\u0646\u0634', last7Days:'7 \u0631\u0648\u0632 \u06af\u0630\u0634\u062a\u0647', sectionActors:'\u0628\u0627\u0632\u06cc\u06af\u0631\u0627\u0646 \u0646\u0638\u0627\u0645\u06cc \u0641\u0639\u0627\u0644', sectionTargets:'\u0627\u0631\u0632\u06cc\u0627\u0628\u06cc \u0648\u0636\u0639\u06cc\u062a \u0627\u0647\u062f\u0627\u0641', sectionAssets:'\u062a\u0648\u0632\u06cc\u0639 \u062f\u0627\u0631\u0627\u06cc\u06cc', sectionSignals:'\u0641\u06cc\u062f \u0633\u06cc\u06af\u0646\u0627\u0644', backToMain:'\u2190 \u0628\u0627\u0632\u06af\u0634\u062a', toggleLabel:'\u062a\u063a\u06cc\u06cc\u0631: \u0631\u0648\u0634\u0646 - \u062a\u0627\u0631\u06cc\u06a9', signals:'\u0633\u06cc\u06af\u0646\u0627\u0644', score:'\u0627\u0645\u062a\u06cc\u0627\u0632', topSignal:'\u0633\u06cc\u06af\u0646\u0627\u0644 \u0628\u0631\u062a\u0631', defenseRSS:'RSS \u062f\u0641\u0627\u0639\u06cc', gdelt:'GDELT', newsapi:'NEWSAPI', reddit:'\u0631\u062f\u06cc\u062a', lastUpdated:'\u0622\u062e\u0631\u06cc\u0646 \u0628\u0631\u0648\u0632\u0631\u0633\u0627\u0646\u06cc', scanTime:'\u0632\u0645\u0627\u0646 \u0627\u0633\u06a9\u0646', taTitle:'\u062a\u062d\u0644\u06cc\u0644 \u0635\u062d\u0646\u0647', taExecLabel:'\u062e\u0644\u0627\u0635\u0647 \u0627\u062c\u0631\u0627\u06cc\u06cc', taConvergence:'\u0627\u062b\u0631 \u0627\u0646\u06af\u0634\u062a \u0641\u0634\u0627\u0631 \u062c\u0641\u062a\u06cc', taChokepoints:'\u0646\u0642\u0627\u0637 \u062e\u0641\u0647 \u06a9\u0646', taTheatres:'\u0635\u062d\u0646\u0647 \u0647\u0627' }
 };
 
 var currentLang = 'en';
@@ -701,6 +789,7 @@ function renderAll(data) {
     else ts.textContent = '';
 
     renderEvacBanner(data.evacuation_alerts || []);
+    renderTheaterAnalysis(data.interpretation || null);
     renderTheatres(data.actor_summaries || {}, data.theatre_groupings || null, t);
     renderTargets(data.target_postures || {}, t);
     renderAssets(data.asset_distribution || {});
@@ -730,6 +819,184 @@ div.innerHTML = icon + ' <a href="' + (a.url || '#') + '" target="_blank" rel="n
         items.appendChild(div);
     }
 }
+
+// ────────────────────────────────────────────────────────────
+// THEATER ANALYSIS (BLUF) — v3.2.x analytical prose layer
+// Reads data.interpretation produced by military_signal_interpreter.py
+// (no extra network call; data flows in via /api/military-posture).
+// ────────────────────────────────────────────────────────────
+function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+}
+
+function toggleTaSection(sectionId) {
+    var sec = document.getElementById(sectionId);
+    if (sec) sec.classList.toggle('expanded');
+}
+
+function renderTheaterAnalysis(interp) {
+    var card = document.getElementById('taCard');
+    if (!card) return;
+
+    // Empty / unavailable state — graceful degrade if interpreter not yet wired
+    if (!interp || typeof interp !== 'object') {
+        card.classList.add('visible');
+        card.innerHTML = '<div class="ta-header"><div class="ta-title">🎯 Theater Analysis</div></div>'
+            + '<div class="ta-unavailable">Analytical prose layer not yet available. '
+            + 'Force-refresh via <code>/api/military-posture?refresh=true</code> to populate.</div>';
+        return;
+    }
+
+    card.classList.add('visible');
+
+    // ── Meta line (interpreter version) ──
+    var meta = document.getElementById('taMeta');
+    if (meta) {
+        var v = interp.interpreter_version || '?';
+        meta.textContent = 'INTERPRETER v' + v;
+    }
+
+    // ── Executive summary ──
+    var execEl = document.getElementById('taExecText');
+    if (execEl) {
+        execEl.textContent = interp.executive_summary || 'No analytical summary available.';
+    }
+
+    // ── Convergence section (amber/orange register) ──
+    var convSection = document.getElementById('taConvergenceSection');
+    var convBody    = document.getElementById('taConvergenceBody');
+    var convCount   = document.getElementById('taConvergenceCount');
+    var convergences = interp.convergence_prose || {};
+    var convKeys = Object.keys(convergences);
+
+    if (convKeys.length === 0) {
+        convSection.style.display = 'none';
+    } else {
+        convSection.style.display = '';
+        convCount.textContent = '(' + convKeys.length + ')';
+        // Auto-expand convergence on first render — these are rare/load-bearing signals
+        if (!convSection.classList.contains('user-toggled')) {
+            convSection.classList.add('expanded');
+        }
+        var convHtml = '';
+        for (var i = 0; i < convKeys.length; i++) {
+            var label = convKeys[i];
+            var c = convergences[label] || {};
+            var lvl = c.level || 'contested';
+            convHtml += '<div class="ta-prose-block lvl-' + escapeHtml(lvl) + '">';
+            convHtml += '<div class="ta-prose-label">'
+                + '<span>' + escapeHtml((c.display || label).toUpperCase()) + '</span>'
+                + '<span class="ta-prose-pill lvl-' + escapeHtml(lvl) + '">' + escapeHtml(lvl.toUpperCase()) + '</span>'
+                + '</div>';
+            convHtml += '<div>' + escapeHtml(c.prose || '') + '</div>';
+            convHtml += '</div>';
+        }
+        convBody.innerHTML = convHtml;
+    }
+
+    // ── Chokepoints section ──
+    var cpSection = document.getElementById('taChokepointSection');
+    var cpBody    = document.getElementById('taChokepointBody');
+    var cpCount   = document.getElementById('taChokepointCount');
+    var chokepoints = interp.chokepoint_prose || {};
+    var cpKeys = Object.keys(chokepoints);
+
+    if (cpKeys.length === 0) {
+        cpSection.style.display = 'none';
+    } else {
+        cpSection.style.display = '';
+        cpCount.textContent = '(' + cpKeys.length + ')';
+        // Auto-expand if any chokepoint is at contested+ (analytically significant)
+        var hasContested = false;
+        for (var k = 0; k < cpKeys.length; k++) {
+            var lvl0 = (chokepoints[cpKeys[k]] || {}).level || '';
+            if (lvl0 === 'contested' || lvl0 === 'disrupted') { hasContested = true; break; }
+        }
+        if (hasContested && !cpSection.classList.contains('user-toggled')) {
+            cpSection.classList.add('expanded');
+        }
+        // Sort chokepoints by severity (disrupted → contested → monitored)
+        var SEV_RANK = { 'disrupted': 3, 'contested': 2, 'monitored': 1, 'open': 0 };
+        cpKeys.sort(function (a, b) {
+            return (SEV_RANK[(chokepoints[b] || {}).level] || 0) -
+                   (SEV_RANK[(chokepoints[a] || {}).level] || 0);
+        });
+        var cpHtml = '';
+        for (var j = 0; j < cpKeys.length; j++) {
+            var cpId = cpKeys[j];
+            var cp = chokepoints[cpId] || {};
+            var cpLvl = cp.level || 'monitored';
+            cpHtml += '<div class="ta-prose-block lvl-' + escapeHtml(cpLvl) + '">';
+            cpHtml += '<div class="ta-prose-label">'
+                + '<span>' + escapeHtml(cp.display || cpId) + '</span>'
+                + '<span class="ta-prose-pill lvl-' + escapeHtml(cpLvl) + '">' + escapeHtml(cpLvl.toUpperCase()) + '</span>'
+                + '</div>';
+            cpHtml += '<div>' + escapeHtml(cp.prose || '') + '</div>';
+            cpHtml += '</div>';
+        }
+        cpBody.innerHTML = cpHtml;
+    }
+
+    // ── Theatres section (always shown — 5 regions per Option C) ──
+    var thSection = document.getElementById('taTheatreSection');
+    var thBody    = document.getElementById('taTheatreBody');
+    var thCount   = document.getElementById('taTheatreCount');
+    var theatres = interp.theater_prose || {};
+    var thKeys = Object.keys(theatres);
+
+    thCount.textContent = '(' + thKeys.length + ')';
+    // Auto-expand theatres section if any are at high+
+    var anyEscalated = false;
+    for (var m = 0; m < thKeys.length; m++) {
+        var thLvl = (theatres[thKeys[m]] || {}).level || '';
+        if (thLvl === 'high' || thLvl === 'surge') { anyEscalated = true; break; }
+    }
+    if (anyEscalated && !thSection.classList.contains('user-toggled')) {
+        thSection.classList.add('expanded');
+    }
+    // Sort by severity (surge → high → elevated → normal)
+    var TH_RANK = { 'surge': 3, 'high': 2, 'elevated': 1, 'normal': 0 };
+    thKeys.sort(function (a, b) {
+        return (TH_RANK[(theatres[b] || {}).level] || 0) -
+               (TH_RANK[(theatres[a] || {}).level] || 0);
+    });
+    var thHtml = '';
+    for (var n = 0; n < thKeys.length; n++) {
+        var thId = thKeys[n];
+        var th = theatres[thId] || {};
+        var thLvlEl = th.level || 'normal';
+        thHtml += '<div class="ta-prose-block lvl-' + escapeHtml(thLvlEl) + '">';
+        thHtml += '<div class="ta-prose-label">'
+            + '<span>' + escapeHtml(th.display || thId) + '</span>'
+            + '<span class="ta-prose-pill lvl-' + escapeHtml(thLvlEl) + '">' + escapeHtml(thLvlEl.toUpperCase()) + '</span>'
+            + '</div>';
+        thHtml += '<div>' + escapeHtml(th.prose || '') + '</div>';
+        thHtml += '</div>';
+    }
+    thBody.innerHTML = thHtml;
+}
+
+// Mark sections as user-toggled when manually clicked, so auto-expand
+// logic on subsequent renders doesn't reopen what the user closed.
+document.addEventListener('DOMContentLoaded', function () {
+    ['taConvergenceSection', 'taChokepointSection', 'taTheatreSection'].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) {
+            var toggle = el.querySelector('.ta-section-toggle');
+            if (toggle) {
+                toggle.addEventListener('click', function () {
+                    el.classList.add('user-toggled');
+                });
+            }
+        }
+    });
+});
 
 function renderTheatres(actors, theatreGroupings, t) {
     var container = document.getElementById('theatreContainer');
