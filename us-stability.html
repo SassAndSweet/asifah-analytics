@@ -1118,34 +1118,206 @@
             font-family: 'Courier New', monospace;
         }
 
-        /* ── RHETORIC PLACEHOLDER CARD ── */
-        .rhetoric-placeholder {
-            background: linear-gradient(135deg, rgba(34,197,94,0.04), rgba(21,128,61,0.02));
-            border: 1.5px dashed rgba(34,197,94,0.4);
-            border-radius: 10px;
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-        }
-        [data-theme="dark"] .rhetoric-placeholder {
+        /* ── RHETORIC LIVE MINI-CARD (v1.0.0 May 2026) ── */
+        /* Live mini-dashboard pulling from /api/rhetoric/us. Replaces the
+         * earlier placeholder. Click-through to full rhetoric-us.html for
+         * the deep-dive 9-actor view. */
+        .rhetoric-live-card {
             background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(21,128,61,0.03));
+            border: 1.5px solid rgba(34,197,94,0.5);
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
         }
-        .rhetoric-placeholder-icon {
-            font-size: 2rem;
-            margin-bottom: 6px;
+        [data-theme="dark"] .rhetoric-live-card {
+            background: linear-gradient(135deg, rgba(34,197,94,0.10), rgba(21,128,61,0.05));
+            box-shadow: 0 0 18px rgba(34,197,94,0.10);
         }
-        .rhetoric-placeholder-title {
+        .rhetoric-live-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, transparent, #22c55e, transparent);
+            opacity: 0.6;
+        }
+        .rhetoric-live-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .rhetoric-live-title {
             font-size: 1rem;
             font-weight: 700;
             color: #22c55e;
-            margin-bottom: 4px;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .rhetoric-placeholder-text {
+        .rhetoric-live-pill {
+            background: rgba(34,197,94,0.18);
+            color: #22c55e;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border: 1px solid rgba(34,197,94,0.4);
+        }
+        .rhetoric-live-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .rhetoric-live-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 18px;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        @media (max-width: 720px) {
+            .rhetoric-live-grid { grid-template-columns: 1fr; }
+        }
+        .rhetoric-live-score-block {
+            text-align: center;
+            padding: 10px;
+            background: rgba(0,0,0,0.10);
+            border-radius: 8px;
+            border: 1px solid rgba(34,197,94,0.2);
+        }
+        [data-theme="dark"] .rhetoric-live-score-block {
+            background: rgba(0,0,0,0.30);
+        }
+        .rhetoric-live-score {
+            font-size: 2.8rem;
+            font-weight: 700;
+            line-height: 1;
+            color: #22c55e;
+        }
+        .rhetoric-live-score.tier-stable      { color: #10b981; }
+        .rhetoric-live-score.tier-active      { color: #38bdf8; }
+        .rhetoric-live-score.tier-active-plus { color: #f59e0b; }
+        .rhetoric-live-score.tier-volatile    { color: #f97316; }
+        .rhetoric-live-score.tier-crisis      { color: #ef4444; }
+        .rhetoric-live-score-out-of {
             font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .rhetoric-live-band {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 6px;
+            color: var(--text-primary);
+        }
+        .rhetoric-live-sowhat {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+        }
+        .rhetoric-live-sowhat-factor {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .rhetoric-live-sowhat-text {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             line-height: 1.5;
+        }
+        .rhetoric-live-vectors {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        @media (max-width: 600px) {
+            .rhetoric-live-vectors { grid-template-columns: repeat(2, 1fr); }
+        }
+        .rhetoric-live-vector {
+            background: rgba(0,0,0,0.06);
+            border: 1px solid rgba(34,197,94,0.2);
+            border-radius: 6px;
+            padding: 8px 10px;
+            text-align: center;
+        }
+        [data-theme="dark"] .rhetoric-live-vector {
+            background: rgba(0,0,0,0.25);
+        }
+        .rhetoric-live-vector-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 3px;
+        }
+        .rhetoric-live-vector-value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .rhetoric-live-signals {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rhetoric-live-signal {
+            background: rgba(0,0,0,0.06);
+            border-left: 3px solid #22c55e;
+            border-radius: 4px;
+            padding: 7px 10px;
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+        [data-theme="dark"] .rhetoric-live-signal {
+            background: rgba(0,0,0,0.25);
+        }
+        .rhetoric-live-signal.severity-critical { border-left-color: #ef4444; }
+        .rhetoric-live-signal.severity-high     { border-left-color: #f97316; }
+        .rhetoric-live-signal.severity-medium   { border-left-color: #f59e0b; }
+        .rhetoric-live-signal.severity-low      { border-left-color: #38bdf8; }
+        .rhetoric-live-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, #15803d 0%, #16a34a 50%, #15803d 100%);
+            color: #ffffff;
+            padding: 9px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.2s;
+        }
+        .rhetoric-live-cta:hover {
+            box-shadow: 0 0 20px rgba(34,197,94,0.4);
+            transform: translateY(-1px);
+        }
+        .rhetoric-live-loading {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 30px;
+            font-style: italic;
+        }
+        .rhetoric-live-error {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 20px;
+            font-size: 0.85rem;
+            font-style: italic;
         }
 
         /* ── SIGNALS / NEWS TABBED ── */
@@ -1634,12 +1806,18 @@
                     </div>
                 </div>
 
-                <!-- ── RHETORIC TRACKER PLACEHOLDER ── -->
-                <div class="rhetoric-placeholder">
-                    <div class="rhetoric-placeholder-icon">💬</div>
-                    <div class="rhetoric-placeholder-title" data-i18n="rhetoricPlaceholderTitle">U.S. Rhetoric Tracker — In Development</div>
-                    <div class="rhetoric-placeholder-text" data-i18n="rhetoricPlaceholderText">
-                        A dedicated rhetoric tracker for U.S. domestic and outbound posture (covering executive political rhetoric, congressional dynamics, Greenland/Cuba/Panama outbound posture, and inbound rhetoric from China, Russia, Iran, DPRK) is on the roadmap. Once live, signals from that tracker will feed back into this stability page.
+                <!-- ── U.S. RHETORIC LIVE MINI-CARD (v1.0.0 May 2026) ── -->
+                <!-- Pulls from /api/rhetoric/us. Compact mini-dashboard. -->
+                <div class="rhetoric-live-card" id="rhetoricLiveCard">
+                    <div class="rhetoric-live-header">
+                        <div class="rhetoric-live-title">
+                            💬 <span data-i18n="rhetoricLiveTitle">U.S. Rhetoric Tracker</span>
+                            <span class="rhetoric-live-pill" data-i18n="rhetoricLivePill">● Live</span>
+                        </div>
+                        <div class="rhetoric-live-meta" id="rhetoricLiveMeta" data-i18n="rhetoricLiveLoading">Loading rhetoric data…</div>
+                    </div>
+                    <div id="rhetoricLiveContent">
+                        <div class="rhetoric-live-loading" data-i18n="rhetoricLiveLoadingMessage">Fetching latest U.S. rhetoric scan…</div>
                     </div>
                 </div>
 
@@ -1976,8 +2154,20 @@ var TRANSLATIONS = {
         tooltipPopulation: 'Population:',
         commodityTitle: 'U.S. Commodity Exposure',
         commodityProse: 'The United States is a globally significant producer and consumer of energy (oil, natural gas), agricultural commodities (corn, wheat, soybeans), and industrial metals. Domestic price stress in these commodities translates directly to consumer wallets and political pressure regardless of which administration is in power. This card surfaces commodity-specific stress signals affecting U.S. household stability.',
-        rhetoricPlaceholderTitle: 'U.S. Rhetoric Tracker — In Development',
-        rhetoricPlaceholderText: 'A dedicated rhetoric tracker for U.S. domestic and outbound posture (covering executive political rhetoric, congressional dynamics, Greenland/Cuba/Panama outbound posture, and inbound rhetoric from China, Russia, Iran, DPRK) is on the roadmap. Once live, signals from that tracker will feed back into this stability page.',
+        rhetoricLiveTitle: 'U.S. Rhetoric Tracker',
+        rhetoricLivePill: '● Live',
+        rhetoricLiveLoading: 'Loading rhetoric data…',
+        rhetoricLiveLoadingMessage: 'Fetching latest U.S. rhetoric scan…',
+        rhetoricLiveError: 'Rhetoric data unavailable. Tracker may be running its first scan — refresh in a few minutes.',
+        rhetoricLiveSoWhat: 'So What',
+        rhetoricLiveExecutive: 'Executive',
+        rhetoricLiveLegislative: 'Legislative',
+        rhetoricLiveInstitutional: 'Institutional',
+        rhetoricLiveFracture: 'Fracture',
+        rhetoricLiveCta: '💬 View Full U.S. Rhetoric Tracker →',
+        rhetoricLiveTopSignals: 'Top Signals',
+        rhetoricLiveScanned: 'Last scan',
+        rhetoricLiveArticles: 'articles',
         newsTitle: 'Recent Stability Signals',
         newsTabEnglish: 'English',
         newsTabSpanish: 'Español',
@@ -2054,8 +2244,20 @@ var TRANSLATIONS = {
         tooltipPopulation: 'Población:',
         commodityTitle: 'Exposición a Commodities de EE. UU.',
         commodityProse: 'Estados Unidos es un productor y consumidor globalmente significativo de energía (petróleo, gas natural), commodities agrícolas (maíz, trigo, soja) y metales industriales. La presión doméstica en los precios de estos commodities se traduce directamente a los bolsillos del consumidor y a la presión política, independientemente de qué administración esté en el poder.',
-        rhetoricPlaceholderTitle: 'Rastreador de Retórica de EE. UU. — En Desarrollo',
-        rhetoricPlaceholderText: 'Un rastreador de retórica dedicado a la postura doméstica y externa de EE. UU. (cubriendo retórica política ejecutiva, dinámica congresional, postura externa hacia Groenlandia/Cuba/Panamá, y retórica entrante desde China, Rusia, Irán, RPDC) está en la hoja de ruta. Una vez activo, las señales de ese rastreador se retroalimentarán en esta página de estabilidad.',
+        rhetoricLiveTitle: 'Rastreador de Retórica de EE. UU.',
+        rhetoricLivePill: '● En Vivo',
+        rhetoricLiveLoading: 'Cargando datos de retórica…',
+        rhetoricLiveLoadingMessage: 'Obteniendo el último escaneo de retórica de EE. UU.…',
+        rhetoricLiveError: 'Datos de retórica no disponibles. El rastreador puede estar ejecutando su primer escaneo — recargue en unos minutos.',
+        rhetoricLiveSoWhat: '¿Y Qué?',
+        rhetoricLiveExecutive: 'Ejecutivo',
+        rhetoricLiveLegislative: 'Legislativo',
+        rhetoricLiveInstitutional: 'Institucional',
+        rhetoricLiveFracture: 'Fractura',
+        rhetoricLiveCta: '💬 Ver Rastreador Completo de Retórica EE. UU. →',
+        rhetoricLiveTopSignals: 'Señales Principales',
+        rhetoricLiveScanned: 'Último escaneo',
+        rhetoricLiveArticles: 'artículos',
         newsTitle: 'Señales Recientes de Estabilidad',
         newsTabEnglish: 'Inglés',
         newsTabSpanish: 'Español',
@@ -2132,8 +2334,20 @@ var TRANSLATIONS = {
         tooltipPopulation: 'População:',
         commodityTitle: 'Exposição dos EUA a Commodities',
         commodityProse: 'Os Estados Unidos são um produtor e consumidor globalmente significativo de energia (petróleo, gás natural), commodities agrícolas (milho, trigo, soja) e metais industriais. A pressão doméstica nos preços dessas commodities se traduz diretamente em bolsos do consumidor e pressão política, independentemente de qual administração esteja no poder.',
-        rhetoricPlaceholderTitle: 'Rastreador de Retórica dos EUA — Em Desenvolvimento',
-        rhetoricPlaceholderText: 'Um rastreador de retórica dedicado à postura doméstica e externa dos EUA (cobrindo retórica política executiva, dinâmica congressional, postura externa em relação a Groenlândia/Cuba/Panamá, e retórica de entrada de China, Rússia, Irã, RPDC) está no roadmap. Uma vez ativo, sinais desse rastreador alimentarão de volta esta página de estabilidade.',
+        rhetoricLiveTitle: 'Rastreador de Retórica dos EUA',
+        rhetoricLivePill: '● Ao Vivo',
+        rhetoricLiveLoading: 'Carregando dados de retórica…',
+        rhetoricLiveLoadingMessage: 'Buscando a varredura mais recente de retórica dos EUA…',
+        rhetoricLiveError: 'Dados de retórica indisponíveis. O rastreador pode estar executando sua primeira varredura — atualize em alguns minutos.',
+        rhetoricLiveSoWhat: 'E Daí?',
+        rhetoricLiveExecutive: 'Executivo',
+        rhetoricLiveLegislative: 'Legislativo',
+        rhetoricLiveInstitutional: 'Institucional',
+        rhetoricLiveFracture: 'Fratura',
+        rhetoricLiveCta: '💬 Ver Rastreador Completo de Retórica EUA →',
+        rhetoricLiveTopSignals: 'Sinais Principais',
+        rhetoricLiveScanned: 'Última varredura',
+        rhetoricLiveArticles: 'artigos',
         newsTitle: 'Sinais Recentes de Estabilidade',
         newsTabEnglish: 'Inglês',
         newsTabSpanish: 'Espanhol',
@@ -3158,9 +3372,143 @@ function toggleLibraryItem(idx) {
 // ────────────────────────────────────────────────────────────
 // INIT
 // ────────────────────────────────────────────────────────────
+// ────────────────────────────────────────────────────────────
+// U.S. RHETORIC TRACKER — LIVE MINI-CARD FETCH (v1.0.0 May 2026)
+// Pulls from /api/rhetoric/us and renders into #rhetoricLiveContent
+// ────────────────────────────────────────────────────────────
+var RHETORIC_ENDPOINT = API_BASE + '/api/rhetoric/us';
+
+function tierToClassRhetoric(tier) {
+    if (!tier) return 'tier-active';
+    var m = String(tier).toLowerCase();
+    if (m.indexOf('crisis') !== -1) return 'tier-crisis';
+    if (m.indexOf('volatile') !== -1) return 'tier-volatile';
+    if (m.indexOf('active+') !== -1 || m.indexOf('active_plus') !== -1) return 'tier-active-plus';
+    if (m.indexOf('active') !== -1) return 'tier-active';
+    if (m.indexOf('stable') !== -1) return 'tier-stable';
+    return 'tier-active';
+}
+
+function escapeHtmlR(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function avgScoreRhetoric(actorList) {
+    var valid = actorList.filter(function(a) { return a && typeof a.actor_score === 'number'; });
+    if (valid.length === 0) return 0;
+    return valid.reduce(function(s, a) { return s + a.actor_score; }, 0) / valid.length;
+}
+
+function tR(key, fallback) {
+    var dict = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    return dict[key] || fallback || key;
+}
+
+async function fetchRhetoricData() {
+    var contentEl = document.getElementById('rhetoricLiveContent');
+    var metaEl = document.getElementById('rhetoricLiveMeta');
+    if (!contentEl) return;
+    try {
+        var resp = await fetch(RHETORIC_ENDPOINT);
+        if (!resp.ok) {
+            // 503 typically means first scan still in progress
+            contentEl.innerHTML = '<div class="rhetoric-live-error">' +
+                escapeHtmlR(tR('rhetoricLiveError', 'Rhetoric data unavailable. Refresh in a few minutes.')) +
+                '</div>';
+            if (metaEl) metaEl.textContent = '';
+            return;
+        }
+        var data = await resp.json();
+        renderRhetoricLive(data);
+    } catch (e) {
+        console.error('Rhetoric fetch error:', e);
+        contentEl.innerHTML = '<div class="rhetoric-live-error">' +
+            escapeHtmlR(tR('rhetoricLiveError', 'Rhetoric data unavailable.')) +
+            '</div>';
+    }
+}
+
+function renderRhetoricLive(data) {
+    var contentEl = document.getElementById('rhetoricLiveContent');
+    var metaEl = document.getElementById('rhetoricLiveMeta');
+    if (!contentEl) return;
+
+    var score = (data.composite_score !== undefined && data.composite_score !== null) ? Math.round(data.composite_score) : '—';
+    var tier = data.tier_name || data.tier || 'Active';
+    var band = data.tier_band || 'ACTIVE';
+    var icon = data.tier_icon || '🟢';
+    var sowhat = data.so_what || {};
+
+    // Vectors from actor scores
+    var actors = data.actors || {};
+    var execAvg = avgScoreRhetoric([actors.us_executive, actors.us_state_dept, actors.us_defense]);
+    var legiAvg = avgScoreRhetoric([actors.us_congress_majority, actors.us_congress_opposition]);
+    var instAvg = avgScoreRhetoric([actors.us_judicial, actors.us_dhs_ice, actors.us_federal_reserve, actors.us_states]);
+    var fracture = data.domestic_fracture_score || 0;
+
+    // Meta line
+    if (metaEl) {
+        var when = data.scan_completed_at ? new Date(data.scan_completed_at).toLocaleString() : '—';
+        var articles = data.article_count || 0;
+        metaEl.textContent = tR('rhetoricLiveScanned', 'Last scan') + ': ' + when + ' · ' + articles + ' ' + tR('rhetoricLiveArticles', 'articles');
+    }
+
+    // Top 3 signals
+    var topSigs = (data.top_signals || []).slice(0, 3);
+    var sigsHtml = '';
+    if (topSigs.length > 0) {
+        sigsHtml = '<div class="rhetoric-live-signals">';
+        topSigs.forEach(function(sig) {
+            var sev = sig.severity || 'low';
+            sigsHtml += '<div class="rhetoric-live-signal severity-' + escapeHtmlR(sev) + '">' +
+                        escapeHtmlR(sig.short_text || '') + '</div>';
+        });
+        sigsHtml += '</div>';
+    }
+
+    contentEl.innerHTML =
+        '<div class="rhetoric-live-grid">' +
+            '<div class="rhetoric-live-score-block">' +
+                '<div class="rhetoric-live-score ' + tierToClassRhetoric(tier) + '">' + score + '</div>' +
+                '<div class="rhetoric-live-score-out-of">/ 100</div>' +
+                '<div class="rhetoric-live-band">' + escapeHtmlR(icon) + ' ' + escapeHtmlR(tier) + '</div>' +
+            '</div>' +
+            '<div class="rhetoric-live-sowhat">' +
+                '<div class="rhetoric-live-sowhat-factor">' + escapeHtmlR(sowhat.factor || '—') + '</div>' +
+                '<div class="rhetoric-live-sowhat-text">' + escapeHtmlR(sowhat.description || '') + '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="rhetoric-live-vectors">' +
+            '<div class="rhetoric-live-vector">' +
+                '<div class="rhetoric-live-vector-label">' + escapeHtmlR(tR('rhetoricLiveExecutive', 'Executive')) + '</div>' +
+                '<div class="rhetoric-live-vector-value">' + Math.round(execAvg) + '</div>' +
+            '</div>' +
+            '<div class="rhetoric-live-vector">' +
+                '<div class="rhetoric-live-vector-label">' + escapeHtmlR(tR('rhetoricLiveLegislative', 'Legislative')) + '</div>' +
+                '<div class="rhetoric-live-vector-value">' + Math.round(legiAvg) + '</div>' +
+            '</div>' +
+            '<div class="rhetoric-live-vector">' +
+                '<div class="rhetoric-live-vector-label">' + escapeHtmlR(tR('rhetoricLiveInstitutional', 'Institutional')) + '</div>' +
+                '<div class="rhetoric-live-vector-value">' + Math.round(instAvg) + '</div>' +
+            '</div>' +
+            '<div class="rhetoric-live-vector">' +
+                '<div class="rhetoric-live-vector-label">' + escapeHtmlR(tR('rhetoricLiveFracture', 'Fracture')) + '</div>' +
+                '<div class="rhetoric-live-vector-value">' + Math.round(fracture) + '</div>' +
+            '</div>' +
+        '</div>' +
+        sigsHtml +
+        '<a href="rhetoric-us.html" class="rhetoric-live-cta">' +
+            escapeHtmlR(tR('rhetoricLiveCta', '💬 View Full U.S. Rhetoric Tracker →')) +
+        '</a>';
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     applyTranslations();
     fetchData(false);
+    fetchRhetoricData();
 });
 </script>
 </body>
