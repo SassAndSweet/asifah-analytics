@@ -1,0 +1,2863 @@
+<!DOCTYPE html>
+<!-- Asifah Analytics — U.S. Stability Index v1.0.0 — May 11, 2026 -->
+<!-- Gold Standard: Arctic scheme + watermark + sidebar + 6 dimensions + state map + commodity + EN/ES/PT -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<html lang="en" dir="ltr">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-Z9114D1Z5C');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Stability Index | Asifah Analytics</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* ── ARCTIC COLOR SCHEME (canonical for WHA stability pages) ── */
+        :root {
+            --bg-color: #f5f5f5;
+            --container-bg: #ffffff;
+            --card-bg: #ffffff;
+            --card-border: #e1e8ed;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --text-muted: #95a5a6;
+            --article-bg: #f8f9fa;
+            --article-hover: #e8f4f8;
+            --accent: #6495ED;
+            --accent-cyan: #0891b2;
+            --accent-blue: #2563eb;
+            --watermark-opacity: 0.5;
+            --grid-color: transparent;
+            --scanline-opacity: 0;
+            --glow-opacity: 0;
+            --band-resilient: #10b981;
+            --band-stressed: #f59e0b;
+            --band-fractured: #f97316;
+            --band-crisis: #ef4444;
+            --band-constitutional: #991b1b;
+            --party-r: #c0392b;
+            --party-d: #2563eb;
+            --party-swing: #8b5cf6;
+            --party-light-r: #f8d7da;
+            --party-light-d: #d1ecf9;
+            --party-light-swing: #e7d6f7;
+        }
+        [data-theme="dark"] {
+            --bg-color: #060d1a;
+            --container-bg: #0d1b2e;
+            --card-bg: #0d1b2e;
+            --card-border: #1e3a5f;
+            --text-primary: #e2f0fb;
+            --text-secondary: #93c5fd;
+            --text-muted: #64748b;
+            --article-bg: #0a1628;
+            --article-hover: #112442;
+            --accent: #38bdf8;
+            --accent-cyan: #38bdf8;
+            --accent-blue: #60a5fa;
+            --watermark-opacity: 1;
+            --grid-color: rgba(0,212,255,0.04);
+            --scanline-opacity: 0.03;
+            --glow-opacity: 1;
+            --party-r: #ef4444;
+            --party-d: #60a5fa;
+            --party-swing: #a78bfa;
+            --party-light-r: rgba(239,68,68,0.18);
+            --party-light-d: rgba(96,165,250,0.18);
+            --party-light-swing: rgba(167,139,250,0.18);
+        }
+
+        /* ── BODY + WATERMARK GOLD STANDARD ── */
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; height: 800px;
+            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+            background-size: 135%;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: var(--watermark-opacity);
+            pointer-events: none;
+            z-index: 0;
+            border-radius: 50%;
+            filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+        }
+        [data-theme="light"] body::after, :not([data-theme]) body::after {
+            filter: none;
+            width: 500px;
+            height: 500px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ── PAGE LAYOUT WITH SIDEBAR ── */
+        .page-with-sidebar {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        .nav-sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-top: 4px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+            align-self: flex-start;
+        }
+        .nav-sidebar-label {
+            font-size: 9px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            margin: 12px 0 4px 0;
+            padding-left: 2px;
+        }
+        .nav-sidebar-label:first-child { margin-top: 0; }
+        .nav-btn {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 10px 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            border: 1.5px solid rgba(0,200,255,0.2);
+            background: linear-gradient(135deg, rgba(0,180,255,0.06), rgba(0,120,200,0.04));
+            color: var(--text-primary);
+        }
+        .nav-btn .nav-btn-label {
+            position: relative;
+            z-index: 2;
+            font-size: 12px;
+            line-height: 1.3;
+        }
+        .nav-btn .nav-btn-status {
+            position: relative;
+            z-index: 2;
+            font-family: 'Courier New', monospace;
+            font-size: 9px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 5px;
+            opacity: 0.7;
+            color: #64dcff;
+        }
+        .nav-btn:hover {
+            border-color: rgba(0,220,255,0.7);
+            box-shadow: 0 0 18px rgba(0,180,255,0.2);
+            transform: translateY(-2px);
+        }
+        .nav-btn.current-page {
+            background: linear-gradient(135deg, rgba(0,200,255,0.2), rgba(0,150,200,0.15));
+            border-color: rgba(0,220,255,0.7);
+            box-shadow: 0 0 18px rgba(0,200,255,0.25);
+        }
+        .nav-btn.inactive-nav {
+            opacity: 0.4;
+            cursor: default;
+            border-color: rgba(100,100,100,0.2);
+            background: transparent;
+        }
+        .nav-btn.rhetoric-btn {
+            border-color: rgba(34,197,94,0.4);
+            background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(21,128,61,0.05));
+        }
+        .nav-btn.rhetoric-btn:hover {
+            border-color: rgba(34,197,94,0.8);
+            box-shadow: 0 0 18px rgba(34,197,94,0.2);
+        }
+        .nav-btn.rhetoric-btn .nav-btn-status { color: #4ade80; }
+        .nav-btn.commodity-btn {
+            border-color: rgba(245,158,11,0.4);
+            background: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(180,83,9,0.05));
+        }
+        .nav-btn.commodity-btn:hover {
+            border-color: rgba(251,191,36,0.7);
+            box-shadow: 0 0 18px rgba(245,158,11,0.2);
+        }
+        .nav-btn.commodity-btn .nav-btn-status { color: #fbbf24; }
+        .nav-btn.gpi-btn {
+            border-color: rgba(139,92,246,0.4);
+            background: linear-gradient(135deg, rgba(139,92,246,0.08), rgba(91,33,182,0.05));
+        }
+        .nav-btn.gpi-btn:hover {
+            border-color: rgba(167,139,250,0.7);
+            box-shadow: 0 0 18px rgba(139,92,246,0.2);
+        }
+        .nav-btn.gpi-btn .nav-btn-status { color: #a78bfa; }
+        .nav-divider {
+            height: 1px;
+            background: rgba(0,200,255,0.15);
+            margin: 8px 0;
+        }
+        .nav-sidebar-main {
+            flex: 1;
+            min-width: 0;
+        }
+        @media (max-width: 768px) {
+            .nav-sidebar { display: none !important; }
+            .page-with-sidebar { flex-direction: column; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ── HEADER ── */
+        header {
+            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+            color: white;
+            padding: 35px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            min-height: 130px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+            overflow: hidden;
+        }
+        [data-theme="dark"] header {
+            background: linear-gradient(135deg, #0f172a 0%, #164e63 50%, #0f172a 100%);
+            border: 1px solid rgba(0,210,255,0.15);
+        }
+        header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,255,0.015) 2px, rgba(0,255,255,0.015) 4px);
+            pointer-events: none;
+            border-radius: 12px;
+            z-index: 1;
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .header-title-block {
+            flex: 1;
+            min-width: 300px;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .header-flag {
+            font-size: 2.2rem;
+        }
+        .header-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .header-btn {
+            padding: 6px 14px;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.78rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .header-btn:hover {
+            background: rgba(255,255,255,0.22);
+            transform: translateY(-1px);
+        }
+        .header-btn.active {
+            background: rgba(255,255,255,0.3);
+            box-shadow: 0 0 12px rgba(255,255,255,0.3);
+        }
+        .lang-toggle {
+            display: flex;
+            gap: 4px;
+            background: rgba(0,0,0,0.2);
+            padding: 3px;
+            border-radius: 6px;
+        }
+        .lang-btn {
+            padding: 4px 10px;
+            background: transparent;
+            border: none;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .lang-btn.active {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+        .lang-btn:hover { color: white; }
+
+        /* ── METADATA STRIP ── */
+        .meta-strip {
+            display: flex;
+            gap: 16px;
+            padding: 8px 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .meta-strip strong { color: var(--text-primary); }
+        .meta-strip .meta-pill {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+        }
+        .meta-pill.live { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid #22c55e; }
+        .meta-pill.cached { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid #f59e0b; }
+        .meta-pill.static { background: rgba(245,158,11,0.15); color: #f59e0b; border: 1px solid #f59e0b; }
+        .meta-pill.warning { background: rgba(239,68,68,0.15); color: #ef4444; border: 1px solid #ef4444; }
+        /* ── UK-FCDO TRAVEL ADVISORY BANNER (THE INVERSION) ── */
+        .fcdo-banner {
+            background: linear-gradient(135deg, rgba(220,38,38,0.08), rgba(185,28,28,0.05));
+            border: 2px solid #dc2626;
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            position: relative;
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            box-shadow: 0 0 16px rgba(220,38,38,0.12);
+        }
+        [data-theme="dark"] .fcdo-banner {
+            background: linear-gradient(135deg, rgba(220,38,38,0.10), rgba(185,28,28,0.06));
+            box-shadow: 0 0 24px rgba(220,38,38,0.18);
+        }
+        .fcdo-icon {
+            font-size: 2.4rem;
+            line-height: 1;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+        .fcdo-content { flex: 1; }
+        .fcdo-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #dc2626;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .fcdo-title-pill {
+            font-size: 0.6rem;
+            padding: 1px 6px;
+            border-radius: 8px;
+            background: rgba(245,158,11,0.15);
+            border: 1px solid #f59e0b;
+            color: #f59e0b;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .fcdo-context {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 8px;
+        }
+        .fcdo-summary {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .fcdo-cta {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(220,38,38,0.15);
+            border: 1px solid #dc2626;
+            color: #dc2626;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.2s;
+        }
+        .fcdo-cta:hover {
+            background: #dc2626;
+            color: white;
+            transform: translateX(4px);
+        }
+        .fcdo-asof {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            margin-top: 8px;
+        }
+
+        /* ── COMPOSITE STABILITY INDEX (HERO CARD) ── */
+        .composite-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 28px 32px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            position: relative;
+            overflow: hidden;
+        }
+        [data-theme="dark"] .composite-card {
+            box-shadow: 0 0 30px rgba(56,189,248,0.05);
+        }
+        .composite-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 6px; height: 100%;
+            background: var(--composite-band-color, var(--band-stressed));
+            transition: background 0.4s;
+        }
+        .composite-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+            align-items: center;
+        }
+        @media (max-width: 700px) {
+            .composite-grid { grid-template-columns: 1fr; }
+        }
+        .composite-headline { padding-left: 8px; }
+        .composite-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .composite-score-block {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+        .composite-score {
+            font-size: 4.5rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--composite-band-color, var(--band-stressed));
+            font-family: 'Times New Roman', serif;
+        }
+        .composite-out-of {
+            font-size: 1.4rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+        .composite-band-label {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--composite-band-color, var(--band-stressed));
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .composite-band-icon { font-size: 1.6rem; margin-right: 6px; }
+        .composite-description {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+        .composite-modifier {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            padding: 4px 8px;
+            background: var(--article-bg);
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .composite-trend {
+            background: var(--article-bg);
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid var(--card-border);
+        }
+        .composite-trend-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        #compositeTrendSvg {
+            width: 100%;
+            height: 100px;
+            display: block;
+        }
+        .composite-trend-bottom {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ── SIX DIMENSION CARDS (VERTICAL STACK) ── */
+        .dimension-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 18px 22px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            position: relative;
+            transition: box-shadow 0.3s;
+        }
+        [data-theme="dark"] .dimension-card {
+            box-shadow: 0 0 18px rgba(56,189,248,0.04);
+        }
+        .dimension-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+        .dimension-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: var(--dim-band-color, var(--band-stressed));
+            border-radius: 4px 0 0 4px;
+            transition: background 0.4s;
+        }
+        .dim-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            padding: 4px 0 4px 8px;
+        }
+        .dim-title-block { flex: 1; }
+        .dim-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .dim-icon {
+            font-size: 1.3rem;
+        }
+        .dim-meta {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        .dim-score-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .dim-score {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dim-band-color);
+            line-height: 1;
+        }
+        .dim-band-pill {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border: 1.5px solid var(--dim-band-color);
+            color: var(--dim-band-color);
+            background: rgba(255,255,255,0);
+        }
+        .dim-chevron {
+            font-size: 1rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+            margin-left: 12px;
+        }
+        .dim-card.expanded .dim-chevron {
+            transform: rotate(180deg);
+        }
+        .dim-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 0;
+        }
+        .dim-card.expanded .dim-body {
+            max-height: 4000px;
+            opacity: 1;
+            padding-top: 14px;
+            margin-top: 12px;
+            border-top: 1px solid var(--card-border);
+        }
+        .dim-section-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin: 12px 0 8px 0;
+        }
+        .dim-section-title:first-child { margin-top: 0; }
+
+        /* Economic indicator tiles */
+        .indicator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+        .indicator-tile {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            transition: background 0.2s;
+        }
+        .indicator-tile:hover { background: var(--article-hover); }
+        .indicator-tile.tier-top {
+            border-left: 3px solid var(--accent-cyan);
+        }
+        .indicator-tile.high-stress {
+            border-color: var(--band-fractured);
+            box-shadow: 0 0 8px rgba(249,115,22,0.15);
+        }
+        .indicator-tile.crisis-stress {
+            border-color: var(--band-crisis);
+            box-shadow: 0 0 12px rgba(239,68,68,0.2);
+        }
+        .indicator-name {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .indicator-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 3px;
+        }
+        .indicator-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .indicator-unit {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .indicator-change {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+        .indicator-change.up { color: #22c55e; }
+        .indicator-change.down { color: #ef4444; }
+        .indicator-frame {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+        .indicator-source {
+            font-size: 0.62rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            margin-top: 3px;
+        }
+        .expand-indicators-btn {
+            display: inline-block;
+            padding: 6px 12px;
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        .expand-indicators-btn:hover {
+            background: var(--article-hover);
+            color: var(--text-primary);
+        }
+
+        /* Signal categories within a dimension */
+        .signal-cat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .signal-cat {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px 14px;
+        }
+        .signal-cat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .signal-cat-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: capitalize;
+        }
+        .signal-cat-count {
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            padding: 2px 8px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        .signal-cat-count.high { color: var(--band-fractured); border: 1px solid var(--band-fractured); }
+        .signal-cat-count.crisis { color: var(--band-crisis); border: 1px solid var(--band-crisis); }
+        .signal-cat-articles {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 6px;
+        }
+        .signal-cat-article {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            padding: 4px 0;
+        }
+        .signal-cat-article a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .signal-cat-article a:hover { text-decoration: underline; }
+        .signal-cat-pattern {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            background: var(--card-bg);
+            padding: 1px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+        .signal-cat-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+            margin-top: 4px;
+        }
+        .dim-empty {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 12px 0;
+        }
+
+        /* Military dimension special tiles */
+        .mil-fingerprint-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+        .mil-fp-tile {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        .mil-fp-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .mil-fp-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* ── STATE-LEVEL MAP ── */
+        .map-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        [data-theme="dark"] .map-card {
+            box-shadow: 0 0 18px rgba(56,189,248,0.04);
+        }
+        .map-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .map-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .map-toggles {
+            display: flex;
+            gap: 4px;
+            background: var(--article-bg);
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--card-border);
+            flex-wrap: wrap;
+        }
+        .map-toggle-btn {
+            padding: 5px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .map-toggle-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+        .map-toggle-btn:hover:not(.active) {
+            color: var(--text-primary);
+            background: var(--article-hover);
+        }
+        .map-svg-wrapper {
+            position: relative;
+            width: 100%;
+            background: var(--article-bg);
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid var(--card-border);
+        }
+        #usMapSvg {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        .state-shape {
+            stroke: var(--card-bg);
+            stroke-width: 1;
+            cursor: pointer;
+            transition: filter 0.2s, stroke-width 0.2s;
+        }
+        .state-shape:hover {
+            stroke-width: 2;
+            stroke: var(--accent);
+            filter: brightness(1.15);
+        }
+        .map-tooltip {
+            position: absolute;
+            background: var(--card-bg);
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+            pointer-events: none;
+            display: none;
+            z-index: 100;
+            min-width: 160px;
+        }
+        .map-tooltip.visible { display: block; }
+        .map-tooltip-name {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 0.85rem;
+        }
+        .map-tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+        }
+        .map-legend {
+            display: flex;
+            gap: 14px;
+            margin-top: 10px;
+            font-size: 0.72rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .map-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .map-legend-dot {
+            width: 14px; height: 14px;
+            border-radius: 3px;
+        }
+        /* ── COMMODITY EXPOSURE CARD (Lebanon-pattern gold standard) ── */
+        .commodity-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        [data-theme="dark"] .commodity-card {
+            box-shadow: 0 0 18px rgba(245,158,11,0.06);
+        }
+        .commodity-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 4px; height: 100%;
+            background: #f59e0b;
+            border-radius: 4px 0 0 4px;
+        }
+        .commodity-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .commodity-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .commodity-prose {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 12px 14px;
+            background: var(--article-bg);
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border-left: 3px solid #f59e0b;
+        }
+        .commodity-alert-banner {
+            padding: 10px 14px;
+            border-radius: 6px;
+            border-left: 3px solid;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: none;
+        }
+        .commodity-alert-banner.show { display: block; }
+        .commodity-alert-banner.alert-normal   { background: rgba(34,197,94,0.08);  border-left-color: #22c55e; color: #22c55e; }
+        .commodity-alert-banner.alert-elevated { background: rgba(234,179,8,0.10);  border-left-color: #eab308; color: #eab308; }
+        .commodity-alert-banner.alert-high     { background: rgba(249,115,22,0.10); border-left-color: #f97316; color: #f97316; }
+        .commodity-alert-banner.alert-surge    { background: rgba(239,68,68,0.10);  border-left-color: #ef4444; color: #ef4444; }
+        .commodity-tile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .commodity-tile {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+        .commodity-tile.tile-elevated { border-left: 3px solid #eab308; }
+        .commodity-tile.tile-high     { border-left: 3px solid #f97316; }
+        .commodity-tile.tile-surge    { border-left: 3px solid #ef4444; }
+        .commodity-tile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .commodity-tile-name {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .commodity-tile-badges {
+            display: flex;
+            gap: 4px;
+            font-size: 0.62rem;
+        }
+        .commodity-badge {
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .commodity-badge.role-importer { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid #60a5fa; }
+        .commodity-badge.role-exporter { background: rgba(34,197,94,0.15); color: #22c55e; border: 1px solid #22c55e; }
+        .commodity-badge.role-mixed    { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid #a78bfa; }
+        .commodity-tile-frame {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+        .commodity-tile-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* ── RHETORIC PLACEHOLDER CARD ── */
+        .rhetoric-placeholder {
+            background: linear-gradient(135deg, rgba(34,197,94,0.04), rgba(21,128,61,0.02));
+            border: 1.5px dashed rgba(34,197,94,0.4);
+            border-radius: 10px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        [data-theme="dark"] .rhetoric-placeholder {
+            background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(21,128,61,0.03));
+        }
+        .rhetoric-placeholder-icon {
+            font-size: 2rem;
+            margin-bottom: 6px;
+        }
+        .rhetoric-placeholder-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #22c55e;
+            margin-bottom: 4px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .rhetoric-placeholder-text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* ── SIGNALS / NEWS TABBED ── */
+        .news-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        [data-theme="dark"] .news-card {
+            box-shadow: 0 0 18px rgba(56,189,248,0.04);
+        }
+        .news-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .news-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid var(--card-border);
+            flex-wrap: wrap;
+        }
+        .news-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+        .news-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .news-tab:hover:not(.active) {
+            color: var(--text-primary);
+        }
+        .news-tab-count {
+            display: inline-block;
+            margin-left: 6px;
+            padding: 1px 6px;
+            font-size: 0.7rem;
+            background: var(--article-bg);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+        .news-list {
+            max-height: 400px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .news-item {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            transition: background 0.2s;
+        }
+        .news-item:hover { background: var(--article-hover); }
+        .news-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .news-item-title {
+            font-size: 0.88rem;
+            color: var(--text-primary);
+            line-height: 1.4;
+            font-weight: 600;
+            flex: 1;
+        }
+        .news-item-title a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .news-item-title a:hover { text-decoration: underline; }
+        .news-item-source {
+            font-size: 0.62rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            background: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--card-border);
+        }
+        .news-item-source.rss     { color: #f97316; border-color: #f97316; background: rgba(249,115,22,0.08); }
+        .news-item-source.gdelt   { color: #3b82f6; border-color: #3b82f6; background: rgba(59,130,246,0.08); }
+        .news-item-source.newsapi { color: #22c55e; border-color: #22c55e; background: rgba(34,197,94,0.08); }
+        .news-item-meta {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+        .news-empty {
+            padding: 24px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 0.85rem;
+        }
+
+        /* ── KNOWLEDGE LIBRARY ── */
+        .library-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 22px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .library-card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 14px;
+        }
+        .library-item {
+            background: var(--article-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .library-item:hover {
+            background: var(--article-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .library-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .library-item-title {
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .library-item-chevron {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        .library-item.expanded .library-item-chevron {
+            transform: rotate(180deg);
+        }
+        .library-item-summary {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .library-item-detail {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .library-item.expanded .library-item-detail {
+            max-height: 1000px;
+            opacity: 1;
+            padding-top: 8px;
+            margin-top: 8px;
+            border-top: 1px solid var(--card-border);
+        }
+        .library-item-detail p {
+            margin-bottom: 6px;
+        }
+        .library-item-detail strong {
+            color: var(--text-primary);
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        footer p { margin-bottom: 6px; }
+        footer strong { color: var(--text-primary); }
+
+        /* ── LOADING / ERROR STATES ── */
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(6, 13, 26, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s;
+        }
+        [data-theme="light"] .loading-overlay {
+            background: rgba(245, 245, 245, 0.95);
+        }
+        .loading-overlay.hidden { opacity: 0; pointer-events: none; }
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--card-border);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text {
+            margin-top: 14px;
+            color: var(--text-secondary);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            font-family: 'Courier New', monospace;
+        }
+        .error-banner {
+            background: rgba(239,68,68,0.1);
+            border: 1.5px solid #ef4444;
+            color: #ef4444;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: none;
+            font-size: 0.85rem;
+        }
+        .error-banner.show { display: block; }
+    </style>
+</head>
+<body data-theme="dark">
+    <div class="page-with-sidebar">
+        <nav class="nav-sidebar">
+            <div class="nav-sidebar-label" data-i18n="navDashboards">Dashboards</div>
+            <a href="africa.html" class="nav-btn inactive-nav">
+                <span class="nav-btn-label">🌍 Africa</span>
+                <span class="nav-btn-status" data-i18n="navFuture">Future</span>
+            </a>
+            <a href="asia.html" class="nav-btn">
+                <span class="nav-btn-label">🌏 Asia &amp; Pacific</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="europe.html" class="nav-btn">
+                <span class="nav-btn-label">🌍 Europe</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="middle-east.html" class="nav-btn">
+                <span class="nav-btn-label">🏛️ Middle East</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="wha.html" class="nav-btn">
+                <span class="nav-btn-label">🌎 W. Hemisphere</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+
+            <div class="nav-divider"></div>
+            <div class="nav-sidebar-label" data-i18n="navTools">Cross-Cutting Tools</div>
+            <a href="commodities.html" class="nav-btn commodity-btn">
+                <span class="nav-btn-label">🌾 Commodity Tracker</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="military.html" class="nav-btn">
+                <span class="nav-btn-label">🪖 Military Tracker</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="gpi.html" class="nav-btn gpi-btn">
+                <span class="nav-btn-label">🌐 Global Pressure Index</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+
+            <div class="nav-divider"></div>
+            <div class="nav-sidebar-label" data-i18n="navRhetoric">Regional Rhetoric</div>
+            <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+                <span class="nav-btn-label">💬 Middle East</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+                <span class="nav-btn-label">💬 Asia</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+                <span class="nav-btn-label">💬 Europe</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+            <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+                <span class="nav-btn-label">💬 Western Hemisphere</span>
+                <span class="nav-btn-status">● Live</span>
+            </a>
+
+            <div class="nav-divider"></div>
+            <div class="nav-sidebar-label" data-i18n="navUSPages">U.S. Pages</div>
+            <a href="us-stability.html" class="nav-btn current-page">
+                <span class="nav-btn-label">🇺🇸 U.S. Stability</span>
+                <span class="nav-btn-status" data-i18n="navYouAreHere">You are here</span>
+            </a>
+            <a href="rhetoric-us.html" class="nav-btn rhetoric-btn inactive-nav">
+                <span class="nav-btn-label">💬 U.S. Rhetoric</span>
+                <span class="nav-btn-status" data-i18n="navInDev">In Dev</span>
+            </a>
+        </nav>
+
+        <main class="nav-sidebar-main">
+            <div class="container">
+                <header>
+                    <div class="header-content">
+                        <div class="header-top">
+                            <div class="header-title-block">
+                                <h1>
+                                    <span class="header-flag">🇺🇸</span>
+                                    <span data-i18n="pageTitle">U.S. Stability Index</span>
+                                </h1>
+                                <div class="header-subtitle" data-i18n="pageSubtitle">
+                                    Multi-Dimensional Structural Stability Assessment
+                                </div>
+                            </div>
+                            <div class="header-controls">
+                                <div class="lang-toggle">
+                                    <button class="lang-btn active" onclick="setLang('en')" id="langEn">EN</button>
+                                    <button class="lang-btn" onclick="setLang('es')" id="langEs">ES</button>
+                                    <button class="lang-btn" onclick="setLang('pt')" id="langPt">PT</button>
+                                </div>
+                                <button class="header-btn" onclick="toggleTheme()" id="themeBtn" data-i18n="btnTheme">🌙 Dark</button>
+                                <button class="header-btn" onclick="refreshData()" id="refreshBtn" data-i18n="btnRefresh">↻ Refresh</button>
+                                <a href="wha.html" class="header-btn" data-i18n="btnBackWha">← W. Hemisphere</a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="meta-strip" id="metaStrip">
+                    <span><strong data-i18n="metaUpdated">Last Updated:</strong> <span id="metaUpdated">—</span></span>
+                    <span><strong data-i18n="metaArticles">Articles Scanned:</strong> <span id="metaArticles">—</span></span>
+                    <span><strong data-i18n="metaCycle">Election Cycle:</strong> <span id="metaCycle">—</span></span>
+                    <span><strong data-i18n="metaConfig">Government:</strong> <span id="metaConfig">—</span></span>
+                    <span class="meta-pill" id="metaFreshness">—</span>
+                </div>
+                <div id="stalenessWarning" style="display:none; padding:10px 14px; background:rgba(245,158,11,0.1); border-left:3px solid #f59e0b; border-radius:4px; margin-bottom:12px; font-size:0.85rem; color:var(--text-primary);"></div>
+
+
+<!-- BODY STRUCTURE -->
+                <!-- ── UK-FCDO TRAVEL ADVISORY BANNER (THE INVERSION) ── -->
+                <div class="fcdo-banner" id="fcdoBanner">
+                    <div class="fcdo-icon">🇬🇧</div>
+                    <div class="fcdo-content">
+                        <div class="fcdo-title">
+                            <span data-i18n="fcdoTitle">UK Foreign, Commonwealth &amp; Development Office — Travel Advice for the United States</span>
+                            <span class="fcdo-title-pill" data-i18n="fcdoPill">Allied Foreign Service View</span>
+                        </div>
+                        <div class="fcdo-context" data-i18n="fcdoContext">
+                            Reflects how an allied foreign service assesses U.S. conditions for British nationals abroad. Surfaces stability-relevant signals (gun violence, severe weather, civil unrest) without partisan framing — a reciprocal analytical view of our own country.
+                        </div>
+                        <div class="fcdo-summary" id="fcdoSummary" data-i18n="fcdoSummary">
+                            Loading FCDO advisory&hellip;
+                        </div>
+                        <a href="https://www.gov.uk/foreign-travel-advice/usa" target="_blank" rel="noopener" class="fcdo-cta" data-i18n="fcdoCta">View Full UK-FCDO Advisory →</a>
+                        <div class="fcdo-asof" id="fcdoAsof" data-i18n="fcdoAsofLoading">Last updated: loading&hellip;</div>
+                    </div>
+                </div>
+
+                <!-- ── COMPOSITE STABILITY INDEX (HERO CARD) ── -->
+                <div class="composite-card" id="compositeCard">
+                    <div class="composite-grid">
+                        <div class="composite-headline">
+                            <div class="composite-label" data-i18n="compositeLabel">Composite Stability Index</div>
+                            <div class="composite-score-block">
+                                <div class="composite-score" id="compositeScore">—</div>
+                                <div class="composite-out-of">/ 100</div>
+                            </div>
+                            <div class="composite-band-label" id="compositeBandLabel">
+                                <span class="composite-band-icon" id="compositeBandIcon">—</span>
+                                <span id="compositeBandText">—</span>
+                            </div>
+                            <div class="composite-description" id="compositeDescription">—</div>
+                            <div class="composite-modifier" id="compositeModifier">—</div>
+                        </div>
+                        <div class="composite-trend">
+                            <div class="composite-trend-title" data-i18n="compositeTrendTitle">30-Day Composite Trend</div>
+                            <svg id="compositeTrendSvg" viewBox="0 0 600 100" preserveAspectRatio="none">
+                                <text x="300" y="55" text-anchor="middle" fill="currentColor" opacity="0.4" font-size="11" data-i18n="trendCold">
+                                    Trend data populates from first scan onward
+                                </text>
+                            </svg>
+                            <div class="composite-trend-bottom">
+                                <span id="trendStartDate">—</span>
+                                <span id="trendEndDate">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── SIX STABILITY DIMENSION CARDS ── -->
+                <div id="dimensionContainer">
+                    <!-- DIMENSION 1: ECONOMIC STABILITY -->
+                    <div class="dimension-card dim-card" id="dim-economic" data-dim="economic">
+                        <div class="dim-header" onclick="toggleDimension('economic')">
+                            <div class="dim-title-block">
+                                <div class="dim-title">
+                                    <span class="dim-icon">📊</span>
+                                    <span data-i18n="dimEconomic">Economic Stability</span>
+                                </div>
+                                <div class="dim-meta" data-i18n="dimEconomicMeta">FRED + Yahoo Finance · 18 indicators · Weight: 20%</div>
+                            </div>
+                            <div class="dim-score-block">
+                                <div class="dim-score" id="dim-economic-score">—</div>
+                                <div class="dim-band-pill" id="dim-economic-pill">—</div>
+                                <div class="dim-chevron">▼</div>
+                            </div>
+                        </div>
+                        <div class="dim-body" id="dim-economic-body">
+                            <div class="dim-section-title" data-i18n="topIndicators">Top-Tier Indicators (Always Visible)</div>
+                            <div class="indicator-grid" id="dim-economic-top-indicators"></div>
+                            <button class="expand-indicators-btn" onclick="toggleExpandedIndicators()" id="expandIndicatorsBtn" data-i18n="showAllIndicators">+ Show All 13 Expanded Indicators</button>
+                            <div id="dim-economic-expanded-indicators" style="display:none; margin-top:12px;">
+                                <div class="dim-section-title" data-i18n="expandedIndicators">Expanded Indicators</div>
+                                <div class="indicator-grid" id="dim-economic-expanded-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DIMENSION 2: POLITICAL COHESION -->
+                    <div class="dimension-card dim-card" id="dim-political_cohesion" data-dim="political_cohesion">
+                        <div class="dim-header" onclick="toggleDimension('political_cohesion')">
+                            <div class="dim-title-block">
+                                <div class="dim-title">
+                                    <span class="dim-icon">🏛️</span>
+                                    <span data-i18n="dimPolitical">Political Cohesion</span>
+                                </div>
+                                <div class="dim-meta" data-i18n="dimPoliticalMeta">Cabinet/agency churn · Legislative deadlock · Inter-branch friction · Weight: 15%</div>
+                            </div>
+                            <div class="dim-score-block">
+                                <div class="dim-score" id="dim-political_cohesion-score">—</div>
+                                <div class="dim-band-pill" id="dim-political_cohesion-pill">—</div>
+                                <div class="dim-chevron">▼</div>
+                            </div>
+                        </div>
+                        <div class="dim-body" id="dim-political_cohesion-body">
+                            <div class="signal-cat-list" id="dim-political_cohesion-categories"></div>
+                        </div>
+                    </div>
+
+                    <!-- DIMENSION 3: CIVIL/SOCIAL -->
+                    <div class="dimension-card dim-card" id="dim-civil_social" data-dim="civil_social">
+                        <div class="dim-header" onclick="toggleDimension('civil_social')">
+                            <div class="dim-title-block">
+                                <div class="dim-title">
+                                    <span class="dim-icon">👥</span>
+                                    <span data-i18n="dimCivil">Civil &amp; Social Stability</span>
+                                </div>
+                                <div class="dim-meta" data-i18n="dimCivilMeta">Mass casualty events · Protest activity · Civil unrest · Severe weather · Weight: 15%</div>
+                            </div>
+                            <div class="dim-score-block">
+                                <div class="dim-score" id="dim-civil_social-score">—</div>
+                                <div class="dim-band-pill" id="dim-civil_social-pill">—</div>
+                                <div class="dim-chevron">▼</div>
+                            </div>
+                        </div>
+                        <div class="dim-body" id="dim-civil_social-body">
+                            <div class="signal-cat-list" id="dim-civil_social-categories"></div>
+                        </div>
+                    </div>
+
+                    <!-- DIMENSION 4: DEMOCRATIC INSTITUTIONS -->
+                    <div class="dimension-card dim-card" id="dim-democratic_institutions" data-dim="democratic_institutions">
+                        <div class="dim-header" onclick="toggleDimension('democratic_institutions')">
+                            <div class="dim-title-block">
+                                <div class="dim-title">
+                                    <span class="dim-icon">⚖️</span>
+                                    <span data-i18n="dimDemocratic">Democratic Institutions</span>
+                                </div>
+                                <div class="dim-meta" data-i18n="dimDemocraticMeta">Court orders · Inspector General · Civil service · Electoral integrity · DOJ independence · Weight: 20%</div>
+                            </div>
+                            <div class="dim-score-block">
+                                <div class="dim-score" id="dim-democratic_institutions-score">—</div>
+                                <div class="dim-band-pill" id="dim-democratic_institutions-pill">—</div>
+                                <div class="dim-chevron">▼</div>
+                            </div>
+                        </div>
+                        <div class="dim-body" id="dim-democratic_institutions-body">
+                            <div class="signal-cat-list" id="dim-democratic_institutions-categories"></div>
+                        </div>
+                    </div>
+
+                    <!-- DIMENSION 5: MILITARY POSTURE -->
+                    <div class="dimension-card dim-card" id="dim-military_posture" data-dim="military_posture">
+                        <div class="dim-header" onclick="toggleDimension('military_posture')">
+                            <div class="dim-title-block">
+                                <div class="dim-title">
+                                    <span class="dim-icon">🪖</span>
+                                    <span data-i18n="dimMilitary">Military Posture</span>
+                                </div>
+                                <div class="dim-meta" data-i18n="dimMilitaryMeta">Reads from Military Tracker fingerprint · Cross-references: NATO, Greenland, Cuba, Panama · Weight: 15%</div>
+                            </div>
+                            <div class="dim-score-block">
+                                <div class="dim-score" id="dim-military_posture-score">—</div>
+                                <div class="dim-band-pill" id="dim-military_posture-pill">—</div>
+                                <div class="dim-chevron">▼</div>
+                            </div>
+                        </div>
+                        <div class="dim-body" id="dim-military_posture-body">
+                            <div id="dim-military_posture-content"></div>
+                        </div>
+                    </div>
+
+                    <!-- DIMENSION 6: CYBER/INFRASTRUCTURE -->
+                    <div class="dimension-card dim-card" id="dim-cyber_infrastructure" data-dim="cyber_infrastructure">
+                        <div class="dim-header" onclick="toggleDimension('cyber_infrastructure')">
+                            <div class="dim-title-block">
+                                <div class="dim-title">
+                                    <span class="dim-icon">💻</span>
+                                    <span data-i18n="dimCyber">Cyber &amp; Infrastructure</span>
+                                </div>
+                                <div class="dim-meta" data-i18n="dimCyberMeta">Cyber events · Infrastructure failures · Tech / network stability · Weight: 15%</div>
+                            </div>
+                            <div class="dim-score-block">
+                                <div class="dim-score" id="dim-cyber_infrastructure-score">—</div>
+                                <div class="dim-band-pill" id="dim-cyber_infrastructure-pill">—</div>
+                                <div class="dim-chevron">▼</div>
+                            </div>
+                        </div>
+                        <div class="dim-body" id="dim-cyber_infrastructure-body">
+                            <div class="signal-cat-list" id="dim-cyber_infrastructure-categories"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── STATE-LEVEL MAP ── -->
+                <div class="map-card">
+                    <div class="map-card-header">
+                        <div class="map-card-title">
+                            🗺️ <span data-i18n="mapTitle">State-Level View</span>
+                        </div>
+                        <div class="map-toggles">
+                            <button class="map-toggle-btn active" onclick="setMapMode('political')" id="mapToggle-political" data-i18n="mapTogglePolitical">Political Lean</button>
+                            <button class="map-toggle-btn" onclick="setMapMode('density')" id="mapToggle-density" data-i18n="mapToggleDensity">Signal Density</button>
+                            <button class="map-toggle-btn" onclick="setMapMode('percapita')" id="mapToggle-percapita" data-i18n="mapTogglePercapita">Per-Capita</button>
+                            <button class="map-toggle-btn" onclick="setMapMode('severity')" id="mapToggle-severity" data-i18n="mapToggleSeverity">Severity-Weighted</button>
+                        </div>
+                    </div>
+                    <div class="map-svg-wrapper" id="mapWrapper">
+                        <svg id="usMapSvg" viewBox="0 0 960 600"></svg>
+                        <div class="map-tooltip" id="mapTooltip">
+                            <div class="map-tooltip-name" id="tooltipName"></div>
+                            <div class="map-tooltip-row"><span data-i18n="tooltipLean">Lean:</span> <span id="tooltipLean">—</span></div>
+                            <div class="map-tooltip-row"><span data-i18n="tooltipSignals">Signals (7d):</span> <span id="tooltipSignals">—</span></div>
+                            <div class="map-tooltip-row"><span data-i18n="tooltipSeverity">Severity score:</span> <span id="tooltipSeverity">—</span></div>
+                            <div class="map-tooltip-row"><span data-i18n="tooltipPopulation">Population:</span> <span id="tooltipPopulation">—</span></div>
+                        </div>
+                    </div>
+                    <div class="map-legend" id="mapLegend"></div>
+                </div>
+
+                <!-- ── COMMODITY EXPOSURE CARD ── -->
+                <div class="commodity-card" id="commodityCard">
+                    <div class="commodity-card-header">
+                        <div class="commodity-card-title">
+                            🌾 <span data-i18n="commodityTitle">U.S. Commodity Exposure</span>
+                        </div>
+                    </div>
+                    <div class="commodity-prose" id="commodityProse" data-i18n="commodityProse">
+                        The United States is a globally significant producer and consumer of energy (oil, natural gas), agricultural commodities (corn, wheat, soybeans), and industrial metals. Domestic price stress in these commodities translates directly to consumer wallets and political pressure regardless of which administration is in power. This card surfaces commodity-specific stress signals affecting U.S. household stability.
+                    </div>
+                    <div class="commodity-alert-banner alert-normal" id="commodityAlertBanner">
+                        <span id="commodityAlertText">—</span>
+                    </div>
+                    <div class="commodity-tile-grid" id="commodityTileGrid"></div>
+                </div>
+
+                <!-- ── RHETORIC TRACKER PLACEHOLDER ── -->
+                <div class="rhetoric-placeholder">
+                    <div class="rhetoric-placeholder-icon">💬</div>
+                    <div class="rhetoric-placeholder-title" data-i18n="rhetoricPlaceholderTitle">U.S. Rhetoric Tracker — In Development</div>
+                    <div class="rhetoric-placeholder-text" data-i18n="rhetoricPlaceholderText">
+                        A dedicated rhetoric tracker for U.S. domestic and outbound posture (covering executive political rhetoric, congressional dynamics, Greenland/Cuba/Panama outbound posture, and inbound rhetoric from China, Russia, Iran, DPRK) is on the roadmap. Once live, signals from that tracker will feed back into this stability page.
+                    </div>
+                </div>
+
+                <!-- ── NEWS / SIGNALS TABBED ── -->
+                <div class="news-card">
+                    <div class="news-card-title">
+                        📰 <span data-i18n="newsTitle">Recent Stability Signals</span>
+                    </div>
+                    <div class="news-tabs">
+                        <button class="news-tab active" onclick="setNewsTab('en')" id="newsTabEn">
+                            <span data-i18n="newsTabEnglish">English</span>
+                            <span class="news-tab-count" id="newsTabEnCount">0</span>
+                        </button>
+                        <button class="news-tab" onclick="setNewsTab('es')" id="newsTabEs">
+                            <span data-i18n="newsTabSpanish">Español</span>
+                            <span class="news-tab-count" id="newsTabEsCount">0</span>
+                        </button>
+                        <button class="news-tab" onclick="setNewsTab('social')" id="newsTabSocial">
+                            <span data-i18n="newsTabSocial">Social Media</span>
+                            <span class="news-tab-count" id="newsTabSocialCount">0</span>
+                        </button>
+                    </div>
+                    <div class="news-list" id="newsList"></div>
+                </div>
+
+                <!-- ── KNOWLEDGE LIBRARY ── -->
+                <div class="library-card">
+                    <div class="library-card-title">
+                        📚 <span data-i18n="libraryTitle">Knowledge Library — U.S. Governmental Framework</span>
+                    </div>
+                    <div class="library-grid" id="libraryGrid"></div>
+                </div>
+
+                <!-- ── FOOTER ── -->
+                <footer>
+                    <p>
+                        <strong data-i18n="footerSourcesTitle">Data Sources:</strong>
+                        <span data-i18n="footerSources">FRED (Federal Reserve Economic Data) · Yahoo Finance · Congress.gov API · UK FCDO · GDELT · NewsAPI · Google News RSS · CISA · FEMA · Asifah Military Tracker fingerprint contract.</span>
+                    </p>
+                    <p>
+                        <strong data-i18n="footerMethodologyTitle">Methodology:</strong>
+                        <span data-i18n="footerMethodology">Apolitical six-dimension scoring framework. Same rubric scores all administrations. Election-cycle aware (auto-recalibrating after midterms). Composite weighted average of structural indicators, not rhetoric-tempo deltas — directly comparable across time periods.</span>
+                    </p>
+                    <p>
+                        <strong data-i18n="footerCopyright">© 2025-2026 Asifah Analytics.</strong>
+                        <span data-i18n="footerRights">All rights reserved. This is open-source OSINT geopolitical intelligence; not investment, legal, or political advice.</span>
+                    </p>
+                </footer>
+            </div>
+        </main>
+    </div>
+
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text" data-i18n="loadingText">SCANNING U.S. STABILITY...</div>
+    </div>
+
+<script>
+// ────────────────────────────────────────────────────────────
+// I18N — EN / ES / PT
+// ────────────────────────────────────────────────────────────
+var TRANSLATIONS = {
+    en: {
+        pageTitle: 'U.S. Stability Index',
+        pageSubtitle: 'Multi-Dimensional Structural Stability Assessment',
+        navDashboards: 'Dashboards',
+        navTools: 'Cross-Cutting Tools',
+        navRhetoric: 'Regional Rhetoric',
+        navUSPages: 'U.S. Pages',
+        navYouAreHere: 'You are here',
+        navInDev: 'In Dev',
+        navFuture: 'Future',
+        btnTheme: '🌙 Dark',
+        btnRefresh: '↻ Refresh',
+        btnBackWha: '← W. Hemisphere',
+        metaUpdated: 'Last Updated:',
+        metaArticles: 'Articles Scanned:',
+        metaCycle: 'Election Cycle:',
+        metaConfig: 'Government:',
+        fcdoTitle: 'UK Foreign, Commonwealth & Development Office — Travel Advice for the United States',
+        fcdoPill: 'Allied Foreign Service View',
+        fcdoContext: 'Reflects how an allied foreign service assesses U.S. conditions for British nationals abroad. Surfaces stability-relevant signals (gun violence, severe weather, civil unrest) without partisan framing — a reciprocal analytical view of our own country.',
+        fcdoSummary: 'British nationals visiting the United States should monitor local advisories. The U.S. has experienced incidents of gun violence and mass casualty events in public places. Severe weather (hurricanes, wildfires, tornadoes) regularly affects regions of the country. Civil unrest occasionally occurs in major cities. Healthcare costs are very high; comprehensive travel insurance is essential. ESTA authorization required for visa-waiver travel.',
+        fcdoCta: 'View Full UK-FCDO Advisory →',
+        fcdoAsofLoading: 'Last updated: loading…',
+        compositeLabel: 'Composite Stability Index',
+        compositeTrendTitle: '30-Day Composite Trend',
+        trendCold: 'Trend data populates from first scan onward',
+        topIndicators: 'Top-Tier Indicators (Always Visible)',
+        expandedIndicators: 'Expanded Indicators',
+        showAllIndicators: '+ Show All Expanded Indicators',
+        hideExpandedIndicators: '− Hide Expanded Indicators',
+        dimEconomic: 'Economic Stability',
+        dimEconomicMeta: 'FRED + Yahoo Finance · 18 indicators · Weight: 20%',
+        dimPolitical: 'Political Cohesion',
+        dimPoliticalMeta: 'Cabinet/agency churn · Legislative deadlock · Inter-branch friction · Weight: 15%',
+        dimCivil: 'Civil & Social Stability',
+        dimCivilMeta: 'Mass casualty events · Protest activity · Civil unrest · Severe weather · Weight: 15%',
+        dimDemocratic: 'Democratic Institutions',
+        dimDemocraticMeta: 'Court orders · Inspector General · Civil service · Electoral integrity · DOJ independence · Weight: 20%',
+        dimMilitary: 'Military Posture',
+        dimMilitaryMeta: 'Reads from Military Tracker fingerprint · Cross-references: NATO, Greenland, Cuba, Panama · Weight: 15%',
+        dimCyber: 'Cyber & Infrastructure',
+        dimCyberMeta: 'Cyber events · Infrastructure failures · Tech / network stability · Weight: 15%',
+        mapTitle: 'State-Level View',
+        mapTogglePolitical: 'Political Lean',
+        mapToggleDensity: 'Signal Density',
+        mapTogglePercapita: 'Per-Capita',
+        mapToggleSeverity: 'Severity-Weighted',
+        tooltipLean: 'Lean:',
+        tooltipSignals: 'Signals (7d):',
+        tooltipSeverity: 'Severity score:',
+        tooltipPopulation: 'Population:',
+        commodityTitle: 'U.S. Commodity Exposure',
+        commodityProse: 'The United States is a globally significant producer and consumer of energy (oil, natural gas), agricultural commodities (corn, wheat, soybeans), and industrial metals. Domestic price stress in these commodities translates directly to consumer wallets and political pressure regardless of which administration is in power. This card surfaces commodity-specific stress signals affecting U.S. household stability.',
+        rhetoricPlaceholderTitle: 'U.S. Rhetoric Tracker — In Development',
+        rhetoricPlaceholderText: 'A dedicated rhetoric tracker for U.S. domestic and outbound posture (covering executive political rhetoric, congressional dynamics, Greenland/Cuba/Panama outbound posture, and inbound rhetoric from China, Russia, Iran, DPRK) is on the roadmap. Once live, signals from that tracker will feed back into this stability page.',
+        newsTitle: 'Recent Stability Signals',
+        newsTabEnglish: 'English',
+        newsTabSpanish: 'Español',
+        newsTabSocial: 'Social Media',
+        libraryTitle: 'Knowledge Library — U.S. Governmental Framework',
+        footerSourcesTitle: 'Data Sources:',
+        footerSources: 'FRED (Federal Reserve Economic Data) · Yahoo Finance · Congress.gov API · UK FCDO · GDELT · NewsAPI · Google News RSS · CISA · FEMA · Asifah Military Tracker fingerprint contract.',
+        footerMethodologyTitle: 'Methodology:',
+        footerMethodology: 'Apolitical six-dimension scoring framework. Same rubric scores all administrations. Election-cycle aware (auto-recalibrating after midterms). Composite weighted average of structural indicators, not rhetoric-tempo deltas — directly comparable across time periods.',
+        footerCopyright: '© 2025-2026 Asifah Analytics.',
+        footerRights: 'All rights reserved. This is open-source OSINT geopolitical intelligence; not investment, legal, or political advice.',
+        loadingText: 'SCANNING U.S. STABILITY...',
+        emptySignals: 'No signals detected in this category for the current scan window.',
+        coldStart: 'Initial scan in progress. Composite score will populate within 5 minutes.',
+        leanRepublican: 'Republican',
+        leanDemocratic: 'Democratic',
+        leanSwing: 'Swing',
+        bands: { resilient: 'Resilient', stressed: 'Stressed', fractured: 'Fractured',
+                  crisis_mode: 'Crisis Mode', constitutional_crisis: 'Constitutional Crisis' },
+    },
+    es: {
+        pageTitle: 'Índice de Estabilidad de EE. UU.',
+        pageSubtitle: 'Evaluación de Estabilidad Estructural Multidimensional',
+        navDashboards: 'Paneles',
+        navTools: 'Herramientas Transversales',
+        navRhetoric: 'Retórica Regional',
+        navUSPages: 'Páginas EE. UU.',
+        navYouAreHere: 'Estás aquí',
+        navInDev: 'En Desarrollo',
+        navFuture: 'Futuro',
+        btnTheme: '🌙 Oscuro',
+        btnRefresh: '↻ Actualizar',
+        btnBackWha: '← Hemisferio Occ.',
+        metaUpdated: 'Última actualización:',
+        metaArticles: 'Artículos analizados:',
+        metaCycle: 'Ciclo electoral:',
+        metaConfig: 'Gobierno:',
+        fcdoTitle: 'Oficina del Exterior del Reino Unido — Aviso de Viaje para Estados Unidos',
+        fcdoPill: 'Vista Diplomática Aliada',
+        fcdoContext: 'Refleja cómo un servicio exterior aliado evalúa las condiciones de EE. UU. para sus ciudadanos. Surge señales relevantes de estabilidad (violencia armada, clima severo, disturbios civiles) sin enmarcado partidista — una vista analítica recíproca de nuestro propio país.',
+        fcdoSummary: 'Los ciudadanos británicos que visiten EE. UU. deben monitorear los avisos locales. El país ha experimentado incidentes de violencia armada y eventos con víctimas masivas en lugares públicos. El clima severo (huracanes, incendios forestales, tornados) afecta regularmente a regiones del país. Ocasionalmente ocurren disturbios civiles en ciudades importantes. Los costos de atención médica son muy altos; el seguro de viaje integral es esencial. Se requiere autorización ESTA para viajar bajo el Programa de Exención de Visas.',
+        fcdoCta: 'Ver aviso UK-FCDO completo →',
+        fcdoAsofLoading: 'Última actualización: cargando…',
+        compositeLabel: 'Índice Compuesto de Estabilidad',
+        compositeTrendTitle: 'Tendencia Compuesta de 30 Días',
+        trendCold: 'Los datos de tendencia se completan a partir del primer análisis',
+        topIndicators: 'Indicadores Principales (Siempre Visibles)',
+        expandedIndicators: 'Indicadores Ampliados',
+        showAllIndicators: '+ Mostrar Todos los Indicadores Ampliados',
+        hideExpandedIndicators: '− Ocultar Indicadores Ampliados',
+        dimEconomic: 'Estabilidad Económica',
+        dimEconomicMeta: 'FRED + Yahoo Finance · 18 indicadores · Peso: 20%',
+        dimPolitical: 'Cohesión Política',
+        dimPoliticalMeta: 'Rotación de gabinete/agencias · Estancamiento legislativo · Fricción interpoderes · Peso: 15%',
+        dimCivil: 'Estabilidad Civil y Social',
+        dimCivilMeta: 'Eventos con víctimas masivas · Actividad de protesta · Disturbios civiles · Clima severo · Peso: 15%',
+        dimDemocratic: 'Instituciones Democráticas',
+        dimDemocraticMeta: 'Órdenes judiciales · Inspectores Generales · Servicio civil · Integridad electoral · Independencia del DOJ · Peso: 20%',
+        dimMilitary: 'Postura Militar',
+        dimMilitaryMeta: 'Lee la huella del Rastreador Militar · Referencias: OTAN, Groenlandia, Cuba, Panamá · Peso: 15%',
+        dimCyber: 'Cibernética e Infraestructura',
+        dimCyberMeta: 'Eventos cibernéticos · Fallas de infraestructura · Estabilidad de tecnología/red · Peso: 15%',
+        mapTitle: 'Vista por Estado',
+        mapTogglePolitical: 'Inclinación Política',
+        mapToggleDensity: 'Densidad de Señales',
+        mapTogglePercapita: 'Per Cápita',
+        mapToggleSeverity: 'Ponderado por Severidad',
+        tooltipLean: 'Inclinación:',
+        tooltipSignals: 'Señales (7d):',
+        tooltipSeverity: 'Puntaje severidad:',
+        tooltipPopulation: 'Población:',
+        commodityTitle: 'Exposición a Commodities de EE. UU.',
+        commodityProse: 'Estados Unidos es un productor y consumidor globalmente significativo de energía (petróleo, gas natural), commodities agrícolas (maíz, trigo, soja) y metales industriales. La presión doméstica en los precios de estos commodities se traduce directamente a los bolsillos del consumidor y a la presión política, independientemente de qué administración esté en el poder.',
+        rhetoricPlaceholderTitle: 'Rastreador de Retórica de EE. UU. — En Desarrollo',
+        rhetoricPlaceholderText: 'Un rastreador de retórica dedicado a la postura doméstica y externa de EE. UU. (cubriendo retórica política ejecutiva, dinámica congresional, postura externa hacia Groenlandia/Cuba/Panamá, y retórica entrante desde China, Rusia, Irán, RPDC) está en la hoja de ruta. Una vez activo, las señales de ese rastreador se retroalimentarán en esta página de estabilidad.',
+        newsTitle: 'Señales Recientes de Estabilidad',
+        newsTabEnglish: 'Inglés',
+        newsTabSpanish: 'Español',
+        newsTabSocial: 'Redes Sociales',
+        libraryTitle: 'Biblioteca de Conocimiento — Marco Gubernamental de EE. UU.',
+        footerSourcesTitle: 'Fuentes de Datos:',
+        footerSources: 'FRED (Datos Económicos del Banco de la Reserva Federal) · Yahoo Finance · API Congress.gov · UK FCDO · GDELT · NewsAPI · Google News RSS · CISA · FEMA · Contrato de huella del Rastreador Militar de Asifah.',
+        footerMethodologyTitle: 'Metodología:',
+        footerMethodology: 'Marco de puntuación apolítico de seis dimensiones. La misma rúbrica puntúa todas las administraciones. Consciente del ciclo electoral (auto-recalibración tras elecciones de medio término). Promedio compuesto ponderado de indicadores estructurales, no deltas de tempo retórico — directamente comparable a través de períodos de tiempo.',
+        footerCopyright: '© 2025-2026 Asifah Analytics.',
+        footerRights: 'Todos los derechos reservados. Esta es inteligencia geopolítica OSINT de código abierto; no es asesoramiento de inversión, legal o político.',
+        loadingText: 'ANALIZANDO ESTABILIDAD DE EE. UU...',
+        emptySignals: 'No se detectaron señales en esta categoría para la ventana actual.',
+        coldStart: 'Análisis inicial en progreso. La puntuación compuesta se completará en 5 minutos.',
+        leanRepublican: 'Republicano',
+        leanDemocratic: 'Demócrata',
+        leanSwing: 'Indeciso',
+        bands: { resilient: 'Resiliente', stressed: 'Tensionado', fractured: 'Fracturado',
+                  crisis_mode: 'Modo Crisis', constitutional_crisis: 'Crisis Constitucional' },
+    },
+    pt: {
+        pageTitle: 'Índice de Estabilidade dos EUA',
+        pageSubtitle: 'Avaliação Estrutural Multidimensional de Estabilidade',
+        navDashboards: 'Painéis',
+        navTools: 'Ferramentas Transversais',
+        navRhetoric: 'Retórica Regional',
+        navUSPages: 'Páginas dos EUA',
+        navYouAreHere: 'Você está aqui',
+        navInDev: 'Em Desenvolvimento',
+        navFuture: 'Futuro',
+        btnTheme: '🌙 Escuro',
+        btnRefresh: '↻ Atualizar',
+        btnBackWha: '← Hem. Ocidental',
+        metaUpdated: 'Última atualização:',
+        metaArticles: 'Artigos analisados:',
+        metaCycle: 'Ciclo eleitoral:',
+        metaConfig: 'Governo:',
+        fcdoTitle: 'Foreign Office do Reino Unido — Aviso de Viagem aos EUA',
+        fcdoPill: 'Visão Diplomática Aliada',
+        fcdoContext: 'Reflete como um serviço diplomático aliado avalia as condições dos EUA para seus cidadãos. Faz emergir sinais relevantes de estabilidade (violência armada, clima severo, distúrbios civis) sem enquadramento partidário — uma visão analítica recíproca do nosso próprio país.',
+        fcdoSummary: 'Cidadãos britânicos que visitam os EUA devem monitorar os avisos locais. O país experimentou incidentes de violência armada e eventos com vítimas em massa em locais públicos. Clima severo (furacões, incêndios, tornados) afeta regularmente regiões do país. Distúrbios civis ocasionalmente ocorrem em grandes cidades. Custos de saúde são muito altos; seguro de viagem abrangente é essencial. Autorização ESTA é exigida para viagem com isenção de visto.',
+        fcdoCta: 'Ver aviso UK-FCDO completo →',
+        fcdoAsofLoading: 'Última atualização: carregando…',
+        compositeLabel: 'Índice Composto de Estabilidade',
+        compositeTrendTitle: 'Tendência Composta de 30 Dias',
+        trendCold: 'Dados de tendência preenchem a partir do primeiro escaneamento',
+        topIndicators: 'Indicadores de Topo (Sempre Visíveis)',
+        expandedIndicators: 'Indicadores Expandidos',
+        showAllIndicators: '+ Mostrar Todos os Indicadores Expandidos',
+        hideExpandedIndicators: '− Ocultar Indicadores Expandidos',
+        dimEconomic: 'Estabilidade Econômica',
+        dimEconomicMeta: 'FRED + Yahoo Finance · 18 indicadores · Peso: 20%',
+        dimPolitical: 'Coesão Política',
+        dimPoliticalMeta: 'Rotatividade de gabinete/agências · Impasse legislativo · Atrito interpoderes · Peso: 15%',
+        dimCivil: 'Estabilidade Civil e Social',
+        dimCivilMeta: 'Eventos de vítimas em massa · Atividade de protesto · Distúrbios civis · Clima severo · Peso: 15%',
+        dimDemocratic: 'Instituições Democráticas',
+        dimDemocraticMeta: 'Ordens judiciais · Inspetores Gerais · Serviço civil · Integridade eleitoral · Independência do DOJ · Peso: 20%',
+        dimMilitary: 'Postura Militar',
+        dimMilitaryMeta: 'Lê a impressão do Rastreador Militar · Referências cruzadas: OTAN, Groenlândia, Cuba, Panamá · Peso: 15%',
+        dimCyber: 'Cibernética e Infraestrutura',
+        dimCyberMeta: 'Eventos cibernéticos · Falhas de infraestrutura · Estabilidade de tecnologia/rede · Peso: 15%',
+        mapTitle: 'Visão Estadual',
+        mapTogglePolitical: 'Inclinação Política',
+        mapToggleDensity: 'Densidade de Sinais',
+        mapTogglePercapita: 'Per Capita',
+        mapToggleSeverity: 'Ponderado por Severidade',
+        tooltipLean: 'Inclinação:',
+        tooltipSignals: 'Sinais (7d):',
+        tooltipSeverity: 'Pontuação severidade:',
+        tooltipPopulation: 'População:',
+        commodityTitle: 'Exposição dos EUA a Commodities',
+        commodityProse: 'Os Estados Unidos são um produtor e consumidor globalmente significativo de energia (petróleo, gás natural), commodities agrícolas (milho, trigo, soja) e metais industriais. A pressão doméstica nos preços dessas commodities se traduz diretamente em bolsos do consumidor e pressão política, independentemente de qual administração esteja no poder.',
+        rhetoricPlaceholderTitle: 'Rastreador de Retórica dos EUA — Em Desenvolvimento',
+        rhetoricPlaceholderText: 'Um rastreador de retórica dedicado à postura doméstica e externa dos EUA (cobrindo retórica política executiva, dinâmica congressional, postura externa em relação a Groenlândia/Cuba/Panamá, e retórica de entrada de China, Rússia, Irã, RPDC) está no roadmap. Uma vez ativo, sinais desse rastreador alimentarão de volta esta página de estabilidade.',
+        newsTitle: 'Sinais Recentes de Estabilidade',
+        newsTabEnglish: 'Inglês',
+        newsTabSpanish: 'Espanhol',
+        newsTabSocial: 'Mídias Sociais',
+        libraryTitle: 'Biblioteca de Conhecimento — Estrutura Governamental dos EUA',
+        footerSourcesTitle: 'Fontes de Dados:',
+        footerSources: 'FRED (Dados Econômicos do Federal Reserve) · Yahoo Finance · API Congress.gov · UK FCDO · GDELT · NewsAPI · Google News RSS · CISA · FEMA · Contrato de impressão do Rastreador Militar Asifah.',
+        footerMethodologyTitle: 'Metodologia:',
+        footerMethodology: 'Estrutura de pontuação apolítica de seis dimensões. A mesma rubrica pontua todas as administrações. Consciente do ciclo eleitoral (auto-recalibração após eleições de meio de mandato). Média ponderada composta de indicadores estruturais, não deltas de tempo retórico — diretamente comparável entre períodos.',
+        footerCopyright: '© 2025-2026 Asifah Analytics.',
+        footerRights: 'Todos os direitos reservados. Esta é inteligência geopolítica OSINT de código aberto; não é aconselhamento de investimento, legal ou político.',
+        loadingText: 'ANALISANDO ESTABILIDADE DOS EUA...',
+        emptySignals: 'Nenhum sinal detectado nesta categoria para a janela atual.',
+        coldStart: 'Análise inicial em andamento. A pontuação composta será preenchida em 5 minutos.',
+        leanRepublican: 'Republicano',
+        leanDemocratic: 'Democrata',
+        leanSwing: 'Indeciso',
+        bands: { resilient: 'Resiliente', stressed: 'Tensionado', fractured: 'Fraturado',
+                  crisis_mode: 'Modo Crise', constitutional_crisis: 'Crise Constitucional' },
+    },
+};
+
+var currentLang = 'en';
+var currentMapMode = 'political';
+var currentNewsTab = 'en';
+var lastData = null;
+var lastHistoryData = null;
+
+// ────────────────────────────────────────────────────────────
+// API ENDPOINT
+// ────────────────────────────────────────────────────────────
+// Auto-detect: localhost dev vs production
+var API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000'
+    : 'https://asifah-wha-backend.onrender.com';
+
+var STABILITY_ENDPOINT = API_BASE + '/api/us-stability';
+var HISTORY_ENDPOINT   = API_BASE + '/api/us-stability/history';
+
+// ────────────────────────────────────────────────────────────
+// STATE-LEVEL DATA: political lean + population
+// ────────────────────────────────────────────────────────────
+// Political lean = current state alignment as of May 2026 based on
+// recent presidential votes + governor + state legislature + senate
+// delegation. "Swing" = states genuinely close in recent cycles.
+// Population from Census Bureau 2024 estimates (millions).
+// ────────────────────────────────────────────────────────────
+var STATE_DATA = {
+    AL: { name: 'Alabama',       lean: 'R', pop: 5.11 },
+    AK: { name: 'Alaska',        lean: 'R', pop: 0.73 },
+    AZ: { name: 'Arizona',       lean: 'swing', pop: 7.43 },
+    AR: { name: 'Arkansas',      lean: 'R', pop: 3.07 },
+    CA: { name: 'California',    lean: 'D', pop: 38.97 },
+    CO: { name: 'Colorado',      lean: 'D', pop: 5.91 },
+    CT: { name: 'Connecticut',   lean: 'D', pop: 3.62 },
+    DE: { name: 'Delaware',      lean: 'D', pop: 1.04 },
+    FL: { name: 'Florida',       lean: 'R', pop: 22.61 },
+    GA: { name: 'Georgia',       lean: 'swing', pop: 11.10 },
+    HI: { name: 'Hawaii',        lean: 'D', pop: 1.43 },
+    ID: { name: 'Idaho',         lean: 'R', pop: 2.00 },
+    IL: { name: 'Illinois',      lean: 'D', pop: 12.55 },
+    IN: { name: 'Indiana',       lean: 'R', pop: 6.86 },
+    IA: { name: 'Iowa',          lean: 'R', pop: 3.21 },
+    KS: { name: 'Kansas',        lean: 'R', pop: 2.94 },
+    KY: { name: 'Kentucky',      lean: 'R', pop: 4.52 },
+    LA: { name: 'Louisiana',     lean: 'R', pop: 4.57 },
+    ME: { name: 'Maine',         lean: 'D', pop: 1.40 },
+    MD: { name: 'Maryland',      lean: 'D', pop: 6.18 },
+    MA: { name: 'Massachusetts', lean: 'D', pop: 7.02 },
+    MI: { name: 'Michigan',      lean: 'swing', pop: 10.06 },
+    MN: { name: 'Minnesota',     lean: 'D', pop: 5.74 },
+    MS: { name: 'Mississippi',   lean: 'R', pop: 2.94 },
+    MO: { name: 'Missouri',      lean: 'R', pop: 6.20 },
+    MT: { name: 'Montana',       lean: 'R', pop: 1.13 },
+    NE: { name: 'Nebraska',      lean: 'R', pop: 1.99 },
+    NV: { name: 'Nevada',        lean: 'swing', pop: 3.20 },
+    NH: { name: 'New Hampshire', lean: 'swing', pop: 1.40 },
+    NJ: { name: 'New Jersey',    lean: 'D', pop: 9.32 },
+    NM: { name: 'New Mexico',    lean: 'D', pop: 2.12 },
+    NY: { name: 'New York',      lean: 'D', pop: 19.57 },
+    NC: { name: 'North Carolina', lean: 'swing', pop: 10.84 },
+    ND: { name: 'North Dakota',  lean: 'R', pop: 0.78 },
+    OH: { name: 'Ohio',          lean: 'R', pop: 11.79 },
+    OK: { name: 'Oklahoma',      lean: 'R', pop: 4.05 },
+    OR: { name: 'Oregon',        lean: 'D', pop: 4.23 },
+    PA: { name: 'Pennsylvania',  lean: 'swing', pop: 12.96 },
+    RI: { name: 'Rhode Island',  lean: 'D', pop: 1.10 },
+    SC: { name: 'South Carolina', lean: 'R', pop: 5.37 },
+    SD: { name: 'South Dakota',  lean: 'R', pop: 0.92 },
+    TN: { name: 'Tennessee',     lean: 'R', pop: 7.13 },
+    TX: { name: 'Texas',         lean: 'R', pop: 30.50 },
+    UT: { name: 'Utah',          lean: 'R', pop: 3.42 },
+    VT: { name: 'Vermont',       lean: 'D', pop: 0.65 },
+    VA: { name: 'Virginia',      lean: 'D', pop: 8.72 },
+    WA: { name: 'Washington',    lean: 'D', pop: 7.96 },
+    WV: { name: 'West Virginia', lean: 'R', pop: 1.77 },
+    WI: { name: 'Wisconsin',     lean: 'swing', pop: 5.91 },
+    WY: { name: 'Wyoming',       lean: 'R', pop: 0.59 },
+    DC: { name: 'District of Columbia', lean: 'D', pop: 0.68 },
+};
+
+// ────────────────────────────────────────────────────────────
+// STATE TILE GRID (Bloomberg-style geographic-tile cartogram)
+// Each state is a tile; layout approximates US geography.
+// {col, row} grid coordinates. Renders as a grid of clean tiles
+// rather than precise borders — easier to read for state-level data.
+// ────────────────────────────────────────────────────────────
+var STATE_GRID = {
+    AK: {col: 0, row: 0},                       HI: {col: 0, row: 6},
+    WA: {col: 1, row: 1}, MT: {col: 2, row: 1}, ND: {col: 3, row: 1}, MN: {col: 4, row: 1},
+    WI: {col: 5, row: 1},                                                MI: {col: 6, row: 1},
+    OR: {col: 1, row: 2}, ID: {col: 2, row: 2}, WY: {col: 3, row: 2}, SD: {col: 4, row: 2},
+    IA: {col: 5, row: 2}, IL: {col: 6, row: 2}, IN: {col: 7, row: 2}, OH: {col: 8, row: 2},
+    PA: {col: 9, row: 2},                                                  NY: {col: 10, row: 1}, VT: {col: 11, row: 1}, NH: {col: 12, row: 1}, ME: {col: 13, row: 0},
+    CA: {col: 1, row: 3}, NV: {col: 2, row: 3}, UT: {col: 3, row: 3}, CO: {col: 4, row: 3},
+    NE: {col: 5, row: 3}, MO: {col: 6, row: 3}, KY: {col: 7, row: 3}, WV: {col: 8, row: 3},
+    VA: {col: 9, row: 3}, MD: {col: 10, row: 3}, DE: {col: 11, row: 3}, NJ: {col: 11, row: 2},
+    CT: {col: 12, row: 2}, RI: {col: 13, row: 2}, MA: {col: 12, row: 1},
+                            AZ: {col: 2, row: 4}, NM: {col: 3, row: 4}, KS: {col: 4, row: 4},
+    AR: {col: 5, row: 4}, TN: {col: 6, row: 4}, NC: {col: 7, row: 4}, SC: {col: 8, row: 4},
+                            OK: {col: 4, row: 5}, LA: {col: 5, row: 5}, MS: {col: 6, row: 5},
+    AL: {col: 7, row: 5}, GA: {col: 8, row: 5},
+                            TX: {col: 4, row: 6},                          FL: {col: 8, row: 6},
+                                                                              DC: {col: 10, row: 4},
+};
+
+// ────────────────────────────────────────────────────────────
+// KNOWLEDGE LIBRARY CONTENT (apolitical reference)
+// ────────────────────────────────────────────────────────────
+var LIBRARY_ITEMS = [
+    {
+        title: 'The U.S. Federal System',
+        summary: 'How federal vs. state powers, separation of powers, and checks and balances work in the U.S. constitutional structure.',
+        detail: '<p>The U.S. operates under a <strong>federal system</strong>: a national government with enumerated powers (Article I § 8) and 50 state governments retaining all powers not delegated to the federal government (10th Amendment).</p><p><strong>Separation of powers</strong> divides federal authority across three branches: Legislative (Congress: House + Senate), Executive (President + departments), Judicial (Supreme Court + federal courts).</p><p><strong>Checks and balances</strong>: Congress can override vetoes, impeach officials, control federal spending. The President can veto legislation, appoint judges, command the military. Courts can strike down laws as unconstitutional. Each branch constrains the others.</p><p><strong>State sovereignty</strong> means states control most criminal law, family law, education, elections (administered by states), and intrastate commerce. Federal supremacy applies only where the federal government has explicit constitutional authority.</p>',
+    },
+    {
+        title: 'U.S. Electoral Architecture',
+        summary: 'How federal elections work: Electoral College, primaries, certification, and the role of state secretaries of state.',
+        detail: '<p>Federal elections are <strong>administered by states</strong>, not the federal government. Each state\'s Secretary of State (or equivalent) oversees election machinery, ballot certification, voter rolls, and result certification.</p><p><strong>Presidential elections</strong> use the Electoral College: 538 electors, 270 needed to win. Each state has electors equal to its congressional delegation (House seats + 2 senators). Most states award electors winner-take-all by statewide popular vote (Maine and Nebraska are exceptions, awarding by congressional district).</p><p><strong>Congressional elections</strong> are entirely by direct popular vote: 435 House seats every 2 years (each state gets seats proportional to population, minimum 1), 100 Senate seats with 2 per state, staggered 6-year terms (1/3 up every 2 years).</p><p><strong>Certification</strong>: After Election Day, states have until ~mid-December to certify results. Congress meets January 6 of the following year to count electoral votes. New Congress sworn in January 3.</p>',
+    },
+    {
+        title: 'The Civilian-Military Boundary',
+        summary: 'Posse Comitatus, the Insurrection Act, Title 10 vs. Title 32, and how civilian control of the military operates.',
+        detail: '<p><strong>Posse Comitatus Act (1878)</strong> prohibits the use of federal military forces (Army, Air Force, Marines, Navy) for domestic law enforcement except as expressly authorized by the Constitution or Congress.</p><p><strong>The Insurrection Act</strong> (1807, amended) is one such authorization — it permits the President to deploy federal troops domestically to suppress insurrection, enforce federal law where state authorities have failed, or protect constitutional rights when state authorities cannot or will not.</p><p><strong>Title 10 vs Title 32</strong>: Title 10 governs federal active-duty military and federalized National Guard (Posse Comitatus applies). Title 32 governs the National Guard under state control (Posse Comitatus does not apply — state guards CAN do law enforcement). When a state governor activates the Guard, troops remain under state control. When the President federalizes the Guard, they become Title 10.</p><p><strong>Civilian control</strong>: The Constitution makes the President Commander-in-Chief, but Congress declares war, funds the military, and confirms senior officers. The Secretary of Defense (a civilian) sits between the President and the Joint Chiefs of Staff in the chain of command.</p>',
+    },
+    {
+        title: 'U.S. Economic Stability Indicators',
+        summary: 'What S&P 500, CPI, unemployment, mortgage rates, and Treasury yields actually measure as stability signals.',
+        detail: '<p>This page tracks 18 economic indicators as <strong>stability signals</strong>, not investment commentary.</p><p><strong>CPI (Consumer Price Index)</strong> measures inflation rate. Above 2% Fed target = sustained pressure on consumer purchasing power. Above 4-6% = significant household financial stress.</p><p><strong>Unemployment rate</strong> is the headline labor market signal. Above 5% sustained = elevated labor stress; above 7% = recession-level conditions.</p><p><strong>30-year fixed mortgage rate</strong> is the dominant cost-of-housing signal. Above 7% locks many first-time buyers out; above 8.5% creates structural housing market stress.</p><p><strong>10-year Treasury yield</strong> is the sovereign credit signal: how much does the U.S. government pay to borrow long-term? Above 5% = elevated borrowing costs ripple through corporate and consumer credit.</p><p><strong>S&P 500</strong> measures broad equity sentiment — a leading indicator for economic expectations. Sustained drops indicate market stress about growth, inflation, or geopolitical risk.</p>',
+    },
+    {
+        title: 'The Federal Reserve',
+        summary: 'How the Fed operates, its independence framework, dual mandate, and history of political pressure.',
+        detail: '<p>The <strong>Federal Reserve</strong> is the central bank of the United States. Created in 1913 to provide a stable monetary system. Independent within (not from) the government — its policy decisions are insulated from political pressure but it operates within congressional mandate.</p><p><strong>Structure</strong>: 7-member Board of Governors (14-year staggered terms, presidential appointment + Senate confirmation), 12 regional Federal Reserve Banks. The <strong>FOMC</strong> (Federal Open Market Committee) — 12 members, 8 meetings/year — sets the federal funds rate.</p><p><strong>Dual mandate</strong> (1977): maximum employment AND price stability (~2% inflation target). These can conflict — fighting inflation often raises unemployment.</p><p><strong>Political pressure history</strong>: Presidents from both parties have publicly pressured Fed chairs. Nixon (Burns), Reagan (Volcker), George H.W. Bush (Greenspan), Trump (Powell), have all expressed displeasure with rates. Fed independence is a structural norm, not a constitutional requirement.</p><p><strong>Why it matters for stability</strong>: A perception of compromised Fed independence affects bond markets, dollar credibility, and global confidence in U.S. financial leadership.</p>',
+    },
+    {
+        title: 'Federal Agencies & Independent Bodies',
+        summary: 'DOJ, FBI, intelligence community, inspectors general, the SES, and the role of career civil service.',
+        detail: '<p>The federal government has roughly 2 million civilian employees. Most are <strong>career civil servants</strong> (competitive service) protected by merit-system rules — they cannot be hired or fired for political reasons.</p><p><strong>Senior Executive Service (SES)</strong> is roughly 8,000 senior career officials between political appointees and rank-and-file. Most are career, but some slots can be filled with political appointees.</p><p><strong>Department of Justice (DOJ)</strong>: Headed by Attorney General (political appointee, Senate-confirmed). Includes FBI, US Attorneys, Solicitor General. By tradition (not law), DOJ operates with independence from White House on specific case decisions.</p><p><strong>FBI Director</strong> serves a 10-year term (post-Watergate reform) — designed to span administrations. Mid-term removal is rare and structurally significant.</p><p><strong>Inspectors General (IGs)</strong>: Independent oversight officials within each agency. They investigate waste, fraud, and abuse. Can be fired by the President but require 30-day notice to Congress (post-2008 reform). Mass IG dismissals are a stability signal because they affect oversight integrity.</p><p><strong>Intelligence Community</strong>: 18 agencies coordinated by Director of National Intelligence (DNI). Includes CIA, NSA, DIA, NRO, NGA, FBI Intelligence, and others.</p>',
+    },
+    {
+        title: 'Press Freedom Framework',
+        summary: 'First Amendment scope, libel law, FCC authority over broadcasters, and how press freedom intersects with stability.',
+        detail: '<p>The <strong>First Amendment</strong> prohibits Congress from making any law "abridging the freedom of speech, or of the press." This is one of the strongest press protections in the world.</p><p><strong>Libel law</strong>: Public officials must prove "actual malice" (New York Times v. Sullivan, 1964) — knowing falsehood or reckless disregard for truth — to recover for defamation. This high bar protects journalism about public figures even when the journalism contains errors.</p><p><strong>FCC authority</strong>: The Federal Communications Commission regulates broadcasters who use public airwaves (radio, broadcast TV) but has no authority over print, cable, or internet content. Broadcast license renewal is the FCC\'s leverage; revoking a license for content reasons would face severe First Amendment challenge.</p><p><strong>Stability relevance</strong>: Press freedom is structurally relevant because: (1) it enables informed citizenship, (2) it constrains government power through transparency, (3) credible information ecosystems are foundational to democratic legitimacy. Stress signals include attempts to weaponize libel law against journalists, threats to broadcaster licenses, or restricted access to government information.</p>',
+    },
+    {
+        title: 'U.S. Crisis Response Architecture',
+        summary: 'FEMA, Stafford Act, Continuity of Government, and how the U.S. responds to large-scale emergencies.',
+        detail: '<p><strong>FEMA (Federal Emergency Management Agency)</strong>: Coordinates federal response to natural disasters, terrorism, and other major emergencies. Operates under the <strong>Stafford Act</strong>, which requires a state governor to formally request federal assistance before FEMA can act. FEMA is part of DHS but has its own Administrator.</p><p><strong>Stafford Act declarations</strong>: A "Major Disaster Declaration" or "Emergency Declaration" by the President unlocks federal funding and resources for state-level response. Without a Stafford Act declaration, FEMA cannot lead response in a state.</p><p><strong>Continuity of Government (COG)</strong>: Plans to ensure essential government functions continue during catastrophic events. Includes succession protocols (Designated Survivor concept), continuity-of-operations plans for each agency, and emergency preservation of constitutional government.</p><p><strong>Presidential succession</strong> (after President and VP): Speaker of the House → Senate President Pro Tempore → Cabinet secretaries in order of department creation (State first, then Treasury, then Defense, etc.).</p><p><strong>The 25th Amendment</strong>: Permits temporary presidential incapacity transfer to VP via written declaration; Cabinet majority can declare president unable to discharge duties.</p>',
+    },
+    {
+        title: 'Civil Disturbance & Protest Tradition',
+        summary: 'Historical context of major protest movements (1960s, 1992, 2014, 2020) and the legal framework around assembly.',
+        detail: '<p>The U.S. has a long tradition of <strong>protest as constitutional right</strong>. The First Amendment protects "the right of the people peaceably to assemble, and to petition the Government for a redress of grievances."</p><p><strong>Time, place, and manner restrictions</strong> are permitted: governments can require permits for street marches, restrict use of certain public spaces, and prohibit blocking critical infrastructure. They cannot restrict based on the content or message of the protest.</p><p><strong>Historical context</strong>: Major protest movements have been recurring features of U.S. political life: 1965 Selma march and Civil Rights movement, 1968 anti-war and post-MLK assassination protests, 1992 Los Angeles Rodney King protests, 2014 Ferguson and Black Lives Matter, 2020 George Floyd protests, 2021 January 6 (a different category — attack on the Capitol), 2024-2026 immigration enforcement protests, 2025 No Kings Movement.</p><p><strong>Stability signals</strong> from protest activity: peaceful protest = exercise of constitutional right (low stability stress); protests escalating to property destruction or violence = elevated stability stress; protests resulting in deaths or injuries to civilians by law enforcement = high stability stress; protests where National Guard or federal forces are deployed = significant stability signal.</p>',
+    },
+];
+</script>
+
+<script>
+// ────────────────────────────────────────────────────────────
+// HELPERS
+// ────────────────────────────────────────────────────────────
+function escapeHtml(s) {
+    if (s == null) return '';
+    return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function bandColorVar(band) {
+    var map = {
+        'resilient':            'var(--band-resilient)',
+        'stressed':             'var(--band-stressed)',
+        'fractured':            'var(--band-fractured)',
+        'crisis_mode':          'var(--band-crisis)',
+        'constitutional_crisis': 'var(--band-constitutional)',
+    };
+    return map[band] || 'var(--band-stressed)';
+}
+
+// ────────────────────────────────────────────────────────────
+// THEME / LANG
+// ────────────────────────────────────────────────────────────
+function toggleTheme() {
+    var current = document.body.getAttribute('data-theme');
+    var newTheme = current === 'light' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', newTheme);
+    var btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = newTheme === 'dark' ? '🌙 Dark' : '☀️ Light';
+}
+function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(function(b){ b.classList.remove('active'); });
+    document.getElementById('lang' + lang.charAt(0).toUpperCase() + lang.slice(1)).classList.add('active');
+    applyTranslations();
+    if (lastData) renderAll(lastData);
+}
+function applyTranslations() {
+    var t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    document.querySelectorAll('[data-i18n]').forEach(function(el) {
+        var key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+    });
+    document.documentElement.lang = currentLang;
+}
+
+// ────────────────────────────────────────────────────────────
+// FETCH + REFRESH
+// ────────────────────────────────────────────────────────────
+async function fetchData(forceRefresh) {
+    var loader = document.getElementById('loadingOverlay');
+    if (loader) loader.classList.remove('hidden');
+    try {
+        var url = STABILITY_ENDPOINT + (forceRefresh ? '?refresh=true' : '');
+        var resp = await fetch(url);
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        var data = await resp.json();
+        if (!data.success) throw new Error(data.error || 'Unknown error');
+        lastData = data;
+        // Also fetch history (separate endpoint)
+        try {
+            var hresp = await fetch(HISTORY_ENDPOINT);
+            if (hresp.ok) {
+                var hdata = await hresp.json();
+                lastHistoryData = hdata;
+            }
+        } catch (he) { console.warn('History fetch failed', he); }
+        renderAll(data);
+    } catch (err) {
+        console.error('[US Stability] Fetch error:', err);
+        showError('Failed to fetch stability data: ' + err.message);
+    } finally {
+        if (loader) loader.classList.add('hidden');
+    }
+}
+function refreshData() { fetchData(true); }
+function showError(msg) {
+    // Show error inline since we don't have a banner element from earlier parts
+    console.error(msg);
+}
+
+// ────────────────────────────────────────────────────────────
+// MAIN RENDERER
+// ────────────────────────────────────────────────────────────
+function renderAll(data) {
+    var t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    renderMeta(data, t);
+    renderComposite(data, t);
+    renderTrendline(lastHistoryData);
+    renderEconomicDimension(data, t);
+    renderKeywordDimension('political_cohesion', data, t);
+    renderKeywordDimension('civil_social', data, t);
+    renderKeywordDimension('democratic_institutions', data, t);
+    renderMilitaryDimension(data, t);
+    renderKeywordDimension('cyber_infrastructure', data, t);
+    renderMap(data);
+    renderCommodity(data, t);
+    renderNews(data, t);
+    renderLibrary();
+}
+
+function renderMeta(data, t) {
+    document.getElementById('metaUpdated').textContent =
+        data.last_updated ? new Date(data.last_updated).toLocaleString() : '—';
+    document.getElementById('metaArticles').textContent =
+        (data.articles_scanned || 0).toLocaleString();
+    var phase = (data.election_cycle || {}).phase_label || '—';
+    var daysOut = (data.election_cycle || {}).days_until_next_election;
+    document.getElementById('metaCycle').textContent =
+        phase + (daysOut != null ? ' (' + daysOut + ' days)' : '');
+    var sb = data.structural_baseline || {};
+    document.getElementById('metaConfig').textContent =
+        sb.configuration ? sb.configuration.replace('_', ' ').replace('_', ' ') : '—';
+    var freshnessEl = document.getElementById('metaFreshness');
+    var freshness = data.government_data_freshness || 'static_fallback';
+    freshnessEl.className = 'meta-pill ' + (
+        freshness === 'live' ? 'live' :
+        freshness === 'cached' ? 'cached' : 'static');
+    freshnessEl.textContent = freshness.toUpperCase().replace('_', ' ');
+    var warn = data.staleness_warning;
+    var warnEl = document.getElementById('stalenessWarning');
+    if (warn) {
+        warnEl.style.display = 'block';
+        warnEl.innerHTML = '⚠️ ' + escapeHtml(warn);
+    } else {
+        warnEl.style.display = 'none';
+    }
+}
+
+function renderComposite(data, t) {
+    var c = data.composite || {};
+    var score = c.score != null ? c.score : 0;
+    var band = c.band || {};
+    var color = bandColorVar(band.band || 'stressed');
+    var card = document.getElementById('compositeCard');
+    card.style.setProperty('--composite-band-color', color);
+    document.getElementById('compositeScore').textContent = score;
+    document.getElementById('compositeBandIcon').textContent = band.icon || '—';
+    document.getElementById('compositeBandText').textContent =
+        (t.bands && t.bands[band.band]) || band.label || '—';
+    document.getElementById('compositeDescription').textContent = band.description || '';
+    var modText = '';
+    if (c.cycle_modifier) {
+        modText = 'Cycle modifier: ' + c.cycle_modifier + 'x · Raw composite: ' + (c.raw_score || '—');
+    }
+    document.getElementById('compositeModifier').textContent = modText;
+}
+
+function renderTrendline(historyData) {
+    var svg = document.getElementById('compositeTrendSvg');
+    if (!svg) return;
+    var snapshots = ((historyData || {}).snapshots) || [];
+    var startEl = document.getElementById('trendStartDate');
+    var endEl = document.getElementById('trendEndDate');
+    if (snapshots.length === 0) {
+        return;
+    }
+    if (snapshots.length < 2) {
+        // Single snapshot — show as a dot
+        var s = snapshots[0];
+        var t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+        svg.innerHTML = '<circle cx="300" cy="' + (100 - s.score) + '" r="4" fill="currentColor"/>' +
+            '<text x="300" y="50" text-anchor="middle" fill="currentColor" opacity="0.5" font-size="10">' +
+            escapeHtml(t.trendCold || 'First scan recorded') + '</text>';
+        startEl.textContent = s.date;
+        endEl.textContent = s.date;
+        return;
+    }
+    var w = 600, h = 100, pad = 8;
+    var inner = h - 2 * pad;
+    var stepX = (w - 2 * pad) / (snapshots.length - 1);
+    var pts = snapshots.map(function(s, i) {
+        var x = pad + i * stepX;
+        var y = pad + (1 - s.score / 100) * inner;
+        return [x, y, s.score, s.band, s.date];
+    });
+    // Build SVG: gradient fill + line
+    var pathLine = pts.map(function(p, i) {
+        return (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1);
+    }).join(' ');
+    var pathArea = pathLine + ' L' + pts[pts.length-1][0].toFixed(1) + ',' + (h - pad) + ' L' + pts[0][0].toFixed(1) + ',' + (h - pad) + ' Z';
+    var dotsHtml = pts.map(function(p) {
+        return '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="3" fill="' + bandColorVar(p[3]) + '"><title>' + p[4] + ': ' + p[2] + '</title></circle>';
+    }).join('');
+    svg.innerHTML = '<defs><linearGradient id="trendGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="currentColor" stop-opacity="0.25"/><stop offset="100%" stop-color="currentColor" stop-opacity="0"/></linearGradient></defs>' +
+        '<path d="' + pathArea + '" fill="url(#trendGrad)" stroke="none"/>' +
+        '<path d="' + pathLine + '" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>' +
+        dotsHtml;
+    startEl.textContent = snapshots[0].date;
+    endEl.textContent = snapshots[snapshots.length - 1].date;
+}
+
+// ────────────────────────────────────────────────────────────
+// DIMENSION RENDERERS
+// ────────────────────────────────────────────────────────────
+function applyDimColor(dimId, band) {
+    var card = document.getElementById('dim-' + dimId);
+    if (card) card.style.setProperty('--dim-band-color', bandColorVar(band));
+}
+function renderDimHeader(dimId, dim, t) {
+    var score = dim.score != null ? dim.score : 0;
+    var band = dim.band || {};
+    document.getElementById('dim-' + dimId + '-score').textContent = score;
+    var pill = document.getElementById('dim-' + dimId + '-pill');
+    pill.textContent = (t.bands && t.bands[band.band]) || band.label || '—';
+    applyDimColor(dimId, band.band || 'stressed');
+}
+function toggleDimension(dimId) {
+    var card = document.getElementById('dim-' + dimId);
+    if (card) card.classList.toggle('expanded');
+}
+
+// Dimension 1: Economic
+function renderEconomicDimension(data, t) {
+    var dim = (data.dimensions || {}).economic || {};
+    renderDimHeader('economic', dim, t);
+    var indicators = dim.indicators || {};
+    var topGrid = document.getElementById('dim-economic-top-indicators');
+    var expGrid = document.getElementById('dim-economic-expanded-grid');
+    topGrid.innerHTML = '';
+    expGrid.innerHTML = '';
+    var topCount = 0, expCount = 0;
+    Object.keys(indicators).forEach(function(iid) {
+        var ind = indicators[iid];
+        var html = renderIndicatorTile(ind, iid);
+        if (ind.tier === 'top') {
+            topGrid.innerHTML += html;
+            topCount++;
+        } else {
+            expGrid.innerHTML += html;
+            expCount++;
+        }
+    });
+    var btn = document.getElementById('expandIndicatorsBtn');
+    btn.textContent = (t.showAllIndicators || '+ Show All Expanded Indicators').replace(
+        'Expanded Indicators', expCount + ' Expanded Indicators');
+}
+function renderIndicatorTile(ind, iid) {
+    var stress = ind.stress_score != null ? ind.stress_score : 0;
+    var stressClass = stress >= 70 ? 'crisis-stress' : stress >= 50 ? 'high-stress' : '';
+    var tierClass = ind.tier === 'top' ? 'tier-top' : '';
+    var changeClass = '';
+    var changeText = '';
+    // Note: ind from server has 'change' attribute; if score from us_stability that's different
+    // Backend supplies econ data via `dim.indicators` which is a re-shape; check both
+    return '<div class="indicator-tile ' + tierClass + ' ' + stressClass + '">' +
+        '<div class="indicator-name">' + escapeHtml(ind.name || iid) + '</div>' +
+        '<div class="indicator-value-row">' +
+            '<div class="indicator-value">' + (ind.value != null ? ind.value : '—') + '</div>' +
+            '<div class="indicator-unit">' + escapeHtml(ind.unit || '') + '</div>' +
+        '</div>' +
+        (ind.frame ? '<div class="indicator-frame">' + escapeHtml(ind.frame) + '</div>' : '') +
+        (ind.source ? '<div class="indicator-source">' + escapeHtml(ind.source) + '</div>' : '') +
+    '</div>';
+}
+function toggleExpandedIndicators() {
+    var div = document.getElementById('dim-economic-expanded-indicators');
+    var btn = document.getElementById('expandIndicatorsBtn');
+    var t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    if (div.style.display === 'none') {
+        div.style.display = 'block';
+        btn.textContent = t.hideExpandedIndicators || '− Hide Expanded Indicators';
+    } else {
+        div.style.display = 'none';
+        btn.textContent = t.showAllIndicators || '+ Show All Expanded Indicators';
+    }
+}
+
+// Keyword dimensions (Political, Civil, Democratic, Cyber)
+function renderKeywordDimension(dimId, data, t) {
+    var dim = (data.dimensions || {})[dimId] || {};
+    renderDimHeader(dimId, dim, t);
+    var container = document.getElementById('dim-' + dimId + '-categories');
+    if (!container) return;
+    var cats = dim.category_data || {};
+    var keys = Object.keys(cats);
+    if (keys.length === 0) {
+        container.innerHTML = '<div class="dim-empty">' + escapeHtml(t.emptySignals || 'No signals detected.') + '</div>';
+        return;
+    }
+    // Sort by impact descending
+    keys.sort(function(a, b) {
+        var aImpact = cats[a].count * cats[a].weight * cats[a].modifier;
+        var bImpact = cats[b].count * cats[b].weight * cats[b].modifier;
+        return bImpact - aImpact;
+    });
+    var html = '';
+    keys.forEach(function(catKey) {
+        var cat = cats[catKey];
+        var impact = cat.count * cat.weight * cat.modifier;
+        var countClass = impact >= 30 ? 'crisis' : impact >= 15 ? 'high' : '';
+        var catName = catKey.replace(/_/g, ' ');
+        catName = catName.charAt(0).toUpperCase() + catName.slice(1);
+        var articlesHtml = '';
+        if (cat.sample_articles && cat.sample_articles.length > 0) {
+            articlesHtml = '<div class="signal-cat-articles">' +
+                cat.sample_articles.map(function(a) {
+                    return '<div class="signal-cat-article">→ ' +
+                        (a.link ? ('<a href="' + escapeHtml(a.link) + '" target="_blank" rel="noopener">' + escapeHtml(a.title || '(no title)') + '</a>') : escapeHtml(a.title || '(no title)')) +
+                        (a.pattern ? '<span class="signal-cat-pattern">' + escapeHtml(a.pattern) + '</span>' : '') +
+                        '</div>';
+                }).join('') + '</div>';
+        }
+        var statesText = cat.states && cat.states.length > 0
+            ? 'States: ' + cat.states.join(', ')
+            : 'National scope';
+        html += '<div class="signal-cat">' +
+            '<div class="signal-cat-row">' +
+                '<div class="signal-cat-name">' + escapeHtml(catName) + '</div>' +
+                '<div class="signal-cat-count ' + countClass + '">' + cat.count + ' signal' + (cat.count !== 1 ? 's' : '') + '</div>' +
+            '</div>' +
+            articlesHtml +
+            '<div class="signal-cat-meta">Weight: ' + cat.weight + ' × Modifier: ' + cat.modifier.toFixed(2) + ' = Impact ' + impact.toFixed(1) + ' · ' + escapeHtml(statesText) + '</div>' +
+        '</div>';
+    });
+    container.innerHTML = html;
+}
+
+// Dimension 5: Military Posture
+function renderMilitaryDimension(data, t) {
+    var dim = (data.dimensions || {}).military_posture || {};
+    renderDimHeader('military_posture', dim, t);
+    var container = document.getElementById('dim-military_posture-content');
+    if (!container) return;
+    var fp = dim.mil_fingerprint;
+    if (!fp) {
+        container.innerHTML = '<div class="dim-empty">' +
+            escapeHtml(dim.note || 'Military posture fingerprint not yet available.') +
+            '</div>';
+        return;
+    }
+    var html = '<div class="dim-section-title">Posture Fingerprint</div>' +
+        '<div class="mil-fingerprint-row">' +
+            '<div class="mil-fp-tile"><div class="mil-fp-label">Alert Level</div>' +
+                '<div class="mil-fp-value">' + escapeHtml((fp.alert_label || fp.alert_level || '—').toUpperCase()) + '</div></div>' +
+            '<div class="mil-fp-tile"><div class="mil-fp-label">Mil Score</div>' +
+                '<div class="mil-fp-value">' + (fp.score != null ? fp.score : '—') + '</div></div>' +
+            '<div class="mil-fp-tile"><div class="mil-fp-label">Tension Multiplier</div>' +
+                '<div class="mil-fp-value">' + (fp.tension_multi ? fp.tension_multi + 'x' : '—') + '</div></div>' +
+            '<div class="mil-fp-tile"><div class="mil-fp-label">NEO/Evac Active</div>' +
+                '<div class="mil-fp-value">' + (fp.evac_active ? '🚨 YES' : 'No') + '</div></div>' +
+        '</div>';
+    var cr = dim.cross_references || {};
+    if (Object.keys(cr).length > 0) {
+        html += '<div class="dim-section-title" style="margin-top:14px;">Cross-References</div>';
+        html += '<div class="signal-cat-list">';
+        Object.keys(cr).forEach(function(label) {
+            html += '<div class="signal-cat">' +
+                '<div class="signal-cat-name">🔗 ' + escapeHtml(label.replace(/_/g, ' ')) + '</div>' +
+                '<div class="signal-cat-meta">' + escapeHtml(JSON.stringify(cr[label]).slice(0, 200)) + '</div>' +
+            '</div>';
+        });
+        html += '</div>';
+    }
+    if (dim.top_signals && dim.top_signals.length > 0) {
+        html += '<div class="dim-section-title" style="margin-top:14px;">Top Mil Signals</div>';
+        html += '<div class="signal-cat-list">';
+        dim.top_signals.forEach(function(sig) {
+            html += '<div class="signal-cat">' +
+                '<div class="signal-cat-row">' +
+                    '<div class="signal-cat-name">' + escapeHtml(sig.short_text || '—') + '</div>' +
+                '</div>' +
+                '<div class="signal-cat-meta">' + escapeHtml(sig.long_text || '') + '</div>' +
+            '</div>';
+        });
+        html += '</div>';
+    }
+    container.innerHTML = html;
+}
+
+// ────────────────────────────────────────────────────────────
+// STATE TILE-GRID MAP
+// ────────────────────────────────────────────────────────────
+var TILE_W = 64, TILE_H = 56, TILE_GAP = 4;
+var TILE_OFFSET_X = 30, TILE_OFFSET_Y = 30;
+
+function setMapMode(mode) {
+    currentMapMode = mode;
+    document.querySelectorAll('.map-toggle-btn').forEach(function(b){ b.classList.remove('active'); });
+    var btn = document.getElementById('mapToggle-' + mode);
+    if (btn) btn.classList.add('active');
+    if (lastData) renderMap(lastData);
+}
+
+function getStateColor(stateCode, mode, signalCount, severity, population) {
+    var data = STATE_DATA[stateCode] || {};
+    if (mode === 'political') {
+        if (data.lean === 'R') return 'var(--party-r)';
+        if (data.lean === 'D') return 'var(--party-d)';
+        if (data.lean === 'swing') return 'var(--party-swing)';
+        return 'var(--text-muted)';
+    }
+    // Density / per-capita / severity modes — heat map
+    var value = 0;
+    if (mode === 'density') value = signalCount;
+    else if (mode === 'percapita' && population > 0) value = (signalCount / population) * 10;
+    else if (mode === 'severity') value = severity;
+    if (value <= 0) return 'var(--card-border)';
+    // Map value to red intensity (max 15 signals = full red)
+    var maxScale = mode === 'severity' ? 80 : (mode === 'percapita' ? 20 : 15);
+    var pct = Math.min(1, value / maxScale);
+    var alpha = 0.15 + pct * 0.85;
+    return 'rgba(239, 68, 68, ' + alpha.toFixed(2) + ')';
+}
+
+function renderMap(data) {
+    var svg = document.getElementById('usMapSvg');
+    if (!svg) return;
+    var stateSignals = data.state_signals || {};
+    var dims = data.dimensions || {};
+
+    // Compute per-state severity score by scanning all dimensions' category_data
+    var stateSeverity = {};
+    Object.keys(dims).forEach(function(dimId) {
+        var cats = (dims[dimId] || {}).category_data || {};
+        Object.keys(cats).forEach(function(catKey) {
+            var cat = cats[catKey];
+            (cat.states || []).forEach(function(stCode) {
+                var weight = cat.weight || 1;
+                stateSeverity[stCode] = (stateSeverity[stCode] || 0) + (cat.count * weight * (cat.modifier || 1));
+            });
+        });
+    });
+
+    // Build SVG content
+    var svgContent = '';
+    Object.keys(STATE_GRID).forEach(function(stCode) {
+        var pos = STATE_GRID[stCode];
+        var x = TILE_OFFSET_X + pos.col * (TILE_W + TILE_GAP);
+        var y = TILE_OFFSET_Y + pos.row * (TILE_H + TILE_GAP);
+        var data_ = STATE_DATA[stCode] || { name: stCode, lean: 'unknown', pop: 0 };
+        var signalCount = stateSignals[stCode] || 0;
+        var severity = stateSeverity[stCode] || 0;
+        var fill = getStateColor(stCode, currentMapMode, signalCount, severity, data_.pop);
+        // Determine label color based on state lean for political mode
+        var labelColor = '#ffffff';
+        if (currentMapMode === 'political') {
+            // Always white for visibility on colored tiles
+            labelColor = '#ffffff';
+        } else {
+            // For heat-map modes, light text on dark fills
+            labelColor = signalCount > 5 || severity > 30 ? '#ffffff' : '#888888';
+        }
+        svgContent += '<g class="state-tile" data-state="' + stCode + '" ' +
+                       'onmousemove="showStateTooltip(event, \'' + stCode + '\')" ' +
+                       'onmouseleave="hideStateTooltip()">' +
+            '<rect class="state-shape" x="' + x + '" y="' + y + '" ' +
+                  'width="' + TILE_W + '" height="' + TILE_H + '" ' +
+                  'rx="6" ry="6" fill="' + fill + '"/>' +
+            '<text x="' + (x + TILE_W/2) + '" y="' + (y + TILE_H/2 - 4) + '" ' +
+                  'text-anchor="middle" fill="' + labelColor + '" ' +
+                  'font-size="14" font-weight="700" font-family="Times New Roman, serif" ' +
+                  'pointer-events="none">' + stCode + '</text>' +
+            '<text x="' + (x + TILE_W/2) + '" y="' + (y + TILE_H/2 + 12) + '" ' +
+                  'text-anchor="middle" fill="' + labelColor + '" ' +
+                  'font-size="9" font-family="Courier New, monospace" opacity="0.85" ' +
+                  'pointer-events="none">' +
+                  (currentMapMode === 'political' ? data_.lean.toUpperCase()
+                   : currentMapMode === 'density' ? signalCount + 's'
+                   : currentMapMode === 'severity' ? severity.toFixed(0)
+                   : data_.pop.toFixed(1) + 'M') +
+                  '</text>' +
+        '</g>';
+    });
+    svg.setAttribute('viewBox', '0 0 ' + (TILE_OFFSET_X * 2 + 14 * (TILE_W + TILE_GAP)) +
+                                    ' ' + (TILE_OFFSET_Y * 2 + 7 * (TILE_H + TILE_GAP)));
+    svg.innerHTML = svgContent;
+    renderMapLegend(currentMapMode);
+}
+
+function showStateTooltip(evt, stCode) {
+    var data_ = STATE_DATA[stCode] || {};
+    var signalCount = ((lastData || {}).state_signals || {})[stCode] || 0;
+    var dims = ((lastData || {}).dimensions || {});
+    var severity = 0;
+    Object.keys(dims).forEach(function(dimId) {
+        var cats = (dims[dimId] || {}).category_data || {};
+        Object.keys(cats).forEach(function(catKey) {
+            var cat = cats[catKey];
+            if ((cat.states || []).indexOf(stCode) !== -1) {
+                severity += cat.count * (cat.weight || 1) * (cat.modifier || 1);
+            }
+        });
+    });
+    var t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    var leanLabel = data_.lean === 'R' ? t.leanRepublican
+                   : data_.lean === 'D' ? t.leanDemocratic
+                   : data_.lean === 'swing' ? t.leanSwing : '—';
+    document.getElementById('tooltipName').textContent = data_.name || stCode;
+    document.getElementById('tooltipLean').textContent = leanLabel;
+    document.getElementById('tooltipSignals').textContent = signalCount;
+    document.getElementById('tooltipSeverity').textContent = severity.toFixed(0);
+    document.getElementById('tooltipPopulation').textContent = (data_.pop || 0).toFixed(2) + 'M';
+    var tip = document.getElementById('mapTooltip');
+    tip.classList.add('visible');
+    var wrapper = document.getElementById('mapWrapper');
+    var rect = wrapper.getBoundingClientRect();
+    var x = evt.clientX - rect.left + 14;
+    var y = evt.clientY - rect.top + 14;
+    if (x + 180 > rect.width) x = evt.clientX - rect.left - 190;
+    tip.style.left = x + 'px';
+    tip.style.top  = y + 'px';
+}
+function hideStateTooltip() {
+    document.getElementById('mapTooltip').classList.remove('visible');
+}
+function renderMapLegend(mode) {
+    var legend = document.getElementById('mapLegend');
+    var t = TRANSLATIONS[currentLang] || TRANSLATIONS.en;
+    if (mode === 'political') {
+        legend.innerHTML =
+            '<div class="map-legend-item"><div class="map-legend-dot" style="background:var(--party-r)"></div> ' + t.leanRepublican + '</div>' +
+            '<div class="map-legend-item"><div class="map-legend-dot" style="background:var(--party-d)"></div> ' + t.leanDemocratic + '</div>' +
+            '<div class="map-legend-item"><div class="map-legend-dot" style="background:var(--party-swing)"></div> ' + t.leanSwing + '</div>';
+    } else {
+        legend.innerHTML =
+            '<div class="map-legend-item"><div class="map-legend-dot" style="background:var(--card-border)"></div> Low</div>' +
+            '<div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(239,68,68,0.4)"></div> Medium</div>' +
+            '<div class="map-legend-item"><div class="map-legend-dot" style="background:rgba(239,68,68,0.85)"></div> High</div>';
+    }
+}
+
+// ────────────────────────────────────────────────────────────
+// COMMODITY CARD (placeholder — backend wiring in Phase 5/6)
+// ────────────────────────────────────────────────────────────
+function renderCommodity(data, t) {
+    // Basic US commodity profile — these are static for now; will read from
+    // commodity_proxy_us when that's built. For initial deploy, show a useful
+    // baseline of US's primary commodity exposure.
+    var profile = [
+        { name: 'Crude Oil (WTI)',       role: 'mixed',    frame: 'Both major producer (post-shale) and consumer. Price volatility hits gas pump and transport directly.', alert: 'normal' },
+        { name: 'Natural Gas',           role: 'exporter', frame: 'Largest LNG exporter. Domestic prices sensitive to weather + LNG export demand.', alert: 'normal' },
+        { name: 'Wheat',                 role: 'exporter', frame: 'Major global exporter. Weather + trade dynamics drive price stress.', alert: 'normal' },
+        { name: 'Corn',                  role: 'exporter', frame: 'Largest producer globally. Affects ethanol, livestock feed, food prices.', alert: 'normal' },
+        { name: 'Soybeans',              role: 'exporter', frame: 'Major exporter; trade-policy-sensitive (China relationship).', alert: 'normal' },
+        { name: 'Industrial Metals',     role: 'importer', frame: 'Net importer of copper, aluminum, rare earths. Tariff/trade-policy sensitive.', alert: 'normal' },
+    ];
+    var grid = document.getElementById('commodityTileGrid');
+    grid.innerHTML = profile.map(function(c) {
+        return '<div class="commodity-tile tile-' + c.alert + '">' +
+            '<div class="commodity-tile-header">' +
+                '<div class="commodity-tile-name">' + escapeHtml(c.name) + '</div>' +
+                '<div class="commodity-tile-badges">' +
+                    '<span class="commodity-badge role-' + c.role + '">' + c.role.toUpperCase() + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="commodity-tile-frame">' + escapeHtml(c.frame) + '</div>' +
+            '<div class="commodity-tile-meta">Live commodity-pressure feed: pending Phase 5</div>' +
+        '</div>';
+    }).join('');
+    var banner = document.getElementById('commodityAlertBanner');
+    banner.classList.remove('show');
+}
+
+// ────────────────────────────────────────────────────────────
+// NEWS — TABBED (English / Spanish / Social)
+// ────────────────────────────────────────────────────────────
+function setNewsTab(lang) {
+    currentNewsTab = lang;
+    document.querySelectorAll('.news-tab').forEach(function(b){ b.classList.remove('active'); });
+    var t = document.getElementById('newsTab' + lang.charAt(0).toUpperCase() + lang.slice(1));
+    if (t) t.classList.add('active');
+    if (lastData) renderNews(lastData, TRANSLATIONS[currentLang] || TRANSLATIONS.en);
+}
+function renderNews(data, t) {
+    var allArticles = [];
+    var dims = data.dimensions || {};
+    Object.keys(dims).forEach(function(dimId) {
+        var cats = (dims[dimId] || {}).category_data || {};
+        Object.keys(cats).forEach(function(catKey) {
+            var cat = cats[catKey];
+            (cat.sample_articles || []).forEach(function(a) {
+                if (a.title) allArticles.push(a);
+            });
+        });
+    });
+    // Dedupe by link
+    var seen = {};
+    var dedupe = [];
+    allArticles.forEach(function(a) {
+        if (!seen[a.link || a.title]) {
+            seen[a.link || a.title] = true;
+            dedupe.push(a);
+        }
+    });
+    // Bucket by language/source
+    var enArticles = [];
+    var esArticles = [];
+    var socialArticles = [];
+    dedupe.forEach(function(a) {
+        var src = (a.source || '').toLowerCase();
+        if (src.indexOf('telemundo') !== -1 || src.indexOf('univision') !== -1 ||
+            src.indexOf('españ') !== -1 || src.indexOf('mexic') !== -1) {
+            esArticles.push(a);
+        } else if (src.indexOf('twitter') !== -1 || src.indexOf('x.com') !== -1 ||
+                   src.indexOf('bluesky') !== -1 || src.indexOf('reddit') !== -1 ||
+                   src.indexOf('telegram') !== -1) {
+            socialArticles.push(a);
+        } else {
+            enArticles.push(a);
+        }
+    });
+    document.getElementById('newsTabEnCount').textContent = enArticles.length;
+    document.getElementById('newsTabEsCount').textContent = esArticles.length;
+    document.getElementById('newsTabSocialCount').textContent = socialArticles.length;
+    var bucket = currentNewsTab === 'es' ? esArticles
+               : currentNewsTab === 'social' ? socialArticles : enArticles;
+    var list = document.getElementById('newsList');
+    if (bucket.length === 0) {
+        list.innerHTML = '<div class="news-empty">' + escapeHtml(t.emptySignals || 'No signals.') + '</div>';
+        return;
+    }
+    list.innerHTML = bucket.slice(0, 30).map(function(a) {
+        var src = (a.source || '').toLowerCase();
+        var srcType = src.indexOf('gdelt') !== -1 ? 'gdelt'
+                    : src.indexOf('newsapi') !== -1 ? 'newsapi' : 'rss';
+        return '<div class="news-item">' +
+            '<div class="news-item-row">' +
+                '<div class="news-item-title">' +
+                    (a.link ? '<a href="' + escapeHtml(a.link) + '" target="_blank" rel="noopener">' + escapeHtml(a.title) + '</a>' : escapeHtml(a.title)) +
+                '</div>' +
+                '<div class="news-item-source ' + srcType + '">' + escapeHtml(a.source || 'unknown') + '</div>' +
+            '</div>' +
+            (a.pattern ? '<div class="news-item-meta">Triggered by: ' + escapeHtml(a.pattern) + '</div>' : '') +
+        '</div>';
+    }).join('');
+}
+
+// ────────────────────────────────────────────────────────────
+// KNOWLEDGE LIBRARY
+// ────────────────────────────────────────────────────────────
+function renderLibrary() {
+    var grid = document.getElementById('libraryGrid');
+    if (!grid) return;
+    grid.innerHTML = LIBRARY_ITEMS.map(function(item, i) {
+        return '<div class="library-item" onclick="toggleLibraryItem(' + i + ')" id="library-item-' + i + '">' +
+            '<div class="library-item-header">' +
+                '<div class="library-item-title">' + escapeHtml(item.title) + '</div>' +
+                '<div class="library-item-chevron">▼</div>' +
+            '</div>' +
+            '<div class="library-item-summary">' + escapeHtml(item.summary) + '</div>' +
+            '<div class="library-item-detail">' + item.detail + '</div>' +
+        '</div>';
+    }).join('');
+}
+function toggleLibraryItem(idx) {
+    var item = document.getElementById('library-item-' + idx);
+    if (item) item.classList.toggle('expanded');
+}
+
+// ────────────────────────────────────────────────────────────
+// INIT
+// ────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    applyTranslations();
+    fetchData(false);
+});
+</script>
+</body>
+</html>
