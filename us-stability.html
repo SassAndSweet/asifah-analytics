@@ -1742,9 +1742,9 @@
                 <span class="nav-btn-label">🇺🇸 U.S. Stability</span>
                 <span class="nav-btn-status" data-i18n="navYouAreHere">You are here</span>
             </a>
-            <a href="rhetoric-us.html" class="nav-btn rhetoric-btn inactive-nav">
+            <a href="rhetoric-us.html" class="nav-btn rhetoric-btn">
                 <span class="nav-btn-label">💬 U.S. Rhetoric</span>
-                <span class="nav-btn-status" data-i18n="navInDev">In Dev</span>
+                <span class="nav-btn-status" data-i18n="navLive">● Live</span>
             </a>
         </nav>
 
@@ -3288,9 +3288,16 @@ function renderNews(data, t) {
     var esArticles = [];
     var redditArticles = [];
     var otherSocialArticles = [];
+    // Defensive: a.source may be a dict (from some social signal modules) — coerce to string
+    function safeSrcStr(s) {
+        if (s === null || s === undefined) return '';
+        if (typeof s === 'string') return s.toLowerCase();
+        if (typeof s === 'object' && s.name) return String(s.name).toLowerCase();
+        return String(s).toLowerCase();
+    }
     dedupe.forEach(function(a) {
-        var src = (a.source || '').toLowerCase();
-        var url = (a.link || a.url || '').toLowerCase();
+        var src = safeSrcStr(a.source);
+        var url = String(a.link || a.url || '').toLowerCase();
         // Reddit detection
         if (src.indexOf('reddit') !== -1 || url.indexOf('reddit.com') !== -1 || url.indexOf('redd.it') !== -1) {
             redditArticles.push(a);
@@ -3327,8 +3334,9 @@ function renderNews(data, t) {
         return;
     }
     list.innerHTML = bucket.slice(0, 30).map(function(a) {
-        var src = (a.source || '').toLowerCase();
-        var url = (a.link || a.url || '').toLowerCase();
+        // Defensive: a.source may be a dict (from some social signals) — use safeSrcStr
+        var src = safeSrcStr(a.source);
+        var url = String(a.link || a.url || '').toLowerCase();
         var srcType =
             src.indexOf('reddit') !== -1 || url.indexOf('reddit.com') !== -1 ? 'reddit' :
             src.indexOf('bluesky') !== -1 || src.indexOf('bsky') !== -1 || url.indexOf('bsky.app') !== -1 ? 'bluesky' :
