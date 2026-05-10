@@ -19,8 +19,12 @@
         --text-secondary: #334155;
         --text-muted: #64748b;
         --article-bg: #f1f5f9;
-        --watermark-opacity: 0.06;
+        --watermark-opacity: 0.5;
+        --watermark-size: 500px;
         --watermark-filter: none;
+        --grid-color: transparent;
+        --scanline-opacity: 0;
+        --glow-opacity: 0;
         --card-glow: none;
         --card-hover-glow: 0 8px 20px rgba(0,0,0,0.10);
         --accent: #0284c7;
@@ -39,8 +43,12 @@
         --text-secondary: #93c5fd;
         --text-muted: #4a7fa5;
         --article-bg: #091525;
-        --watermark-opacity: 0.22;
+        --watermark-opacity: 1;
+        --watermark-size: 800px;
         --watermark-filter: saturate(3) brightness(0.8) hue-rotate(185deg);
+        --grid-color: rgba(0,212,255,0.04);
+        --scanline-opacity: 0.03;
+        --glow-opacity: 1;
         --accent: #38bdf8;
         --cyber-cyan: #38bdf8;
         --cyber-cyan-glow: rgba(56,189,248,0.18);
@@ -60,18 +68,52 @@
         position: relative;
     }
 
-    /* Watermark */
+    /* Watermark gold standard (May 11 2026 — from military.html) */
+    .watermark {
+        position: fixed;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: var(--watermark-size);
+        height: var(--watermark-size);
+        background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+        background-size: 135%;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 50%;
+        opacity: var(--watermark-opacity);
+        pointer-events: none;
+        z-index: 0;
+        filter: var(--watermark-filter);
+        transition: all 0.4s ease;
+    }
+
+    /* Grid overlay (body::before) — gold standard */
     body::before {
         content: '';
-        position: fixed; top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        width: 110vmin; height: 110vmin;
-        min-width: 800px; min-height: 800px;
-        max-width: 1400px; max-height: 1400px;
-        background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-        background-size: contain; background-repeat: no-repeat; background-position: center;
-        opacity: var(--watermark-opacity); filter: var(--watermark-filter);
-        z-index: 0; pointer-events: none; user-select: none;
+        position: fixed;
+        inset: 0;
+        background-image:
+            linear-gradient(var(--grid-color) 1px, transparent 1px),
+            linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+        background-size: 40px 40px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Scanlines overlay (body::after) — gold standard */
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0,212,255,var(--scanline-opacity)) 2px,
+            rgba(0,212,255,var(--scanline-opacity)) 4px
+        );
+        pointer-events: none;
+        z-index: 0;
     }
 
     .container { max-width: 1100px; margin: 0 auto; padding: 20px; position: relative; z-index: 1; }
@@ -278,6 +320,8 @@
 </style>
 </head>
 <body>
+
+<div class="watermark"></div>
 <div class="container">
 
 <!-- HEADER -->
@@ -388,6 +432,14 @@
         <span class="nav-btn-label">📊 Chile Stability</span>
         <span class="nav-btn-status" data-i18n="navLive">● Live</span>
     </a>
+    <a href="rhetoric-us.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label">🇺🇸 U.S. Rhetoric Tracker</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
+    <a href="us-stability.html" class="nav-btn active-nav">
+        <span class="nav-btn-label">📊 U.S. Stability</span>
+        <span class="nav-btn-status" data-i18n="navLive">● Live</span>
+    </a>
 </nav>
 
 <!-- MAIN CONTENT -->
@@ -431,10 +483,6 @@
 <!-- COMING SOON -->
 <div class="section-title" style="margin-top:24px;">🔜 <span data-i18n="comingSoonTitle">In Development</span></div>
 <div class="trackers-list">
-    <div class="coming-soon-banner">
-        <div class="coming-soon-name">🇺🇸 <span data-i18n="soon_us">United States Rhetoric Tracker</span></div>
-        <span class="coming-soon-badge" data-i18n="soon_badge">In Development</span>
-    </div>
     <div class="coming-soon-banner">
         <div class="coming-soon-name">🇲🇽 <span data-i18n="soon_mx">Mexico Rhetoric Tracker</span></div>
         <span class="coming-soon-badge" data-i18n="soon_badge">In Development</span>
@@ -523,6 +571,15 @@
             summaryUrl: WHA_BACKEND + '/api/rhetoric/chile',
             url:        'https://www.asifahanalytics.com/rhetoric-chile.html',
         },
+        {
+            id:         'us',
+            name:       'U.S. Rhetoric & Divergence Tracker',
+            flag:       '🇺🇸',
+            actors:     'Executive · State Dept · Defense · Congress Majority · Congress Opposition · Judicial · DHS/ICE · Federal Reserve · State Governors',
+            vectors:    ['Executive Branch', 'Legislative Branch', 'Institutional', 'Domestic Fracture'],
+            summaryUrl: WHA_BACKEND + '/api/rhetoric/us',
+            url:        'https://www.asifahanalytics.com/rhetoric-us.html',
+        },
     ];
 
     // ── TRANSLATIONS (EN / ES / PT) ──
@@ -540,7 +597,6 @@
             blufSource:         'Asifah Analytics · Western Hemisphere Regional Synthesis · Open-source signals only',
             activeTitle:        'Active Rhetoric Trackers — Western Hemisphere',
             comingSoonTitle:    'In Development',
-            soon_us:            'United States Rhetoric Tracker',
             soon_mx:            'Mexico Rhetoric Tracker',
             soon_ve:            'Venezuela Rhetoric Tracker',
             soon_co:            'Colombia Rhetoric Tracker',
@@ -579,7 +635,6 @@
             blufSource:         'Asifah Analytics · Síntesis Regional del Hemisferio Occidental · Solo fuentes abiertas',
             activeTitle:        'Rastreadores de Retórica Activos — Hemisferio Occidental',
             comingSoonTitle:    'En Desarrollo',
-            soon_us:            'Rastreador de Retórica de Estados Unidos',
             soon_mx:            'Rastreador de Retórica de México',
             soon_ve:            'Rastreador de Retórica de Venezuela',
             soon_co:            'Rastreador de Retórica de Colombia',
@@ -618,7 +673,6 @@
             blufSource:         'Asifah Analytics · Síntese Regional do Hemisfério Ocidental · Apenas sinais de código aberto',
             activeTitle:        'Rastreadores de Retórica Ativos — Hemisfério Ocidental',
             comingSoonTitle:    'Em Desenvolvimento',
-            soon_us:            'Rastreador de Retórica dos Estados Unidos',
             soon_mx:            'Rastreador de Retórica do México',
             soon_ve:            'Rastreador de Retórica da Venezuela',
             soon_co:            'Rastreador de Retórica da Colômbia',
