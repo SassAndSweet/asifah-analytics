@@ -4,53 +4,35 @@
  * Asifah Analytics — reusable Web Component for the Leader Commodity
  * Interventions module ("Butterfly Build", Phase 1).
  *
- * USAGE:
+ * v1.1.0 ADDS:
+ *   - Absorption signature integration ("So What" layer)
+ *   - Per-intervention parallel fetch of /absorption-signature/<id>
+ *   - Collapsible So What block: BLUF visible by default, full analysis
+ *     (transmission chain, escalation ladder, historical analog) on expand
+ *   - Same proxy-aware backend routing as leader interventions
  *
- *   <!-- Country mode (India stability page, etc.) -->
+ * USAGE: (unchanged from v1.0)
+ *
  *   <leader-signals-card
  *     country="india"
  *     backend="https://asifah-asia-backend.onrender.com/api/asia">
  *   </leader-signals-card>
  *
- *   <!-- Commodity mode (gold-specific cross-country view) -->
  *   <leader-signals-card
  *     commodity="gold"
  *     backend="https://asifah-backend.onrender.com/api">
  *   </leader-signals-card>
  *
- *   <!-- Global mode (commodities.html dashboard panel) -->
  *   <leader-signals-card
  *     backend="https://asifah-backend.onrender.com/api">
  *   </leader-signals-card>
  *
- * BACKEND ATTRIBUTE:
- *   The component appends "/leader-interventions[/<country>|/commodity/<c>]"
- *   to the `backend` URL. Pass the parent path:
- *     - ME direct:  "https://asifah-backend.onrender.com/api"
- *     - Asia proxy: "https://asifah-asia-backend.onrender.com/api/asia"
- *     - WHA proxy:  "https://asifah-wha-backend.onrender.com/api/wha"
- *     - EU proxy:   "https://asifa-europe-backend.onrender.com/api/europe"
- *       (note: "asifa", no "h" — Render service typo, canonical)
- *
- * THEME INHERITANCE:
- *   The card reads these CSS custom properties from its parent page if set:
- *     --lsc-bg              card background           (default: #0d1b2e)
- *     --lsc-border          card border               (default: #1e3a5f)
- *     --lsc-accent          accent color              (default: #38bdf8)
- *     --lsc-text-primary    primary text              (default: #e2f0fb)
- *     --lsc-text-secondary  secondary text            (default: #93c5fd)
- *     --lsc-text-muted      muted text                (default: #6b7d99)
- *
- * REFRESH:
- *   Auto-refreshes every 5 minutes. Call element.refresh() to force.
- *
- * v1.0.0 — May 11 2026
+ * v1.1.0 — May 11 2026 — Phase 1 architectural stub
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 class LeaderSignalsCard extends HTMLElement {
 
-  // ───── Setup ────────────────────────────────────────────────────────────
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -78,15 +60,18 @@ class LeaderSignalsCard extends HTMLElement {
     if (this._refreshTimer) clearInterval(this._refreshTimer);
   }
 
-  // ───── Mode resolution ──────────────────────────────────────────────────
   _getMode() {
     if (this.getAttribute('country'))   return 'country';
     if (this.getAttribute('commodity')) return 'commodity';
     return 'global';
   }
 
-  _getEndpointUrl() {
-    const backend = (this.getAttribute('backend') || '').replace(/\/+$/, '');
+  _getBackendBase() {
+    return (this.getAttribute('backend') || '').replace(/\/+$/, '');
+  }
+
+  _getInterventionsUrl() {
+    const backend = this._getBackendBase();
     if (!backend) return null;
     const mode = this._getMode();
     if (mode === 'country')   return `${backend}/leader-interventions/${encodeURIComponent(this.getAttribute('country').toLowerCase())}`;
@@ -94,9 +79,14 @@ class LeaderSignalsCard extends HTMLElement {
     return `${backend}/leader-interventions`;
   }
 
-  // ───── Data fetch + render ──────────────────────────────────────────────
+  _getAbsorptionUrl(interventionId) {
+    const backend = this._getBackendBase();
+    if (!backend || !interventionId) return null;
+    return `${backend}/absorption-signature/${encodeURIComponent(interventionId)}`;
+  }
+
   async refresh() {
-    const url = this._getEndpointUrl();
+    const url = this._getInterventionsUrl();
     if (!url) {
       this._renderError('No backend URL configured. Set the `backend` attribute.');
       return;
@@ -106,13 +96,49 @@ class LeaderSignalsCard extends HTMLElement {
       const resp = await fetch(url, { method: 'GET' });
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
       const data = await resp.json();
+
+      const interventions = (data && data.interventions) || [];
+      if (interventions.length > 0) {
+        const enriched = await Promise.all(
+          interventions.map(iv => this._fetchSignature(iv))
+        );
+        data.interventions = enriched;
+      }
+
       this._renderData(data);
     } catch (err) {
       this._renderError(`Could not load leader signals: ${err.message}`);
     }
   }
 
-  // ───── Render: skeleton shell (only once on connect) ────────────────────
+  async _fetchSignature(intervention) {
+    const interventionId = intervention.fingerprint_id;
+    if (!interventionId) {
+      intervention._absorption_signature = null;
+      return intervention;
+    }
+    const url = this._getAbsorptionUrl(interventionId);
+    if (!url) {
+      intervention._absorption_signature = null;
+      return intervention;
+    }
+    try {
+      const resp = await fetch(url, { method: 'GET' });
+      if (!resp.ok) {
+        intervention._absorption_signature = null;
+        return intervention;
+      }
+      const data = await resp.json();
+      intervention._absorption_signature = (data && data.has_signature)
+        ? data.signature
+        : null;
+    } catch (err) {
+      console.warn(`[LeaderSignalsCard] Signature fetch failed for ${interventionId}:`, err.message);
+      intervention._absorption_signature = null;
+    }
+    return intervention;
+  }
+
   _renderShell() {
     this.shadowRoot.innerHTML = `
       <style>${this._css()}</style>
@@ -133,13 +159,24 @@ class LeaderSignalsCard extends HTMLElement {
           </div>
         </div>
         <div class="footer">
-          <span class="footer-text">Asifah Analytics · Butterfly Build v1.0</span>
+          <span class="footer-text">Asifah Analytics · Butterfly Build v1.1</span>
         </div>
       </div>
     `;
+
+    this.shadowRoot.addEventListener('click', (e) => {
+      const toggle = e.target.closest('.sw-toggle');
+      if (toggle) {
+        e.preventDefault();
+        const block = toggle.closest('.so-what');
+        if (block) {
+          const isOpen = block.classList.toggle('open');
+          toggle.textContent = isOpen ? 'Hide full analysis ▴' : 'Read full analysis ▾';
+        }
+      }
+    });
   }
 
-  // ───── Render: loading state ─────────────────────────────────────────────
   _renderLoading() {
     const body = this.shadowRoot.getElementById('body');
     if (!body) return;
@@ -152,7 +189,6 @@ class LeaderSignalsCard extends HTMLElement {
     `;
   }
 
-  // ───── Render: error state ──────────────────────────────────────────────
   _renderError(msg) {
     const body = this.shadowRoot.getElementById('body');
     if (!body) return;
@@ -165,7 +201,6 @@ class LeaderSignalsCard extends HTMLElement {
     `;
   }
 
-  // ───── Render: data ─────────────────────────────────────────────────────
   _renderData(data) {
     const body = this.shadowRoot.getElementById('body');
     const subtitle = this.shadowRoot.getElementById('subtitle');
@@ -174,7 +209,6 @@ class LeaderSignalsCard extends HTMLElement {
     const interventions = (data && data.interventions) || [];
     const mode = this._getMode();
 
-    // Update the subtitle to reflect the mode
     if (subtitle) {
       if (mode === 'country') {
         subtitle.textContent = `Verbal commodity interventions by ${this._titleCase(this.getAttribute('country'))} officials.`;
@@ -186,7 +220,6 @@ class LeaderSignalsCard extends HTMLElement {
       }
     }
 
-    // Empty state — intentional design, not a broken fetch
     if (interventions.length === 0) {
       body.innerHTML = `
         <div class="state-empty">
@@ -202,7 +235,6 @@ class LeaderSignalsCard extends HTMLElement {
       return;
     }
 
-    // Build breakdown header for global/commodity mode (skip for country)
     let breakdownHtml = '';
     if (mode === 'global' && data.breakdown_by_country) {
       const topCountries = Object.entries(data.breakdown_by_country)
@@ -222,20 +254,21 @@ class LeaderSignalsCard extends HTMLElement {
         </div>
       `;
     } else if (mode === 'country') {
+      const swCount = interventions.filter(iv => iv._absorption_signature).length;
+      const swHint = swCount > 0
+        ? ` · <span class="breakdown-sw-hint">${swCount} with So What analysis</span>`
+        : '';
       breakdownHtml = `
         <div class="breakdown">
-          <span class="breakdown-label">${interventions.length} active ${interventions.length === 1 ? 'signal' : 'signals'} for ${this._titleCase(this.getAttribute('country'))}</span>
+          <span class="breakdown-label">${interventions.length} active ${interventions.length === 1 ? 'signal' : 'signals'} for ${this._titleCase(this.getAttribute('country'))}${swHint}</span>
         </div>
       `;
     }
 
-    // Build the intervention list
     const listHtml = interventions.map(iv => this._renderIntervention(iv, mode)).join('');
-
     body.innerHTML = breakdownHtml + `<div class="intervention-list">${listHtml}</div>`;
   }
 
-  // ───── Single intervention block ────────────────────────────────────────
   _renderIntervention(iv, mode) {
     const directionMeta = this._directionMeta(iv.direction);
     const intensityClass = `intensity-${iv.intensity || 'moderate'}`;
@@ -249,49 +282,173 @@ class LeaderSignalsCard extends HTMLElement {
     const role = this._humanizeRole(iv.role);
     const rationale = this._humanizeRationale(iv.rationale);
 
-    // Country tag is hidden in country mode (it's already in the header) but
-    // shown in commodity/global mode so users can scan who's doing what.
-    const countryTagHtml = (mode === 'country')
-      ? ''
-      : `<span class="tag tag-country">${country}</span>`;
-
+    const countryTagHtml = (mode === 'country') ? '' : `<span class="tag tag-country">${country}</span>`;
     const url = iv.source_url || '#';
     const isClickable = !!iv.source_url;
 
+    const soWhatHtml = iv._absorption_signature
+      ? this._renderSoWhat(iv._absorption_signature)
+      : '';
+
     return `
-      <a class="intervention ${isClickable ? 'clickable' : ''}" href="${this._escape(url)}" target="_blank" rel="noopener noreferrer">
-        <div class="iv-top">
-          <span class="iv-icon" title="${directionMeta.label}">${directionMeta.icon}</span>
-          <div class="iv-headline-block">
-            <div class="iv-speaker">
-              <strong>${this._escape(speaker)}</strong>
-              <span class="iv-role">· ${this._escape(role)}</span>
+      <div class="intervention-wrapper">
+        <a class="intervention ${isClickable ? 'clickable' : ''}" href="${this._escape(url)}" target="_blank" rel="noopener noreferrer">
+          <div class="iv-top">
+            <span class="iv-icon" title="${directionMeta.label}">${directionMeta.icon}</span>
+            <div class="iv-headline-block">
+              <div class="iv-speaker">
+                <strong>${this._escape(speaker)}</strong>
+                <span class="iv-role">· ${this._escape(role)}</span>
+              </div>
+              <div class="iv-quote">${this._escape(iv.quote_short || '')}</div>
             </div>
-            <div class="iv-quote">${this._escape(iv.quote_short || '')}</div>
+            <div class="iv-meta-right">
+              <span class="iv-date">${dateStr}</span>
+              <span class="iv-lang">${langTag}</span>
+            </div>
           </div>
-          <div class="iv-meta-right">
-            <span class="iv-date">${dateStr}</span>
-            <span class="iv-lang">${langTag}</span>
+          <div class="iv-tags">
+            ${countryTagHtml}
+            <span class="tag tag-commodity">${commodity}</span>
+            <span class="tag tag-direction tag-${directionMeta.cssClass}">${directionMeta.label}</span>
+            ${rationale ? `<span class="tag tag-rationale">${this._escape(rationale)}</span>` : ''}
+            <span class="tag tag-intensity ${intensityClass}">${(iv.intensity || 'moderate').toUpperCase()}</span>
+            ${priceReaction}
+            ${iv.verbal_only ? '<span class="tag tag-verbal" title="Verbal intervention with no formal policy action">VERBAL</span>' : ''}
           </div>
-        </div>
-        <div class="iv-tags">
-          ${countryTagHtml}
-          <span class="tag tag-commodity">${commodity}</span>
-          <span class="tag tag-direction tag-${directionMeta.cssClass}">${directionMeta.label}</span>
-          ${rationale ? `<span class="tag tag-rationale">${this._escape(rationale)}</span>` : ''}
-          <span class="tag tag-intensity ${intensityClass}">${(iv.intensity || 'moderate').toUpperCase()}</span>
-          ${priceReaction}
-          ${iv.verbal_only ? '<span class="tag tag-verbal" title="Verbal intervention with no formal policy action">VERBAL</span>' : ''}
-        </div>
-        <div class="iv-source">
-          <span class="iv-source-label">Source:</span>
-          <span class="iv-source-name">${this._escape(sourceTitle)}</span>
-        </div>
-      </a>
+          <div class="iv-source">
+            <span class="iv-source-label">Source:</span>
+            <span class="iv-source-name">${this._escape(sourceTitle)}</span>
+          </div>
+        </a>
+        ${soWhatHtml}
+      </div>
     `;
   }
 
-  // ───── Helpers: data normalization & display ────────────────────────────
+  _renderSoWhat(sig) {
+    const classificationMeta = this._classificationMeta(sig.classification);
+    const chainSteps = (sig.transmission_chain || [])
+      .map((step, i, arr) => {
+        const isLast = i === arr.length - 1;
+        const isIntervention = step.is_intervention;
+        return `
+          <div class="sw-chain-step ${isIntervention ? 'sw-chain-step-iv' : ''}">
+            <span class="sw-chain-num">${step.step}</span>
+            <span class="sw-chain-label">${this._escape(step.label)}</span>
+          </div>
+        `;
+      }).join('');
+
+    const ladder = sig.escalation_ladder || {};
+    const nextRungs = (ladder.next_rungs || [])
+      .map(rung => `
+        <div class="sw-rung">
+          <div class="sw-rung-name">${this._escape((rung.name || '').replace(/_/g, ' ').toUpperCase())}</div>
+          <div class="sw-rung-desc">${this._escape(rung.description || '')}</div>
+          <div class="sw-rung-meta">
+            <span class="sw-rung-days">~${rung.estimated_days || '?'} days</span>
+            <span class="sw-rung-prob">P=${Math.round((rung.probability || 0) * 100)}%</span>
+          </div>
+        </div>
+      `).join('');
+
+    const triggers = (ladder.trigger_conditions || [])
+      .map(t => `<li>${this._escape(t)}</li>`).join('');
+
+    const stressors = (sig.upstream_stressors || [])
+      .map(s => `
+        <div class="sw-stressor">
+          <div class="sw-stressor-header">
+            <span class="sw-stressor-theater">${this._escape((s.theater || '').toUpperCase())}</span>
+            <span class="sw-stressor-mech">${this._escape((s.mechanism || '').replace(/_/g, ' '))}</span>
+            <span class="sw-stressor-contrib">${Math.round((s.contribution || 0) * 100)}%</span>
+          </div>
+          ${s.note ? `<div class="sw-stressor-note">${this._escape(s.note)}</div>` : ''}
+        </div>
+      `).join('');
+
+    const analog = sig.historical_analog;
+    const analogHtml = analog ? `
+      <div class="sw-section">
+        <div class="sw-section-title">📚 Historical Analog</div>
+        <div class="sw-analog">
+          <div class="sw-analog-event"><strong>${this._escape(this._titleCase(analog.country || ''))} ${analog.year || ''}</strong> — ${this._escape(analog.event || '')}</div>
+          ${analog.preceded ? `<div class="sw-analog-detail"><em>Preceded:</em> ${this._escape(analog.preceded)}</div>` : ''}
+          ${analog.similarity ? `<div class="sw-analog-detail"><em>Pattern:</em> ${this._escape(analog.similarity)}</div>` : ''}
+        </div>
+      </div>
+    ` : '';
+
+    return `
+      <div class="so-what">
+        <div class="sw-header">
+          <span class="sw-badge sw-badge-${classificationMeta.cssClass}">🔗 SO WHAT — ${classificationMeta.label}</span>
+          ${sig.confidence ? `<span class="sw-confidence">Confidence: ${Math.round(sig.confidence * 100)}%</span>` : ''}
+        </div>
+
+        <div class="sw-bluf">${this._escape(sig.so_what_short || '')}</div>
+
+        <button class="sw-toggle" type="button">Read full analysis ▾</button>
+
+        <div class="sw-expanded">
+
+          ${stressors ? `
+            <div class="sw-section">
+              <div class="sw-section-title">🌐 Upstream Stressors</div>
+              ${stressors}
+            </div>
+          ` : ''}
+
+          ${chainSteps ? `
+            <div class="sw-section">
+              <div class="sw-section-title">🦋 Transmission Chain</div>
+              <div class="sw-chain">${chainSteps}</div>
+            </div>
+          ` : ''}
+
+          ${nextRungs ? `
+            <div class="sw-section">
+              <div class="sw-section-title">🪜 Escalation Ladder · Current: <span class="sw-current-rung">${this._escape((ladder.current_rung || '').replace(/_/g, ' ').toUpperCase())}</span></div>
+              <div class="sw-rungs">${nextRungs}</div>
+              ${triggers ? `
+                <div class="sw-triggers">
+                  <div class="sw-triggers-label">Trigger conditions to watch:</div>
+                  <ul>${triggers}</ul>
+                </div>
+              ` : ''}
+              ${ladder.analyst_note ? `<div class="sw-analyst-note">${this._escape(ladder.analyst_note)}</div>` : ''}
+            </div>
+          ` : ''}
+
+          ${analogHtml}
+
+          ${sig.so_what_long ? `
+            <div class="sw-section">
+              <div class="sw-section-title">🧭 Full Analysis</div>
+              <div class="sw-long-prose">${this._formatLongProse(sig.so_what_long)}</div>
+            </div>
+          ` : ''}
+
+          <div class="sw-attribution">
+            <span class="sw-attr-label">Authored by:</span>
+            <span class="sw-attr-name">${this._escape(sig.authored_by || 'Asifah')}</span>
+            ${sig.source_type ? `<span class="sw-attr-source">(${this._escape(sig.source_type.replace(/_/g, ' '))})</span>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  _classificationMeta(classification) {
+    const map = {
+      defensive_statecraft: { label: 'Defensive statecraft', cssClass: 'defensive' },
+      offensive_statecraft: { label: 'Offensive statecraft', cssClass: 'offensive' },
+      mixed:                { label: 'Mixed posture',         cssClass: 'mixed' },
+    };
+    return map[classification] || { label: (classification || 'Analysis').replace(/_/g, ' '), cssClass: 'neutral' };
+  }
+
   _directionMeta(direction) {
     const map = {
       suppress_demand:     { icon: '📉', label: 'Suppress demand',     cssClass: 'down' },
@@ -337,8 +494,6 @@ class LeaderSignalsCard extends HTMLElement {
   }
 
   _sourceLabel(source) {
-    // Defensive: backend may emit {name: '...'} dict or plain string depending
-    // on which scan wrote the fingerprint. Normalize for display.
     if (!source) return 'Unknown';
     if (typeof source === 'string') return source;
     if (typeof source === 'object' && source.name) return source.name;
@@ -368,6 +523,14 @@ class LeaderSignalsCard extends HTMLElement {
     }
   }
 
+  _formatLongProse(text) {
+    if (!text) return '';
+    return text
+      .split('\n\n')
+      .map(para => `<p>${this._escape(para.trim())}</p>`)
+      .join('');
+  }
+
   _titleCase(s) {
     if (!s) return '';
     return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
@@ -383,7 +546,6 @@ class LeaderSignalsCard extends HTMLElement {
       .replace(/'/g, '&#39;');
   }
 
-  // ───── CSS (Shadow DOM scoped) ──────────────────────────────────────────
   _css() {
     return `
       :host {
@@ -417,67 +579,41 @@ class LeaderSignalsCard extends HTMLElement {
         opacity: 0.6;
       }
 
-      /* Header */
       .header { margin-bottom: 14px; }
       .title-row { display: flex; align-items: center; gap: 10px; }
       .icon { font-size: 1.4em; }
-      .title {
-        margin: 0;
-        font-size: 1.1em;
-        font-weight: 600;
-        color: var(--_text);
-        letter-spacing: 0.01em;
-      }
+      .title { margin: 0; font-size: 1.1em; font-weight: 600; color: var(--_text); letter-spacing: 0.01em; }
       .live-dot {
-        width: 8px; height: 8px;
-        border-radius: 50%;
-        background: var(--_accent);
-        margin-left: auto;
+        width: 8px; height: 8px; border-radius: 50%;
+        background: var(--_accent); margin-left: auto;
         animation: pulse 2.6s ease-in-out infinite;
       }
       @keyframes pulse {
         0%, 100% { opacity: 0.5; transform: scale(1); }
         50%      { opacity: 1.0; transform: scale(1.15); }
       }
-      .subtitle {
-        margin: 4px 0 0 0;
-        font-size: 0.85em;
-        color: var(--_text-3);
-        line-height: 1.4;
-      }
+      .subtitle { margin: 4px 0 0 0; font-size: 0.85em; color: var(--_text-3); line-height: 1.4; }
 
-      /* Breakdown bar */
       .breakdown {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
+        display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
         padding: 10px 0 14px 0;
         border-bottom: 1px solid var(--_border);
         margin-bottom: 12px;
       }
-      .breakdown-label {
-        font-size: 0.8em;
-        color: var(--_text-2);
-        font-weight: 500;
-      }
+      .breakdown-label { font-size: 0.8em; color: var(--_text-2); font-weight: 500; }
+      .breakdown-sw-hint { color: var(--_accent); font-weight: 600; }
       .breakdown-pill {
-        font-size: 0.75em;
-        padding: 3px 9px;
-        border-radius: 999px;
+        font-size: 0.75em; padding: 3px 9px; border-radius: 999px;
         background: rgba(56, 189, 248, 0.08);
-        border: 1px solid var(--_border);
-        color: var(--_text-2);
+        border: 1px solid var(--_border); color: var(--_text-2);
       }
       .breakdown-pill b { color: var(--_accent); font-weight: 700; margin-left: 4px; }
 
-      /* Intervention list */
-      .intervention-list { display: flex; flex-direction: column; gap: 12px; }
+      .intervention-list { display: flex; flex-direction: column; gap: 14px; }
+      .intervention-wrapper { display: flex; flex-direction: column; }
 
       .intervention {
-        display: block;
-        text-decoration: none;
-        color: inherit;
+        display: block; text-decoration: none; color: inherit;
         padding: 12px 14px;
         border: 1px solid var(--_border);
         border-radius: var(--_radius-sm);
@@ -499,38 +635,18 @@ class LeaderSignalsCard extends HTMLElement {
       .iv-role { color: var(--_text-3); font-weight: 400; font-size: 0.85em; }
       .iv-quote { font-size: 0.85em; color: var(--_text-2); line-height: 1.45; }
 
-      .iv-meta-right {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 4px;
-        flex-shrink: 0;
-      }
+      .iv-meta-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
       .iv-date { font-size: 0.75em; color: var(--_text-3); }
       .iv-lang {
-        font-size: 0.65em;
-        font-weight: 700;
-        padding: 1px 6px;
-        border-radius: 3px;
-        background: rgba(56, 189, 248, 0.1);
-        color: var(--_accent);
-        letter-spacing: 0.05em;
+        font-size: 0.65em; font-weight: 700; padding: 1px 6px; border-radius: 3px;
+        background: rgba(56, 189, 248, 0.1); color: var(--_accent); letter-spacing: 0.05em;
       }
 
-      .iv-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        margin-bottom: 6px;
-      }
+      .iv-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; }
       .tag {
-        font-size: 0.7em;
-        padding: 2px 8px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, 0.05);
-        color: var(--_text-2);
-        letter-spacing: 0.03em;
-        font-weight: 500;
+        font-size: 0.7em; padding: 2px 8px; border-radius: 999px;
+        background: rgba(255, 255, 255, 0.05); color: var(--_text-2);
+        letter-spacing: 0.03em; font-weight: 500;
       }
       .tag-country     { background: rgba(56, 189, 248, 0.12); color: var(--_accent); font-weight: 600; }
       .tag-commodity   { background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-weight: 600; }
@@ -552,11 +668,123 @@ class LeaderSignalsCard extends HTMLElement {
       .iv-source-label { opacity: 0.7; margin-right: 4px; }
       .iv-source-name { color: var(--_text-2); }
 
-      /* States */
+      /* SO WHAT BLOCK */
+      .so-what {
+        margin-top: -1px;
+        padding: 14px 14px 12px 16px;
+        border: 1px solid var(--_border);
+        border-top: none;
+        border-left: 3px solid var(--_accent);
+        border-radius: 0 0 var(--_radius-sm) var(--_radius-sm);
+        background: rgba(56, 189, 248, 0.025);
+      }
+      .sw-header {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 8px; flex-wrap: wrap; margin-bottom: 8px;
+      }
+      .sw-badge { font-size: 0.7em; font-weight: 700; letter-spacing: 0.04em; padding: 3px 10px; border-radius: 999px; }
+      .sw-badge-defensive  { background: rgba(56, 189, 248, 0.15); color: var(--_accent); }
+      .sw-badge-offensive  { background: rgba(239, 68, 68, 0.15);  color: #ef4444; }
+      .sw-badge-mixed      { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+      .sw-badge-neutral    { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
+      .sw-confidence { font-size: 0.7em; color: var(--_text-3); }
+      .sw-bluf { font-size: 0.88em; color: var(--_text-2); line-height: 1.55; margin-bottom: 8px; }
+      .sw-toggle {
+        background: none; border: none; padding: 4px 0;
+        color: var(--_accent); font-size: 0.8em; font-weight: 600;
+        cursor: pointer; letter-spacing: 0.02em; font-family: inherit;
+      }
+      .sw-toggle:hover { text-decoration: underline; }
+
+      .sw-expanded { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+      .so-what.open .sw-expanded { max-height: 4000px; transition: max-height 0.6s ease-in; margin-top: 8px; }
+
+      .sw-section { margin: 14px 0; padding-top: 12px; border-top: 1px dashed rgba(56, 189, 248, 0.18); }
+      .sw-section:first-child { border-top: none; padding-top: 0; }
+      .sw-section-title {
+        font-size: 0.78em; font-weight: 700;
+        color: var(--_text); letter-spacing: 0.04em;
+        margin-bottom: 10px;
+      }
+      .sw-current-rung { font-size: 0.85em; color: var(--_accent); font-weight: 700; margin-left: 4px; }
+
+      .sw-stressor {
+        padding: 8px 10px; margin-bottom: 6px;
+        background: rgba(56, 189, 248, 0.04);
+        border-radius: var(--_radius-sm);
+        border-left: 2px solid var(--_accent);
+      }
+      .sw-stressor-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+      .sw-stressor-theater {
+        font-size: 0.7em; font-weight: 700; letter-spacing: 0.04em;
+        padding: 1px 7px; border-radius: 999px;
+        background: rgba(56, 189, 248, 0.15); color: var(--_accent);
+      }
+      .sw-stressor-mech { font-size: 0.8em; color: var(--_text-2); font-weight: 500; }
+      .sw-stressor-contrib { margin-left: auto; font-size: 0.7em; color: var(--_text-3); font-weight: 700; }
+      .sw-stressor-note { font-size: 0.78em; color: var(--_text-3); line-height: 1.5; }
+
+      .sw-chain { display: flex; flex-direction: column; gap: 6px; }
+      .sw-chain-step { display: flex; align-items: center; gap: 10px; padding: 4px 0; }
+      .sw-chain-num {
+        flex-shrink: 0; width: 22px; height: 22px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 50%;
+        background: rgba(56, 189, 248, 0.10); color: var(--_accent);
+        font-size: 0.7em; font-weight: 700;
+      }
+      .sw-chain-step-iv .sw-chain-num { background: var(--_accent); color: var(--_bg); }
+      .sw-chain-label { font-size: 0.83em; color: var(--_text-2); line-height: 1.4; }
+      .sw-chain-step-iv .sw-chain-label { color: var(--_text); font-weight: 600; }
+
+      .sw-rungs { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 10px; }
+      .sw-rung {
+        padding: 8px 10px;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--_border);
+        border-radius: var(--_radius-sm);
+      }
+      .sw-rung-name { font-size: 0.72em; font-weight: 700; color: var(--_text); letter-spacing: 0.05em; margin-bottom: 4px; }
+      .sw-rung-desc { font-size: 0.78em; color: var(--_text-2); line-height: 1.4; margin-bottom: 6px; }
+      .sw-rung-meta { display: flex; justify-content: space-between; font-size: 0.7em; color: var(--_text-3); }
+      .sw-rung-prob { color: var(--_accent); font-weight: 700; }
+
+      .sw-triggers {
+        padding: 8px 10px; margin: 8px 0;
+        background: rgba(251, 191, 36, 0.04);
+        border-left: 2px solid #fbbf24;
+        border-radius: var(--_radius-sm);
+      }
+      .sw-triggers-label { font-size: 0.75em; font-weight: 700; color: #fbbf24; margin-bottom: 4px; }
+      .sw-triggers ul { list-style: none; padding: 0; margin: 0; font-size: 0.78em; color: var(--_text-2); }
+      .sw-triggers li { padding: 2px 0; }
+      .sw-triggers li::before { content: '▸ '; color: #fbbf24; }
+      .sw-analyst-note { font-size: 0.75em; color: var(--_text-3); font-style: italic; line-height: 1.5; margin-top: 6px; }
+
+      .sw-analog {
+        padding: 8px 10px;
+        background: rgba(168, 85, 247, 0.04);
+        border-left: 2px solid #c084fc;
+        border-radius: var(--_radius-sm);
+      }
+      .sw-analog-event { font-size: 0.85em; color: var(--_text); margin-bottom: 4px; }
+      .sw-analog-detail { font-size: 0.78em; color: var(--_text-2); line-height: 1.5; margin-top: 2px; }
+
+      .sw-long-prose p { font-size: 0.85em; color: var(--_text-2); line-height: 1.6; margin: 0 0 10px 0; }
+      .sw-long-prose p:last-child { margin-bottom: 0; }
+
+      .sw-attribution {
+        margin-top: 14px; padding-top: 10px;
+        border-top: 1px dashed rgba(56, 189, 248, 0.18);
+        font-size: 0.7em; color: var(--_text-3);
+      }
+      .sw-attr-label { opacity: 0.7; }
+      .sw-attr-name { color: var(--_text-2); margin-left: 4px; font-weight: 500; }
+      .sw-attr-source { margin-left: 6px; font-style: italic; opacity: 0.7; }
+
       .state-loading { display: flex; flex-direction: column; gap: 10px; padding: 8px 0; }
       .skeleton {
-        height: 56px;
-        border-radius: var(--_radius-sm);
+        height: 56px; border-radius: var(--_radius-sm);
         background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.06), rgba(255,255,255,0.02));
         background-size: 200% 100%;
         animation: shimmer 1.6s linear infinite;
@@ -566,54 +794,24 @@ class LeaderSignalsCard extends HTMLElement {
         100% { background-position: -200% 0; }
       }
 
-      .state-empty, .state-error {
-        padding: 20px 12px;
-        text-align: center;
-      }
-      .state-empty-icon, .state-error-icon {
-        font-size: 2em;
-        margin-bottom: 8px;
-        opacity: 0.8;
-      }
-      .state-empty-msg, .state-error-msg {
-        font-size: 0.95em;
-        color: var(--_text);
-        font-weight: 500;
-        margin-bottom: 6px;
-      }
-      .state-empty-hint, .state-error-hint {
-        font-size: 0.8em;
-        color: var(--_text-3);
-        line-height: 1.5;
-        max-width: 420px;
-        margin: 0 auto;
-      }
+      .state-empty, .state-error { padding: 20px 12px; text-align: center; }
+      .state-empty-icon, .state-error-icon { font-size: 2em; margin-bottom: 8px; opacity: 0.8; }
+      .state-empty-msg, .state-error-msg { font-size: 0.95em; color: var(--_text); font-weight: 500; margin-bottom: 6px; }
+      .state-empty-hint, .state-error-hint { font-size: 0.8em; color: var(--_text-3); line-height: 1.5; max-width: 420px; margin: 0 auto; }
 
-      /* Footer */
-      .footer {
-        margin-top: 14px;
-        padding-top: 10px;
-        border-top: 1px solid var(--_border);
-        text-align: right;
-      }
-      .footer-text {
-        font-size: 0.68em;
-        color: var(--_text-3);
-        letter-spacing: 0.04em;
-      }
+      .footer { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--_border); text-align: right; }
+      .footer-text { font-size: 0.68em; color: var(--_text-3); letter-spacing: 0.04em; }
 
-      /* Responsive */
       @media (max-width: 600px) {
         .card { padding: 16px 14px; }
         .iv-top { flex-wrap: wrap; }
         .iv-meta-right { flex-direction: row; gap: 8px; width: 100%; justify-content: space-between; margin-top: 4px; }
+        .sw-rungs { grid-template-columns: 1fr; }
       }
     `;
   }
 }
 
-// Register the custom element with the browser. Once this script loads on a
-// page, the <leader-signals-card> tag becomes a real, working HTML element.
 if (!customElements.get('leader-signals-card')) {
   customElements.define('leader-signals-card', LeaderSignalsCard);
 }
