@@ -41,7 +41,18 @@ class LeaderSignalsCard extends HTMLElement {
   }
 
   static get observedAttributes() {
-    return ['country', 'commodity', 'backend'];
+    return ['country', 'commodity', 'backend', 'detail'];
+  }
+
+  /**
+   * Detail level controls how much info renders per intervention:
+   *   compact — card header only, no tags, no source (regional roll-ups)
+   *   bluf    — card + tags + So What BLUF + drill-in link (commodity pages)
+   *   full    — everything (country stability pages — default)
+   */
+  _getDetailLevel() {
+    const level = (this.getAttribute('detail') || 'full').toLowerCase();
+    return ['compact', 'bluf', 'full'].includes(level) ? level : 'full';
   }
 
   attributeChangedCallback(_name, oldVal, newVal) {
@@ -286,13 +297,27 @@ class LeaderSignalsCard extends HTMLElement {
     const url = iv.source_url || '#';
     const isClickable = !!iv.source_url;
 
-    const soWhatHtml = iv._absorption_signature
-      ? this._renderSoWhat(iv._absorption_signature)
-      : '';
+    // Render So What block scaled to detail level:
+    //   compact → omit entirely
+    //   bluf    → BLUF + drill-in link, no expandable analysis
+    //   full    → full collapsible analysis (default)
+    const detail = this._getDetailLevel();
+    let soWhatHtml = '';
+    if (iv._absorption_signature && detail !== 'compact') {
+      if (detail === 'bluf') {
+        soWhatHtml = this._renderSoWhatBluf(iv._absorption_signature, iv.country);
+      } else {
+        soWhatHtml = this._renderSoWhat(iv._absorption_signature);
+      }
+    }
+
+    // Compact mode: minimal card — header only, no tags or source row.
+    // Used in regional roll-ups where many cards are stacked at low altitude.
+    const isCompact = detail === 'compact';
 
     return `
       <div class="intervention-wrapper">
-        <a class="intervention ${isClickable ? 'clickable' : ''}" href="${this._escape(url)}" target="_blank" rel="noopener noreferrer">
+        <a class="intervention ${isClickable ? 'clickable' : ''} ${isCompact ? 'is-compact' : ''}" href="${this._escape(url)}" target="_blank" rel="noopener noreferrer">
           <div class="iv-top">
             <span class="iv-icon" title="${directionMeta.label}">${directionMeta.icon}</span>
             <div class="iv-headline-block">
@@ -307,6 +332,7 @@ class LeaderSignalsCard extends HTMLElement {
               <span class="iv-lang">${langTag}</span>
             </div>
           </div>
+          ${isCompact ? '' : `
           <div class="iv-tags">
             ${countryTagHtml}
             <span class="tag tag-commodity">${commodity}</span>
@@ -320,8 +346,40 @@ class LeaderSignalsCard extends HTMLElement {
             <span class="iv-source-label">Source:</span>
             <span class="iv-source-name">${this._escape(sourceTitle)}</span>
           </div>
+          `}
         </a>
         ${soWhatHtml}
+      </div>
+    `;
+  }
+
+  /**
+   * BLUF-only So What rendering — for commodities.html and similar pages.
+   * Shows the classification badge + short-form BLUF + a discreet drill-in
+   * link to the country stability page where the full analysis lives.
+   */
+  _renderSoWhatBluf(sig, country) {
+    const classificationMeta = this._classificationMeta(sig.classification);
+    const countryLower = (country || '').toLowerCase();
+    const countryDisplay = this._titleCase(country || '');
+    // Convention: country stability pages live at /{country}-stability.html
+    // (lebanon-stability.html, india-stability.html, china-stability.html, etc.)
+    const drillUrl = countryLower ? `/${countryLower}-stability.html` : null;
+
+    const drillHtml = drillUrl ? `
+      <a class="sw-drillin" href="${this._escape(drillUrl)}">
+        Why does this matter? <strong>${this._escape(countryDisplay)} stability page</strong> →
+      </a>
+    ` : '';
+
+    return `
+      <div class="so-what so-what-bluf">
+        <div class="sw-header">
+          <span class="sw-badge sw-badge-${classificationMeta.cssClass}">🔗 SO WHAT — ${classificationMeta.label}</span>
+          ${sig.confidence ? `<span class="sw-confidence">Confidence: ${Math.round(sig.confidence * 100)}%</span>` : ''}
+        </div>
+        <div class="sw-bluf">${this._escape(sig.so_what_short || '')}</div>
+        ${drillHtml}
       </div>
     `;
   }
@@ -667,6 +725,27 @@ class LeaderSignalsCard extends HTMLElement {
       .iv-source { font-size: 0.7em; color: var(--_text-3); }
       .iv-source-label { opacity: 0.7; margin-right: 4px; }
       .iv-source-name { color: var(--_text-2); }
+
+      /* Compact card — used in regional roll-ups (detail="compact") */
+      .intervention.is-compact { padding: 8px 12px; }
+      .intervention.is-compact .iv-top { margin-bottom: 0; }
+
+      /* Drill-in link for BLUF mode (detail="bluf") */
+      .sw-drillin {
+        display: inline-block;
+        margin-top: 6px;
+        font-size: 0.78em;
+        color: var(--_text-3);
+        text-decoration: none;
+        letter-spacing: 0.02em;
+        transition: color 0.15s ease;
+      }
+      .sw-drillin:hover { color: var(--_accent); }
+      .sw-drillin strong { color: var(--_text-2); font-weight: 600; }
+      .sw-drillin:hover strong { color: var(--_accent); }
+
+      /* BLUF-mode So What — no expandable, just BLUF + drill-in */
+      .so-what-bluf .sw-bluf { margin-bottom: 4px; }
 
       /* SO WHAT BLOCK */
       .so-what {
