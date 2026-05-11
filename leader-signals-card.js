@@ -301,13 +301,19 @@ class LeaderSignalsCard extends HTMLElement {
     //   compact → omit entirely
     //   bluf    → BLUF + drill-in link, no expandable analysis
     //   full    → full collapsible analysis (default)
+    //
+    // Staleness gate: signatures with should_render === false (expired analysis,
+    // beyond the analytical_validity_days window) are suppressed entirely. The
+    // intervention card still renders — we just don't show stale interpretation.
     const detail = this._getDetailLevel();
     let soWhatHtml = '';
-    if (iv._absorption_signature && detail !== 'compact') {
+    const sig = iv._absorption_signature;
+    const sigShouldRender = sig && (sig.should_render !== false);
+    if (sig && sigShouldRender && detail !== 'compact') {
       if (detail === 'bluf') {
-        soWhatHtml = this._renderSoWhatBluf(iv._absorption_signature, iv.country);
+        soWhatHtml = this._renderSoWhatBluf(sig, iv.country);
       } else {
-        soWhatHtml = this._renderSoWhat(iv._absorption_signature);
+        soWhatHtml = this._renderSoWhat(sig);
       }
     }
 
@@ -354,6 +360,41 @@ class LeaderSignalsCard extends HTMLElement {
   }
 
   /**
+   * Render an analytical-staleness banner for a signature, if appropriate.
+   * Returns empty string for `fresh` (don't clutter), otherwise returns a
+   * color-coded banner (aging=cyan, stale=amber). `expired` is gated out
+   * upstream so this never sees it.
+   */
+  _renderStalenessBanner(sig) {
+    if (!sig) return '';
+    const status = sig.staleness_status || 'fresh';
+    if (status === 'fresh') return '';
+
+    const days = sig.days_since_authored;
+    const daysLeft = sig.days_until_expiry;
+    let label = '';
+    let icon = '';
+
+    if (status === 'aging') {
+      icon = 'ℹ️';
+      label = `Analysis is ${Math.round(days)} days old — context may be shifting.`;
+    } else if (status === 'stale') {
+      icon = '⚠️';
+      label = `Analysis is ${Math.round(days)} days old — conditions may have changed. Expires in ${Math.round(daysLeft)} days.`;
+    } else {
+      // Defensive — shouldn't reach here because expired is gated upstream
+      return '';
+    }
+
+    return `
+      <div class="sw-staleness sw-staleness-${status}">
+        <span class="sw-staleness-icon">${icon}</span>
+        <span class="sw-staleness-text">${this._escape(label)}</span>
+      </div>
+    `;
+  }
+
+  /**
    * BLUF-only So What rendering — for commodities.html and similar pages.
    * Shows the classification badge + short-form BLUF + a discreet drill-in
    * link to the country stability page where the full analysis lives.
@@ -372,12 +413,15 @@ class LeaderSignalsCard extends HTMLElement {
       </a>
     ` : '';
 
+    const stalenessHtml = this._renderStalenessBanner(sig);
+
     return `
       <div class="so-what so-what-bluf">
         <div class="sw-header">
           <span class="sw-badge sw-badge-${classificationMeta.cssClass}">🔗 SO WHAT — ${classificationMeta.label}</span>
           ${sig.confidence ? `<span class="sw-confidence">Confidence: ${Math.round(sig.confidence * 100)}%</span>` : ''}
         </div>
+        ${stalenessHtml}
         <div class="sw-bluf">${this._escape(sig.so_what_short || '')}</div>
         ${drillHtml}
       </div>
@@ -438,12 +482,16 @@ class LeaderSignalsCard extends HTMLElement {
       </div>
     ` : '';
 
+    const stalenessHtml = this._renderStalenessBanner(sig);
+
     return `
       <div class="so-what">
         <div class="sw-header">
           <span class="sw-badge sw-badge-${classificationMeta.cssClass}">🔗 SO WHAT — ${classificationMeta.label}</span>
           ${sig.confidence ? `<span class="sw-confidence">Confidence: ${Math.round(sig.confidence * 100)}%</span>` : ''}
         </div>
+
+        ${stalenessHtml}
 
         <div class="sw-bluf">${this._escape(sig.so_what_short || '')}</div>
 
@@ -746,6 +794,30 @@ class LeaderSignalsCard extends HTMLElement {
 
       /* BLUF-mode So What — no expandable, just BLUF + drill-in */
       .so-what-bluf .sw-bluf { margin-bottom: 4px; }
+
+      /* Staleness banner — visually degrades trust as analysis ages */
+      .sw-staleness {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        margin: 4px 0 8px 0;
+        border-radius: var(--_radius-sm);
+        font-size: 0.75em;
+        line-height: 1.4;
+      }
+      .sw-staleness-icon { font-size: 1.05em; flex-shrink: 0; }
+      .sw-staleness-text { color: var(--_text-2); }
+      .sw-staleness-aging {
+        background: rgba(56, 189, 248, 0.06);
+        border-left: 2px solid var(--_accent);
+      }
+      .sw-staleness-aging .sw-staleness-text { color: var(--_text-2); }
+      .sw-staleness-stale {
+        background: rgba(251, 191, 36, 0.08);
+        border-left: 2px solid #fbbf24;
+      }
+      .sw-staleness-stale .sw-staleness-text { color: #fde68a; font-weight: 500; }
 
       /* SO WHAT BLOCK */
       .so-what {
