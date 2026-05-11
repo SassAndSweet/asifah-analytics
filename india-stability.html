@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<!-- Asifah Analytics - India Stability Index v1.0.0 -->
-<html lang="en">
+<!-- Asifah Analytics — India Stability Index v2.0.0 — May 2026 -->
+<!-- Gold Standard: Arctic scheme + military.html watermark canonical + sidebar
+     + Leader Signals (Butterfly Build Phase 1) + commodity card + EN/ZH/JA/KO -->
+<!-- COPYRIGHT (c) 2025-2026 Asifah Analytics. All rights reserved. -->
+<html lang="en" data-theme="dark">
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z9114D1Z5C"></script>
     <script>
@@ -12,718 +15,1307 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>India Stability Index | Asifah Analytics v1.0.0</title>
+    <title>India Stability Index | Asifah Analytics v2.0.0</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        :root {
-            --bg-color: #f5f5f5;
-            --container-bg: #ffffff;
-            --card-bg: #ffffff;
-            --card-border: #e1e8ed;
-            --text-primary: #2c3e50;
-            --text-secondary: #7f8c8d;
-            --text-muted: #95a5a6;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
-            --header-text: #ffffff;
-            --metric-bg: #ffffff;
-            --metric-hover-shadow: rgba(0,0,0,0.15);
-            --article-bg: #f8f9fa;
-            --article-hover: #e8f4f8;
-            --watermark-opacity: 0.03;
-            --loading-overlay-bg: rgba(245, 245, 245, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.2);
-            --accent: #6495ED;
-        }
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/leader-signals-card.js" defer></script>
 
-        [data-theme="dark"] {
-            --bg-color: #1a1a1a;
-            --container-bg: #2d2d2d;
-            --card-bg: #2d2d2d;
-            --card-border: #404040;
-            --text-primary: #e0e0e0;
-            --text-secondary: #b0b0b0;
-            --text-muted: #808080;
-            --header-gradient-start: #1e3a5f;
-            --header-gradient-end: #2c5282;
-            --header-text: #ffffff;
-            --metric-bg: #2d2d2d;
-            --metric-hover-shadow: rgba(255,255,255,0.1);
-            --article-bg: #353535;
-            --article-hover: #404040;
-            --watermark-opacity: 0.02;
-            --loading-overlay-bg: rgba(26, 26, 26, 0.98);
-            --loading-spinner-bg: rgba(100, 149, 237, 0.3);
-        }
+<style>
+/* ════════════════════════════════════════════════════════════
+   ARCTIC SCHEME — canonical Asifah palette
+   + Watermark Gold Standard from military.html (May 11 2026)
+   ════════════════════════════════════════════════════════════ */
+:root {
+    --bg-color:#f8fafc; --container-bg:#ffffff; --card-bg:#ffffff;
+    --card-border:#e2e8f0; --text-primary:#0f172a; --text-secondary:#475569;
+    --text-muted:#64748b; --article-bg:#f1f5f9; --article-hover:#e2e8f0;
+    --header-gradient-start:#f1f5f9; --header-gradient-end:#cbd5e1; --header-text:#0f172a;
+    --accent:#0ea5e9; --accent-cyan:#0ea5e9; --accent-glow:rgba(14,165,233,0.15);
+    --card-glow:0 1px 3px rgba(0,0,0,0.06);
+    --card-hover-glow:0 8px 20px rgba(0,0,0,0.15);
+    --watermark-opacity:0.5; --watermark-size:500px; --watermark-filter:none;
+    --grid-color:transparent; --scanline-opacity:0; --glow-opacity:0;
+    --loading-overlay-bg:rgba(248,250,252,0.98);
+    --loading-spinner-bg:rgba(14,165,233,0.2);
+}
+[data-theme="dark"] {
+    --bg-color:#060d1a; --container-bg:#0d1b2e; --card-bg:#0d1b2e;
+    --card-border:#1e3a5f; --text-primary:#e2f0fb; --text-secondary:#93c5fd;
+    --text-muted:#4a7090; --article-bg:#0a1525; --article-hover:#112038;
+    --header-gradient-start:#060d1a; --header-gradient-end:#1e3a5f; --header-text:#e2f0fb;
+    --accent:#38bdf8; --accent-cyan:#38bdf8; --accent-glow:rgba(56,189,248,0.2);
+    --card-glow:0 0 6px rgba(56,189,248,0.12), 0 0 1px rgba(56,189,248,0.25);
+    --card-hover-glow:0 0 22px rgba(56,189,248,0.28), 0 8px 25px rgba(0,0,0,0.5);
+    --watermark-opacity:1; --watermark-size:800px;
+    --watermark-filter:saturate(3) brightness(0.8) hue-rotate(185deg);
+    --grid-color:rgba(0,212,255,0.04); --scanline-opacity:0.03; --glow-opacity:1;
+    --loading-overlay-bg:rgba(6,13,26,0.98);
+    --loading-spinner-bg:rgba(56,189,248,0.2);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'Times New Roman',Times,serif; background-color:var(--bg-color); color:var(--text-primary); min-height:100vh; transition:background-color 0.3s,color 0.3s; }
+body::before { content:''; position:fixed; top:0; left:0; right:0; bottom:0; background-image:linear-gradient(var(--grid-color) 1px,transparent 1px),linear-gradient(90deg,var(--grid-color) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
+body::after  { content:''; position:fixed; top:0; left:0; right:0; bottom:0; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,var(--scanline-opacity)) 2px,rgba(0,212,255,var(--scanline-opacity)) 4px); pointer-events:none; z-index:0; }
+.watermark { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:var(--watermark-size); height:var(--watermark-size); opacity:var(--watermark-opacity); pointer-events:none; z-index:0; background-image:url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png'); background-size:135%; background-repeat:no-repeat; background-position:center; border-radius:50%; filter:var(--watermark-filter); transition:all 0.4s ease; }
 
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 14px;
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 20px;
-            min-height: 100vh;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            position: relative;
-        }
+.container { max-width:1800px; margin:0 auto; padding:0 20px; position:relative; z-index:1; }
+.page-with-sidebar { display:flex; flex-direction:row; gap:20px; align-items:flex-start; }
+.main-content { flex:1; min-width:0; }
+@media (max-width:1024px) { .page-with-sidebar { flex-direction:column; } }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 800px;
-            height: 800px;
-            background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            opacity: var(--watermark-opacity);
-            z-index: 0;
-            pointer-events: none;
-            user-select: none;
-        }
+header { background:linear-gradient(135deg,var(--header-gradient-start),var(--header-gradient-end)); padding:22px 30px; margin-bottom:22px; border-radius:0 0 12px 12px; color:var(--header-text); position:relative; overflow:hidden; display:flex; align-items:center; gap:24px; }
+header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent-cyan),transparent); opacity:var(--glow-opacity); }
+.header-logo-wrap { display:flex; flex-direction:column; align-items:center; gap:8px; }
+.header-logo { height:88px; width:auto; border-radius:8px; padding:4px; background:rgba(255,255,255,0.06); border:1px solid rgba(0,0,0,0.08); }
+[data-theme="dark"] .header-logo { background:rgba(255,255,255,0.02); border-color:rgba(255,255,255,0.05); }
+.back-link { font-size:11px; font-weight:700; color:var(--text-secondary); text-decoration:none; padding:4px 10px; border:1px solid var(--card-border); border-radius:6px; background:rgba(255,255,255,0.5); transition:all 0.2s; text-transform:uppercase; letter-spacing:0.5px; }
+[data-theme="dark"] .back-link { background:rgba(56,189,248,0.06); }
+.back-link:hover { color:var(--accent); border-color:var(--accent); }
+.header-content { flex:1; min-width:0; }
+header h1 { font-size:30px; font-weight:700; margin-bottom:6px; letter-spacing:0.5px; line-height:1.1; }
+.subtitle { font-size:13px; color:var(--text-secondary); margin-bottom:8px; line-height:1.45; }
+.last-updated { font-size:10px; color:var(--text-muted); font-style:italic; text-transform:uppercase; letter-spacing:1px; }
+.header-controls { display:flex; flex-direction:column; align-items:flex-end; gap:10px; }
+.language-switcher { display:flex; gap:4px; }
+.lang-btn { padding:4px 10px; font-size:10px; font-weight:700; background:rgba(0,0,0,0.05); border:1px solid var(--card-border); color:var(--text-secondary); border-radius:4px; cursor:pointer; transition:all 0.2s; font-family:inherit; letter-spacing:0.3px; }
+[data-theme="dark"] .lang-btn { background:rgba(56,189,248,0.05); }
+.lang-btn:hover { color:var(--accent); border-color:var(--accent); }
+.lang-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.theme-toggle { display:flex; align-items:center; gap:8px; }
+.theme-toggle-label { font-size:10px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; font-weight:600; }
+.theme-toggle-switch { width:44px; height:22px; background:var(--card-border); border-radius:11px; position:relative; cursor:pointer; transition:all 0.3s; }
+.theme-toggle-slider { width:18px; height:18px; background:#fff; border-radius:50%; position:absolute; top:2px; left:2px; transition:all 0.3s; }
+[data-theme="dark"] .theme-toggle-switch { background:var(--accent); }
+[data-theme="dark"] .theme-toggle-slider { left:24px; }
 
-        .loading-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--loading-overlay-bg);
-            backdrop-filter: blur(10px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-        .loading-overlay.hidden { opacity: 0; visibility: hidden; }
-        .loading-spinner {
-            width: 60px; height: 60px;
-            border: 5px solid var(--loading-spinner-bg);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 30px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-status { text-align: center; max-width: 500px; padding: 0 20px; }
-        .loading-title { font-size: 24px; font-weight: bold; color: var(--accent); margin-bottom: 20px; letter-spacing: 1px; }
-        .loading-steps { margin-top: 20px; }
-        .loading-step {
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            padding: 12px; font-size: 15px; color: var(--text-secondary); transition: all 0.3s ease;
-        }
-        .loading-step.active { color: var(--accent); font-weight: bold; }
-        .loading-step.complete { color: #4ade80; }
-        .step-icon { font-size: 18px; min-width: 20px; }
-        .loading-progress { margin-top: 25px; font-size: 13px; color: var(--text-secondary); font-style: italic; }
-        .loading-error {
-            color: #f87171; font-size: 16px; margin-top: 20px; padding: 15px;
-            background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: 8px;
-        }
+.nav-sidebar { width:200px; flex-shrink:0; background:var(--card-bg); border:1px solid var(--card-border); border-radius:10px; padding:14px; box-shadow:var(--card-glow); position:sticky; top:20px; max-height:calc(100vh - 40px); overflow-y:auto; }
+.nav-sidebar-label { font-size:9px; font-weight:800; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.5px; margin:8px 0 6px 4px; }
+.nav-divider { height:1px; background:var(--card-border); margin:10px 0; }
+.nav-btn { display:flex; align-items:center; justify-content:space-between; padding:8px 10px; margin-bottom:4px; background:rgba(56,189,248,0.04); border:1px solid var(--card-border); border-radius:6px; text-decoration:none; transition:all 0.2s; cursor:pointer; }
+.nav-btn:hover { border-color:var(--accent); background:rgba(56,189,248,0.10); transform:translateX(2px); }
+.nav-btn-label { font-size:11px; font-weight:700; color:var(--text-primary); }
+.nav-btn-status { font-size:9px; font-weight:700; color:#22c55e; text-transform:uppercase; letter-spacing:0.5px; }
+.nav-btn.inactive-nav { opacity:0.45; cursor:not-allowed; pointer-events:none; }
+.nav-btn.inactive-nav .nav-btn-status { color:var(--text-muted); }
+.nav-btn.active-nav .nav-btn-status { color:#22c55e; }
+.nav-btn.current-page { border-color:var(--accent); background:rgba(56,189,248,0.16); box-shadow:0 0 8px rgba(56,189,248,0.25); }
+.nav-btn.current-page .nav-btn-label, .nav-btn.current-page .nav-btn-status { color:var(--accent); }
+.nav-btn.rhetoric-btn { border-color:rgba(34,197,94,0.4); background:linear-gradient(135deg,rgba(34,197,94,0.06),rgba(22,163,74,0.04)); }
+.nav-btn.rhetoric-btn:hover { border-color:rgba(34,197,94,0.8); box-shadow:0 0 14px rgba(34,197,94,0.18); }
+.nav-btn.rhetoric-btn .nav-btn-status { color:#4ade80; }
+.nav-btn.commodity-btn { border-color:rgba(250,204,21,0.4); background:linear-gradient(135deg,rgba(250,204,21,0.08),rgba(202,138,4,0.05)); }
+.nav-btn.commodity-btn:hover { border-color:rgba(250,204,21,0.8); box-shadow:0 0 18px rgba(250,204,21,0.2); }
+.nav-btn.commodity-btn .nav-btn-status { color:#fde047; }
+.nav-btn.military-btn { border-color:rgba(168,85,247,0.4); background:linear-gradient(135deg,rgba(168,85,247,0.08),rgba(126,34,206,0.05)); }
+.nav-btn.military-btn:hover { border-color:rgba(168,85,247,0.8); box-shadow:0 0 18px rgba(168,85,247,0.2); }
+.nav-btn.military-btn .nav-btn-status { color:#d8b4fe; }
 
-        .container { max-width: 1400px; margin: 0 auto; position: relative; z-index: 1; }
+.loading-overlay { position:fixed; inset:0; background:var(--loading-overlay-bg); z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column; transition:opacity 0.5s; opacity:1; }
+.loading-overlay.hidden { opacity:0; pointer-events:none; }
+.loading-spinner { width:60px; height:60px; border:4px solid var(--loading-spinner-bg); border-top-color:var(--accent); border-radius:50%; animation:spin 0.9s linear infinite; margin-bottom:20px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.loading-status { text-align:center; }
+.loading-title { font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:6px; }
+.loading-progress { font-size:12px; color:var(--text-muted); }
 
-        header {
-            background: linear-gradient(135deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
-            color: var(--header-text);
-            padding: 35px; border-radius: 12px; margin-bottom: 30px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-            position: relative; display: flex; align-items: center; gap: 30px;
-        }
-        .header-logo { width: 80px; height: 80px; flex-shrink: 0; border-radius: 50%; margin-top: 48px; }
-        .header-content { flex: 1; text-align: center; }
-        h1 { font-size: 28px; font-weight: bold; margin-bottom: 10px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
-        .subtitle { font-size: 16px; font-weight: normal; opacity: 0.95; letter-spacing: 0.5px; }
-        .last-updated { font-size: 13px; opacity: 0.85; margin-top: 10px; }
+.advisory-row { margin-bottom:14px; }
 
-        .header-controls {
-            position: absolute; top: 35px; right: 35px;
-            display: flex; flex-direction: column; gap: 10px; z-index: 1000;
-        }
-        [dir="rtl"] .header-controls { right: auto; left: 35px; }
+.metric-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:20px 24px; box-shadow:var(--card-glow); margin-bottom:18px; transition:box-shadow 0.3s; }
+.metric-card:hover { box-shadow:var(--card-hover-glow); }
+.subsection-title { font-size:16px; font-weight:700; color:var(--text-primary); margin-bottom:14px; letter-spacing:0.3px; }
+.stability-score-row { display:flex; align-items:center; gap:18px; margin-bottom:14px; flex-wrap:wrap; }
+.stability-score-big { font-size:56px; font-weight:800; color:var(--accent); line-height:1; min-width:110px; }
+.stability-label { font-size:12px; font-weight:700; padding:6px 14px; border-radius:16px; text-transform:uppercase; letter-spacing:1.2px; }
+.level-0 { background:rgba(100,116,139,0.15); color:var(--text-muted); }
+.level-1 { background:rgba(34,197,94,0.15);  color:#22c55e; }
+.level-2 { background:rgba(234,179,8,0.15);  color:#eab308; }
+.level-3 { background:rgba(249,115,22,0.15); color:#f97316; }
+.level-4 { background:rgba(239,68,68,0.15);  color:#ef4444; }
+.metric-meta { display:flex; flex-wrap:wrap; gap:10px; font-size:11px; color:var(--text-secondary); margin-top:8px; }
+.metric-meta span { background:rgba(56,189,248,0.05); padding:4px 10px; border-radius:6px; border:1px solid var(--card-border); }
 
-        .language-switcher {
-            display: flex; gap: 8px;
-            background: rgba(255,255,255,0.15); padding: 8px 12px;
-            border-radius: 8px; backdrop-filter: blur(10px);
-        }
-        .theme-toggle {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background: rgba(255,255,255,0.15); padding: 8px 12px;
-            border-radius: 8px; backdrop-filter: blur(10px);
-        }
-        .theme-toggle-label {
-            font-size: 11px; color: rgba(255,255,255,0.9); margin-right: 8px;
-            text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap;
-        }
-        .theme-toggle-switch {
-            position: relative; width: 50px; height: 26px;
-            background: rgba(255,255,255,0.2); border-radius: 13px; cursor: pointer;
-            transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3);
-        }
-        .theme-toggle-switch:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .theme-toggle-slider {
-            position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
-            background: white; border-radius: 50%; transition: transform 0.3s ease;
-            display: flex; align-items: center; justify-content: center; font-size: 10px;
-        }
-        .theme-toggle-slider::before { content: '\2600\FE0F'; }
-        [data-theme="dark"] .theme-toggle-slider { transform: translateX(24px); }
-        [data-theme="dark"] .theme-toggle-slider::before { content: '\1F319'; }
+.rhetoric-placeholder { background:var(--card-bg); border:1px dashed var(--card-border); border-radius:10px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; margin-bottom:16px; }
 
-        .lang-btn {
-            background: rgba(255,255,255,0.2); border: 2px solid rgba(255,255,255,0.3);
-            color: white; padding: 6px 14px; font-family: 'Times New Roman', Times, serif;
-            font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .lang-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
-        .lang-btn.active { background: white; color: #1e3a5f; border-color: white; }
+/* Leader Signals wrapper + fallback */
+.leader-signals-wrapper { margin-bottom:22px; }
+.leader-signals-fallback { display:none; background:var(--card-bg); border:1px solid var(--card-border); border-left:4px solid #a855f7; border-radius:10px; padding:18px 22px; margin-bottom:16px; }
+.leader-signals-fallback.visible { display:block; }
+.lsf-title { font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:8px; display:flex; align-items:center; gap:8px; }
+.lsf-text  { font-size:12px; color:var(--text-secondary); line-height:1.6; }
+.lsf-text strong { color:#c4b5fd; }
+.lsf-badge { font-size:9px; padding:2px 8px; border-radius:10px; background:rgba(168,85,247,0.15); color:#c4b5fd; font-weight:700; text-transform:uppercase; letter-spacing:0.6px; }
 
-        .back-link {
-            display: inline-block; position: absolute; top: 20px; left: 20px; margin: 0;
-            padding: 12px 24px; background: rgba(255,255,255,0.2); color: white;
-            text-decoration: none; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3);
-            transition: all 0.2s ease; font-size: 14px; font-weight: bold;
-        }
-        .back-link:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+/* Commodity card (Gold Standard v2.0 — Peru pattern) */
+.commodity-card { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:24px 28px; margin-bottom:18px; box-shadow:var(--card-glow); transition:box-shadow 0.3s; }
+.commodity-card:hover { box-shadow:var(--card-hover-glow); }
+[data-theme="dark"] .commodity-card { border-color:rgba(250,204,21,0.25); }
+.commodity-card-title { font-size:18px; font-weight:700; color:var(--text-primary); margin-bottom:14px; letter-spacing:0.3px; }
+.commodity-prose { font-size:13px; line-height:1.65; color:var(--text-secondary); background:rgba(2,6,23,0.5); border-radius:8px; padding:14px 16px; margin-bottom:14px; border-left:3px solid var(--accent); }
+[data-theme="light"] .commodity-prose { background:#f8fbfe; }
+.commodity-convergence-alert { display:none; background:linear-gradient(135deg,rgba(239,68,68,0.18) 0%,rgba(249,115,22,0.18) 100%); border-left:4px solid #ef4444; border-radius:6px; padding:14px 18px; margin-bottom:14px; }
+.commodity-convergence-alert.active { display:block; }
+.cca-title { font-size:12px; font-weight:800; color:#fca5a5; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+.cca-detail { font-size:12px; line-height:1.5; color:#fde8e8; }
+.commodity-alert-banner { display:none; padding:12px 16px; border-left:4px solid var(--text-muted); border-radius:6px; margin-bottom:14px; font-size:13px; font-weight:700; letter-spacing:0.5px; }
+.commodity-alert-banner.show { display:block; }
+.commodity-alert-banner.alert-normal   { background:rgba(34,197,94,0.08);  border-left-color:#22c55e; color:#22c55e; }
+.commodity-alert-banner.alert-elevated { background:rgba(234,179,8,0.10);  border-left-color:#eab308; color:#eab308; }
+.commodity-alert-banner.alert-high     { background:rgba(249,115,22,0.10); border-left-color:#f97316; color:#f97316; }
+.commodity-alert-banner.alert-surge    { background:rgba(239,68,68,0.12);  border-left-color:#ef4444; color:#ef4444; }
+.commodity-alert-banner strong { letter-spacing:1.5px; }
+.commodity-alert-banner .ab-meta { color:var(--text-muted); font-weight:400; margin-left:10px; }
+.commodity-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; margin-bottom:14px; }
+.commodity-pill { background:rgba(2,6,23,0.5); border:1px solid var(--card-border); border-radius:10px; padding:12px 14px; display:flex; flex-direction:column; gap:8px; transition:all 0.2s; }
+[data-theme="light"] .commodity-pill { background:#f8fbfe; }
+.commodity-pill:hover { border-color:var(--accent); transform:translateY(-2px); }
+.commodity-pill-header { display:flex; align-items:center; gap:10px; }
+.commodity-pill-icon { font-size:22px; line-height:1; }
+.commodity-pill-name { font-size:13px; font-weight:700; color:var(--text-primary); flex:1; }
+.commodity-pill-rank { font-size:9px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+.commodity-pill-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.commodity-pill-alert { font-size:9px; font-weight:800; padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.8px; }
+.commodity-alert-normal   { background:rgba(34,197,94,0.12);  color:#22c55e; border:1px solid rgba(34,197,94,0.3); }
+.commodity-alert-elevated { background:rgba(234,179,8,0.12);  color:#eab308; border:1px solid rgba(234,179,8,0.3); }
+.commodity-alert-high     { background:rgba(249,115,22,0.12); color:#f97316; border:1px solid rgba(249,115,22,0.3); }
+.commodity-alert-surge    { background:rgba(239,68,68,0.12);  color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+.commodity-pill-role { font-size:9px; padding:2px 6px; border-radius:4px; background:rgba(56,189,248,0.10); color:var(--accent); font-weight:700; }
+.commodity-pill-signals { font-size:10px; color:var(--text-muted); font-weight:600; }
+.commodity-pill-note { font-size:11px; line-height:1.45; color:var(--text-secondary); font-style:italic; }
+.commodity-pill-spark { display:flex; align-items:center; gap:8px; min-height:26px; }
+.commodity-pill-price { font-size:12px; font-weight:700; color:var(--text-primary); }
+.commodity-pill-delta { font-size:10px; font-weight:700; }
+.commodity-pill-delta.up   { color:#22c55e; }
+.commodity-pill-delta.down { color:#ef4444; }
+.commodity-pill-spark-svg { flex:1; height:24px; }
+.commodity-pill-intervention { font-size:9px; padding:2px 6px; border-radius:4px; background:rgba(168,85,247,0.12); color:#c4b5fd; border:1px solid rgba(168,85,247,0.3); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+.commodity-top-signals { margin-top:14px; padding:12px 14px; background:rgba(2,6,23,0.5); border-radius:6px; border-left:3px solid var(--text-muted); font-size:11px; }
+[data-theme="light"] .commodity-top-signals { background:#f8fbfe; }
+.commodity-top-signals .ts-title { color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; font-size:10px; }
+.commodity-top-signals a { color:var(--text-secondary); text-decoration:none; display:block; padding:3px 0; line-height:1.45; }
+.commodity-top-signals a:hover { color:var(--accent); }
+.commodity-top-signals .ts-source { color:var(--text-muted); font-size:10px; }
+.strategic-linkage { margin-top:14px; padding:12px 14px; background:rgba(56,189,248,0.05); border-left:3px solid var(--accent); border-radius:6px; font-size:11.5px; line-height:1.55; color:var(--text-secondary); }
+.strategic-linkage strong { color:var(--accent); font-weight:700; }
 
-        .map-section {
-            background: var(--container-bg); border: 2px solid var(--card-border);
-            border-radius: 12px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .map-section h2 { font-size: 20px; margin-bottom: 10px; color: var(--text-primary); }
-        .map-subtitle { font-size: 13px; color: var(--text-secondary); margin-bottom: 15px; font-style: italic; }
+/* Internal pressure tiles */
+.pressure-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+.pressure-tile { background:rgba(2,6,23,0.4); border:1px solid var(--card-border); border-radius:8px; padding:14px 16px; }
+[data-theme="light"] .pressure-tile { background:#f1f5f9; }
+.pt-label { font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:6px; display:flex; justify-content:space-between; align-items:center; }
+.pt-value { font-size:22px; font-weight:800; color:var(--text-primary); line-height:1.1; margin-bottom:4px; }
+.pt-meta  { font-size:10px; color:var(--text-secondary); line-height:1.4; }
+.pt-status { font-size:9px; font-weight:800; padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.5px; }
+.pt-status.normal   { background:rgba(34,197,94,0.15);  color:#22c55e; }
+.pt-status.warning  { background:rgba(234,179,8,0.15);  color:#eab308; }
+.pt-status.elevated { background:rgba(249,115,22,0.15); color:#f97316; }
+.pt-status.stress   { background:rgba(239,68,68,0.15);  color:#ef4444; }
+.pt-source { font-size:9px; color:var(--text-muted); font-style:italic; margin-top:6px; }
 
-        .knowledge-library {
-            background: var(--container-bg); border: 2px solid var(--card-border);
-            border-radius: 12px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .knowledge-library h2 { font-size: 24px; margin-bottom: 20px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
-        .library-icon { font-size: 28px; }
-        .knowledge-categories { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .knowledge-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 10px; overflow: hidden; transition: all 0.3s ease; }
-        .knowledge-card:hover { transform: translateY(-3px); box-shadow: 0 6px 16px var(--metric-hover-shadow); }
-        .knowledge-header {
-            background: linear-gradient(135deg, rgba(100, 149, 237, 0.1) 0%, rgba(30, 82, 130, 0.1) 100%);
-            padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between;
-            align-items: center; transition: background 0.3s ease;
-        }
-        .knowledge-header:hover { background: linear-gradient(135deg, rgba(100, 149, 237, 0.15) 0%, rgba(30, 82, 130, 0.15) 100%); }
-        .knowledge-header-title { display: flex; align-items: center; gap: 12px; font-size: 16px; font-weight: bold; color: var(--text-primary); }
-        .category-icon { font-size: 22px; }
-        .collapse-icon { font-size: 20px; color: var(--accent); transition: transform 0.3s ease; }
-        .knowledge-card.collapsed .collapse-icon { transform: rotate(-90deg); }
-        .knowledge-content { padding: 20px; max-height: 500px; overflow-y: auto; transition: max-height 0.3s ease, padding 0.3s ease; }
-        .knowledge-card.collapsed .knowledge-content { max-height: 0; padding: 0 20px; overflow: hidden; }
-        .knowledge-content p { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 12px; }
-        .knowledge-content ul { margin-left: 20px; margin-bottom: 12px; }
-        .knowledge-content li { font-size: 13px; line-height: 1.6; color: var(--text-secondary); margin-bottom: 6px; }
-        .knowledge-content strong { color: var(--text-primary); }
-        .open-source-disclaimer { font-size: 11px; color: var(--text-muted); font-style: italic; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--card-border); }
-        .report-links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
-        .report-link {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 10px 16px; background: var(--accent); color: white;
-            text-decoration: none; border-radius: 6px; font-size: 12px; font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .report-link:hover { background: #4169E1; transform: translateX(3px); box-shadow: 0 4px 12px rgba(100, 149, 237, 0.3); }
-        [dir="rtl"] .report-link:hover { transform: translateX(-3px); }
-        .knowledge-content::-webkit-scrollbar { width: 8px; }
-        .knowledge-content::-webkit-scrollbar-track { background: var(--article-bg); border-radius: 4px; }
-        .knowledge-content::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
-        .knowledge-content::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+/* Map */
+.map-section { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--card-glow); }
+.map-section h2 { font-size:20px; margin-bottom:10px; color:var(--text-primary); }
+.map-subtitle { font-size:12px; color:var(--text-secondary); margin-bottom:14px; line-height:1.5; }
+#indiaMap { height:480px; border-radius:8px; border:1px solid var(--card-border); }
 
-        .articles-section {
-            background: var(--container-bg); border-radius: 12px; padding: 25px; margin-bottom: 30px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
-        .section-title { font-size: 20px; margin-bottom: 20px; color: var(--text-primary); font-weight: bold; letter-spacing: 0.5px; }
-        .article-item {
-            background: var(--article-bg); padding: 15px; border-radius: 8px; margin-bottom: 10px;
-            transition: background 0.2s ease, transform 0.2s; border-left: 4px solid #1e3a5f;
-        }
-        [dir="rtl"] .article-item { border-left: none; border-right: 4px solid #1e3a5f; }
-        .article-item:hover { background: var(--article-hover); transform: translateX(4px); }
-        [dir="rtl"] .article-item:hover { transform: translateX(-4px); }
-        .article-title { color: var(--text-primary); font-size: 14px; margin-bottom: 5px; font-weight: 500; }
-        .article-meta { font-size: 12px; color: var(--text-secondary); }
-        .article-link { color: var(--accent); text-decoration: none; font-size: 13px; }
-        .article-link:hover { text-decoration: underline; }
+/* Knowledge Library */
+.knowledge-library { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:24px 28px; margin-bottom:18px; box-shadow:var(--card-glow); }
+.knowledge-library h2 { font-size:22px; margin-bottom:6px; color:var(--text-primary); }
+.kl-disclaimer { font-size:11px; color:var(--text-muted); font-style:italic; margin-bottom:18px; }
+.knowledge-categories { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:14px; }
+.knowledge-card { background:var(--card-bg); border:2px solid var(--card-border); border-radius:10px; overflow:hidden; transition:all 0.3s ease; }
+.knowledge-card:hover { transform:translateY(-3px); box-shadow:var(--card-hover-glow); }
+.knowledge-header { padding:14px 18px; background:linear-gradient(135deg,rgba(56,189,248,0.06),rgba(14,165,233,0.04)); cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+.knowledge-header-title { font-size:13px; font-weight:700; color:var(--text-primary); display:flex; align-items:center; gap:10px; }
+.category-icon { font-size:18px; }
+.collapse-icon { font-size:12px; color:var(--text-muted); transition:transform 0.3s; }
+.knowledge-card.collapsed .collapse-icon { transform:rotate(-90deg); }
+.knowledge-content { padding:14px 18px; max-height:1500px; transition:max-height 0.4s ease, padding 0.3s ease; overflow:hidden; }
+.knowledge-card.collapsed .knowledge-content { max-height:0; padding:0 18px; }
+.knowledge-content p  { font-size:12px; line-height:1.6; color:var(--text-secondary); margin-bottom:10px; }
+.knowledge-content ul { margin-left:18px; margin-bottom:8px; }
+.knowledge-content li { font-size:11.5px; line-height:1.55; color:var(--text-secondary); margin-bottom:6px; }
+.knowledge-content strong { color:var(--text-primary); }
 
-        footer {
-            background: var(--container-bg); padding: 25px; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 2px solid var(--card-border);
-            font-size: 12px; text-align: center; margin-top: 40px; color: var(--text-secondary);
-            transition: background 0.3s ease, border-color 0.3s ease;
-        }
+/* Articles */
+.articles-section { background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:22px 24px; margin-bottom:18px; box-shadow:var(--card-glow); }
+.section-title { font-size:18px; margin-bottom:14px; color:var(--text-primary); font-weight:bold; letter-spacing:0.5px; }
+.tab-row { display:flex; gap:6px; margin-bottom:14px; flex-wrap:wrap; border-bottom:1px solid var(--card-border); padding-bottom:8px; }
+.tab-btn { padding:6px 12px; font-size:11px; font-weight:700; background:rgba(56,189,248,0.04); border:1px solid var(--card-border); color:var(--text-secondary); border-radius:6px; cursor:pointer; transition:all 0.2s; font-family:inherit; }
+.tab-btn:hover { color:var(--accent); border-color:var(--accent); }
+.tab-btn.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+.tab-count { font-size:9px; padding:1px 5px; border-radius:8px; background:rgba(56,189,248,0.15); color:var(--accent); margin-left:4px; font-weight:700; }
+.tab-btn.active .tab-count { background:rgba(255,255,255,0.25); color:#fff; }
+.article-item { background:var(--article-bg); padding:12px 14px; border-radius:8px; margin-bottom:8px; transition:all 0.2s; border-left:3px solid var(--accent); }
+.article-item:hover { background:var(--article-hover); transform:translateX(2px); }
+.article-title { font-size:12.5px; font-weight:700; color:var(--text-primary); line-height:1.4; margin-bottom:4px; }
+.article-title a { color:inherit; text-decoration:none; }
+.article-title a:hover { color:var(--accent); }
+.article-meta { font-size:10px; color:var(--text-muted); display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.source-pill { font-size:9px; font-weight:700; padding:1px 6px; border-radius:3px; text-transform:uppercase; letter-spacing:0.5px; }
+.source-rss      { background:rgba(34,197,94,0.15);  color:#22c55e; }
+.source-gdelt    { background:rgba(168,85,247,0.15); color:#c4b5fd; }
+.source-newsapi  { background:rgba(56,189,248,0.15); color:var(--accent); }
+.source-brave    { background:rgba(249,115,22,0.15); color:#f97316; }
+.source-bluesky  { background:rgba(14,165,233,0.18); color:#0ea5e9; }
+.source-telegram { background:rgba(56,189,248,0.20); color:var(--accent); }
+.source-reddit   { background:rgba(255,69,0,0.18);   color:#ff4500; }
+.source-thinktank{ background:rgba(245,158,11,0.18); color:#f59e0b; }
 
-        @media (max-width: 768px) {
-            header { flex-direction: column; gap: 20px; padding: 25px 20px; }
-            .header-logo { width: 60px; height: 60px; }
-            .header-content { text-align: center; }
-            .header-controls { position: static; align-items: center; }
-            h1 { font-size: 24px; }
-            .back-link { position: static; display: block; width: fit-content; margin: 0 auto 15px; }
-            .knowledge-categories { grid-template-columns: 1fr; }
-        }
-    </style>
+/* Footer */
+.asifah-footer { background:var(--card-bg); border-top:2px solid var(--accent); margin-top:24px; padding:22px 28px 14px; border-radius:12px 12px 0 0; }
+.footer-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:22px; margin-bottom:16px; }
+.footer-col h4 { font-size:12px; font-weight:700; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+.footer-col p { font-size:11px; color:var(--text-secondary); line-height:1.55; }
+.footer-disclaimer { font-size:10px; color:var(--text-muted); line-height:1.5; padding-top:14px; border-top:1px solid var(--card-border); }
+.footer-support { font-size:11px; color:var(--text-secondary); margin:10px 0; }
+.footer-support a { color:#fde047; text-decoration:none; font-weight:700; }
+.footer-copyright { font-size:10px; color:var(--text-muted); padding-top:10px; }
+</style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-        <div class="loading-status">
-            <div class="loading-title">Loading India Stability Data</div>
-            <div class="loading-steps" id="loadingSteps">
-                <div class="loading-step active" id="step1">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Fetching OSINT articles on India...</span>
-                </div>
-                <div class="loading-step" id="step2">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Scanning border incident reports...</span>
-                </div>
-                <div class="loading-step" id="step3">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Analyzing Kashmir situation...</span>
-                </div>
-                <div class="loading-step" id="step4">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Compiling Indo-Pacific strategic indicators...</span>
-                </div>
-                <div class="loading-step" id="step5">
-                    <span class="step-icon">&#x23F3;</span>
-                    <span>Rendering dashboard...</span>
-                </div>
+
+<div class="watermark"></div>
+
+<!-- ════════════════════════════════════════════════════════════ LOADING OVERLAY ════════════════════════════════════════════════════════════ -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-status">
+        <div class="loading-title" data-i18n="loading_title">Loading India Stability Data</div>
+        <div class="loading-progress" id="loadingProgress">
+            <span data-i18n="loading_progress">Connecting to backend... This may take 20-40 seconds on cold cache.</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+<!-- ════════════════════════════════════════════════════════════ HEADER ════════════════════════════════════════════════════════════ -->
+<header>
+    <div class="header-logo-wrap">
+        <a href="asia.html" class="back-link" data-i18n="back_to_asia">← Asia &amp; Pacific</a>
+        <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo"/>
+    </div>
+    <div class="header-content">
+        <h1 data-i18n="page_title">🇮🇳 INDIA STABILITY INDEX</h1>
+        <div class="subtitle" data-i18n="page_subtitle">Multi-Factor Analysis: India-China LAC Posture · Kashmir &amp; Pakistan Tensions · Indo-Pacific &amp; QUAD · Economic Statecraft (FX Defense, Gold/Oil Import Dependency) · Internal Cohesion</div>
+        <div class="last-updated" id="lastUpdated">Connecting to backend...</div>
+    </div>
+    <div class="header-controls">
+        <div class="language-switcher">
+            <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
+            <button class="lang-btn" onclick="switchLanguage('zh', this)">中文</button>
+            <button class="lang-btn" onclick="switchLanguage('ja', this)">日本語</button>
+            <button class="lang-btn" onclick="switchLanguage('ko', this)">한국어</button>
+        </div>
+        <div class="theme-toggle">
+            <span class="theme-toggle-label" data-i18n="theme_label">Theme</span>
+            <div class="theme-toggle-switch" onclick="toggleTheme()">
+                <div class="theme-toggle-slider"></div>
             </div>
-            <div class="loading-progress" id="loadingProgress">This may take 20-40 seconds...</div>
-            <div class="loading-error" id="loadingError" style="display: none;"></div>
+        </div>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════════════════════ PAGE WITH SIDEBAR ════════════════════════════════════════════════════════════ -->
+<div class="page-with-sidebar">
+
+<!-- ── NAV SIDEBAR (Gold Standard) ── -->
+<nav class="nav-sidebar">
+    <div class="nav-sidebar-label" data-i18n="nav_dashboards">Dashboards</div>
+    <div class="nav-btn inactive-nav">
+        <span class="nav-btn-label" data-i18n="nav_africa">🌍 Africa</span>
+        <span class="nav-btn-status" data-i18n="nav_future">🔒 Future</span>
+    </div>
+    <a href="asia.html" class="nav-btn active-nav">
+        <span class="nav-btn-label" data-i18n="nav_asia_pacific">🌏 Asia &amp; Pacific</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="europe.html" class="nav-btn active-nav">
+        <span class="nav-btn-label" data-i18n="nav_europe">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="middle-east.html" class="nav-btn active-nav">
+        <span class="nav-btn-label" data-i18n="nav_me">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="wha.html" class="nav-btn active-nav">
+        <span class="nav-btn-label" data-i18n="nav_wha">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <a href="commodities.html" class="nav-btn commodity-btn">
+        <span class="nav-btn-label" data-i18n="nav_commodities">🛢️ Commodities</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="military.html" class="nav-btn military-btn">
+        <span class="nav-btn-label" data-i18n="nav_military">🎖️ Military Tracker</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="gpi.html" class="nav-btn military-btn">
+        <span class="nav-btn-label" data-i18n="nav_gpi">🌐 Global Pressure</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label" data-i18n="nav_rhetoric">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label" data-i18n="nav_rhetoric_me">🕌 Middle East</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label" data-i18n="nav_rhetoric_asia">🌏 Asia</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label" data-i18n="nav_rhetoric_europe">🌍 Europe</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn">
+        <span class="nav-btn-label" data-i18n="nav_rhetoric_wha">🌎 W. Hemisphere</span>
+        <span class="nav-btn-status">● Live</span>
+    </a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label" data-i18n="nav_india">India</div>
+    <a href="india-stability.html" class="nav-btn current-page">
+        <span class="nav-btn-label" data-i18n="nav_india_stability">🇮🇳 India Stability</span>
+        <span class="nav-btn-status" data-i18n="nav_here">◉ You are here</span>
+    </a>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════════ MAIN CONTENT ════════════════════════════════════════════════════════════ -->
+<div class="main-content">
+
+<!-- ── U.S. STATE DEPT WORLDWIDE CAUTION ── -->
+<div class="advisory-row" style="background:linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#7f1d1d 100%); border:2px solid #ef4444; border-radius:10px; padding:14px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 15px rgba(239,68,68,0.3);">
+    <div style="font-size:24px; flex-shrink:0;">🚨</div>
+    <div style="flex:1;">
+        <div style="font-size:12px; font-weight:bold; color:#fca5a5; text-transform:uppercase; letter-spacing:1.5px; margin-bottom:3px;" data-i18n="ww_caution_label">⚠️ U.S. State Department — Worldwide Caution</div>
+        <div style="font-size:12px; color:#fde8e8; line-height:1.4;" data-i18n="ww_caution_text">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
+    </div>
+    <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="ww_caution_button">VIEW CAUTION →</a>
+</div>
+
+<!-- ── INDIA TRAVEL ADVISORY ── -->
+<div class="advisory-row" id="indiaTravelAdvisory" style="background:linear-gradient(135deg,#1e3a5f 0%,#2c5282 100%); border:2px solid #f59e0b; border-radius:10px; padding:14px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    <div style="font-size:24px; flex-shrink:0;">🇮🇳</div>
+    <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+            <span style="font-size:11px; font-weight:bold; color:#fca5a5; text-transform:uppercase; letter-spacing:1.5px;" data-i18n="travel_label">U.S. State Department — India Travel Advisory</span>
+            <span id="indiaTravelLevel" style="background:#f59e0b; color:white; font-size:10px; font-weight:800; padding:2px 8px; border-radius:3px; letter-spacing:1px;" data-i18n="travel_level">LEVEL 2</span>
+        </div>
+        <div id="indiaTravelText" style="font-size:12px; color:#e2e8f0; line-height:1.4;" data-i18n="travel_text"><strong style='color:#f59e0b;'>Exercise Increased Caution</strong> due to crime and terrorism. Reconsider travel to <strong>Jammu &amp; Kashmir</strong> (excluding the Ladakh region and its capital Leh). Do not travel within 10 km of the <strong>India-Pakistan border</strong> or to <strong>central/east India</strong> due to Naxalite/Maoist insurgency.</div>
+    </div>
+    <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/india-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="travel_button">VIEW ADVISORY →</a>
+</div>
+
+<!-- ── RHETORIC TRACKER PLACEHOLDER (Phase 2 will replace this with rhetoric-india.html link) ── -->
+<div class="rhetoric-placeholder">
+    <div>
+        <div style="font-size:13px; font-weight:bold; color:var(--text-primary);" data-i18n="rhetoric_placeholder_title">📡 India Rhetoric &amp; Coercion Tracker</div>
+        <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" data-i18n="rhetoric_placeholder_subtitle">Coming next: PMO · MEA · RBI · Armed Forces · Opposition · Mining/Energy · Cross-LAC dynamics — with Economic Absorption Signatures baked in day one.</div>
+    </div>
+    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
+        <span style="background:#6b7280; color:white; font-size:12px; font-weight:700; padding:5px 14px; border-radius:6px; letter-spacing:0.5px;" data-i18n="rhetoric_in_dev">🔧 In Development</span>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ LEADER COMMODITY SIGNALS (Butterfly Build Phase 1) ════════════════════════════════════════════════════════════ -->
+<div class="leader-signals-wrapper">
+
+    <!-- Static fallback shown only if Web Component fails to render -->
+    <div class="leader-signals-fallback" id="leaderSignalsFallback">
+        <div class="lsf-title">
+            <span>🦋 Leader Commodity Signals</span>
+            <span class="lsf-badge" data-i18n="lsf_fallback_badge">Standby</span>
+        </div>
+        <div class="lsf-text" data-i18n-html="lsf_fallback_text">
+            <strong>No live data right now.</strong> The Leader Signals feed for India couldn't reach the Asia proxy. The signal class we track here is <em>jawboning</em>: verbal interventions by heads of state, finance ministers, and central bank governors that move commodity markets without formal policy action. Most recent recorded example for India — <strong>PM Modi (May 2026): publicly asked Indians to suspend gold purchases for one year</strong>, classified as defensive statecraft driven by FX defense pressure from sustained Iran/Hormuz oil pricing. Full details and absorption analysis return when the feed comes back online.
         </div>
     </div>
 
-    <div class="container">
-        <header>
-            <a href="asia.html" class="back-link" data-i18n="backLink">&#8592; Back to Dashboard</a>
-            <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo">
-            <div class="header-content">
-                <h1 data-i18n="pageTitle">🇮🇳 INDIA STABILITY INDEX</h1>
-                <div class="subtitle" data-i18n="pageSubtitle">Multi-Factor Analysis: China &amp; Pakistan Border Tensions, Kashmir Conflict, Internal Security &amp; Regional Power Competition</div>
-                <div class="last-updated" id="lastUpdated" data-i18n="lastUpdated">Last updated: Loading...</div>
-            </div>
-            <div class="header-controls">
-                <div class="language-switcher">
-                    <button class="lang-btn active" onclick="switchLanguage('en', this)">EN</button>
-                    <button class="lang-btn" onclick="switchLanguage('hi', this)">हिं</button>
-                    <button class="lang-btn" onclick="switchLanguage('ur', this)">اردو</button>
-                    <button class="lang-btn" onclick="switchLanguage('zh', this)">中文</button>
-                </div>
-                <div class="theme-toggle">
-                    <span class="theme-toggle-label" data-i18n="themeToggle">Theme</span>
-                    <div class="theme-toggle-switch" onclick="toggleTheme()">
-                        <div class="theme-toggle-slider"></div>
-                    </div>
-                </div>
-            </div>
-        </header>
+    <!-- Live Web Component (Butterfly Build Phase 1) — routes through Asia proxy → ME backend -->
+    <leader-signals-card
+        id="indiaLeaderSignals"
+        country="india"
+        backend="https://asifah-asia-backend.onrender.com/api/asia"
+        detail="bluf">
+    </leader-signals-card>
+</div>
 
-        <!-- U.S. STATE DEPARTMENT — WORLDWIDE CAUTION -->
-        <div style="
-            background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #7f1d1d 100%);
-            border: 2px solid #ef4444; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 10px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">🚨</div>
-            <div style="flex: 1;">
-                <div style="font-size: 12px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 3px;">⚠️ U.S. State Department — Worldwide Caution</div>
-                <div style="font-size: 12px; color: #fde8e8; line-height: 1.4;">Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.</div>
-            </div>
-            <a href="https://travel.state.gov/en/international-travel/travel-advisories/global-events/worldwide-caution.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW CAUTION →</a>
-        </div>
+<!-- ════════════════════════════════════════════════════════════ COMMODITY EXPOSURE CARD (Gold Standard v2.0) ════════════════════════════════════════════════════════════ -->
+<div class="commodity-card" id="commodityCard">
+    <div class="commodity-card-title" data-i18n="commodity_title">🛢️ Commodity Exposure &amp; Strategic Pressure</div>
 
-        <!-- INDIA TRAVEL ADVISORY — Level 2 -->
-        <div style="
-            background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
-            border: 2px solid #f59e0b; border-radius: 10px; padding: 14px 20px;
-            margin-bottom: 15px; display: flex; align-items: center; gap: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        ">
-            <div style="font-size: 24px; flex-shrink: 0;">🇮🇳</div>
-            <div style="flex: 1;">
-                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-                    <span style="font-size: 11px; font-weight: bold; color: #fca5a5; text-transform: uppercase; letter-spacing: 1.5px;">U.S. State Department — India Travel Advisory</span>
-                    <span style="background: #f59e0b; color: white; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 3px; letter-spacing: 1px;">LEVEL 2</span>
-                </div>
-                <div style="font-size: 12px; color: #e2e8f0; line-height: 1.4;"><strong style='color: #f59e0b;'>Exercise Increased Caution in India</strong> due to crime and terrorism. Exercise increased caution near the borders with Pakistan and China, and in Jammu and Kashmir (excluding Ladakh Union Territory), where terrorism and civil unrest occur.</div>
-            </div>
-            <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/india-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;">VIEW ADVISORY →</a>
-        </div>
-
-        <!-- MAP SECTION -->
-        <div class="map-section">
-            <h2>&#x1F5FA;&#xFE0F; <span data-i18n="mapTitle">India &#8212; Strategic Overview</span></h2>
-            <div class="map-subtitle" data-i18n="mapSubtitle">Interactive map centered on New Delhi. Kashmir Line of Control and LAC are key monitoring zones.</div>
-            <div style="width: 100%; height: 450px; border: 2px solid var(--card-border); border-radius: 8px; overflow: hidden;">
-                <iframe
-                    src="https://www.openstreetmap.org/export/embed.html?bbox=68.1%2C7.9%2C97.4%2C35.5&layer=mapnik&marker=28.61%2C77.21"
-                    width="100%" height="100%" frameborder="0" scrolling="no" style="border: none;">
-                </iframe>
-            </div>
-        </div>
-
-        <!-- KNOWLEDGE LIBRARY -->
-        <div class="knowledge-library">
-            <h2>
-                <span class="library-icon">&#x1F4DA;</span>
-                <span data-i18n="knowledgeLibraryTitle">Knowledge Library</span>
-            </h2>
-            <p class="open-source-disclaimer">
-                Note: Background information is compiled from open-source research and analysis. One-pager documents for each category are under development.
-            </p>
-
-            <div class="knowledge-categories">
-
-                <!-- India-China Border &amp; LAC -->
-                <div class="knowledge-card collapsed" id="card-china_border">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('china_border')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">⛰️</span>
-                            <span>India-China Border &amp; LAC</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>The Line of Actual Control (LAC)</strong> is the de facto border between India and China along a 3,488 km frontier in the Himalayas. It has never been formally delineated, creating persistent friction.</p>
-                        <p><strong>Key Developments:</strong></p>
-                        <ul>
-                            <li><strong>Galwan Valley (2020):</strong> Deadliest clash in 45 years; 20 Indian and 4+ Chinese soldiers killed in hand-to-hand combat</li>
-                            <li><strong>Disengagement:</strong> Partial pullbacks at several friction points (Gogra, Hot Springs, Pangong Tso) following diplomatic talks</li>
-                            <li><strong>Infrastructure Race:</strong> Both sides conducting massive border road, airfield, and facility construction programs</li>
-                            <li><strong>Depsang Plains:</strong> Chinese incursions into historically Indian-patrolled territory; limited disengagement progress</li>
-                            <li><strong>Strategic Implications:</strong> India has pivoted toward QUAD alignment and U.S. defense cooperation in response to Chinese aggression</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.brookings.edu/topic/india/" target="_blank" class="report-link">&#x1F4D1; Brookings - India</a>
-<a href="https://orfonline.org/" target="_blank" class="report-link">&#x1F4D1; Observer Research Foundation</a>
-<a href="https://www.csis.org/" target="_blank" class="report-link">&#x1F4D1; CSIS - India</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kashmir &amp; Pakistan Tensions -->
-                <div class="knowledge-card collapsed" id="card-kashmir">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('kashmir')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🏔️</span>
-                            <span>Kashmir &amp; Pakistan Tensions</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>Kashmir</strong> remains the central dispute between nuclear-armed India and Pakistan, with both countries claiming the territory in full while controlling separate portions.</p>
-                        <p><strong>Current Situation:</strong></p>
-                        <ul>
-                            <li><strong>Article 370:</strong> India revoked Jammu &amp; Kashmir's special status in August 2019, bifurcating it into two Union Territories; Pakistan condemned the move</li>
-                            <li><strong>Line of Control:</strong> Periodic ceasefire violations despite 2021 agreement; Indian and Pakistani forces maintain heavy forward deployments</li>
-                            <li><strong>Militancy:</strong> Pakistan-based groups (Lashkar-e-Taiba, Jaish-e-Mohammed) conduct cross-border attacks; Pahalgam attack (2025) killed 26 tourists</li>
-                            <li><strong>Nuclear Dimension:</strong> Both India and Pakistan possess nuclear weapons; escalation risks are real</li>
-                            <li><strong>Diplomatic:</strong> Bilateral relations effectively frozen since 2019; no scheduled summits</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.crisisgroup.org/asia/south-asia/kashmir" target="_blank" class="report-link">&#x1F4D1; Crisis Group - Kashmir</a>
-<a href="https://www.cfr.org/backgrounder/kashmir-disputed-land" target="_blank" class="report-link">&#x1F4D1; CFR - Kashmir</a>
-<a href="https://www.stimson.org/" target="_blank" class="report-link">&#x1F4D1; Stimson Center - South Asia</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Internal Security &amp; Political Dynamics -->
-                <div class="knowledge-card collapsed" id="card-internal">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('internal')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🏛️</span>
-                            <span>Internal Security &amp; Political Dynamics</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>India faces a range of internal security challenges</strong> even as it cements its position as the world's most populous country and fifth-largest economy.</p>
-                        <p><strong>Key Issues:</strong></p>
-                        <ul>
-                            <li><strong>Naxalism:</strong> Maoist insurgency (Naxalites) in central India (Chhattisgarh, Jharkhand); declining but persistent; India's longest-running insurgency</li>
-                            <li><strong>Northeast:</strong> Various ethnic insurgencies in Manipur, Nagaland, and Assam; Manipur communal violence (2023) displaced hundreds of thousands</li>
-                            <li><strong>Communal Tensions:</strong> Hindu-Muslim tensions elevated under BJP governance; Citizenship Amendment Act protests; periodic riots</li>
-                            <li><strong>Press Freedom:</strong> India ranked 161/180 in RSF Press Freedom Index; foreign journalists increasingly restricted</li>
-                            <li><strong>Democracy:</strong> Concerns about democratic backsliding; opposition leaders face legal challenges; electoral bond controversy</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.freedomhouse.org/country/india/freedom-world/2024" target="_blank" class="report-link">&#x1F4D1; Freedom House - India</a>
-<a href="https://www.satp.org/" target="_blank" class="report-link">&#x1F4D1; SATP - India Terrorism</a>
-<a href="https://carnegieendowment.org/" target="_blank" class="report-link">&#x1F4D1; Carnegie - South Asia</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Indo-Pacific Strategy &amp; QUAD -->
-                <div class="knowledge-card collapsed" id="card-indo_pacific">
-                    <div class="knowledge-header" onclick="toggleKnowledgeCard('indo_pacific')">
-                        <div class="knowledge-header-title">
-                            <span class="category-icon">🌊</span>
-                            <span>Indo-Pacific Strategy &amp; QUAD</span>
-                        </div>
-                        <span class="collapse-icon">&#x25BC;</span>
-                    </div>
-                    <div class="knowledge-content">
-                        <p><strong>India occupies a pivotal position</strong> in the Indo-Pacific security architecture, balancing strategic autonomy with deepening U.S. partnership.</p>
-                        <p><strong>Strategic Dynamics:</strong></p>
-                        <ul>
-                            <li><strong>QUAD:</strong> India, U.S., Japan, Australia; increasing military exercises (Malabar); intelligence sharing; technology cooperation</li>
-                            <li><strong>Defense Cooperation:</strong> India is now a major U.S. arms purchaser (Apache helicopters, P-8 Poseidon); BECA, LEMOA, COMCASA signed</li>
-                            <li><strong>Russia Relations:</strong> India maintains ties with Russia (oil imports, S-400 purchase); balances Western pressure with strategic autonomy</li>
-                            <li><strong>Indian Ocean:</strong> India considers the Indian Ocean its sphere of influence; countering Chinese port investments (Hambantota, Gwadar)</li>
-                            <li><strong>SCO &amp; BRICS:</strong> India is member of both Russia/China-led forums while deepening Western alignment</li>
-                        </ul>
-                        <div class="open-source-disclaimer">* Based on open-source intelligence, academic research, and publicly available government reports</div>
-                        <div class="report-links-grid">
-                            <a href="https://www.iiss.org/" target="_blank" class="report-link">&#x1F4D1; IISS - Asia</a>
-<a href="https://www.orfonline.org/" target="_blank" class="report-link">&#x1F4D1; ORF - Strategic Studies</a>
-<a href="https://www.stimson.org/" target="_blank" class="report-link">&#x1F4D1; Stimson - Indo-Pacific</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- RECENT ARTICLES -->
-        <div class="articles-section">
-            <div class="section-title" data-i18n="recentArticles">&#x1F4F0; Recent India, Kashmir &amp; Indo-Pacific Articles (Last 7 Days)</div>
-            <div id="articlesContainer">
-                <div style="text-align: center; color: var(--text-secondary); padding: 30px;">Loading articles...</div>
-            </div>
-        </div>
-
-        <footer>
-            <div>Data Sources: NewsAPI, GDELT, ACLED, ORF, SATP, and OSINT sources</div>
-            <div style="margin-top:15px; font-size:0.85em;">
-                Hindi and Urdu feeds via GDELT. Reddit intelligence from r/india, r/IndiaSpeaks, r/geopolitics.
-            </div>
-            <div style="margin-top:15px;">For inquiries, contact: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></div>
-
-            <div style="margin-top:25px; padding:15px; background:var(--article-bg); border-radius:8px;">
-                <div style="font-size:0.9em; margin-bottom:8px;">Asifah Analytics v1.0.0</div>
-                <div style="font-size:0.8em;">Updated every 30 minutes | Not for operational use</div>
-            </div>
-
-            <div style="margin-top:20px; padding:15px; background:rgba(139,0,0,0.2); border-radius:8px;">
-                <span style="font-size:0.9em;">
-                    If you find Asifah Analytics useful and want to support ongoing development, you can
-                    <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank" style="color:var(--accent);">&#x2615; buy me a coffee</a>
-                </span>
-            </div>
-
-            <div style="margin-top:25px; font-size:0.75em; color:var(--text-muted);">
-                &copy; 2026 RCGG. All Rights Reserved. Proprietary and Confidential.<br>
-                Unauthorized use, reproduction, or distribution prohibited.
-            </div>
-        </footer>
+    <div class="commodity-prose" id="commodityProse">
+        <span data-i18n="commodity_prose_loading">Loading commodity exposure profile…</span>
     </div>
 
-    <script>
-        const BACKEND_URL = 'https://asifah-asia-backend.onrender.com';
-        const RTL_LANGS = ["ur"];
+    <!-- GOLD × FX DEFENSE CONVERGENCE -->
+    <div class="commodity-convergence-alert" id="commodityConvergenceGold" style="background:linear-gradient(135deg,rgba(250,204,21,0.18) 0%,rgba(202,138,4,0.18) 100%); border-color:#facc15;">
+        <div class="cca-title" data-i18n="cca_gold_title" style="color:#fde047;">🪙 Gold × FX Defense Convergence (Butterfly Build)</div>
+        <div class="cca-detail" data-i18n="cca_gold_detail" style="color:#fef9c3;">
+            India is the world's #2 gold consumer (~$72B annual imports, 90%+ imported). PM Modi's May 2026 call to suspend gold purchases for one year is classified by Asifah as <strong>defensive statecraft under balance-of-payments pressure</strong> — downstream of sustained Iran-US friction at the Strait of Hormuz expanding India's oil import bill against a strong dollar. Watch the gold import duty in the next 60–90 days as the next rung on the escalation ladder.
+        </div>
+    </div>
 
-        // Theme
-        function initTheme() {
-            const savedTheme = localStorage.getItem('asifah-theme') || 'light';
-            document.documentElement.setAttribute('data-theme', savedTheme);
+    <!-- OIL × HORMUZ -->
+    <div class="commodity-convergence-alert" id="commodityConvergenceOil" style="background:linear-gradient(135deg,rgba(239,68,68,0.18) 0%,rgba(249,115,22,0.18) 100%);">
+        <div class="cca-title" data-i18n="cca_oil_title">⚡ Oil × Strait of Hormuz Convergence</div>
+        <div class="cca-detail" data-i18n="cca_oil_detail">
+            India imports ~85% of its crude. Sustained Brent above $85/bbl driven by Iran-US tension at Hormuz is the upstream stressor on India's current macro position. Hormuz handles roughly 20% of global oil flow — disruption translates directly into India's import bill, rupee weakness, and FX-reserve drawdown.
+        </div>
+    </div>
+
+    <div class="commodity-alert-banner" id="commodityAlertBanner"></div>
+
+    <div class="commodity-grid" id="commodityGrid">
+        <div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:20px; font-size:12px;" data-i18n="commodity_loading">⏳ Loading commodity exposure tiles…</div>
+    </div>
+
+    <div class="commodity-top-signals" id="commodityTopSignals" style="display:none;">
+        <div class="ts-title" data-i18n="ts_title">📰 Top signals (last 24h)</div>
+        <div id="commodityTopSignalsList"></div>
+    </div>
+
+    <div class="strategic-linkage" data-i18n-html="strategic_linkage">
+        <strong>🎯 Strategic Linkage:</strong> India is structurally exposed to commodity pressure on three axes simultaneously: (1) <strong>crude oil</strong> (~85% imported, Brent-sensitive, Middle East volatility multiplier), (2) <strong>gold</strong> (~90% imported, ~$72B annual bill, FX-defense lever), and (3) <strong>fertilizer/potash</strong> (food security and farmer politics). When upstream stressors stack — Iran-Hormuz tension, Fed tightening, India-China friction — the pressure absorbs through the rupee, the FX reserves, and ultimately through head-of-state rhetoric directed at consumer behavior. Modi's May 2026 gold call is the canonical example of this absorption pattern in action. Watch RBI gold accumulation, INR/USD breaking 88, FX reserves below $580B, and any duty-policy signaling from Sitharaman or Goyal.
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ STABILITY SCORE PLACEHOLDER ════════════════════════════════════════════════════════════ -->
+<div class="metric-card">
+    <div class="subsection-title" data-i18n="stability_card_title">🇮🇳 India Stability Index</div>
+    <div class="stability-score-row">
+        <div class="stability-score-big" id="stabilityScore">--</div>
+        <span id="stabilityLevelLabel" class="stability-label level-0" data-i18n="stability_pending">Pending</span>
+    </div>
+    <div style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:14px; line-height:1.55;" data-i18n-html="stability_card_text">
+        Multi-factor stability assessment combining LAC posture (India-China), Kashmir &amp; Pakistan dynamics, internal cohesion (Naxalite/communal/electoral), Indo-Pacific posture, and economic statecraft (rupee, FX reserves, import-bill pressure).<br><br><em style="color:var(--text-muted);">Detailed stability backend (india_stability.py) is in development. Until then, draw inferences from the Leader Signals + commodity card above and the Knowledge Library below. When the India Rhetoric Tracker ships (next), this card will populate with a theatre score (inbound + outbound max levels).</em>
+    </div>
+    <div class="metric-meta">
+        <span data-i18n="meta_mil_posture">Military Posture: <strong>—</strong></span>
+        <span data-i18n="meta_rhetoric">Rhetoric Tier: <strong>—</strong></span>
+        <span data-i18n="meta_commodity">Commodity Pressure: <strong>—</strong></span>
+        <span data-i18n="meta_alert">Alert Level: <strong>—</strong></span>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ INTERNAL PRESSURE TILES (static, scaffolds india_stability.py) ════════════════════════════════════════════════════════════ -->
+<div class="metric-card">
+    <div class="subsection-title" data-i18n="internal_pressure_title">🪙 Macro &amp; FX Pressure Snapshot</div>
+    <div style="font-size:11.5px; color:var(--text-secondary); margin-bottom:14px; line-height:1.55;" data-i18n="internal_pressure_intro">
+        Snapshot indicators relevant to economic-absorption analysis. These are static reference values today; live API wiring lands with india_stability.py in the next build phase.
+    </div>
+    <div class="pressure-grid">
+        <div class="pressure-tile">
+            <div class="pt-label"><span data-i18n="pt_inr_label">INR / USD</span><span class="pt-status warning" data-i18n="pt_inr_status">Warning</span></div>
+            <div class="pt-value" data-i18n="pt_inr_value">~83.5</div>
+            <div class="pt-meta" data-i18n="pt_inr_meta">Rupee under pressure from Brent +Fed strength. Watch 85 / 88 thresholds.</div>
+            <div class="pt-source">Source: RBI reference rate · data_as_of: May 2026</div>
+        </div>
+        <div class="pressure-tile">
+            <div class="pt-label"><span data-i18n="pt_fx_label">FX Reserves</span><span class="pt-status elevated" data-i18n="pt_fx_status">Elevated</span></div>
+            <div class="pt-value" data-i18n="pt_fx_value">~$640B</div>
+            <div class="pt-meta" data-i18n="pt_fx_meta">Healthy by historical standards. Stress threshold ~$580B per 1991 analog.</div>
+            <div class="pt-source">Source: RBI Weekly Statistical Supplement · data_as_of: May 2026</div>
+        </div>
+        <div class="pressure-tile">
+            <div class="pt-label"><span data-i18n="pt_oil_label">Oil Import Dependency</span><span class="pt-status stress" data-i18n="pt_oil_status">Stress</span></div>
+            <div class="pt-value" data-i18n="pt_oil_value">~85%</div>
+            <div class="pt-meta" data-i18n="pt_oil_meta">India imports ~4.7M bpd. Every $10 in Brent ≈ $15B added to annual bill.</div>
+            <div class="pt-source">Source: PPAC, Petroleum Planning &amp; Analysis Cell · 2024–25</div>
+        </div>
+        <div class="pressure-tile">
+            <div class="pt-label"><span data-i18n="pt_gold_label">Gold Import Bill</span><span class="pt-status elevated" data-i18n="pt_gold_status">Elevated</span></div>
+            <div class="pt-value" data-i18n="pt_gold_value">~$72B / yr</div>
+            <div class="pt-meta" data-i18n="pt_gold_meta">~90%+ imported. Modi's May 2026 jawboning call targets this directly as discretionary FX defense.</div>
+            <div class="pt-source">Source: Ministry of Commerce · India Bullion &amp; Jewellers Assn · 2024</div>
+        </div>
+        <div class="pressure-tile">
+            <div class="pt-label"><span data-i18n="pt_gdp_label">GDP Growth (RBI proj.)</span><span class="pt-status normal" data-i18n="pt_gdp_status">Normal</span></div>
+            <div class="pt-value" data-i18n="pt_gdp_value">~6.5–7.0%</div>
+            <div class="pt-meta" data-i18n="pt_gdp_meta">Robust real-economy growth provides macro buffer against external shocks.</div>
+            <div class="pt-source">Source: RBI Monetary Policy Statement · April 2026</div>
+        </div>
+        <div class="pressure-tile">
+            <div class="pt-label"><span data-i18n="pt_cpi_label">CPI Inflation</span><span class="pt-status warning" data-i18n="pt_cpi_status">Warning</span></div>
+            <div class="pt-value" data-i18n="pt_cpi_value">~5.0%</div>
+            <div class="pt-meta" data-i18n="pt_cpi_meta">Above RBI 4% target. Food and fuel components most sensitive to FX pass-through.</div>
+            <div class="pt-source">Source: MoSPI · India CPI Combined · April 2026</div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ MAP SECTION ════════════════════════════════════════════════════════════ -->
+<div class="map-section">
+    <h2>🗺️ <span data-i18n="map_title">India — Strategic Overview</span></h2>
+    <div class="map-subtitle" data-i18n="map_subtitle">Interactive map centered on New Delhi. Key monitoring zones: India-China LAC (Ladakh, Arunachal), Line of Control (Kashmir), naval theaters (Andaman Sea, Arabian Sea, Bay of Bengal), and economic chokepoints (Mumbai, Chennai ports, Bengaluru tech hub).</div>
+    <div id="indiaMap"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ KNOWLEDGE LIBRARY (2-column responsive Gold Standard) ════════════════════════════════════════════════════════════ -->
+<div class="knowledge-library">
+    <h2>📚 <span data-i18n="kl_title">Knowledge Library</span></h2>
+    <p class="kl-disclaimer" data-i18n="kl_disclaimer">Background information compiled from open-source research, think-tank analyses, and public government reporting. One-pager documents for each category are under development.</p>
+
+    <div class="knowledge-categories">
+
+        <!-- 1. India-China Border & LAC -->
+        <div class="knowledge-card collapsed" id="card-china_border">
+            <div class="knowledge-header" onclick="toggleCard('china_border')">
+                <div class="knowledge-header-title"><span class="category-icon">🏔️</span><span data-i18n="kl_china_title">India-China Border &amp; LAC</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content" data-i18n-html="kl_china_content">
+                <p>The <strong>Line of Actual Control (LAC)</strong> stretches roughly 3,488 km along contested India-China frontier from Ladakh to Arunachal Pradesh. Following the 2020 Galwan clash and partial disengagement agreements through 2024, posture remains <strong>elevated but managed</strong>.</p>
+                <ul>
+                    <li><strong>Eastern Ladakh:</strong> Buffer zones established at Galwan, Hot Springs, Gogra. Patrolling resumed at Demchok and Depsang in late 2024 per Modi-Xi BRICS understanding.</li>
+                    <li><strong>Arunachal Pradesh:</strong> China continues to refer to the region as "Zangnan"; periodic name-list publications and infrastructure development on the Tibetan side persist.</li>
+                    <li><strong>Infrastructure race:</strong> Both sides have built all-weather roads, airfields, and forward bases. India's Nyoma airfield and Tawang sector reinforcement match PLA's G695 highway and Yarlung Zangbo dam projects.</li>
+                    <li><strong>Trade dependence:</strong> India runs a ~$85B trade deficit with China. Decoupling rhetoric is constrained by pharma APIs, electronics components, and rare earth dependencies.</li>
+                </ul>
+                <p style="font-size:10px; color:var(--text-muted); font-style:italic;">Sources: MEA briefings, IISS Military Balance 2024, ORF, Brookings India, Carnegie India.</p>
+            </div>
+        </div>
+
+        <!-- 2. Kashmir & Pakistan -->
+        <div class="knowledge-card collapsed" id="card-kashmir">
+            <div class="knowledge-header" onclick="toggleCard('kashmir')">
+                <div class="knowledge-header-title"><span class="category-icon">⚔️</span><span data-i18n="kl_kashmir_title">Kashmir &amp; Pakistan Tensions</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content" data-i18n-html="kl_kashmir_content">
+                <p>The <strong>Line of Control (LoC)</strong> separates Indian-administered Jammu &amp; Kashmir from Pakistan-administered Kashmir. Following India's August 2019 revocation of Article 370 special status, tensions structurally elevated. The 2021 LoC ceasefire understanding has largely held but remains fragile.</p>
+                <ul>
+                    <li><strong>Article 370 (revoked Aug 2019):</strong> J&amp;K reorganized into two Union Territories; full integration into the Indian constitutional framework. Pakistan downgraded diplomatic and trade ties in response.</li>
+                    <li><strong>Internal security:</strong> Targeted-killing campaigns against minorities and security forces continued through 2022–2024. Tourism rebounded in Kashmir Valley; Amarnath Yatra resumed at scale.</li>
+                    <li><strong>Pakistan instability:</strong> PTI–Imran Khan vs. army-establishment confrontation has limited Islamabad's external bandwidth; economic crisis and IMF dependency further constrain Pakistani escalation options.</li>
+                    <li><strong>Cross-border terrorism:</strong> Pulwama (2019) and Pahalgam-class incidents remain the inflection points capable of triggering rapid escalation cycles.</li>
+                </ul>
+                <p style="font-size:10px; color:var(--text-muted); font-style:italic;">Sources: South Asia Terrorism Portal, ORF, Asia Society, USIP, MEA statements.</p>
+            </div>
+        </div>
+
+        <!-- 3. Internal Security & Politics -->
+        <div class="knowledge-card collapsed" id="card-internal">
+            <div class="knowledge-header" onclick="toggleCard('internal')">
+                <div class="knowledge-header-title"><span class="category-icon">🏛️</span><span data-i18n="kl_internal_title">Internal Security &amp; Political Dynamics</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content" data-i18n-html="kl_internal_content">
+                <p>India's domestic stability rests on the cohesion of its federal system, the strength of the BJP-led NDA coalition under Modi's third term (2024–), and management of communal, agrarian, and northeastern tensions.</p>
+                <ul>
+                    <li><strong>2024 election outcome:</strong> BJP returned to power but lost its outright majority, governing in coalition with TDP (Andhra Pradesh) and JD-U (Bihar). Increased intra-coalition negotiation has constrained certain unilateral policy moves.</li>
+                    <li><strong>Naxalite/Maoist insurgency:</strong> Reduced from peak ~2010 levels but persists across Chhattisgarh, Jharkhand, and Odisha "Red Corridor." Affected districts down from 200+ to under 40.</li>
+                    <li><strong>Northeast dynamics:</strong> Manipur ethnic violence (Meitei vs. Kuki, 2023–) remains unresolved despite repeated central interventions. Mizoram and Nagaland comparatively calm.</li>
+                    <li><strong>Communal tensions:</strong> Periodic flashpoints around contested religious sites (Gyanvapi, Ayodhya consecration), CAA implementation, and electoral cycles. Generally contained but episodic.</li>
+                </ul>
+                <p style="font-size:10px; color:var(--text-muted); font-style:italic;">Sources: Election Commission of India, Ministry of Home Affairs reports, Carnegie India, Pew Research Center.</p>
+            </div>
+        </div>
+
+        <!-- 4. Indo-Pacific & QUAD -->
+        <div class="knowledge-card collapsed" id="card-indo_pacific">
+            <div class="knowledge-header" onclick="toggleCard('indo_pacific')">
+                <div class="knowledge-header-title"><span class="category-icon">🌊</span><span data-i18n="kl_indo_title">Indo-Pacific Strategy &amp; QUAD</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content" data-i18n-html="kl_indo_content">
+                <p>India's Indo-Pacific posture balances strategic partnership with the United States, Japan, and Australia through the <strong>Quadrilateral Security Dialogue (QUAD)</strong> against its long-standing tradition of strategic autonomy and its energy relationship with Russia.</p>
+                <ul>
+                    <li><strong>QUAD:</strong> Annual summits since 2021. Working groups on critical &amp; emerging tech, climate, infrastructure, health, and maritime domain awareness. India consistently resists formal alliance framing.</li>
+                    <li><strong>BECA / LEMOA / COMCASA:</strong> Three foundational defense agreements with the US enabling interoperability, geospatial sharing, and secure communications. Major Defense Partner status since 2016.</li>
+                    <li><strong>Russia tension:</strong> India continues purchasing discounted Russian oil despite Western pressure; S-400 deliveries completed. Russia is India's largest defense supplier historically — diversification toward US, France, and Israel is accelerating.</li>
+                    <li><strong>Indian Ocean naval posture:</strong> INS Vikrant carrier operational; expanded Andaman &amp; Nicobar Command; basing arrangements with Mauritius (Agalega), Oman (Duqm), and France (Reunion).</li>
+                </ul>
+                <p style="font-size:10px; color:var(--text-muted); font-style:italic;">Sources: U.S. State Department, MEA briefings, SIPRI Arms Transfers Database, ORF, IISS Asia-Pacific Regional Security Assessment.</p>
+            </div>
+        </div>
+
+        <!-- 5. Economic Statecraft (NEW — Butterfly Build context card) -->
+        <div class="knowledge-card collapsed" id="card-econ_statecraft">
+            <div class="knowledge-header" onclick="toggleCard('econ_statecraft')">
+                <div class="knowledge-header-title"><span class="category-icon">🦋</span><span data-i18n="kl_econ_title">Economic Statecraft &amp; FX Defense</span></div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="knowledge-content" data-i18n-html="kl_econ_content">
+                <p>India's macro posture is structurally exposed to external commodity shocks via the <strong>oil &amp; gold import dependency chain</strong>. When upstream stressors stack — Middle East friction, Fed tightening — pressure absorbs through the rupee, FX reserves, and ultimately through head-of-state rhetoric directed at consumer behavior.</p>
+                <ul>
+                    <li><strong>FX defense lever — gold:</strong> India is the world's #2 gold consumer, ~$72B annual imports, 90%+ imported. Gold is the most price-elastic discretionary import India has — household demand can be meaningfully suppressed without immediate economic damage.</li>
+                    <li><strong>Modi May 2026 jawboning:</strong> Public call to suspend gold purchases for one year. Classified by Asifah as <strong>defensive statecraft under balance-of-payments pressure</strong> — verbal-only suppression preceding any formal duty hike. See the Leader Signals card above for the full absorption analysis.</li>
+                    <li><strong>Escalation ladder (1991 analog):</strong> Verbal jawboning → import duty hike (60–90 days) → tighter capital controls / LRS limits (3–6 months) → IMF-class consultation (well below threshold today, but the playbook is well-traveled).</li>
+                    <li><strong>Trigger conditions to watch:</strong> Brent sustained &gt; $90 for 30+ days · INR breaking 88/USD · FX reserves dropping below ~$580B. Any two firing simultaneously raises the probability of formal duty action within 30 days.</li>
+                </ul>
+                <p style="font-size:10px; color:var(--text-muted); font-style:italic;">Sources: RBI, Ministry of Commerce, World Gold Council, PPAC, Asifah Analytics absorption-signature framework (May 2026).</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ ARTICLES SECTION (tabbed: EN / ZH / JA / KO / Social) ════════════════════════════════════════════════════════════ -->
+<div class="articles-section">
+    <div class="section-title" data-i18n="articles_title">📰 Recent India, LAC &amp; Indo-Pacific Articles (Last 7 Days)</div>
+
+    <div class="tab-row">
+        <button class="tab-btn active" data-tab="all"     onclick="switchTab('all')"     data-i18n="tab_all">All <span class="tab-count" id="count-all">0</span></button>
+        <button class="tab-btn"        data-tab="en"      onclick="switchTab('en')"      data-i18n="tab_en">English <span class="tab-count" id="count-en">0</span></button>
+        <button class="tab-btn"        data-tab="zh"      onclick="switchTab('zh')"      data-i18n="tab_zh">中文 <span class="tab-count" id="count-zh">0</span></button>
+        <button class="tab-btn"        data-tab="ja"      onclick="switchTab('ja')"      data-i18n="tab_ja">日本語 <span class="tab-count" id="count-ja">0</span></button>
+        <button class="tab-btn"        data-tab="ko"      onclick="switchTab('ko')"      data-i18n="tab_ko">한국어 <span class="tab-count" id="count-ko">0</span></button>
+        <button class="tab-btn"        data-tab="social"  onclick="switchTab('social')"  data-i18n="tab_social">Social <span class="tab-count" id="count-social">0</span></button>
+    </div>
+
+    <div id="articlesContainer">
+        <div style="text-align:center; color:var(--text-muted); padding:30px; font-style:italic;" data-i18n="articles_loading">Loading articles…</div>
+    </div>
+</div>
+
+</div><!-- /main-content -->
+</div><!-- /page-with-sidebar -->
+
+<!-- ════════════════════════════════════════════════════════════ FOOTER ════════════════════════════════════════════════════════════ -->
+<div class="asifah-footer">
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h4 data-i18n="footer_methodology_title">Methodology</h4>
+            <p data-i18n="footer_methodology_text">Multi-factor stability assessment scaffolding integrating commodity exposure (oil, gold, fertilizer), Leader Signals (verbal interventions, classified offensive vs defensive), and (when live) rhetoric tracker score. Detailed India stability backend (india_stability.py) and India Rhetoric Tracker are in development as the next phases of the Butterfly Build.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer_sources_title">Data Sources</h4>
+            <p data-i18n="footer_sources_text">RSS (Reuters, The Hindu, Hindustan Times, Indian Express, Mint, Business Standard, NDTV), GDELT (EN / HI / UR queries), NewsAPI, Brave Search (tertiary fallback), Bluesky, Reddit (r/india, r/IndianModerate, r/IndianEconomy, r/IndianDefense). Static reference data sourced from RBI, MoSPI, PPAC, MEA, MoSF, Ministry of Commerce, World Gold Council, SIPRI, IISS, ORF, Carnegie India.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer_contact_title">Contact</h4>
+            <p data-i18n-html="footer_contact_text">Built by Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a><br>Inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a></p>
+        </div>
+    </div>
+    <div class="footer-disclaimer" data-i18n-html="footer_disclaimer">
+        <strong>⚠️ DISCLAIMER:</strong> This dashboard provides probability estimates based on open-source intelligence aggregation and algorithmic analysis. It does not constitute intelligence assessments, military advice, or policy recommendations. Stability indicators reflect media signal intensity and should not be interpreted as ground-truth predictions. Always consult authoritative sources for decision-making. Updated every ~12 hours · Not for operational use.
+    </div>
+    <div class="footer-support" data-i18n-html="footer_support_text">
+        If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">buy me a coffee</a>.
+    </div>
+    <div class="footer-copyright" data-i18n="footer_copyright_legal">© 2025-2026 Asifah Analytics. Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.</div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+// ════════════════════════════════════════════════════════════
+// INDIA STABILITY — Frontend Logic v2.0.0
+// EN / ZH / JA / KO i18n + Gold Standard commodity card + Leader Signals
+// Backends: Asia proxy (commodity + leader interventions) + ME (direct for thinktank if needed)
+// ════════════════════════════════════════════════════════════
+const ASIA_BACKEND = 'https://asifah-asia-backend.onrender.com';
+const ME_BACKEND   = 'https://asifah-backend.onrender.com';
+
+// ════════════════════════════════════════════════════════════
+// TRANSLATIONS — EN / ZH / JA / KO
+// ════════════════════════════════════════════════════════════
+const TRANSLATIONS = {
+    en: {
+        back_to_asia:'← Asia & Pacific',
+        page_title:'🇮🇳 INDIA STABILITY INDEX',
+        page_subtitle:'Multi-Factor Analysis: India-China LAC Posture · Kashmir & Pakistan Tensions · Indo-Pacific & QUAD · Economic Statecraft (FX Defense, Gold/Oil Import Dependency) · Internal Cohesion',
+        theme_label:'Theme',
+        loading_title:'Loading India Stability Data',
+        loading_progress:'Connecting to backend... This may take 20-40 seconds on cold cache.',
+        nav_dashboards:'Dashboards', nav_rhetoric:'Regional Rhetoric', nav_india:'India',
+        nav_africa:'🌍 Africa', nav_future:'🔒 Future', nav_asia_pacific:'🌏 Asia & Pacific',
+        nav_europe:'🌍 Europe', nav_me:'🕌 Middle East', nav_wha:'🌎 W. Hemisphere',
+        nav_commodities:'🛢️ Commodities', nav_military:'🎖️ Military Tracker', nav_gpi:'🌐 Global Pressure',
+        nav_rhetoric_me:'🕌 Middle East', nav_rhetoric_asia:'🌏 Asia',
+        nav_rhetoric_europe:'🌍 Europe', nav_rhetoric_wha:'🌎 W. Hemisphere',
+        nav_india_stability:'🇮🇳 India Stability', nav_here:'◉ You are here',
+        ww_caution_label:'⚠️ U.S. State Department — Worldwide Caution',
+        ww_caution_text:'Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.',
+        ww_caution_button:'VIEW CAUTION →',
+        travel_label:'U.S. State Department — India Travel Advisory',
+        travel_level:'LEVEL 2',
+        travel_text:"<strong style='color:#f59e0b;'>Exercise Increased Caution</strong> due to crime and terrorism. Reconsider travel to <strong>Jammu & Kashmir</strong> (excluding the Ladakh region and its capital Leh). Do not travel within 10 km of the <strong>India-Pakistan border</strong> or to <strong>central/east India</strong> due to Naxalite/Maoist insurgency.",
+        travel_button:'VIEW ADVISORY →',
+        rhetoric_placeholder_title:'📡 India Rhetoric & Coercion Tracker',
+        rhetoric_placeholder_subtitle:'Coming next: PMO · MEA · RBI · Armed Forces · Opposition · Mining/Energy · Cross-LAC dynamics — with Economic Absorption Signatures baked in day one.',
+        rhetoric_in_dev:'🔧 In Development',
+        lsf_fallback_badge:'Standby',
+        lsf_fallback_text:'<strong>No live data right now.</strong> The Leader Signals feed for India couldn\'t reach the Asia proxy. The signal class we track here is <em>jawboning</em>: verbal interventions by heads of state, finance ministers, and central bank governors that move commodity markets without formal policy action. Most recent recorded example for India — <strong>PM Modi (May 2026): publicly asked Indians to suspend gold purchases for one year</strong>, classified as defensive statecraft driven by FX defense pressure from sustained Iran/Hormuz oil pricing. Full details and absorption analysis return when the feed comes back online.',
+        stability_card_title:'🇮🇳 India Stability Index',
+        stability_pending:'Pending',
+        stability_card_text:'Multi-factor stability assessment combining LAC posture (India-China), Kashmir & Pakistan dynamics, internal cohesion (Naxalite/communal/electoral), Indo-Pacific posture, and economic statecraft (rupee, FX reserves, import-bill pressure).<br><br><em style="color:var(--text-muted);">Detailed stability backend (india_stability.py) is in development. Until then, draw inferences from the Leader Signals + commodity card above and the Knowledge Library below. When the India Rhetoric Tracker ships (next), this card will populate with a theatre score (inbound + outbound max levels).</em>',
+        meta_mil_posture:'Military Posture: <strong>—</strong>',
+        meta_rhetoric:'Rhetoric Tier: <strong>—</strong>',
+        meta_commodity:'Commodity Pressure: <strong>—</strong>',
+        meta_alert:'Alert Level: <strong>—</strong>',
+        commodity_title:'🛢️ Commodity Exposure & Strategic Pressure',
+        commodity_prose_loading:'Loading commodity exposure profile…',
+        commodity_loading:'⏳ Loading commodity exposure tiles…',
+        cca_gold_title:'🪙 Gold × FX Defense Convergence (Butterfly Build)',
+        cca_gold_detail:"India is the world's #2 gold consumer (~$72B annual imports, 90%+ imported). PM Modi's May 2026 call to suspend gold purchases for one year is classified by Asifah as <strong>defensive statecraft under balance-of-payments pressure</strong> — downstream of sustained Iran-US friction at the Strait of Hormuz expanding India's oil import bill against a strong dollar. Watch the gold import duty in the next 60–90 days as the next rung on the escalation ladder.",
+        cca_oil_title:'⚡ Oil × Strait of Hormuz Convergence',
+        cca_oil_detail:"India imports ~85% of its crude. Sustained Brent above $85/bbl driven by Iran-US tension at Hormuz is the upstream stressor on India's current macro position. Hormuz handles roughly 20% of global oil flow — disruption translates directly into India's import bill, rupee weakness, and FX-reserve drawdown.",
+        ts_title:'📰 Top signals (last 24h)',
+        strategic_linkage:"<strong>🎯 Strategic Linkage:</strong> India is structurally exposed to commodity pressure on three axes simultaneously: (1) <strong>crude oil</strong> (~85% imported, Brent-sensitive, Middle East volatility multiplier), (2) <strong>gold</strong> (~90% imported, ~$72B annual bill, FX-defense lever), and (3) <strong>fertilizer/potash</strong> (food security and farmer politics). When upstream stressors stack — Iran-Hormuz tension, Fed tightening, India-China friction — the pressure absorbs through the rupee, the FX reserves, and ultimately through head-of-state rhetoric directed at consumer behavior. Modi's May 2026 gold call is the canonical example of this absorption pattern in action. Watch RBI gold accumulation, INR/USD breaking 88, FX reserves below $580B, and any duty-policy signaling from Sitharaman or Goyal.",
+        internal_pressure_title:'🪙 Macro & FX Pressure Snapshot',
+        internal_pressure_intro:'Snapshot indicators relevant to economic-absorption analysis. These are static reference values today; live API wiring lands with india_stability.py in the next build phase.',
+        pt_inr_label:'INR / USD', pt_inr_status:'Warning', pt_inr_value:'~83.5', pt_inr_meta:'Rupee under pressure from Brent +Fed strength. Watch 85 / 88 thresholds.',
+        pt_fx_label:'FX Reserves', pt_fx_status:'Elevated', pt_fx_value:'~$640B', pt_fx_meta:'Healthy by historical standards. Stress threshold ~$580B per 1991 analog.',
+        pt_oil_label:'Oil Import Dependency', pt_oil_status:'Stress', pt_oil_value:'~85%', pt_oil_meta:'India imports ~4.7M bpd. Every $10 in Brent ≈ $15B added to annual bill.',
+        pt_gold_label:'Gold Import Bill', pt_gold_status:'Elevated', pt_gold_value:'~$72B / yr', pt_gold_meta:"~90%+ imported. Modi's May 2026 jawboning call targets this directly as discretionary FX defense.",
+        pt_gdp_label:'GDP Growth (RBI proj.)', pt_gdp_status:'Normal', pt_gdp_value:'~6.5–7.0%', pt_gdp_meta:'Robust real-economy growth provides macro buffer against external shocks.',
+        pt_cpi_label:'CPI Inflation', pt_cpi_status:'Warning', pt_cpi_value:'~5.0%', pt_cpi_meta:'Above RBI 4% target. Food and fuel components most sensitive to FX pass-through.',
+        map_title:'🗺️ India — Strategic Overview',
+        map_subtitle:'Interactive map centered on New Delhi. Key monitoring zones: India-China LAC (Ladakh, Arunachal), Line of Control (Kashmir), naval theaters (Andaman Sea, Arabian Sea, Bay of Bengal), and economic chokepoints (Mumbai, Chennai ports, Bengaluru tech hub).',
+        kl_title:'Knowledge Library',
+        kl_disclaimer:'Background information compiled from open-source research, think-tank analyses, and public government reporting. One-pager documents for each category are under development.',
+        kl_china_title:'India-China Border & LAC',
+        kl_kashmir_title:'Kashmir & Pakistan Tensions',
+        kl_internal_title:'Internal Security & Political Dynamics',
+        kl_indo_title:'Indo-Pacific Strategy & QUAD',
+        kl_econ_title:'Economic Statecraft & FX Defense',
+        articles_title:'📰 Recent India, LAC & Indo-Pacific Articles (Last 7 Days)',
+        articles_loading:'Loading articles…',
+        tab_all:'All', tab_en:'English', tab_zh:'中文', tab_ja:'日本語', tab_ko:'한국어', tab_social:'Social',
+        footer_methodology_title:'Methodology',
+        footer_methodology_text:'Multi-factor stability assessment scaffolding integrating commodity exposure (oil, gold, fertilizer), Leader Signals (verbal interventions, classified offensive vs defensive), and (when live) rhetoric tracker score. Detailed India stability backend (india_stability.py) and India Rhetoric Tracker are in development as the next phases of the Butterfly Build.',
+        footer_sources_title:'Data Sources',
+        footer_sources_text:'RSS (Reuters, The Hindu, Hindustan Times, Indian Express, Mint, Business Standard, NDTV), GDELT (EN / HI / UR queries), NewsAPI, Brave Search (tertiary fallback), Bluesky, Reddit (r/india, r/IndianModerate, r/IndianEconomy, r/IndianDefense). Static reference data sourced from RBI, MoSPI, PPAC, MEA, MoSF, Ministry of Commerce, World Gold Council, SIPRI, IISS, ORF, Carnegie India.',
+        footer_contact_title:'Contact',
+        footer_contact_text:'Built by Asifah Analytics — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a><br>Inquiries: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a>',
+        footer_disclaimer:'<strong>⚠️ DISCLAIMER:</strong> This dashboard provides probability estimates based on open-source intelligence aggregation and algorithmic analysis. It does not constitute intelligence assessments, military advice, or policy recommendations. Stability indicators reflect media signal intensity and should not be interpreted as ground-truth predictions. Always consult authoritative sources for decision-making. Updated every ~12 hours · Not for operational use.',
+        footer_support_text:'If you find Asifah Analytics useful and want to support ongoing development, you can ☕ <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">buy me a coffee</a>.',
+        footer_copyright_legal:'© 2025-2026 Asifah Analytics. Proprietary and Confidential. Unauthorized use, reproduction, or distribution prohibited.',
+    },
+    zh: {
+        back_to_asia:'← 亚洲与太平洋',
+        page_title:'🇮🇳 印度稳定指数',
+        page_subtitle:'多因素分析：中印实控线态势 · 克什米尔与巴基斯坦紧张局势 · 印太与四方安全对话 · 经济外交（外汇防御、黄金/石油进口依赖）· 内部凝聚力',
+        theme_label:'主题',
+        loading_title:'加载印度稳定数据中',
+        loading_progress:'正在连接后端... 冷缓存可能需要 20-40 秒。',
+        nav_dashboards:'仪表板', nav_rhetoric:'地区话语', nav_india:'印度',
+        nav_africa:'🌍 非洲', nav_future:'🔒 未来', nav_asia_pacific:'🌏 亚太',
+        nav_europe:'🌍 欧洲', nav_me:'🕌 中东', nav_wha:'🌎 西半球',
+        nav_commodities:'🛢️ 大宗商品', nav_military:'🎖️ 军事追踪', nav_gpi:'🌐 全球压力',
+        nav_rhetoric_me:'🕌 中东', nav_rhetoric_asia:'🌏 亚洲',
+        nav_rhetoric_europe:'🌍 欧洲', nav_rhetoric_wha:'🌎 西半球',
+        nav_india_stability:'🇮🇳 印度稳定', nav_here:'◉ 当前位置',
+        ww_caution_label:'⚠️ 美国国务院 — 全球警告',
+        ww_caution_text:'随着美国对伊朗发动军事行动，全球美国公民、特别是中东地区，应遵循最近美国使领馆的指导。',
+        ww_caution_button:'查看警告 →',
+        travel_label:'美国国务院 — 印度旅游警示',
+        travel_level:'二级',
+        travel_text:"<strong style='color:#f59e0b;'>请提高警惕</strong>，因犯罪和恐怖主义风险。建议<strong>重新考虑前往查谟和克什米尔</strong>（拉达克及其首府列城除外）。请勿前往<strong>印巴边境 10 公里以内</strong>或<strong>印度中部/东部</strong>，因纳萨尔派/毛派叛乱活动。",
+        travel_button:'查看警示 →',
+        rhetoric_placeholder_title:'📡 印度话语与胁迫追踪',
+        rhetoric_placeholder_subtitle:'即将上线：总理办公室 · 外交部 · 印度储备银行 · 武装部队 · 反对派 · 矿业/能源 · 跨实控线动态 — 自第一天起内置经济吸收特征。',
+        rhetoric_in_dev:'🔧 开发中',
+        lsf_fallback_badge:'待机',
+        lsf_fallback_text:'<strong>目前没有实时数据。</strong> 印度领导人信号源无法连接亚洲代理。我们在此追踪的信号类型是<em>口头干预</em>：国家元首、财政部长和央行行长在没有正式政策行动的情况下影响大宗商品市场的言论。最近印度的记录案例 — <strong>莫迪总理（2026年5月）：公开要求印度人暂停购买黄金一年</strong>，被分类为由伊朗/霍尔木兹海峡持续石油定价造成的外汇防御压力驱动的防御性国务。完整详情和吸收分析将在源恢复在线时返回。',
+        stability_card_title:'🇮🇳 印度稳定指数',
+        stability_pending:'待定',
+        stability_card_text:'多因素稳定评估，结合实控线态势（中印）、克什米尔与巴基斯坦动态、内部凝聚力（纳萨尔派/教派/选举）、印太态势及经济外交（卢比、外汇储备、进口账单压力）。<br><br><em style="color:var(--text-muted);">详细稳定后端（india_stability.py）正在开发中。在此之前，可从上方的领导人信号和大宗商品卡及下方的知识库中得出推论。当印度话语追踪器上线（下一步）时，此卡片将填充战区评分（入站+出站最高级别）。</em>',
+        meta_mil_posture:'军事态势： <strong>—</strong>',
+        meta_rhetoric:'话语等级： <strong>—</strong>',
+        meta_commodity:'大宗商品压力： <strong>—</strong>',
+        meta_alert:'警报级别： <strong>—</strong>',
+        commodity_title:'🛢️ 大宗商品敞口与战略压力',
+        commodity_prose_loading:'正在加载大宗商品敞口资料…',
+        commodity_loading:'⏳ 正在加载大宗商品敞口图块…',
+        cca_gold_title:'🪙 黄金 × 外汇防御汇合（蝴蝶建设）',
+        cca_gold_detail:"印度是全球第二大黄金消费国（年度进口约 720 亿美元，90%以上进口）。莫迪总理 2026 年 5 月要求暂停购买黄金一年的呼吁被 Asifah 归类为<strong>国际收支压力下的防御性国务</strong> — 源自伊朗-美国在霍尔木兹海峡的持续摩擦扩大了印度对强势美元的石油进口账单。请关注未来 60-90 天的黄金进口关税，作为升级阶梯上的下一档。",
+        cca_oil_title:'⚡ 石油 × 霍尔木兹海峡汇合',
+        cca_oil_detail:"印度约 85% 的原油为进口。伊朗-美国在霍尔木兹的紧张局势推动布伦特持续高于 85 美元/桶，是印度当前宏观状况的上游压力源。霍尔木兹处理约 20% 的全球石油流量 — 中断直接转化为印度的进口账单、卢比疲软和外汇储备消耗。",
+        ts_title:'📰 最近信号（24小时）',
+        strategic_linkage:"<strong>🎯 战略关联：</strong>印度同时在三个轴线上结构性暴露于大宗商品压力：（1）<strong>原油</strong>（约 85% 进口，对布伦特敏感，中东波动倍增器），（2）<strong>黄金</strong>（约 90% 进口，约 720 亿美元年度账单，外汇防御杠杆），以及（3）<strong>化肥/钾肥</strong>（粮食安全和农民政治）。当上游压力源叠加 — 伊朗-霍尔木兹紧张局势、美联储紧缩、中印摩擦 — 压力通过卢比、外汇储备，并最终通过针对消费者行为的国家元首言论吸收。莫迪 2026 年 5 月的黄金呼吁是这种吸收模式的典型案例。请关注印度储备银行的黄金积累、印度卢比/美元突破 88、外汇储备低于 5800 亿美元，以及来自西塔拉曼或戈亚尔的任何关税政策信号。",
+        internal_pressure_title:'🪙 宏观与外汇压力快照',
+        internal_pressure_intro:'与经济吸收分析相关的快照指标。这些是当今的静态参考值；实时 API 接入将随 india_stability.py 在下一建设阶段进行。',
+        pt_inr_label:'印度卢比/美元', pt_inr_status:'警告', pt_inr_value:'约 83.5', pt_inr_meta:'卢比受布伦特+美联储力量压力。请关注 85 / 88 阈值。',
+        pt_fx_label:'外汇储备', pt_fx_status:'升高', pt_fx_value:'约 6400 亿美元', pt_fx_meta:'按历史标准健康。压力阈值约 5800 亿美元（参照 1991 年）。',
+        pt_oil_label:'石油进口依赖', pt_oil_status:'紧张', pt_oil_value:'约 85%', pt_oil_meta:'印度进口约 470 万桶/日。布伦特每涨 10 美元约等于年度账单增加 150 亿美元。',
+        pt_gold_label:'黄金进口账单', pt_gold_status:'升高', pt_gold_value:'约 720 亿美元/年', pt_gold_meta:'约 90% 以上进口。莫迪 2026 年 5 月的口头干预直接针对此作为可自由处置的外汇防御。',
+        pt_gdp_label:'GDP 增长（印度储备银行预测）', pt_gdp_status:'正常', pt_gdp_value:'约 6.5–7.0%', pt_gdp_meta:'强劲的实体经济增长为外部冲击提供宏观缓冲。',
+        pt_cpi_label:'CPI 通胀', pt_cpi_status:'警告', pt_cpi_value:'约 5.0%', pt_cpi_meta:'高于印度储备银行 4% 目标。食品和燃料分项对外汇传导最敏感。',
+        map_title:'🗺️ 印度 — 战略概览',
+        map_subtitle:'以新德里为中心的交互式地图。关键监测区：中印实控线（拉达克、阿鲁纳恰尔）、控制线（克什米尔）、海军战场（安达曼海、阿拉伯海、孟加拉湾）以及经济咽喉点（孟买、金奈港口、班加罗尔科技中心）。',
+        kl_title:'知识库',
+        kl_disclaimer:'根据公开来源研究、智库分析和公开政府报告汇编的背景信息。每个类别的单页文档正在开发中。',
+        kl_china_title:'中印边界与实控线',
+        kl_kashmir_title:'克什米尔与巴基斯坦紧张局势',
+        kl_internal_title:'内部安全与政治动态',
+        kl_indo_title:'印太战略与四方安全对话',
+        kl_econ_title:'经济外交与外汇防御',
+        articles_title:'📰 最近印度、实控线和印太文章（过去 7 天）',
+        articles_loading:'正在加载文章…',
+        tab_all:'全部', tab_en:'英语', tab_zh:'中文', tab_ja:'日语', tab_ko:'韩语', tab_social:'社交',
+        footer_methodology_title:'方法论',
+        footer_methodology_text:'多因素稳定评估脚手架，整合大宗商品敞口（石油、黄金、化肥）、领导人信号（口头干预，分类为攻击性 vs 防御性），以及（上线后）话语追踪评分。详细的印度稳定后端（india_stability.py）和印度话语追踪器作为蝴蝶建设的下一阶段正在开发中。',
+        footer_sources_title:'数据来源',
+        footer_sources_text:'RSS（路透社、《印度教徒报》、《印度斯坦时报》、《印度快报》、Mint、Business Standard、NDTV）、GDELT（英语/印地语/乌尔都语查询）、NewsAPI、Brave 搜索（三级后备）、Bluesky、Reddit（r/india、r/IndianModerate、r/IndianEconomy、r/IndianDefense）。静态参考数据来源于印度储备银行、MoSPI、PPAC、外交部、MoSF、商务部、世界黄金协会、SIPRI、IISS、ORF、卡内基印度。',
+        footer_contact_title:'联系',
+        footer_contact_text:'由 Asifah Analytics 构建 — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a><br>咨询：<a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a>',
+        footer_disclaimer:'<strong>⚠️ 免责声明：</strong>本仪表板基于开源情报聚合和算法分析提供概率估计。它不构成情报评估、军事建议或政策建议。稳定指标反映媒体信号强度，不应被解释为基本事实预测。决策时请始终咨询权威来源。每约 12 小时更新一次 · 不用于运营。',
+        footer_support_text:'如果您觉得 Asifah Analytics 有用并希望支持持续开发，您可以 ☕ <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">请我喝杯咖啡</a>。',
+        footer_copyright_legal:'© 2025-2026 Asifah Analytics。专有和机密。禁止未经授权使用、复制或分发。',
+    },
+    ja: {
+        back_to_asia:'← アジア太平洋',
+        page_title:'🇮🇳 インド安定指数',
+        page_subtitle:'多要因分析：中印実効支配線の態勢 · カシミールとパキスタンの緊張 · インド太平洋とQUAD · 経済国政（外貨防衛、金/石油輸入依存）· 内部結束',
+        theme_label:'テーマ',
+        loading_title:'インド安定データを読み込み中',
+        loading_progress:'バックエンドに接続中... コールドキャッシュで20〜40秒かかる場合があります。',
+        nav_dashboards:'ダッシュボード', nav_rhetoric:'地域レトリック', nav_india:'インド',
+        nav_africa:'🌍 アフリカ', nav_future:'🔒 将来', nav_asia_pacific:'🌏 アジア太平洋',
+        nav_europe:'🌍 欧州', nav_me:'🕌 中東', nav_wha:'🌎 西半球',
+        nav_commodities:'🛢️ コモディティ', nav_military:'🎖️ 軍事追跡', nav_gpi:'🌐 グローバル圧力',
+        nav_rhetoric_me:'🕌 中東', nav_rhetoric_asia:'🌏 アジア',
+        nav_rhetoric_europe:'🌍 欧州', nav_rhetoric_wha:'🌎 西半球',
+        nav_india_stability:'🇮🇳 インド安定', nav_here:'◉ 現在地',
+        ww_caution_label:'⚠️ 米国務省 — 世界的警告',
+        ww_caution_text:'米国のイラン戦闘作戦開始を受けて、世界中、特に中東のアメリカ人は最寄りの米国大使館または領事館の指示に従ってください。',
+        ww_caution_button:'警告を見る →',
+        travel_label:'米国務省 — インド渡航勧告',
+        travel_level:'レベル 2',
+        travel_text:"<strong style='color:#f59e0b;'>注意の強化を実行</strong> 犯罪とテロのため。<strong>ジャンムー・カシミール</strong>（ラダック地域とその首都レーを除く）への渡航は再考してください。<strong>印パ国境から10km以内</strong>または<strong>インド中部/東部</strong>のナクサライト/マオイスト反乱地域には渡航しないでください。",
+        travel_button:'勧告を見る →',
+        rhetoric_placeholder_title:'📡 インドのレトリック・強要トラッカー',
+        rhetoric_placeholder_subtitle:'近日公開：首相府 · 外務省 · インド準備銀行 · 軍 · 野党 · 鉱業/エネルギー · 国境動態 — 初日から経済吸収特性を組み込み。',
+        rhetoric_in_dev:'🔧 開発中',
+        lsf_fallback_badge:'スタンバイ',
+        lsf_fallback_text:'<strong>現在ライブデータはありません。</strong> インドのリーダーシグナルフィードはアジアプロキシに接続できませんでした。ここで追跡しているシグナルクラスは<em>口頭介入</em>です：国家元首、財務大臣、中央銀行総裁による公式政策措置を伴わずに商品市場を動かす発言。インドの最新の記録例 — <strong>モディ首相（2026年5月）：インド人に金の購入を1年間停止するよう公式要請</strong>、Asifahは持続するイラン/ホルムズ海峡石油価格による外貨防衛圧力を駆動とする防御的国政と分類。フィードがオンラインに戻ると詳細と吸収分析が返ります。',
+        stability_card_title:'🇮🇳 インド安定指数',
+        stability_pending:'保留中',
+        stability_card_text:'実効支配線態勢（印中）、カシミール・パキスタン動向、内部結束（ナクサライト・宗派・選挙）、インド太平洋態勢、経済国政（ルピー、外貨準備、輸入請求書圧力）を組み合わせた多要因安定評価。<br><br><em style="color:var(--text-muted);">詳細な安定バックエンド（india_stability.py）は開発中です。それまでは、上記のリーダーシグナル+コモディティカードおよび下記のナレッジライブラリから推論を導出してください。インドのレトリックトラッカーが上線すると（次）、このカードには戦域スコア（入着+発信最高レベル）が入力されます。</em>',
+        meta_mil_posture:'軍事態勢： <strong>—</strong>',
+        meta_rhetoric:'レトリックレベル： <strong>—</strong>',
+        meta_commodity:'コモディティ圧力： <strong>—</strong>',
+        meta_alert:'警告レベル： <strong>—</strong>',
+        commodity_title:'🛢️ コモディティエクスポージャと戦略的圧力',
+        commodity_prose_loading:'コモディティエクスポージャプロファイルを読み込み中…',
+        commodity_loading:'⏳ コモディティエクスポージャタイルを読み込み中…',
+        cca_gold_title:'🪙 金 × 外貨防衛のコンバージェンス（バタフライビルド）',
+        cca_gold_detail:"インドは世界第2位の金消費国（年間輸入額約720億ドル、90%以上輸入）。モディ首相の2026年5月の1年間の金購入停止の呼びかけは、Asifahによって<strong>国際収支圧力下の防御的国政</strong>と分類されました — ホルムズ海峡でのイラン・米国の継続的摩擦により強いドルに対してインドの石油輸入請求書が拡大することの下流。今後60〜90日間の金輸入関税を、エスカレーションラダーの次の段階として注視してください。",
+        cca_oil_title:'⚡ 石油 × ホルムズ海峡のコンバージェンス',
+        cca_oil_detail:"インドは原油の約85%を輸入しています。ホルムズでのイラン・米国の緊張に駆動された85ドル/バレル以上の持続的ブレントは、インドの現在のマクロ状況の上流ストレッサーです。ホルムズは世界の石油流通の約20%を扱います — 中断は直接インドの輸入請求書、ルピー安、外貨準備の引き出しに変換されます。",
+        ts_title:'📰 最新シグナル（過去24時間）',
+        strategic_linkage:"<strong>🎯 戦略的リンク：</strong>インドは3つの軸で同時に構造的にコモディティ圧力にさらされています：（1）<strong>原油</strong>（約85%輸入、ブレント感応、中東ボラティリティ乗数）、（2）<strong>金</strong>（約90%輸入、年間請求書約720億ドル、外貨防衛レバー）、（3）<strong>肥料/カリ</strong>（食料安全保障と農家政治）。上流ストレッサーが積み重なると — イラン・ホルムズ緊張、FED引き締め、印中摩擦 — 圧力はルピー、外貨準備、最終的に消費者行動に向けられた国家元首のレトリックを通じて吸収されます。モディの2026年5月の金呼びかけは、この吸収パターンの典型例です。RBI金蓄積、INR/USD 88突破、外貨準備5800億ドル以下、シタラマンまたはゴヤルからの関税政策シグナルを注視してください。",
+        internal_pressure_title:'🪙 マクロ・外貨圧力スナップショット',
+        internal_pressure_intro:'経済吸収分析に関連するスナップショット指標。これらは今日の静的参照値です；ライブAPI配線はindia_stability.pyと共に次のビルドフェーズで実装されます。',
+        pt_inr_label:'インドルピー / 米ドル', pt_inr_status:'警告', pt_inr_value:'約83.5', pt_inr_meta:'ルピーはブレント+FEDの強さからの圧力下。85/88しきい値を注視。',
+        pt_fx_label:'外貨準備', pt_fx_status:'上昇', pt_fx_value:'約6400億ドル', pt_fx_meta:'歴史的基準では健全。ストレスしきい値は1991年類似で約5800億ドル。',
+        pt_oil_label:'石油輸入依存', pt_oil_status:'ストレス', pt_oil_value:'約85%', pt_oil_meta:'インドは約470万bpdを輸入。ブレント10ドル増ごとに年間請求書約150億ドル追加。',
+        pt_gold_label:'金輸入請求書', pt_gold_status:'上昇', pt_gold_value:'約720億ドル/年', pt_gold_meta:'約90%以上輸入。モディの2026年5月の口頭介入は、これを裁量的外貨防衛として直接ターゲット。',
+        pt_gdp_label:'GDP成長（RBI予測）', pt_gdp_status:'正常', pt_gdp_value:'約6.5〜7.0%', pt_gdp_meta:'堅調な実体経済成長が外的ショックに対するマクロバッファを提供。',
+        pt_cpi_label:'CPIインフレ', pt_cpi_status:'警告', pt_cpi_value:'約5.0%', pt_cpi_meta:'RBI 4%目標を上回る。食品と燃料コンポーネントが外貨パススルーに最も敏感。',
+        map_title:'🗺️ インド — 戦略概観',
+        map_subtitle:'ニューデリーを中心とするインタラクティブマップ。主要監視ゾーン：印中実効支配線（ラダック、アルナーチャル）、停戦ライン（カシミール）、海軍戦域（アンダマン海、アラビア海、ベンガル湾）、経済要衝（ムンバイ、チェンナイ港、ベンガルール技術ハブ）。',
+        kl_title:'ナレッジライブラリ',
+        kl_disclaimer:'オープンソース研究、シンクタンク分析、および公開政府報告からまとめた背景情報。各カテゴリのワンページャー文書は開発中です。',
+        kl_china_title:'印中国境と実効支配線',
+        kl_kashmir_title:'カシミールとパキスタン緊張',
+        kl_internal_title:'内部安全保障と政治動態',
+        kl_indo_title:'インド太平洋戦略とQUAD',
+        kl_econ_title:'経済国政と外貨防衛',
+        articles_title:'📰 最近のインド・実効支配線・インド太平洋記事（過去7日間）',
+        articles_loading:'記事を読み込み中…',
+        tab_all:'すべて', tab_en:'英語', tab_zh:'中国語', tab_ja:'日本語', tab_ko:'韓国語', tab_social:'ソーシャル',
+        footer_methodology_title:'方法論',
+        footer_methodology_text:'コモディティエクスポージャ（石油、金、肥料）、リーダーシグナル（口頭介入、攻撃的vs防御的に分類）、および（ライブ時）レトリックトラッカースコアを統合する多要因安定評価の足場。詳細なインド安定バックエンド（india_stability.py）とインドレトリックトラッカーは、バタフライビルドの次のフェーズとして開発中です。',
+        footer_sources_title:'データソース',
+        footer_sources_text:'RSS（ロイター、ザ・ヒンドゥー、ヒンドゥスタン・タイムズ、インディアン・エクスプレス、ミント、ビジネス・スタンダード、NDTV）、GDELT（EN/HI/URクエリ）、NewsAPI、Brave検索（三次フォールバック）、Bluesky、Reddit（r/india、r/IndianModerate、r/IndianEconomy、r/IndianDefense）。静的参照データはRBI、MoSPI、PPAC、MEA、MoSF、商務省、世界金協会、SIPRI、IISS、ORF、カーネギー・インドより。',
+        footer_contact_title:'連絡先',
+        footer_contact_text:'Asifah Analyticsが構築 — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a><br>お問い合わせ：<a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a>',
+        footer_disclaimer:'<strong>⚠️ 免責事項：</strong>このダッシュボードは、オープンソース情報の集約とアルゴリズム分析に基づく確率推定を提供します。情報評価、軍事的助言、または政策提言を構成するものではありません。安定指標はメディアシグナルの強度を反映するものであり、地上の真実の予測として解釈されるべきではありません。意思決定には常に権威ある情報源を参照してください。約12時間ごとに更新 · 業務用ではありません。',
+        footer_support_text:'Asifah Analyticsが役立ち、継続的な開発をサポートしたい場合は、☕ <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">コーヒーを買う</a>ことができます。',
+        footer_copyright_legal:'© 2025-2026 Asifah Analytics. 専有および機密。無許可の使用、複製、または配布は禁止されています。',
+    },
+    ko: {
+        back_to_asia:'← 아시아 태평양',
+        page_title:'🇮🇳 인도 안정 지수',
+        page_subtitle:'다요인 분석: 인도-중국 실질통제선 태세 · 카슈미르 및 파키스탄 긴장 · 인도태평양 및 쿼드 · 경제 국정(외환 방어, 금/석유 수입 의존도) · 내부 결속',
+        theme_label:'테마',
+        loading_title:'인도 안정 데이터 로드 중',
+        loading_progress:'백엔드에 연결 중... 콜드 캐시에서 20-40초 걸릴 수 있습니다.',
+        nav_dashboards:'대시보드', nav_rhetoric:'지역 레토릭', nav_india:'인도',
+        nav_africa:'🌍 아프리카', nav_future:'🔒 미래', nav_asia_pacific:'🌏 아시아 태평양',
+        nav_europe:'🌍 유럽', nav_me:'🕌 중동', nav_wha:'🌎 서반구',
+        nav_commodities:'🛢️ 원자재', nav_military:'🎖️ 군사 추적', nav_gpi:'🌐 글로벌 압력',
+        nav_rhetoric_me:'🕌 중동', nav_rhetoric_asia:'🌏 아시아',
+        nav_rhetoric_europe:'🌍 유럽', nav_rhetoric_wha:'🌎 서반구',
+        nav_india_stability:'🇮🇳 인도 안정', nav_here:'◉ 현재 위치',
+        ww_caution_label:'⚠️ 미국 국무부 — 전세계 경고',
+        ww_caution_text:'미국의 이란 전투작전 개시에 따라, 전 세계 미국인, 특히 중동 지역의 미국인은 가장 가까운 미국 대사관 또는 영사관의 안내를 따르십시오.',
+        ww_caution_button:'경고 보기 →',
+        travel_label:'미국 국무부 — 인도 여행 권고',
+        travel_level:'레벨 2',
+        travel_text:"<strong style='color:#f59e0b;'>범죄와 테러 위험으로 인해 주의를 강화</strong>하십시오. <strong>잠무 카슈미르</strong>(라다크 지역과 수도 레 제외) 여행을 재고하십시오. 낙살라이트/마오이스트 반란으로 인해 <strong>인도-파키스탄 국경 10km 이내</strong> 또는 <strong>인도 중부/동부</strong>로 여행하지 마십시오.",
+        travel_button:'권고 보기 →',
+        rhetoric_placeholder_title:'📡 인도 레토릭 및 강압 추적기',
+        rhetoric_placeholder_subtitle:'곧 출시: 총리실 · 외무부 · 인도 준비은행 · 군 · 야당 · 광업/에너지 · 국경 역학 — 첫날부터 경제 흡수 특성 내장.',
+        rhetoric_in_dev:'🔧 개발 중',
+        lsf_fallback_badge:'대기',
+        lsf_fallback_text:'<strong>현재 라이브 데이터가 없습니다.</strong> 인도의 리더 시그널 피드가 아시아 프록시에 연결할 수 없었습니다. 여기서 추적하는 시그널 클래스는 <em>구두 개입</em>입니다: 국가원수, 재무장관, 중앙은행 총재가 공식 정책 조치 없이 원자재 시장을 움직이는 발언. 인도의 최신 기록 예 — <strong>모디 총리(2026년 5월): 인도인들에게 1년간 금 구매를 중단하도록 공개적으로 요청</strong>, Asifah는 지속적인 이란/호르무즈 해협 석유 가격으로 인한 외환 방어 압력에 의한 방어적 국정으로 분류. 피드가 다시 온라인 상태가 되면 자세한 내용과 흡수 분석이 반환됩니다.',
+        stability_card_title:'🇮🇳 인도 안정 지수',
+        stability_pending:'보류 중',
+        stability_card_text:'실질통제선 태세(인도-중국), 카슈미르 및 파키스탄 역학, 내부 결속(낙살라이트/공동체/선거), 인도태평양 태세, 경제 국정(루피, 외환 보유고, 수입 청구서 압력)을 결합한 다요인 안정 평가.<br><br><em style="color:var(--text-muted);">상세한 안정 백엔드(india_stability.py)는 개발 중입니다. 그때까지는 위의 리더 시그널 + 원자재 카드와 아래의 지식 라이브러리에서 추론을 도출하십시오. 인도 레토릭 추적기가 출시되면(다음), 이 카드는 전역 점수(인바운드 + 아웃바운드 최대 레벨)로 채워집니다.</em>',
+        meta_mil_posture:'군사 태세: <strong>—</strong>',
+        meta_rhetoric:'레토릭 등급: <strong>—</strong>',
+        meta_commodity:'원자재 압력: <strong>—</strong>',
+        meta_alert:'경고 수준: <strong>—</strong>',
+        commodity_title:'🛢️ 원자재 노출 및 전략적 압력',
+        commodity_prose_loading:'원자재 노출 프로필 로드 중…',
+        commodity_loading:'⏳ 원자재 노출 타일 로드 중…',
+        cca_gold_title:'🪙 금 × 외환 방어 융합(나비 효과 빌드)',
+        cca_gold_detail:"인도는 세계 2위 금 소비국(연간 수입액 약 720억 달러, 90% 이상 수입)입니다. 모디 총리의 2026년 5월 1년간 금 구매 중단 호소는 Asifah에 의해 <strong>국제수지 압력 하의 방어적 국정</strong>으로 분류되었습니다 — 호르무즈 해협에서의 이란-미국의 지속적 마찰이 강한 달러에 대한 인도의 석유 수입 청구서를 확대하는 것의 하류. 향후 60~90일 동안의 금 수입 관세를 에스컬레이션 사다리의 다음 단계로 주시하십시오.",
+        cca_oil_title:'⚡ 석유 × 호르무즈 해협 융합',
+        cca_oil_detail:"인도는 원유의 약 85%를 수입합니다. 호르무즈에서의 이란-미국 긴장에 의해 추진된 85달러/배럴 이상의 지속적인 브렌트는 인도의 현재 거시적 상황의 상류 스트레서입니다. 호르무즈는 세계 석유 유통의 약 20%를 처리합니다 — 중단은 직접적으로 인도의 수입 청구서, 루피 약세, 외환 보유고 인출로 전환됩니다.",
+        ts_title:'📰 최근 신호(지난 24시간)',
+        strategic_linkage:"<strong>🎯 전략적 연결:</strong> 인도는 세 축에서 동시에 구조적으로 원자재 압력에 노출됩니다: (1) <strong>원유</strong>(약 85% 수입, 브렌트 민감, 중동 변동성 승수), (2) <strong>금</strong>(약 90% 수입, 연간 청구서 약 720억 달러, 외환 방어 레버), (3) <strong>비료/칼륨</strong>(식량 안보와 농민 정치). 상류 스트레서가 쌓일 때 — 이란-호르무즈 긴장, FED 긴축, 인도-중국 마찰 — 압력은 루피, 외환 보유고, 그리고 최종적으로 소비자 행동을 향한 국가원수 레토릭을 통해 흡수됩니다. 모디의 2026년 5월 금 호소는 이 흡수 패턴의 전형적인 예입니다. RBI 금 축적, INR/USD 88 돌파, 외환 보유고 5800억 달러 이하, 시타라만 또는 고얄로부터의 관세 정책 신호를 주시하십시오.",
+        internal_pressure_title:'🪙 거시 및 외환 압력 스냅샷',
+        internal_pressure_intro:'경제 흡수 분석과 관련된 스냅샷 지표. 이는 오늘의 정적 참조값입니다; 라이브 API 배선은 다음 빌드 단계에서 india_stability.py와 함께 도착합니다.',
+        pt_inr_label:'인도 루피 / 미국 달러', pt_inr_status:'경고', pt_inr_value:'약 83.5', pt_inr_meta:'루피는 브렌트 + FED 강세로부터의 압력 하에. 85/88 임계값 주시.',
+        pt_fx_label:'외환 보유고', pt_fx_status:'상승', pt_fx_value:'약 6400억 달러', pt_fx_meta:'역사적 기준으로 건전. 스트레스 임계값은 1991년 유사로 약 5800억 달러.',
+        pt_oil_label:'석유 수입 의존도', pt_oil_status:'스트레스', pt_oil_value:'약 85%', pt_oil_meta:'인도는 약 470만 bpd 수입. 브렌트 10달러 상승마다 연간 청구서에 약 150억 달러 추가.',
+        pt_gold_label:'금 수입 청구서', pt_gold_status:'상승', pt_gold_value:'약 720억 달러/년', pt_gold_meta:'약 90% 이상 수입. 모디의 2026년 5월 구두 개입은 이를 재량적 외환 방어로 직접 타겟팅.',
+        pt_gdp_label:'GDP 성장(RBI 예측)', pt_gdp_status:'정상', pt_gdp_value:'약 6.5~7.0%', pt_gdp_meta:'견조한 실물 경제 성장이 외부 충격에 대한 거시적 완충 제공.',
+        pt_cpi_label:'CPI 인플레이션', pt_cpi_status:'경고', pt_cpi_value:'약 5.0%', pt_cpi_meta:'RBI 4% 목표 초과. 식품 및 연료 구성 요소가 외환 패스스루에 가장 민감.',
+        map_title:'🗺️ 인도 — 전략 개요',
+        map_subtitle:'뉴델리를 중심으로 한 대화형 지도. 주요 모니터링 구역: 인도-중국 실질통제선(라다크, 아루나찰), 통제선(카슈미르), 해군 전구(안다만해, 아라비아해, 벵골만), 경제 요충지(뭄바이, 첸나이 항구, 벵갈루루 기술 허브).',
+        kl_title:'지식 라이브러리',
+        kl_disclaimer:'오픈소스 연구, 싱크탱크 분석 및 공개 정부 보고서에서 편집된 배경 정보. 각 카테고리의 한 페이지 문서가 개발 중입니다.',
+        kl_china_title:'인도-중국 국경 및 실질통제선',
+        kl_kashmir_title:'카슈미르 및 파키스탄 긴장',
+        kl_internal_title:'내부 안보 및 정치 역학',
+        kl_indo_title:'인도태평양 전략 및 쿼드',
+        kl_econ_title:'경제 국정 및 외환 방어',
+        articles_title:'📰 최근 인도, 실질통제선 및 인도태평양 기사(지난 7일)',
+        articles_loading:'기사 로드 중…',
+        tab_all:'전체', tab_en:'영어', tab_zh:'중국어', tab_ja:'일본어', tab_ko:'한국어', tab_social:'소셜',
+        footer_methodology_title:'방법론',
+        footer_methodology_text:'원자재 노출(석유, 금, 비료), 리더 시그널(공격적 vs 방어적으로 분류된 구두 개입), 그리고 (출시 시) 레토릭 추적 점수를 통합하는 다요인 안정 평가 스캐폴딩. 상세한 인도 안정 백엔드(india_stability.py)와 인도 레토릭 추적기는 나비 효과 빌드의 다음 단계로 개발 중입니다.',
+        footer_sources_title:'데이터 소스',
+        footer_sources_text:'RSS(로이터, 더 힌두, 힌두스탄 타임스, 인디언 익스프레스, 민트, 비즈니스 스탠다드, NDTV), GDELT(EN/HI/UR 쿼리), NewsAPI, Brave 검색(3차 폴백), Bluesky, Reddit(r/india, r/IndianModerate, r/IndianEconomy, r/IndianDefense). 정적 참조 데이터는 RBI, MoSPI, PPAC, MEA, MoSF, 상무부, 세계금협회, SIPRI, IISS, ORF, 카네기 인디아에서.',
+        footer_contact_title:'연락처',
+        footer_contact_text:'Asifah Analytics 제작 — <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a><br>문의: <a href="mailto:asifahanalytics@gmail.com" style="color:var(--accent);">asifahanalytics@gmail.com</a>',
+        footer_disclaimer:'<strong>⚠️ 면책 조항:</strong> 이 대시보드는 오픈소스 정보 집계 및 알고리즘 분석을 기반으로 한 확률 추정치를 제공합니다. 정보 평가, 군사 자문 또는 정책 권고를 구성하지 않습니다. 안정성 지표는 미디어 신호 강도를 반영하며 실측 예측으로 해석되어서는 안 됩니다. 의사 결정에는 항상 권위 있는 출처를 참조하십시오. 약 12시간마다 업데이트 · 운영용 아님.',
+        footer_support_text:'Asifah Analytics가 유용하고 지속적인 개발을 지원하고 싶다면, ☕ <a href="https://www.buymeacoffee.com/asifahanalytics" target="_blank">커피를 사주실 수 있습니다</a>.',
+        footer_copyright_legal:'© 2025-2026 Asifah Analytics. 독점 및 기밀. 무단 사용, 복제 또는 배포 금지.',
+    },
+};
+
+let currentLang = 'en';
+
+// ════════════════════════════════════════════════════════════
+// i18n SWITCHER
+// ════════════════════════════════════════════════════════════
+function switchLanguage(lang, btn) {
+    if (!TRANSLATIONS[lang]) return;
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    if (btn) btn.classList.add('active');
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (TRANSLATIONS[lang][key] !== undefined) el.textContent = TRANSLATIONS[lang][key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (TRANSLATIONS[lang][key] !== undefined) el.innerHTML = TRANSLATIONS[lang][key];
+    });
+}
+
+// ════════════════════════════════════════════════════════════
+// THEME TOGGLE
+// ════════════════════════════════════════════════════════════
+function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme');
+    const next = (cur === 'dark') ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem('asifah-theme', next); } catch(e){}
+}
+function initTheme() {
+    let saved = 'dark';
+    try { saved = localStorage.getItem('asifah-theme') || 'dark'; } catch(e){}
+    document.documentElement.setAttribute('data-theme', saved);
+}
+
+// ════════════════════════════════════════════════════════════
+// KNOWLEDGE CARD TOGGLE
+// ════════════════════════════════════════════════════════════
+function toggleCard(id) {
+    const card = document.getElementById(`card-${id}`);
+    if (card) card.classList.toggle('collapsed');
+}
+
+// ════════════════════════════════════════════════════════════
+// LEAFLET MAP
+// ════════════════════════════════════════════════════════════
+let indiaMap = null;
+function initIndiaMap() {
+    if (indiaMap) return;
+    if (typeof L === 'undefined') { console.warn('Leaflet not loaded'); return; }
+    indiaMap = L.map('indiaMap', { scrollWheelZoom: false }).setView([22.5, 80.5], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors', maxZoom: 18
+    }).addTo(indiaMap);
+
+    const markers = [
+        { name:'New Delhi (capital)',           coords:[28.6139, 77.2090], icon:'🏛️', note:'Seat of central government, MEA, RBI, military HQs.' },
+        { name:'Ladakh (LAC frontier)',         coords:[34.1526, 77.5770], icon:'🏔️', note:'India-China contested frontier; Galwan, Demchok, Depsang buffer zones.' },
+        { name:'Tawang (Arunachal)',            coords:[27.5862, 91.8594], icon:'🏔️', note:'Eastern LAC sector; subject of Chinese "Zangnan" claims.' },
+        { name:'Srinagar (Kashmir Valley)',     coords:[34.0837, 74.7973], icon:'⚔️', note:'Capital of J&K UT; tourism rebound, intermittent security incidents.' },
+        { name:'Line of Control sector',        coords:[33.7782, 74.3553], icon:'⚔️', note:'2021 ceasefire understanding largely holding but fragile.' },
+        { name:'Mumbai (financial / port)',     coords:[19.0760, 72.8777], icon:'⚓', note:'Largest container port + financial capital; Arabian Sea theater anchor.' },
+        { name:'Chennai (port + naval HQ ENC)', coords:[13.0827, 80.2707], icon:'⚓', note:'Eastern Naval Command; Bay of Bengal access; auto/manufacturing hub.' },
+        { name:'Bengaluru (tech / aerospace)',  coords:[12.9716, 77.5946], icon:'💻', note:'IT capital + ISRO + HAL aerospace cluster.' },
+        { name:'Andaman & Nicobar Command',     coords:[11.6234, 92.7265], icon:'🛡️', note:'Tri-services joint command; Indo-Pacific maritime domain awareness anchor.' },
+        { name:'Vizag (Eastern Fleet HQ)',      coords:[17.6868, 83.2185], icon:'🛡️', note:'INS Vikrant carrier-group ops; ballistic-missile submarine base.' },
+        { name:'Bastar / Red Corridor (CG)',    coords:[19.1071, 81.9535], icon:'🔥', note:'Residual Naxalite/Maoist activity; affected districts down from 200+ to <40.' },
+        { name:'Imphal (Manipur)',              coords:[24.8170, 93.9368], icon:'🔥', note:'Meitei–Kuki ethnic violence (2023–) ongoing despite central interventions.' },
+    ];
+    markers.forEach(m => {
+        L.marker(m.coords).addTo(indiaMap).bindPopup(`<strong>${m.icon} ${m.name}</strong><br><span style="font-size:11px;color:#475569;">${m.note}</span>`);
+    });
+}
+
+// ════════════════════════════════════════════════════════════
+// COMMODITY CARD — fetched from Asia proxy
+// ════════════════════════════════════════════════════════════
+async function fetchCommodityIndia() {
+    const url = `${ASIA_BACKEND}/api/asia/commodity/india`;
+    try {
+        const r = await fetch(url, { method:'GET' });
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const d = await r.json();
+        renderCommodityCard(d);
+    } catch(err) {
+        console.warn('Commodity fetch failed:', err);
+        renderCommodityFallback();
+    }
+}
+
+function renderCommodityCard(d) {
+    if (!d || d.success === false) { renderCommodityFallback(); return; }
+
+    // Prose
+    const proseEl = document.getElementById('commodityProse');
+    if (proseEl && d.prose) proseEl.innerHTML = d.prose;
+
+    // Alert banner
+    const ab = document.getElementById('commodityAlertBanner');
+    const alertLevel = (d.alert_level || 'normal').toLowerCase();
+    if (ab) {
+        ab.className = `commodity-alert-banner show alert-${alertLevel}`;
+        const pressure = d.commodity_pressure || 0;
+        ab.innerHTML = `<strong>📡 ${alertLevel.toUpperCase()}</strong> · Commodity pressure score: ${pressure}<span class="ab-meta">${(d.commodity_summaries||[]).length} commodities tracked</span>`;
+    }
+
+    // Convergence alerts always visible for India (Modi gold + Hormuz oil)
+    document.getElementById('commodityConvergenceGold')?.classList.add('active');
+    document.getElementById('commodityConvergenceOil')?.classList.add('active');
+
+    // Tiles
+    const grid = document.getElementById('commodityGrid');
+    const summaries = d.commodity_summaries || [];
+    if (grid && summaries.length) {
+        grid.innerHTML = summaries.map(c => renderCommodityPill(c, d.leader_interventions || [])).join('');
+    } else if (grid) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--text-muted);padding:20px;font-size:12px;">No commodity tiles available right now.</div>`;
+    }
+
+    // Top signals
+    const topSignals = d.top_signals || [];
+    if (topSignals.length) {
+        const tsList = document.getElementById('commodityTopSignalsList');
+        const tsWrap = document.getElementById('commodityTopSignals');
+        if (tsList && tsWrap) {
+            tsList.innerHTML = topSignals.slice(0, 5).map(s => `
+                <a href="${s.url || '#'}" target="_blank" rel="noopener">
+                    <span>${(s.short_text || s.title || s.text || 'Signal')}</span>
+                    <span class="ts-source"> · ${(s.source || '').toUpperCase()}</span>
+                </a>`).join('');
+            tsWrap.style.display = 'block';
         }
-        function toggleTheme() {
-            const current = document.documentElement.getAttribute('data-theme');
-            const next = current === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', next);
-            localStorage.setItem('asifah-theme', next);
-        }
-        initTheme();
+    }
+}
 
-        // Knowledge Library Toggle
-        function toggleKnowledgeCard(cardId) {
-            const card = document.getElementById('card-' + cardId);
-            if (card) card.classList.toggle('collapsed');
-        }
+function renderCommodityPill(c, interventions) {
+    const name  = c.name || c.commodity || 'Commodity';
+    const icon  = c.icon || '📊';
+    const rank  = c.rank_label || '';
+    const alert = (c.alert || 'normal').toLowerCase();
+    const role  = c.role || '';
+    const note  = c.note || '';
+    const sig   = c.signal_count || 0;
+    const price = (typeof c.price === 'number') ? `$${c.price.toFixed(2)}` : '—';
+    const delta = (typeof c.change_pct_1d === 'number')
+        ? `<span class="commodity-pill-delta ${c.change_pct_1d >= 0 ? 'up' : 'down'}">${c.change_pct_1d >= 0 ? '+' : ''}${c.change_pct_1d.toFixed(2)}%</span>`
+        : '';
+    // Sparkline (SVG mini-chart)
+    let sparkSvg = '';
+    if (Array.isArray(c.sparkline) && c.sparkline.length > 1) {
+        const vals = c.sparkline;
+        const mx = Math.max(...vals), mn = Math.min(...vals);
+        const rng = (mx - mn) || 1;
+        const pts = vals.map((v, i) => `${(i / (vals.length - 1)) * 100},${30 - ((v - mn) / rng) * 28}`).join(' ');
+        const isUp = vals[vals.length-1] >= vals[0];
+        sparkSvg = `<svg class="commodity-pill-spark-svg" viewBox="0 0 100 30" preserveAspectRatio="none"><polyline fill="none" stroke="${isUp ? '#22c55e' : '#ef4444'}" stroke-width="1.5" points="${pts}"/></svg>`;
+    }
+    // Intervention badge
+    const intervBadge = (interventions || []).some(iv => iv.commodity === (c.commodity_id || c.id))
+        ? `<span class="commodity-pill-intervention">🦋 Leader signal</span>` : '';
 
-        // Loading Overlay
-        let loadingStepIndex = 0;
-        let loadingInterval = null;
-        let loadingTimeout = null;
-        const STEP_COUNT = 5;
+    return `
+        <div class="commodity-pill">
+            <div class="commodity-pill-header">
+                <span class="commodity-pill-icon">${icon}</span>
+                <span class="commodity-pill-name">${name}</span>
+                ${rank ? `<span class="commodity-pill-rank">${rank}</span>` : ''}
+            </div>
+            <div class="commodity-pill-row">
+                <span class="commodity-pill-alert commodity-alert-${alert}">${alert}</span>
+                ${role ? `<span class="commodity-pill-role">${role}</span>` : ''}
+                <span class="commodity-pill-signals">${sig} signals</span>
+                ${intervBadge}
+            </div>
+            <div class="commodity-pill-spark">
+                <span class="commodity-pill-price">${price}</span>${delta}
+                ${sparkSvg}
+            </div>
+            ${note ? `<div class="commodity-pill-note">${note}</div>` : ''}
+        </div>`;
+}
 
-        function startLoadingProgress() {
-            const steps = Array.from({length: STEP_COUNT}, (_, i) => 'step' + (i + 1));
-            loadingInterval = setInterval(() => {
-                if (loadingStepIndex < steps.length - 1) {
-                    const cur = document.getElementById(steps[loadingStepIndex]);
-                    if (cur) { cur.classList.remove('active'); cur.classList.add('complete'); cur.querySelector('.step-icon').textContent = '\u2713'; }
-                    loadingStepIndex++;
-                    const next = document.getElementById(steps[loadingStepIndex]);
-                    if (next) next.classList.add('active');
-                }
-            }, 5000);
-            loadingTimeout = setTimeout(() => {
-                document.getElementById('loadingError').style.display = 'block';
-                document.getElementById('loadingError').textContent = '\u26A0\uFE0F Loading is taking longer than expected. Please wait or refresh.';
-            }, 60000);
-        }
+function renderCommodityFallback() {
+    const grid = document.getElementById('commodityGrid');
+    if (grid) {
+        grid.innerHTML = `
+            <div style="grid-column:1/-1; text-align:center; color:var(--text-muted); padding:20px; font-size:12px;">
+                ⚠️ Live commodity data temporarily unavailable. Showing static exposure profile only — see strategic linkage below.
+            </div>`;
+    }
+    document.getElementById('commodityConvergenceGold')?.classList.add('active');
+    document.getElementById('commodityConvergenceOil')?.classList.add('active');
+}
 
-        function hideLoadingOverlay() {
-            if (loadingInterval) clearInterval(loadingInterval);
-            if (loadingTimeout) clearTimeout(loadingTimeout);
-            document.querySelectorAll('.loading-step').forEach(step => {
-                step.classList.remove('active');
-                step.classList.add('complete');
-                step.querySelector('.step-icon').textContent = '\u2713';
-            });
-            setTimeout(() => {
-                const overlay = document.getElementById('loadingOverlay');
-                if (overlay) overlay.classList.add('hidden');
-            }, 500);
-        }
+// ════════════════════════════════════════════════════════════
+// LEADER SIGNALS FALLBACK MONITOR
+// If the Web Component fails or stays empty, show the static block.
+// ════════════════════════════════════════════════════════════
+async function probeLeaderSignals() {
+    const url = `${ASIA_BACKEND}/api/asia/leader-interventions/india`;
+    try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const d = await r.json();
+        const ct = (d && (d.intervention_count || (d.interventions || []).length)) || 0;
+        if (ct === 0) showLeaderFallback();
+    } catch(e) {
+        console.warn('Leader signals probe failed:', e);
+        showLeaderFallback();
+    }
+}
+function showLeaderFallback() {
+    document.getElementById('leaderSignalsFallback')?.classList.add('visible');
+}
 
-        // Fetch articles from backend
-        async function loadArticles() {
-            try {
-                const response = await fetch(BACKEND_URL + '/scan-india');
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                if (data.success && data.articles && data.articles.length > 0) {
-                    displayArticles(data.articles);
-                } else {
-                    await loadArticlesFallback();
-                }
-            } catch (error) {
-                console.warn('Primary endpoint failed:', error.message);
-                await loadArticlesFallback();
-            }
-        }
+// ════════════════════════════════════════════════════════════
+// ARTICLES TABS — fetched from Asia proxy (commodity-pressure top_signals + future india threat endpoint)
+// For v1 we render from commodity-pressure top_signals; india-stability backend wires later.
+// ════════════════════════════════════════════════════════════
+let ARTICLES = { all:[], en:[], zh:[], ja:[], ko:[], social:[] };
+let currentTab = 'all';
 
-        async function loadArticlesFallback() {
-            try {
-                const q = encodeURIComponent('India');
-                const response = await fetch(BACKEND_URL + '/scan-osint?q=' + q);
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                const data = await response.json();
-                if (data.articles && data.articles.length > 0) {
-                    displayArticles(data.articles);
-                } else {
-                    displayArticlesFallbackStatic();
-                }
-            } catch (error) {
-                console.warn('Fallback also failed:', error.message);
-                displayArticlesFallbackStatic();
-            }
-        }
-
-        function displayArticles(articles) {
-            const container = document.getElementById('articlesContainer');
-            if (!articles || articles.length === 0) { displayArticlesFallbackStatic(); return; }
-            container.innerHTML = articles.slice(0, 20).map(article => {
-                const title = article.title || 'Untitled';
-                const source = article.source || article.source_name || '';
-                const published = article.published || article.publishedAt || article.date || '';
-                const url = article.url || article.link || '#';
-                const description = article.description || '';
-                let dateStr = 'Recent';
-                if (published) {
-                    try { dateStr = new Date(published).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
-                    catch(e) { dateStr = published; }
-                }
-                return '<div class="article-item">' +
-                    '<div class="article-title">' + title + '</div>' +
-                    (description ? '<div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px; line-height:1.5;">' + description.substring(0, 200) + (description.length > 200 ? '...' : '') + '</div>' : '') +
-                    '<div class="article-meta">' + source + ' &bull; ' + dateStr + '</div>' +
-                    (url !== '#' ? '<a href="' + url + '" target="_blank" class="article-link">Read article &rarr;</a>' : '') +
-                    '</div>';
-            }).join('');
-        }
-
-        function displayArticlesFallbackStatic() {
-            const container = document.getElementById('articlesContainer');
-            container.innerHTML =
-                '<div style="text-align:center; padding:30px; color:var(--text-secondary);">' +
-                '<p style="font-size:16px; margin-bottom:15px;">&#x1F4E1; Live article feed loading for India.</p>' +
-                '<p style="font-size:13px; margin-bottom:20px;">Check these curated OSINT sources:</p>' +
-                '<div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:15px;">' +
-                '<a href="https://www.reuters.com/world/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Reuters - World</a>' +
-                '<a href="https://www.aljazeera.com/asia-pacific/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">Al Jazeera - Asia</a>' +
-                '<a href="https://thediplomat.com/" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">The Diplomat</a>' +
-                '<a href="https://www.acleddata.com/dashboard/#/dashboard" target="_blank" style="padding:10px 18px; background:var(--accent); color:white; border-radius:6px; text-decoration:none; font-size:13px; font-weight:bold;">ACLED Dashboard</a>' +
-                '</div>' +
-                '</div>';
-        }
-
-        // Translation system
-        const translations = {
-            en: {"pageTitle": "🇮🇳 INDIA STABILITY INDEX", "pageSubtitle": "Multi-Factor Analysis: China & Pakistan Border Tensions, Kashmir Conflict, Internal Security & Regional Power Competition", "backLink": "← Back to Dashboard", "themeToggle": "Theme", "lastUpdated": "Last updated: ", "mapTitle": "India — Strategic Overview", "mapSubtitle": "Interactive map centered on New Delhi. Kashmir LoC and China LAC are key monitoring zones.", "knowledgeLibraryTitle": "Knowledge Library", "recentArticles": "📰 Recent India, Kashmir & Indo-Pacific Articles (Last 7 Days)"},
-            hi: {"pageTitle": "🇮🇳 भारत स्थिरता सूचकांक", "pageSubtitle": "बहु-कारक विश्लेषण: चीन और पाकिस्तान सीमा तनाव, कश्मीर संघर्ष, आंतरिक सुरक्षा", "backLink": "← डैशबोर्ड पर वापस", "themeToggle": "थीम", "lastUpdated": "अंतिम अपडेट: ", "mapTitle": "भारत — रणनीतिक अवलोकन", "mapSubtitle": "नई दिल्ली केंद्रित इंटरैक्टिव मानचित्र।", "knowledgeLibraryTitle": "ज्ञान पुस्तकालय", "recentArticles": "📰 भारत और कश्मीर पर हालिया लेख"},
-            ur: {"pageTitle": "🇮🇳 بھارت استحکام اشاریہ", "pageSubtitle": "کثیر عوامل تجزیہ: چین و پاکستان سرحدی کشیدگی، کشمیر تنازع، داخلی سلامتی", "backLink": "→ ڈیش بورڈ پر واپس", "themeToggle": "تھیم", "lastUpdated": "آخری تازہ کاری: ", "mapTitle": "بھارت — تزویراتی جائزہ", "mapSubtitle": "نئی دہلی مرکوز نقشہ۔", "knowledgeLibraryTitle": "علم کتب خانہ", "recentArticles": "📰 بھارت اور کشمیر پر حالیہ مضامین"},
-            zh: {"pageTitle": "🇮🇳 印度稳定指数", "pageSubtitle": "多因素分析：中印巴边境紧张、克什米尔冲突、内部安全", "backLink": "← 返回仪表板", "themeToggle": "主题", "lastUpdated": "最后更新：", "mapTitle": "印度 — 战略概览", "mapSubtitle": "以新德里为中心的交互式地图。", "knowledgeLibraryTitle": "知识库", "recentArticles": "📰 最新印度与克什米尔报道"}
-        };
-
-        function switchLanguage(lang, button) {
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            if (RTL_LANGS.includes(lang)) {
-                document.documentElement.setAttribute('dir', 'rtl');
-            } else {
-                document.documentElement.setAttribute('dir', 'ltr');
-            }
-
-            document.querySelectorAll('[data-i18n]').forEach(element => {
-                const key = element.getAttribute('data-i18n');
-                if (translations[lang] && translations[lang][key]) {
-                    if (key === 'lastUpdated' && element.id === 'lastUpdated') {
-                        const currentText = element.textContent;
-                        if (currentText.includes(':')) {
-                            const timestamp = currentText.split(': ').slice(1).join(': ');
-                            element.textContent = translations[lang][key] + timestamp;
-                        } else {
-                            element.textContent = translations[lang][key] + 'Loading...';
-                        }
-                    } else {
-                        element.textContent = translations[lang][key];
-                    }
-                }
-            });
-        }
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            startLoadingProgress();
-            document.getElementById('lastUpdated').textContent =
-                'Last updated: ' + new Date().toLocaleString('en-US', {
-                    month: 'short', day: 'numeric', year: 'numeric',
-                    hour: 'numeric', minute: '2-digit', hour12: true
-                });
-            loadArticles().then(() => {
-                hideLoadingOverlay();
-            }).catch(err => {
-                console.error('Error loading India data:', err);
-                hideLoadingOverlay();
-            });
+async function fetchArticles() {
+    try {
+        const r = await fetch(`${ASIA_BACKEND}/api/asia/commodity/india`);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const d = await r.json();
+        const top = d.top_signals || [];
+        // Distribute by language hint
+        top.forEach(s => {
+            const item = {
+                title: s.short_text || s.title || s.text || 'Signal',
+                url:   s.url || '#',
+                source:(s.source || '').toLowerCase(),
+                published: s.published || s.date || '',
+                lang:  (s.language || s.lang || 'en').toLowerCase(),
+            };
+            ARTICLES.all.push(item);
+            const socialSet = ['bluesky','telegram','reddit'];
+            if (socialSet.includes(item.source)) ARTICLES.social.push(item);
+            else if (item.lang === 'zh') ARTICLES.zh.push(item);
+            else if (item.lang === 'ja') ARTICLES.ja.push(item);
+            else if (item.lang === 'ko') ARTICLES.ko.push(item);
+            else ARTICLES.en.push(item);
         });
-    </script>
+        updateCounts(); renderTab(currentTab);
+    } catch(err) {
+        console.warn('Article fetch failed:', err);
+        const container = document.getElementById('articlesContainer');
+        if (container) container.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:30px;font-style:italic;">⚠️ Articles temporarily unavailable.</div>`;
+    }
+}
+
+function updateCounts() {
+    ['all','en','zh','ja','ko','social'].forEach(k => {
+        const el = document.getElementById(`count-${k}`);
+        if (el) el.textContent = (ARTICLES[k] || []).length;
+    });
+}
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.tab-btn[data-tab="${tab}"]`)?.classList.add('active');
+    renderTab(tab);
+}
+
+function renderTab(tab) {
+    const container = document.getElementById('articlesContainer');
+    if (!container) return;
+    const items = ARTICLES[tab] || [];
+    if (!items.length) {
+        container.innerHTML = `<div style="text-align:center;color:var(--text-muted);padding:30px;font-style:italic;">No articles in this tab yet.</div>`;
+        return;
+    }
+    container.innerHTML = items.slice(0, 30).map(a => `
+        <div class="article-item">
+            <div class="article-title"><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></div>
+            <div class="article-meta">
+                <span class="source-pill source-${a.source || 'rss'}">${(a.source || 'RSS').toUpperCase()}</span>
+                ${a.published ? `<span>${a.published}</span>` : ''}
+                ${a.lang ? `<span>${a.lang.toUpperCase()}</span>` : ''}
+            </div>
+        </div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════
+// LAST-UPDATED + BOOT
+// ════════════════════════════════════════════════════════════
+function setLastUpdated() {
+    const el = document.getElementById('lastUpdated');
+    if (!el) return;
+    const t = new Date().toLocaleString();
+    el.textContent = `Last refreshed: ${t}`;
+}
+
+window.addEventListener('DOMContentLoaded', async () => {
+    initTheme();
+    switchLanguage('en', document.querySelector('.lang-btn.active'));
+
+    // Boot fetches in parallel
+    const tasks = [fetchCommodityIndia(), fetchArticles(), probeLeaderSignals()];
+    await Promise.allSettled(tasks);
+
+    // Map + last-updated + hide loading
+    initIndiaMap();
+    setLastUpdated();
+    setTimeout(() => document.getElementById('loadingOverlay')?.classList.add('hidden'), 500);
+});
+</script>
 </body>
 </html>
