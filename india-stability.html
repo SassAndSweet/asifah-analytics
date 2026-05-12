@@ -63,7 +63,189 @@ body::after  { content:''; position:fixed; top:0; left:0; right:0; bottom:0; bac
 .container { max-width:1800px; margin:0 auto; padding:0 20px; position:relative; z-index:1; }
 .page-with-sidebar { display:flex; flex-direction:row; gap:20px; align-items:flex-start; }
 .main-content { flex:1; min-width:0; }
-@media (max-width:1024px) { .page-with-sidebar { flex-direction:column; } }
+/* ════════════════════════════════════════════════════════════
+   MOBILE / TABLET RESPONSIVE STYLES — May 2026 Gold Standard
+   Breakpoints: 1024 (tablet flex) · 768 (tablet) · 480 (phone)
+   ════════════════════════════════════════════════════════════ */
+
+/* Hamburger button — hidden on desktop, visible on mobile */
+.mobile-menu-btn {
+    display: none;
+    background: rgba(56,189,248,0.10); border: 1px solid var(--card-border);
+    border-radius: 6px; padding: 6px 10px; cursor: pointer;
+    font-size: 18px; line-height: 1; color: var(--text-primary);
+    font-family: inherit;
+}
+.mobile-menu-btn:hover { border-color: var(--accent); background: rgba(56,189,248,0.20); }
+
+/* Mobile drawer (sidebar substitute) + backdrop */
+.mobile-drawer-backdrop {
+    display: none;
+    position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+    z-index: 9998; backdrop-filter: blur(2px);
+}
+.mobile-drawer-backdrop.open { display: block; }
+.mobile-drawer {
+    display: none;
+    position: fixed; top: 0; left: 0; bottom: 0;
+    width: 84%; max-width: 320px;
+    background: var(--card-bg); border-right: 2px solid var(--accent);
+    z-index: 9999; padding: 18px 16px;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+}
+.mobile-drawer.open { display: block; transform: translateX(0); }
+.mobile-drawer-close {
+    position: absolute; top: 10px; right: 10px;
+    background: transparent; border: 1px solid var(--card-border);
+    border-radius: 6px; width: 32px; height: 32px;
+    cursor: pointer; color: var(--text-primary); font-size: 16px;
+    line-height: 1; font-family: inherit;
+}
+.mobile-drawer-close:hover { border-color: var(--accent); color: var(--accent); }
+.mobile-drawer-title {
+    font-size: 14px; font-weight: 700; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1.5px;
+    margin: 0 0 14px 4px; padding-right: 40px;
+}
+
+/* ── BREAKPOINT: 1024px (tablet flex) ── */
+@media (max-width: 1024px) {
+    .page-with-sidebar { flex-direction: column; }
+    .nav-sidebar { width: 100%; position: static; max-height: none; }
+}
+
+/* ── BREAKPOINT: 768px (tablet portrait + landscape phone) ── */
+@media (max-width: 768px) {
+    .container { padding: 0 10px; }
+
+    /* Hide desktop sidebar, show hamburger */
+    .nav-sidebar { display: none; }
+    .mobile-menu-btn { display: inline-flex; align-items: center; gap: 6px; }
+
+    /* Header stacks vertically */
+    header { flex-direction: column; align-items: flex-start; gap: 12px; padding: 14px 16px; }
+    .header-logo-wrap { flex-direction: row; gap: 12px; align-items: center; width: 100%; justify-content: flex-start; }
+    .header-logo { height: 56px; }
+    .header-content { width: 100%; }
+    header h1 { font-size: 21px; line-height: 1.15; }
+    .subtitle { font-size: 12px; line-height: 1.45; }
+    .last-updated { font-size: 9px; }
+    .header-controls { width: 100%; flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; }
+    .language-switcher { flex-wrap: wrap; }
+    .lang-btn { padding: 4px 8px; font-size: 10px; }
+
+    /* Loading overlay text */
+    .loading-title { font-size: 14px; }
+    .loading-progress { font-size: 11px; padding: 0 16px; }
+
+    /* Advisory banners stack */
+    .advisory-row { flex-direction: column !important; align-items: stretch !important; gap: 10px !important; padding: 12px 14px !important; }
+    .advisory-row > a { align-self: flex-end; }
+
+    /* Rhetoric placeholder stacks */
+    .rhetoric-placeholder { flex-direction: column; align-items: flex-start; gap: 10px; padding: 12px 14px; }
+
+    /* Cards: tighter padding */
+    .metric-card,
+    .commodity-card,
+    .map-section,
+    .knowledge-library,
+    .articles-section,
+    .leader-signals-fallback { padding: 16px 14px; }
+
+    /* Stability score row */
+    .stability-score-big { font-size: 42px; min-width: 80px; }
+    .stability-label { font-size: 11px; padding: 4px 10px; }
+
+    /* Commodity grid: 1 column */
+    .commodity-grid { grid-template-columns: 1fr; }
+    .pressure-grid { grid-template-columns: 1fr; }
+
+    /* Map: shorter */
+    #indiaMap { height: 340px; }
+
+    /* Knowledge cards: 1 column */
+    .knowledge-categories { grid-template-columns: 1fr; }
+
+    /* Articles tabs wrap nicely */
+    .tab-row { gap: 4px; }
+    .tab-btn { padding: 5px 9px; font-size: 10px; }
+    .tab-count { font-size: 8px; padding: 1px 4px; }
+
+    /* Footer columns stack */
+    .footer-grid { grid-template-columns: 1fr; gap: 14px; }
+    .asifah-footer { padding: 16px 14px 10px; }
+
+    /* Watermark scales down so it doesn't dominate mobile */
+    :root        { --watermark-size: 320px; }
+    [data-theme="dark"] { --watermark-size: 460px; }
+}
+
+/* ── BREAKPOINT: 480px (small phone portrait) ── */
+@media (max-width: 480px) {
+    .container { padding: 0 8px; }
+
+    /* Header gets even tighter */
+    header { padding: 12px 12px; gap: 10px; }
+    .header-logo { height: 48px; }
+    header h1 { font-size: 18px; }
+    .subtitle { font-size: 11px; }
+    .back-link { font-size: 10px; padding: 3px 8px; }
+
+    /* Advisory text smaller */
+    .advisory-row { padding: 10px 12px !important; }
+    .advisory-row > div:nth-child(2) > div:last-child,
+    .advisory-row > div:nth-child(2) > div { font-size: 11px !important; line-height: 1.4 !important; }
+
+    /* Cards: even tighter */
+    .metric-card,
+    .commodity-card,
+    .map-section,
+    .knowledge-library,
+    .articles-section,
+    .leader-signals-fallback { padding: 14px 12px; border-radius: 10px; }
+
+    .commodity-card-title,
+    .subsection-title,
+    .section-title,
+    .knowledge-library h2,
+    .map-section h2 { font-size: 15px; }
+
+    /* Stability score */
+    .stability-score-big { font-size: 36px; }
+
+    /* Commodity prose & convergence detail */
+    .commodity-prose { font-size: 12px; padding: 10px 12px; }
+    .cca-detail { font-size: 11px; }
+    .strategic-linkage { font-size: 11px; padding: 10px 12px; }
+
+    /* Pressure tile */
+    .pt-value { font-size: 18px; }
+    .pt-label { font-size: 9px; }
+    .pt-meta { font-size: 9.5px; }
+
+    /* Map shorter still */
+    #indiaMap { height: 280px; }
+
+    /* Knowledge content */
+    .knowledge-header { padding: 11px 14px; }
+    .knowledge-header-title { font-size: 12px; }
+    .knowledge-content { padding: 11px 14px; }
+    .knowledge-content p, .knowledge-content li { font-size: 11px; }
+
+    /* Articles */
+    .article-item { padding: 10px 12px; }
+    .article-title { font-size: 12px; }
+    .article-meta { font-size: 9px; gap: 6px; }
+
+    /* Footer */
+    .asifah-footer { padding: 14px 12px 10px; }
+    .footer-col h4 { font-size: 11px; }
+    .footer-col p, .footer-disclaimer, .footer-support, .footer-copyright { font-size: 10px; }
+}
 
 header { background:linear-gradient(135deg,var(--header-gradient-start),var(--header-gradient-end)); padding:22px 30px; margin-bottom:22px; border-radius:0 0 12px 12px; color:var(--header-text); position:relative; overflow:hidden; display:flex; align-items:center; gap:24px; }
 header::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent-cyan),transparent); opacity:var(--glow-opacity); }
@@ -293,6 +475,9 @@ header h1 { font-size:30px; font-weight:700; margin-bottom:6px; letter-spacing:0
 
 <!-- ════════════════════════════════════════════════════════════ HEADER ════════════════════════════════════════════════════════════ -->
 <header>
+    <button class="mobile-menu-btn" onclick="openMobileDrawer()" aria-label="Open navigation menu">
+        <span style="font-size:20px;">☰</span><span style="font-size:11px;font-weight:700;letter-spacing:0.5px;" data-i18n="mobile_menu">Menu</span>
+    </button>
     <div class="header-logo-wrap">
         <a href="asia.html" class="back-link" data-i18n="back_to_asia">← Asia &amp; Pacific</a>
         <img src="https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png" alt="Asifah Analytics Logo" class="header-logo"/>
@@ -317,6 +502,33 @@ header h1 { font-size:30px; font-weight:700; margin-bottom:6px; letter-spacing:0
         </div>
     </div>
 </header>
+
+<!-- ════════════════════════════════════════════════════════════ MOBILE NAV DRAWER (replaces sidebar < 768px) ════════════════════════════════════════════════════════════ -->
+<div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop" onclick="closeMobileDrawer()"></div>
+<aside class="mobile-drawer" id="mobileDrawer" aria-label="Navigation menu">
+    <button class="mobile-drawer-close" onclick="closeMobileDrawer()" aria-label="Close menu">✕</button>
+    <div class="mobile-drawer-title" data-i18n="mobile_drawer_title">Navigation</div>
+
+    <div class="nav-sidebar-label" data-i18n="nav_dashboards">Dashboards</div>
+    <div class="nav-btn inactive-nav"><span class="nav-btn-label" data-i18n="nav_africa">🌍 Africa</span><span class="nav-btn-status" data-i18n="nav_future">🔒 Future</span></div>
+    <a href="asia.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="nav_asia_pacific">🌏 Asia &amp; Pacific</span><span class="nav-btn-status">● Live</span></a>
+    <a href="europe.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="nav_europe">🌍 Europe</span><span class="nav-btn-status">● Live</span></a>
+    <a href="middle-east.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="nav_me">🕌 Middle East</span><span class="nav-btn-status">● Live</span></a>
+    <a href="wha.html" class="nav-btn active-nav"><span class="nav-btn-label" data-i18n="nav_wha">🌎 W. Hemisphere</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-divider"></div>
+    <a href="commodities.html" class="nav-btn commodity-btn"><span class="nav-btn-label" data-i18n="nav_commodities">🛢️ Commodities</span><span class="nav-btn-status">● Live</span></a>
+    <a href="military.html" class="nav-btn military-btn"><span class="nav-btn-label" data-i18n="nav_military">🎖️ Military Tracker</span><span class="nav-btn-status">● Live</span></a>
+    <a href="gpi.html" class="nav-btn military-btn"><span class="nav-btn-label" data-i18n="nav_gpi">🌐 Global Pressure</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label" data-i18n="nav_rhetoric">Regional Rhetoric</div>
+    <a href="rhetoric-index.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="nav_rhetoric_me">🕌 Middle East</span><span class="nav-btn-status">● Live</span></a>
+    <a href="rhetoric-asia.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="nav_rhetoric_asia">🌏 Asia</span><span class="nav-btn-status">● Live</span></a>
+    <a href="rhetoric-europe.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="nav_rhetoric_europe">🌍 Europe</span><span class="nav-btn-status">● Live</span></a>
+    <a href="rhetoric-wha.html" class="nav-btn rhetoric-btn"><span class="nav-btn-label" data-i18n="nav_rhetoric_wha">🌎 W. Hemisphere</span><span class="nav-btn-status">● Live</span></a>
+    <div class="nav-divider"></div>
+    <div class="nav-sidebar-label" data-i18n="nav_india">India</div>
+    <a href="india-stability.html" class="nav-btn current-page"><span class="nav-btn-label" data-i18n="nav_india_stability">🇮🇳 India Stability</span><span class="nav-btn-status" data-i18n="nav_here">◉ You are here</span></a>
+</aside>
 
 <!-- ════════════════════════════════════════════════════════════ PAGE WITH SIDEBAR ════════════════════════════════════════════════════════════ -->
 <div class="page-with-sidebar">
@@ -730,6 +942,7 @@ const TRANSLATIONS = {
         nav_rhetoric_me:'🕌 Middle East', nav_rhetoric_asia:'🌏 Asia',
         nav_rhetoric_europe:'🌍 Europe', nav_rhetoric_wha:'🌎 W. Hemisphere',
         nav_india_stability:'🇮🇳 India Stability', nav_here:'◉ You are here',
+        mobile_menu:'Menu', mobile_drawer_title:'Navigation',
         ww_caution_label:'⚠️ U.S. State Department — Worldwide Caution',
         ww_caution_text:'Following the launch of U.S. combat operations in Iran, Americans worldwide and especially in the Middle East should follow guidance from the nearest U.S. embassy or consulate.',
         ww_caution_button:'VIEW CAUTION →',
@@ -802,6 +1015,7 @@ const TRANSLATIONS = {
         nav_rhetoric_me:'🕌 中东', nav_rhetoric_asia:'🌏 亚洲',
         nav_rhetoric_europe:'🌍 欧洲', nav_rhetoric_wha:'🌎 西半球',
         nav_india_stability:'🇮🇳 印度稳定', nav_here:'◉ 当前位置',
+        mobile_menu:'菜单', mobile_drawer_title:'导航',
         ww_caution_label:'⚠️ 美国国务院 — 全球警告',
         ww_caution_text:'随着美国对伊朗发动军事行动，全球美国公民、特别是中东地区，应遵循最近美国使领馆的指导。',
         ww_caution_button:'查看警告 →',
@@ -874,6 +1088,7 @@ const TRANSLATIONS = {
         nav_rhetoric_me:'🕌 中東', nav_rhetoric_asia:'🌏 アジア',
         nav_rhetoric_europe:'🌍 欧州', nav_rhetoric_wha:'🌎 西半球',
         nav_india_stability:'🇮🇳 インド安定', nav_here:'◉ 現在地',
+        mobile_menu:'メニュー', mobile_drawer_title:'ナビゲーション',
         ww_caution_label:'⚠️ 米国務省 — 世界的警告',
         ww_caution_text:'米国のイラン戦闘作戦開始を受けて、世界中、特に中東のアメリカ人は最寄りの米国大使館または領事館の指示に従ってください。',
         ww_caution_button:'警告を見る →',
@@ -908,7 +1123,7 @@ const TRANSLATIONS = {
         pt_fx_label:'外貨準備', pt_fx_status:'上昇', pt_fx_value:'約6400億ドル', pt_fx_meta:'歴史的基準では健全。ストレスしきい値は1991年類似で約5800億ドル。',
         pt_oil_label:'石油輸入依存', pt_oil_status:'ストレス', pt_oil_value:'約85%', pt_oil_meta:'インドは約470万bpdを輸入。ブレント10ドル増ごとに年間請求書約150億ドル追加。',
         pt_gold_label:'金輸入請求書', pt_gold_status:'上昇', pt_gold_value:'約720億ドル/年', pt_gold_meta:'約90%以上輸入。モディの2026年5月の口頭介入は、これを裁量的外貨防衛として直接ターゲット。',
-        pt_gdp_label:'GDP成長（RBI予測）', pt_gdp_status:'正常', pt_gdp_value:'約6.5〜7.0%', pt_gdp_meta:'堅調な実体経済成長が外的ショックに対するマクロバッファを提供。',
+        pt_gdp_label:'GDP成長(RBI予測)', pt_gdp_status:'正常', pt_gdp_value:'約6.5〜7.0%', pt_gdp_meta:'堅調な実体経済成長が外的ショックに対するマクロバッファを提供。',
         pt_cpi_label:'CPIインフレ', pt_cpi_status:'警告', pt_cpi_value:'約5.0%', pt_cpi_meta:'RBI 4%目標を上回る。食品と燃料コンポーネントが外貨パススルーに最も敏感。',
         map_title:'🗺️ インド — 戦略概観',
         map_subtitle:'ニューデリーを中心とするインタラクティブマップ。主要監視ゾーン：印中実効支配線（ラダック、アルナーチャル）、停戦ライン（カシミール）、海軍戦域（アンダマン海、アラビア海、ベンガル湾）、経済要衝（ムンバイ、チェンナイ港、ベンガルール技術ハブ）。',
@@ -946,6 +1161,7 @@ const TRANSLATIONS = {
         nav_rhetoric_me:'🕌 중동', nav_rhetoric_asia:'🌏 아시아',
         nav_rhetoric_europe:'🌍 유럽', nav_rhetoric_wha:'🌎 서반구',
         nav_india_stability:'🇮🇳 인도 안정', nav_here:'◉ 현재 위치',
+        mobile_menu:'메뉴', mobile_drawer_title:'탐색',
         ww_caution_label:'⚠️ 미국 국무부 — 전세계 경고',
         ww_caution_text:'미국의 이란 전투작전 개시에 따라, 전 세계 미국인, 특히 중동 지역의 미국인은 가장 가까운 미국 대사관 또는 영사관의 안내를 따르십시오.',
         ww_caution_button:'경고 보기 →',
@@ -1050,6 +1266,24 @@ function toggleCard(id) {
     const card = document.getElementById(`card-${id}`);
     if (card) card.classList.toggle('collapsed');
 }
+
+// ════════════════════════════════════════════════════════════
+// MOBILE DRAWER (replaces sidebar < 768px)
+// ════════════════════════════════════════════════════════════
+function openMobileDrawer() {
+    document.getElementById('mobileDrawer')?.classList.add('open');
+    document.getElementById('mobileDrawerBackdrop')?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeMobileDrawer() {
+    document.getElementById('mobileDrawer')?.classList.remove('open');
+    document.getElementById('mobileDrawerBackdrop')?.classList.remove('open');
+    document.body.style.overflow = '';
+}
+// Close drawer with Escape key
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileDrawer();
+});
 
 // ════════════════════════════════════════════════════════════
 // LEAFLET MAP
