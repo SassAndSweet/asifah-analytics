@@ -676,20 +676,47 @@ header .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 3px; l
 }
 
 /* ============================================================================
-   FOOTER
+   FOOTER — gold standard 2-column grid
    ============================================================================ */
 footer {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
     border-radius: 10px;
-    padding: 16px 20px;
+    padding: 22px 28px;
     margin-top: 30px;
-    font-size: 11px;
+    font-size: 12px;
     color: var(--text-muted);
     line-height: 1.6;
     box-shadow: var(--card-glow);
 }
 footer strong { color: var(--text-primary); }
+.footer-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+@media (max-width: 800px) {
+    .footer-grid { grid-template-columns: 1fr; }
+}
+footer h4 {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin: 0 0 8px 0;
+    letter-spacing: 0.5px;
+}
+footer p { margin: 0; }
+footer .footer-version {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+    font-size: 10px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* GPI nav button — purple accent (cross-cutting meta-layer) */
+.nav-btn.gpi { color: #c084fc; border-color: rgba(192,132,252,0.25); }
+.nav-btn.gpi:hover { background: rgba(192,132,252,0.08); border-color: rgba(192,132,252,0.5); }
 
 /* ============================================================================
    MOBILE RESPONSIVE — hamburger gold standard (FIRST rhetoric page)
@@ -802,7 +829,13 @@ footer strong { color: var(--text-primary); }
     <a href="europe.html"      class="nav-btn"><span data-i18n="nav_europe">🌍 Europe</span></a>
     <a href="middle-east.html" class="nav-btn"><span data-i18n="nav_me">🕌 Middle East</span></a>
     <a href="wha.html"         class="nav-btn"><span data-i18n="nav_wha">🌎 W. Hemisphere</span></a>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-sidebar-label" data-i18n="nav_crosscut">Cross-cutting Tools</div>
+    <a href="commodities.html" class="nav-btn"><span data-i18n="nav_commodities">🌾 Commodities Tracker</span></a>
     <a href="military.html"    class="nav-btn"><span data-i18n="nav_military">🎖️ Military Tracker</span></a>
+    <a href="gpi.html"         class="nav-btn gpi"><span data-i18n="nav_gpi">🌐 Global Pressure Index</span></a>
 
     <div class="nav-divider"></div>
 
@@ -949,12 +982,21 @@ footer strong { color: var(--text-primary); }
         <div id="errorMessage" style="margin-top:8px;"></div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer — gold standard 2-column grid -->
     <footer>
-        <strong>Asifah Analytics — India Rhetoric Tracker v1.0</strong> ·
-        <span data-i18n="footer_text">Multi-source OSINT scan every 6 hours. Cross-theater fingerprints read from Iran, China, Pakistan, US trackers. Absorption signatures fire when both upstream pressure AND India's own-signals are present.</span>
-        ·
-        <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a>
+        <div class="footer-grid">
+            <div>
+                <h4 data-i18n="ftr_about">About this tracker</h4>
+                <p data-i18n="ftr_about_text">The India Rhetoric Tracker monitors absorption-class signals across seven actor clusters: PMO, MEA, Armed Forces, Economic Statecraft, Opposition, Hindutva ecosystem, and Adversary Cross-reads. Calibrated to detect when upstream pressure from Iran, China, Pakistan, and US trackers is actively absorbed into India's domestic rhetorical posture. Scoring measures absorption intensity, not aggression — India's command-node sits where the world's economic stress signals converge.</p>
+            </div>
+            <div>
+                <h4 data-i18n="ftr_sources">Data sources</h4>
+                <p data-i18n="ftr_sources_text">RSS feeds (Times of India, The Hindu, Hindustan Times, Indian Express, Mint, ThePrint, Wire, Scroll, BBC India, Reuters India) · GDELT · NewsAPI · Brave Search · Bluesky (India-specific verified accounts) · Telegram · Native Hindi &amp; Urdu sources · Cross-theater fingerprints from Iran, China, Pakistan, and US trackers · Absorption signatures fire when both upstream pressure AND India's own-signals are present.</p>
+            </div>
+        </div>
+        <div class="footer-version">
+            <strong>Asifah Analytics — India Rhetoric Tracker v1.0</strong> · <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a>
+        </div>
     </footer>
 
 </main>
@@ -1016,7 +1058,13 @@ const translations = {
         ct_stressors: 'Upstream Stressors Detected',
         ct_amplifiers: 'Actor Amplifier Deltas',
         error_title: 'Scan Failed',
-        footer_text: 'Multi-source OSINT scan every 6 hours. Cross-theater fingerprints read from Iran, China, Pakistan, US trackers. Absorption signatures fire when both upstream pressure AND India\'s own-signals are present.',
+        nav_crosscut: 'Cross-cutting Tools',
+        nav_commodities: '🌾 Commodities Tracker',
+        nav_gpi: '🌐 Global Pressure Index',
+        ftr_about: 'About this tracker',
+        ftr_about_text: 'The India Rhetoric Tracker monitors absorption-class signals across seven actor clusters: PMO, MEA, Armed Forces, Economic Statecraft, Opposition, Hindutva ecosystem, and Adversary Cross-reads. Calibrated to detect when upstream pressure from Iran, China, Pakistan, and US trackers is actively absorbed into India\'s domestic rhetorical posture. Scoring measures absorption intensity, not aggression — India\'s command-node sits where the world\'s economic stress signals converge.',
+        ftr_sources: 'Data sources',
+        ftr_sources_text: 'RSS feeds (Times of India, The Hindu, Hindustan Times, Indian Express, Mint, ThePrint, Wire, Scroll, BBC India, Reuters India) · GDELT · NewsAPI · Brave Search · Bluesky (India-specific verified accounts) · Telegram · Native Hindi & Urdu sources · Cross-theater fingerprints from Iran, China, Pakistan, and US trackers · Absorption signatures fire when both upstream pressure AND India\'s own-signals are present.',
         no_data: 'No data available yet — first scan may still be in progress.',
         no_contributors: 'No actors contributing at this dashboard right now.',
         no_absorption: 'No absorption signatures currently fired.',
@@ -1076,7 +1124,13 @@ const translations = {
         ct_stressors: '检测到的上游压力源',
         ct_amplifiers: '行为者放大增量',
         error_title: '扫描失败',
-        footer_text: '每 6 小时进行一次多源 OSINT 扫描。跨战区指纹来自伊朗、中国、巴基斯坦和美国追踪器。当上游压力和印度自身信号同时出现时,触发吸收特征。',
+        nav_crosscut: '跨领域工具',
+        nav_commodities: '🌾 商品追踪器',
+        nav_gpi: '🌐 全球压力指数',
+        ftr_about: '关于本追踪器',
+        ftr_about_text: '印度修辞追踪器监测七个行为者集群的吸收级信号:总理办公室、外交部、武装部队、经济治国、反对派、印度教民族主义生态系统及对手交叉读取。校准用于检测来自伊朗、中国、巴基斯坦和美国追踪器的上游压力何时被主动吸收到印度国内的修辞姿态中。评分衡量吸收强度而非侵略性——印度的指挥节点位于世界经济压力信号汇聚之处。',
+        ftr_sources: '数据来源',
+        ftr_sources_text: 'RSS 源(印度时报、印度教徒报、印度斯坦时报、印度快报、Mint、ThePrint、Wire、Scroll、BBC 印度、路透社印度)· GDELT · NewsAPI · Brave Search · Bluesky(印度特定认证账户)· Telegram · 印地语及乌尔都语原生信源 · 来自伊朗、中国、巴基斯坦和美国追踪器的跨战区指纹 · 当上游压力和印度自身信号同时存在时,吸收特征触发。',
         no_data: '尚无数据 — 首次扫描可能仍在进行中。',
         no_contributors: '此仪表板目前没有行为者贡献。',
         no_absorption: '当前没有触发吸收特征。',
@@ -1136,7 +1190,13 @@ const translations = {
         ct_stressors: '検出された上流ストレッサー',
         ct_amplifiers: 'アクター増幅デルタ',
         error_title: 'スキャン失敗',
-        footer_text: '6時間ごとのマルチソース OSINT スキャン。クロスシアター指紋はイラン・中国・パキスタン・米国トラッカーから読み取る。上流圧力とインド自身のシグナルが両方存在する時に吸収シグネチャーが発火する。',
+        nav_crosscut: '分野横断ツール',
+        nav_commodities: '🌾 商品トラッカー',
+        nav_gpi: '🌐 グローバル圧力指数',
+        ftr_about: 'このトラッカーについて',
+        ftr_about_text: 'インド修辞トラッカーは、首相府・外務省・軍・経済戦略・野党・ヒンドゥトヴァ・敵対者クロスリードという 7 つのアクタークラスター全体で吸収クラスのシグナルを監視する。イラン・中国・パキスタン・米国トラッカーからの上流圧力が、インドの国内修辞姿勢に能動的に吸収される時を検出するよう較正されている。スコアは攻撃性ではなく吸収強度を測定する——インドの指揮ノードは、世界の経済ストレス信号が収束する地点に位置する。',
+        ftr_sources: 'データソース',
+        ftr_sources_text: 'RSS フィード(タイムズ・オブ・インディア、ヒンドゥー、ヒンドゥスタン・タイムズ、インディアン・エクスプレス、Mint、ThePrint、Wire、Scroll、BBC インド、ロイター・インド)· GDELT · NewsAPI · Brave Search · Bluesky(インド固有の認証アカウント)· Telegram · ヒンディー語およびウルドゥー語のネイティブソース · イラン・中国・パキスタン・米国トラッカーからのクロスシアター指紋 · 上流圧力とインド自身のシグナルが両方存在する時に吸収シグネチャーが発火する。',
         no_data: 'まだデータがありません — 初回スキャンが進行中の可能性があります。',
         no_contributors: 'このダッシュボードに現在貢献しているアクターはいません。',
         no_absorption: '現在発火している吸収シグネチャーはありません。',
@@ -1196,7 +1256,13 @@ const translations = {
         ct_stressors: '감지된 상류 압력 요인',
         ct_amplifiers: '행위자 증폭 델타',
         error_title: '스캔 실패',
-        footer_text: '6시간마다 다중 소스 OSINT 스캔. 교차 극장 지문은 이란·중국·파키스탄·미국 추적기에서 읽어옴. 상류 압력과 인도 자체 신호가 모두 있을 때 흡수 시그니처가 발동.',
+        nav_crosscut: '교차 영역 도구',
+        nav_commodities: '🌾 원자재 추적기',
+        nav_gpi: '🌐 글로벌 압력 지수',
+        ftr_about: '본 추적기 소개',
+        ftr_about_text: '인도 수사 추적기는 총리실, 외교부, 군, 경제 전략, 야당, 힌두트바 생태계, 적대국 교차 판독이라는 7개 행위자 클러스터 전반에 걸쳐 흡수 등급 신호를 모니터링합니다. 이란, 중국, 파키스탄, 미국 추적기로부터의 상류 압력이 인도의 국내 수사적 자세로 능동적으로 흡수되는 시점을 감지하도록 보정되어 있습니다. 점수는 공격성이 아닌 흡수 강도를 측정합니다 — 인도의 지휘 노드는 세계의 경제 압박 신호가 수렴하는 지점에 위치합니다.',
+        ftr_sources: '데이터 소스',
+        ftr_sources_text: 'RSS 피드(타임스 오브 인디아, 더 힌두, 힌두스탄 타임스, 인디언 익스프레스, Mint, ThePrint, Wire, Scroll, BBC 인디아, 로이터 인디아) · GDELT · NewsAPI · Brave Search · Bluesky (인도 특화 인증 계정) · Telegram · 힌디어 및 우르두어 원어 소스 · 이란, 중국, 파키스탄, 미국 추적기로부터의 교차 극장 지문 · 상류 압력과 인도 자체 신호가 모두 있을 때 흡수 시그니처가 발동합니다.',
         no_data: '아직 데이터 없음 — 첫 스캔이 진행 중일 수 있습니다.',
         no_contributors: '이 대시보드에 현재 기여하는 행위자가 없습니다.',
         no_absorption: '현재 발동된 흡수 시그니처가 없습니다.',
