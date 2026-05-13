@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+    Asifah Analytics — India Rhetoric Tracker (Patch 11, May 2026)
+    Gold Standard: Arctic palette + military.html watermark canonical + hamburger
+    drawer mobile pattern (FIRST rhetoric page to adopt this). 3-dashboard layout
+    (outbound + inbound + internal) reflecting India's three-dashboard absorber-
+    class architecture. EN/ZH/JA/KO i18n. Consumes /api/rhetoric/india payload.
+
+    Reference docs:
+      - Backend payload contract: rhetoric_tracker_india.py run_india_rhetoric_scan()
+      - Static catalog (so_what content): absorption_signatures.py
+      - Asia hub link: rhetoric-asia.html (Patch 12 adds India tile)
+      - Stability page: india-stability.html (Patch 13 wires live panel)
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title data-i18n="page_title_meta">India Rhetoric — Asifah Analytics</title>
+<link rel="preconnect" href="https://asifah-asia-backend.onrender.com">
+<style>
+/* ============================================================================
+   THEME VARIABLES — Arctic palette (canonical for Europe + India rhetoric)
+   ============================================================================ */
+:root[data-theme="light"] {
+    --bg:               #f1f5f9;
+    --card-bg:          #ffffff;
+    --card-border:      #cbd5e1;
+    --card-glow:        0 2px 8px rgba(15,23,42,0.05);
+    --text-primary:     #0f172a;
+    --text-secondary:   #334155;
+    --text-muted:       #64748b;
+    --accent:           #0284c7;
+    --accent-hover:     #0369a1;
+    --article-bg:       #f8fafc;
+    --watermark-opacity: 0.5;
+    --watermark-size:    500px;
+    --watermark-filter:  none;
+    --grid-color:        transparent;
+    --scanline-opacity:  0;
+    --glow-opacity:      0;
+    --dashboard-out-bg:  linear-gradient(135deg, rgba(220,38,38,0.06), rgba(185,28,28,0.03));
+    --dashboard-out-border: rgba(220,38,38,0.4);
+    --dashboard-out-text:#dc2626;
+    --dashboard-in-bg:   linear-gradient(135deg, rgba(29,78,216,0.06), rgba(30,64,175,0.03));
+    --dashboard-in-border: rgba(59,130,246,0.4);
+    --dashboard-in-text: #1d4ed8;
+    --dashboard-int-bg:  linear-gradient(135deg, rgba(124,58,237,0.06), rgba(91,33,182,0.03));
+    --dashboard-int-border: rgba(124,58,237,0.4);
+    --dashboard-int-text:#7c3aed;
+}
+:root[data-theme="dark"], :root:not([data-theme]) {
+    --bg:               #060d1a;
+    --card-bg:          #0d1b2e;
+    --card-border:      #1e3a5f;
+    --card-glow:        0 0 24px rgba(56,189,248,0.08);
+    --text-primary:     #e2f0fb;
+    --text-secondary:   #cbd5e1;
+    --text-muted:       #93c5fd;
+    --accent:           #38bdf8;
+    --accent-hover:     #7dd3fc;
+    --article-bg:       #102036;
+    --watermark-opacity: 1;
+    --watermark-size:    800px;
+    --watermark-filter:  saturate(3) brightness(0.8) hue-rotate(185deg);
+    --grid-color:        rgba(0,212,255,0.04);
+    --scanline-opacity:  0.03;
+    --glow-opacity:      1;
+    --dashboard-out-bg:  linear-gradient(135deg, rgba(220,38,38,0.08), rgba(127,29,29,0.05));
+    --dashboard-out-border: rgba(239,68,68,0.5);
+    --dashboard-out-text:#ef4444;
+    --dashboard-in-bg:   linear-gradient(135deg, rgba(59,130,246,0.08), rgba(29,78,216,0.05));
+    --dashboard-in-border: rgba(96,165,250,0.5);
+    --dashboard-in-text: #60a5fa;
+    --dashboard-int-bg:  linear-gradient(135deg, rgba(168,85,247,0.08), rgba(124,58,237,0.05));
+    --dashboard-int-border: rgba(168,85,247,0.5);
+    --dashboard-int-text:#c084fc;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Watermark + grid + scanlines (canonical military.html pattern) */
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 1;
+}
+body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(56, 189, 248, var(--scanline-opacity)) 2px,
+        rgba(56, 189, 248, var(--scanline-opacity)) 3px
+    );
+    pointer-events: none;
+    z-index: 2;
+}
+.watermark {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--watermark-size);
+    height: var(--watermark-size);
+    opacity: var(--watermark-opacity);
+    pointer-events: none;
+    z-index: 0;
+    background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+    background-size: 135%;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%;
+    filter: var(--watermark-filter);
+    transition: all 0.4s ease;
+}
+
+.container {
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 24px 20px;
+    position: relative;
+    z-index: 3;
+}
+
+/* ============================================================================
+   HEADER
+   ============================================================================ */
+header { display: flex; align-items: center; gap: 18px; margin-bottom: 20px; flex-wrap: wrap; }
+.logo-mark {
+    width: 56px; height: 56px;
+    background-image: url('https://raw.githubusercontent.com/SassAndSweet/asifah-analytics/main/Asifah_Analytics_1_25_26_V1_LOGO.png');
+    background-size: contain; background-repeat: no-repeat; background-position: center;
+    flex-shrink: 0;
+}
+.header-text { flex: 1; min-width: 0; }
+header h1 { font-size: 21px; font-weight: 800; letter-spacing: -0.3px; }
+header .subtitle { font-size: 11px; color: var(--text-muted); margin-top: 3px; line-height: 1.45; }
+
+.header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.lang-switcher {
+    display: flex; gap: 4px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    padding: 3px;
+}
+.lang-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 11px;
+    padding: 5px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.15s;
+}
+.lang-btn.active { background: var(--accent); color: #fff; }
+.lang-btn:hover:not(.active) { background: var(--article-bg); color: var(--text-primary); }
+.theme-toggle {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+}
+
+/* Hamburger button — only visible on mobile */
+.hamburger-btn {
+    display: none;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================================================
+   PAGE LAYOUT — sidebar + main
+   ============================================================================ */
+.page-with-sidebar {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: flex-start;
+}
+.main-content { flex: 1; min-width: 0; }
+
+.nav-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: var(--card-glow);
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+.nav-sidebar-label {
+    font-size: 9px; font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 12px 0 6px 4px;
+}
+.nav-sidebar-label:first-child { margin-top: 0; }
+.nav-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 6px;
+    padding: 7px 10px;
+    background: var(--article-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 7px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    transition: all 0.15s;
+}
+.nav-btn:hover { color: var(--accent); border-color: var(--accent); }
+.nav-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-btn.faded { opacity: 0.5; }
+.nav-btn-status { font-size: 9px; opacity: 0.7; }
+.nav-divider {
+    height: 1px; background: var(--card-border);
+    margin: 10px 0 8px;
+}
+
+/* Mobile drawer scaffolding */
+.drawer-backdrop {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+    z-index: 90;
+}
+.drawer-backdrop.open { display: block; }
+
+/* ============================================================================
+   BLUF BLOCK — top of page, dominant
+   ============================================================================ */
+.bluf-block {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: var(--card-glow);
+    position: relative;
+    overflow: hidden;
+}
+.bluf-block::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--dashboard-out-text), var(--dashboard-int-text), var(--dashboard-in-text));
+}
+.bluf-header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 14px; margin-bottom: 14px; flex-wrap: wrap;
+}
+.bluf-eyebrow {
+    font-size: 10px; font-weight: 800;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 6px;
+}
+.bluf-title {
+    font-size: 18px; font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+.bluf-score-block {
+    display: flex; align-items: center; gap: 14px;
+    background: var(--article-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    flex-shrink: 0;
+}
+.bluf-score-num {
+    font-size: 32px; font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+.bluf-score-label {
+    font-size: 9px; font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+}
+.bluf-score-level {
+    font-size: 13px; font-weight: 800;
+    margin-top: 2px;
+}
+
+.bluf-synthesis {
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+}
+.bluf-synthesis strong { color: var(--text-primary); font-weight: 700; }
+
+.bluf-evidence-title {
+    font-size: 10px; font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 14px 0 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+}
+.bluf-evidence-list {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 6px;
+}
+.bluf-evidence-list li {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    padding-left: 16px;
+    position: relative;
+}
+.bluf-evidence-list li::before {
+    content: '▸';
+    position: absolute; left: 0;
+    color: var(--accent);
+    font-size: 10px;
+    top: 2px;
+}
+
+.scan-meta {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 8px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--card-border);
+    font-size: 10px;
+    color: var(--text-muted);
+}
+.scan-meta-left { display: flex; gap: 14px; flex-wrap: wrap; }
+.scan-meta strong { color: var(--text-secondary); }
+.refresh-btn {
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+}
+.refresh-btn:hover { background: var(--accent-hover); }
+.refresh-btn:disabled { opacity: 0.5; cursor: wait; }
+
+/* ============================================================================
+   THREE-DASHBOARD GRID
+   ============================================================================ */
+.tri-dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+.dashboard-card {
+    border-radius: 12px;
+    padding: 18px;
+    border: 2px solid;
+    background: var(--card-bg);
+}
+.dashboard-card.outbound { background: var(--dashboard-out-bg); border-color: var(--dashboard-out-border); }
+.dashboard-card.inbound  { background: var(--dashboard-in-bg);  border-color: var(--dashboard-in-border); }
+.dashboard-card.internal { background: var(--dashboard-int-bg); border-color: var(--dashboard-int-border); }
+
+.dashboard-title {
+    font-size: 11px; font-weight: 800;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid;
+}
+.dashboard-card.outbound .dashboard-title { color: var(--dashboard-out-text); border-color: rgba(220,38,38,0.2); }
+.dashboard-card.inbound  .dashboard-title { color: var(--dashboard-in-text);  border-color: rgba(59,130,246,0.2); }
+.dashboard-card.internal .dashboard-title { color: var(--dashboard-int-text); border-color: rgba(124,58,237,0.2); }
+
+.dashboard-q {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 12px;
+    line-height: 1.45;
+}
+.dashboard-score-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 10px;
+}
+.dashboard-score {
+    font-size: 30px; font-weight: 900;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+}
+.dashboard-card.outbound .dashboard-score { color: var(--dashboard-out-text); }
+.dashboard-card.inbound  .dashboard-score { color: var(--dashboard-in-text); }
+.dashboard-card.internal .dashboard-score { color: var(--dashboard-int-text); }
+.dashboard-label {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: right;
+}
+.dashboard-row {
+    display: flex; justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid rgba(127,127,127,0.12);
+    font-size: 11px;
+}
+.dashboard-row:last-child { border-bottom: none; }
+.dashboard-row-label { color: var(--text-muted); }
+.dashboard-row-level { font-weight: 700; }
+
+/* Absorption inline alert inside relevant dashboard */
+.absorption-inline {
+    margin-top: 10px;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 8px;
+    padding: 10px 12px;
+}
+.absorption-inline-eyebrow {
+    font-size: 9px; font-weight: 800;
+    color: #ef4444;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.absorption-inline-title {
+    font-size: 11px; font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.absorption-inline-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.45;
+}
+
+/* ============================================================================
+   ACTOR CARDS GRID
+   ============================================================================ */
+.section-title {
+    font-size: 12px; font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin: 24px 0 12px;
+    padding-left: 4px;
+}
+.actors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 14px;
+}
+.actor-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 14px;
+    box-shadow: var(--card-glow);
+}
+.actor-card-header {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--card-border);
+}
+.actor-icon { font-size: 20px; flex-shrink: 0; }
+.actor-name { flex: 1; min-width: 0; }
+.actor-name-title { font-size: 12.5px; font-weight: 700; color: var(--text-primary); }
+.actor-name-role { font-size: 9.5px; color: var(--text-muted); margin-top: 1px; }
+.actor-level-badge {
+    font-size: 10px; font-weight: 800;
+    padding: 4px 10px;
+    border-radius: 6px;
+    color: #fff;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.actor-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.actor-stat {
+    text-align: center;
+    background: var(--article-bg);
+    border-radius: 6px;
+    padding: 6px 4px;
+}
+.actor-stat-num { font-size: 14px; font-weight: 800; color: var(--text-primary); }
+.actor-stat-label {
+    font-size: 8px; color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.actor-section-title {
+    font-size: 9px; font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin: 10px 0 5px;
+}
+.actor-triggers { display: flex; flex-wrap: wrap; gap: 4px; }
+.trigger-pill {
+    background: var(--article-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+.trigger-pill.tripwire {
+    background: rgba(239,68,68,0.15);
+    border-color: rgba(239,68,68,0.4);
+    color: #ef4444;
+    font-weight: 700;
+}
+.actor-articles { display: flex; flex-direction: column; gap: 6px; }
+.actor-article {
+    background: var(--article-bg);
+    border-radius: 6px;
+    padding: 7px 10px;
+    border-left: 3px solid var(--accent);
+}
+.actor-article-title {
+    font-size: 11px;
+    color: var(--text-primary);
+    line-height: 1.35;
+    text-decoration: none;
+    display: block;
+}
+.actor-article-title:hover { color: var(--accent); }
+.actor-article-meta {
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+}
+.actor-amplified-note {
+    font-size: 9.5px;
+    color: var(--accent);
+    background: rgba(56,189,248,0.08);
+    border-left: 3px solid var(--accent);
+    padding: 4px 8px;
+    margin-top: 8px;
+    border-radius: 0 4px 4px 0;
+    font-style: italic;
+}
+
+/* ============================================================================
+   CROSS-THEATER SECTION
+   ============================================================================ */
+.crosstheater-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 18px;
+    margin: 24px 0;
+    box-shadow: var(--card-glow);
+}
+.ct-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+}
+.ct-section-title {
+    font-size: 10px; font-weight: 800;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+.stressor-pill {
+    display: inline-block;
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.3);
+    color: #ef4444;
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 4px 4px 0;
+}
+.amplifier-pill {
+    display: inline-block;
+    background: rgba(56,189,248,0.08);
+    border: 1px solid rgba(56,189,248,0.3);
+    color: var(--accent);
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 0 4px 4px 0;
+}
+.amplifier-pill .delta { font-weight: 800; margin-left: 4px; }
+
+/* ============================================================================
+   LOADING + ERROR STATES
+   ============================================================================ */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+}
+.loading-spinner {
+    display: inline-block;
+    width: 28px; height: 28px;
+    border: 3px solid var(--card-border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 14px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-title { font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.error-state {
+    background: rgba(239,68,68,0.08);
+    border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 10px;
+    padding: 18px;
+    color: #ef4444;
+    font-size: 12px;
+    text-align: center;
+}
+
+/* ============================================================================
+   FOOTER
+   ============================================================================ */
+footer {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-top: 30px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    box-shadow: var(--card-glow);
+}
+footer strong { color: var(--text-primary); }
+
+/* ============================================================================
+   MOBILE RESPONSIVE — hamburger gold standard (FIRST rhetoric page)
+   ============================================================================ */
+@media (max-width: 1024px) {
+    .tri-dashboard { grid-template-columns: 1fr; }
+    .ct-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+    .container { padding: 16px 12px; }
+    .hamburger-btn { display: flex; }
+
+    /* Sidebar becomes drawer */
+    .nav-sidebar {
+        position: fixed;
+        top: 0; left: -240px;
+        width: 240px; height: 100vh; max-height: 100vh;
+        z-index: 100;
+        border-radius: 0;
+        border-right: 2px solid var(--accent);
+        transition: left 0.25s ease;
+        padding-top: 60px;
+    }
+    .nav-sidebar.open { left: 0; }
+    .drawer-close-btn {
+        display: flex; position: absolute; top: 12px; right: 12px;
+        width: 36px; height: 36px;
+        background: var(--article-bg);
+        border: 1px solid var(--card-border);
+        border-radius: 6px;
+        align-items: center; justify-content: center;
+        cursor: pointer;
+        font-size: 18px; color: var(--text-primary);
+    }
+    .drawer-title {
+        display: block; position: absolute; top: 18px; left: 16px;
+        font-size: 11px; font-weight: 800;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    .page-with-sidebar { flex-direction: column; }
+    .main-content { width: 100%; }
+
+    header { gap: 12px; }
+    .logo-mark { width: 48px; height: 48px; }
+    header h1 { font-size: 18px; }
+    header .subtitle { font-size: 10px; }
+
+    .bluf-header { flex-direction: column; }
+    .bluf-score-block { width: 100%; }
+    .actors-grid { grid-template-columns: 1fr; }
+}
+@media (min-width: 769px) {
+    .drawer-close-btn, .drawer-title { display: none; }
+}
+@media (max-width: 480px) {
+    header h1 { font-size: 16px; }
+    .bluf-title { font-size: 16px; }
+    .bluf-score-num { font-size: 26px; }
+}
+
+</style>
+</head>
+<body data-theme="dark">
+
+<div class="watermark"></div>
+
+<div class="container">
+
+<!-- ============================================================================
+     HEADER
+     ============================================================================ -->
+<header>
+    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open navigation" data-i18n-aria="mobile_menu">☰</button>
+    <div class="logo-mark"></div>
+    <div class="header-text">
+        <h1 data-i18n="page_title">🇮🇳 INDIA RHETORIC TRACKER</h1>
+        <div class="subtitle" data-i18n="page_subtitle">Three-Dashboard Absorption Analysis · PMO · MEA · Armed Forces · Economic Statecraft · Opposition · Hindutva · Adversary Cross-reads</div>
+    </div>
+    <div class="header-controls">
+        <div class="lang-switcher" role="group" aria-label="Language">
+            <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+            <button class="lang-btn"        data-lang="zh" onclick="setLanguage('zh')">中</button>
+            <button class="lang-btn"        data-lang="ja" onclick="setLanguage('ja')">日</button>
+            <button class="lang-btn"        data-lang="ko" onclick="setLanguage('ko')">한</button>
+        </div>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+            <span id="themeIcon">☀️</span>
+            <span data-i18n="theme_label">Theme</span>
+        </button>
+    </div>
+</header>
+
+<!-- ============================================================================
+     PAGE: SIDEBAR + MAIN
+     ============================================================================ -->
+<div class="page-with-sidebar">
+
+<!-- Mobile drawer backdrop -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="closeMobileDrawer()"></div>
+
+<!-- Sidebar (becomes drawer on mobile) -->
+<nav class="nav-sidebar" id="navSidebar" aria-label="Site navigation">
+    <span class="drawer-title" data-i18n="mobile_drawer_title">Navigation</span>
+    <button class="drawer-close-btn" onclick="closeMobileDrawer()" aria-label="Close navigation">✕</button>
+
+    <div class="nav-sidebar-label" data-i18n="nav_dashboards">Regional Dashboards</div>
+    <a href="asia.html"        class="nav-btn"><span data-i18n="nav_asia">🌏 Asia &amp; Pacific</span></a>
+    <a href="europe.html"      class="nav-btn"><span data-i18n="nav_europe">🌍 Europe</span></a>
+    <a href="middle-east.html" class="nav-btn"><span data-i18n="nav_me">🕌 Middle East</span></a>
+    <a href="wha.html"         class="nav-btn"><span data-i18n="nav_wha">🌎 W. Hemisphere</span></a>
+    <a href="military.html"    class="nav-btn"><span data-i18n="nav_military">🎖️ Military Tracker</span></a>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-sidebar-label" data-i18n="nav_me_rhetoric">Middle East Rhetoric</div>
+    <a href="rhetoric-iran.html"   class="nav-btn"><span data-i18n="nav_iran">🇮🇷 Iran</span></a>
+    <a href="rhetoric-israel.html" class="nav-btn"><span data-i18n="nav_israel">🇮🇱 Israel</span></a>
+    <a href="rhetoric-oman.html"   class="nav-btn"><span data-i18n="nav_oman">🇴🇲 Oman</span></a>
+
+    <div class="nav-sidebar-label" data-i18n="nav_asia_rhetoric">Asia Rhetoric</div>
+    <a href="rhetoric-china.html"    class="nav-btn"><span data-i18n="nav_china">🇨🇳 China</span></a>
+    <a href="rhetoric-india.html"    class="nav-btn active"><span data-i18n="nav_india">🇮🇳 India</span></a>
+    <a href="rhetoric-japan.html"    class="nav-btn"><span data-i18n="nav_japan">🇯🇵 Japan</span></a>
+    <a href="rhetoric-taiwan.html"   class="nav-btn"><span data-i18n="nav_taiwan">🇹🇼 Taiwan</span></a>
+
+    <div class="nav-sidebar-label" data-i18n="nav_europe_rhetoric">Europe Rhetoric</div>
+    <a href="rhetoric-russia.html"  class="nav-btn"><span data-i18n="nav_russia">🇷🇺 Russia</span></a>
+    <a href="rhetoric-belarus.html" class="nav-btn"><span data-i18n="nav_belarus">🇧🇾 Belarus</span></a>
+    <a href="rhetoric-ukraine.html" class="nav-btn"><span data-i18n="nav_ukraine">🇺🇦 Ukraine</span></a>
+
+    <div class="nav-sidebar-label" data-i18n="nav_wha_rhetoric">Western Hemisphere Rhetoric</div>
+    <a href="rhetoric-us.html"    class="nav-btn"><span data-i18n="nav_us">🇺🇸 United States</span></a>
+    <a href="rhetoric-cuba.html"  class="nav-btn"><span data-i18n="nav_cuba">🇨🇺 Cuba</span></a>
+    <a href="rhetoric-chile.html" class="nav-btn"><span data-i18n="nav_chile">🇨🇱 Chile</span></a>
+    <a href="rhetoric-peru.html"  class="nav-btn"><span data-i18n="nav_peru">🇵🇪 Peru</span></a>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-sidebar-label" data-i18n="nav_country_view">India Tracker</div>
+    <a href="india-stability.html" class="nav-btn"><span data-i18n="nav_india_stability">📊 Stability Index</span></a>
+    <a href="rhetoric-india.html"  class="nav-btn active"><span data-i18n="nav_india_rhetoric_short">🗣️ Rhetoric (this page)</span></a>
+</nav>
+
+<!-- Main content -->
+<main class="main-content">
+
+    <!-- BLUF block -->
+    <section class="bluf-block" id="blufBlock">
+        <div class="loading" id="blufLoading">
+            <div class="loading-spinner"></div>
+            <div class="loading-title" data-i18n="loading_title">Loading India Rhetoric Scan</div>
+            <div data-i18n="loading_sub">Connecting to Asia backend. This may take 20–40 seconds if cache is cold.</div>
+        </div>
+        <div id="blufContent" style="display:none;">
+            <div class="bluf-header">
+                <div>
+                    <div class="bluf-eyebrow" data-i18n="bluf_eyebrow">BLUF · So What Factor</div>
+                    <div class="bluf-title" id="blufTitle">—</div>
+                </div>
+                <div class="bluf-score-block">
+                    <div>
+                        <div class="bluf-score-label" data-i18n="bluf_score_label">Theatre Score</div>
+                        <div class="bluf-score-num" id="blufScoreNum">—</div>
+                        <div class="bluf-score-level" id="blufScoreLevel">—</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bluf-synthesis" id="blufSynthesis">
+                <!-- Filled by JS -->
+            </div>
+
+            <div class="bluf-evidence-title" data-i18n="bluf_evidence_title">Supporting Evidence — Cross-Theater Context</div>
+            <ul class="bluf-evidence-list" id="blufEvidence">
+                <!-- Filled by JS -->
+            </ul>
+
+            <div class="scan-meta">
+                <div class="scan-meta-left">
+                    <span><strong data-i18n="meta_scanned_at">Scanned:</strong> <span id="metaScannedAt">—</span></span>
+                    <span><strong data-i18n="meta_articles">Articles:</strong> <span id="metaArticleCount">—</span></span>
+                    <span><strong data-i18n="meta_duration">Duration:</strong> <span id="metaDuration">—</span></span>
+                </div>
+                <button class="refresh-btn" id="refreshBtn" onclick="refreshScan()" data-i18n="refresh_btn">↻ Refresh</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Three-dashboard grid -->
+    <section class="tri-dashboard" id="triDashboard" style="display:none;">
+
+        <!-- Outbound -->
+        <div class="dashboard-card outbound">
+            <div class="dashboard-title" data-i18n="dash_outbound">▲ Outbound</div>
+            <div class="dashboard-q" data-i18n="dash_outbound_q">"How is India projecting external posture under pressure?"</div>
+            <div class="dashboard-score-row">
+                <div class="dashboard-score" id="outboundScore">—</div>
+                <div class="dashboard-label" id="outboundLabel">—</div>
+            </div>
+            <div id="outboundContributors"></div>
+            <div id="outboundAbsorption"></div>
+        </div>
+
+        <!-- Inbound -->
+        <div class="dashboard-card inbound">
+            <div class="dashboard-title" data-i18n="dash_inbound">▼ Inbound</div>
+            <div class="dashboard-q" data-i18n="dash_inbound_q">"What upstream pressure is India absorbing right now?"</div>
+            <div class="dashboard-score-row">
+                <div class="dashboard-score" id="inboundScore">—</div>
+                <div class="dashboard-label" id="inboundLabel">—</div>
+            </div>
+            <div id="inboundContributors"></div>
+            <div id="inboundAbsorption"></div>
+        </div>
+
+        <!-- Internal -->
+        <div class="dashboard-card internal">
+            <div class="dashboard-title" data-i18n="dash_internal">◆ Internal</div>
+            <div class="dashboard-q" data-i18n="dash_internal_q">"Is India holding cohesion under absorption?"</div>
+            <div class="dashboard-score-row">
+                <div class="dashboard-score" id="internalScore">—</div>
+                <div class="dashboard-label" id="internalLabel">—</div>
+            </div>
+            <div id="internalContributors"></div>
+            <div id="internalAbsorption"></div>
+        </div>
+
+    </section>
+
+    <!-- Actor cards -->
+    <h2 class="section-title" data-i18n="actors_title">Actor Matrix — Seven Clusters</h2>
+    <section class="actors-grid" id="actorsGrid">
+        <!-- Filled by JS -->
+    </section>
+
+    <!-- Cross-theater section -->
+    <section class="crosstheater-card" id="crosstheaterCard" style="display:none;">
+        <div class="bluf-eyebrow" data-i18n="ct_eyebrow">Cross-Theater Read</div>
+        <div class="bluf-title" data-i18n="ct_title">Upstream Pressure Map · Iran · China · Pakistan · United States</div>
+        <div class="ct-grid">
+            <div>
+                <div class="ct-section-title" data-i18n="ct_stressors">Upstream Stressors Detected</div>
+                <div id="ctStressors"></div>
+            </div>
+            <div>
+                <div class="ct-section-title" data-i18n="ct_amplifiers">Actor Amplifier Deltas</div>
+                <div id="ctAmplifiers"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Error block -->
+    <section class="error-state" id="errorState" style="display:none;">
+        <strong data-i18n="error_title">Scan Failed</strong>
+        <div id="errorMessage" style="margin-top:8px;"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <strong>Asifah Analytics — India Rhetoric Tracker v1.0</strong> ·
+        <span data-i18n="footer_text">Multi-source OSINT scan every 6 hours. Cross-theater fingerprints read from Iran, China, Pakistan, US trackers. Absorption signatures fire when both upstream pressure AND India's own-signals are present.</span>
+        ·
+        <a href="https://asifahanalytics.com" style="color:var(--accent);">asifahanalytics.com</a>
+    </footer>
+
+</main>
+
+</div><!-- /page-with-sidebar -->
+
+</div><!-- /container -->
+
+<script>
+// ============================================================================
+// CONFIG
+// ============================================================================
+const API_BASE = 'https://asifah-asia-backend.onrender.com';
+const SCAN_ENDPOINT = `${API_BASE}/api/rhetoric/india`;
+
+let currentLang = localStorage.getItem('asifah_lang') || 'en';
+let currentScanData = null;
+
+// ============================================================================
+// i18n TRANSLATIONS — EN / ZH / JA / KO
+// ============================================================================
+const translations = {
+    en: {
+        page_title_meta: 'India Rhetoric — Asifah Analytics',
+        page_title: '🇮🇳 INDIA RHETORIC TRACKER',
+        page_subtitle: 'Three-Dashboard Absorption Analysis · PMO · MEA · Armed Forces · Economic Statecraft · Opposition · Hindutva · Adversary Cross-reads',
+        theme_label: 'Theme',
+        mobile_menu: 'Open navigation',
+        mobile_drawer_title: 'Navigation',
+        nav_dashboards: 'Regional Dashboards',
+        nav_asia: '🌏 Asia & Pacific', nav_europe: '🌍 Europe', nav_me: '🕌 Middle East', nav_wha: '🌎 W. Hemisphere',
+        nav_military: '🎖️ Military Tracker',
+        nav_me_rhetoric: 'Middle East Rhetoric',
+        nav_iran: '🇮🇷 Iran', nav_israel: '🇮🇱 Israel', nav_oman: '🇴🇲 Oman',
+        nav_asia_rhetoric: 'Asia Rhetoric',
+        nav_china: '🇨🇳 China', nav_india: '🇮🇳 India', nav_japan: '🇯🇵 Japan', nav_taiwan: '🇹🇼 Taiwan',
+        nav_europe_rhetoric: 'Europe Rhetoric',
+        nav_russia: '🇷🇺 Russia', nav_belarus: '🇧🇾 Belarus', nav_ukraine: '🇺🇦 Ukraine',
+        nav_wha_rhetoric: 'Western Hemisphere Rhetoric',
+        nav_us: '🇺🇸 United States', nav_cuba: '🇨🇺 Cuba', nav_chile: '🇨🇱 Chile', nav_peru: '🇵🇪 Peru',
+        nav_country_view: 'India Tracker',
+        nav_india_stability: '📊 Stability Index', nav_india_rhetoric_short: '🗣️ Rhetoric (this page)',
+        loading_title: 'Loading India Rhetoric Scan',
+        loading_sub: 'Connecting to Asia backend. This may take 20–40 seconds if cache is cold.',
+        bluf_eyebrow: 'BLUF · So What Factor',
+        bluf_score_label: 'Theatre Score',
+        bluf_evidence_title: 'Supporting Evidence — Cross-Theater Context',
+        meta_scanned_at: 'Scanned:', meta_articles: 'Articles:', meta_duration: 'Duration:',
+        refresh_btn: '↻ Refresh', refresh_btn_running: 'Refreshing…',
+        dash_outbound: '▲ Outbound',
+        dash_outbound_q: '"How is India projecting external posture under pressure?"',
+        dash_inbound: '▼ Inbound',
+        dash_inbound_q: '"What upstream pressure is India absorbing right now?"',
+        dash_internal: '◆ Internal',
+        dash_internal_q: '"Is India holding cohesion under absorption?"',
+        actors_title: 'Actor Matrix — Seven Clusters',
+        ct_eyebrow: 'Cross-Theater Read',
+        ct_title: 'Upstream Pressure Map · Iran · China · Pakistan · United States',
+        ct_stressors: 'Upstream Stressors Detected',
+        ct_amplifiers: 'Actor Amplifier Deltas',
+        error_title: 'Scan Failed',
+        footer_text: 'Multi-source OSINT scan every 6 hours. Cross-theater fingerprints read from Iran, China, Pakistan, US trackers. Absorption signatures fire when both upstream pressure AND India\'s own-signals are present.',
+        no_data: 'No data available yet — first scan may still be in progress.',
+        no_contributors: 'No actors contributing at this dashboard right now.',
+        no_absorption: 'No absorption signatures currently fired.',
+        no_stressors: 'No upstream stressors detected.',
+        no_amplifiers: 'No actor amplifications active.',
+        absorption_eyebrow: 'Absorption Signature Fired',
+        amplified: 'amplified',
+        from_level: 'from L',
+        stat_score: 'Score', stat_articles: 'Articles', stat_triggers: 'Triggers',
+        section_triggers: 'Triggers matched', section_articles: 'Top articles',
+        opposition_aligned: 'Opposition: ALIGNED (rally-round-flag)',
+        opposition_attacking: 'Opposition: ATTACKING (cohesion stress)',
+        opposition_normal: 'Opposition: normal posture',
+        synth_baseline: 'India is at <strong>{level_label}</strong> posture (theatre score {score}). No absorption signatures are currently firing — the tracker is reading baseline rhetoric flow without convergence of upstream pressure and Indian own-signal response.',
+        synth_with_absorption: 'India is at <strong>{level_label}</strong> posture (theatre score {score}) with <strong>{absorption_count} absorption signature{plural} firing</strong>: <strong>{signature_names}</strong>. {lit_text} The convergence of upstream pressure and Indian rhetoric response is the signal — words doing the work of policy when policy levers are too slow or politically expensive.',
+        lit_one: 'One dashboard is lit at L3+,',
+        lit_two: 'Two dashboards are simultaneously lit at L3+ (+5 convergence bonus),',
+        lit_three: 'All three dashboards are simultaneously lit at L3+ (+10 convergence bonus — maximum),',
+        lit_zero: '',
+    },
+    zh: {
+        page_title_meta: '印度言论追踪 — Asifah 分析',
+        page_title: '🇮🇳 印度言论追踪器',
+        page_subtitle: '三仪表板吸收分析 · 总理办公室 · 外交部 · 武装部队 · 经济治国 · 反对派 · 印度教民族主义 · 对手交叉解读',
+        theme_label: '主题',
+        mobile_menu: '打开导航',
+        mobile_drawer_title: '导航',
+        nav_dashboards: '区域仪表板',
+        nav_asia: '🌏 亚太', nav_europe: '🌍 欧洲', nav_me: '🕌 中东', nav_wha: '🌎 西半球',
+        nav_military: '🎖️ 军事追踪器',
+        nav_me_rhetoric: '中东言论',
+        nav_iran: '🇮🇷 伊朗', nav_israel: '🇮🇱 以色列', nav_oman: '🇴🇲 阿曼',
+        nav_asia_rhetoric: '亚洲言论',
+        nav_china: '🇨🇳 中国', nav_india: '🇮🇳 印度', nav_japan: '🇯🇵 日本', nav_taiwan: '🇹🇼 台湾',
+        nav_europe_rhetoric: '欧洲言论',
+        nav_russia: '🇷🇺 俄罗斯', nav_belarus: '🇧🇾 白俄罗斯', nav_ukraine: '🇺🇦 乌克兰',
+        nav_wha_rhetoric: '西半球言论',
+        nav_us: '🇺🇸 美国', nav_cuba: '🇨🇺 古巴', nav_chile: '🇨🇱 智利', nav_peru: '🇵🇪 秘鲁',
+        nav_country_view: '印度追踪器',
+        nav_india_stability: '📊 稳定指数', nav_india_rhetoric_short: '🗣️ 言论(本页)',
+        loading_title: '正在加载印度言论扫描',
+        loading_sub: '正在连接亚洲后端。冷缓存可能需要 20–40 秒。',
+        bluf_eyebrow: '关键判断 · 重要性因素',
+        bluf_score_label: '战区分数',
+        bluf_evidence_title: '支持证据 — 跨战区背景',
+        meta_scanned_at: '扫描时间:', meta_articles: '文章数:', meta_duration: '耗时:',
+        refresh_btn: '↻ 刷新', refresh_btn_running: '刷新中…',
+        dash_outbound: '▲ 对外',
+        dash_outbound_q: '"印度如何在压力下投射外部姿态?"',
+        dash_inbound: '▼ 对内',
+        dash_inbound_q: '"印度目前正在吸收哪些上游压力?"',
+        dash_internal: '◆ 内部',
+        dash_internal_q: '"印度在吸收过程中能否保持凝聚力?"',
+        actors_title: '行为者矩阵 — 七个集群',
+        ct_eyebrow: '跨战区解读',
+        ct_title: '上游压力地图 · 伊朗 · 中国 · 巴基斯坦 · 美国',
+        ct_stressors: '检测到的上游压力源',
+        ct_amplifiers: '行为者放大增量',
+        error_title: '扫描失败',
+        footer_text: '每 6 小时进行一次多源 OSINT 扫描。跨战区指纹来自伊朗、中国、巴基斯坦和美国追踪器。当上游压力和印度自身信号同时出现时,触发吸收特征。',
+        no_data: '尚无数据 — 首次扫描可能仍在进行中。',
+        no_contributors: '此仪表板目前没有行为者贡献。',
+        no_absorption: '当前没有触发吸收特征。',
+        no_stressors: '未检测到上游压力源。',
+        no_amplifiers: '没有激活的行为者放大。',
+        absorption_eyebrow: '吸收特征已触发',
+        amplified: '放大',
+        from_level: '从 L',
+        stat_score: '分数', stat_articles: '文章', stat_triggers: '触发',
+        section_triggers: '匹配的触发词', section_articles: '主要文章',
+        opposition_aligned: '反对派: 一致 (团结一致)',
+        opposition_attacking: '反对派: 攻击 (凝聚力压力)',
+        opposition_normal: '反对派: 正常姿态',
+        synth_baseline: '印度处于 <strong>{level_label}</strong> 姿态 (战区分数 {score})。当前没有触发任何吸收特征 — 追踪器读取的是基线言论流,没有上游压力与印度自身信号响应的汇合。',
+        synth_with_absorption: '印度处于 <strong>{level_label}</strong> 姿态 (战区分数 {score}),<strong>{absorption_count} 个吸收特征触发中</strong>: <strong>{signature_names}</strong>。{lit_text} 上游压力与印度言论响应的汇合是信号 — 当政策杠杆太慢或政治代价太高时,言语在完成政策的工作。',
+        lit_one: '一个仪表板在 L3+ 点亮,',
+        lit_two: '两个仪表板同时在 L3+ 点亮 (+5 汇合奖励),',
+        lit_three: '所有三个仪表板同时在 L3+ 点亮 (+10 汇合奖励 — 最大值),',
+        lit_zero: '',
+    },
+    ja: {
+        page_title_meta: 'インドレトリック — Asifah Analytics',
+        page_title: '🇮🇳 インド・レトリック・トラッカー',
+        page_subtitle: '三ダッシュボード吸収分析 · PMO · MEA · 軍 · 経済外交 · 野党 · ヒンドゥトヴァ · 敵対勢力クロスリード',
+        theme_label: 'テーマ',
+        mobile_menu: 'ナビゲーションを開く',
+        mobile_drawer_title: 'ナビゲーション',
+        nav_dashboards: '地域ダッシュボード',
+        nav_asia: '🌏 アジア太平洋', nav_europe: '🌍 ヨーロッパ', nav_me: '🕌 中東', nav_wha: '🌎 西半球',
+        nav_military: '🎖️ 軍事トラッカー',
+        nav_me_rhetoric: '中東レトリック',
+        nav_iran: '🇮🇷 イラン', nav_israel: '🇮🇱 イスラエル', nav_oman: '🇴🇲 オマーン',
+        nav_asia_rhetoric: 'アジアレトリック',
+        nav_china: '🇨🇳 中国', nav_india: '🇮🇳 インド', nav_japan: '🇯🇵 日本', nav_taiwan: '🇹🇼 台湾',
+        nav_europe_rhetoric: 'ヨーロッパレトリック',
+        nav_russia: '🇷🇺 ロシア', nav_belarus: '🇧🇾 ベラルーシ', nav_ukraine: '🇺🇦 ウクライナ',
+        nav_wha_rhetoric: '西半球レトリック',
+        nav_us: '🇺🇸 米国', nav_cuba: '🇨🇺 キューバ', nav_chile: '🇨🇱 チリ', nav_peru: '🇵🇪 ペルー',
+        nav_country_view: 'インドトラッカー',
+        nav_india_stability: '📊 安定指数', nav_india_rhetoric_short: '🗣️ レトリック(本ページ)',
+        loading_title: 'インドレトリックスキャンを読み込み中',
+        loading_sub: 'アジアバックエンドに接続中。コールドキャッシュの場合 20–40 秒かかることがあります。',
+        bluf_eyebrow: '結論 · 重要性ファクター',
+        bluf_score_label: 'シアタースコア',
+        bluf_evidence_title: '裏付け証拠 — クロスシアター文脈',
+        meta_scanned_at: 'スキャン:', meta_articles: '記事:', meta_duration: '所要時間:',
+        refresh_btn: '↻ 更新', refresh_btn_running: '更新中…',
+        dash_outbound: '▲ アウトバウンド',
+        dash_outbound_q: '"インドは圧力下でどのように外部姿勢を投影しているか?"',
+        dash_inbound: '▼ インバウンド',
+        dash_inbound_q: '"インドが今吸収している上流の圧力は何か?"',
+        dash_internal: '◆ 内部',
+        dash_internal_q: '"インドは吸収下で結束を保っているか?"',
+        actors_title: 'アクター・マトリクス — 7つのクラスター',
+        ct_eyebrow: 'クロスシアター・リード',
+        ct_title: '上流圧力マップ · イラン · 中国 · パキスタン · 米国',
+        ct_stressors: '検出された上流ストレッサー',
+        ct_amplifiers: 'アクター増幅デルタ',
+        error_title: 'スキャン失敗',
+        footer_text: '6時間ごとのマルチソース OSINT スキャン。クロスシアター指紋はイラン・中国・パキスタン・米国トラッカーから読み取る。上流圧力とインド自身のシグナルが両方存在する時に吸収シグネチャーが発火する。',
+        no_data: 'まだデータがありません — 初回スキャンが進行中の可能性があります。',
+        no_contributors: 'このダッシュボードに現在貢献しているアクターはいません。',
+        no_absorption: '現在発火している吸収シグネチャーはありません。',
+        no_stressors: '上流ストレッサーは検出されていません。',
+        no_amplifiers: 'アクター増幅は有効ではありません。',
+        absorption_eyebrow: '吸収シグネチャー発火',
+        amplified: '増幅',
+        from_level: 'L',
+        stat_score: 'スコア', stat_articles: '記事', stat_triggers: 'トリガー',
+        section_triggers: '一致したトリガー', section_articles: '主要記事',
+        opposition_aligned: '野党: 一致 (旗の下集結)',
+        opposition_attacking: '野党: 攻撃 (結束ストレス)',
+        opposition_normal: '野党: 通常姿勢',
+        synth_baseline: 'インドは <strong>{level_label}</strong> 姿勢 (シアタースコア {score})。現在発火している吸収シグネチャーはなし — トラッカーはベースラインのレトリックフローを読み取っており、上流圧力とインド自身のシグナル応答の収束はない。',
+        synth_with_absorption: 'インドは <strong>{level_label}</strong> 姿勢 (シアタースコア {score})、<strong>{absorption_count} 件の吸収シグネチャー発火中</strong>: <strong>{signature_names}</strong>。{lit_text} 上流圧力とインドのレトリック応答の収束がシグナル — 政策レバーが遅すぎるか政治的に高すぎる時、言葉が政策の仕事をしている。',
+        lit_one: '1つのダッシュボードが L3+ で点灯、',
+        lit_two: '2つのダッシュボードが同時に L3+ で点灯 (+5 収束ボーナス)、',
+        lit_three: '3つすべてのダッシュボードが同時に L3+ で点灯 (+10 収束ボーナス — 最大)、',
+        lit_zero: '',
+    },
+    ko: {
+        page_title_meta: '인도 수사 — Asifah Analytics',
+        page_title: '🇮🇳 인도 수사 추적기',
+        page_subtitle: '3-대시보드 흡수 분석 · PMO · MEA · 군 · 경제 외교 · 야당 · 힌두트바 · 적대세력 교차 분석',
+        theme_label: '테마',
+        mobile_menu: '탐색 열기',
+        mobile_drawer_title: '탐색',
+        nav_dashboards: '지역 대시보드',
+        nav_asia: '🌏 아시아 태평양', nav_europe: '🌍 유럽', nav_me: '🕌 중동', nav_wha: '🌎 서반구',
+        nav_military: '🎖️ 군사 추적기',
+        nav_me_rhetoric: '중동 수사',
+        nav_iran: '🇮🇷 이란', nav_israel: '🇮🇱 이스라엘', nav_oman: '🇴🇲 오만',
+        nav_asia_rhetoric: '아시아 수사',
+        nav_china: '🇨🇳 중국', nav_india: '🇮🇳 인도', nav_japan: '🇯🇵 일본', nav_taiwan: '🇹🇼 대만',
+        nav_europe_rhetoric: '유럽 수사',
+        nav_russia: '🇷🇺 러시아', nav_belarus: '🇧🇾 벨라루스', nav_ukraine: '🇺🇦 우크라이나',
+        nav_wha_rhetoric: '서반구 수사',
+        nav_us: '🇺🇸 미국', nav_cuba: '🇨🇺 쿠바', nav_chile: '🇨🇱 칠레', nav_peru: '🇵🇪 페루',
+        nav_country_view: '인도 추적기',
+        nav_india_stability: '📊 안정성 지수', nav_india_rhetoric_short: '🗣️ 수사 (현재 페이지)',
+        loading_title: '인도 수사 스캔 로딩 중',
+        loading_sub: '아시아 백엔드에 연결 중. 콜드 캐시의 경우 20–40초 걸릴 수 있습니다.',
+        bluf_eyebrow: '핵심 판단 · 중요성 요소',
+        bluf_score_label: '극장 점수',
+        bluf_evidence_title: '뒷받침 증거 — 교차 극장 맥락',
+        meta_scanned_at: '스캔:', meta_articles: '기사:', meta_duration: '소요:',
+        refresh_btn: '↻ 새로고침', refresh_btn_running: '새로고침 중…',
+        dash_outbound: '▲ 아웃바운드',
+        dash_outbound_q: '"인도는 압력 하에서 외부 자세를 어떻게 투사하는가?"',
+        dash_inbound: '▼ 인바운드',
+        dash_inbound_q: '"인도가 지금 흡수하고 있는 상류 압력은 무엇인가?"',
+        dash_internal: '◆ 내부',
+        dash_internal_q: '"인도는 흡수 과정에서 응집력을 유지하는가?"',
+        actors_title: '행위자 매트릭스 — 7개 클러스터',
+        ct_eyebrow: '교차 극장 분석',
+        ct_title: '상류 압력 지도 · 이란 · 중국 · 파키스탄 · 미국',
+        ct_stressors: '감지된 상류 압력 요인',
+        ct_amplifiers: '행위자 증폭 델타',
+        error_title: '스캔 실패',
+        footer_text: '6시간마다 다중 소스 OSINT 스캔. 교차 극장 지문은 이란·중국·파키스탄·미국 추적기에서 읽어옴. 상류 압력과 인도 자체 신호가 모두 있을 때 흡수 시그니처가 발동.',
+        no_data: '아직 데이터 없음 — 첫 스캔이 진행 중일 수 있습니다.',
+        no_contributors: '이 대시보드에 현재 기여하는 행위자가 없습니다.',
+        no_absorption: '현재 발동된 흡수 시그니처가 없습니다.',
+        no_stressors: '상류 압력 요인이 감지되지 않았습니다.',
+        no_amplifiers: '활성화된 행위자 증폭이 없습니다.',
+        absorption_eyebrow: '흡수 시그니처 발동',
+        amplified: '증폭',
+        from_level: 'L',
+        stat_score: '점수', stat_articles: '기사', stat_triggers: '트리거',
+        section_triggers: '일치된 트리거', section_articles: '주요 기사',
+        opposition_aligned: '야당: 일치 (단결)',
+        opposition_attacking: '야당: 공격 (응집력 압박)',
+        opposition_normal: '야당: 정상 자세',
+        synth_baseline: '인도는 <strong>{level_label}</strong> 자세 (극장 점수 {score}). 현재 발동된 흡수 시그니처 없음 — 추적기는 기준선 수사 흐름을 읽고 있으며 상류 압력과 인도 자체 신호 응답의 수렴은 없음.',
+        synth_with_absorption: '인도는 <strong>{level_label}</strong> 자세 (극장 점수 {score})이며 <strong>{absorption_count}개 흡수 시그니처 발동 중</strong>: <strong>{signature_names}</strong>. {lit_text} 상류 압력과 인도 수사 응답의 수렴이 신호 — 정책 레버가 너무 느리거나 정치적으로 비쌀 때, 말이 정책의 일을 하고 있다.',
+        lit_one: '하나의 대시보드가 L3+에서 점등,',
+        lit_two: '두 개의 대시보드가 동시에 L3+에서 점등 (+5 수렴 보너스),',
+        lit_three: '세 개의 모든 대시보드가 동시에 L3+에서 점등 (+10 수렴 보너스 — 최대),',
+        lit_zero: '',
+    },
+};
+
+function t(key) {
+    return (translations[currentLang] && translations[currentLang][key]) || translations.en[key] || key;
+}
+
+function applyTranslations() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        const val = t(key);
+        if (val) el.innerHTML = val;
+    });
+    document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+        const key = el.getAttribute('data-i18n-aria');
+        const val = t(key);
+        if (val) el.setAttribute('aria-label', val);
+    });
+    document.title = t('page_title_meta');
+    document.documentElement.lang = currentLang;
+}
+
+function setLanguage(lang) {
+    currentLang = lang;
+    localStorage.setItem('asifah_lang', lang);
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+    applyTranslations();
+    if (currentScanData) renderScanData(currentScanData);
+}
+
+// ============================================================================
+// THEME
+// ============================================================================
+function toggleTheme() {
+    const cur = document.body.getAttribute('data-theme') || 'dark';
+    const next = cur === 'dark' ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', next);
+    document.documentElement.setAttribute('data-theme', next);
+    document.getElementById('themeIcon').textContent = next === 'dark' ? '☀️' : '🌙';
+    localStorage.setItem('asifah_theme', next);
+}
+(function initTheme() {
+    const saved = localStorage.getItem('asifah_theme') || 'dark';
+    document.body.setAttribute('data-theme', saved);
+    document.documentElement.setAttribute('data-theme', saved);
+    setTimeout(() => {
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.textContent = saved === 'dark' ? '☀️' : '🌙';
+    }, 0);
+})();
+
+// ============================================================================
+// MOBILE DRAWER
+// ============================================================================
+function openMobileDrawer() {
+    document.getElementById('navSidebar').classList.add('open');
+    document.getElementById('drawerBackdrop').classList.add('open');
+}
+function closeMobileDrawer() {
+    document.getElementById('navSidebar').classList.remove('open');
+    document.getElementById('drawerBackdrop').classList.remove('open');
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('hamburgerBtn').addEventListener('click', openMobileDrawer);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMobileDrawer(); });
+});
+
+// ============================================================================
+// API FETCH + RENDER
+// ============================================================================
+async function loadScan() {
+    document.getElementById('blufLoading').style.display = 'block';
+    document.getElementById('blufContent').style.display = 'none';
+    document.getElementById('errorState').style.display = 'none';
+
+    try {
+        const resp = await fetch(SCAN_ENDPOINT, { method: 'GET', cache: 'no-cache' });
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        const data = await resp.json();
+        if (!data.success) throw new Error(data.error || 'Scan returned success=false');
+        currentScanData = data;
+        renderScanData(data);
+    } catch (e) {
+        document.getElementById('blufLoading').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+        document.getElementById('errorMessage').textContent = String(e);
+    }
+}
+
+async function refreshScan() {
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true;
+    btn.textContent = t('refresh_btn_running');
+    await loadScan();
+    btn.disabled = false;
+    btn.textContent = t('refresh_btn');
+}
+
+function formatTimestamp(iso) {
+    if (!iso) return '—';
+    try {
+        const d = new Date(iso);
+        return d.toLocaleString(currentLang === 'en' ? 'en-US' : currentLang, {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+    } catch { return iso; }
+}
+
+function buildSynthesisHTML(data) {
+    const litCount = data.lit_dashboards || 0;
+    const absorptionCount = (data.absorption && data.absorption.count) || 0;
+    const sigIds = (data.absorption && data.absorption.signature_ids) || [];
+    const levelLabel = data.theatre_label || 'Baseline';
+    const score = data.theatre_score || 0;
+
+    if (absorptionCount === 0) {
+        return t('synth_baseline')
+            .replace('{level_label}', levelLabel)
+            .replace('{score}', score);
+    }
+
+    let litText = '';
+    if (litCount >= 3)       litText = t('lit_three');
+    else if (litCount === 2) litText = t('lit_two');
+    else if (litCount === 1) litText = t('lit_one');
+    else                     litText = t('lit_zero');
+
+    const sigNames = sigIds.map(s => s.replace(/_/g, ' ')).join(', ');
+    const plural = absorptionCount === 1 ? '' : 's';
+
+    return t('synth_with_absorption')
+        .replace('{level_label}', levelLabel)
+        .replace('{score}', score)
+        .replace('{absorption_count}', absorptionCount)
+        .replace('{plural}', plural)
+        .replace('{signature_names}', sigNames)
+        .replace('{lit_text}', litText);
+}
+
+function renderScanData(data) {
+    // BLUF
+    document.getElementById('blufLoading').style.display = 'none';
+    document.getElementById('blufContent').style.display = 'block';
+    document.getElementById('triDashboard').style.display = 'grid';
+    document.getElementById('crosstheaterCard').style.display = 'block';
+
+    document.getElementById('blufScoreNum').textContent = data.theatre_score;
+    document.getElementById('blufScoreNum').style.color = data.theatre_color || 'inherit';
+    document.getElementById('blufScoreLevel').textContent = `L${data.theatre_level} · ${data.theatre_label}`;
+    document.getElementById('blufScoreLevel').style.color = data.theatre_color || 'inherit';
+    document.getElementById('blufTitle').textContent = `${data.theatre_label} posture — L${data.theatre_level} across ${data.lit_dashboards} dashboard${data.lit_dashboards === 1 ? '' : 's'}`;
+
+    document.getElementById('blufSynthesis').innerHTML = buildSynthesisHTML(data);
+
+    const evidenceUL = document.getElementById('blufEvidence');
+    evidenceUL.innerHTML = '';
+    const notes = (data.cross_theater && data.cross_theater.context_notes) || [];
+    if (notes.length === 0) {
+        evidenceUL.innerHTML = `<li style="color:var(--text-muted);font-style:italic;">${t('no_stressors')}</li>`;
+    } else {
+        notes.forEach(n => {
+            const li = document.createElement('li');
+            li.textContent = n;
+            evidenceUL.appendChild(li);
+        });
+    }
+
+    document.getElementById('metaScannedAt').textContent = formatTimestamp(data.scanned_at);
+    document.getElementById('metaArticleCount').textContent = data.article_count || 0;
+    document.getElementById('metaDuration').textContent = `${data.scan_duration_sec || 0}s`;
+
+    // Dashboards
+    renderDashboard('outbound', data.dashboards && data.dashboards.outbound, data);
+    renderDashboard('inbound',  data.dashboards && data.dashboards.inbound,  data);
+    renderDashboard('internal', data.dashboards && data.dashboards.internal, data);
+
+    // Actors
+    renderActors(data.actors || {});
+
+    // Cross-theater
+    renderCrossTheater(data.cross_theater || {});
+}
+
+function renderDashboard(key, dash, data) {
+    if (!dash) return;
+    const scoreEl  = document.getElementById(`${key}Score`);
+    const labelEl  = document.getElementById(`${key}Label`);
+    const contribEl = document.getElementById(`${key}Contributors`);
+    const absorpEl = document.getElementById(`${key}Absorption`);
+
+    scoreEl.textContent = `L${dash.level}`;
+    labelEl.textContent = dash.label;
+    labelEl.style.color = dash.color;
+
+    // Contributors
+    const contribs = dash.contributors || [];
+    if (contribs.length === 0) {
+        contribEl.innerHTML = `<div class="dashboard-q" style="margin-top:8px;">${t('no_contributors')}</div>`;
+    } else {
+        contribEl.innerHTML = contribs.map(c => {
+            const actor = (data.actors || {})[c];
+            const lvl = actor ? actor.level : 0;
+            const lbl = actor ? actor.level_label : '';
+            const nm  = actor ? actor.name : c;
+            return `<div class="dashboard-row">
+                <span class="dashboard-row-label">${nm}</span>
+                <span class="dashboard-row-level" style="color:${actor ? actor.level_color : 'inherit'};">L${lvl} · ${lbl}</span>
+            </div>`;
+        }).join('');
+    }
+
+    // Inline absorption (only for INBOUND dashboard per the design)
+    // We render absorption inline on the INBOUND dashboard because absorption
+    // signatures are by definition INBOUND-driven (upstream pressure absorbed).
+    if (key === 'inbound') {
+        const absResults = (data.absorption && data.absorption.results) || [];
+        if (absResults.length === 0) {
+            absorpEl.innerHTML = '';
+        } else {
+            absorpEl.innerHTML = absResults.map(r => `
+                <div class="absorption-inline">
+                    <div class="absorption-inline-eyebrow">🦋 ${t('absorption_eyebrow')}</div>
+                    <div class="absorption-inline-title">${(r.signature_id || '').replace(/_/g, ' ')}</div>
+                    <div class="absorption-inline-desc">${r.rule_description || ''}</div>
+                </div>
+            `).join('');
+        }
+    }
+}
+
+function renderActors(actors) {
+    const grid = document.getElementById('actorsGrid');
+    grid.innerHTML = '';
+
+    const order = ['pmo', 'mea', 'armed_forces', 'economic_statecraft',
+                   'opposition', 'hindutva_ideological', 'adversary_crossreads'];
+
+    order.forEach(key => {
+        const a = actors[key];
+        if (!a) return;
+
+        const amplifiedHTML = ('amplified_by' in a)
+            ? `<div class="actor-amplified-note">▲ ${t('amplified')} +${a.amplified_by} ${t('from_level')}${a.original_level || 0}</div>`
+            : '';
+
+        const triggerPills = (a.matched_triggers || []).slice(0, 8).map(tr => {
+            const isTw = tr.startsWith('TRIPWIRE');
+            return `<span class="trigger-pill ${isTw ? 'tripwire' : ''}">${tr}</span>`;
+        }).join('');
+
+        const articleHTML = (a.top_articles || []).slice(0, 3).map(art => `
+            <div class="actor-article">
+                <a class="actor-article-title" href="${art.url || '#'}" target="_blank" rel="noopener">${art.title || ''}</a>
+                <div class="actor-article-meta">
+                    <span>${art.source || ''}</span>
+                    <span>L${art.level || 0}</span>
+                    <span>${art.trigger || ''}</span>
+                </div>
+            </div>
+        `).join('');
+
+        const card = document.createElement('div');
+        card.className = 'actor-card';
+        card.innerHTML = `
+            <div class="actor-card-header">
+                <div class="actor-icon">${a.icon || '•'}</div>
+                <div class="actor-name">
+                    <div class="actor-name-title">${a.name || key}</div>
+                    <div class="actor-name-role">${a.role || ''}</div>
+                </div>
+                <div class="actor-level-badge" style="background:${a.level_color || '#6b7280'};">L${a.level || 0} · ${a.level_label || 'Baseline'}</div>
+            </div>
+            <div class="actor-stats">
+                <div class="actor-stat"><div class="actor-stat-num">${a.weighted_score || 0}</div><div class="actor-stat-label">${t('stat_score')}</div></div>
+                <div class="actor-stat"><div class="actor-stat-num">${a.article_count || 0}</div><div class="actor-stat-label">${t('stat_articles')}</div></div>
+                <div class="actor-stat"><div class="actor-stat-num">${(a.matched_triggers || []).length}</div><div class="actor-stat-label">${t('stat_triggers')}</div></div>
+            </div>
+            ${amplifiedHTML}
+            ${triggerPills ? `<div class="actor-section-title">${t('section_triggers')}</div><div class="actor-triggers">${triggerPills}</div>` : ''}
+            ${articleHTML ? `<div class="actor-section-title">${t('section_articles')}</div><div class="actor-articles">${articleHTML}</div>` : ''}
+        `;
+        grid.appendChild(card);
+    });
+}
+
+function renderCrossTheater(ct) {
+    const stressorsDiv = document.getElementById('ctStressors');
+    const stressors = ct.upstream_stressors || [];
+    if (stressors.length === 0) {
+        stressorsDiv.innerHTML = `<div style="color:var(--text-muted);font-style:italic;font-size:11px;">${t('no_stressors')}</div>`;
+    } else {
+        stressorsDiv.innerHTML = stressors.map(s =>
+            `<span class="stressor-pill">${s.replace(/_/g, ' ')}</span>`
+        ).join('');
+    }
+
+    const amplifiersDiv = document.getElementById('ctAmplifiers');
+    const deltas = ct.amplifier_actor_deltas || {};
+    const keys = Object.keys(deltas);
+    if (keys.length === 0) {
+        amplifiersDiv.innerHTML = `<div style="color:var(--text-muted);font-style:italic;font-size:11px;">${t('no_amplifiers')}</div>`;
+    } else {
+        amplifiersDiv.innerHTML = keys.map(k =>
+            `<span class="amplifier-pill">${k.replace(/_/g, ' ')}<span class="delta">+${deltas[k]}</span></span>`
+        ).join('');
+    }
+}
+
+// ============================================================================
+// INIT
+// ============================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.toggle('active', b.dataset.lang === currentLang));
+    applyTranslations();
+    loadScan();
+});
+</script>
+
+</body>
+</html>
