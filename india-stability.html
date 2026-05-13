@@ -621,14 +621,55 @@ header h1 { font-size:30px; font-weight:700; margin-bottom:6px; letter-spacing:0
     <a href="https://travel.state.gov/content/travel/en/traveladvisories/traveladvisories/india-travel-advisory.html" target="_blank" rel="noopener" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="travel_button">VIEW ADVISORY →</a>
 </div>
 
-<!-- ── RHETORIC TRACKER PLACEHOLDER (Phase 2 will replace this with rhetoric-india.html link) ── -->
-<div class="rhetoric-placeholder">
-    <div>
-        <div style="font-size:13px; font-weight:bold; color:var(--text-primary);" data-i18n="rhetoric_placeholder_title">📡 India Rhetoric &amp; Coercion Tracker</div>
-        <div style="font-size:11px; color:var(--text-secondary); margin-top:3px;" data-i18n="rhetoric_placeholder_subtitle">Coming next: PMO · MEA · RBI · Armed Forces · Opposition · Mining/Energy · Cross-LAC dynamics — with Economic Absorption Signatures baked in day one.</div>
+<!-- ── RHETORIC TRACKER (Patch 13, May 2026) — green banner + live card ── -->
+<!-- Green banner — gold standard placement: directly under travel warning -->
+<div class="advisory-row" style="background:linear-gradient(135deg,#064e3b 0%,#065f46 50%,#064e3b 100%); border:2px solid #10b981; border-radius:10px; padding:14px 20px; display:flex; align-items:center; gap:14px; box-shadow:0 4px 12px rgba(16,185,129,0.18); margin-bottom:14px;">
+    <div style="font-size:24px; flex-shrink:0;">🟢</div>
+    <div style="flex:1; min-width:0;">
+        <div style="color:white; font-weight:bold; font-size:13px; letter-spacing:0.3px;" data-i18n="rhetoric_banner_title">India Rhetoric Tracker — Live</div>
+        <div style="color:rgba(255,255,255,0.85); font-size:11px; margin-top:2px;" data-i18n="rhetoric_banner_subtitle">First absorber-class tracker on the platform · Three dashboards · Seven actor clusters · Updated every 6 hours</div>
     </div>
-    <div style="display:flex; align-items:center; gap:10px; flex-shrink:0;">
-        <span style="background:#6b7280; color:white; font-size:12px; font-weight:700; padding:5px 14px; border-radius:6px; letter-spacing:0.5px;" data-i18n="rhetoric_in_dev">🔧 In Development</span>
+    <a href="rhetoric-india.html" style="flex-shrink:0; padding:6px 14px; background:rgba(255,255,255,0.18); border:1px solid rgba(255,255,255,0.35); border-radius:6px; color:white; text-decoration:none; font-size:11px; font-weight:bold; white-space:nowrap;" data-i18n="rhetoric_banner_button">FULL TRACKER →</a>
+</div>
+
+<!-- Live rhetoric card (BLUF + 2 key metrics + deep link) -->
+<div class="rhetoric-card" id="rhetoricCard" style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:12px; padding:18px 22px; margin-bottom:16px; box-shadow:var(--card-glow); position:relative; overflow:hidden;">
+    <!-- Top accent stripe (matches rhetoric-india.html convention) -->
+    <div style="position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,#dc2626,#7c3aed,#1d4ed8);"></div>
+
+    <!-- Header row: title + theatre level badge + last scanned -->
+    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:10px;">
+        <div>
+            <div style="font-size:9px; font-weight:800; color:var(--accent); text-transform:uppercase; letter-spacing:2px;" data-i18n="rhetoric_card_eyebrow">India Rhetoric · So What Factor</div>
+            <div style="font-size:16px; font-weight:800; color:var(--text-primary); margin-top:4px;" id="rhetoricCardTitle" data-i18n="rhetoric_card_loading_title">Loading rhetoric scan…</div>
+        </div>
+        <div id="rhetoricCardBadge" style="background:#6b7280; color:white; font-size:11px; font-weight:800; padding:5px 12px; border-radius:6px; letter-spacing:0.5px; white-space:nowrap; flex-shrink:0;">
+            <span data-i18n="rhetoric_card_loading_badge">Loading…</span>
+        </div>
+    </div>
+
+    <!-- Synthesis paragraph -->
+    <div id="rhetoricCardSynthesis" style="font-size:13px; line-height:1.6; color:var(--text-secondary); margin-bottom:12px;" data-i18n="rhetoric_card_loading_synth">
+        Connecting to the Asia backend. If this is your first visit and cache is cold, the live scan can take 20–40 seconds. Refresh in a moment.
+    </div>
+
+    <!-- Key metrics row + deep link -->
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; padding-top:12px; border-top:1px solid var(--card-border);">
+        <div style="display:flex; gap:18px; flex-wrap:wrap;">
+            <div>
+                <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.2px; font-weight:700;" data-i18n="rhetoric_card_metric_dashboards">Dashboards lit</div>
+                <div id="rhetoricCardDashboards" style="font-size:18px; font-weight:900; color:var(--text-primary); font-variant-numeric:tabular-nums;">—</div>
+            </div>
+            <div>
+                <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.2px; font-weight:700;" data-i18n="rhetoric_card_metric_absorption">Absorption fired</div>
+                <div id="rhetoricCardAbsorption" style="font-size:18px; font-weight:900; color:var(--text-primary); font-variant-numeric:tabular-nums;">—</div>
+            </div>
+            <div>
+                <div style="font-size:9px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1.2px; font-weight:700;" data-i18n="rhetoric_card_metric_scanned">Last scan</div>
+                <div id="rhetoricCardScannedAt" style="font-size:11px; color:var(--text-secondary); margin-top:2px;">—</div>
+            </div>
+        </div>
+        <a href="rhetoric-india.html" style="flex-shrink:0; padding:8px 16px; background:var(--accent); color:white; text-decoration:none; border-radius:7px; font-size:11px; font-weight:700; letter-spacing:0.5px; text-transform:uppercase;" data-i18n="rhetoric_card_full_link">View Full Tracker →</a>
     </div>
 </div>
 
@@ -950,9 +991,18 @@ const TRANSLATIONS = {
         travel_level:'LEVEL 2',
         travel_text:"<strong style='color:#f59e0b;'>Exercise Increased Caution</strong> due to crime and terrorism. Reconsider travel to <strong>Jammu & Kashmir</strong> (excluding the Ladakh region and its capital Leh). Do not travel within 10 km of the <strong>India-Pakistan border</strong> or to <strong>central/east India</strong> due to Naxalite/Maoist insurgency.",
         travel_button:'VIEW ADVISORY →',
-        rhetoric_placeholder_title:'📡 India Rhetoric & Coercion Tracker',
-        rhetoric_placeholder_subtitle:'Coming next: PMO · MEA · RBI · Armed Forces · Opposition · Mining/Energy · Cross-LAC dynamics — with Economic Absorption Signatures baked in day one.',
-        rhetoric_in_dev:'🔧 In Development',
+        rhetoric_banner_title:'India Rhetoric Tracker — Live',
+        rhetoric_banner_subtitle:'First absorber-class tracker on the platform · Three dashboards · Seven actor clusters · Updated every 6 hours',
+        rhetoric_banner_button:'FULL TRACKER →',
+        rhetoric_card_eyebrow:'India Rhetoric · So What Factor',
+        rhetoric_card_loading_title:'Loading rhetoric scan…',
+        rhetoric_card_loading_badge:'Loading…',
+        rhetoric_card_loading_synth:'Connecting to the Asia backend. If this is your first visit and cache is cold, the live scan can take 20–40 seconds. Refresh in a moment.',
+        rhetoric_card_metric_dashboards:'Dashboards lit',
+        rhetoric_card_metric_absorption:'Absorption fired',
+        rhetoric_card_metric_scanned:'Last scan',
+        rhetoric_card_full_link:'View Full Tracker →',
+        rhetoric_card_error:'Rhetoric tracker is unreachable right now. The live page is still available at the link below.',
         lsf_fallback_badge:'Standby',
         lsf_fallback_text:'<strong>No live data right now.</strong> The Leader Signals feed for India couldn\'t reach the Asia proxy. The signal class we track here is <em>jawboning</em>: verbal interventions by heads of state, finance ministers, and central bank governors that move commodity markets without formal policy action. Most recent recorded example for India — <strong>PM Modi (May 2026): publicly asked Indians to suspend gold purchases for one year</strong>, classified as defensive statecraft driven by FX defense pressure from sustained Iran/Hormuz oil pricing. Full details and absorption analysis return when the feed comes back online.',
         stability_card_title:'🇮🇳 India Stability Index',
@@ -1023,9 +1073,18 @@ const TRANSLATIONS = {
         travel_level:'二级',
         travel_text:"<strong style='color:#f59e0b;'>请提高警惕</strong>，因犯罪和恐怖主义风险。建议<strong>重新考虑前往查谟和克什米尔</strong>（拉达克及其首府列城除外）。请勿前往<strong>印巴边境 10 公里以内</strong>或<strong>印度中部/东部</strong>，因纳萨尔派/毛派叛乱活动。",
         travel_button:'查看警示 →',
-        rhetoric_placeholder_title:'📡 印度话语与胁迫追踪',
-        rhetoric_placeholder_subtitle:'即将上线：总理办公室 · 外交部 · 印度储备银行 · 武装部队 · 反对派 · 矿业/能源 · 跨实控线动态 — 自第一天起内置经济吸收特征。',
-        rhetoric_in_dev:'🔧 开发中',
+        rhetoric_banner_title:'印度话语追踪器 — 实时',
+        rhetoric_banner_subtitle:'平台首个吸收型追踪器 · 三个仪表板 · 七个行为者集群 · 每6小时更新',
+        rhetoric_banner_button:'完整追踪器 →',
+        rhetoric_card_eyebrow:'印度话语 · 重要性因素',
+        rhetoric_card_loading_title:'正在加载话语扫描…',
+        rhetoric_card_loading_badge:'加载中…',
+        rhetoric_card_loading_synth:'正在连接亚洲后端。如果是首次访问且缓存为冷态,实时扫描可能需要 20–40 秒。请稍候刷新。',
+        rhetoric_card_metric_dashboards:'点亮仪表板',
+        rhetoric_card_metric_absorption:'吸收触发',
+        rhetoric_card_metric_scanned:'上次扫描',
+        rhetoric_card_full_link:'查看完整追踪器 →',
+        rhetoric_card_error:'话语追踪器目前无法访问。可通过下方链接前往实时页面。',
         lsf_fallback_badge:'待机',
         lsf_fallback_text:'<strong>目前没有实时数据。</strong> 印度领导人信号源无法连接亚洲代理。我们在此追踪的信号类型是<em>口头干预</em>：国家元首、财政部长和央行行长在没有正式政策行动的情况下影响大宗商品市场的言论。最近印度的记录案例 — <strong>莫迪总理（2026年5月）：公开要求印度人暂停购买黄金一年</strong>，被分类为由伊朗/霍尔木兹海峡持续石油定价造成的外汇防御压力驱动的防御性国务。完整详情和吸收分析将在源恢复在线时返回。',
         stability_card_title:'🇮🇳 印度稳定指数',
@@ -1096,9 +1155,18 @@ const TRANSLATIONS = {
         travel_level:'レベル 2',
         travel_text:"<strong style='color:#f59e0b;'>注意の強化を実行</strong> 犯罪とテロのため。<strong>ジャンムー・カシミール</strong>（ラダック地域とその首都レーを除く）への渡航は再考してください。<strong>印パ国境から10km以内</strong>または<strong>インド中部/東部</strong>のナクサライト/マオイスト反乱地域には渡航しないでください。",
         travel_button:'勧告を見る →',
-        rhetoric_placeholder_title:'📡 インドのレトリック・強要トラッカー',
-        rhetoric_placeholder_subtitle:'近日公開：首相府 · 外務省 · インド準備銀行 · 軍 · 野党 · 鉱業/エネルギー · 国境動態 — 初日から経済吸収特性を組み込み。',
-        rhetoric_in_dev:'🔧 開発中',
+        rhetoric_banner_title:'インド・レトリック・トラッカー — ライブ',
+        rhetoric_banner_subtitle:'プラットフォーム初の吸収型トラッカー · 3つのダッシュボード · 7つのアクタークラスター · 6時間ごとに更新',
+        rhetoric_banner_button:'完全トラッカー →',
+        rhetoric_card_eyebrow:'インド・レトリック · 重要性ファクター',
+        rhetoric_card_loading_title:'レトリックスキャンを読み込み中…',
+        rhetoric_card_loading_badge:'読み込み中…',
+        rhetoric_card_loading_synth:'アジアバックエンドに接続中。初回訪問でキャッシュがコールドの場合、ライブスキャンは 20–40 秒かかることがあります。少し待ってから更新してください。',
+        rhetoric_card_metric_dashboards:'点灯ダッシュボード',
+        rhetoric_card_metric_absorption:'吸収発火',
+        rhetoric_card_metric_scanned:'最終スキャン',
+        rhetoric_card_full_link:'完全トラッカーを見る →',
+        rhetoric_card_error:'レトリックトラッカーは現在到達不能です。以下のリンクからライブページへアクセスできます。',
         lsf_fallback_badge:'スタンバイ',
         lsf_fallback_text:'<strong>現在ライブデータはありません。</strong> インドのリーダーシグナルフィードはアジアプロキシに接続できませんでした。ここで追跡しているシグナルクラスは<em>口頭介入</em>です：国家元首、財務大臣、中央銀行総裁による公式政策措置を伴わずに商品市場を動かす発言。インドの最新の記録例 — <strong>モディ首相（2026年5月）：インド人に金の購入を1年間停止するよう公式要請</strong>、Asifahは持続するイラン/ホルムズ海峡石油価格による外貨防衛圧力を駆動とする防御的国政と分類。フィードがオンラインに戻ると詳細と吸収分析が返ります。',
         stability_card_title:'🇮🇳 インド安定指数',
@@ -1169,9 +1237,18 @@ const TRANSLATIONS = {
         travel_level:'레벨 2',
         travel_text:"<strong style='color:#f59e0b;'>범죄와 테러 위험으로 인해 주의를 강화</strong>하십시오. <strong>잠무 카슈미르</strong>(라다크 지역과 수도 레 제외) 여행을 재고하십시오. 낙살라이트/마오이스트 반란으로 인해 <strong>인도-파키스탄 국경 10km 이내</strong> 또는 <strong>인도 중부/동부</strong>로 여행하지 마십시오.",
         travel_button:'권고 보기 →',
-        rhetoric_placeholder_title:'📡 인도 레토릭 및 강압 추적기',
-        rhetoric_placeholder_subtitle:'곧 출시: 총리실 · 외무부 · 인도 준비은행 · 군 · 야당 · 광업/에너지 · 국경 역학 — 첫날부터 경제 흡수 특성 내장.',
-        rhetoric_in_dev:'🔧 개발 중',
+        rhetoric_banner_title:'인도 수사 추적기 — 라이브',
+        rhetoric_banner_subtitle:'플랫폼 최초의 흡수형 추적기 · 3개 대시보드 · 7개 행위자 클러스터 · 6시간마다 업데이트',
+        rhetoric_banner_button:'전체 추적기 →',
+        rhetoric_card_eyebrow:'인도 수사 · 중요성 요소',
+        rhetoric_card_loading_title:'수사 스캔 로딩 중…',
+        rhetoric_card_loading_badge:'로딩 중…',
+        rhetoric_card_loading_synth:'아시아 백엔드에 연결 중. 첫 방문이고 캐시가 콜드라면 라이브 스캔이 20–40초 걸릴 수 있습니다. 잠시 후 새로고침하세요.',
+        rhetoric_card_metric_dashboards:'점등 대시보드',
+        rhetoric_card_metric_absorption:'흡수 발동',
+        rhetoric_card_metric_scanned:'마지막 스캔',
+        rhetoric_card_full_link:'전체 추적기 보기 →',
+        rhetoric_card_error:'수사 추적기에 현재 도달할 수 없습니다. 아래 링크에서 라이브 페이지를 사용할 수 있습니다.',
         lsf_fallback_badge:'대기',
         lsf_fallback_text:'<strong>현재 라이브 데이터가 없습니다.</strong> 인도의 리더 시그널 피드가 아시아 프록시에 연결할 수 없었습니다. 여기서 추적하는 시그널 클래스는 <em>구두 개입</em>입니다: 국가원수, 재무장관, 중앙은행 총재가 공식 정책 조치 없이 원자재 시장을 움직이는 발언. 인도의 최신 기록 예 — <strong>모디 총리(2026년 5월): 인도인들에게 1년간 금 구매를 중단하도록 공개적으로 요청</strong>, Asifah는 지속적인 이란/호르무즈 해협 석유 가격으로 인한 외환 방어 압력에 의한 방어적 국정으로 분류. 피드가 다시 온라인 상태가 되면 자세한 내용과 흡수 분석이 반환됩니다.',
         stability_card_title:'🇮🇳 인도 안정 지수',
@@ -1538,12 +1615,101 @@ function setLastUpdated() {
     el.textContent = `Last refreshed: ${t}`;
 }
 
+// ── Rhetoric live-card fetch (Patch 13, May 2026) ──
+// Hits the Asia backend's /api/rhetoric/india/summary endpoint and populates
+// the green-banner / live-card block. Fails gracefully — if backend is
+// unreachable, the card shows an error state but the rest of the stability
+// page is unaffected.
+async function fetchRhetoricCard() {
+    const card        = document.getElementById('rhetoricCard');
+    const titleEl     = document.getElementById('rhetoricCardTitle');
+    const badgeEl     = document.getElementById('rhetoricCardBadge');
+    const synthEl     = document.getElementById('rhetoricCardSynthesis');
+    const dashEl      = document.getElementById('rhetoricCardDashboards');
+    const absEl       = document.getElementById('rhetoricCardAbsorption');
+    const scannedEl   = document.getElementById('rhetoricCardScannedAt');
+    if (!card) return;
+
+    try {
+        const resp = await fetch('https://asifah-asia-backend.onrender.com/api/rhetoric/india/summary',
+                                  { method: 'GET', cache: 'no-cache' });
+        if (!resp.ok) throw new Error('HTTP ' + resp.status);
+        const data = await resp.json();
+        if (!data.success) throw new Error(data.error || 'success=false');
+
+        // Title shows the theatre label + level
+        const level = data.theatre_level || 0;
+        const label = data.theatre_label || 'Baseline';
+        const score = data.theatre_score || 0;
+        titleEl.textContent = `L${level} · ${label} · Theatre Score ${score}`;
+
+        // Badge mirrors the theatre_color from the backend
+        badgeEl.style.background = data.theatre_color || '#6b7280';
+        badgeEl.innerHTML = `L${level} · ${label}`;
+
+        // Synthesis paragraph — short version of the BLUF synthesis logic from
+        // rhetoric-india.html. Lives in the user's current language thanks to
+        // the in-page i18n; we hand-craft a short version here since this is
+        // only a teaser card (full BLUF is on rhetoric-india.html).
+        const dashLit  = data.dashboards
+            ? ['outbound','inbound','internal'].filter(k =>
+                data.dashboards[k] && data.dashboards[k].level >= 3).length
+            : 0;
+        const absCount = (data.absorption && data.absorption.count) || 0;
+        const absIds   = (data.absorption && data.absorption.signature_ids) || [];
+
+        let synth;
+        if (absCount > 0) {
+            const sigText = absIds.map(s => s.replace(/_/g, ' ')).join(', ');
+            const plural  = absCount === 1 ? '' : 's';
+            synth = `India is at <strong>${label}</strong> posture with `
+                  + `<strong>${absCount} absorption signature${plural} firing</strong>: `
+                  + `<em>${sigText}</em>. `
+                  + `${dashLit} dashboard${dashLit === 1 ? '' : 's'} lit at L3+. `
+                  + `Click through for the full BLUF, 7-actor matrix, and cross-theater read.`;
+        } else {
+            synth = `India is at <strong>${label}</strong> posture (score ${score}). `
+                  + `No absorption signatures firing right now — `
+                  + `tracker is reading baseline rhetoric without upstream-pressure convergence. `
+                  + `Click through for the full BLUF, 7-actor matrix, and cross-theater read.`;
+        }
+        synthEl.innerHTML = synth;
+
+        // Metrics
+        dashEl.textContent = `${dashLit} / 3`;
+        absEl.textContent  = absCount;
+
+        if (data.scanned_at) {
+            try {
+                const d = new Date(data.scanned_at);
+                scannedEl.textContent = d.toLocaleString(undefined, {
+                    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+                });
+            } catch { scannedEl.textContent = data.scanned_at; }
+        }
+    } catch (e) {
+        const errKey = (translations[currentLang] && translations[currentLang].rhetoric_card_error)
+                      || translations.en.rhetoric_card_error
+                      || 'Rhetoric tracker unreachable.';
+        synthEl.textContent = errKey;
+        titleEl.textContent = '—';
+        badgeEl.innerHTML = '⚠️';
+        badgeEl.style.background = '#ef4444';
+        console.warn('[Rhetoric card] fetch failed:', e);
+    }
+}
+
 window.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     switchLanguage('en', document.querySelector('.lang-btn.active'));
 
     // Boot fetches in parallel
-    const tasks = [fetchCommodityIndia(), fetchArticles(), probeLeaderSignals()];
+    const tasks = [
+        fetchCommodityIndia(),
+        fetchArticles(),
+        probeLeaderSignals(),
+        fetchRhetoricCard(),
+    ];
     await Promise.allSettled(tasks);
 
     // Map + last-updated + hide loading
