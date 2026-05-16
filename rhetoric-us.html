@@ -531,6 +531,107 @@
             color: var(--accent-cyan);
         }
 
+        /* CURRENTLY JAWBONING CARD (Phase 5c — May 15, 2026)
+           Reads from /api/jawboning/active/us and renders each active Trump
+           signature with its mechanism, target sector, and analyst prose. */
+        .jawboning-card {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-orange);
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 22px;
+            box-shadow: var(--shadow-glow);
+        }
+        .jawboning-label {
+            font-size: 0.76rem;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+        .jawboning-title {
+            font-size: 1.45rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .jawboning-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.55;
+        }
+        .jawboning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+        .jawboning-tile {
+            background: rgba(255,140,0,0.06);
+            border: 1px solid rgba(255,140,0,0.25);
+            border-radius: 8px;
+            padding: 14px 16px;
+            transition: all 0.2s ease;
+        }
+        .jawboning-tile:hover {
+            background: rgba(255,140,0,0.10);
+            border-color: rgba(255,140,0,0.45);
+            transform: translateY(-1px);
+        }
+        .jawboning-tile-target {
+            font-size: 1.0rem;
+            font-weight: 600;
+            color: var(--accent-orange);
+            margin-bottom: 4px;
+            text-transform: capitalize;
+        }
+        .jawboning-tile-mechanism {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+        }
+        .jawboning-tile-prose {
+            font-size: 0.86rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+        .jawboning-empty {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 14px 0;
+            text-align: center;
+        }
+        .jawboning-confidence-badge {
+            display: inline-block;
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-left: 6px;
+            vertical-align: 1px;
+        }
+        .jawboning-confidence-badge.high {
+            background: rgba(0,255,136,0.12);
+            color: var(--accent-green);
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+        .jawboning-confidence-badge.medium {
+            background: rgba(255,204,0,0.12);
+            color: var(--accent-yellow);
+            border: 1px solid rgba(255,204,0,0.3);
+        }
+        .jawboning-confidence-badge.low {
+            background: rgba(100,116,139,0.15);
+            color: var(--text-muted);
+            border: 1px solid rgba(100,116,139,0.35);
+        }
+
         /* WHITE HOUSE RHETORIC & DIVERGENCE PANEL (preview placeholder for v1.1) */
         .divergence-panel {
             background: linear-gradient(135deg, rgba(220,38,38,0.05), rgba(124,58,237,0.05));
@@ -979,9 +1080,52 @@
             .composite-strip { grid-template-columns: 1fr; }
             .composite-vectors { grid-template-columns: repeat(2, 1fr); }
         }
+        /* ── MOBILE HAMBURGER (gold standard from india-stability.html) ── */
+        .mobile-menu-btn {
+            display: none;
+            background: rgba(56,189,248,0.10); border: 1px solid var(--border-color);
+            border-radius: 6px; padding: 6px 10px; cursor: pointer;
+            font-size: 18px; line-height: 1; color: var(--text-primary);
+            font-family: inherit;
+        }
+        .mobile-menu-btn:hover { border-color: var(--accent-cyan); background: rgba(56,189,248,0.20); }
+
+        /* Mobile drawer (sidebar substitute) + backdrop */
+        .mobile-drawer-backdrop {
+            display: none;
+            position: fixed; inset: 0; background: rgba(0,0,0,0.55);
+            z-index: 9998; backdrop-filter: blur(2px);
+        }
+        .mobile-drawer-backdrop.open { display: block; }
+        .mobile-drawer {
+            display: none;
+            position: fixed; top: 0; left: 0; bottom: 0;
+            width: 84%; max-width: 320px;
+            background: var(--bg-card); border-right: 2px solid var(--accent-cyan);
+            z-index: 9999; padding: 18px 16px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.5);
+        }
+        .mobile-drawer.open { display: block; transform: translateX(0); }
+        .mobile-drawer-close {
+            position: absolute; top: 10px; right: 10px;
+            background: transparent; border: 1px solid var(--border-color);
+            border-radius: 6px; width: 32px; height: 32px;
+            cursor: pointer; color: var(--text-primary); font-size: 16px;
+            line-height: 1; font-family: inherit;
+        }
+        .mobile-drawer-close:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); }
+        .mobile-drawer-title {
+            font-size: 14px; font-weight: 700; color: var(--accent-cyan);
+            text-transform: uppercase; letter-spacing: 1.5px;
+            margin: 0 0 14px 4px; padding-right: 40px;
+        }
         @media (max-width: 768px) {
             .main-layout { grid-template-columns: 1fr; }
-            .sidebar { position: relative; height: auto; max-height: 280px; }
+            .sidebar { display: none; }
+            .mobile-menu-btn { display: inline-flex; align-items: center; gap: 6px; }
             .composite-vectors { grid-template-columns: 1fr; }
             .actor-grid { grid-template-columns: 1fr; }
             .balance-grid { grid-template-columns: 1fr; }
@@ -991,6 +1135,41 @@
 <body data-theme="dark">
 
 <div class="watermark"></div>
+
+<!-- Mobile drawer backdrop + drawer (gold standard, hidden on desktop) -->
+<div class="mobile-drawer-backdrop" id="mobileDrawerBackdrop" onclick="closeMobileDrawer()"></div>
+<aside class="mobile-drawer" id="mobileDrawer" aria-label="Navigation menu">
+    <button class="mobile-drawer-close" onclick="closeMobileDrawer()" aria-label="Close menu">✕</button>
+    <div class="mobile-drawer-title" data-i18n="mobile_drawer_title">Navigation</div>
+    <div class="sidebar-section">
+        <div class="sidebar-header" data-i18n="sb_regional">REGIONAL LANDINGS</div>
+        <a href="middle-east.html" class="sidebar-link" data-i18n="sb_me">🌍 Middle East</a>
+        <a href="asia.html" class="sidebar-link" data-i18n="sb_asia">🌏 Asia-Pacific</a>
+        <a href="europe.html" class="sidebar-link" data-i18n="sb_europe">🌍 Europe</a>
+        <a href="wha.html" class="sidebar-link" data-i18n="sb_wha">🌎 Western Hemisphere</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+        <div class="sidebar-header" data-i18n="sb_crosscut">CROSS-CUTTING TOOLS</div>
+        <a href="commodities.html" class="sidebar-link crosscut" data-i18n="sb_commodities">🌾 Commodities Tracker</a>
+        <a href="military.html" class="sidebar-link crosscut" data-i18n="sb_military">🪖 Military Tracker</a>
+        <a href="gpi.html" class="sidebar-link gpi" data-i18n="sb_gpi">🌐 Global Pressure Index</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+        <div class="sidebar-header" data-i18n="sb_rhetoric">REGIONAL RHETORIC</div>
+        <a href="rhetoric-index.html" class="sidebar-link rhetoric" data-i18n="sb_rh_me">💬 Middle East Rhetoric</a>
+        <a href="rhetoric-asia.html" class="sidebar-link rhetoric" data-i18n="sb_rh_asia">💬 Asia Rhetoric</a>
+        <a href="rhetoric-europe.html" class="sidebar-link rhetoric" data-i18n="sb_rh_europe">💬 Europe Rhetoric</a>
+        <a href="rhetoric-wha.html" class="sidebar-link rhetoric" data-i18n="sb_rh_wha">💬 Western Hemisphere Rhetoric</a>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section">
+        <div class="sidebar-header" data-i18n="sb_us_pages">UNITED STATES</div>
+        <a href="rhetoric-us.html" class="sidebar-link rhetoric active" data-i18n="sb_us_rhetoric">💬 U.S. Rhetoric</a>
+        <a href="us-stability.html" class="sidebar-link" data-i18n="sb_us_stability">📊 U.S. Stability</a>
+    </div>
+</aside>
 
 <div class="loading-overlay" id="loadingOverlay">
     <div class="loading-content">
@@ -1012,6 +1191,9 @@
             </div>
         </div>
         <div class="header-controls">
+            <button class="mobile-menu-btn" onclick="openMobileDrawer()" aria-label="Open navigation menu">
+                <span style="font-size:20px;">☰</span><span style="font-size:11px;font-weight:700;letter-spacing:0.5px;" data-i18n="mobile_menu">Menu</span>
+            </button>
             <button class="header-btn lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
             <button class="header-btn lang-btn" data-lang="es" onclick="setLanguage('es')">ES</button>
             <button class="header-btn lang-btn" data-lang="pt" onclick="setLanguage('pt')">PT</button>
@@ -1112,6 +1294,19 @@
             <div class="so-what-factor" id="soWhatFactor">—</div>
             <div class="so-what-description" id="soWhatDescription">—</div>
             <ul class="so-what-bullets" id="soWhatBullets"></ul>
+        </div>
+
+        <!-- CURRENTLY JAWBONING (Phase 5c — May 15, 2026) -->
+        <div class="jawboning-card" id="jawboningCard">
+            <div class="jawboning-label" data-i18n="jaw_label">🦋 Currently Jawboning</div>
+            <div class="jawboning-title" data-i18n="jaw_title">Active Leader Interventions</div>
+            <div class="jawboning-subtitle" data-i18n="jaw_subtitle">
+                Targets the U.S. executive is currently applying public rhetorical pressure to.
+                Each signature shows the mechanism and downstream cross-theater impact path.
+            </div>
+            <div class="jawboning-grid" id="jawboningGrid">
+                <div class="jawboning-empty" data-i18n="jaw_loading">Loading active interventions…</div>
+            </div>
         </div>
 
         <!-- TOP SIGNALS -->
@@ -1306,6 +1501,10 @@
 const API_BASE = 'https://asifah-wha-backend.onrender.com';
 const RHETORIC_ENDPOINT = API_BASE + '/api/rhetoric/us';
 
+// Phase 5c (May 15, 2026) — Jawboning fingerprints live on ME backend
+const ME_BACKEND = 'https://asifah-backend.onrender.com';
+const JAWBONING_ACTIVE_ENDPOINT = ME_BACKEND + '/api/jawboning/active/us';
+
 let currentLang = 'en';
 let currentTheme = 'dark';
 let cachedData = null;
@@ -1355,6 +1554,16 @@ const I18N = {
 
         // So What
         sw_label: 'So What',
+
+        // Jawboning card (Phase 5c)
+        jaw_label: '🦋 Currently Jawboning',
+        jaw_title: 'Active Leader Interventions',
+        jaw_subtitle: 'Targets the U.S. executive is currently applying public rhetorical pressure to. Each signature shows the mechanism and downstream cross-theater impact path.',
+        jaw_loading: 'Loading active interventions…',
+
+        // Mobile drawer
+        mobile_menu: 'Menu',
+        mobile_drawer_title: 'Navigation',
 
         // Top signals
         ts_title: 'Top Signals',
@@ -1455,6 +1664,16 @@ const I18N = {
         // So What
         sw_label: '¿Y Qué?',
 
+        // Jawboning card (Phase 5c)
+        jaw_label: '🦋 Presionando Actualmente',
+        jaw_title: 'Intervenciones Activas del Líder',
+        jaw_subtitle: 'Objetivos sobre los cuales el ejecutivo estadounidense ejerce actualmente presión retórica pública. Cada firma muestra el mecanismo y la vía de impacto entre teatros.',
+        jaw_loading: 'Cargando intervenciones activas…',
+
+        // Mobile drawer
+        mobile_menu: 'Menú',
+        mobile_drawer_title: 'Navegación',
+
         // Top signals
         ts_title: 'Señales Principales',
         ts_subtitle: 'Señales retóricas de mayor prioridad surgidas en este escaneo. Toque cualquier tarjeta para contexto.',
@@ -1553,6 +1772,16 @@ const I18N = {
 
         // So What
         sw_label: 'E Daí?',
+
+        // Jawboning card (Phase 5c)
+        jaw_label: '🦋 Pressionando Atualmente',
+        jaw_title: 'Intervenções Ativas do Líder',
+        jaw_subtitle: 'Alvos sobre os quais o executivo dos EUA está aplicando pressão retórica pública. Cada assinatura mostra o mecanismo e o caminho de impacto entre teatros.',
+        jaw_loading: 'Carregando intervenções ativas…',
+
+        // Mobile drawer
+        mobile_menu: 'Menu',
+        mobile_drawer_title: 'Navegação',
 
         // Top signals
         ts_title: 'Sinais Principais',
@@ -1693,7 +1922,7 @@ async function fetchData(forceRefresh) {
     }
 }
 
-function refreshData() { fetchData(true); }
+function refreshData() { fetchData(true); fetchJawboningCard(); }
 
 function showLoading(msg) {
     const overlay = document.getElementById('loadingOverlay');
@@ -2071,10 +2300,108 @@ function formatDate(s) {
 }
 
 // ════════════════════════════════════════════════════════════════════
+// JAWBONING CARD (Phase 5c — fetches active Trump signatures from ME)
+// ════════════════════════════════════════════════════════════════════
+// Reads /api/jawboning/active/us on ME backend. Renders one tile per
+// fired signature with target, mechanism, and prose. Graceful fallback
+// if endpoint is unreachable: shows "no active interventions" message.
+
+// Friendly display names for the 11 Trump signatures + Xi entry.
+// Falls back to the raw signature_id if no mapping exists (e.g., for
+// future signatures added to the catalog before this map is updated).
+const JAWBONING_DISPLAY = {
+    'trump_on_oil':            { target: 'Oil',           label: '🛢️ Oil markets / OPEC' },
+    'trump_on_fed':            { target: 'Fed',           label: '🏦 Federal Reserve' },
+    'trump_on_tariffs':        { target: 'Tariffs',       label: '⚖️ Tariff policy' },
+    'trump_on_companies':      { target: 'Companies',     label: '🏢 Specific corporations' },
+    'trump_on_china':          { target: 'China',         label: '🇨🇳 China policy' },
+    'trump_on_iran':           { target: 'Iran',          label: '🇮🇷 Iran policy' },
+    'trump_on_russia_ukraine': { target: 'Russia/Ukraine', label: '🇷🇺🇺🇦 Russia-Ukraine war' },
+    'trump_on_mexico':         { target: 'Mexico',        label: '🇲🇽 Mexico (border + drugs)' },
+    'trump_on_cuba':           { target: 'Cuba',          label: '🇨🇺 Cuba policy' },
+    'trump_on_greenland':      { target: 'Greenland',     label: '🇬🇱 Greenland / Arctic' },
+    'trump_on_saudi':          { target: 'Saudi Arabia',  label: '🇸🇦 Saudi alignment' },
+    'xi_on_rare_earths':       { target: 'Rare Earths',   label: '⚙️ Critical minerals' },
+};
+
+async function fetchJawboningCard() {
+    const grid = document.getElementById('jawboningGrid');
+    if (!grid) return;
+    try {
+        const r = await fetch(JAWBONING_ACTIVE_ENDPOINT, { cache: 'no-store' });
+        if (!r.ok) {
+            grid.innerHTML = '<div class="jawboning-empty">⚠️ Could not reach jawboning service. Try refresh.</div>';
+            return;
+        }
+        const data = await r.json();
+        if (!data || !data.success) {
+            grid.innerHTML = '<div class="jawboning-empty">No data returned from jawboning service.</div>';
+            return;
+        }
+        const active = Array.isArray(data.active) ? data.active : [];
+        if (active.length === 0) {
+            grid.innerHTML = '<div class="jawboning-empty">No active leader interventions in the last 24 hours.</div>';
+            return;
+        }
+        // Render one tile per active signature
+        grid.innerHTML = active.map(entry => {
+            const sigId = entry.signature_id || 'unknown';
+            const display = JAWBONING_DISPLAY[sigId] || { target: sigId, label: sigId };
+            const meta = entry.metadata || {};
+            const conf = (meta.confidence || 'medium').toLowerCase();
+            const mech = (meta.mechanism || '').replace(/_/g, ' ');
+            const writtenAt = entry.written_at ? new Date(entry.written_at).toLocaleString() : '';
+            // Prefer analyst_summary if present in metadata; otherwise generic line.
+            const prose = meta.analyst_summary
+                ? meta.analyst_summary.slice(0, 220) + (meta.analyst_summary.length > 220 ? '…' : '')
+                : 'Public rhetorical pressure detected. Cross-theater amplification expected; downstream trackers should expect amplified scoring on related actor clusters.';
+            return `
+                <div class="jawboning-tile" title="${escapeHtml(sigId)}">
+                    <div class="jawboning-tile-target">
+                        ${escapeHtml(display.label)}
+                        <span class="jawboning-confidence-badge ${conf}">${escapeHtml(conf)}</span>
+                    </div>
+                    <div class="jawboning-tile-mechanism">${escapeHtml(mech || 'pressure signaling')}</div>
+                    <div class="jawboning-tile-prose">${escapeHtml(prose)}</div>
+                </div>
+            `;
+        }).join('');
+    } catch (err) {
+        console.warn('[jawboning] fetch error:', err);
+        grid.innerHTML = '<div class="jawboning-empty">⚠️ Jawboning service unreachable. Backend may be cold-starting.</div>';
+    }
+}
+
+function escapeHtml(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+// ════════════════════════════════════════════════════════════════════
+// MOBILE DRAWER (gold standard from india-stability.html)
+// ════════════════════════════════════════════════════════════════════
+function openMobileDrawer() {
+    document.getElementById('mobileDrawer')?.classList.add('open');
+    document.getElementById('mobileDrawerBackdrop')?.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+function closeMobileDrawer() {
+    document.getElementById('mobileDrawer')?.classList.remove('open');
+    document.getElementById('mobileDrawerBackdrop')?.classList.remove('open');
+    document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMobileDrawer();
+});
+
+// ════════════════════════════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════════════════════════════
 applyI18n();
 fetchData(false);
+fetchJawboningCard();
 
 </script>
 </body>
