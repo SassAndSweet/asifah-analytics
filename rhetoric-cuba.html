@@ -340,6 +340,92 @@
     .loading-dot:nth-child(2) { animation-delay: 0.2s; }
     .loading-dot:nth-child(3) { animation-delay: 0.4s; }
     @keyframes blink { 0%,80%,100% { opacity: 0; } 40% { opacity: 1; } }
+
+    /* ────────────────────────────────────────────────────────────
+       BUTTERFLY UPSTREAM CARD (Phase 6 — May 16, 2026)
+       Reads result.butterfly_upstream_stressors + butterfly_context_notes
+       from /api/rhetoric/cuba scan. Arctic palette matches Cuba theme.
+       Card auto-hides when no upstream signals fired this scan.
+       ──────────────────────────────────────────────────────────── */
+    .butterfly-card {
+        background: var(--card-bg, rgba(13,27,46,0.85));
+        border: 1px solid var(--accent, #38bdf8);
+        border-left: 4px solid var(--accent, #38bdf8);
+        border-radius: 10px;
+        padding: 22px;
+        margin: 20px 0 22px 0;
+        box-shadow: 0 0 24px rgba(56,189,248,0.15);
+    }
+    .butterfly-label {
+        font-size: 0.76rem;
+        color: var(--accent, #38bdf8);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 6px;
+        font-weight: 700;
+    }
+    .butterfly-title {
+        font-size: 1.45rem;
+        font-weight: 600;
+        color: var(--text-primary, #e2f0fb);
+        margin-bottom: 4px;
+    }
+    .butterfly-subtitle {
+        font-size: 0.88rem;
+        color: var(--text-secondary, #93c5fd);
+        margin-bottom: 16px;
+        line-height: 1.55;
+    }
+    .butterfly-stressors {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 14px;
+    }
+    .butterfly-pill {
+        background: rgba(56,189,248,0.10);
+        border: 1px solid rgba(56,189,248,0.30);
+        color: var(--text-primary, #e2f0fb);
+        font-size: 0.82rem;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 999px;
+        text-transform: capitalize;
+    }
+    .butterfly-notes {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .butterfly-note {
+        background: rgba(56,189,248,0.05);
+        border-left: 3px solid rgba(56,189,248,0.40);
+        padding: 10px 14px;
+        font-size: 0.88rem;
+        color: var(--text-secondary, #93c5fd);
+        line-height: 1.55;
+        border-radius: 0 6px 6px 0;
+    }
+    .butterfly-boosts {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid rgba(56,189,248,0.18);
+        font-size: 0.76rem;
+        color: var(--text-secondary, #93c5fd);
+        opacity: 0.85;
+    }
+    .butterfly-boosts strong {
+        color: var(--accent, #38bdf8);
+        font-weight: 700;
+    }
+    .butterfly-empty {
+        font-size: 0.92rem;
+        color: var(--text-secondary, #93c5fd);
+        font-style: italic;
+        padding: 14px 0;
+        text-align: center;
+        opacity: 0.75;
+    }
 </style>
 </head>
 <body>
@@ -574,6 +660,24 @@
     </div>
 </div>
 
+<!-- ════════════════════════════════════════════════════════════════════
+     BUTTERFLY UPSTREAM CARD — Phase 6 (May 16, 2026)
+     Renders cross-theater upstream signals affecting Cuba scoring.
+     Reads result.butterfly_upstream_stressors + butterfly_context_notes
+     + butterfly_boosts_applied from /api/rhetoric/cuba scan output.
+     Auto-hides when no upstream signals fired this scan.
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="butterfly-card" id="butterflyCard" style="display:none;">
+    <div class="butterfly-label" data-i18n="bf_label">🦋 Cross-Theater Upstream Signals</div>
+    <div class="butterfly-title" data-i18n="bf_title">Cuba Affected By Other Regions</div>
+    <div class="butterfly-subtitle" data-i18n="bf_subtitle">
+        Signals from US, Iran, China, and other trackers that amplify Cuba's actor scoring this scan. Each stressor pill represents a specific upstream pressure; each context note explains the analytical reasoning.
+    </div>
+    <div class="butterfly-stressors" id="butterflyStressors"></div>
+    <div class="butterfly-notes" id="butterflyNotes"></div>
+    <div class="butterfly-boosts" id="butterflyBoosts" style="display:none;"></div>
+</div>
+
 <!-- ACTOR GROUPS (ordered by three-question frame) -->
 
 <!-- GROUP A: U.S. PRESSURE ACTORS -->
@@ -731,6 +835,12 @@ const T = {
         ctMigrationSignal:     'Migration Surge Signal',
         ctActive:              'ACTIVE',
         ctInactive:            'Baseline',
+        // ── Phase 6 Butterfly card (May 16, 2026) ──
+        bf_label:              '🦋 Cross-Theater Upstream Signals',
+        bf_title:              'Cuba Affected By Other Regions',
+        bf_subtitle:           "Signals from US, Iran, China, and other trackers that amplify Cuba's actor scoring this scan. Each stressor pill represents a specific upstream pressure; each context note explains the analytical reasoning.",
+        bf_boosts_label:       'Actor scoring adjustments applied this scan:',
+        bf_empty:              'No upstream cross-theater signals affecting Cuba this scan.',
         groupUsPressure:       'U.S. Pressure — Inbound Signals Toward Cuba',
         groupRegimeFracture:   'Cuban Regime Response — Fracture Signal',
         groupAdversaryAccess:  'Adversary Exploitation — Russia / China / Iran Access',
@@ -813,6 +923,12 @@ const T = {
         ctMigrationSignal:     'Señal de Oleada Migratoria',
         ctActive:              'ACTIVO',
         ctInactive:            'Base',
+        // ── Phase 6 Butterfly card (May 16, 2026) ──
+        bf_label:              '🦋 Señales Transversales Aguas Arriba',
+        bf_title:              'Cuba Afectada por Otras Regiones',
+        bf_subtitle:           'Señales de los rastreadores de EE.UU., Irán, China y otros que amplifican la puntuación de los actores cubanos en este escaneo. Cada píldora de estresante representa una presión específica aguas arriba; cada nota de contexto explica el razonamiento analítico.',
+        bf_boosts_label:       'Ajustes de puntuación de actores aplicados en este escaneo:',
+        bf_empty:              'No hay señales transversales aguas arriba que afecten a Cuba en este escaneo.',
         groupUsPressure:       'Presión EE.UU. — Señales Entrantes Hacia Cuba',
         groupRegimeFracture:   'Respuesta del Régimen Cubano — Señal de Fractura',
         groupAdversaryAccess:  'Explotación Adversaria — Acceso Rusia / China / Irán',
@@ -895,6 +1011,12 @@ const T = {
         ctMigrationSignal:     'Sinal de Onda Migratória',
         ctActive:              'ATIVO',
         ctInactive:            'Base',
+        // ── Phase 6 Butterfly card (May 16, 2026) ──
+        bf_label:              '🦋 Sinais Transversais a Montante',
+        bf_title:              'Cuba Afetada por Outras Regiões',
+        bf_subtitle:           'Sinais dos rastreadores dos EUA, Irã, China e outros que amplificam a pontuação dos atores cubanos neste scan. Cada pílula de estressor representa uma pressão específica a montante; cada nota de contexto explica o raciocínio analítico.',
+        bf_boosts_label:       'Ajustes de pontuação de atores aplicados neste scan:',
+        bf_empty:              'Nenhum sinal transversal a montante afetando Cuba neste scan.',
         groupUsPressure:       'Pressão EUA — Sinais Entrantes em Direção a Cuba',
         groupRegimeFracture:   'Resposta do Regime Cubano — Sinal de Fratura',
         groupAdversaryAccess:  'Exploração de Adversários — Acesso Rússia / China / Irã',
@@ -1209,12 +1331,79 @@ function renderActors(data) {
 // ════════════════════════════════════════════════════════
 // MAIN: RENDER ALL
 // ════════════════════════════════════════════════════════
+function renderButterfly(data) {
+    // ── Phase 6 Butterfly card (May 16, 2026) ──
+    // Reads butterfly_upstream_stressors + butterfly_context_notes +
+    // butterfly_boosts_applied from /api/rhetoric/cuba scan output.
+    // Auto-hides card when no upstream signals fired this scan.
+    const card = document.getElementById('butterflyCard');
+    if (!card) return;
+    const stressors = Array.isArray(data.butterfly_upstream_stressors)
+                    ? data.butterfly_upstream_stressors : [];
+    const notes     = Array.isArray(data.butterfly_context_notes)
+                    ? data.butterfly_context_notes : [];
+    const boosts    = Array.isArray(data.butterfly_boosts_applied)
+                    ? data.butterfly_boosts_applied : [];
+
+    const tr = T[currentLang] || T.en;
+
+    // Auto-hide if no signals fired
+    if (stressors.length === 0 && notes.length === 0 && boosts.length === 0) {
+        card.style.display = 'none';
+        return;
+    }
+    card.style.display = '';
+
+    // Render stressor pills (capitalized + underscore→space)
+    const stressorsEl = document.getElementById('butterflyStressors');
+    if (stressorsEl) {
+        stressorsEl.innerHTML = stressors.map(s => {
+            const label = String(s).replace(/_/g, ' ');
+            return `<div class="butterfly-pill">${escapeHtmlBf(label)}</div>`;
+        }).join('');
+    }
+
+    // Render context notes as separate paragraphs
+    const notesEl = document.getElementById('butterflyNotes');
+    if (notesEl) {
+        if (notes.length === 0) {
+            notesEl.innerHTML = `<div class="butterfly-empty">${escapeHtmlBf(tr.bf_empty || 'No upstream signals.')}</div>`;
+        } else {
+            notesEl.innerHTML = notes.map(n =>
+                `<div class="butterfly-note">${escapeHtmlBf(n)}</div>`
+            ).join('');
+        }
+    }
+
+    // Render boosts footer (only if any actor scores were adjusted)
+    const boostsEl = document.getElementById('butterflyBoosts');
+    if (boostsEl) {
+        if (boosts.length === 0) {
+            boostsEl.style.display = 'none';
+        } else {
+            boostsEl.style.display = '';
+            const label = tr.bf_boosts_label || 'Actor scoring adjustments applied this scan:';
+            boostsEl.innerHTML = `<strong>${escapeHtmlBf(label)}</strong> ${
+                boosts.map(b => escapeHtmlBf(b)).join(' · ')
+            }`;
+        }
+    }
+}
+
+function escapeHtmlBf(s) {
+    if (s === null || s === undefined) return '';
+    return String(s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
 function renderAll(data) {
     window._lastCubaData = data;
     renderBanner(data);
     renderSoWhat(data);
     renderRedLines(data);
     renderCrossTheater(data);
+    renderButterfly(data);
     renderActors(data);
 }
 
