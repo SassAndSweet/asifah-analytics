@@ -1182,6 +1182,7 @@
 <header class="header">
     <div class="header-grid">
         <div class="header-title-block">
+            <a href="us-stability.html" class="back-link" data-i18n="hdr_back" style="align-self:flex-start; display:inline-flex; align-items:center; gap:6px; padding:6px 14px; margin-bottom:8px; border-radius:8px; border:1px solid rgba(56,189,248,0.3); background:rgba(56,189,248,0.08); color:var(--accent-cyan); text-decoration:none; font-size:0.82rem; font-weight:600; transition:all 0.2s ease;">← Back to U.S. Stability</a>
             <div class="header-title-row">
                 <span class="header-flag-icons">🇺🇸 💬</span>
                 <span data-i18n="hdr_title">U.S. Rhetoric Tracker</span>
@@ -1516,6 +1517,7 @@ const I18N = {
     en: {
         // Header
         hdr_title: 'U.S. Rhetoric Tracker',
+        hdr_back: '← Back to U.S. Stability',
         hdr_subtitle: 'Multi-actor monitoring across 9 actors and 3 branches. Apolitical infrastructure tracking volatility, divergence, and cross-spectrum fracture — not aggression.',
         hdr_dark: 'Dark', hdr_light: 'Light', hdr_refresh: 'Refresh',
 
@@ -1624,7 +1626,8 @@ const I18N = {
 
     es: {
         // Header
-        hdr_title: 'Rastreador de Retórica EE.UU.',
+        hdr_title: 'Rastreador de Retórica de EE.UU.',
+        hdr_back: '← Volver a Estabilidad EE.UU.',
         hdr_subtitle: 'Monitoreo multi-actor a través de 9 actores y 3 ramas. Infraestructura apolítica que rastrea volatilidad, divergencia y fractura transversal — no agresión.',
         hdr_dark: 'Oscuro', hdr_light: 'Claro', hdr_refresh: 'Recargar',
 
@@ -1733,7 +1736,8 @@ const I18N = {
 
     pt: {
         // Header
-        hdr_title: 'Rastreador de Retórica EUA',
+        hdr_title: 'Rastreador de Retórica dos EUA',
+        hdr_back: '← Voltar para Estabilidade EUA',
         hdr_subtitle: 'Monitoramento multi-ator através de 9 atores e 3 ramos. Infraestrutura apolítica rastreando volatilidade, divergência e fratura transversal — não agressão.',
         hdr_dark: 'Escuro', hdr_light: 'Claro', hdr_refresh: 'Atualizar',
 
@@ -2149,20 +2153,31 @@ function buildActorCard(key, a, layer) {
 }
 
 function renderBalance(data) {
-    // Pull from source_counts + dimension data
+    // ── Cross-spectrum balance (v1.0 transparency placeholder)
+    // The backend currently aggregates all Reddit articles into one count without
+    // labeling which subreddit each came from. Full left/right/center split requires
+    // a backend change (planned for v1.1): reddit_signals_us.py needs to emit
+    // per-subreddit counts, then aggregate into LEAN_LEFT / CENTER / LEAN_RIGHT.
+    //
+    // Until that ships, show source breakdown across ALL signals (RSS + Reddit +
+    // Bluesky + Telegram), so the user at least sees we're listening broadly.
     const sc = data.source_counts || {};
-    // Cross-spectrum fracture score is computed in interpreter; we approximate
-    // partisan balance from Reddit sub source counts (encoded in source string).
-    // For simplicity in v1.0 we display total Reddit count as proxy for cross-spectrum activity.
-    const total = sc.reddit || 0;
-    // We don't have direct left/right counts at this layer; v1.1 will surface them
-    // via interpreter. For now show total + a transparency note.
-    document.getElementById('balanceLeftCount').textContent = '—';
-    document.getElementById('balanceCenterCount').textContent = total > 0 ? total : '—';
-    document.getElementById('balanceRightCount').textContent = '—';
-    document.getElementById('balanceLeftPct').textContent = '—';
-    document.getElementById('balanceCenterPct').textContent = total > 0 ? (total + ' Reddit') : '—';
-    document.getElementById('balanceRightPct').textContent = '—';
+    const total_rss      = sc.rss      || 0;
+    const total_reddit   = sc.reddit   || 0;
+    const total_bluesky  = sc.bluesky  || 0;
+    const total_telegram = sc.telegram || 0;
+    const total_gdelt    = sc.gdelt    || 0;
+    const total_all = total_rss + total_reddit + total_bluesky + total_telegram + total_gdelt;
+
+    // For v1.0 we render this card as "Source Diversity" instead of L/C/R counts:
+    document.getElementById('balanceLeftCount').textContent   = total_rss > 0 ? total_rss : '—';
+    document.getElementById('balanceCenterCount').textContent = total_reddit > 0 ? total_reddit : '—';
+    document.getElementById('balanceRightCount').textContent  = (total_bluesky + total_telegram) > 0
+                                                                ? (total_bluesky + total_telegram) : '—';
+    document.getElementById('balanceLeftPct').textContent   = total_rss > 0 ? (total_rss + ' editorial sources') : '—';
+    document.getElementById('balanceCenterPct').textContent = total_reddit > 0 ? (total_reddit + ' Reddit discussion') : '—';
+    document.getElementById('balanceRightPct').textContent  = (total_bluesky + total_telegram) > 0
+                                                              ? ((total_bluesky + total_telegram) + ' social / Telegram') : '—';
 }
 
 function renderTargets(data) {
