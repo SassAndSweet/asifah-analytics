@@ -1594,7 +1594,7 @@ const I18N = {
         bal_left: 'Left-of-Center',
         bal_center: 'Center / Moderated',
         bal_right: 'Right-of-Center',
-        bal_disclaimer: "Source mix from r/politics, r/Conservative, r/moderatepolitics, r/NeutralPolitics, plus cross-spectrum journalists on Bluesky. We don't claim perfect balance — only transparency about who we're listening to.",
+        bal_disclaimer: "Source mix from r/politics (left), r/Conservative + r/JoeRogan + r/TuckerCarlson + r/BenShapiro (right), r/moderatepolitics + r/NeutralPolitics + r/NeutralNews (center), r/EzraKleinShow + r/PivotPodcast (center-left), plus cross-spectrum journalists on Bluesky. We don't claim perfect balance — only transparency about who we're listening to. Hover over each count to see which subreddits contributed.",
 
         // Targets + cross-theater
         targ_title: 'U.S. Rhetoric Targets',
@@ -1704,7 +1704,7 @@ const I18N = {
         bal_left: 'Centro-Izquierda',
         bal_center: 'Centro / Moderado',
         bal_right: 'Centro-Derecha',
-        bal_disclaimer: 'Mezcla de fuentes de r/politics, r/Conservative, r/moderatepolitics, r/NeutralPolitics, más periodistas transversales en Bluesky. No afirmamos un balance perfecto — solo transparencia sobre a quién escuchamos.',
+        bal_disclaimer: "Mezcla de fuentes: r/politics (izquierda), r/Conservative + r/JoeRogan + r/TuckerCarlson + r/BenShapiro (derecha), r/moderatepolitics + r/NeutralPolitics + r/NeutralNews (centro), r/EzraKleinShow + r/PivotPodcast (centro-izquierda), más periodistas transversales en Bluesky. No afirmamos un balance perfecto — solo transparencia sobre a quién escuchamos. Pasa el cursor sobre cada conteo para ver qué subreddits contribuyeron.",
 
         // Targets + cross-theater
         targ_title: 'Objetivos Retóricos de EE.UU.',
@@ -1814,7 +1814,7 @@ const I18N = {
         bal_left: 'Centro-Esquerda',
         bal_center: 'Centro / Moderado',
         bal_right: 'Centro-Direita',
-        bal_disclaimer: 'Mistura de fontes de r/politics, r/Conservative, r/moderatepolitics, r/NeutralPolitics, mais jornalistas transversais no Bluesky. Não afirmamos balanço perfeito — apenas transparência sobre quem ouvimos.',
+        bal_disclaimer: "Mistura de fontes: r/politics (esquerda), r/Conservative + r/JoeRogan + r/TuckerCarlson + r/BenShapiro (direita), r/moderatepolitics + r/NeutralPolitics + r/NeutralNews (centro), r/EzraKleinShow + r/PivotPodcast (centro-esquerda), mais jornalistas transversais no Bluesky. Não afirmamos balanço perfeito — apenas transparência sobre quem ouvimos. Passe o cursor sobre cada contagem para ver quais subreddits contribuíram.",
 
         // Targets + cross-theater
         targ_title: 'Alvos Retóricos dos EUA',
@@ -2153,31 +2153,80 @@ function buildActorCard(key, a, layer) {
 }
 
 function renderBalance(data) {
-    // ── Cross-spectrum balance (v1.0 transparency placeholder)
-    // The backend currently aggregates all Reddit articles into one count without
-    // labeling which subreddit each came from. Full left/right/center split requires
-    // a backend change (planned for v1.1): reddit_signals_us.py needs to emit
-    // per-subreddit counts, then aggregate into LEAN_LEFT / CENTER / LEAN_RIGHT.
-    //
-    // Until that ships, show source breakdown across ALL signals (RSS + Reddit +
-    // Bluesky + Telegram), so the user at least sees we're listening broadly.
+    // ── Cross-spectrum balance (v1.3 — May 16, 2026) ──
+    // Reads source_counts.reddit_lean_3 (UI-friendly 3-bucket counts) and
+    // source_counts.reddit_breakdown (per-subreddit counts for tooltips).
+    // 5-bucket detail is in source_counts.reddit_lean_5 for future v1.2 expansion.
     const sc = data.source_counts || {};
-    const total_rss      = sc.rss      || 0;
-    const total_reddit   = sc.reddit   || 0;
-    const total_bluesky  = sc.bluesky  || 0;
-    const total_telegram = sc.telegram || 0;
-    const total_gdelt    = sc.gdelt    || 0;
-    const total_all = total_rss + total_reddit + total_bluesky + total_telegram + total_gdelt;
+    const lean3 = sc.reddit_lean_3 || {};
+    const breakdown = sc.reddit_breakdown || {};
 
-    // For v1.0 we render this card as "Source Diversity" instead of L/C/R counts:
-    document.getElementById('balanceLeftCount').textContent   = total_rss > 0 ? total_rss : '—';
-    document.getElementById('balanceCenterCount').textContent = total_reddit > 0 ? total_reddit : '—';
-    document.getElementById('balanceRightCount').textContent  = (total_bluesky + total_telegram) > 0
-                                                                ? (total_bluesky + total_telegram) : '—';
-    document.getElementById('balanceLeftPct').textContent   = total_rss > 0 ? (total_rss + ' editorial sources') : '—';
-    document.getElementById('balanceCenterPct').textContent = total_reddit > 0 ? (total_reddit + ' Reddit discussion') : '—';
-    document.getElementById('balanceRightPct').textContent  = (total_bluesky + total_telegram) > 0
-                                                              ? ((total_bluesky + total_telegram) + ' social / Telegram') : '—';
+    const left   = lean3.left || 0;
+    const center = lean3.center || 0;
+    const right  = lean3.right || 0;
+    const apolitical = lean3.apolitical || 0;
+
+    const politicalTotal = left + center + right;
+
+    // Build hover tooltips listing which subreddits feed each bucket.
+    // Mapping is duplicated from backend SUBREDDIT_LEAN_5BUCKET for tooltip
+    // generation only — backend is source of truth for actual counts.
+    const LEAN_3_BUCKET_FRONTEND = {
+        // LEFT bucket (left + center_left)
+        'politics': 'left', 'EzraKleinShow': 'left', 'PivotPodcast': 'left',
+        // CENTER bucket
+        'moderatepolitics': 'center', 'NeutralPolitics': 'center',
+        'NeutralNews': 'center', 'news': 'center', 'worldnews': 'center',
+        'protest': 'center', 'PublicFreakout': 'center',
+        'scotus': 'center', 'law': 'center',
+        // RIGHT bucket (right + far_right)
+        'Conservative': 'right', 'JoeRogan': 'right',
+        'TuckerCarlson': 'right', 'BenShapiro': 'right',
+    };
+    const subsByBucket = { left: [], center: [], right: [] };
+    Object.entries(breakdown).forEach(([sub, count]) => {
+        const bucket = LEAN_3_BUCKET_FRONTEND[sub];
+        if (bucket) subsByBucket[bucket].push(`r/${sub}: ${count}`);
+    });
+    const tooltipLeft   = subsByBucket.left.join(' · ')   || 'No data this scan';
+    const tooltipCenter = subsByBucket.center.join(' · ') || 'No data this scan';
+    const tooltipRight  = subsByBucket.right.join(' · ')  || 'No data this scan';
+
+    // Set counts + percentages + tooltips
+    const leftEl   = document.getElementById('balanceLeftCount');
+    const centerEl = document.getElementById('balanceCenterCount');
+    const rightEl  = document.getElementById('balanceRightCount');
+
+    leftEl.textContent   = politicalTotal > 0 ? left   : '—';
+    centerEl.textContent = politicalTotal > 0 ? center : '—';
+    rightEl.textContent  = politicalTotal > 0 ? right  : '—';
+
+    leftEl.title   = tooltipLeft;
+    centerEl.title = tooltipCenter;
+    rightEl.title  = tooltipRight;
+
+    // Percentage strings under each column
+    if (politicalTotal > 0) {
+        document.getElementById('balanceLeftPct').textContent =
+            `${Math.round((left / politicalTotal) * 100)}% of political voices`;
+        document.getElementById('balanceCenterPct').textContent =
+            `${Math.round((center / politicalTotal) * 100)}% of political voices`;
+        document.getElementById('balanceRightPct').textContent =
+            `${Math.round((right / politicalTotal) * 100)}% of political voices`;
+    } else {
+        document.getElementById('balanceLeftPct').textContent = '—';
+        document.getElementById('balanceCenterPct').textContent = '—';
+        document.getElementById('balanceRightPct').textContent = '—';
+    }
+
+    // Apolitical footnote: append to the existing balance-disclaimer
+    const sourceNote = document.querySelector('.balance-disclaimer');
+    if (sourceNote && apolitical > 0) {
+        const baseText = sourceNote.getAttribute('data-base-text')
+                      || sourceNote.textContent;
+        sourceNote.setAttribute('data-base-text', baseText);
+        sourceNote.textContent = `${baseText} Plus ${apolitical} apolitical signals (weather, military, economics, cyber, OSINT) tracked separately.`;
+    }
 }
 
 function renderTargets(data) {
