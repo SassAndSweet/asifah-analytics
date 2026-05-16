@@ -474,6 +474,109 @@
         .theatre-right { text-align: center; }
         .regime-signal-meta { margin-left: 0; }
     }
+
+    /* ────────────────────────────────────────────────────────────
+       XI JAWBONING CARD (Phase 5b — fetches active Xi signatures from ME)
+       Reads /api/jawboning/active/china. Red palette matches China theme.
+       ──────────────────────────────────────────────────────────── */
+    .jawboning-card {
+        background: var(--bg-card, rgba(15,23,42,0.7));
+        border: 1px solid #ef4444;
+        border-left: 4px solid #ef4444;
+        border-radius: 10px;
+        padding: 22px;
+        margin: 20px 0 22px 0;
+        box-shadow: 0 0 24px rgba(239,68,68,0.18);
+    }
+    .jawboning-label {
+        font-size: 0.76rem;
+        color: #ef4444;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 6px;
+        font-weight: 700;
+    }
+    .jawboning-title {
+        font-size: 1.45rem;
+        font-weight: 600;
+        color: var(--text-primary, #f1f5f9);
+        margin-bottom: 4px;
+    }
+    .jawboning-subtitle {
+        font-size: 0.88rem;
+        color: var(--text-secondary, #cbd5e1);
+        margin-bottom: 16px;
+        line-height: 1.55;
+    }
+    .jawboning-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 12px;
+    }
+    .jawboning-tile {
+        background: rgba(239,68,68,0.06);
+        border: 1px solid rgba(239,68,68,0.25);
+        border-radius: 8px;
+        padding: 14px 16px;
+        transition: all 0.2s ease;
+    }
+    .jawboning-tile:hover {
+        background: rgba(239,68,68,0.10);
+        border-color: rgba(239,68,68,0.45);
+        transform: translateY(-1px);
+    }
+    .jawboning-tile-target {
+        font-size: 1.0rem;
+        font-weight: 600;
+        color: #f87171;
+        margin-bottom: 4px;
+        text-transform: capitalize;
+    }
+    .jawboning-tile-mechanism {
+        font-size: 0.74rem;
+        color: var(--text-muted, #94a3b8);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+    }
+    .jawboning-tile-prose {
+        font-size: 0.86rem;
+        color: var(--text-secondary, #cbd5e1);
+        line-height: 1.55;
+    }
+    .jawboning-empty {
+        font-size: 0.92rem;
+        color: var(--text-muted, #94a3b8);
+        font-style: italic;
+        padding: 14px 0;
+        text-align: center;
+    }
+    .jawboning-confidence-badge {
+        display: inline-block;
+        font-size: 0.66rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 2px 7px;
+        border-radius: 4px;
+        margin-left: 6px;
+        vertical-align: 1px;
+    }
+    .jawboning-confidence-badge.high {
+        background: rgba(34,197,94,0.12);
+        color: #4ade80;
+        border: 1px solid rgba(34,197,94,0.3);
+    }
+    .jawboning-confidence-badge.medium {
+        background: rgba(234,179,8,0.12);
+        color: #facc15;
+        border: 1px solid rgba(234,179,8,0.3);
+    }
+    .jawboning-confidence-badge.low {
+        background: rgba(100,116,139,0.15);
+        color: var(--text-muted, #94a3b8);
+        border: 1px solid rgba(100,116,139,0.35);
+    }
 </style>
 </head>
 <body>
@@ -830,6 +933,23 @@
     <div class="history-legend" id="historyLegend"></div>
 </div>
 
+    <!-- ════════════════════════════════════════════════════════════════════
+     XI JAWBONING CARD — Phase 5b (May 16, 2026)
+     Reads from ME backend /api/jawboning/active/china and renders each
+     active Xi signature with its mechanism, target sector, and analyst
+     prose. Card auto-empties when no signatures in last 24h (Redis TTL).
+     ════════════════════════════════════════════════════════════════════ -->
+<div class="jawboning-card" id="jawboningCard">
+    <div class="jawboning-label" data-i18n="jaw_label">🦋 Currently Jawboning</div>
+    <div class="jawboning-title" data-i18n="jaw_title">Active Leader Interventions</div>
+    <div class="jawboning-subtitle" data-i18n="jaw_subtitle">
+        Targets Xi Jinping / CMC is currently applying public rhetorical pressure to. Each signature shows the mechanism and downstream cross-theater impact path.
+    </div>
+    <div class="jawboning-grid" id="jawboningGrid">
+        <div class="jawboning-empty" data-i18n="jaw_loading">Loading active interventions…</div>
+    </div>
+</div>
+
 <!-- ACTOR STATUS -->
 <div class="section-card">
     <div class="section-title" data-i18n="actorTitle">🎯 ACTOR STATUS</div>
@@ -880,6 +1000,8 @@
 
 <script>
     const API_BASE = 'https://asifah-asia-backend.onrender.com';
+    const ME_BACKEND = 'https://asifah-backend.onrender.com';
+    const JAWBONING_ACTIVE_ENDPOINT = ME_BACKEND + '/api/jawboning/active/china';
 
     const ESCALATION_LEVELS = {
         0: { label:'Baseline',        color:'#6b7280', description:'Routine statements, no significant signals' },
@@ -959,6 +1081,12 @@
             btn30day:'30D',
             btnCompare:'COMPARE',
             chartEmpty:'Collecting data — first snapshot saves on next scan cycle',
+            jaw_label:'🦋 Currently Jawboning',
+            jaw_title:'Active Leader Interventions',
+            jaw_subtitle:'Targets Xi Jinping / CMC is currently applying public rhetorical pressure to. Each signature shows the mechanism and downstream cross-theater impact path.',
+            jaw_loading:'Loading active interventions…',
+            jaw_empty_24h:'No active leader interventions in the last 24 hours.',
+            jaw_unreachable:'⚠️ Jawboning service unreachable. Backend may be cold-starting.',
             actorTitle:'🎯 ACTOR STATUS',
             articlesTitle:'📰 TOP ARTICLES BY ACTOR',
             refreshScan:'Refresh Scan',
@@ -1025,6 +1153,12 @@
             btn30day:'30天',
             btnCompare:'比较',
             chartEmpty:'正在收集数据 — 第一次快照将在下次扫描周期保存',
+            jaw_label:'🦋 当前施压',
+            jaw_title:'领导人主动干预',
+            jaw_subtitle:'习近平/中央军委当前正在施加公开舆论压力的对象。每个特征显示其作用机制及跨战区影响路径。',
+            jaw_loading:'正在加载活跃干预…',
+            jaw_empty_24h:'过去 24 小时内无活跃领导人干预。',
+            jaw_unreachable:'⚠️ 施压检测服务无法连接。后端可能正在冷启动。',
             actorTitle:'🎯 行为者状态',
             articlesTitle:'📰 按行为者排名的顶级文章',
             refreshScan:'刷新扫描',
@@ -1090,6 +1224,12 @@
             btn30day:'30日',
             btnCompare:'比較',
             chartEmpty:'データ収集中 — 最初のスナップショットは次のスキャンサイクルで保存',
+            jaw_label:'🦋 現在の圧力行使',
+            jaw_title:'指導者による能動的介入',
+            jaw_subtitle:'習近平/中央軍事委員会が現在、公的なレトリックによる圧力を行使している対象。各シグネチャは作用機構と劇場間の影響経路を示します。',
+            jaw_loading:'活発な介入を読み込み中…',
+            jaw_empty_24h:'過去24時間以内に活発な指導者の介入はありません。',
+            jaw_unreachable:'⚠️ ジョウボーニング・サービスに接続できません。バックエンドがコールドスタート中の可能性があります。',
             actorTitle:'🎯 アクターステータス',
             articlesTitle:'📰 アクター別トップ記事',
             refreshScan:'スキャン更新',
@@ -1155,6 +1295,12 @@
             btn30day:'30일',
             btnCompare:'비교',
             chartEmpty:'데이터 수집 중 — 첫 번째 스냅샷은 다음 스캔 주기에 저장',
+            jaw_label:'🦋 현재 압박 행사',
+            jaw_title:'지도자의 능동적 개입',
+            jaw_subtitle:'시진핑/중앙군사위원회가 현재 공개적 수사 압박을 가하고 있는 대상. 각 시그니처는 작동 메커니즘과 전구 간 영향 경로를 표시합니다.',
+            jaw_loading:'활성 개입을 불러오는 중…',
+            jaw_empty_24h:'지난 24시간 동안 활성 지도자 개입이 없습니다.',
+            jaw_unreachable:'⚠️ 압박 행사 서비스에 연결할 수 없습니다. 백엔드가 콜드 스타트 중일 수 있습니다.',
             actorTitle:'🎯 행위자 상태',
             articlesTitle:'📰 행위자별 상위 기사',
             refreshScan:'스캔 새로고침',
@@ -1677,7 +1823,77 @@
     document.addEventListener('DOMContentLoaded', function() {
         loadTheme();
         loadRhetoricData();
+        fetchJawboningCard();
     });
+
+    // ════════════════════════════════════════════════════════════════════
+    // JAWBONING CARD (Phase 5b — fetches active Xi signatures from ME)
+    // Reads /api/jawboning/active/china on ME backend. Renders one tile per
+    // fired signature with target, mechanism, and prose. Graceful fallback
+    // if endpoint is unreachable: shows "no active interventions" message.
+    // Card auto-empties when fingerprints expire (24h Redis TTL on the
+    // jawboning:command:china:* keys).
+    // ════════════════════════════════════════════════════════════════════
+
+    // Friendly display names for the Xi catalog entry (and future Xi additions).
+    // Falls back to the raw signature_id if no mapping exists.
+    const JAWBONING_DISPLAY = {
+        'xi_on_rare_earths':        { target: 'Rare Earths',  label: '⚙️ Critical minerals' },
+        'xi_on_taiwan':             { target: 'Taiwan',       label: '🇹🇼 Taiwan / cross-strait' },
+        'xi_on_tech_export_controls': { target: 'Tech exports', label: '💻 Semiconductor / tech export controls' },
+    };
+
+    function escapeHtmlJaw(s) {
+        if (s === null || s === undefined) return '';
+        return String(s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    async function fetchJawboningCard() {
+        const grid = document.getElementById('jawboningGrid');
+        if (!grid) return;
+        try {
+            const r = await fetch(JAWBONING_ACTIVE_ENDPOINT, { cache: 'no-store' });
+            if (!r.ok) {
+                grid.innerHTML = '<div class="jawboning-empty">' + t('jaw_unreachable') + '</div>';
+                return;
+            }
+            const data = await r.json();
+            if (!data || !data.success) {
+                grid.innerHTML = '<div class="jawboning-empty">' + t('jaw_empty_24h') + '</div>';
+                return;
+            }
+            const active = Array.isArray(data.active) ? data.active : [];
+            if (active.length === 0) {
+                grid.innerHTML = '<div class="jawboning-empty">' + t('jaw_empty_24h') + '</div>';
+                return;
+            }
+            grid.innerHTML = active.map(entry => {
+                const sigId = entry.signature_id || 'unknown';
+                const display = JAWBONING_DISPLAY[sigId] || { target: sigId, label: sigId };
+                const meta = entry.metadata || {};
+                const conf = (meta.confidence || 'medium').toLowerCase();
+                const mech = (meta.mechanism || '').replace(/_/g, ' ');
+                const prose = meta.analyst_summary
+                    ? meta.analyst_summary.slice(0, 220) + (meta.analyst_summary.length > 220 ? '…' : '')
+                    : 'Public rhetorical pressure detected. Cross-theater amplification expected; downstream trackers should expect amplified scoring on related actor clusters.';
+                return `
+                    <div class="jawboning-tile" title="${escapeHtmlJaw(sigId)}">
+                        <div class="jawboning-tile-target">
+                            ${escapeHtmlJaw(display.label)}
+                            <span class="jawboning-confidence-badge ${conf}">${escapeHtmlJaw(conf)}</span>
+                        </div>
+                        <div class="jawboning-tile-mechanism">${escapeHtmlJaw(mech || 'pressure signaling')}</div>
+                        <div class="jawboning-tile-prose">${escapeHtmlJaw(prose)}</div>
+                    </div>
+                `;
+            }).join('');
+        } catch (err) {
+            console.warn('[jawboning] fetch error:', err);
+            grid.innerHTML = '<div class="jawboning-empty">' + t('jaw_unreachable') + '</div>';
+        }
+    }
 
     // ── MOBILE DRAWER (gold standard) ──
     function openMobileDrawer() {
